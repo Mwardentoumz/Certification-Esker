@@ -241,6 +241,24 @@ Lib.AP.Customization = Lib.AP.Customization || {};
 		},
 
 		/**
+		 * Called after tax computation but before the workflow is built:
+		 * fills the vendor risk fields so that the compliance review step is added to the workflow if needed
+		 */
+		OnLineItemsPopulatedPostTax: function ()
+		{
+			const VendorRisk = Lib.AP.Customization.Common.CustomFunctions.VendorRisk;
+			VendorRisk.EvaluateInvoiceRisk()
+				.Then(function (assessment)
+				{
+					VendorRisk.ApplyToForm(assessment);
+				})
+				.Catch(function (error)
+				{
+					Log.Error("[VendorRisk] Unexpected error during extraction: " + (error && error.message ? error.message : error));
+				});
+		},
+
+		/**
 		 * When the company code is not defined, uses the default value for the given ERP.
 		 */
 		ForceCompanyCode: function ()

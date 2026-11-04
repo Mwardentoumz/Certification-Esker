@@ -288,6 +288,14 @@ Sys.ExtendLib(Lib, "P2P.CSVDataImportParameters", function ()
 				this.Parameters.ReplicationMode = "incremental";
 				this.Parameters.ClearTable = true;
 			}
+			else if (g_tableName === "VendorsRiskLevel")
+			{
+				// Partial update of AP - Vendors__ (risk columns only, see mapping_VendorsRiskLevel__.xml):
+				// existing vendors are updated, unknown vendors are ignored and no vendor is deleted
+				this.Parameters.ReplicationMode = "incremental";
+				this.Parameters.NoInsert = true;
+				this.Parameters.NoDelete = true;
+			}
 			return this.Parameters;
 		},
 

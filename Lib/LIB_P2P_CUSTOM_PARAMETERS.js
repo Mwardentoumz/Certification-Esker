@@ -49,6 +49,34 @@ var Lib;
 			}
 		});
 
+	// Vendor risk management (see LIB_AP_CUSTOMIZATION_COMMON)
+	// Z_RiskThresholdMedium / Z_RiskThresholdHigh: amount (company currency) above which a compliance review is required
+	// Z_ComplianceReviewerLogin / Z_ComplianceReviewerName: user added to the workflow for the compliance review step
+	Sys.Parameters.GetInstance("AP").Extend(
+		{
+			"PROD":
+			{
+				"Z_RiskThresholdMedium": "10000",
+				"Z_RiskThresholdHigh": "2000",
+				"Z_ComplianceReviewerLogin": "compliance@vilt-group.com",
+				"Z_ComplianceReviewerName": "Compliance"
+			},
+			"QA":
+			{
+				"Z_RiskThresholdMedium": "10000",
+				"Z_RiskThresholdHigh": "2000",
+				"Z_ComplianceReviewerLogin": "compliance@vilt-group.com",
+				"Z_ComplianceReviewerName": "Compliance"
+			},
+			"DEV":
+			{
+				"Z_RiskThresholdMedium": "10000",
+				"Z_RiskThresholdHigh": "2000",
+				"Z_ComplianceReviewerLogin": "compliance@vilt-group.com",
+				"Z_ComplianceReviewerName": "Compliance"
+			}
+		});
+
 	Sys.Parameters.GetInstance("Contract").Extend(
 		// Each object associates one environment to a list of parameters and their values.
 		{
@@ -66,4 +94,4 @@ var Lib;
 			}
 		});
 
-})();
+})();
