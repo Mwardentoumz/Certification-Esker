@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<viewType xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<reportpreselectedonlydefined>true</reportpreselectedonlydefined>
+	<headers>
+		<header name="Status__" fromflexible="true">
+			<custom-styles>
+				<custom-style hasFlexibleAttributes="true" style-name="info border" ldapfilter="(Status__=Draft)"/>
+				<custom-style hasFlexibleAttributes="true" style-name="warning border" ldapfilter="(Status__=ToApprove)"/>
+				<custom-style hasFlexibleAttributes="true" style-name="success border" ldapfilter="(Status__=Approved)"/>
+				<custom-style hasFlexibleAttributes="true" style-name="urgent border" ldapfilter="(|(Status__=Reverted)(Status__=Rejected)(Status__=Failed))"/>
+			</custom-styles>
+		</header>
+	</headers>
+</viewType>

@@ -1,0 +1,1000 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:03:23" deleted="0" eskerapplication="" global="0" id="CPATT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="0" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="MobileConfigImport__" needvalidation="1" ootofilter="" ootoversion="1" originalProcessID="HA97FP000SG1" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="0" version="1" visibility="1">
+  <properties>
+    <gdr>
+      <FinalizationScriptAllowRetry>
+      </FinalizationScriptAllowRetry>
+      <FinalizationScript>
+      </FinalizationScript>
+      <ValidationScriptAllowRetry>
+      </ValidationScriptAllowRetry>
+      <validationscriptIncludedScripts>Sys/Sys_Helpers_LdapUtil</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Sys/Sys_Helpers_Database</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Sys/Sys_GenericAPI_Server</validationscriptIncludedScripts>
+      <ValidationScript>"use strict";
+const currentName = Data.GetActionName();
+const currentAction = Data.GetActionType();
+Log.Info("-- Contract Validation Script -- Name: '" + (currentName ? currentName : "&lt;empty&gt;") + "', Action: '" + (currentAction ? currentAction : "&lt;empty&gt;") + "' , Device: '" + Data.GetActionDevice() + "'");
+/*
+    - The order with the highest value has higher priority to avoid negative value
+    - New imported config must have highest priority order
+*/
+function SaveConfiguration(migration, config, order, configName, forceUpgrade) {
+    try {
+        const json = Sys.Helpers.ParseJS(config.Customization);
+        let processName = json.processName;
+        let processId = config.ProcessId;
+        if (migration &amp;&amp; !processName) {
+            // The customization was imported from a xml without processName specified in json
+            try {
+                processName = Process.GetProcessDefinitionFromID(processId).name;
+            }
+            catch (e) {
+                Log.Error(e);
+                return { error: e.toString() };
+            }
+        }
+        configName = configName || processName;
+        Log.Info(`Save mobile configuration "${configName}"`);
+        const configType = processName ? "ProcessConfiguration" : "GlobalConfiguration";
+        const orderAndUpgradable = GetConfigOrderAndUpgradable(configName);
+        if (!forceUpgrade &amp;&amp; (orderAndUpgradable &amp;&amp; !orderAndUpgradable.upgradable)) {
+            Log.Warn(`The mobile configuration '${configName}' exists and is not upgradable`);
+            return { type: configType, warning: configName };
+        }
+        if (orderAndUpgradable) {
+            // keep existing config order
+            order = orderAndUpgradable.order;
+        }
+        if (!processId &amp;&amp; processName) {
+            processId = Process.GetProcessID(processName);
+        }
+        if (config.Customization.length &gt;= 32766) {
+            Log.Error(`The mobile configuration '${configName}' is too long. It exceed 32766 characters.`);
+            return { type: configType, error: Language.Translate("_Error saving mobile configuration '{0}': {1}", false, configName, "The config is too long.") };
+        }
+        const upgradable = Sys.Helpers.IsUndefined(json.upgradable) || json.upgradable === true || Sys.Helpers.String.ToBoolean(json.upgradable) ? "1" : "0";
+        const filter = Sys.Helpers.LdapUtil.FilterEqual("ConfigName__", configName).toString();
+        const attributes = [
+            { name: "ConfigName__", value: configName },
+            { name: "ConfigType__", value: configType },
+            { name: "ProcessName__", value: processName || "" },
+            { name: "ProcessId__", value: processId || "" },
+            { name: "Template__", value: json.template || "" },
+            { name: "MainAccountId2__", value: config.MainAccountId2 },
+            { name: "OwnerId__", value: config.OwnerId },
+            { name: "Order__", value: order },
+            { name: "Upgradable__", value: upgradable },
+            { name: "LanguageName__", value: json.languageName },
+            { name: "Configuration__", value: GetConfigurationJSON(json) },
+            { name: "OriginalConfiguration__", value: config.Customization }
+        ];
+        const result = Sys.Helpers.Database.AddOrModifyTableRecord("MobileConfig__", filter, attributes);
+        if (result.nSuccess == 0) {
+            Log.Error(`Error saving mobile configuration '${configName}': ${result.msg}`);
+            return { type: configType, error: Language.Translate("_Error saving mobile configuration '{0}': {1}", false, configName, result.msg) };
+        }
+        if (result.createdNewRecord) {
+            Log.Info(`New mobile configuration '${configName}' successfully created`);
+        }
+        else {
+            Log.Info(`Mobile configuration '${configName}' successfully updated`);
+        }
+        return { type: configType };
+    }
+    catch (e) {
+        Log.Error(`Invalid mobile configuration: ${e.toString()}`);
+        return { error: Language.Translate("_Invalid mobile configuration '{0}': {1}", false, configName || "", e.toString()) };
+    }
+}
+function MigrateCustomizations() {
+    Log.Info("Migrate customizations");
+    const mainAccountId2 = Users.GetUser(Data.GetValue("OwnerId")).GetValue("MainAccountId");
+    let filter = [];
+    filter.push(Sys.Helpers.LdapUtil.FilterEqual("MainAccountId2", mainAccountId2));
+    filter.push(Sys.Helpers.LdapUtil.FilterEqual("MainAccountId2", mainAccountId2 + "/*"));
+    const queryFilter = Sys.Helpers.LdapUtil.FilterOr(...filter);
+    const options = {
+        table: "EDD_PROCESSMOBILE",
+        attributes: ["ProcessId", "Customization", "MainAccountId2", "OwnerId"],
+        filter: queryFilter.toString(),
+        maxRecords: -1,
+        additionalOptions: "FastSearch=-1"
+    };
+    return Sys.GenericAPI.PromisedQuery(options).Then(results =&gt; {
+        let order = QueryLastOrder();
+        let processIds = [];
+        results.forEach(config =&gt; {
+            order += 5;
+            const result = SaveConfiguration(true, config, order);
+            if (!result.error) {
+                processIds.push(config.ProcessId);
+            }
+        });
+        if (processIds.length &gt; 0) {
+            Log.Info("Remove migrated configs from EDD_PROCESSMOBILE");
+            const removeFilter = Sys.Helpers.LdapUtil.FilterAnd(queryFilter, Sys.Helpers.LdapUtil.FilterIn("ProcessId", processIds));
+            Sys.Helpers.Database.RemoveTableRecord("EDD_PROCESSMOBILE", removeFilter.toString());
+        }
+        return order;
+    });
+}
+function Save(lastOrder, forceUpgrade) {
+    let savingResult = { ProcessConfiguration: 0, GlobalConfiguration: 0, error: null, warning: null };
+    const ownerId = Data.GetValue("OwnerId");
+    const mainAccountId2 = Users.GetUser(ownerId).GetValue("MainAccountId");
+    const nbAttach = Attach.GetNbAttach();
+    let orderInc = 10;
+    for (let i = 0; i &lt; nbAttach &amp;&amp; !savingResult.error; i++) {
+        let order;
+        // The attached file name defines the config order and name. Ex. 12-Expense ==&gt; order=12, configName=Expense
+        // Note: the importing from application enabling/upgrade creates only 1 attachement per process.
+        let configName = Attach.GetName(i);
+        const exp = /^(\d+)-(.+)$/;
+        const res = exp.exec(configName);
+        if (res !== null) {
+            order = parseInt(res[1], 10);
+            configName = res[2];
+            if (order &gt; lastOrder) {
+                lastOrder = order;
+            }
+        }
+        else {
+            // No order specified in the file name will have a highet order of precedence (lastOrder + 110), (lastOrder + 120), ...
+            order = lastOrder + 200 + orderInc;
+            orderInc += 10;
+        }
+        // For the moment, only the importing from application enabling/upgrade should check upgradable
+        const result = SaveConfiguration(false, { Customization: Attach.GetConvertedFile(i).GetContent({ detectEncoding: true }), MainAccountId2: mainAccountId2, OwnerId: ownerId }, order, configName, forceUpgrade);
+        if (result.error) {
+            savingResult.error = result.error;
+        }
+        else if (result.warning) {
+            if (!savingResult.warning) {
+                savingResult.warning = [];
+            }
+            savingResult.warning.push(result.warning);
+        }
+        else {
+            savingResult[result.type]++;
+        }
+    }
+    return savingResult;
+}
+function QueryLastOrder() {
+    const vars = Sys.Helpers.Database.GetFirstRecordResult("MobileConfig__", null, "Order__", "Order__ DESC", "Limit=1");
+    return vars ? vars.GetValue_Long("Order__", 0) : 0;
+}
+function GetConfigOrderAndUpgradable(configName) {
+    const filter = Sys.Helpers.LdapUtil.FilterEqual("ConfigName__", configName).toString();
+    const vars = Sys.Helpers.Database.GetFirstRecordResult("MobileConfig__", filter, "Order__,Upgradable__");
+    if (!vars) {
+        return null;
+    }
+    return { order: vars.GetValue_Long("Order__", 0), upgradable: vars.GetValue_Long("Upgradable__", 0) === 1 };
+}
+function GetConfigurationJSON(json) {
+    // Migrate old customization on actions and notif: undefined properties are removed with the JSON.stringify
+    [json.actions, json.notif]
+        .filter(obj =&gt; !!obj)
+        .forEach(obj =&gt; {
+        for (const name in obj) {
+            if (typeof obj[name] === "undefined") {
+                obj[name] = null;
+            }
+        }
+    });
+    return JSON.stringify(json);
+}
+Process.DisableChecks();
+if (!currentAction &amp;&amp; !currentName) {
+    // Enable/update the package
+    if (Variable.GetValueAsString("ApplicationEnable") == "1" || Variable.GetValueAsString("ApplicationUpgrade") == "1") {
+        let state = 100;
+        if (!Process.PreventConcurrentAccess("SaveMobileConfig", () =&gt; {
+            MigrateCustomizations().Then(newLastOrder =&gt; {
+                if (Save(newLastOrder).error) {
+                    state = 200;
+                }
+            });
+        }, null, 120)) {
+            Log.Error("Error creating the critical section 'SaveMobileConfig'");
+            state = 200;
+        }
+        Data.SetValue("State", state);
+    }
+}
+else if (currentAction === "approve_asynchronous" || currentAction === "approve") {
+    let savingResult;
+    switch (currentName) {
+        case "Save":
+        case "SaveQuit":
+        case "ForceUpgrade":
+            // Import configuration
+            if (!Process.PreventConcurrentAccess("SaveMobileConfig", () =&gt; {
+                savingResult = Save(QueryLastOrder(), currentName == "ForceUpgrade");
+            })) {
+                Log.Error("Error creating the critical section 'SaveMobileConfig'");
+                savingResult = { ProcessConfiguration: 0, GlobalConfiguration: 0, error: Language.Translate("_Error creating the critical section 'SaveMobileConfig'") };
+            }
+            Variable.SetValueAsString("SavingResult", JSON.stringify(savingResult));
+            if (savingResult.warning) {
+                Process.PreventApproval();
+            }
+            else {
+                Data.SetValue("KeepOpenAfterApproval", "WaitForApproval");
+            }
+            break;
+        default:
+            break;
+    }
+}
+//# sourceMappingURL=validationscript.js.map</ValidationScript>
+      <AllowTagCoverPages>true</AllowTagCoverPages>
+      <AllowTagNewDocuments>true</AllowTagNewDocuments>
+      <AllowTagAttachments>true</AllowTagAttachments>
+      <ExtractionScriptAllowRetry>
+      </ExtractionScriptAllowRetry>
+      <ExtractionScript>
+      </ExtractionScript>
+      <ExtractionScriptRunOnOCRFailed>
+      </ExtractionScriptRunOnOCRFailed>
+      <AllowRemovePages>true</AllowRemovePages>
+      <AllowSwapPages>true</AllowSwapPages>
+      <PostProcessingScriptAllowRetry>
+      </PostProcessingScriptAllowRetry>
+      <PostProcessingScript>
+      </PostProcessingScript>
+    </gdr>
+    <lg>
+      <process_da>{
+	"_ChooseFile": "Vælg den konfigurationsfil, der skal importeres.",
+	"_Error creating the critical section 'SaveMobileConfig'": "Der opstod en teknisk fejl. Prøv igen senere.",
+	"_Error saving mobile configuration '{0}': {1}": "Der opstod en fejl ved lagring af konfigurationsfilen '{0}': {1}",
+	"_ForceUpgrade": "Gennemtving opdatering",
+	"_ForceUpgradeDescription": "Følgende konfigurationer, der tidligere er angivet som ikke-opdaterbare, vil blive opdateret:",
+	"_Import mobile configuration": "Importér konfiguration",
+	"_ImportConfig": "Importér konfiguration",
+	"_Invalid mobile configuration '{0}': {1}": "Ugyldig konfigurationsfil '{0}': {1}",
+	"_Mobile configuration successfully imported": "Konfigurationsfilen blev importeret.",
+	"_MobileConfigImport": "Importér konfiguration af mobilapp",
+	"_Upgrade": "Opdater",
+	"MobileConfigImport": "Importér konfiguration af mobilapp",
+	"MobileConfigImport__": "Importér konfiguration af mobilapp"
+}</process_da>
+      <process_de>{
+	"_ChooseFile": "Wählen Sie die Konfigurationsdatei zum Importieren aus.",
+	"_Error creating the critical section 'SaveMobileConfig'": "Ein technischer Fehler ist aufgetreten. Bitte versuchen Sie es später noch einmal.",
+	"_Error saving mobile configuration '{0}': {1}": "Beim Speichern der Konfigurationsdatei ‚{0}‘ ist ein Fehler aufgetreten: {1}",
+	"_ForceUpgrade": "Aktualisierung erzwingen",
+	"_ForceUpgradeDescription": "Die folgenden Konfigurationen, die zuvor als nicht aktualisierbar festgelegt wurden, werden aktualisiert:",
+	"_Import mobile configuration": "Importkonfiguration",
+	"_ImportConfig": "Importkonfiguration",
+	"_Invalid mobile configuration '{0}': {1}": "Ungültige Konfigurationsdatei ‚{0}‘: {1}",
+	"_Mobile configuration successfully imported": "Die Konfigurationsdatei wurde erfolgreich importiert.",
+	"_MobileConfigImport": "Konfiguration der mobilen Anwendung importieren",
+	"_Upgrade": "Aktualisieren",
+	"MobileConfigImport": "Konfiguration der mobilen Anwendung importieren",
+	"MobileConfigImport__": "Konfiguration der mobilen Anwendung importieren"
+}</process_de>
+      <process_ja>{
+	"_ChooseFile": "インポートする設定ファイルを選択します。",
+	"_Error creating the critical section 'SaveMobileConfig'": "技術的なエラーが発生しました。後で再度お試しください。",
+	"_Error saving mobile configuration '{0}': {1}": "設定ファイル '{0}' の保存中にエラーが発生しました: {1}",
+	"_ForceUpgrade": "強制更新",
+	"_ForceUpgradeDescription": "以前は更新不可として設定されていた次の設定が更新されます。",
+	"_Import mobile configuration": "インポート設定",
+	"_ImportConfig": "インポート設定",
+	"_Invalid mobile configuration '{0}': {1}": "無効な設定ファイル '{0}': {1}",
+	"_Mobile configuration successfully imported": "設定ファイルが正しくインポートされました。",
+	"_MobileConfigImport": "インポートモバイルアプリケーション設定",
+	"_Upgrade": "更新",
+	"MobileConfigImport": "インポートモバイルアプリケーション設定",
+	"MobileConfigImport__": "インポートモバイルアプリケーション設定"
+}</process_ja>
+      <process_en>{
+	"_ChooseFile": "Select the configuration file to import.",
+	"_Error creating the critical section 'SaveMobileConfig'": "A technical error occurred. Please try again later.",
+	"_Error saving mobile configuration '{0}': {1}": "An error occurred while saving the configuration file '{0}': {1}",
+	"_ForceUpgrade": "Force Update",
+	"_ForceUpgradeDescription": "The following configurations previously set as not updatable will be updated:",
+	"_Import mobile configuration": "Import Configuration",
+	"_ImportConfig": "Import Configuration",
+	"_Invalid mobile configuration '{0}': {1}": "Invalid configuration file '{0}': {1}",
+	"_Mobile configuration successfully imported": "The configuration file was successfully imported.",
+	"_MobileConfigImport": "Import mobile application configuration",
+	"_Upgrade": "Update",
+	"MobileConfigImport": "Import mobile application configuration",
+	"MobileConfigImport__": "Import mobile application configuration"
+}</process_en>
+      <process_es>{
+	"_ChooseFile": "Seleccione el archivo de configuración a importar.",
+	"_Error creating the critical section 'SaveMobileConfig'": "Se ha producido un error técnico. Vuelva a intentarlo más tarde.",
+	"_Error saving mobile configuration '{0}': {1}": "Se ha producido un error al guardar el archivo de configuración '{0}': {1}",
+	"_ForceUpgrade": "Forzar la actualización",
+	"_ForceUpgradeDescription": "Se actualizarán las siguientes configuraciones previamente establecidas como no actualizables:",
+	"_Import mobile configuration": "Importar una configuración",
+	"_ImportConfig": "Importar una configuración",
+	"_Invalid mobile configuration '{0}': {1}": "Archivo de configuración no válido '{0}': {1}",
+	"_Mobile configuration successfully imported": "El archivo de configuración se ha importado con éxito.",
+	"_MobileConfigImport": "Importación de la configuración de la aplicación móvil",
+	"_Upgrade": "Actualizar",
+	"MobileConfigImport": "Importación de la configuración de la aplicación móvil",
+	"MobileConfigImport__": "Importación de la configuración de la aplicación móvil"
+}</process_es>
+      <process_fr>{
+	"_ChooseFile": "Sélectionnez le fichier de configuration à importer.",
+	"_Error creating the critical section 'SaveMobileConfig'": "Une erreur technique est survenue. Veuillez réessayer plus tard.",
+	"_Error saving mobile configuration '{0}': {1}": "Une erreur est survenue lors de l'enregistrement du fichier de configuration '{0}': {1} ",
+	"_ForceUpgrade": "Forcer la mise à jour",
+	"_ForceUpgradeDescription": "Les configurations suivantes seront mises à jour même si la mise à jour est définie comme non autorisée :",
+	"_Import mobile configuration": "Importer une configuration",
+	"_ImportConfig": "Importer une configuration",
+	"_Invalid mobile configuration '{0}': {1}": "Fichier de configuration '{0}' non valide: {1}",
+	"_Mobile configuration successfully imported": "Le fichier de configuration a été importé.",
+	"_MobileConfigImport": "Import de configuration d'application mobile",
+	"_Upgrade": "Mettre à jour",
+	"MobileConfigImport": "Import de configuration d'application mobile",
+	"MobileConfigImport__": "Import de configuration d'application mobile"
+}</process_fr>
+      <process_nl-NL>{
+	"_ChooseFile": "Selecteer het configuratiebestand om te importeren.",
+	"_Error creating the critical section 'SaveMobileConfig'": "Er is een technische fout opgetreden. Probeer het later opnieuw.",
+	"_Error saving mobile configuration '{0}': {1}": "Er is een fout opgetreden bij het opslaan van het configuratiebestand '{0}': {1}",
+	"_ForceUpgrade": "Update afdwingen",
+	"_ForceUpgradeDescription": "De volgende configuraties die eerder zijn ingesteld als geen update mogelijk, worden bijgewerkt:",
+	"_Import mobile configuration": "Importconfiguratie",
+	"_ImportConfig": "Importconfiguratie",
+	"_Invalid mobile configuration '{0}': {1}": "Ongeldig configuratiebestand '{0}': {1}",
+	"_Mobile configuration successfully imported": "Het configuratiebestand is geïmporteerd.",
+	"_MobileConfigImport": "Import configuratie mobile application",
+	"_Upgrade": "Bijwerken",
+	"MobileConfigImport": "Import configuratie mobile application",
+	"MobileConfigImport__": "Import configuratie mobile application"
+}</process_nl-NL>
+      <process_pl>{
+	"_ChooseFile": "Wybierz plik konfiguracji do zaimportowania.",
+	"_Error creating the critical section 'SaveMobileConfig'": "Wystąpił błąd techniczny. Spróbuj ponownie później.",
+	"_Error saving mobile configuration '{0}': {1}": "Podczas zapisywania pliku konfiguracji „{0}” wystąpił błąd: {1}",
+	"_ForceUpgrade": "Wymuś aktualizację",
+	"_ForceUpgradeDescription": "Następujące konfiguracje wcześniej ustawione jako nieprzeznaczone do aktualizacji zostaną zaktualizowane:",
+	"_Import mobile configuration": "Importuj konfigurację",
+	"_ImportConfig": "Importuj konfigurację",
+	"_Invalid mobile configuration '{0}': {1}": "Nieprawidłowy plik konfiguracji „{0}”: {1}",
+	"_Mobile configuration successfully imported": "Plik konfiguracji został zaimportowany.",
+	"_MobileConfigImport": "Importuj konfigurację aplikacji mobilnej",
+	"_Upgrade": "Aktualizuj",
+	"MobileConfigImport": "Importuj konfigurację aplikacji mobilnej",
+	"MobileConfigImport__": "Importuj konfigurację aplikacji mobilnej"
+}</process_pl>
+      <process_it>{
+	"_ChooseFile": "Selezionare il file di configurazione da importare.",
+	"_Error creating the critical section 'SaveMobileConfig'": "Si è verificato un errore tecnico. Riprovare più tardi.",
+	"_Error saving mobile configuration '{0}': {1}": "Si è verificato un errore durante il salvataggio del file di configurazione '{0}': {1}",
+	"_ForceUpgrade": "Forza aggiornamento",
+	"_ForceUpgradeDescription": "Le seguenti configurazioni, precedentemente impostate come non aggiornabili, saranno aggiornate:",
+	"_Import mobile configuration": "Importa configurazione",
+	"_ImportConfig": "Importa configurazione",
+	"_Invalid mobile configuration '{0}': {1}": "File di configurazione non valido '{0}': {1}",
+	"_Mobile configuration successfully imported": "Il file di configurazione è stato importato.",
+	"_MobileConfigImport": "Importazione configurazione applicazione mobile",
+	"_Upgrade": "Aggiorna",
+	"MobileConfigImport": "Importazione configurazione applicazione mobile",
+	"MobileConfigImport__": "Importazione configurazione applicazione mobile"
+}</process_it>
+      <process_sk>{
+	"_ChooseFile": "Vyberte konfiguračný súbor, ktorý chcete importovať.",
+	"_Error creating the critical section 'SaveMobileConfig'": "Vyskytla sa technická chyba. Skúste neskôr prosím.",
+	"_Error saving mobile configuration '{0}': {1}": "Pri ukladaní konfiguračného súboru '{0}' nastala chyba: {1}",
+	"_ForceUpgrade": "Vynútiť aktualizáciu",
+	"_ForceUpgradeDescription": "Nasledujúce konfigurácie, ktoré boli predtým nastavené ako neaktualizovateľné, budú aktualizované:",
+	"_Import mobile configuration": "Importovať konfiguráciu",
+	"_ImportConfig": "Importovať konfiguráciu",
+	"_Invalid mobile configuration '{0}': {1}": "Neplatný konfiguračný súbor '{0}': {1}",
+	"_Mobile configuration successfully imported": "Konfiguračný súbor bol úspešne importovaný.",
+	"_MobileConfigImport": "Import konfigurácie mobilnej aplikácie",
+	"_Upgrade": "Aktualizácia",
+	"MobileConfigImport": "Import konfigurácie mobilnej aplikácie",
+	"MobileConfigImport__": "Import konfigurácie mobilnej aplikácie"
+}</process_sk>
+      <process_zh-CN>{
+	"_ChooseFile": "请选择要导入的配置文件。",
+	"_Error creating the critical section 'SaveMobileConfig'": "发生技术错误，请稍后再试。",
+	"_Error saving mobile configuration '{0}': {1}": "保存配置文件“{0}”时出错：{1}",
+	"_ForceUpgrade": "强制更新",
+	"_ForceUpgradeDescription": "以下设为不可更新的配置也会进行更新：",
+	"_Import mobile configuration": "导入配置",
+	"_ImportConfig": "导入配置",
+	"_Invalid mobile configuration '{0}': {1}": "无效的配置文件“{0}” ：{1}",
+	"_Mobile configuration successfully imported": "配置文件导入成功。",
+	"_MobileConfigImport": "移动应用配置导入",
+	"_Upgrade": "更新",
+	"MobileConfigImport": "移动应用配置导入",
+	"MobileConfigImport__": "移动应用配置导入"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"_ChooseFile": "Selecione um arquivo de configuração para importar.",
+	"_Error creating the critical section 'SaveMobileConfig'": "Ocorreu um erro técnico. Por favor, tente novamente mais tarde.",
+	"_Error saving mobile configuration '{0}': {1}": "Ocorreu um erro ao salvar o arquivo de configuração'{0}': {1}",
+	"_ForceUpgrade": "Forçar atualização",
+	"_ForceUpgradeDescription": "As configurações definidas anteriormente como não atualizáveis serão atualizadas:",
+	"_Import mobile configuration": "Configuração da importação",
+	"_ImportConfig": "Configuração da importação",
+	"_Invalid mobile configuration '{0}': {1}": "Arquivo de configuração inválido '{0}': {1}",
+	"_Mobile configuration successfully imported": "O arquivo de configuração foi importado com sucesso.",
+	"_MobileConfigImport": "Importar configuração de aplicativo móvel",
+	"_Upgrade": "Atualizar",
+	"MobileConfigImport": "Importar configuração de aplicativo móvel",
+	"MobileConfigImport__": "Importar configuração de aplicativo móvel"
+}</process_pt-BR>
+    </lg>
+    <ocr>
+      <trade-off>accurate</trade-off>
+      <image-ocr-timeout>
+      </image-ocr-timeout>
+      <image-binarization>no</image-binarization>
+      <image-draft-fax>no</image-draft-fax>
+      <image-despeckle>no</image-despeckle>
+      <allowed-language>0</allowed-language>
+      <image-resolution-enhancement>auto</image-resolution-enhancement>
+      <pdf-processing>no-ocr</pdf-processing>
+      <ocr_engine>Nuance210</ocr_engine>
+      <ocrpagestoprocess>0</ocrpagestoprocess>
+      <extractionAdditionalOptions>
+      </extractionAdditionalOptions>
+    </ocr>
+    <openInProcess>
+      <startInPopup>true</startInPopup>
+      <startWithoutProcessing>true</startWithoutProcessing>
+    </openInProcess>
+    <process>
+      <flowtype>processing</flowtype>
+      <ocrpreset>scan</ocrpreset>
+      <EnableNegativeNumbersBetweenBrackets>true</EnableNegativeNumbersBetweenBrackets>
+      <homepagelabel>_MobileConfigImport</homepagelabel>
+      <enableflexibleauditing>
+      </enableflexibleauditing>
+      <enableflexibleediting>
+      </enableflexibleediting>
+      <enableflexibleteaching>
+      </enableflexibleteaching>
+      <enableflexiblewalkme>
+      </enableflexiblewalkme>
+      <enableInternalConversation>
+      </enableInternalConversation>
+      <disableocr>
+      </disableocr>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <disableautolearning>true</disableautolearning>
+      <backgroundprocessingthreshold>
+      </backgroundprocessingthreshold>
+      <EnablePreviewPrecomputation>
+      </EnablePreviewPrecomputation>
+      <enablerounddecimal>true</enablerounddecimal>
+      <pdfNormalizeFilter>
+      </pdfNormalizeFilter>
+      <archiveDuration>0</archiveDuration>
+      <ocrpagestoprocess>0</ocrpagestoprocess>
+      <ScriptEngineType>2</ScriptEngineType>
+      <UseActionNameWithScriptApproval>true</UseActionNameWithScriptApproval>
+      <displayWidth>
+      </displayWidth>
+      <AllowUploadAttachment>1</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>1</AllowUploadReferenceDocument>
+      <RemovePointWhenCastingIntToString>true</RemovePointWhenCastingIntToString>
+      <UseCultureFormat>true</UseCultureFormat>
+      <AllowRetryExtractCD>true</AllowRetryExtractCD>
+      <TransportName>CustomData</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+      <printToProcess>
+      </printToProcess>
+    </process>
+    <ui>
+      <CustomScriptDebug>false</CustomScriptDebug>
+      <customscriptIncludedScripts>Lib_MobileConfig_Client_V12.0.566.0</customscriptIncludedScripts>
+      <CustomScriptReadonly>true</CustomScriptReadonly>
+      <CustomScript>"use strict";
+let dial = {
+    fill_CB: function (dialog) {
+        dialog.SetWidth("400px");
+        dialog.AddDescription("ctrlDesc").SetText("_ChooseFile");
+        dialog.AddSeparator();
+        let ctrlFileUploader = dialog.AddFileUploader("ctrlFiles", ""); // the string empty is for don't have style="Width: 100%" and a scroll bar
+        ctrlFileUploader.SetAllowedExtensions(["json"]);
+        //ctrlFileUploader.SetAllowUploadingOnlyOneFile(true);
+    },
+    commit_CB: function (dialog) {
+        let ctrlFiles = dialog.GetControl("ctrlFiles");
+        let files = ctrlFiles.GetUploadedFiles();
+        if (files &amp;&amp; files.length &gt; 0) {
+            files.forEach((uploadedFile) =&gt; Attach.AddAttach(uploadedFile));
+            ProcessInstance.Approve("Save");
+        }
+        else {
+            Log.Error("No files submitted.");
+            ProcessInstance.Quit("quit");
+        }
+    },
+    cancel_CB: function () {
+        ProcessInstance.Quit("quit");
+    },
+    Show: function () {
+        Popup.Dialog("_ImportConfig", null, this.fill_CB, this.commit_CB, null, null, this.cancel_CB);
+    }
+};
+let dialForceUpgrade = {
+    processList: [],
+    fill_CB: function (dialog) {
+        dialog.SetWidth("400px");
+        dialog.AddDescription("ctrlDesc").SetText("_ForceUpgradeDescription");
+        let ctrlProcessList = dialog.AddMultilineText("ctrlProcessList");
+        ctrlProcessList.SetText("\u2022" + dialForceUpgrade.processList.join("\n\u2022"));
+        ctrlProcessList.SetReadOnly(true);
+        dialog.HideDefaultButtons();
+        let control = dialog.AddButton("Updgrade__", "_Upgrade");
+        control.SetWarningStyle();
+        dialog.AddButton("Cancel__", "_Cancel");
+        dialog.AddSeparator();
+    },
+    commit_CB: function () {
+        ProcessInstance.Approve("ForceUpgrade");
+    },
+    cancel_CB: function () {
+        // For set the process status to 100
+        ProcessInstance.ApproveAsynchronous("Finalize");
+    },
+    handle_CB: function (dialog, tabId, event, control) {
+        if (event === "OnClick") {
+            switch (control.GetName()) {
+                case "Updgrade__":
+                    dialog.Commit();
+                    break;
+                case "Cancel__":
+                default:
+                    dialog.Cancel();
+                    break;
+            }
+        }
+    }
+};
+function ChangeReturnURL(json) {
+    return function () {
+        Lib.MobileConfig.ChangeReturnURL(json.ProcessConfiguration &gt; json.GlobalConfiguration ? "_MobileProcessConfigurationView" : "_MobileGlobalConfigurationView");
+        ProcessInstance.Quit("quit");
+    };
+}
+function NotifyAndQuit() {
+    let savingResult = Variable.GetValueAsString("savingResult");
+    if (savingResult) {
+        const json = JSON.parse(savingResult);
+        if (json.error) {
+            Popup.Alert(json.error, true, () =&gt; ProcessInstance.Quit("quit"), "_Import mobile configuration");
+        }
+        else if (json.warning) {
+            dialForceUpgrade.processList = json.warning;
+            Popup.Dialog("_ForceUpgrade", null, dialForceUpgrade.fill_CB, dialForceUpgrade.commit_CB, null, dialForceUpgrade.handle_CB, dialForceUpgrade.cancel_CB);
+        }
+        else {
+            const CallbackOnOK = ChangeReturnURL(json);
+            Popup.Alert("_Mobile configuration successfully imported", false, CallbackOnOK, "_Import mobile configuration");
+        }
+    }
+}
+if (ProcessInstance.isOpenInPopup) {
+    ProcessInstance.SetSilentChange(true);
+    Controls.DataPanel.Hide(true);
+    if (ProcessInstance.state) {
+        NotifyAndQuit();
+    }
+    else {
+        dial.Show();
+    }
+}
+//# sourceMappingURL=customscript.js.map</CustomScript>
+      <layout>{
+	"*": {
+		"GDRData": {
+			"type": "GDRData",
+			"options": {
+				"version": 0
+			},
+			"stamp": 1,
+			"data": []
+		},
+		"OCRParams": {
+			"type": "OCRParams",
+			"options": {
+				"version": 0
+			},
+			"stamp": 2,
+			"data": []
+		},
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"options": {
+				"splitterType": "complex",
+				"style": "FlexibleFormLight",
+				"version": 0,
+				"maxwidth": "",
+				"backColor": "text-backgroundcolor-default",
+				"footerStyle": "default"
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"options": {
+						"version": 0,
+						"maxwidth": ""
+					},
+					"stamp": 4,
+					"data": []
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"options": {
+						"version": 0,
+						"maxwidth": ""
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-top": {
+									"type": "FlexibleFormSplitter",
+									"options": {
+										"autosize": true,
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"height": "25%"
+										},
+										"hidden": true,
+										"hideSeparator": true
+									},
+									"*": {
+										"form-content-top-1": {
+											"type": "FlexibleFormLine",
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"DocumentsPanel": {
+													"type": "PanelDocument",
+													"options": {
+														"version": 0,
+														"border": {},
+														"labelLength": 0,
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": false,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"sameHeightAsSiblings": false,
+														"label": "_Documents"
+													},
+													"*": {
+														"Document": {
+															"data": [
+																"documentscontroldata"
+															],
+															"type": "Documents",
+															"options": {
+																"version": 0
+															},
+															"stamp": 10
+														}
+													},
+													"stamp": 9,
+													"data": []
+												}
+											},
+											"stamp": 8,
+											"data": []
+										}
+									},
+									"stamp": 7,
+									"data": []
+								},
+								"form-content-bottom": {
+									"type": "FlexibleFormSplitter",
+									"options": {
+										"version": 1,
+										"box": {
+											"top": "25%",
+											"left": "0%",
+											"height": "75%"
+										},
+										"hidden": false,
+										"hideSeparator": true
+									},
+									"*": {
+										"form-content-left": {
+											"type": "FlexibleFormSplitter",
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "0%",
+													"width": "45%"
+												},
+												"hidden": false,
+												"hideSeparator": true
+											},
+											"*": {
+												"form-content-left-1": {
+													"type": "FlexibleFormLine",
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"DataPanel": {
+															"type": "PanelData",
+															"options": {
+																"border": {},
+																"version": 0,
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_Document data"
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"options": {
+																		"controlsAssociation": {},
+																		"version": 0
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"options": {
+																				"lines": 0,
+																				"columns": 2,
+																				"version": 0,
+																				"ctrlsPos": {},
+																				"colspans": []
+																			},
+																			"data": [
+																				"fields"
+																			],
+																			"*": {},
+																			"stamp": 16
+																		}
+																	},
+																	"stamp": 15,
+																	"data": []
+																}
+															},
+															"stamp": 14,
+															"data": []
+														}
+													},
+													"stamp": 13,
+													"data": []
+												},
+												"form-content-left-2": {
+													"type": "FlexibleFormLine",
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"SystemData": {
+															"type": "PanelSystemData",
+															"options": {
+																"multicolumn": false,
+																"version": 0,
+																"border": {
+																	"collapsed": true
+																},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_System data",
+																"hidden": true
+															},
+															"stamp": 18,
+															"data": []
+														}
+													},
+													"stamp": 17,
+													"data": []
+												},
+												"form-content-left-3": {
+													"type": "FlexibleFormLine",
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"NextProcess": {
+															"type": "PanelNextProcess",
+															"options": {
+																"hidden": true,
+																"version": 0,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_Next Process"
+															},
+															"stamp": 20,
+															"data": []
+														}
+													},
+													"stamp": 19,
+													"data": []
+												}
+											},
+											"stamp": 12,
+											"data": []
+										},
+										"form-content-right": {
+											"type": "FlexibleFormSplitter",
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "45%",
+													"width": "55%"
+												},
+												"hidden": true
+											},
+											"*": {
+												"form-content-right-1": {
+													"type": "FlexibleFormLine",
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"PreviewPanel": {
+															"type": "PanelPreview",
+															"options": {
+																"border": {},
+																"version": 0,
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_Document Preview"
+															},
+															"*": {
+																"Preview": {
+																	"data": [
+																		"previewdata"
+																	],
+																	"type": "Preview",
+																	"options": {
+																		"version": 0
+																	},
+																	"stamp": 24
+																}
+															},
+															"stamp": 23,
+															"data": []
+														}
+													},
+													"stamp": 22,
+													"data": []
+												}
+											},
+											"stamp": 21,
+											"data": []
+										}
+									},
+									"stamp": 11,
+									"data": []
+								}
+							},
+							"stamp": 6,
+							"data": []
+						}
+					},
+					"stamp": 5,
+					"data": []
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"options": {
+						"splitterType": "simple-h",
+						"version": 0,
+						"maxwidth": ""
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"options": {
+								"label": "_Save",
+								"action": "save",
+								"submit": true,
+								"version": 0,
+								"textSize": "S"
+							},
+							"stamp": 26,
+							"data": []
+						},
+						"Approve": {
+							"type": "SubmitButton",
+							"options": {
+								"label": "_Approve",
+								"action": "approve",
+								"submit": true,
+								"version": 0,
+								"textSize": "S"
+							},
+							"stamp": 27,
+							"data": []
+						},
+						"Reject": {
+							"type": "SubmitButton",
+							"options": {
+								"label": "_Reject",
+								"action": "reject",
+								"submit": true,
+								"version": 0,
+								"textSize": "S"
+							},
+							"stamp": 28,
+							"data": []
+						},
+						"Reprocess": {
+							"type": "SubmitButton",
+							"options": {
+								"label": "_Reprocess",
+								"action": "reprocess",
+								"submit": true,
+								"version": 0,
+								"textSize": "S"
+							},
+							"stamp": 29,
+							"data": []
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"version": 0,
+								"textSize": "S"
+							},
+							"stamp": 30,
+							"data": []
+						}
+					},
+					"stamp": 25,
+					"data": []
+				}
+			},
+			"stamp": 3,
+			"data": []
+		}
+	},
+	"stamps": 30,
+	"data": []
+}</layout>
+    </ui>
+  </properties>
+  <type id="GOLHG0000M4O" name="CD">
+  </type>
+</process>

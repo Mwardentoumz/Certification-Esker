@@ -1,0 +1,664 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:07:59" deleted="0" eskerapplication="P2P" global="0" id="GRBQT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="Send notifs from report lines" needvalidation="0" ootofilter="" ootoversion="0" originalProcessID="PAC215074" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="1" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="0" version="1" visibility="0">
+  <properties>
+    <dataConditions>
+      <listDataConditions>
+				&lt;dataCondition&gt;
+					&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+					&lt;filter&gt;msnex=*&lt;/filter&gt;
+					&lt;labelKey&gt;_Purchasing disabled&lt;/labelKey&gt;
+					&lt;conditions&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnablePurchasingGlobalSetting__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableStandardPurchasingGlobalSetting__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+					&lt;/conditions&gt;
+				&lt;/dataCondition&gt;</listDataConditions>
+    </dataConditions>
+    <gdr>
+      <AllowTagCoverPages>true</AllowTagCoverPages>
+      <AllowTagNewDocuments>true</AllowTagNewDocuments>
+      <AllowTagAttachments>true</AllowTagAttachments>
+      <extractionscriptIncludedScripts>Sys/Sys_Helpers_Attach</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>Lib_V12.0.566.0</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>Lib_P2P_V12.0.566.0</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>Lib_Parameters_P2P_V12.0.566.0</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>Lib_P2P_EmailNotification_Server_V12.0.566.0</extractionscriptIncludedScripts>
+      <ExtractionScript>"use strict";
+const reportParameter = Variable.GetValueAsString("reportParameter");
+if (reportParameter) {
+    const params = JSON.parse(reportParameter);
+    Lib.P2P.EmailNotification.SendReminders({
+        template: params.template,
+        fromName: Language.Translate(params.fromName, false),
+        backupUserAsCC: true,
+        escapeCustomTags: false,
+        GetCustomTags: function (user) {
+            const vars = user.dbInfo.GetVars();
+            let baseUrl = Data.GetValue("ValidationUrl");
+            baseUrl = baseUrl.substr(0, baseUrl.lastIndexOf("/"));
+            const language = vars.GetValue_String("Language", 0);
+            if (params.ValidationUrlV1) {
+                params.ValidationUrl = (Lib.Version &amp;&amp; Lib.Version.PAC) &gt;= 2 ? params.ValidationUrlV2 : params.ValidationUrlV1;
+            }
+            const customTags = {
+                "RecipientDisplayName": vars.GetValue_String("DisplayName", 0),
+                "ApproverDisplayName": vars.GetValue_String("DisplayName", 0),
+                "NumberOfItems": user.count,
+                "Requisition": Language.TranslateInto(user.count &gt; 1 ? "Requisitions" : "Requisition", language, false), //use in subject of ReminderForPRApproval
+                "ValidationUrl": baseUrl + params.ValidationUrl, // SSO url will automatically added be Lib.P2P.EmailNotification.SendReminders
+                "DisplayValidationUrlsAsTables": !!params.displayAsTable
+            };
+            if (user.count &gt; 1) {
+                customTags.PlurialItems = true;
+            }
+            if (user.moreInfo.length &gt; 0) {
+                const userObj = Users.GetUser(vars.GetValue_String("Login", 0));
+                customTags.ValidationUrlList = BuildValidationUrlsHtml(user.moreInfo, baseUrl + params.ValidationUrl, params, userObj);
+            }
+            return customTags;
+        },
+        sendToAllMembersIfGroup: Sys.Parameters.GetInstance("P2P").GetParameterBool("SendNotificationsToEachGroupMembers", false)
+    });
+}
+function BuildValidationUrlsHtml(lines, baseUrl, parameters, user) {
+    const columnsUrlDesc = parameters.columnsUrlDesc ? parameters.columnsUrlDesc.split(';') : [];
+    const displayAsTable = !!parameters.displayAsTable;
+    let htmlList = "";
+    if (lines.length &gt; 0 &amp;&amp; columnsUrlDesc.length &gt; 0) {
+        if (displayAsTable) {
+            htmlList = BuildValidationUrlsHtmlTable(lines, baseUrl, columnsUrlDesc, user);
+        }
+        else {
+            htmlList = BuildValidationUrlsHtmlList(lines, baseUrl, columnsUrlDesc[0], user);
+        }
+    }
+    return htmlList;
+}
+function BuildValidationUrlsHtmlTable(lines, baseUrl, columnsUrlDesc, user) {
+    let htmlTable = "";
+    const alreadyAdded = {};
+    for (let i = 0; i &lt; lines.length; i++) {
+        const lineInfo = lines[i];
+        if (!alreadyAdded[lineInfo[0]]) {
+            const url = Lib.P2P.GetURLFromSSO(encodeUrl(baseUrl + lineInfo[0]), user);
+            let columns = "";
+            for (let j = 0; j &lt; columnsUrlDesc.length; j++) {
+                const columnIndex = columnsUrlDesc[j];
+                if (columnIndex &lt; lineInfo.length) {
+                    columns += '&lt;td style="padding-left: 30px;"&gt;&lt;span&gt;' + lineInfo[columnIndex] + "&lt;/span&gt;&lt;/td&gt;";
+                }
+            }
+            if (columns.length &gt; 0) {
+                columns = '&lt;td style="padding-left: 30px;"&gt;&lt;a href=' + url + "&gt;" + Language.Translate("_View") + "&lt;/a&gt;&lt;/td&gt;" + columns;
+                htmlTable += "&lt;tr&gt;" + columns + "&lt;/tr&gt;";
+                alreadyAdded[lineInfo[0]] = true;
+            }
+        }
+    }
+    if (htmlTable.length &gt; 0) {
+        htmlTable = "&lt;Table&gt;" + htmlTable + "&lt;/Table&gt;";
+    }
+    return htmlTable;
+}
+function BuildValidationUrlsHtmlList(lines, baseUrl, columnUrlDesc, user) {
+    let htmlList = "";
+    const alreadyAdded = {};
+    for (let i = 0; i &lt; lines.length; i++) {
+        const lineInfo = lines[i];
+        if (!alreadyAdded[lineInfo[0]]) {
+            const url = Lib.P2P.GetURLFromSSO(encodeUrl(baseUrl + lineInfo[0]), user);
+            if (columnUrlDesc &lt; lineInfo.length) {
+                htmlList += "&lt;li&gt;&lt;a href=" + url + "&gt;" + lineInfo[columnUrlDesc] + "&lt;/a&gt;&lt;/li&gt;";
+                alreadyAdded[lineInfo[0]] = true;
+            }
+        }
+    }
+    if (htmlList.length &gt; 0) {
+        htmlList = "&lt;ul&gt;" + htmlList + "&lt;/ul&gt;";
+    }
+    return htmlList;
+}
+function encodeUrl(url) {
+    return url.replace('#', encodeURIComponent('#'));
+}
+//# sourceMappingURL=extractionscript.js.map</ExtractionScript>
+      <AllowRemovePages>true</AllowRemovePages>
+      <AllowSwapPages>true</AllowSwapPages>
+    </gdr>
+    <lg>
+      <process_da>{
+	"_FromName_Reminders": "Esker Procurement",
+	"_View": "Vis",
+	"Item": "vare",
+	"Items": "varer",
+	"Purchase order": "Indkøbsordre",
+	"Purchase requisition": "Indkøbsrekvisition",
+	"Requisition": "indkøbsrekvisition",
+	"Requisitions": "indkøbsrekvisitioner",
+	"Send notifs from report lines": "Automatiske påmindelser"
+}</process_da>
+      <process_de>{
+	"_FromName_Reminders": "Esker Einkauf",
+	"_View": "Anzeigen",
+	"Item": "Artikel",
+	"Items": "Artikel",
+	"Purchase order": "Bestellung",
+	"Purchase requisition": "Bestellanforderung",
+	"Requisition": "Bestellanforderung",
+	"Requisitions": "Bestellanforderungen",
+	"Send notifs from report lines": "Automatische Erinnerungen"
+}</process_de>
+      <process_ja>{
+	"_FromName_Reminders": "Esker 調達",
+	"_View": "表示",
+	"Item": "品目",
+	"Items": "品目",
+	"Purchase order": "発注書",
+	"Purchase requisition": "購買依頼",
+	"Requisition": "購買依頼",
+	"Requisitions": "購買依頼",
+	"Send notifs from report lines": "自動リマインダー"
+}</process_ja>
+      <process_en>{
+	"_FromName_Reminders": "Esker Procurement",
+	"_View": "View",
+	"Item": "item",
+	"Items": "items",
+	"Purchase order": "Purchase Order",
+	"Purchase requisition": "Purchase Requisition",
+	"Requisition": "purchase requisition",
+	"Requisitions": "purchase requisitions",
+	"Send notifs from report lines": "Automatic reminders"
+}</process_en>
+      <process_es>{
+	"_FromName_Reminders": "Esker Compras",
+	"_View": "Ver",
+	"Item": "artículo",
+	"Items": "artículos",
+	"Purchase order": "Pedido de compra",
+	"Purchase requisition": "Solicitud de compra",
+	"Requisition": "solicitud de compra",
+	"Requisitions": "solicitudes de compra",
+	"Send notifs from report lines": "Recordatorios automáticos"
+}</process_es>
+      <process_fr>{
+	"_FromName_Reminders": "Esker Achats",
+	"_View": "Voir",
+	"Item": "article",
+	"Items": "articles",
+	"Purchase order": "Commande fournisseur",
+	"Purchase requisition": "Demande d'achat",
+	"Requisition": "demande d'achat",
+	"Requisitions": "demandes d'achat",
+	"Send notifs from report lines": "Rappels automatiques"
+}</process_fr>
+      <process_nl-NL>{
+	"_FromName_Reminders": "Esker Inkoop",
+	"_View": "Bekijken",
+	"Item": "item",
+	"Items": "items",
+	"Purchase order": "Kooporder",
+	"Purchase requisition": "Inkoopvordering",
+	"Requisition": "inkoopvordering",
+	"Requisitions": "inkoopvorderingen",
+	"Send notifs from report lines": "Automatische herinneringen"
+}</process_nl-NL>
+      <process_pl>{
+	"_FromName_Reminders": "Esker Procurement",
+	"_View": "Wyświetl",
+	"Item": "pozycja",
+	"Items": "pozycje",
+	"Purchase order": "Zamówienie zakupu",
+	"Purchase requisition": "Zapotrzebowanie zakupu",
+	"Requisition": "zapotrzebowanie zakupu",
+	"Requisitions": "zapotrzebowania zakupu",
+	"Send notifs from report lines": "Automatyczne przypomnienia"
+}</process_pl>
+      <process_it>{
+	"_FromName_Reminders": "Esker Acquisti",
+	"_View": "Visualizza",
+	"Item": "articolo",
+	"Items": "articoli",
+	"Purchase order": "Ordine di acquisto",
+	"Purchase requisition": "Richiesta di acquisto",
+	"Requisition": "richiesta di acquisto",
+	"Requisitions": "richieste di acquisto",
+	"Send notifs from report lines": "Promemoria automatici"
+}</process_it>
+      <process_sk>{
+	"_FromName_Reminders": "Obstarávanie Esker",
+	"_View": "Zobraziť",
+	"Item": "položka",
+	"Items": "položky",
+	"Purchase order": "Objednávka",
+	"Purchase requisition": "Požiadavka na objednávku",
+	"Requisition": "požiadavka na objednávku",
+	"Requisitions": "požiadavky na objednávku",
+	"Send notifs from report lines": "Automatické pripomienky"
+}</process_sk>
+      <process_zh-CN>{
+	"_FromName_Reminders": "Esker 采购",
+	"_View": "查看",
+	"Item": "商品",
+	"Items": "商品",
+	"Purchase order": "采购订单",
+	"Purchase requisition": "请购单",
+	"Requisition": "请购单",
+	"Requisitions": "请购单",
+	"Send notifs from report lines": "自动提醒"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"_FromName_Reminders": "Esker Compras",
+	"_View": "Ver",
+	"Item": "item",
+	"Items": "itens",
+	"Purchase order": "Pedido de compra",
+	"Purchase requisition": "Requisição de compra",
+	"Requisition": "requisição de compra",
+	"Requisitions": "requisições de compra",
+	"Send notifs from report lines": "Lembretes automáticos"
+}</process_pt-BR>
+    </lg>
+    <process>
+      <flowtype>processing</flowtype>
+      <ocrpreset>scan</ocrpreset>
+      <homepagelabel>Send notifs from report lines</homepagelabel>
+      <enableflexibleauditing>
+      </enableflexibleauditing>
+      <enableflexibleediting>
+      </enableflexibleediting>
+      <enableflexibleteaching>
+      </enableflexibleteaching>
+      <upgradable>yes</upgradable>
+      <disableocr>
+      </disableocr>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <disableautolearning>true</disableautolearning>
+      <backgroundprocessingthreshold>
+      </backgroundprocessingthreshold>
+      <EnablePreviewPrecomputation>
+      </EnablePreviewPrecomputation>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <archiveDuration>0</archiveDuration>
+      <ocrpagestoprocess>
+      </ocrpagestoprocess>
+      <ScriptEngineType>2</ScriptEngineType>
+      <AllowUploadAttachment>1</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+      <UseCultureFormat>true</UseCultureFormat>
+      <AllowRetryExtractCD>true</AllowRetryExtractCD>
+      <TransportName>CustomData</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+    </process>
+    <ui>
+      <restorationPanel>DataPanel</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 30,
+	"*": {
+		"GDRData": {
+			"type": "GDRData",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"version": 0
+			}
+		},
+		"OCRParams": {
+			"type": "OCRParams",
+			"data": [],
+			"stamp": 2,
+			"options": {
+				"version": 0
+			}
+		},
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 3,
+			"options": {
+				"splitterType": "complex",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 4,
+					"options": {
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 5,
+					"options": {
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 6,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-top": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 7,
+									"options": {
+										"autosize": true,
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"width": null,
+											"height": "16%"
+										},
+										"hidden": false
+									},
+									"*": {
+										"form-content-top-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 8,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"DocumentsPanel": {
+													"type": "PanelDocument",
+													"data": [],
+													"stamp": 9,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"label": "_Documents",
+														"version": 0
+													},
+													"*": {
+														"Document": {
+															"type": "Documents",
+															"data": [
+																"documentscontroldata"
+															],
+															"stamp": 10,
+															"options": {
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								},
+								"form-content-bottom": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 11,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": "16%",
+											"left": "0%",
+											"width": null,
+											"height": "84%"
+										},
+										"hidden": false
+									},
+									"*": {
+										"form-content-left": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 12,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "0%",
+													"width": "100%",
+													"height": null
+												},
+												"hidden": false
+											},
+											"*": {
+												"form-content-left-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 13,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"DataPanel": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 14,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"label": "_Document data",
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 15,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 16,
+																			"options": {
+																				"version": 0,
+																				"lines": 0,
+																				"columns": 2,
+																				"ctrlsPos": {},
+																				"colspans": []
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-2": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 17,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"SystemData": {
+															"type": "PanelSystemData",
+															"data": [],
+															"stamp": 18,
+															"options": {
+																"multicolumn": false,
+																"border": {},
+																"labelLength": 0,
+																"label": "_System data",
+																"hidden": true,
+																"version": 0
+															}
+														}
+													}
+												},
+												"form-content-left-3": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 19,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"NextProcess": {
+															"type": "PanelNextProcess",
+															"data": [],
+															"stamp": 20,
+															"options": {
+																"hidden": true,
+																"border": {},
+																"labelLength": 0,
+																"label": "_Next Process",
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-right": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 21,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "45%",
+													"width": "55%"
+												},
+												"hidden": true,
+												"hideSeparator": true
+											},
+											"*": {
+												"form-content-right-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 22,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"PreviewPanel": {
+															"type": "PanelPreview",
+															"data": [],
+															"stamp": 23,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"label": "_Document Preview",
+																"version": 0
+															},
+															"*": {
+																"Preview": {
+																	"type": "Preview",
+																	"data": [
+																		"previewdata"
+																	],
+																	"stamp": 24,
+																	"options": {
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 25,
+					"options": {
+						"splitterType": "simple-h",
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 26,
+							"options": {
+								"label": "_Save",
+								"action": "save",
+								"submit": true,
+								"disabled": true,
+								"version": 0
+							}
+						},
+						"Approve": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 27,
+							"options": {
+								"label": "_Approve",
+								"action": "approve",
+								"submit": true,
+								"disabled": true,
+								"version": 0
+							}
+						},
+						"Reject": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 28,
+							"options": {
+								"label": "_Reject",
+								"action": "reject",
+								"submit": true,
+								"disabled": true,
+								"version": 0
+							}
+						},
+						"Reprocess": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 29,
+							"options": {
+								"label": "_Reprocess",
+								"action": "reprocess",
+								"submit": true,
+								"disabled": true,
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 30,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <type id="GOLHG0000M4O" name="CD">
+  </type>
+</process>

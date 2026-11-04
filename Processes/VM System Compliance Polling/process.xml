@@ -1,0 +1,719 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:09:51" deleted="0" eskerapplication="P2P" global="0" id="KEEQT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="VM System Compliance Polling" needvalidation="0" ootofilter="" ootoversion="1" originalProcessID="NJ9100000YRL" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="0" version="1" visibility="1">
+  <properties>
+    <externalvariables>
+      <Configuration>Default</Configuration>
+    </externalvariables>
+    <gdr>
+      <FinalizationScriptAllowRetry>true</FinalizationScriptAllowRetry>
+      <finalizationscriptIncludedScripts>Sys/Sys_Helpers_TimeoutHelper</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Sys/Sys_GenericAPI_Server</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Sys/Sys_Helpers_LdapUtil</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Lib_VM_ComplianceRisk_Server_V12.0.566.0</finalizationscriptIncludedScripts>
+      <FinalizationScript>"use strict";
+//Required: Sys/Sys_Helpers_TimeoutHelper, Sys/Sys_GenericAPI_Server, Sys/Sys_Helpers_LdapUtil
+function RunFinalization() {
+    const nbAttach = Attach.GetNbAttach();
+    if (nbAttach &lt; 2) {
+        return;
+    }
+    const file = Attach.GetInputFile(nbAttach - 1);
+    let thirdPartyDetails = JSON.parse(file.GetContent());
+    const timeoutHelper = Sys.Helpers.TimeoutHelper.GetTimeoutHelper();
+    for (const thirdPartyDetail of thirdPartyDetails) {
+        if (!Lib.VM.ComplianceRisk.Server.ComplianceRiskStorage.Store(thirdPartyDetail)) {
+            return;
+        }
+        timeoutHelper.NotifyIteration();
+    }
+    Log.Info(`Number of third parties updated: ${thirdPartyDetails.length}`);
+}
+RunFinalization();
+//# sourceMappingURL=finalizationscript.js.map</FinalizationScript>
+      <ValidationScriptAllowRetry>true</ValidationScriptAllowRetry>
+      <validationscriptIncludedScripts>Sys/Sys_Helpers_LdapUtil</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Sys/Sys_Helpers_TimeoutHelper</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_Parameters_P2P_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Sys/Sys_VM_E_AttestationsServer</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Sys/Sys_VM_E_AttestationsHelper</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_VM_ComplianceRisk_Server_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_VendorRegistration_Common_V12.0.566.0</validationscriptIncludedScripts>
+      <ValidationScript>"use strict";
+/* eslint-disable max-depth */
+//Required: Sys/Sys_Helpers_LdapUtil, Sys/Sys_Helpers_TimeoutHelper, Sys/Sys_VM_E_AttestationsServer, Sys/Sys_VM_E_AttestationsHelper, Lib_VendorRegistration_Common, Lib_VM_ComplianceRisk_Server
+const ComplianceRisk = {
+    eAttestationsServer: null,
+    timeoutHelper: null,
+    GetReferenceDate(thirdPartyIDs) {
+        // DBSET_READONLY | DBSET_QUICK
+        const DBFastAccess = 0x00210000;
+        // also returns ownershipped records
+        const DBDirtyRead = 0x00020000;
+        //retrieve the last execution date of the process
+        let queryFilter = Sys.Helpers.LdapUtil.FilterAnd(Sys.Helpers.LdapUtil.FilterEqual("State", "100"), Sys.Helpers.LdapUtil.FilterEqual("Deleted", "0"));
+        const processQuery = Process.CreateQuery();
+        processQuery.Reset();
+        processQuery.SetSpecificTable("CDNAME#VM System Compliance Polling");
+        processQuery.SetAttributesList("SubmitDateTime");
+        processQuery.SetFilter(queryFilter.toString());
+        processQuery.SetSortOrder("SubmitDateTime DESC");
+        processQuery.SetOptions(DBFastAccess | DBDirtyRead);
+        processQuery.SetOptionEx("Limit=1");
+        processQuery.SetSearchInArchive(true);
+        if (processQuery.MoveFirst()) {
+            let record = processQuery.MoveNextRecord();
+            if (record) {
+                const recordVars = record.GetVars();
+                if (recordVars) {
+                    Log.Info("Reference date computed with last process execution date");
+                    return recordVars.GetValue_Date("SubmitDateTime", 0);
+                }
+            }
+        }
+        //first time the process is launched, retrieve oldest refresh date
+        queryFilter = Sys.Helpers.LdapUtil.FilterIn("Identifier__", thirdPartyIDs);
+        const vendorQuery = Process.CreateQuery();
+        vendorQuery.Reset();
+        vendorQuery.SetSpecificTable("VM - Compliance Vendors Details__");
+        vendorQuery.SetAttributesList("LastLocalUpdateDate__");
+        vendorQuery.SetFilter(queryFilter.toString());
+        vendorQuery.SetSortOrder("LastLocalUpdateDate__ ASC");
+        vendorQuery.SetOptions(DBFastAccess | DBDirtyRead);
+        vendorQuery.SetOptionEx("Limit=1");
+        if (vendorQuery.MoveFirst()) {
+            let record = vendorQuery.MoveNextRecord();
+            if (record) {
+                Log.Info("Reference date computed with the oldest third party update date");
+                const recordVars = record.GetVars();
+                return recordVars.GetValue_Date("LastLocalUpdateDate__", 0);
+            }
+        }
+        return null;
+    },
+    GetData(thirdPartyIDs) {
+        let results = [];
+        if (thirdPartyIDs.length &gt; 0) {
+            const dateReference = ComplianceRisk.GetReferenceDate(thirdPartyIDs);
+            Log.Info(`Third parties data retrieved from ${dateReference}`);
+            const thirdPartiesResult = ComplianceRisk.eAttestationsServer.GetThirdparties(dateReference);
+            if (thirdPartiesResult.error) {
+                Log.Error(thirdPartiesResult.msg);
+                Data.SetValue("State", 200);
+                Data.SetValue("ShortStatus", "Error getting third parties from compliance platform");
+                return [];
+            }
+            const thirdParties = thirdPartiesResult.data;
+            Log.Info(`Compliance platform returned ${thirdParties.length} third parties with data changes`);
+            for (const thirdParty of thirdParties) {
+                const thirdpartyId = thirdParty.thirdpartyId.toString();
+                if (thirdPartyIDs.indexOf(thirdpartyId) === -1) {
+                    continue;
+                }
+                let foldersResult = ComplianceRisk.eAttestationsServer.SearchThirdPartyFolders(thirdpartyId);
+                if (foldersResult.error) {
+                    Log.Error(thirdPartiesResult.msg);
+                    Data.SetValue("State", 200);
+                    Data.SetValue("ShortStatus", `Error getting folders from compliance platform for third party ${thirdpartyId}`);
+                    return [];
+                }
+                if (foldersResult.data.totalElements &gt; 0) {
+                    //Determine thirdparty stateLastChangeDate based on folders stateLastChangeDate
+                    let stateLastChangeDate = null;
+                    foldersResult.data.content.forEach(folder =&gt; {
+                        //When status is complete, thirdparty.stateLastChangeDate is the most recent folder.stateLastChangeDate
+                        if (thirdParty.complete) {
+                            let folderDate = new Date(folder.stateLastChangeDate);
+                            if (folderDate &gt; stateLastChangeDate) {
+                                stateLastChangeDate = folderDate;
+                            }
+                        }
+                        //When status is incomplete, thirdparty.stateLastChangeDate is the oldest folder.stateLastChangeDate among incomplete folders
+                        else if (!folder.state) {
+                            let folderDate = new Date(folder.stateLastChangeDate);
+                            if (!stateLastChangeDate || folderDate &lt; stateLastChangeDate) {
+                                stateLastChangeDate = folderDate;
+                            }
+                        }
+                    });
+                    thirdParty.stateLastChangeDate = stateLastChangeDate.toISOString().split("T")[0];
+                }
+                else {
+                    Log.Warn(`No folder retrieved for third party ${thirdpartyId}. Last change date on the compliance platform could not be computed`);
+                    thirdParty.stateLastChangeDate = null;
+                }
+                let thirdpartyData = Sys.VM.E_AttestationsHelper.ReturnThirdPartyData(thirdpartyId, { content: thirdParty });
+                thirdpartyData.folders = Sys.VM.E_AttestationsHelper.ParseFoldersData(foldersResult.data);
+                results.push(thirdpartyData);
+                ComplianceRisk.timeoutHelper.NotifyIteration();
+            }
+        }
+        Log.Info(`Number of third parties to update with data changes: ${results.length}`);
+        return results;
+    }
+};
+function RunValidation() {
+    if (Variable.GetValueAsString("ComplianceRequestDone") !== "true") {
+        Lib.VM.ComplianceRisk.Server.LoadConfiguration();
+        if (Lib.VM.ComplianceRisk.Server.IsEnabled()) {
+            const nbAttach = Attach.GetNbAttach();
+            if (nbAttach === 0) {
+                return;
+            }
+            const file = Attach.GetInputFile(nbAttach - 1);
+            const thirdPartyIDs = JSON.parse(file.GetContent());
+            ComplianceRisk.eAttestationsServer = new Sys.VM.E_AttestationsServer({
+                user: Lib.VM.ComplianceRisk.Server.GetComplianceRiskLogin(),
+                pwd: Lib.VM.ComplianceRisk.Server.GetComplianceRiskPassword(),
+                accountId: Lib.VM.ComplianceRisk.Server.GetComplianceRiskAccountID(),
+                env: Lib.VM.ComplianceRisk.Server.GetComplianceRiskEnv()
+            });
+            ComplianceRisk.timeoutHelper = Sys.Helpers.TimeoutHelper.GetTimeoutHelper();
+            const results = ComplianceRisk.GetData(thirdPartyIDs);
+            const tempFile = TemporaryFile.CreateFile("json", "utf8");
+            TemporaryFile.Append(tempFile, JSON.stringify(results));
+            Attach.AttachTemporaryFile(tempFile, "ComplianceData");
+            Variable.SetValueAsString("ComplianceRequestDone", "true");
+        }
+        else {
+            Data.SetValue("State", 200);
+            Data.SetValue("ShortStatus", "Compliance checks configuration setting is disabled");
+        }
+    }
+}
+RunValidation();
+//# sourceMappingURL=validationscript.js.map</ValidationScript>
+      <AllowTagCoverPages>true</AllowTagCoverPages>
+      <AllowTagNewDocuments>true</AllowTagNewDocuments>
+      <AllowTagAttachments>true</AllowTagAttachments>
+      <ExtractionScriptAllowRetry>true</ExtractionScriptAllowRetry>
+      <extractionscriptIncludedScripts>Sys/Sys_Helpers_LdapUtil</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>Sys/Sys_Helpers_TimeoutHelper</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>[Lib_VM_Customization_Server]</extractionscriptIncludedScripts>
+      <ExtractionScript>"use strict";
+//Required: Sys/Sys_Helpers_LdapUtil, Sys/Sys_Helpers_TimeoutHelper
+function GetThirdPartiesToUpdateFromDB() {
+    // DBSET_READONLY | DBSET_QUICK
+    const DBFastAccess = 0x00210000;
+    // also returns ownershipped records
+    const DBDirtyRead = 0x00020000;
+    const customQueryFilter = Sys.Helpers.TryCallFunction("Lib.VM.Customization.Server.GetExtraFilterForVendorComplianceSynchronization");
+    let queryFilter = Sys.Helpers.LdapUtil.FilterAnd(Sys.Helpers.LdapUtil.FilterExist("ComplianceRiskIdentifier__"), Sys.Helpers.LdapUtil.FilterNotEqual("ComplianceRiskIdentifier__", ""));
+    if (customQueryFilter) {
+        queryFilter = Sys.Helpers.LdapUtil.FilterAnd(queryFilter, customQueryFilter);
+    }
+    const vendorQuery = Process.CreateQuery();
+    vendorQuery.Reset();
+    vendorQuery.SetSpecificTable("AP - Vendors__");
+    vendorQuery.SetFilter(queryFilter.toString());
+    vendorQuery.SetAttributesList("ComplianceRiskIdentifier__");
+    vendorQuery.SetOptions(DBFastAccess | DBDirtyRead);
+    vendorQuery.SetOptionEx("Limit=-1");
+    const results = [];
+    if (vendorQuery.MoveFirst()) {
+        const timeoutHelper = Sys.Helpers.TimeoutHelper.GetTimeoutHelper();
+        let record = vendorQuery.MoveNextRecord();
+        while (record) {
+            const recordVars = record.GetVars();
+            const thirdPartyId = recordVars.GetValue_String("ComplianceRiskIdentifier__", 0);
+            if (results.indexOf(thirdPartyId) &lt; 0) {
+                results.push(thirdPartyId);
+            }
+            record = vendorQuery.MoveNextRecord();
+            timeoutHelper.NotifyIteration();
+        }
+    }
+    Log.Info(`Number of third parties to update: ${results.length}`);
+    return JSON.stringify(results);
+}
+function CreateFile(thirdParties) {
+    const tempFile = TemporaryFile.CreateFile("json", "utf8");
+    TemporaryFile.Append(tempFile, thirdParties);
+    Attach.AttachTemporaryFile(tempFile, "ThirdPartiesToUpdate");
+}
+function RunExtraction() {
+    const thirdPartiesToUpdate = GetThirdPartiesToUpdateFromDB();
+    CreateFile(thirdPartiesToUpdate);
+}
+RunExtraction();
+//# sourceMappingURL=extractionscript.js.map</ExtractionScript>
+      <ExtractionScriptRunOnOCRFailed>
+      </ExtractionScriptRunOnOCRFailed>
+      <AllowRemovePages>true</AllowRemovePages>
+      <AllowSwapPages>true</AllowSwapPages>
+      <PostProcessingScriptAllowRetry>
+      </PostProcessingScriptAllowRetry>
+    </gdr>
+    <lg>
+      <process_da>{
+	"VM System Compliance Polling": "Leverandørstyring – polling af compliance-status"
+}</process_da>
+      <process_de>{
+	"VM System Compliance Polling": "Lieferantenmanagement - Abfrage Compliance-Status"
+}</process_de>
+      <process_ja>{
+	"VM System Compliance Polling": "仕入先管理 - コンプライアンスステータスのポーリング"
+}</process_ja>
+      <process_en>{
+	"VM System Compliance Polling": "Supplier Management - Compliance status polling"
+}</process_en>
+      <process_es>{
+	"VM System Compliance Polling": "Gestión de proveedores - Recuperación de los estados de conformidad"
+}</process_es>
+      <process_fr>{
+	"VM System Compliance Polling": "Gestion des fournisseurs - Récupération des états de conformité"
+}</process_fr>
+      <process_nl-NL>{
+	"VM System Compliance Polling": "Leveranciersbeheer - Peiling conformiteitsstatus"
+}</process_nl-NL>
+      <process_pl>{
+	"VM System Compliance Polling": "Zarządzanie dostawcami – sondowanie statusu zgodności z regulacjami"
+}</process_pl>
+      <process_it>{
+	"VM System Compliance Polling": "Gestione fornitori - Recupero stati conformità"
+}</process_it>
+      <process_sk>{
+	"VM System Compliance Polling": "Riadenie dodávateľov – zisťovanie statusu súladu"
+}</process_sk>
+      <process_zh-CN>{
+	"VM System Compliance Polling": "供应商管理 - 合规状况轮询"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"VM System Compliance Polling": "Gerenciamento de fornecedores - Recuperação de status de conformidade"
+}</process_pt-BR>
+    </lg>
+    <process>
+      <flowtype>processing</flowtype>
+      <ocrpreset>scan</ocrpreset>
+      <homepagelabel>VM System Compliance Polling</homepagelabel>
+      <enableflexibleauditing>
+      </enableflexibleauditing>
+      <enableflexibleediting>
+      </enableflexibleediting>
+      <enableflexibleteaching>
+      </enableflexibleteaching>
+      <upgradable>yes</upgradable>
+      <disableocr>
+      </disableocr>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <disableautolearning>true</disableautolearning>
+      <backgroundprocessingthreshold>
+      </backgroundprocessingthreshold>
+      <EnablePreviewPrecomputation>
+      </EnablePreviewPrecomputation>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <enablerounddecimal>true</enablerounddecimal>
+      <pdfNormalizeFilter>
+      </pdfNormalizeFilter>
+      <archiveDuration>0</archiveDuration>
+      <ownhomepage>
+      </ownhomepage>
+      <ocrpagestoprocess>0</ocrpagestoprocess>
+      <ScriptEngineType>2</ScriptEngineType>
+      <UseActionNameWithScriptApproval>true</UseActionNameWithScriptApproval>
+      <displayWidth>1024</displayWidth>
+      <AllowUploadAttachment>1</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>1</AllowUploadReferenceDocument>
+      <UseCultureFormat>true</UseCultureFormat>
+      <AllowRetryExtractCD>true</AllowRetryExtractCD>
+      <TransportName>CustomData</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+    </process>
+    <ui>
+      <CustomScriptDebug>false</CustomScriptDebug>
+      <CustomScriptReadonly>true</CustomScriptReadonly>
+      <CustomScript>
+      </CustomScript>
+      <restorationPanel>DataPanel</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 30,
+	"*": {
+		"GDRData": {
+			"type": "GDRData",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"version": 0
+			}
+		},
+		"OCRParams": {
+			"type": "OCRParams",
+			"data": [],
+			"stamp": 2,
+			"options": {
+				"version": 0
+			}
+		},
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 3,
+			"options": {
+				"splitterType": "complex",
+				"maxwidth": "",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 4,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 5,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 6,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-top": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 7,
+									"options": {
+										"autosize": true,
+										"version": 1,
+										"box": {
+											"top": 0,
+											"left": 0,
+											"width": 100,
+											"height": 17
+										},
+										"hidden": false
+									},
+									"*": {
+										"form-content-top-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 8,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"DocumentsPanel": {
+													"type": "PanelDocument",
+													"data": [],
+													"stamp": 9,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": false,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"label": "_Documents",
+														"version": 0
+													},
+													"*": {
+														"Document": {
+															"type": "Documents",
+															"data": [
+																"documentscontroldata"
+															],
+															"stamp": 10,
+															"options": {
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								},
+								"form-content-bottom": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 11,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": 17,
+											"left": 0,
+											"width": 100,
+											"height": 83
+										},
+										"hidden": false
+									},
+									"*": {
+										"form-content-left": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 12,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": 0,
+													"left": 0,
+													"width": 100,
+													"height": 99
+												},
+												"hidden": false
+											},
+											"*": {
+												"form-content-left-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 13,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"DataPanel": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 14,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_Document data",
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 15,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 16,
+																			"options": {
+																				"version": 0,
+																				"lines": 0,
+																				"columns": 2,
+																				"ctrlsPos": {},
+																				"colspans": []
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-2": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 17,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"SystemData": {
+															"type": "PanelSystemData",
+															"data": [],
+															"stamp": 18,
+															"options": {
+																"multicolumn": false,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"label": "_System data",
+																"hidden": true,
+																"version": 0
+															}
+														}
+													}
+												},
+												"form-content-left-3": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 19,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"NextProcess": {
+															"type": "PanelNextProcess",
+															"data": [],
+															"stamp": 20,
+															"options": {
+																"hidden": true,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"label": "_Next Process",
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-right": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 21,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": 0,
+													"left": 45,
+													"width": 55,
+													"height": 99
+												},
+												"hidden": true,
+												"hideSeparator": true
+											},
+											"*": {
+												"form-content-right-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 22,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"PreviewPanel": {
+															"type": "PanelPreview",
+															"data": [],
+															"stamp": 23,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"label": "_Document Preview",
+																"version": 0
+															},
+															"*": {
+																"Preview": {
+																	"type": "Preview",
+																	"data": [
+																		"previewdata"
+																	],
+																	"stamp": 24,
+																	"options": {
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 25,
+					"options": {
+						"splitterType": "simple-h",
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 26,
+							"options": {
+								"label": "_Save",
+								"action": "save",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Approve": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 27,
+							"options": {
+								"label": "_Approve",
+								"action": "approve",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Reject": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 28,
+							"options": {
+								"label": "_Reject",
+								"action": "reject",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Reprocess": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 29,
+							"options": {
+								"label": "_Reprocess",
+								"action": "reprocess",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 30,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <type id="GOLHG0000M4O" name="CD">
+  </type>
+</process>

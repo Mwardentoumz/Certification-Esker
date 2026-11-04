@@ -1,0 +1,883 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:11:04" deleted="0" eskerapplication="P2P" global="0" id="S1GQT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="Vendor Invoice Peppol Response" needvalidation="0" ootofilter="" ootoversion="2" originalProcessID="O1A000000YRL" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="1" reuseengine="0" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="0" version="1" visibility="0">
+  <properties>
+    <dbIndex>
+      <AUTO_AT1GQT400153EA>&lt;Index&gt;&lt;Ref Name="AT1GQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AT1GQT400153EA>
+    </dbIndex>
+    <gdr>
+      <FinalizationScriptAllowRetry>true</FinalizationScriptAllowRetry>
+      <ValidationScriptAllowRetry>true</ValidationScriptAllowRetry>
+      <validationscriptIncludedScripts>[LIB_PARAMETERS_P2P_V12.0.566.0]</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Sys/Sys_AP_VendorInvoicePeppolIR_ValidationScript</validationscriptIncludedScripts>
+      <ValidationScript>"use strict";
+Sys.AP.VendorInvoicePeppolIR.ValidationScript.Main();
+//# sourceMappingURL=validationscript.js.map</ValidationScript>
+      <AllowTagCoverPages>true</AllowTagCoverPages>
+      <AllowTagNewDocuments>true</AllowTagNewDocuments>
+      <AllowTagAttachments>true</AllowTagAttachments>
+      <ExtractionScriptAllowRetry>true</ExtractionScriptAllowRetry>
+      <AllowRemovePages>true</AllowRemovePages>
+      <AllowSwapPages>true</AllowSwapPages>
+    </gdr>
+    <lg>
+      <process_da>{
+	"_Peppol Invoice Response data": "Dokumentdata",
+	"_VendorInvoiceRUIDEX": "Udvidet id for leverandørfaktura",
+	"_VendorInvoiceRUIDEX_report": "Udvidet id for leverandørfaktura",
+	"Vendor Invoice Peppol Response": "Fakturasvar fra Peppol BIS",
+	"FRB2B_200_Deposited": "Sendt",
+	"FRB2B_201_IssuedByPlatform": "Udstedt af PA",
+	"FRB2B_202_PlatformReceived": "Modtaget af PA",
+	"FRB2B_203_Received": "Gjort tilgængelig",
+	"FRB2B_204_TakeOn": "Modtaget",
+	"FRB2B_205_Approved": "Godkendt",
+	"FRB2B_206_PartiallyApproved": "Delvist godkendt",
+	"FRB2B_207_OnHold": "Indsigelse fremsat",
+	"FRB2B_208_Suspended": "Afvist",
+	"FRB2B_209_Completed": "Afsluttet",
+	"FRB2B_210_Refused": "Afvist",
+	"FRB2B_211_PaymentSent": "Betaling sendt",
+	"FRB2B_212_Cashed": "Betaling modtaget",
+	"FRB2B_213_Rejected": "Afvist af PA",
+	"FRB2B_214_RefundSent": "Agent godkendt",
+	"FRB2B_220_Cancelled": "Annulleret",
+	"FRB2B_224_DirectPaymentRequest": "Anmodning om direkte betaling",
+	"FRB2B_225_Factored": "Overdraget til factoring",
+	"FRB2B_226_FactoredConfidential": "Overdraget til factoring (fortrolig)",
+	"FRB2B_227_PayableAccountChange": "Ændring af betalingskonto",
+	"FRB2B_228_NotFactored": "Ikke overdraget til factoring"
+}</process_da>
+      <process_de>{
+	"_Peppol Invoice Response data": "Dokumentdaten",
+	"_VendorInvoiceRUIDEX": "Erweiterte ID der Lieferanten-Rechnung",
+	"_VendorInvoiceRUIDEX_report": "Erweiterte ID der Lieferanten-Rechnung",
+	"Vendor Invoice Peppol Response": "Peppol BIS Invoice Response",
+	"FRB2B_200_Deposited": "Übermittelt",
+	"FRB2B_201_IssuedByPlatform": "Von PA ausgestellt",
+	"FRB2B_202_PlatformReceived": "Von PA empfangen",
+	"FRB2B_203_Received": "Zur Verfügung gestellt",
+	"FRB2B_204_TakeOn": "Vorliegend",
+	"FRB2B_205_Approved": "Genehmigt",
+	"FRB2B_206_PartiallyApproved": "Teilweise genehmigt",
+	"FRB2B_207_OnHold": "Bestritten",
+	"FRB2B_208_Suspended": "Ausgesetzt",
+	"FRB2B_209_Completed": "Abgeschlossen",
+	"FRB2B_210_Refused": "Abgelehnt",
+	"FRB2B_211_PaymentSent": "Zahlung gesendet",
+	"FRB2B_212_Cashed": "Zahlung erhalten",
+	"FRB2B_213_Rejected": "Von PA abgelehnt",
+	"FRB2B_214_RefundSent": "Durch Agent genehmigt",
+	"FRB2B_220_Cancelled": "Storniert",
+	"FRB2B_224_DirectPaymentRequest": "Direktzahlungsanforderung",
+	"FRB2B_225_Factored": "Factoring",
+	"FRB2B_226_FactoredConfidential": "Factoring (vertraulich)",
+	"FRB2B_227_PayableAccountChange": "Änderung des Zahlungskontos",
+	"FRB2B_228_NotFactored": "Kein Factoring"
+}</process_de>
+      <process_ja>{
+	"_Peppol Invoice Response data": "文書データ",
+	"_VendorInvoiceRUIDEX": "仕入先請求書拡張ID",
+	"_VendorInvoiceRUIDEX_report": "仕入先請求書拡張ID",
+	"Vendor Invoice Peppol Response": "Peppol BISインボイスレスポンス",
+	"FRB2B_200_Deposited": "送信済み",
+	"FRB2B_201_IssuedByPlatform": "PAによる発行",
+	"FRB2B_202_PlatformReceived": "PAで受領済み",
+	"FRB2B_203_Received": "利用可能",
+	"FRB2B_204_TakeOn": "進行中",
+	"FRB2B_205_Approved": "承認済み",
+	"FRB2B_206_PartiallyApproved": "部分的に承認済み",
+	"FRB2B_207_OnHold": "争議中",
+	"FRB2B_208_Suspended": "一時中断",
+	"FRB2B_209_Completed": "完了",
+	"FRB2B_210_Refused": "拒否",
+	"FRB2B_211_PaymentSent": "支払送金済み",
+	"FRB2B_212_Cashed": "支払い受領済み",
+	"FRB2B_213_Rejected": "PAにより却下",
+	"FRB2B_214_RefundSent": "エージェント承認済み",
+	"FRB2B_220_Cancelled": "キャンセル済み",
+	"FRB2B_224_DirectPaymentRequest": "ダイレクト支払いリクエスト",
+	"FRB2B_225_Factored": "ファクタリング済み",
+	"FRB2B_226_FactoredConfidential": "ファクタリング済み（機密）",
+	"FRB2B_227_PayableAccountChange": "支払い口座の変更",
+	"FRB2B_228_NotFactored": "未ファクタリング"
+}</process_ja>
+      <process_en>{
+	"_Peppol Invoice Response data": "Document data",
+	"_VendorInvoiceRUIDEX": "Supplier invoice extended ID",
+	"_VendorInvoiceRUIDEX_report": "Supplier invoice extended ID",
+	"Vendor Invoice Peppol Response": "Peppol BIS Invoice Response",
+	"FRB2B_200_Deposited": "Submitted",
+	"FRB2B_201_IssuedByPlatform": "Issued by PA",
+	"FRB2B_202_PlatformReceived": "Received by PA",
+	"FRB2B_203_Received": "Made available",
+	"FRB2B_204_TakeOn": "In hand",
+	"FRB2B_205_Approved": "Approved",
+	"FRB2B_206_PartiallyApproved": "Partially approved",
+	"FRB2B_207_OnHold": "Disputed",
+	"FRB2B_208_Suspended": "Suspended",
+	"FRB2B_209_Completed": "Completed",
+	"FRB2B_210_Refused": "Refused",
+	"FRB2B_211_PaymentSent": "Payment sent",
+	"FRB2B_212_Cashed": "Payment received",
+	"FRB2B_213_Rejected": "Rejected by PA",
+	"FRB2B_214_RefundSent": "Agent approved",
+	"FRB2B_220_Cancelled": "Canceled",
+	"FRB2B_224_DirectPaymentRequest": "Direct payment request",
+	"FRB2B_225_Factored": "Factored",
+	"FRB2B_226_FactoredConfidential": "Factored (confidential)",
+	"FRB2B_227_PayableAccountChange": "Change of payment account",
+	"FRB2B_228_NotFactored": "Not factored"
+}</process_en>
+      <process_es>{
+	"_Peppol Invoice Response data": "Datos del documento",
+	"_VendorInvoiceRUIDEX": "ID extendido de la factura de proveedor",
+	"_VendorInvoiceRUIDEX_report": "ID extendido de la factura de proveedor",
+	"Vendor Invoice Peppol Response": "Respuesta a la factura Peppol BIS",
+	"FRB2B_200_Deposited": "Enviada",
+	"FRB2B_201_IssuedByPlatform": "Emitida por la PA",
+	"FRB2B_202_PlatformReceived": "Recibida por la PA",
+	"FRB2B_203_Received": "Disponibles",
+	"FRB2B_204_TakeOn": "Tomada en cuenta",
+	"FRB2B_205_Approved": "Aprobada",
+	"FRB2B_206_PartiallyApproved": "Aprobada parcialmente",
+	"FRB2B_207_OnHold": "Impugnada",
+	"FRB2B_208_Suspended": "Suspendida",
+	"FRB2B_209_Completed": "Realizada",
+	"FRB2B_210_Refused": "Rechazada",
+	"FRB2B_211_PaymentSent": "Pago enviado",
+	"FRB2B_212_Cashed": "Pago recibido",
+	"FRB2B_213_Rejected": "Rechazada por la PA",
+	"FRB2B_214_RefundSent": "Aprobada por el agente",
+	"FRB2B_220_Cancelled": "Cancelada",
+	"FRB2B_224_DirectPaymentRequest": "Solicitud de pago directo",
+	"FRB2B_225_Factored": "Cedida",
+	"FRB2B_226_FactoredConfidential": "Cedida (confidencial)",
+	"FRB2B_227_PayableAccountChange": "Cambio de cuenta de pago\n",
+	"FRB2B_228_NotFactored": "No cedida"
+}</process_es>
+      <process_fr>{
+	"_Peppol Invoice Response data": "Données du document",
+	"_VendorInvoiceRUIDEX": "ID long de la facture fournisseur",
+	"_VendorInvoiceRUIDEX_report": "ID long de la facture fournisseur",
+	"Vendor Invoice Peppol Response": "Réponse à la facture Peppol BIS",
+	"FRB2B_200_Deposited": "Déposée",
+	"FRB2B_201_IssuedByPlatform": "Émise par la PA",
+	"FRB2B_202_PlatformReceived": "Reçue par la PA",
+	"FRB2B_203_Received": "Mise à disposition",
+	"FRB2B_204_TakeOn": "Prise en charge",
+	"FRB2B_205_Approved": "Approuvée",
+	"FRB2B_206_PartiallyApproved": "Approuvée partiellement",
+	"FRB2B_207_OnHold": "En litige",
+	"FRB2B_208_Suspended": "Suspendue",
+	"FRB2B_209_Completed": "Complétée",
+	"FRB2B_210_Refused": "Refusée",
+	"FRB2B_211_PaymentSent": "Paiement transmis",
+	"FRB2B_212_Cashed": "Encaissée",
+	"FRB2B_213_Rejected": "Rejetée par la PA",
+	"FRB2B_214_RefundSent": "Visée",
+	"FRB2B_220_Cancelled": "Annulée\n",
+	"FRB2B_224_DirectPaymentRequest": "Demande de paiement direct",
+	"FRB2B_225_Factored": "Affacturée",
+	"FRB2B_226_FactoredConfidential": "Affacturée confidentiel\n",
+	"FRB2B_227_PayableAccountChange": "Changement de compte à payer\n",
+	"FRB2B_228_NotFactored": "Non affacturée\n"
+}</process_fr>
+      <process_nl-NL>{
+	"_Peppol Invoice Response data": "Documentgegevens",
+	"_VendorInvoiceRUIDEX": "Uitgebreide factuur-ID leverancier",
+	"_VendorInvoiceRUIDEX_report": "Uitgebreide factuur-ID leverancier",
+	"Vendor Invoice Peppol Response": "Factuur antwoorden Peppol BIS ",
+	"FRB2B_200_Deposited": "Ingediend",
+	"FRB2B_201_IssuedByPlatform": "Uitgegeven door PA",
+	"FRB2B_202_PlatformReceived": "Ontvangen door PA",
+	"FRB2B_203_Received": "Beschikbaar gemaakt",
+	"FRB2B_204_TakeOn": "In handen",
+	"FRB2B_205_Approved": "Goedgekeurd",
+	"FRB2B_206_PartiallyApproved": "Deels goedgekeurd",
+	"FRB2B_207_OnHold": "Betwist",
+	"FRB2B_208_Suspended": "Opgeschort",
+	"FRB2B_209_Completed": "Voltooid",
+	"FRB2B_210_Refused": "Geweigerd",
+	"FRB2B_211_PaymentSent": "Betaling verzonden",
+	"FRB2B_212_Cashed": "Betaling ontvangen",
+	"FRB2B_213_Rejected": "Geweigerd door PA",
+	"FRB2B_214_RefundSent": "Vertegenwoordiger goedgekeurd",
+	"FRB2B_220_Cancelled": "Geannuleerd",
+	"FRB2B_224_DirectPaymentRequest": "Direct betalingsverzoek",
+	"FRB2B_225_Factored": "Gefactored",
+	"FRB2B_226_FactoredConfidential": "Gefactored (vertrouwelijk)",
+	"FRB2B_227_PayableAccountChange": "Wijziging betaalrekening",
+	"FRB2B_228_NotFactored": "Niet gefactored"
+}</process_nl-NL>
+      <process_pl>{
+	"_Peppol Invoice Response data": "Dane dokumentu",
+	"_VendorInvoiceRUIDEX": "Rozszerzony id. faktury dostawcy",
+	"_VendorInvoiceRUIDEX_report": "Rozszerzony id. faktury dostawcy",
+	"Vendor Invoice Peppol Response": "Odpowiedź na fakturę Peppol BIS",
+	"FRB2B_200_Deposited": "Przesłana",
+	"FRB2B_201_IssuedByPlatform": "Wystawiona przez PA",
+	"FRB2B_202_PlatformReceived": "Odebrana przez PA",
+	"FRB2B_203_Received": "Udostępnione",
+	"FRB2B_204_TakeOn": "W posiadaniu",
+	"FRB2B_205_Approved": "Zatwierdzone",
+	"FRB2B_206_PartiallyApproved": "Częściowo zatwierdzona",
+	"FRB2B_207_OnHold": "Zgłoszone jako sporne",
+	"FRB2B_208_Suspended": "Zawieszone",
+	"FRB2B_209_Completed": "Ukończona",
+	"FRB2B_210_Refused": "Z odmową",
+	"FRB2B_211_PaymentSent": "Płatność wysłana",
+	"FRB2B_212_Cashed": "Płatność otrzymana",
+	"FRB2B_213_Rejected": "Odrzucona przez PA",
+	"FRB2B_214_RefundSent": "Zatwierdzona przez agenta",
+	"FRB2B_220_Cancelled": "Anulowana",
+	"FRB2B_224_DirectPaymentRequest": "Wniosek o płatność bezpośrednią",
+	"FRB2B_225_Factored": "Objęta faktoringiem",
+	"FRB2B_226_FactoredConfidential": "Objęta faktoringiem (poufnym)",
+	"FRB2B_227_PayableAccountChange": "Zmiana konta płatności",
+	"FRB2B_228_NotFactored": "Nieobjęta faktoringiem"
+}</process_pl>
+      <process_it>{
+	"_Peppol Invoice Response data": "Dati documento",
+	"_VendorInvoiceRUIDEX": "ID esteso fattura fornitore",
+	"_VendorInvoiceRUIDEX_report": "ID esteso fattura fornitore",
+	"Vendor Invoice Peppol Response": "Risposta fattura Peppol BIS",
+	"FRB2B_200_Deposited": "Trasmessa",
+	"FRB2B_201_IssuedByPlatform": "Emessa dalla PA",
+	"FRB2B_202_PlatformReceived": "Ricevuta dalla PA",
+	"FRB2B_203_Received": "Resa disponibile",
+	"FRB2B_204_TakeOn": "Presa in carico",
+	"FRB2B_205_Approved": "Approvata",
+	"FRB2B_206_PartiallyApproved": "Approvata parzialmente",
+	"FRB2B_207_OnHold": "Contestata",
+	"FRB2B_208_Suspended": "Sospesa",
+	"FRB2B_209_Completed": "Completata",
+	"FRB2B_210_Refused": "Rifiutata",
+	"FRB2B_211_PaymentSent": "Pagamento inviato",
+	"FRB2B_212_Cashed": "Pagamento ricevuto",
+	"FRB2B_213_Rejected": "Respinta dalla PA",
+	"FRB2B_214_RefundSent": "Approvata dall'agente",
+	"FRB2B_220_Cancelled": "Annullata",
+	"FRB2B_224_DirectPaymentRequest": "Richiesta di pagamento diretto",
+	"FRB2B_225_Factored": "Ceduta",
+	"FRB2B_226_FactoredConfidential": "Ceduta (confidenziale)",
+	"FRB2B_227_PayableAccountChange": "Modifica del conto di pagamento",
+	"FRB2B_228_NotFactored": "Non ceduta"
+}</process_it>
+      <process_sk>{
+	"_Peppol Invoice Response data": "Dáta dokumentu",
+	"_VendorInvoiceRUIDEX": "Rozšírené ID faktúry dodávateľa",
+	"_VendorInvoiceRUIDEX_report": "Rozšírené ID faktúry dodávateľa",
+	"Vendor Invoice Peppol Response": "Odpoveď na faktúru Peppol BIS",
+	"FRB2B_200_Deposited": "Odoslaná",
+	"FRB2B_201_IssuedByPlatform": "Vydaná PA",
+	"FRB2B_202_PlatformReceived": "Prijatá PA",
+	"FRB2B_203_Received": "Sprístupnený",
+	"FRB2B_204_TakeOn": "K dispozícii",
+	"FRB2B_205_Approved": "Schválené",
+	"FRB2B_206_PartiallyApproved": "Čiastočne schválená",
+	"FRB2B_207_OnHold": "Sporný",
+	"FRB2B_208_Suspended": "Indragen",
+	"FRB2B_209_Completed": "Dokončená",
+	"FRB2B_210_Refused": "Zamietnutý",
+	"FRB2B_211_PaymentSent": "Odoslaná platba",
+	"FRB2B_212_Cashed": "Prijatá platba",
+	"FRB2B_213_Rejected": "Odmietnutá PA",
+	"FRB2B_214_RefundSent": "Schválená agentom",
+	"FRB2B_220_Cancelled": "Zrušená",
+	"FRB2B_224_DirectPaymentRequest": "Žiadosť o priamu platbu",
+	"FRB2B_225_Factored": "Faktoringová",
+	"FRB2B_226_FactoredConfidential": "Faktoringová (dôverná)",
+	"FRB2B_227_PayableAccountChange": "Zmena platobného účtu",
+	"FRB2B_228_NotFactored": "Bez faktoringu"
+}</process_sk>
+      <process_zh-CN>{
+	"_Peppol Invoice Response data": "文档数据",
+	"_VendorInvoiceRUIDEX": "供应商账单发票扩展 ID",
+	"_VendorInvoiceRUIDEX_report": "供应商账单发票扩展 ID",
+	"Vendor Invoice Peppol Response": "Peppol BIS 账单发票响应",
+	"FRB2B_200_Deposited": "已提交",
+	"FRB2B_201_IssuedByPlatform": "由 PA 发出",
+	"FRB2B_202_PlatformReceived": "PA 收到",
+	"FRB2B_203_Received": "已提供",
+	"FRB2B_204_TakeOn": "在手",
+	"FRB2B_205_Approved": "已批准",
+	"FRB2B_206_PartiallyApproved": "部分批准",
+	"FRB2B_207_OnHold": "有争议",
+	"FRB2B_208_Suspended": "暂停",
+	"FRB2B_209_Completed": "已完成",
+	"FRB2B_210_Refused": "已拒绝",
+	"FRB2B_211_PaymentSent": "发出付款",
+	"FRB2B_212_Cashed": "收到付款",
+	"FRB2B_213_Rejected": "PA 拒绝",
+	"FRB2B_214_RefundSent": "经代理人批准",
+	"FRB2B_220_Cancelled": "已取消",
+	"FRB2B_224_DirectPaymentRequest": "直接付款请求",
+	"FRB2B_225_Factored": "保理账单发票",
+	"FRB2B_226_FactoredConfidential": "保理账单发票（机密）",
+	"FRB2B_227_PayableAccountChange": "更改付款账户",
+	"FRB2B_228_NotFactored": "未保理"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"_Peppol Invoice Response data": "Informação de documento",
+	"_VendorInvoiceRUIDEX": "ID estendido de fatura de fornecedor",
+	"_VendorInvoiceRUIDEX_report": "ID estendido de fatura de fornecedor",
+	"Vendor Invoice Peppol Response": "Resposta de faturas do Peppol BIS",
+	"FRB2B_200_Deposited": "Enviada",
+	"FRB2B_201_IssuedByPlatform": "Emitida pela PA",
+	"FRB2B_202_PlatformReceived": "Recebida pela PA",
+	"FRB2B_203_Received": "Disponibilizadas",
+	"FRB2B_204_TakeOn": "Em mão",
+	"FRB2B_205_Approved": "Aprovada",
+	"FRB2B_206_PartiallyApproved": "Parcialmente aprovada",
+	"FRB2B_207_OnHold": "Contestada",
+	"FRB2B_208_Suspended": "Suspendida",
+	"FRB2B_209_Completed": "Processada",
+	"FRB2B_210_Refused": "Recusada",
+	"FRB2B_211_PaymentSent": "Pagamento enviado",
+	"FRB2B_212_Cashed": "Pagamento recebido",
+	"FRB2B_213_Rejected": "Rejeitada pela PA",
+	"FRB2B_214_RefundSent": "Aprovada pelo agente",
+	"FRB2B_220_Cancelled": "Cancelada",
+	"FRB2B_224_DirectPaymentRequest": "Solicitação de pagamento direto",
+	"FRB2B_225_Factored": "Com factoring",
+	"FRB2B_226_FactoredConfidential": "Com factoring (confidencial)",
+	"FRB2B_227_PayableAccountChange": "Alteração da conta de pagamento",
+	"FRB2B_228_NotFactored": "Sem factoring"
+}</process_pt-BR>
+    </lg>
+    <process>
+      <flowtype>processing</flowtype>
+      <ocrpreset>scan</ocrpreset>
+      <EnableNegativeNumbersBetweenBrackets>true</EnableNegativeNumbersBetweenBrackets>
+      <homepagelabel>Vendor Invoice Peppol Response</homepagelabel>
+      <enableflexibleauditing>
+      </enableflexibleauditing>
+      <enableflexibleediting>
+      </enableflexibleediting>
+      <enableflexibleteaching>
+      </enableflexibleteaching>
+      <enableInternalConversation>true</enableInternalConversation>
+      <upgradable>yes</upgradable>
+      <disableocr>
+      </disableocr>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <disableautolearning>true</disableautolearning>
+      <backgroundprocessingthreshold>
+      </backgroundprocessingthreshold>
+      <EnablePreviewPrecomputation>
+      </EnablePreviewPrecomputation>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <enablerounddecimal>true</enablerounddecimal>
+      <pdfNormalizeFilter>
+      </pdfNormalizeFilter>
+      <archiveDuration>0</archiveDuration>
+      <ownhomepage>
+      </ownhomepage>
+      <ocrpagestoprocess>0</ocrpagestoprocess>
+      <ScriptEngineType>2</ScriptEngineType>
+      <UseActionNameWithScriptApproval>true</UseActionNameWithScriptApproval>
+      <displayWidth>1024</displayWidth>
+      <AllowUploadAttachment>1</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>1</AllowUploadReferenceDocument>
+      <RemovePointWhenCastingIntToString>true</RemovePointWhenCastingIntToString>
+      <UseCultureFormat>true</UseCultureFormat>
+      <AllowRetryExtractCD>true</AllowRetryExtractCD>
+      <TransportName>CustomData</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+      <printToProcess>
+      </printToProcess>
+    </process>
+    <ui>
+      <CustomScriptDebug>false</CustomScriptDebug>
+      <CustomScriptReadonly>true</CustomScriptReadonly>
+      <CustomScript>
+      </CustomScript>
+      <restorationPanel>DataPanel</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 32,
+	"*": {
+		"GDRData": {
+			"type": "GDRData",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"version": 0
+			}
+		},
+		"OCRParams": {
+			"type": "OCRParams",
+			"data": [],
+			"stamp": 2,
+			"options": {
+				"version": 0
+			}
+		},
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 3,
+			"options": {
+				"splitterType": "complex",
+				"style": "FlexibleFormLight",
+				"maxwidth": 1024,
+				"backColor": "text-backgroundcolor-default",
+				"footerStyle": "default",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 4,
+					"options": {
+						"maxwidth": 1024,
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 5,
+					"options": {
+						"maxwidth": 1024,
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 6,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-top": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 7,
+									"options": {
+										"autosize": true,
+										"version": 1,
+										"box": {
+											"top": 0,
+											"left": 0,
+											"width": 100,
+											"height": 0
+										},
+										"hidden": false,
+										"hideSeparator": true
+									}
+								},
+								"form-content-bottom": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 8,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": 0,
+											"left": 0,
+											"width": 100,
+											"height": 100
+										},
+										"hidden": false
+									},
+									"*": {
+										"form-content-left": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 9,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": 0,
+													"left": 0,
+													"width": 99,
+													"height": 100
+												},
+												"hidden": false,
+												"hideSeparator": true
+											},
+											"*": {
+												"form-content-left-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 10,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"DataPanel": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 11,
+															"options": {
+																"border": {},
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_Peppol Invoice Response data",
+																"leftImageURL": "",
+																"removeMargins": false,
+																"elementsAlignment": "left",
+																"labelLength": 0,
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 12,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {
+																			"VendorInvoiceRUIDEX__": "LabelVendorInvoiceRUIDEX__",
+																			"LabelVendorInvoiceRUIDEX__": "VendorInvoiceRUIDEX__"
+																		}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 13,
+																			"options": {
+																				"version": 0,
+																				"lines": 1,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"LabelVendorInvoiceRUIDEX__": {
+																						"line": 1,
+																						"column": 1
+																					},
+																					"VendorInvoiceRUIDEX__": {
+																						"line": 1,
+																						"column": 2
+																					}
+																				},
+																				"colspans": [
+																					[]
+																				]
+																			},
+																			"*": {
+																				"LabelVendorInvoiceRUIDEX__": {
+																					"type": "Label",
+																					"data": [
+																						"VendorInvoiceRUIDEX__"
+																					],
+																					"stamp": 15,
+																					"options": {
+																						"label": "_VendorInvoiceRUIDEX",
+																						"version": 0
+																					}
+																				},
+																				"VendorInvoiceRUIDEX__": {
+																					"type": "ShortText",
+																					"data": [
+																						"VendorInvoiceRUIDEX__"
+																					],
+																					"stamp": 14,
+																					"options": {
+																						"label": "_VendorInvoiceRUIDEX",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"hidden": true,
+																						"browsable": false
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-3": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 16,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"NextProcess": {
+															"type": "PanelNextProcess",
+															"data": [],
+															"stamp": 17,
+															"options": {
+																"hidden": true,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_Next Process",
+																"version": 0
+															}
+														}
+													}
+												},
+												"form-content-left-6": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 18,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"DocumentsPanel": {
+															"type": "PanelDocument",
+															"data": [],
+															"stamp": 19,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_Documents",
+																"version": 0
+															},
+															"*": {
+																"Document": {
+																	"type": "Documents",
+																	"data": [
+																		"documentscontroldata"
+																	],
+																	"stamp": 20,
+																	"options": {
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-7": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 21,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"SystemData": {
+															"type": "PanelSystemData",
+															"data": [],
+															"stamp": 22,
+															"options": {
+																"multicolumn": false,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_System data",
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-right": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 23,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": 0,
+													"left": 99,
+													"width": 1,
+													"height": 100
+												},
+												"hidden": false
+											},
+											"*": {
+												"form-content-right-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 24,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"PreviewPanel": {
+															"type": "PanelPreview",
+															"data": [],
+															"stamp": 25,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_Document Preview",
+																"hidden": true,
+																"version": 0
+															},
+															"*": {
+																"Preview": {
+																	"type": "Preview",
+																	"data": [
+																		"previewdata"
+																	],
+																	"stamp": 26,
+																	"options": {
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 27,
+					"options": {
+						"splitterType": "simple-h",
+						"maxwidth": 1024,
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 28,
+							"options": {
+								"label": "_Save",
+								"action": "save",
+								"submit": true,
+								"textSize": "S",
+								"version": 0
+							}
+						},
+						"Approve": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 29,
+							"options": {
+								"label": "_Approve",
+								"action": "approve",
+								"submit": true,
+								"textSize": "S",
+								"version": 0
+							}
+						},
+						"Reject": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 30,
+							"options": {
+								"label": "_Reject",
+								"action": "reject",
+								"submit": true,
+								"textSize": "S",
+								"version": 0
+							}
+						},
+						"Reprocess": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 31,
+							"options": {
+								"label": "_Reprocess",
+								"action": "reprocess",
+								"submit": true,
+								"textSize": "S",
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 32,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"textSize": "S",
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <field deleted="0" format="" guid="P1A000000YRL" id="T1GQT400153E" label="_VendorInvoiceRUIDEX_report" length="50" name="VendorInvoiceRUIDEX__" originalProcessID="O1A000000YRL" precision="0" processid="S1GQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AT1GQT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/VendorInvoiceRUIDEX__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:11:03</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_VendorInvoiceRUIDEX_report</Label>
+        <Alias>AT1GQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <type id="GOLHG0000M4O" name="CD">
+  </type>
+</process>

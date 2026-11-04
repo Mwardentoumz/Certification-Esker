@@ -1,0 +1,2157 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:10:19" deleted="0" eskerapplication="P2P" global="0" id="C1FQT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="Catalog Exporter" needvalidation="0" ootofilter="" ootoversion="1" originalProcessID="M59IG0000SG1" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="0" version="1" visibility="1">
+  <properties>
+    <gdr>
+      <FinalizationScriptAllowRetry>
+      </FinalizationScriptAllowRetry>
+      <FinalizationScript>
+      </FinalizationScript>
+      <ValidationScriptAllowRetry>
+      </ValidationScriptAllowRetry>
+      <validationscriptIncludedScripts>Sys/Sys_Helpers</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Sys/Sys_Helpers_CSVExport</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>LIB_PURCHASING_CATALOGHELPER_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_Purchasing_Catalog_Management_V12.0.566.0</validationscriptIncludedScripts>
+      <ValidationScript>"use strict";
+/* eslint-disable class-methods-use-this */
+var ValidationScript;
+(function (ValidationScript) {
+    var OutputCSV = Sys.Helpers.CSVExport.OutputCSV;
+    var CatalogItem = Lib.Purchasing.CatalogHelper.CatalogItem;
+    var CatalogHelper = Lib.Purchasing.CatalogHelper;
+    class CatalogExporterServer {
+        constructor(config) {
+            this.config = config;
+        }
+        GetCSVLines(catalogItem) {
+            const rawData = catalogItem.GetRawData();
+            const catalogItemCSV = this.config.GetCatalogHeaderAttributes().map((attr) =&gt; { var _a; return ((_a = rawData[attr]) === null || _a === void 0 ? void 0 : _a.toString()) || ""; });
+            const csvLines = [];
+            for (const index in catalogItem.providersItemProperties) {
+                const itemProperties = catalogItem.providersItemProperties[index];
+                if (itemProperties instanceof this.config.itemPropertiesClass) {
+                    const providerCSVPart = this.config.BuildProviderCSVLine(itemProperties);
+                    const csvLine = catalogItemCSV.concat(providerCSVPart);
+                    csvLines.push(csvLine);
+                }
+            }
+            if (!csvLines.length) {
+                csvLines.push(catalogItemCSV);
+            }
+            return csvLines;
+        }
+        AttachCatalogItemsCSV(csv, date) {
+            Log.Time("AttachCatalogItemsCSV");
+            const filename = this.NormalizeFileName(date);
+            csv.AttachCSVFile(filename, true);
+            Log.TimeEnd("AttachCatalogItemsCSV");
+        }
+        CreateBigQueryIterator() {
+            const ctorQueryParams = new Sys.Helpers.QueryParams();
+            ctorQueryParams.onTransport = false;
+            ctorQueryParams.table = "P2P - CatalogItems__";
+            ctorQueryParams.options = ["EnableJoin=1"];
+            ctorQueryParams.attributes = this.config.GetAttributesToQuery();
+            ctorQueryParams.filter = this.config.GetCatalogQueryFilter().toString();
+            return new Sys.Helpers.BigQueryIterator(ctorQueryParams, null, "Msn");
+        }
+        FetchCatalogQueryResults(queryIT) {
+            let records = [];
+            let maxRecord = CatalogExporterServer.NB_RECORDS_TO_FETCH;
+            let currRecord;
+            while (--maxRecord &amp;&amp; (currRecord = queryIT.Next()) != null) {
+                records.push(currRecord);
+            }
+            return records;
+        }
+        RunCatalogExport() {
+            const queryIT = this.CreateBigQueryIterator();
+            let nbItem = 0;
+            let records;
+            const outputCSV = new OutputCSV();
+            outputCSV.SetAutoFlush(1000);
+            outputCSV.SetHeader(this.config.GetCSVHeader());
+            outputCSV.SetLinesAutoPad(true);
+            const attributes = this.config.GetAttributesToQuery();
+            while (records = this.FetchCatalogQueryResults(queryIT), records.length &gt; 0) {
+                const items = CatalogItem.FromQueryResults(records.map((record, i) =&gt; Sys.GenericAPI.BuildQueryResult(record, attributes, i, {
+                    fieldToTypeMap: CatalogExporterServer.fieldToTypeMap
+                })));
+                nbItem += items.length;
+                for (let i = 0; i &lt; items.length; i++) {
+                    outputCSV.AddLines(this.GetCSVLines(items[i]));
+                }
+                Log.Info(`${nbItem} items exported, export in progress`);
+            }
+            Log.Info(`${nbItem} items exported, export done`);
+            const now = new Date();
+            this.AttachCatalogItemsCSV(outputCSV, now);
+            Data.SetValue("ExportDate__", now);
+            Data.SetValue("NumberOfRows__", outputCSV.GetNbLines());
+            Data.SetValue("NumberOfItems__", nbItem);
+        }
+        HandleAction(actionName, actionType) {
+            Log.Info(`received -&gt; actionName: ${actionName} actionType: ${actionType}`);
+            if ((!actionName &amp;&amp; !actionType)
+                || (actionName === "run_catalog_export" &amp;&amp; actionType === "approve")) {
+                this.RunCatalogExport();
+                Data.SetValue("KeepOpenAfterApproval", "WaitForApproval");
+            }
+        }
+        NormalizeFileName(date) {
+            const name = this.config.GetCSVFileName(date);
+            return name.replace(/[&lt;&gt;:"/\\|?*]/g, "_");
+        }
+        Start() {
+            this.HandleAction(Data.GetActionName(), Data.GetActionType());
+        }
+    }
+    CatalogExporterServer.fieldToTypeMap = {
+        "ITEMNUMBER__.UNITPRICE__": "double",
+        "ITEMNUMBER__.PUBLICPRICE__": "double",
+        "GRADE__": "double",
+        "GRADE_NUMBER__": "int",
+        "ITEMNUMBER__.ENERGYCONSUMPTIONKGCO2EPERUNIT__": "string", // We want to handle null value
+        "ITEMNUMBER__.LEADTIME__": "string", // We want to handle null value
+        "ITEMNUMBER__.LOCKED__": "boolean",
+        "ITEMNUMBER__.AVAILABLESTOCK__": "double",
+        "ITEMNUMBER__.CURRENTSTOCK__": "double",
+        "ITEMNUMBER__.RESERVEDSTOCK__": "double",
+        "ITEMNUMBER__.INCOMINGSTOCK__": "double",
+        "ITEMNUMBER__.MINIMUMTHRESHOLD__": "double",
+        "ITEMNUMBER__.EXPECTEDSTOCKLEVEL__": "double",
+        "TAXCODE__.TAXRATE__": "double",
+        "TAXCODE__.NONDEDUCTIBLETAXRATE__": "double",
+        "SUPPLYTYPEID__.NOGOODSRECEIPT__": "boolean",
+        "SUPPLYTYPEID__.NOTIFYREQUESTERONRECEIPT__": "boolean"
+    };
+    CatalogExporterServer.NB_RECORDS_TO_FETCH = 100;
+    ValidationScript.CatalogExporterServer = CatalogExporterServer;
+    class CatalogExporterConfig {
+        constructor() {
+            this._catalogItemAttributes = null;
+        }
+        GetCSVHeader() {
+            const attributes = this.GetFullLineAttributes();
+            return attributes.map((attr) =&gt; {
+                return this.attributesMapping[attr] || attr
+                    .replace(/ITEMNUMBER__./g, "")
+                    .replace(/__/g, "")
+                    .toLowerCase()
+                    .split(".")
+                    .map((attr_part) =&gt; attr_part.length
+                    ? attr_part.charAt(0).toUpperCase() + attr_part.slice(1)
+                    : attr_part)
+                    .join(" ");
+            });
+        }
+        GetCatalogHeaderAttributes() {
+            if (!this._catalogItemAttributes) {
+                this._catalogItemAttributes = Object.keys(CatalogItem.TABLE_ATTRIBUTES).filter((attr) =&gt; this.attributeProperties.every(prop =&gt; CatalogItem.TABLE_ATTRIBUTES[attr].has(prop)));
+            }
+            return this._catalogItemAttributes;
+        }
+        GetFullLineAttributes() {
+            const headerAttributes = this.GetCatalogHeaderAttributes();
+            const providerAttributes = this.itemPropertiesClass.CSVLineAttributes
+                .map(attr =&gt; CatalogHelper.NormalizeAttribute(attr, this.attributeLevel));
+            return headerAttributes.concat(providerAttributes);
+        }
+    }
+    class CatalogExporterConfigVendorItem extends CatalogExporterConfig {
+        constructor() {
+            super(...arguments);
+            this.itemPropertiesClass = CatalogHelper.VendorItemProperties;
+            this.attributeProperties = [
+                "Vendor" /* CatalogHelper.AttributeProperty.Vendor */,
+                "VendorCSVIntegration" /* CatalogHelper.AttributeProperty.VendorCSVIntegration */
+            ];
+            this.attributeLevel = "supplier";
+            // must match EXTRACTED_DATA_TO_CSV_MAPPING Lib_Purchasing_Catalog_Management
+            this.attributesMapping = {
+                "DESCRIPTION__": "Name",
+                "ITEMNUMBER__": "Item number",
+                "LONGDESCRIPTION__": "Description",
+                "ITEMNUMBER__.SUPPLIERPARTID__": "Supplier part ID",
+                "ITEMNUMBER__.SUPPLIERPARTAUXID__": "Supplier auxiliary part ID",
+                "MANUFACTURERNAME__": "Manufacturer name",
+                "MANUFACTURERPARTID__": "Manufacturer part ID",
+                "DEFAULTPUBLICPRICE__": "Suggested price",
+                "DEFAULTCURRENCY__": "Suggested price currency",
+                "ITEMNUMBER__.UNITPRICE__": "Unit price",
+                "ITEMNUMBER__.CURRENCY__": "Currency",
+                "ITEMNUMBER__.ENERGYCONSUMPTIONKGCO2EPERUNIT__": "GHG emissions (kgCO2e)",
+                "ITEMNUMBER__.LEADTIME__": "Lead time",
+                "UNITOFMEASURE__": "Unit of measurement",
+                "COSTTYPE__": "Cost type",
+                "UNSPSC__": "UNSPSC",
+                "ITEMNUMBER__.VALIDITYDATE__": "Start date",
+                "ITEMNUMBER__.EXPIRATIONDATE__": "End date",
+                "COMPANYCODE__": "CompanyCode",
+                "ITEMNUMBER__.VENDORNUMBER__": "VendorNumber",
+                "IMAGE__": "Image",
+                "STICKERID__": "Sticker name"
+            };
+        }
+        BuildPriceConditionCSV(priceConditionData) {
+            const priceConditionCsv = [];
+            if (priceConditionData) {
+                const priceCondition = JSON.parse(priceConditionData);
+                priceConditionCsv.push(priceCondition.type);
+                for (const threshold of priceCondition.thresholds) {
+                    priceConditionCsv.push("" + threshold.threshold, "" + threshold.unitPrice, "" + threshold.base);
+                }
+            }
+            return priceConditionCsv;
+        }
+        BuildProviderCSVLine(itemProperties) {
+            const priceConditionCSV = this.BuildPriceConditionCSV(itemProperties.rawData["PRICECONDITIONDATA__"]);
+            const vendorItemCSV = this.itemPropertiesClass.CSVLineAttributes
+                .map(attribute =&gt; { var _a; return ((_a = itemProperties.rawData[attribute]) === null || _a === void 0 ? void 0 : _a.toString()) || ""; });
+            return vendorItemCSV.concat(priceConditionCSV);
+        }
+        GetAttributesToQuery() {
+            return [
+                "RUIDEX", // For CatalogItem constructor
+                "ITEMNUMBER__.PRICECONDITIONDATA__",
+                ...this.GetFullLineAttributes()
+            ];
+        }
+        GetCSVHeader() {
+            const standardHeaders = super.GetCSVHeader();
+            const priceConditionHeaders = [];
+            const nbPriceConditionThresholds = this.GetMaxPriceConditions();
+            Log.Info(`Max Price Condition : " ${nbPriceConditionThresholds}`);
+            if (nbPriceConditionThresholds) {
+                priceConditionHeaders.push(Lib.Purchasing.ConditionedPricing.CSVColumnName.type);
+                for (let i = 1; i &lt;= nbPriceConditionThresholds; i++) {
+                    priceConditionHeaders.push(Lib.Purchasing.ConditionedPricing.CSVColumnName.threshold(i), Lib.Purchasing.ConditionedPricing.CSVColumnName.unitPrice(i), Lib.Purchasing.ConditionedPricing.CSVColumnName.base(i));
+                }
+            }
+            return [...standardHeaders, ...priceConditionHeaders];
+        }
+        GetCatalogQueryFilter() {
+            return Sys.Helpers.LdapUtil.FilterOr(Sys.Helpers.LdapUtil.FilterNotExist("ITEMNUMBER__.WAREHOUSENUMBER__"), Sys.Helpers.LdapUtil.FilterEqual("ITEMNUMBER__.WAREHOUSENUMBER__", ""));
+        }
+        GetCSVFileName(date) {
+            return `Export_Items_Catalog_${Sys.Helpers.Date.Format(date, "_yyyy-mm-dd_HH-MM-ss")}`;
+        }
+        GetMaxPriceConditions() {
+            let ret = 0;
+            const filter = Sys.Helpers.LdapUtil.FilterAnd(this.GetCatalogQueryFilter(), Sys.Helpers.LdapUtil.FilterNotEqual("ITEMNUMBER__.PRICECONDITIONDATA__", ""));
+            let attributes = [
+                "RUIDEX", // For CatalogItem constructor
+                "ITEMNUMBER__.PRICECONDITIONDATA__"
+            ];
+            const ctorQueryParams = new Sys.Helpers.QueryParams();
+            ctorQueryParams.onTransport = false;
+            ctorQueryParams.table = "P2P - CatalogItems__";
+            ctorQueryParams.attributes = attributes;
+            ctorQueryParams.filter = filter.toString();
+            ctorQueryParams.options = ["EnableJoin=1"];
+            const queryIT = new Sys.Helpers.BigQueryIterator(ctorQueryParams, null, "Msn");
+            let nbItem = 0;
+            let currRecord;
+            while ((currRecord = queryIT.Next()) != null) {
+                const priceCondition = JSON.parse(currRecord.GetVars().GetValue_String("ITEMNUMBER__.PRICECONDITIONDATA__", 0));
+                ret = Math.max(ret, priceCondition.thresholds.length);
+                ++nbItem;
+            }
+            Log.Info(`${nbItem} items, ${ret} max price condition`);
+            return ret;
+        }
+    }
+    ValidationScript.CatalogExporterConfigVendorItem = CatalogExporterConfigVendorItem;
+    class CatalogExporterConfigWarehouseItem extends CatalogExporterConfig {
+        ParseValue(attribute, rawValue) {
+            if (attribute === "STOCKTAKINGDATETIME__") {
+                const parsedDate = CatalogHelper.ParseDateOrElse(rawValue, null);
+                if (parsedDate) {
+                    const culture = Variable.GetValueAsString("DocumentCulture") || "en-US";
+                    return Sys.Helpers.Date.ToLocaleDateEx(parsedDate, culture);
+                }
+            }
+            return (rawValue === null || rawValue === void 0 ? void 0 : rawValue.toString()) || "";
+        }
+        BuildProviderCSVLine(itemProperties) {
+            const warehouseItemCSV = this.itemPropertiesClass.CSVLineAttributes
+                .map(attribute =&gt; this.ParseValue(attribute, itemProperties.rawData[attribute]));
+            return warehouseItemCSV;
+        }
+        constructor(warehouseid) {
+            super();
+            this.itemPropertiesClass = CatalogHelper.WarehouseItemProperties;
+            this.attributeProperties = [
+                "Warehouse" /* CatalogHelper.AttributeProperty.Warehouse */,
+                "WarehouseCSVIntegration" /* CatalogHelper.AttributeProperty.WarehouseCSVIntegration */
+            ];
+            this.attributeLevel = "warehouse";
+            // must match EXTRACTED_DATA_TO_CSV_MAPPING Lib_Purchasing_Catalog_Management
+            this.attributesMapping = {
+                "ITEMNUMBER__": "Item number",
+                "DESCRIPTION__": "Description",
+                "ITEMNUMBER__.WAREHOUSENUMBER__": "Warehouse ID",
+                "ITEMNUMBER__.CURRENTSTOCK__": "Current stock",
+                "ITEMNUMBER__.RESERVEDSTOCK__": "Reserved stock",
+                "ITEMNUMBER__.AVAILABLESTOCK__": "Available stock",
+                "ITEMNUMBER__.INCOMINGSTOCK__": "Incoming stock",
+                "ITEMNUMBER__.MINIMUMTHRESHOLD__": "Reorder point",
+                "ITEMNUMBER__.EXPECTEDSTOCKLEVEL__": "Target stock level",
+                "ITEMNUMBER__.STOCKTAKINGDATETIME__": "Stocktaking datetime",
+                "ITEMNUMBER__.LEADTIME__": "Lead time",
+                "ITEMNUMBER__.UNITPRICE__": "Unit price",
+                "ITEMNUMBER__.CURRENCY__": "Currency",
+                "SUPPLYTYPEID__.NAME__": "Supply type name",
+                "SUPPLYTYPEID__.FULLNAME__": "Supply type full path"
+            };
+            this.warehouseid = warehouseid;
+        }
+        GetAttributesToQuery() {
+            return [
+                "RUIDEX", // For CatalogItem constructor
+                ...this.GetFullLineAttributes()
+            ];
+        }
+        GetCatalogQueryFilter() {
+            return Sys.Helpers.LdapUtil.FilterEqual("ITEMNUMBER__.WAREHOUSENUMBER__", this.warehouseid);
+        }
+        GetCSVFileName(date) {
+            return `Export_Items_${this.warehouseid}_${Sys.Helpers.Date.Format(date, "_yyyy-mm-dd_HH-MM-ss")}`;
+        }
+    }
+    ValidationScript.CatalogExporterConfigWarehouseItem = CatalogExporterConfigWarehouseItem;
+    if (typeof _ENV_TEST_ENABLED === "undefined") {
+        const warehouseid = Variable.GetValueAsString("WAREHOUSEID");
+        const main = warehouseid
+            ? new CatalogExporterServer(new CatalogExporterConfigWarehouseItem(warehouseid))
+            : new CatalogExporterServer(new CatalogExporterConfigVendorItem());
+        main.Start();
+    }
+})(ValidationScript || (ValidationScript = {}));
+//# sourceMappingURL=validationscript.js.map</ValidationScript>
+      <AllowTagCoverPages>true</AllowTagCoverPages>
+      <AllowTagNewDocuments>true</AllowTagNewDocuments>
+      <AllowTagAttachments>true</AllowTagAttachments>
+      <AllowRemovePages>true</AllowRemovePages>
+      <AllowSwapPages>true</AllowSwapPages>
+      <PostProcessingScriptAllowRetry>
+      </PostProcessingScriptAllowRetry>
+      <PostProcessingScript>
+      </PostProcessingScript>
+    </gdr>
+    <lg>
+      <process_da>{
+	"_action_createflexible:Catalog Exporter": "Ny eksport",
+	"_Catalog Export Result": "Gennemført",
+	"_Catalog Exporter": "Eksport af katalog",
+	"_CompanyCode": "Virksomhedskode",
+	"_CompanyCode_report": "Virksomhedskode",
+	"_CSVExportInformation": "Eksportér filoplysninger",
+	"_ExpectedNumberOfRows": "Antal linjer, der skal eksporteres",
+	"_ExportDate": "Eksporteret",
+	"_ExportDate_report": "Dato/tidspunkt for eksport",
+	"_ExportDescription": "Beskrivelse",
+	"_Invalid EnergyConsumptionKgCO2ePerUnit, required number": "Værdien for 'GHG-emissioner (kg CO2e)' skal være større end eller lig med 0.",
+	"_Invalid LeadTime, required number": "Værdien for 'LeadTime' skal angives i antal dage",
+	"_Missing key column SupplierPartID or SupplierAuxPartID": "Manglende kolonneoverskrift: 'Id for del hos leverandør' eller 'id for reservedel hos leverandør'.",
+	"_New Catalog Export": "Udkast",
+	"_New Warehouse Export": "Udkast",
+	"_NumberOfItems": "Antal elementer",
+	"_NumberOfRows": "Antal linjer",
+	"_NumberOfRows_report": "Antal linjer",
+	"_Run_Export": "Eksportér",
+	"_Warehouse Export Result": "Gennemført",
+	"_Warehouse Exporter": "Eksport af lager",
+	"_WarehouseID": "Lager-id",
+	"_WarehouseID_report": "Lager-id",
+	"_WarehouseName": "Lagernavn",
+	"_WarehouseName_report": "Lagernavn",
+	"Catalog Exporter": "Eksport af katalog",
+	"WAREHOUSE EXPORTER": "Eksport af lager",
+	"_CSV parsing error": "Kunne ikke opdatere katalog",
+	"_EskerCatalogManagement": "Esker Procurement",
+	"_Failed": "Mislykkedes",
+	"_Portal Unique identifier required": "Manglende kolonneværdi: 'Supplier part ID'.",
+	"_ProcessCreatedByInboundChannel": "Katalogopdateringer via indgående kanal",
+	"_Too many line in csv. Max: {0}": "Filen overskrider {0} linjer. Reducer antallet af linjer for at importere den.\n\n",
+	"_Unique column identifier required": "Manglende kolonneoverskrift. Filen skal indeholde følgende kolonner:\n• 'Item number' eller\n• 'Manufacturer part ID' og 'Manufacturer name' eller\n• 'Supplier part ID' og 'Vendor number'",
+	"_Unique column identifier required V1 to V2": "Manglende kolonneoverskrift. Filen skal indeholde følgende kolonner:\n• 'ManufacturerPartID__' og 'ManufacturerName__' eller\n• 'ItemNumber__' og 'VendorNumber__' eller\n• 'ItemDescription__'",
+	"_Unique identifier required": "Manglende kolonneværdi: 'Item number' eller 'Manufacturer part ID' eller 'Supplier part ID'.",
+	"_Unique identifier required V1 to V2": "Manglende kolonneværdi: 'ManufacturerPartID__' eller 'ItemNumber__' eller 'ItemDescription__'."
+}</process_da>
+      <process_DE>{
+	"_action_createflexible:Catalog Exporter": "Neuer Export",
+	"_Catalog Export Result": "Abgeschlossen",
+	"_Catalog Exporter": "Katalogexport",
+	"_CompanyCode": "Buchungskreis",
+	"_CompanyCode_report": "Buchungskreis",
+	"_CSVExportInformation": "Exportdatei-Informationen",
+	"_ExpectedNumberOfRows": "Anzahl zu exportierender Zeilen",
+	"_ExportDate": "Exportiert",
+	"_ExportDate_report": "Datum/Uhrzeit exportiert",
+	"_ExportDescription": "Beschreibung",
+	"_Invalid EnergyConsumptionKgCO2ePerUnit, required number": "Der Wert für 'THG-Emissionen (kg CO2e)' muss größer oder gleich 0 sein.",
+	"_Invalid LeadTime, required number": "Der Wert für 'Lead time' muss eine Zeitdauer in Tagen sein",
+	"_Missing key column SupplierPartID or SupplierAuxPartID": "Fehlende Spaltenkopfzeile: 'Supplier part ID' oder 'Supplier auxiliary part ID'",
+	"_New Catalog Export": "Entwurf",
+	"_New Warehouse Export": "Entwurf",
+	"_NumberOfItems": "Artikelanzahl",
+	"_NumberOfRows": "Anzahl der Zeilen",
+	"_NumberOfRows_report": "Anzahl der Zeilen",
+	"_Run_Export": "Exportieren",
+	"_Warehouse Export Result": "Abgeschlossen",
+	"_Warehouse Exporter": "Export von Lagerbeständen",
+	"_WarehouseID": "Lagerkennung",
+	"_WarehouseID_report": "Lagerkennung",
+	"_WarehouseName": "Lagerort",
+	"_WarehouseName_report": "Lagerort",
+	"Catalog Exporter": "Katalogexport",
+	"WAREHOUSE EXPORTER": "Export von Lagerbeständen",
+	"_CSV parsing error": "Katalog kann nicht aktualisiert werden",
+	"_EskerCatalogManagement": "Esker Einkauf",
+	"_Failed": "Fehlgeschlagen",
+	"_Portal Unique identifier required": "Fehlender Spaltenwert 'Supplier part ID'.",
+	"_ProcessCreatedByInboundChannel": "Katalogaktualisierung über eingehenden Kanal",
+	"_Too many line in csv. Max: {0}": "Die Datei hat mehr als {0} Zeilen. Bitte reduzieren Sie die Anzahl der Zeilen, um sie zu importieren.",
+	"_Unique column identifier required": "Fehlende Spaltenüberschrift Die Datei muss die folgenden Spalten enthalten:\n• 'Supplier part ID‘ oder\n• 'Manufacturer part ID‘ und 'Manufacturer name‘ oder\n• 'Supplier part ID‘ und 'Vendor number‘",
+	"_Unique column identifier required V1 to V2": "Fehlende Spaltenüberschrift Die Datei muss die folgenden Spalten enthalten:\n• 'ManufacturerPartID__' und 'ManufacturerName__' oder\n• 'ItemNumber__' und 'VendorNumber__' oder\n• 'ItemDescription__'",
+	"_Unique identifier required": "Fehlender Spaltenwert 'Item number‘ oder 'Manufacturer part ID‘ oder 'Supplier part ID‘",
+	"_Unique identifier required V1 to V2": "Fehlender Spaltenwert 'ManufacturerPartID__' oder 'ItemNumber__' oder 'ItemDescription__'."
+}</process_DE>
+      <process_JA>{
+	"_action_createflexible:Catalog Exporter": "新規エクスポート",
+	"_Catalog Export Result": "完了",
+	"_Catalog Exporter": "カタログのエクスポート",
+	"_CompanyCode": "会社コード",
+	"_CompanyCode_report": "会社コード",
+	"_CSVExportInformation": "エクスポートファイルの情報",
+	"_ExpectedNumberOfRows": "エクスポートする行数",
+	"_ExportDate": "エクスポート済み",
+	"_ExportDate_report": "エクスポート日時",
+	"_ExportDescription": "説明",
+	"_Invalid EnergyConsumptionKgCO2ePerUnit, required number": "「GHG排出量 (kg CO2e)」の値は、ゼロ以上でなければなりません。",
+	"_Invalid LeadTime, required number": "「Lead Time」（リードタイム）の値は、日数を指定してください",
+	"_Missing key column SupplierPartID or SupplierAuxPartID": "列ヘッダーがありません: 'Supplier part ID' または 'Supplier auxiliary part ID'。",
+	"_New Catalog Export": "ドラフト",
+	"_New Warehouse Export": "ドラフト",
+	"_NumberOfItems": "品目数",
+	"_NumberOfRows": "行数",
+	"_NumberOfRows_report": "行数",
+	"_Run_Export": "エクスポート",
+	"_Warehouse Export Result": "完了",
+	"_Warehouse Exporter": "在庫エクスポート",
+	"_WarehouseID": "倉庫ID",
+	"_WarehouseID_report": "倉庫ID",
+	"_WarehouseName": "倉庫名",
+	"_WarehouseName_report": "倉庫名",
+	"Catalog Exporter": "カタログのエクスポート",
+	"WAREHOUSE EXPORTER": "在庫エクスポート",
+	"_CSV parsing error": "カタログを更新できません",
+	"_EskerCatalogManagement": "Esker調達",
+	"_Failed": "失敗",
+	"_Portal Unique identifier required": "列の値がありません: 'Supplier part ID'。",
+	"_ProcessCreatedByInboundChannel": "受信チャンネルを介したカタログの更新",
+	"_Too many line in csv. Max: {0}": "このファイルは {0} 行を超えています。インポートする行数を減らしてください。",
+	"_Unique column identifier required": "列ヘッダーがありません。\nファイルは必ず次の列のいずれかで構成されています。\n• 'Item number'\n• 'Manufacturer part ID' と 'Manufacturer name'\n• 'Supplier part ID' と 'Vendor number'",
+	"_Unique column identifier required V1 to V2": "列ヘッダーがありません。\nファイルは必ず次の列のいずれかで構成されています。\n• 'ManufacturerPartID__' と 'ManufacturerName__'\n• 'ItemNumber__' と 'VendorNumber__'\n• 'ItemDescription__'",
+	"_Unique identifier required": "列の値がありません: 'Item number' または 'Manufacturer part ID' または 'Supplier part ID'。",
+	"_Unique identifier required V1 to V2": "列の値がありません: 'ManufacturerPartID__' または 'ItemNumber__' または 'ItemDescription__'。"
+}</process_JA>
+      <process_en>{
+	"_action_createflexible:Catalog Exporter": "New export",
+	"_Catalog Export Result": "Completed",
+	"_Catalog Exporter": "Catalog Export",
+	"_CompanyCode": "Company code",
+	"_CompanyCode_report": "Company code",
+	"_CSVExportInformation": "Export File Information",
+	"_ExpectedNumberOfRows": "Number of lines to export",
+	"_ExportDate": "Exported",
+	"_ExportDate_report": "Date/time exported",
+	"_ExportDescription": "Description",
+	"_Invalid EnergyConsumptionKgCO2ePerUnit, required number": "The value for 'GHG emissions (kg CO2e)' must be greater than or equal to 0.",
+	"_Invalid LeadTime, required number": "The value for 'LeadTime' must be expressed in number of days",
+	"_Missing key column SupplierPartID or SupplierAuxPartID": "Missing column header: 'Supplier part ID' or 'Supplier auxiliary part ID'.",
+	"_New Catalog Export": "Draft",
+	"_New Warehouse Export": "Draft",
+	"_NumberOfItems": "Number of items",
+	"_NumberOfRows": "Number of lines",
+	"_NumberOfRows_report": "Number of lines",
+	"_Run_Export": "Export",
+	"_Warehouse Export Result": "Completed",
+	"_Warehouse Exporter": "Stock Export",
+	"_WarehouseID": "Warehouse ID",
+	"_WarehouseID_report": "Warehouse ID",
+	"_WarehouseName": "Warehouse name",
+	"_WarehouseName_report": "Warehouse name",
+	"Catalog Exporter": "Catalog Export",
+	"WAREHOUSE EXPORTER": "Stock Export",
+	"_CSV parsing error": "Unable to update catalog",
+	"_EskerCatalogManagement": "Esker Procurement",
+	"_Failed": "Failed",
+	"_Portal Unique identifier required": "Missing column value: 'Supplier part ID'.",
+	"_ProcessCreatedByInboundChannel": "Catalog update via inbound channel",
+	"_Too many line in csv. Max: {0}": "The file exceeds {0} lines. Please reduce the number of lines to import it.\n\n",
+	"_Unique column identifier required": "Missing column header.\nThe file must contain the following columns: \n• 'Item number' or\n• 'Manufacturer part ID' and 'Manufacturer name' or\n• 'Supplier part ID' and 'Vendor number'",
+	"_Unique column identifier required V1 to V2": "Missing column header.\nThe file must contain the following columns: \n• 'ManufacturerPartID__' and 'ManufacturerName__' or\n• 'ItemNumber__' and 'VendorNumber__' or\n• 'ItemDescription__'",
+	"_Unique identifier required": "Missing column value: 'Item number' or 'Manufacturer part ID' or 'Supplier part ID'.",
+	"_Unique identifier required V1 to V2": "Missing column value: 'ManufacturerPartID__' or 'ItemNumber__' or 'ItemDescription__'."
+}</process_en>
+      <process_ES>{
+	"_action_createflexible:Catalog Exporter": "Nueva exportación",
+	"_Catalog Export Result": "Completada",
+	"_Catalog Exporter": "Exportación del catálogo",
+	"_CompanyCode": "Código de empresa",
+	"_CompanyCode_report": "Código de empresa",
+	"_CSVExportInformation": "Información del archivo de exportación",
+	"_ExpectedNumberOfRows": "Número de líneas para exportar",
+	"_ExportDate": "Exportado el",
+	"_ExportDate_report": "Fecha/hora de exportación",
+	"_ExportDescription": "Descripción",
+	"_Invalid EnergyConsumptionKgCO2ePerUnit, required number": "El valor de 'Emisiones de GEI (kg CO2e)' debe ser mayor o igual que 0.",
+	"_Invalid LeadTime, required number": "El valor para 'Lead time' debe expresarse en número de días",
+	"_Missing key column SupplierPartID or SupplierAuxPartID": "Falta encabezamiento de la columna: 'Supplier part ID' o 'Supplier auxiliary part ID'.",
+	"_New Catalog Export": "Borrador",
+	"_New Warehouse Export": "Borrador",
+	"_NumberOfItems": "Número de artículos",
+	"_NumberOfRows": "Número de líneas",
+	"_NumberOfRows_report": "Número de líneas",
+	"_Run_Export": "Exportar",
+	"_Warehouse Export Result": "Completada",
+	"_Warehouse Exporter": "Exportación del stock",
+	"_WarehouseID": "Identificador de almacén",
+	"_WarehouseID_report": "Identificador de almacén",
+	"_WarehouseName": "Nombre del almacén",
+	"_WarehouseName_report": "Nombre del almacén",
+	"Catalog Exporter": "Exportación del catálogo",
+	"WAREHOUSE EXPORTER": "Exportación del stock ",
+	"_CSV parsing error": "No se pudo actualizar el catálogo",
+	"_EskerCatalogManagement": "Esker Compras",
+	"_Failed": "Fallida",
+	"_Portal Unique identifier required": "Falta valor de la columna: ‘ID de pieza del proveedor'. ",
+	"_ProcessCreatedByInboundChannel": "Actualización del catálogo a través del canal entrante",
+	"_Too many line in csv. Max: {0}": "El archivo excede {0} líneas. Por favor, reduzca el número de líneas para importarlo.\n\n",
+	"_Unique column identifier required": "Falta encabezamiento de la columna.\nEl archivo debe contener las siguientes columnas: \n• 'Item number' o \n• 'Manufacturer part ID' \ny 'Manufacturer name' o \n• 'Supplier part ID' y 'Vendor number'",
+	"_Unique column identifier required V1 to V2": "Falta encabezamiento de la columna. \nEl archivo debe contener las siguientes columnas: \n• 'ManufacturerPartID__' y 'ManufacturerName__' o \n• 'ItemNumber__' y 'VendorNumber__' o \n• 'ItemDescription__'",
+	"_Unique identifier required": "Falta valor de la columna: 'Item number' o 'Manufacturer part ID' o 'Supplier part ID'.",
+	"_Unique identifier required V1 to V2": "Falta valor de la columna: ‘ManufacturerPartID__' o 'ItemNumber__' o 'ItemDescription__'."
+}</process_ES>
+      <process_FR>{
+	"_action_createflexible:Catalog Exporter": "Nouvelle exportation",
+	"_Catalog Export Result": "Terminée",
+	"_Catalog Exporter": "Exportation du catalogue",
+	"_CompanyCode": "Code société",
+	"_CompanyCode_report": "Code société",
+	"_CSVExportInformation": "Informations du fichier d'exportation",
+	"_ExpectedNumberOfRows": "Nombre de lignes à exporter",
+	"_ExportDate": "Exporté le",
+	"_ExportDate_report": "Date/heure de l'exportation",
+	"_ExportDescription": "Description",
+	"_Invalid EnergyConsumptionKgCO2ePerUnit, required number": "La valeur pour 'GHG emissions (kg CO2e)' doit être supérieure ou égale à 0.",
+	"_Invalid LeadTime, required number": "La valeur pour 'Lead time' doit être exprimée en nombre de jours",
+	"_Missing key column SupplierPartID or SupplierAuxPartID": "En-tête de colonne manquant : 'Supplier part ID' ou 'Supplier auxiliary part ID'.",
+	"_New Catalog Export": "Brouillon",
+	"_New Warehouse Export": "Brouillon",
+	"_NumberOfItems": "Nombre d'articles",
+	"_NumberOfRows": "Nombre de lignes",
+	"_NumberOfRows_report": "Nombre de lignes",
+	"_Run_Export": "Exporter",
+	"_Warehouse Export Result": "Terminée",
+	"_Warehouse Exporter": "Exportation des stocks",
+	"_WarehouseID": "Identifiant de l'entrepôt",
+	"_WarehouseID_report": "Identifiant de l'entrepôt",
+	"_WarehouseName": "Nom de l'entrepôt",
+	"_WarehouseName_report": "Nom de l'entrepôt",
+	"Catalog Exporter": "Exportation du catalogue",
+	"WAREHOUSE EXPORTER": "Exportation des stocks",
+	"_CSV parsing error": "Échec de mise à jour du catalogue",
+	"_EskerCatalogManagement": "Esker Achats",
+	"_Failed": "En échec",
+	"_Portal Unique identifier required": "Valeur de colonne manquante : 'Supplier part ID'.",
+	"_ProcessCreatedByInboundChannel": "Mise à jour du catalogue par canal entrant",
+	"_Too many line in csv. Max: {0}": "Le fichier dépasse les {0} lignes. Veuillez réduire le nombre de lignes pour l'importer.\n\n",
+	"_Unique column identifier required": "En-tête de colonne manquant.\nLe fichier doit contenir les colonnes suivantes :\n• 'Item number' ou\n• 'Manufacturer part ID' et 'Manufacturer name' ou\n• 'Supplier part ID' et 'Vendor number'",
+	"_Unique column identifier required V1 to V2": "En-tête de colonne manquant.\nLe fichier doit contenir les colonnes suivantes :\n• 'ManufacturerPartID__' et 'ManufacturerName__' ou\n• 'ItemNumber__' et 'VendorNumber__' ou\n• 'ItemDescription__' ",
+	"_Unique identifier required": "Valeur de colonne manquante : 'Item number' ou 'Manufacturer part ID' ou 'Supplier part ID'.",
+	"_Unique identifier required V1 to V2": "Valeur de colonne manquante : 'ManufacturerPartID__' ou 'ItemNumber__' ou 'ItemDescription__'."
+}</process_FR>
+      <process_nl-NL>{
+	"_action_createflexible:Catalog Exporter": "Nieuwe export",
+	"_Catalog Export Result": "Voltooid",
+	"_Catalog Exporter": "Catalogusexport",
+	"_CompanyCode": "Bedrijfscode",
+	"_CompanyCode_report": "Bedrijfscode",
+	"_CSVExportInformation": "Informatie exportbestand",
+	"_ExpectedNumberOfRows": "Aantal te exporteren regels",
+	"_ExportDate": "Geëxporteerd",
+	"_ExportDate_report": "Datum/tijd geëxporteerd",
+	"_ExportDescription": "Beschrijving",
+	"_Invalid EnergyConsumptionKgCO2ePerUnit, required number": "De waarde van 'BKG-emissies (kg CO2e)' moet groter dan of gelijk aan 0 zijn.",
+	"_Invalid LeadTime, required number": "De waarde voor ‘Leveringstermijn’ moet worden uitgedrukt in aantal dagen",
+	"_Missing key column SupplierPartID or SupplierAuxPartID": "Afwezige koptekst van kolom . 'Supplier part ID' of 'Supplier auxiliary part ID'.",
+	"_New Catalog Export": "Ontwerp",
+	"_New Warehouse Export": "Ontwerp",
+	"_NumberOfItems": "Aantal items",
+	"_NumberOfRows": "Aantal regels",
+	"_NumberOfRows_report": "Aantal regels",
+	"_Run_Export": "Exporteren",
+	"_Warehouse Export Result": "Voltooid",
+	"_Warehouse Exporter": "Voorraadexport",
+	"_WarehouseID": "Magazijn-ID",
+	"_WarehouseID_report": "Magazijn-ID",
+	"_WarehouseName": "Naam magazijn",
+	"_WarehouseName_report": "Naam magazijn",
+	"Catalog Exporter": "Catalogusexport",
+	"WAREHOUSE EXPORTER": "Voorraadexport",
+	"_CSV parsing error": "Kan catalogus niet bijwerken",
+	"_EskerCatalogManagement": "Esker Inkoop",
+	"_Failed": "Mislukt",
+	"_Portal Unique identifier required": "Afwezige kolomwaarde: ‘Supplier part ID'",
+	"_ProcessCreatedByInboundChannel": "Catalogusupdate via inkomend kanaal",
+	"_Too many line in csv. Max: {0}": "Het bestand overschrijdt {0} regels. Gelieve het aantal lijnen te verminderen om het te importeren.\n\n",
+	"_Unique column identifier required": "Afwezige koptekst van kolom. Het bestand moet de volgende kolommen bevatten:\n• 'Supplier part ID' of \n• 'Manufacturer part ID' en 'Manufacturer name' of \n• 'Supplier part ID' en 'Vendor number'",
+	"_Unique column identifier required V1 to V2": "Afwezige koptekst van kolom. KolommeHet bestand moet de volgende kolommen bevatten: \n• 'ManufacturerPartID__' en 'ManufacturerName__' of \n• 'ItemNumber__' en 'VendorNumber__' of \n• 'ItemDescription__'",
+	"_Unique identifier required": "Afwezige kolomwaarde:  ‘Item number’ of ‘Manufacturer part ID’ of ‘Supplier part ID’",
+	"_Unique identifier required V1 to V2": "Afwezige kolomwaarde:  'ManufacturerPartID__' of 'ItemNumber__' of 'ItemDescription_'"
+}</process_nl-NL>
+      <process_pl>{
+	"_action_createflexible:Catalog Exporter": "Nowy eksport",
+	"_Catalog Export Result": "Ukończono",
+	"_Catalog Exporter": "Eksport katalogu",
+	"_CompanyCode": "Kod firmy",
+	"_CompanyCode_report": "Kod firmy",
+	"_CSVExportInformation": "Informacje o pliku eksportu",
+	"_ExpectedNumberOfRows": "Liczba wierszy do wyeksportowania",
+	"_ExportDate": "Wyeksportowano",
+	"_ExportDate_report": "Data/godzina eksportu",
+	"_ExportDescription": "Opis",
+	"_Invalid EnergyConsumptionKgCO2ePerUnit, required number": "Wartość „GHG emissions (kg CO2e)” musi być większa lub równa 0.",
+	"_Invalid LeadTime, required number": "Wartość „LeadTime” musi być wyrażona liczbą dni",
+	"_Missing key column SupplierPartID or SupplierAuxPartID": "Brak nagłówka kolumny: „Id. części dostawcy” lub „Pomocniczy id. części dostawcy”.",
+	"_New Catalog Export": "Wersja robocza",
+	"_New Warehouse Export": "Wersja robocza",
+	"_NumberOfItems": "Liczba pozycji",
+	"_NumberOfRows": "Liczba wierszy",
+	"_NumberOfRows_report": "Liczba wierszy",
+	"_Run_Export": "Eksportuj",
+	"_Warehouse Export Result": "Ukończono",
+	"_Warehouse Exporter": "Eksport zapasów",
+	"_WarehouseID": "Id. magazynu",
+	"_WarehouseID_report": "Id. magazynu",
+	"_WarehouseName": "Nazwa magazynu",
+	"_WarehouseName_report": "Nazwa magazynu",
+	"Catalog Exporter": "Eksport katalogu",
+	"WAREHOUSE EXPORTER": "Eksport zapasów",
+	"_CSV parsing error": "Nie można zaktualizować katalogu",
+	"_EskerCatalogManagement": "Esker Procurement",
+	"_Failed": "Niepowodzenie",
+	"_Portal Unique identifier required": "Brak wartości kolumny: „Id. części dostawcy”.",
+	"_ProcessCreatedByInboundChannel": "Aktualizacja katalogu za pośrednictwem kanału przychodzącego",
+	"_Too many line in csv. Max: {0}": "Plik przekracza {0} wierszy. Zmniejsz liczbę wierszy, aby go zaimportować.",
+	"_Unique column identifier required": "Brak nagłówka kolumny.\nPlik musi zawierać następujące kolumny:\n• „Numer pozycji” lub\n• „Id. części producenta” i „Nazwa producenta” lub\n• „Id. części dostawcy” i „Numer dostawcy”",
+	"_Unique column identifier required V1 to V2": "Brak nagłówka kolumny.\nPlik musi zawierać następujące kolumny:\n• „ManufacturerPartID__” i „ManufacturerName__” lub \n• „ItemNumber__” i „VendorNumber__” lub\n• „ItemDescription__”",
+	"_Unique identifier required": "Brak wartości kolumny: „Item number” lub „Manufacturer part ID” lub „Supplier part ID”.",
+	"_Unique identifier required V1 to V2": "Brak wartości kolumny: „ManufacturerPartID__” lub „ItemNumber__” lub „ItemDescription__”."
+}</process_pl>
+      <process_IT>{
+	"_action_createflexible:Catalog Exporter": "Nuova esportazione",
+	"_Catalog Export Result": "Completata",
+	"_Catalog Exporter": "Esportazione catalogo",
+	"_CompanyCode": "Codice società",
+	"_CompanyCode_report": "Codice società",
+	"_CSVExportInformation": "Informazioni del file esportato",
+	"_ExpectedNumberOfRows": "Numero righe da esportare",
+	"_ExportDate": "Esportato il",
+	"_ExportDate_report": "Data/ora esportazione",
+	"_ExportDescription": "Descrizione",
+	"_Invalid EnergyConsumptionKgCO2ePerUnit, required number": "Il valore per 'GHG emissions (kg CO2e)' deve essere superiore o uguale a 0.",
+	"_Invalid LeadTime, required number": "Il valore per 'Lead time' deve essere espresso in numero di giorni",
+	"_Missing key column SupplierPartID or SupplierAuxPartID": "Intestazione colonna mancante: 'Supplier part ID' o 'Supplier auxiliary part ID'.",
+	"_New Catalog Export": "Bozza",
+	"_New Warehouse Export": "Bozza",
+	"_NumberOfItems": "Numero di articoli",
+	"_NumberOfRows": "Numero di righe",
+	"_NumberOfRows_report": "Numero di righe",
+	"_Run_Export": "Esporta",
+	"_Warehouse Export Result": "Completata",
+	"_Warehouse Exporter": "Esportazione stock",
+	"_WarehouseID": "ID magazzino",
+	"_WarehouseID_report": "ID magazzino",
+	"_WarehouseName": "Nome magazzino",
+	"_WarehouseName_report": "Nome magazzino",
+	"Catalog Exporter": "Esportazione catalogo",
+	"WAREHOUSE EXPORTER": "Esportazione stock",
+	"_CSV parsing error": "Impossibile aggiornare il catalogo",
+	"_EskerCatalogManagement": "Esker Acquisti",
+	"_Failed": "Non riuscita",
+	"_Portal Unique identifier required": "Valore colonna mancante: 'Supplier part ID'.",
+	"_ProcessCreatedByInboundChannel": "Aggiornamento catalogo tramite canale in ingresso",
+	"_Too many line in csv. Max: {0}": "Il file supera le {0} righe. Ridurre il numero di righe per importarlo.\n\n",
+	"_Unique column identifier required": "Intestazione colonna mancante.\nIl file deve contenere le seguenti colonne:\n• 'Item number' o\n• 'Manufacturer part ID' e 'Manufacturer name' o\n• 'Supplier part ID' e 'Vendor number'",
+	"_Unique column identifier required V1 to V2": "Intestazione colonna mancante.\nIl file deve contenere le seguenti colonne:\n• 'ManufacturerPartID__' e 'ManufacturerName__' o\n• 'ItemNumber__' e 'VendorNumber__' o\n• 'ItemDescription__' ",
+	"_Unique identifier required": "Valore colonna mancante: 'Item number' o 'Manufacturer part ID' o 'Supplier part ID'.",
+	"_Unique identifier required V1 to V2": "Valore colonna mancante: 'ManufacturerPartID__' o 'ItemNumber__' o 'ItemDescription__'."
+}</process_IT>
+      <process_sk>{
+	"_action_createflexible:Catalog Exporter": "Nový export",
+	"_Catalog Export Result": "Dokončené",
+	"_Catalog Exporter": "Export katalógu",
+	"_CompanyCode": "Kód spoločnosti",
+	"_CompanyCode_report": "Kód spoločnosti",
+	"_CSVExportInformation": "Informácie o exportovanom súbore",
+	"_ExpectedNumberOfRows": "Počet riadkov na export",
+	"_ExportDate": "Exportované",
+	"_ExportDate_report": "Dátum/čas exportu",
+	"_ExportDescription": "Popis",
+	"_Invalid EnergyConsumptionKgCO2ePerUnit, required number": "Hodnota 'Emisie SP (kg CO2e)' musí byť väčšia alebo rovná 0.",
+	"_Invalid LeadTime, required number": "Hodnota dodacej lehoty 'Lead time' musí byť vyjadrená v počte dní",
+	"_Missing key column SupplierPartID or SupplierAuxPartID": "Chýba hlavička stĺpca: 'Supplier part ID' alebo 'Supplier auxiliary part ID'.",
+	"_New Catalog Export": "Návrh",
+	"_New Warehouse Export": "Návrh",
+	"_NumberOfItems": "Počet položiek",
+	"_NumberOfRows": "Počet riadkov",
+	"_NumberOfRows_report": "Počet riadkov",
+	"_Run_Export": "Exportovať",
+	"_Warehouse Export Result": "Dokončené",
+	"_Warehouse Exporter": "Export zásob",
+	"_WarehouseID": "ID skladu",
+	"_WarehouseID_report": "ID skladu",
+	"_WarehouseName": "Názov skladu",
+	"_WarehouseName_report": "Názov skladu",
+	"Catalog Exporter": "Export katalógu",
+	"WAREHOUSE EXPORTER": "Export zásob",
+	"_CSV parsing error": "Katalóg sa nedá aktualizovať",
+	"_EskerCatalogManagement": "Obstarávanie Esker",
+	"_Failed": "Neúspešné",
+	"_Portal Unique identifier required": "Chýba hodnota stĺpca: 'ID dielu dodávateľa'.",
+	"_ProcessCreatedByInboundChannel": "Aktualizácia katalógu prostredníctvom vstupného kanála",
+	"_Too many line in csv. Max: {0}": "Súbor presahuje {0} riadkov. Znížte počet riadkov, aby bolo možné súbor importovať.",
+	"_Unique column identifier required": "Chýba hlavička stĺpca.\nSúbor musí obsahovať nasledujúce stĺpce: \n• 'Číslo položky' or\n• 'ID dielu výrobcu' a 'Názov výrobcu' alebo\n• 'ID dielu dodávateľa' and 'Číslo dodávateľa'",
+	"_Unique column identifier required V1 to V2": "Chýba hlavička stĺpca.\nSúbor musí obsahovať nasledujúce stĺpce: \n• 'ManufacturerPartID__' a 'ManufacturerName__' alebo\n• 'ItemNumber__' a 'VendorNumber__' alebo\n• 'ItemDescription__'",
+	"_Unique identifier required": "Chýba hodnota stĺpca: 'Číslo položky' alebo 'ID dielu výrobcu' alebo 'ID dielu dodávateľa'.",
+	"_Unique identifier required V1 to V2": "Chýba hodnota stĺpca: 'ManufacturerPartID__' alebo 'ItemNumber__' alebo 'ItemDescription__'."
+}</process_sk>
+      <process_ZH-CN>{
+	"_action_createflexible:Catalog Exporter": "新导出",
+	"_Catalog Export Result": "已完成",
+	"_Catalog Exporter": "目录导出",
+	"_CompanyCode": "公司代码",
+	"_CompanyCode_report": "公司代码",
+	"_CSVExportInformation": "导出文件信息",
+	"_ExpectedNumberOfRows": "要导出的行数",
+	"_ExportDate": "已导出",
+	"_ExportDate_report": "导出的日期/时间",
+	"_ExportDescription": "说明/描述",
+	"_Invalid EnergyConsumptionKgCO2ePerUnit, required number": "“温室气体排放（kg CO2e）”的值必须大于或等于 0。",
+	"_Invalid LeadTime, required number": "“Lead time”的值必须以天数表示",
+	"_Missing key column SupplierPartID or SupplierAuxPartID": "缺少列标题：“Supplier part ID”或“Supplier auxiliary part ID”。",
+	"_New Catalog Export": "草稿",
+	"_New Warehouse Export": "草稿",
+	"_NumberOfItems": "商品项数",
+	"_NumberOfRows": "行数",
+	"_NumberOfRows_report": "行数",
+	"_Run_Export": "导出",
+	"_Warehouse Export Result": "已完成",
+	"_Warehouse Exporter": "库存导出",
+	"_WarehouseID": "仓库标识",
+	"_WarehouseID_report": "仓库标识",
+	"_WarehouseName": "仓库名称",
+	"_WarehouseName_report": "仓库名称",
+	"Catalog Exporter": "目录导出",
+	"WAREHOUSE EXPORTER": "库存导出",
+	"_CSV parsing error": "无法更新目录",
+	"_EskerCatalogManagement": "Esker 采购",
+	"_Failed": "失败",
+	"_Portal Unique identifier required": "缺少列值：“Supplier part ID”。",
+	"_ProcessCreatedByInboundChannel": "通过入站通道更新目录",
+	"_Too many line in csv. Max: {0}": "文件超过 {0} 行。请减少其行数再导入。\n\n",
+	"_Unique column identifier required": "缺少列标题。\n文件必须包含以下列：\n• “Item number”或\n• “Manufacturer part ID”和“Manufacturer name”或\n• “Supplier part ID”和“Vendor number”",
+	"_Unique column identifier required V1 to V2": "缺少列标题。\n文件必须包含以下列：\n• “ManufacturerPartID__”和“ManufacturerName__”或\n• “ItemNumber__”和“VendorNumber__”或\n• “ItemDescription__”",
+	"_Unique identifier required": "缺少列值：“Item number”或“Manufacturer part ID”或“Supplier part ID”。",
+	"_Unique identifier required V1 to V2": "缺少列值：“ManufacturerPartID__”或“ItemNumber__”或“ItemDescription__”。"
+}</process_ZH-CN>
+      <process_pt-BR>{
+	"_action_createflexible:Catalog Exporter": "Nova exportação",
+	"_Catalog Export Result": "Concluída",
+	"_Catalog Exporter": "Exportação de catálogo",
+	"_CompanyCode": "Código da empresa",
+	"_CompanyCode_report": "Código da empresa",
+	"_CSVExportInformation": "Informações do arquivo de exportação",
+	"_ExpectedNumberOfRows": "Número de linhas para exportar",
+	"_ExportDate": "Exportado",
+	"_ExportDate_report": "Data/hora de exportação",
+	"_ExportDescription": "Descrição",
+	"_Invalid EnergyConsumptionKgCO2ePerUnit, required number": "O valor para “Emissões de GEE (kg CO2e)” deve ser maior ou igual a 0.",
+	"_Invalid LeadTime, required number": "O valor para 'Lead time' deve ser expresso em número de dias",
+	"_Missing key column SupplierPartID or SupplierAuxPartID": "Cabeçalho da coluna ausente: 'Supplier part ID' ou 'Supplier auxiliary part ID'.",
+	"_New Catalog Export": "Rascunho",
+	"_New Warehouse Export": "Rascunho",
+	"_NumberOfItems": "Número de itens",
+	"_NumberOfRows": "Número de linhas",
+	"_NumberOfRows_report": "Número de linhas",
+	"_Run_Export": "Exportar",
+	"_Warehouse Export Result": "Concluída",
+	"_Warehouse Exporter": "Exportação de estoque",
+	"_WarehouseID": "ID de armazém",
+	"_WarehouseID_report": "ID de armazém",
+	"_WarehouseName": "Nome do armazém",
+	"_WarehouseName_report": "Nome do armazém",
+	"Catalog Exporter": "Exportação de catálogo",
+	"WAREHOUSE EXPORTER": "Exportação de estoque",
+	"_CSV parsing error": "Não é possível atualizar o catálogo",
+	"_EskerCatalogManagement": "Esker Compras",
+	"_Failed": "Com erro",
+	"_Portal Unique identifier required": "Valor da coluna ausente: 'Supplier part ID'.",
+	"_ProcessCreatedByInboundChannel": "Atualização de catálogo via canal de entrada",
+	"_Too many line in csv. Max: {0}": "O arquivo excede {0} linhas. Reduza o número de linhas para importá-lo.",
+	"_Unique column identifier required": "Cabeçalho da coluna ausente. O arquivo deve conter as seguintes colunas:\n• 'Item number' ou\n• 'Manufacturer part ID' e 'Manufacturer name' ou\n• 'Supplier part ID' e 'Vendor number'",
+	"_Unique column identifier required V1 to V2": "Cabeçalho da coluna ausente. O arquivo deve conter as seguintes colunas:\n• 'ManufacturerPartID__' e 'ManufacturerName__' ou • 'ItemNumber__' e 'VendorNumber__' ou\n• 'ItemDescription__'",
+	"_Unique identifier required": "Valor da coluna ausente: 'Item number' ou 'Manufacturer part ID' ou 'Supplier part ID'.",
+	"_Unique identifier required V1 to V2": "Valor da coluna ausente: 'ManufacturerPartID__' ou 'ItemNumber__' ou 'ItemDescription__'."
+}</process_pt-BR>
+    </lg>
+    <process>
+      <flowtype>processing</flowtype>
+      <ocrpreset>scan</ocrpreset>
+      <EnableNegativeNumbersBetweenBrackets>true</EnableNegativeNumbersBetweenBrackets>
+      <homepagelabel>Catalog Exporter</homepagelabel>
+      <enableflexibleauditing>
+      </enableflexibleauditing>
+      <enableflexibleediting>
+      </enableflexibleediting>
+      <enableflexibleteaching>
+      </enableflexibleteaching>
+      <disableocr>
+      </disableocr>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <disableautolearning>true</disableautolearning>
+      <backgroundprocessingthreshold>
+      </backgroundprocessingthreshold>
+      <EnablePreviewPrecomputation>
+      </EnablePreviewPrecomputation>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <enablerounddecimal>true</enablerounddecimal>
+      <pdfNormalizeFilter>
+      </pdfNormalizeFilter>
+      <archiveDuration>0</archiveDuration>
+      <ocrpagestoprocess>0</ocrpagestoprocess>
+      <ScriptEngineType>2</ScriptEngineType>
+      <UseActionNameWithScriptApproval>true</UseActionNameWithScriptApproval>
+      <displayWidth>1024</displayWidth>
+      <AllowUploadAttachment>1</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>1</AllowUploadReferenceDocument>
+      <RemovePointWhenCastingIntToString>true</RemovePointWhenCastingIntToString>
+      <UseCultureFormat>true</UseCultureFormat>
+      <AllowRetryExtractCD>true</AllowRetryExtractCD>
+      <TransportName>CustomData</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+      <printToProcess>
+      </printToProcess>
+    </process>
+    <ui>
+      <CustomScriptDebug>false</CustomScriptDebug>
+      <customscriptIncludedScripts>Lib_Purchasing_Catalog_Management_V12.0.566.0</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Sys/Sys_GenericAPI_Client</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Sys/Sys_Helpers_LdapUtil</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Sys/Sys_Helpers_Banner</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Sys/Sys_Helpers</customscriptIncludedScripts>
+      <CustomScriptReadonly>true</CustomScriptReadonly>
+      <CustomScript>"use strict";
+/* eslint-disable class-methods-use-this */
+var CustomScript;
+(function (CustomScript) {
+    var Warehouse = Lib.P2P.Inventory.Warehouse;
+    class CatalogExporterClientRequester {
+        // eslint-disable-next-line class-methods-use-this
+        async GetNumberOfRowsToExport(filter) {
+            const [result] = await Sys.GenericAPI.PromisedQuery({
+                table: "P2P - CatalogItems__",
+                filter: filter,
+                attributes: ["__Count__"],
+                maxRecords: "FULL_RESULT",
+                additionalOptions: "EnableJoin=1"
+            });
+            return result.__Count__;
+        }
+        GetWarehouse(companyCode, warehouseid) {
+            return Warehouse.GetWarehouse(companyCode, warehouseid);
+        }
+    }
+    CustomScript.CatalogExporterClientRequester = CatalogExporterClientRequester;
+    class CatalogExporterClient {
+        constructor(requester) {
+            this.requester = requester;
+        }
+        OnRunExport(row) {
+            ProcessInstance.Approve("run_catalog_export");
+        }
+        HasBeenExported() {
+            return !!Controls.ExportDate__.GetValue();
+        }
+        async FillNumberOfRowsToExport() {
+            const filter = this.GetNumberOfRowsToExportFilter();
+            try {
+                const nb_items = await this.requester.GetNumberOfRowsToExport(filter);
+                Controls.NumberOfRows__.SetValue(nb_items);
+            }
+            catch (error) {
+                Log.Error(error);
+            }
+        }
+        async InitNewExporterCatalogForm() {
+            Log.Info("InitNewExporterCatalogForm");
+            Controls.ExportDate__.Hide(true);
+            Controls.NumberOfRows__.SetReadOnly(true);
+            Controls.NumberOfRows__.SetLabel(Language.Translate("_ExpectedNumberOfRows"));
+            Controls.NumberOfItems__.Hide(true);
+            Controls.DocumentsPanel.Hide(true);
+            return await this.FillNumberOfRowsToExport();
+        }
+        InitExportedCatalog() {
+            Log.Info("InitExportedCatalog");
+            Controls.ExportDate__.SetReadOnly(true);
+            Controls.NumberOfRows__.SetReadOnly(true);
+            Controls.NumberOfItems__.SetReadOnly(true);
+            Controls.ExportDescription__.SetReadOnly(true);
+            Controls.Run_Export.Hide(true);
+        }
+        InitEvent() {
+            Controls.Run_Export.OnClick = this.OnRunExport.bind(this);
+        }
+        Start() {
+            ProcessInstance.SetSilentChange(true);
+            const promisesToWait = [];
+            this.InitBanner();
+            this.InitEvent();
+            if (this.HasBeenExported()) {
+                this.InitExportedCatalog();
+            }
+            else {
+                promisesToWait.push(this.InitNewExporterCatalogForm());
+            }
+            return Sys.Helpers.Promise.All(promisesToWait)
+                .Finally(() =&gt; {
+                ProcessInstance.SetSilentChange(false);
+            });
+        }
+    }
+    CustomScript.CatalogExporterClient = CatalogExporterClient;
+    class CatalogExporterClientVendorItem extends CatalogExporterClient {
+        GetNumberOfRowsToExportFilter() {
+            return Sys.Helpers.LdapUtil.FilterOr(Sys.Helpers.LdapUtil.FilterNotExist("ITEMNUMBER__.WAREHOUSENUMBER__"), Sys.Helpers.LdapUtil.FilterEqual("ITEMNUMBER__.WAREHOUSENUMBER__", ""));
+        }
+        InitNewExporterCatalogForm() {
+            Controls.CompanyCode__.Hide(true);
+            Controls.WarehouseID__.Hide(true);
+            Controls.WarehouseName__.Hide(true);
+            return super.InitNewExporterCatalogForm();
+        }
+        InitBanner() {
+            Log.Info("InitBanner");
+            Sys.Helpers.Banner.SetHTMLBanner(Controls.HTMLBanner__);
+            Sys.Helpers.Banner.SetMainTitle("_Catalog Exporter");
+            if (this.HasBeenExported()) {
+                Sys.Helpers.Banner.SetSubTitle("_Catalog Export Result");
+            }
+            else {
+                Sys.Helpers.Banner.SetSubTitle("_New Catalog Export");
+            }
+            Sys.Helpers.Banner.Apply();
+        }
+    }
+    CustomScript.CatalogExporterClientVendorItem = CatalogExporterClientVendorItem;
+    class CatalogExporterClientWarehouseItem extends CatalogExporterClient {
+        constructor(requester, warehouseid, companyCode) {
+            super(requester);
+            this.warehouseid = warehouseid;
+            this.companyCode = companyCode;
+            Variable.SetValueAsString("warehouseid", warehouseid);
+            Variable.SetValueAsString("companyCode", companyCode);
+            Process.SetHelpId(5047);
+        }
+        GetNumberOfRowsToExportFilter() {
+            return Sys.Helpers.LdapUtil.FilterAnd(Sys.Helpers.LdapUtil.FilterEqual("ITEMNUMBER__.WAREHOUSENUMBER__", this.warehouseid), Sys.Helpers.LdapUtil.FilterEqual("COMPANYCODE__", this.companyCode));
+        }
+        InitBanner() {
+            Log.Info("InitBanner");
+            Sys.Helpers.Banner.SetHTMLBanner(Controls.HTMLBanner__);
+            Controls.form_header.SetProcessDisplayName("WAREHOUSE EXPORTER");
+            Sys.Helpers.Banner.SetMainTitle("_Warehouse Exporter");
+            if (this.HasBeenExported()) {
+                Sys.Helpers.Banner.SetSubTitle("_Warehouse Export Result");
+            }
+            else {
+                Sys.Helpers.Banner.SetSubTitle("_New Warehouse Export");
+            }
+            Sys.Helpers.Banner.Apply();
+        }
+        InitNewExporterCatalogForm() {
+            // Show warehouse
+            Controls.CompanyCode__.Hide(false);
+            Controls.WarehouseID__.Hide(false);
+            Controls.WarehouseName__.Hide(false);
+            const promiseInitWarehouse = this.requester.GetWarehouse(this.companyCode, this.warehouseid)
+                .Then((warehouse) =&gt; {
+                Controls.CompanyCode__.SetValue(warehouse.companyCode);
+                Controls.WarehouseID__.SetValue(warehouse.ID);
+                Controls.WarehouseName__.SetValue(warehouse.name);
+            });
+            return Sys.Helpers.Promise.All([
+                super.InitNewExporterCatalogForm(),
+                promiseInitWarehouse
+            ]);
+        }
+        InitExportedCatalog() {
+            Controls.CompanyCode__.Hide(false);
+            Controls.WarehouseID__.Hide(false);
+            Controls.WarehouseName__.Hide(false);
+            super.InitExportedCatalog();
+        }
+    }
+    CustomScript.CatalogExporterClientWarehouseItem = CatalogExporterClientWarehouseItem;
+    Sys.Helpers.EnableSmartSilentChange();
+    if (typeof _ENV_TEST_ENABLED === "undefined") {
+        const requester = new CatalogExporterClientRequester();
+        const warehouseid = Process.GetURLParameter("warehouseid") || Variable.GetValueAsString("warehouseid");
+        const companyCode = Process.GetURLParameter("companyCode") || Variable.GetValueAsString("companyCode");
+        const main = warehouseid
+            ? new CatalogExporterClientWarehouseItem(requester, warehouseid, companyCode)
+            : new CatalogExporterClientVendorItem(requester);
+        main.Start();
+    }
+})(CustomScript || (CustomScript = {}));
+//# sourceMappingURL=customscript.js.map</CustomScript>
+      <restorationPanel>CSVExportInformation</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 50,
+	"*": {
+		"GDRData": {
+			"type": "GDRData",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"version": 0
+			}
+		},
+		"OCRParams": {
+			"type": "OCRParams",
+			"data": [],
+			"stamp": 2,
+			"options": {
+				"version": 0
+			}
+		},
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 3,
+			"options": {
+				"splitterType": "complex",
+				"style": "FlexibleFormLight",
+				"maxwidth": 1024,
+				"backColor": "text-backgroundcolor-color7",
+				"footerStyle": "LargeFooter",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 4,
+					"options": {
+						"maxwidth": 1024,
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 5,
+					"options": {
+						"maxwidth": 1024,
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 6,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-top": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 7,
+									"options": {
+										"autosize": true,
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"width": null,
+											"height": "26%"
+										},
+										"hidden": true,
+										"hideSeparator": true
+									},
+									"*": {
+										"form-content-top-4": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 8,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"SystemData": {
+													"type": "PanelSystemData",
+													"data": [],
+													"stamp": 9,
+													"options": {
+														"multicolumn": false,
+														"border": {
+															"collapsed": true
+														},
+														"labelLength": 0,
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": false,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"sameHeightAsSiblings": false,
+														"label": "_System data",
+														"hidden": true,
+														"version": 0
+													}
+												}
+											}
+										}
+									}
+								},
+								"form-content-bottom": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 10,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": "26%",
+											"left": "0%",
+											"width": null,
+											"height": "74%"
+										},
+										"hidden": false,
+										"hideSeparator": true
+									},
+									"*": {
+										"form-content-left": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 11,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "0%",
+													"width": "45%",
+													"height": null
+												},
+												"hidden": false,
+												"hideSeparator": true
+											},
+											"*": {
+												"form-content-left-3": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 12,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"NextProcess": {
+															"type": "PanelNextProcess",
+															"data": [],
+															"stamp": 13,
+															"options": {
+																"hidden": true,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_Next Process",
+																"version": 0
+															}
+														}
+													}
+												},
+												"form-content-left-4": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 14,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"Title": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 15,
+															"options": {
+																"border": {},
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": true,
+																"hideTitleBar": true,
+																"hideTitle": true,
+																"sameHeightAsSiblings": false,
+																"backgroundcolor": "none",
+																"labelsAlignment": "right",
+																"label": "_Title",
+																"hidden": false,
+																"leftImageURL": "",
+																"removeMargins": false,
+																"elementsAlignment": "left",
+																"labelLength": 0,
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 16,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 17,
+																			"options": {
+																				"version": 0,
+																				"lines": 1,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"HTMLBanner__": {
+																						"line": 1,
+																						"column": 1
+																					}
+																				},
+																				"colspans": [
+																					[
+																						{
+																							"index": 0,
+																							"length": 2
+																						}
+																					]
+																				]
+																			},
+																			"*": {
+																				"HTMLBanner__": {
+																					"type": "HTML",
+																					"data": false,
+																					"stamp": 18,
+																					"options": {
+																						"label": "_HTMLBanner",
+																						"width": "100%",
+																						"version": 0
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-5": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 19,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"CSVExportInformation": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 20,
+															"options": {
+																"border": {},
+																"iconURL": "",
+																"TitleFontSize": "L",
+																"hideActionButtons": true,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_CSVExportInformation",
+																"leftImageURL": "",
+																"removeMargins": false,
+																"elementsAlignment": "left",
+																"labelLength": "230px",
+																"isSvgIcon": false,
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 21,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {
+																			"CompanyCode__": "LabelCompanyCode__",
+																			"LabelCompanyCode__": "CompanyCode__",
+																			"WarehouseID__": "LabelWarehouseID__",
+																			"LabelWarehouseID__": "WarehouseID__",
+																			"WarehouseName__": "LabelWarehouseName__",
+																			"LabelWarehouseName__": "WarehouseName__",
+																			"ExportDate__": "LabelExportDate__",
+																			"LabelExportDate__": "ExportDate__",
+																			"NumberOfRows__": "LabelNumberOfRows__",
+																			"LabelNumberOfRows__": "NumberOfRows__",
+																			"NumberOfItems__": "LabelNumberOfItems__",
+																			"LabelNumberOfItems__": "NumberOfItems__",
+																			"ExportDescription__": "LabelExportDescription__",
+																			"LabelExportDescription__": "ExportDescription__"
+																		}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 22,
+																			"options": {
+																				"version": 0,
+																				"lines": 7,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"LabelCompanyCode__": {
+																						"line": 1,
+																						"column": 1
+																					},
+																					"CompanyCode__": {
+																						"line": 1,
+																						"column": 2
+																					},
+																					"LabelWarehouseID__": {
+																						"line": 2,
+																						"column": 1
+																					},
+																					"WarehouseID__": {
+																						"line": 2,
+																						"column": 2
+																					},
+																					"LabelWarehouseName__": {
+																						"line": 3,
+																						"column": 1
+																					},
+																					"WarehouseName__": {
+																						"line": 3,
+																						"column": 2
+																					},
+																					"LabelExportDate__": {
+																						"line": 4,
+																						"column": 1
+																					},
+																					"ExportDate__": {
+																						"line": 4,
+																						"column": 2
+																					},
+																					"LabelNumberOfRows__": {
+																						"line": 5,
+																						"column": 1
+																					},
+																					"NumberOfRows__": {
+																						"line": 5,
+																						"column": 2
+																					},
+																					"LabelNumberOfItems__": {
+																						"line": 6,
+																						"column": 1
+																					},
+																					"NumberOfItems__": {
+																						"line": 6,
+																						"column": 2
+																					},
+																					"LabelExportDescription__": {
+																						"line": 7,
+																						"column": 1
+																					},
+																					"ExportDescription__": {
+																						"line": 7,
+																						"column": 2
+																					}
+																				},
+																				"colspans": [
+																					[],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[]
+																				]
+																			},
+																			"*": {
+																				"LabelCompanyCode__": {
+																					"type": "Label",
+																					"data": [
+																						"CompanyCode__"
+																					],
+																					"stamp": 24,
+																					"options": {
+																						"label": "_CompanyCode",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				},
+																				"CompanyCode__": {
+																					"type": "ShortText",
+																					"data": [
+																						"CompanyCode__"
+																					],
+																					"stamp": 23,
+																					"options": {
+																						"label": "_CompanyCode",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"hidden": true,
+																						"readonly": true,
+																						"browsable": false
+																					}
+																				},
+																				"LabelWarehouseID__": {
+																					"type": "Label",
+																					"data": [
+																						"WarehouseID__"
+																					],
+																					"stamp": 26,
+																					"options": {
+																						"label": "_WarehouseID",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				},
+																				"WarehouseID__": {
+																					"type": "ShortText",
+																					"data": [
+																						"WarehouseID__"
+																					],
+																					"stamp": 25,
+																					"options": {
+																						"label": "_WarehouseID",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"hidden": true,
+																						"readonly": true,
+																						"browsable": false
+																					}
+																				},
+																				"LabelWarehouseName__": {
+																					"type": "Label",
+																					"data": [
+																						"WarehouseName__"
+																					],
+																					"stamp": 28,
+																					"options": {
+																						"label": "_WarehouseName",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				},
+																				"WarehouseName__": {
+																					"type": "ShortText",
+																					"data": [
+																						"WarehouseName__"
+																					],
+																					"stamp": 27,
+																					"options": {
+																						"label": "_WarehouseName",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"hidden": true,
+																						"readonly": true,
+																						"browsable": false
+																					}
+																				},
+																				"LabelExportDate__": {
+																					"type": "Label",
+																					"data": [
+																						"ExportDate__"
+																					],
+																					"stamp": 30,
+																					"options": {
+																						"label": "_ExportDate",
+																						"version": 0
+																					}
+																				},
+																				"ExportDate__": {
+																					"type": "RealDateTime",
+																					"data": [
+																						"ExportDate__"
+																					],
+																					"stamp": 29,
+																					"options": {
+																						"label": "_ExportDate",
+																						"readonly": true,
+																						"displayLongFormat": false,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"version": 0
+																					}
+																				},
+																				"LabelNumberOfRows__": {
+																					"type": "Label",
+																					"data": [
+																						"NumberOfRows__"
+																					],
+																					"stamp": 32,
+																					"options": {
+																						"label": "_NumberOfRows",
+																						"version": 0
+																					}
+																				},
+																				"NumberOfRows__": {
+																					"type": "Integer",
+																					"data": [
+																						"NumberOfRows__"
+																					],
+																					"stamp": 31,
+																					"options": {
+																						"label": "_NumberOfRows",
+																						"version": 2,
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"integer": true,
+																						"precision_internal": 0,
+																						"precision_current": 0,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"enableRoundedStyle": false,
+																						"enablePlusMinus": false,
+																						"browsable": false,
+																						"readonly": true
+																					}
+																				},
+																				"LabelNumberOfItems__": {
+																					"type": "Label",
+																					"data": [
+																						"NumberOfItems__"
+																					],
+																					"stamp": 34,
+																					"options": {
+																						"label": "_NumberOfItems",
+																						"version": 0
+																					}
+																				},
+																				"NumberOfItems__": {
+																					"type": "Integer",
+																					"data": [
+																						"NumberOfItems__"
+																					],
+																					"stamp": 33,
+																					"options": {
+																						"label": "_NumberOfItems",
+																						"version": 2,
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"integer": true,
+																						"precision_internal": 0,
+																						"precision_current": 0,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"enableRoundedStyle": false,
+																						"enablePlusMinus": false,
+																						"readonly": true,
+																						"browsable": false
+																					}
+																				},
+																				"LabelExportDescription__": {
+																					"type": "Label",
+																					"data": [
+																						"ExportDescription__"
+																					],
+																					"stamp": 36,
+																					"options": {
+																						"label": "_ExportDescription",
+																						"version": 0
+																					}
+																				},
+																				"ExportDescription__": {
+																					"type": "LongText",
+																					"data": [
+																						"ExportDescription__"
+																					],
+																					"stamp": 35,
+																					"options": {
+																						"label": "_ExportDescription",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"minNbLines": 3,
+																						"activable": true,
+																						"width": 230
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-6": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 37,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"DocumentsPanel": {
+															"type": "PanelDocument",
+															"data": [],
+															"stamp": 38,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "L",
+																"hideActionButtons": true,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_Documents",
+																"hidden": false,
+																"isSvgIcon": false,
+																"version": 0
+															},
+															"*": {
+																"Document": {
+																	"type": "Documents",
+																	"data": [
+																		"documentscontroldata"
+																	],
+																	"stamp": 39,
+																	"options": {
+																		"downloadButton": true,
+																		"previewButton": false,
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-right": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 40,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "45%",
+													"width": "55%",
+													"height": null
+												},
+												"hidden": true
+											},
+											"*": {
+												"form-content-right-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 41,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"PreviewPanel": {
+															"type": "PanelPreview",
+															"data": [],
+															"stamp": 42,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_Document Preview",
+																"hidden": true,
+																"version": 0
+															},
+															"*": {
+																"Preview": {
+																	"type": "Preview",
+																	"data": [
+																		"previewdata"
+																	],
+																	"stamp": 43,
+																	"options": {
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 44,
+					"options": {
+						"splitterType": "simple-h",
+						"maxwidth": 1024,
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 45,
+							"options": {
+								"label": "_Save",
+								"action": "save",
+								"submit": true,
+								"textSize": "S",
+								"textPosition": "text-right",
+								"textStyle": "default",
+								"textColor": "default",
+								"iconColor": "default",
+								"nextprocess": {
+									"processName": "Advanced Shipping Notice",
+									"attachmentsMode": "all",
+									"willBeChild": true,
+									"returnToOriginalUrl": false
+								},
+								"urlImageOverlay": "",
+								"buttonLabel": "",
+								"isRounded": false,
+								"isOutline": false,
+								"url": "",
+								"position": null,
+								"hidden": true,
+								"version": 0
+							}
+						},
+						"Approve": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 46,
+							"options": {
+								"label": "_Approve",
+								"action": "approve",
+								"submit": true,
+								"textSize": "S",
+								"textPosition": "text-right",
+								"textStyle": "default",
+								"textColor": "default",
+								"iconColor": "default",
+								"nextprocess": {
+									"processName": "Advanced Shipping Notice",
+									"attachmentsMode": "all",
+									"willBeChild": true,
+									"returnToOriginalUrl": false
+								},
+								"urlImageOverlay": "",
+								"buttonLabel": "",
+								"isRounded": false,
+								"isOutline": false,
+								"url": "",
+								"position": null,
+								"hidden": true,
+								"version": 0
+							}
+						},
+						"Reject": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 47,
+							"options": {
+								"label": "_Reject",
+								"action": "reject",
+								"submit": true,
+								"textSize": "S",
+								"textPosition": "text-right",
+								"textStyle": "default",
+								"textColor": "default",
+								"iconColor": "default",
+								"nextprocess": {
+									"processName": "Advanced Shipping Notice",
+									"attachmentsMode": "all",
+									"willBeChild": true,
+									"returnToOriginalUrl": false
+								},
+								"urlImageOverlay": "",
+								"buttonLabel": "",
+								"isRounded": false,
+								"isOutline": false,
+								"url": "",
+								"position": null,
+								"hidden": true,
+								"version": 0
+							}
+						},
+						"Reprocess": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 48,
+							"options": {
+								"label": "_Reprocess",
+								"action": "reprocess",
+								"submit": true,
+								"textSize": "S",
+								"textPosition": "text-right",
+								"textStyle": "default",
+								"textColor": "default",
+								"iconColor": "default",
+								"nextprocess": {
+									"processName": "Advanced Shipping Notice",
+									"attachmentsMode": "all",
+									"willBeChild": true,
+									"returnToOriginalUrl": false
+								},
+								"urlImageOverlay": "",
+								"buttonLabel": "",
+								"isRounded": false,
+								"isOutline": false,
+								"url": "",
+								"position": null,
+								"hidden": true,
+								"version": 0
+							}
+						},
+						"Run_Export": {
+							"type": "SubmitButton",
+							"data": false,
+							"stamp": 49,
+							"options": {
+								"textSize": "S",
+								"label": "_Run_Export",
+								"textPosition": "text-right",
+								"textStyle": "default",
+								"textColor": "default",
+								"iconColor": "default",
+								"nextprocess": {
+									"processName": "Advanced Shipping Notice",
+									"attachmentsMode": "all",
+									"willBeChild": true,
+									"returnToOriginalUrl": false
+								},
+								"urlImageOverlay": "",
+								"style": 1,
+								"buttonLabel": "",
+								"isRounded": true,
+								"isOutline": false,
+								"url": "",
+								"position": null,
+								"action": "none",
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 50,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"textSize": "S",
+								"textPosition": "text-right",
+								"textStyle": "default",
+								"textColor": "default",
+								"iconColor": "default",
+								"nextprocess": {
+									"processName": "Advanced Shipping Notice",
+									"attachmentsMode": "all",
+									"willBeChild": true,
+									"returnToOriginalUrl": false
+								},
+								"urlImageOverlay": "",
+								"style": 1,
+								"buttonLabel": "",
+								"isRounded": true,
+								"isOutline": true,
+								"url": "",
+								"position": null,
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <field deleted="0" format="" guid="PFUHG0000SG1" id="D1FQT400153E" label="_CompanyCode_report" length="50" name="CompanyCode__" originalProcessID="M59IG0000SG1" precision="0" processid="C1FQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AD1FQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/CompanyCode__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:18</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_CompanyCode_report</Label>
+        <Alias>AD1FQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="JPEJG0000SG1" id="E1FQT400153E" label="_ExportDate_report" length="0" name="ExportDate__" originalProcessID="M59IG0000SG1" precision="0" processid="C1FQT400153E" submitable="1" type="DATETIME">
+    <properties>
+      <db>
+        <alias>AE1FQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ExportDate__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:18</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ExportDate_report</Label>
+        <Alias>AE1FQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Date</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="FW8IG0000SG1" id="F1FQT400153E" label="_ExportDescription" length="32766" name="ExportDescription__" originalProcessID="M59IG0000SG1" precision="0" processid="C1FQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AF1FQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ExportDescription__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:18</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ExportDescription</Label>
+        <Alias>AF1FQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="GW8IG0000SG1" id="G1FQT400153E" label="_NumberOfItems" length="0" name="NumberOfItems__" originalProcessID="M59IG0000SG1" precision="0" processid="C1FQT400153E" submitable="1" type="INT">
+    <properties>
+      <db>
+        <alias>AG1FQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/NumberOfItems__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:18</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_NumberOfItems</Label>
+        <Alias>AG1FQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="P59IG0000SG1" id="H1FQT400153E" label="_NumberOfRows_report" length="0" name="NumberOfRows__" originalProcessID="M59IG0000SG1" precision="0" processid="C1FQT400153E" submitable="1" type="INT">
+    <properties>
+      <db>
+        <alias>AH1FQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/NumberOfRows__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:18</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_NumberOfRows_report</Label>
+        <Alias>AH1FQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="QFUHG0000SG1" id="I1FQT400153E" label="_WarehouseID_report" length="50" name="WarehouseID__" originalProcessID="M59IG0000SG1" precision="0" processid="C1FQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AI1FQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/WarehouseID__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:18</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_WarehouseID_report</Label>
+        <Alias>AI1FQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="RFUHG0000SG1" id="J1FQT400153E" label="_WarehouseName_report" length="50" name="WarehouseName__" originalProcessID="M59IG0000SG1" precision="0" processid="C1FQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AJ1FQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/WarehouseName__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:18</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_WarehouseName_report</Label>
+        <Alias>AJ1FQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <type id="GOLHG0000M4O" name="CD">
+  </type>
+</process>

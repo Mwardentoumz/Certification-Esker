@@ -1,0 +1,866 @@
+<process accountid="" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:09:18" deleted="0" eskerapplication="P2P" global="0" id="NoID" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="P2P - Expense type__" needvalidation="0" ootofilter="" ootoversion="1" originalProcessID="IYY1FP000FSX" ownerid="" ownerpb="" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomTable" upgradable="1" userid="" version="1" visibility="0">
+	<properties>
+		<dataConditions>
+			<listDataConditions>
+				&lt;dataCondition&gt;
+					&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+					&lt;filter&gt;msnex=*&lt;/filter&gt;
+					&lt;labelKey&gt;_Expense claims disabled&lt;/labelKey&gt;
+					&lt;conditions&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableExpenseClaimsGlobalSetting__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+					&lt;/conditions&gt;
+				&lt;/dataCondition&gt;
+			</listDataConditions>
+		</dataConditions>
+		<dbIndex>
+			<IndexCompCodeExpType>&lt;Index Option="Unique"&gt;&lt;Ref Name="CompanyCode__" Option="ASC"/&gt;&lt;Ref Name="Name__" Option="ASC"/&gt;&lt;/Index&gt;</IndexCompCodeExpType>
+		</dbIndex>
+		<lg>
+			<!--*.xml-->
+		</lg>
+		<process>
+			<flowtype>processing</flowtype>
+			<homepagelabel>P2P - Expense type</homepagelabel>
+			<instanciable>1</instanciable>
+			<disableScriptModification>true</disableScriptModification>
+			<enableUpgradableDesign>true</enableUpgradableDesign>
+			<enablerounddecimal>true</enablerounddecimal>
+			<OverrideAllowedAttachmentExtensions>*</OverrideAllowedAttachmentExtensions>
+			<UseActionNameWithScriptApproval>true</UseActionNameWithScriptApproval>
+			<AllowUploadAttachment>0</AllowUploadAttachment>
+			<AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+			<shouldRollbackManualRecordEdits>true</shouldRollbackManualRecordEdits>
+			<UseCultureFormat>true</UseCultureFormat>
+			<TransportName>CustomTable</TransportName>
+			<LayoutVersion>1.0</LayoutVersion>
+		</process>
+		<ui>
+			<customscriptIncludedScripts>Lib_Parameters_P2P_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Expense_LayoutManager_V12.0.566.0</customscriptIncludedScripts>
+			<CustomScriptReadonly>true</CustomScriptReadonly>
+			<CustomScript>
+				<!--customscript.js--></CustomScript>
+			<restorationPanel>DataPanel</restorationPanel>
+			<layout>
+				<!--layout.json--></layout>
+		</ui>
+	</properties>
+	<type id="NoID" name="CT" />
+	<field deleted="0" format="" guid="WTLIWM000IYP" id="NoID" label="_Billable_report" length="50" name="BillableFieldBehaviour__" originalProcessID="IYY1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/BillableFieldBehaviour__</fullname>
+				<defaultvalue>Hidden</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_Billable_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<DisplayedColumns />
+				<DataSourceOrigin>Standalone</DataSourceOrigin>
+				<possibleKeys>Hidden
+Required</possibleKeys>
+				<SavedColumn />
+				<possibleValues>_Hidden
+_Visible</possibleValues>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="UW32FP000FSX" id="NoID" label="_CommentTemplate_report" length="32766" name="CommentTemplate__" originalProcessID="IYY1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CommentTemplate__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_CommentTemplate_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"_HelperInputCommentTemplate","helpURL":"4013","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="JYY1FP000FSX" id="NoID" label="_CompanyCode_report" length="50" name="CompanyCode__" originalProcessID="IYY1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CompanyCode__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_CompanyCode_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>true</Editable>
+				<required>true</required>
+				<TableName>CT#NOID</TableName>
+				<SortOrder />
+				<DisplayedColumns>CompanyCode__|CompanyName__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>CompanyCode__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>PurchasingCompanycodes__</ProcessName>
+				<KeyColumnId />
+				<KeyAttribute />
+				<CustomFilter />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="RXD2FP000IYP" id="NoID" label="_CostCenterDescription_report" length="50" name="CostCenterFieldBehaviour__" originalProcessID="IYY1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CostCenterFieldBehaviour__</fullname>
+				<defaultvalue>Hidden</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_CostCenterDescription_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<TableName />
+				<DisplayedColumns />
+				<DataSourceOrigin>Standalone</DataSourceOrigin>
+				<possibleKeys>Hidden
+Required</possibleKeys>
+				<SavedColumn />
+				<possibleValues>_Hidden
+_Visible</possibleValues>
+				<ProcessName />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="QT62FP000FSX" id="NoID" label="_Default G/L account_report" length="30" name="DefaultGLAccount__" originalProcessID="IYY1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/DefaultGLAccount__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Default G/L account_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder>ASC</SortOrder>
+				<DisplayedColumns>Account__|Description__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>Account__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>AP - G/L accounts__</ProcessName>
+				<KeyColumnId />
+				<KeyAttribute />
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="LYY1FP000FSX" id="NoID" label="_TypeDescription_report" length="120" name="Description__" originalProcessID="IYY1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Description__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TypeDescription_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="RXD2FP000IOP" id="NoID" label="_FuelType_report" length="50" name="FuelTypeBehaviour__" originalProcessID="IYY1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FuelTypeBehaviour__</fullname>
+				<defaultvalue>Hidden</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_FuelType_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<TableName />
+				<DisplayedColumns />
+				<DataSourceOrigin>Standalone</DataSourceOrigin>
+				<possibleKeys>Hidden
+Optional</possibleKeys>
+				<SavedColumn />
+				<possibleValues>_Hidden
+_Optional</possibleValues>
+				<ProcessName />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="XK72FP000FSX" id="NoID" label="_InputTaxRate" length="0" name="InputTaxRate__" originalProcessID="IYY1FP000FSX" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/InputTaxRate__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_InputTaxRate</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"_HelperInputTaxRate","helpURL":"4012","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="XK72FP000FSY" id="NoID" label="_Itemizable" length="0" name="Itemizable__" originalProcessID="IYY1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Itemizable__</fullname>
+				<defaultvalue>Disabled</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_Itemizable</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<TableName />
+				<DisplayedColumns />
+				<DataSourceOrigin>Standalone</DataSourceOrigin>
+				<possibleKeys>Disabled
+Optional</possibleKeys>
+				<SavedColumn />
+				<possibleValues>_ItemizationDisabled
+_ItemizationOptional</possibleValues>
+				<ProcessName />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="KYY1FP000FSX" id="NoID" label="_TypeName_report" length="50" name="Name__" originalProcessID="IYY1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Name__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TypeName_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="KUXHG0000PA9" id="NoID" label="_ProjectCodeDescription_report" length="50" name="ProjectCodeFieldBehaviour__" originalProcessID="IYY1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ProjectCodeFieldBehaviour__</fullname>
+				<defaultvalue>Hidden</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_ProjectCodeDescription_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<TableName />
+				<DisplayedColumns />
+				<DataSourceOrigin>Standalone</DataSourceOrigin>
+				<possibleKeys>Hidden
+Optional
+Required</possibleKeys>
+				<SavedColumn />
+				<possibleValues>_Hidden
+_Optional
+_Required</possibleValues>
+				<ProcessName />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="MYNIWM000M4H" id="NoID" label="_Receipt_report" length="50" name="ReceiptBehaviour__" originalProcessID="IYY1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ReceiptBehaviour__</fullname>
+				<defaultvalue>Optional</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_Receipt_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<TableName />
+				<DisplayedColumns />
+				<DataSourceOrigin>Standalone</DataSourceOrigin>
+				<possibleKeys>Optional
+Required</possibleKeys>
+				<SavedColumn />
+				<possibleValues>_ReiceptOptional
+_ReiceptRequired</possibleValues>
+				<ProcessName />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="OK72FP000FSX" id="NoID" label="_TaxCode1_report" length="600" name="TaxCode1__" originalProcessID="IYY1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TaxCode1__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TaxCode1_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder>ASC</SortOrder>
+				<DisplayedColumns>TaxCode__|TaxRate__|Description__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>TaxCode__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>AP - Tax codes__</ProcessName>
+				<KeyColumnId />
+				<KeyAttribute />
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PK72FP000FSX" id="NoID" label="_TaxCode2_report" length="600" name="TaxCode2__" originalProcessID="IYY1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TaxCode2__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TaxCode2_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder />
+				<DisplayedColumns>TaxCode__|TaxRate__|Description__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>TaxCode__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>AP - Tax codes__</ProcessName>
+				<KeyColumnId />
+				<KeyAttribute />
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="QK72FP000FSX" id="NoID" label="_TaxCode3_report" length="600" name="TaxCode3__" originalProcessID="IYY1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TaxCode3__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TaxCode3_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder>ASC</SortOrder>
+				<DisplayedColumns>TaxCode__|TaxRate__|Description__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>TaxCode__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>AP - Tax codes__</ProcessName>
+				<KeyColumnId />
+				<KeyAttribute />
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="RK72FP000FSX" id="NoID" label="_TaxCode4_report" length="600" name="TaxCode4__" originalProcessID="IYY1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TaxCode4__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TaxCode4_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder>ASC</SortOrder>
+				<DisplayedColumns>TaxCode__|TaxRate__|Description__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>TaxCode__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>AP - Tax codes__</ProcessName>
+				<KeyColumnId />
+				<KeyAttribute />
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="VK72FP000FSX" id="NoID" label="_TaxCode5_report" length="600" name="TaxCode5__" originalProcessID="IYY1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TaxCode5__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TaxCode5_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder>ASC</SortOrder>
+				<DisplayedColumns>TaxCode__|TaxRate__|Description__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>TaxCode__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>AP - Tax codes__</ProcessName>
+				<KeyColumnId />
+				<KeyAttribute />
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="H232FP000FSX" id="NoID" label="_TaxRate1_report" length="17" name="TaxRate1__" originalProcessID="IYY1FP000FSX" precision="2" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TaxRate1__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TaxRate1_report</Label>
+				<Alias />
+				<DecimalPrecision vartype="INT">2</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="I232FP000FSX" id="NoID" label="_TaxRate2_report" length="17" name="TaxRate2__" originalProcessID="IYY1FP000FSX" precision="2" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TaxRate2__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TaxRate2_report</Label>
+				<Alias />
+				<DecimalPrecision vartype="INT">2</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="J232FP000FSX" id="NoID" label="_TaxRate3_report" length="17" name="TaxRate3__" originalProcessID="IYY1FP000FSX" precision="2" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TaxRate3__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TaxRate3_report</Label>
+				<Alias />
+				<DecimalPrecision vartype="INT">2</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="K232FP000FSX" id="NoID" label="_TaxRate4_report" length="17" name="TaxRate4__" originalProcessID="IYY1FP000FSX" precision="2" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TaxRate4__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TaxRate4_report</Label>
+				<Alias />
+				<DecimalPrecision vartype="INT">2</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="L232FP000FSX" id="NoID" label="_TaxRate5_report" length="17" name="TaxRate5__" originalProcessID="IYY1FP000FSX" precision="2" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TaxRate5__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TaxRate5_report</Label>
+				<Alias />
+				<DecimalPrecision vartype="INT">2</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="LL42FP000FSX" id="NoID" label="_Template_report" length="50" name="Template__" originalProcessID="IYY1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Template__</fullname>
+				<defaultvalue>Standard</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_Template_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<required>false</required>
+				<DisplayedColumns />
+				<DataSourceOrigin>Standalone</DataSourceOrigin>
+				<possibleKeys>Standard
+Distance
+Restaurant
+Hotel
+Fuel/Gas</possibleKeys>
+				<SavedColumn />
+				<possibleValues>_Standard
+_Distance
+_Restaurant
+_Hotel
+_Fuel/Gas</possibleValues>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="YO32FP000FSX" id="NoID" label="_Vendor" length="50" name="VendorFieldBehaviour__" originalProcessID="IYY1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/VendorFieldBehaviour__</fullname>
+				<defaultvalue>Hidden</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_Vendor</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<required>false</required>
+				<DisplayedColumns />
+				<DataSourceOrigin>Standalone</DataSourceOrigin>
+				<possibleKeys>Hidden
+Optional
+Required</possibleKeys>
+				<SavedColumn />
+				<possibleValues>_Hidden
+_Optional
+_Required</possibleValues>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+</process>

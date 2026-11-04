@@ -1,0 +1,1263 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:10:27" deleted="0" eskerapplication="P2P" global="0" id="J7FQT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="P2P - Forecast Inventory movements__" needvalidation="0" ootofilter="" ootoversion="1" originalProcessID="ZOL4FP000PA9" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomTable" upgradable="1" userid="0" version="1" visibility="0">
+  <properties>
+    <dataConditions>
+      <listDataConditions>&lt;dataCondition&gt;
+					&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+					&lt;filter&gt;msnex=*&lt;/filter&gt;
+					&lt;labelKey&gt;_Purchasing disabled&lt;/labelKey&gt;
+					&lt;multipleConditionsLink&gt;and&lt;/multipleConditionsLink&gt;
+					&lt;conditions&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnablePurchasingGlobalSetting__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableInventoryManagement__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+					&lt;/conditions&gt;
+				&lt;/dataCondition&gt;</listDataConditions>
+    </dataConditions>
+    <dbIndex>
+      <AUTO_AK7FQT400153EA>&lt;Index&gt;&lt;Ref Name="AK7FQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AK7FQT400153EA>
+      <AUTO_AL7FQT400153EA>&lt;Index&gt;&lt;Ref Name="AL7FQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AL7FQT400153EA>
+      <AUTO_AS7FQT400153EA>&lt;Index&gt;&lt;Ref Name="AS7FQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AS7FQT400153EA>
+    </dbIndex>
+    <lg>
+      <process_da>{
+	"_CompanyCode": "Virksomhedskode",
+	"_CompanyCode_report": "Virksomhedskode",
+	"_ItemNumber": "Materiale-id",
+	"_ItemNumber_report": "Materiale-id",
+	"_LineNumber": "Linjenummer",
+	"_LineNumber_report": "Linjenummer",
+	"_MovementDateTime": "Bevægelsesdato",
+	"_MovementDateTime_report": "Bevægelsesdato",
+	"_MovementOrigin": "Bevægelsesoprindelse",
+	"_MovementOrigin_report": "Bevægelsesoprindelse",
+	"_ReplenishValue": "Genopfyldningsmængde",
+	"_ReplenishValue_report": "Genopfyldningsmængde",
+	"_ReservedValue": "Reserveret mængde",
+	"_ReservedValue_report": "Reserveret mængde",
+	"_UnitOfMeasure": "Måleenhed",
+	"_UnitOfMeasure_report": "Måleenhed",
+	"_WarehouseID": "Lager-id",
+	"_WarehouseID_report": "Lager-id",
+	"P2P - Forecast Inventory movements": "S2P – planlagte lagerbevægelser",
+	"P2P - Forecast Inventory movements__": "S2P – planlagte lagerbevægelser"
+}</process_da>
+      <process_de>{
+	"_CompanyCode": "Buchungskreis",
+	"_CompanyCode_report": "Buchungskreis",
+	"_ItemNumber": "Artikelkennung",
+	"_ItemNumber_report": "Artikelkennung",
+	"_LineNumber": "Zeilennummer",
+	"_LineNumber_report": "Zeilennummer",
+	"_MovementDateTime": "Bewegungsdatum",
+	"_MovementDateTime_report": "Bewegungsdatum",
+	"_MovementOrigin": "Ursprung der Bewegung",
+	"_MovementOrigin_report": "Ursprung der Bewegung",
+	"_ReplenishValue": "Menge Bestandsauffüllung",
+	"_ReplenishValue_report": "Menge Bestandsauffüllung",
+	"_ReservedValue": "Reservierte Menge",
+	"_ReservedValue_report": "Reservierte Menge",
+	"_UnitOfMeasure": "Maßeinheit",
+	"_UnitOfMeasure_report": "Maßeinheit",
+	"_WarehouseID": "Lagerkennung",
+	"_WarehouseID_report": "Lagerkennung",
+	"P2P - Forecast Inventory movements": "S2P - Prognostizierte Bestandsbewegungen",
+	"P2P - Forecast Inventory movements__": "S2P - Prognostizierte Bestandsbewegungen"
+}</process_de>
+      <process_ja>{
+	"_CompanyCode": "会社コード",
+	"_CompanyCode_report": "会社コード",
+	"_ItemNumber": "アイテムID",
+	"_ItemNumber_report": "アイテムID",
+	"_LineNumber": "明細番号",
+	"_LineNumber_report": "明細番号",
+	"_MovementDateTime": "移動日",
+	"_MovementDateTime_report": "移動日",
+	"_MovementOrigin": "移動元",
+	"_MovementOrigin_report": "移動元",
+	"_ReplenishValue": "補充数量",
+	"_ReplenishValue_report": "補充数量",
+	"_ReservedValue": "予約数量",
+	"_ReservedValue_report": "予約数量",
+	"_UnitOfMeasure": "計量単位",
+	"_UnitOfMeasure_report": "計量単位",
+	"_WarehouseID": "倉庫ID",
+	"_WarehouseID_report": "倉庫ID",
+	"P2P - Forecast Inventory movements": "S2P - 在庫移動予定",
+	"P2P - Forecast Inventory movements__": "S2P - 在庫移動予定"
+}</process_ja>
+      <process_en>{
+	"_CompanyCode": "Company code",
+	"_CompanyCode_report": "Company code",
+	"_ItemNumber": "Item ID",
+	"_ItemNumber_report": "Item ID",
+	"_LineNumber": "Line number",
+	"_LineNumber_report": "Line number",
+	"_MovementDateTime": "Movement date",
+	"_MovementDateTime_report": "Movement date",
+	"_MovementOrigin": "Movement origin",
+	"_MovementOrigin_report": "Movement origin",
+	"_ReplenishValue": "Replenishment quantity",
+	"_ReplenishValue_report": "Replenishment quantity",
+	"_ReservedValue": "Reserved quantity",
+	"_ReservedValue_report": "Reserved quantity",
+	"_UnitOfMeasure": "Unit of measure",
+	"_UnitOfMeasure_report": "Unit of measure",
+	"_WarehouseID": "Warehouse ID",
+	"_WarehouseID_report": "Warehouse ID",
+	"P2P - Forecast Inventory movements": "S2P - Projected stock movements",
+	"P2P - Forecast Inventory movements__": "S2P - Projected stock movements"
+}</process_en>
+      <process_es>{
+	"_CompanyCode": "Código de empresa",
+	"_CompanyCode_report": "Código de empresa",
+	"_ItemNumber": "Identificador del artículo",
+	"_ItemNumber_report": "Identificador del artículo",
+	"_LineNumber": "Número de línea",
+	"_LineNumber_report": "Número de línea",
+	"_MovementDateTime": "Fecha del movimiento",
+	"_MovementDateTime_report": "Fecha del movimiento",
+	"_MovementOrigin": "Origen del movimiento",
+	"_MovementOrigin_report": "Origen del movimiento",
+	"_ReplenishValue": "Cantidad de reposición",
+	"_ReplenishValue_report": "Cantidad de reposición",
+	"_ReservedValue": "Cantidad reservada",
+	"_ReservedValue_report": "Cantidad reservada",
+	"_UnitOfMeasure": "Unidad de medida",
+	"_UnitOfMeasure_report": "Unidad de medida",
+	"_WarehouseID": "Identificador de almacén",
+	"_WarehouseID_report": "Identificador de almacén",
+	"P2P - Forecast Inventory movements": "S2P - Previsiones de movimientos de stock",
+	"P2P - Forecast Inventory movements__": "S2P - Previsiones de movimientos de stock"
+}</process_es>
+      <process_fr>{
+	"_CompanyCode": "Code société",
+	"_CompanyCode_report": "Code société",
+	"_ItemNumber": "ID de l'article",
+	"_ItemNumber_report": "ID de l'article",
+	"_LineNumber": "Numéro de ligne",
+	"_LineNumber_report": "Numéro de ligne",
+	"_MovementDateTime": "Date du mouvement",
+	"_MovementDateTime_report": "Date du mouvement",
+	"_MovementOrigin": "Origine du mouvement",
+	"_MovementOrigin_report": "Origine du mouvement",
+	"_ReplenishValue": "Quantité de réapprovisionnement",
+	"_ReplenishValue_report": "Quantité de réapprovisionnement",
+	"_ReservedValue": "Quantité réservée",
+	"_ReservedValue_report": "Quantité réservée",
+	"_UnitOfMeasure": "Unité de mesure",
+	"_UnitOfMeasure_report": "Unité de mesure",
+	"_WarehouseID": "Identifiant de l'entrepôt",
+	"_WarehouseID_report": "Identifiant de l'entrepôt",
+	"P2P - Forecast Inventory movements": "S2P - Mouvements de stock prévisionnels",
+	"P2P - Forecast Inventory movements__": "S2P - Mouvements de stock prévisionnels"
+}</process_fr>
+      <process_nl-NL>{
+	"_CompanyCode": "Bedrijfscode",
+	"_CompanyCode_report": "Bedrijfscode",
+	"_ItemNumber": "Item-ID",
+	"_ItemNumber_report": "Item-ID",
+	"_LineNumber": "Regelnummer",
+	"_LineNumber_report": "Regelnummer",
+	"_MovementDateTime": "Datum beweging",
+	"_MovementDateTime_report": "Datum beweging",
+	"_MovementOrigin": "Oorsprong beweging",
+	"_MovementOrigin_report": "Oorsprong beweging",
+	"_ReplenishValue": "Hoeveelheid aanvulling",
+	"_ReplenishValue_report": "Hoeveelheid aanvulling",
+	"_ReservedValue": "Voorbehouden hoeveelheid",
+	"_ReservedValue_report": "Voorbehouden hoeveelheid",
+	"_UnitOfMeasure": "Maateenheid",
+	"_UnitOfMeasure_report": "Maateenheid",
+	"_WarehouseID": "Magazijn-ID",
+	"_WarehouseID_report": "Magazijn-ID",
+	"P2P - Forecast Inventory movements": "S2P - Prognose voorraadbewegingen",
+	"P2P - Forecast Inventory movements__": "S2P - Prognose voorraadbewegingen"
+}</process_nl-NL>
+      <process_pl>{
+	"_CompanyCode": "Kod firmy",
+	"_CompanyCode_report": "Kod firmy",
+	"_ItemNumber": "Id. pozycji",
+	"_ItemNumber_report": "Id. pozycji",
+	"_LineNumber": "Numer wiersza",
+	"_LineNumber_report": "Numer wiersza",
+	"_MovementDateTime": "Data przesunięcia",
+	"_MovementDateTime_report": "Data przesunięcia",
+	"_MovementOrigin": "Źródło przesunięcia",
+	"_MovementOrigin_report": "Źródło przesunięcia",
+	"_ReplenishValue": "Ilość uzupełnienia",
+	"_ReplenishValue_report": "Ilość uzupełnienia",
+	"_ReservedValue": "Ilość zarezerwowana",
+	"_ReservedValue_report": "Ilość zarezerwowana",
+	"_UnitOfMeasure": "Jednostka miary",
+	"_UnitOfMeasure_report": "Jednostka miary",
+	"_WarehouseID": "Id. magazynu",
+	"_WarehouseID_report": "Id. magazynu",
+	"P2P - Forecast Inventory movements": "S2P – prognozowane przesunięcia zapasów",
+	"P2P - Forecast Inventory movements__": "S2P – prognozowane przesunięcia zapasów"
+}</process_pl>
+      <process_it>{
+	"_CompanyCode": "Codice società",
+	"_CompanyCode_report": "Codice società",
+	"_ItemNumber": "ID articolo",
+	"_ItemNumber_report": "ID articolo",
+	"_LineNumber": "Numero di riga",
+	"_LineNumber_report": "Numero di riga",
+	"_MovementDateTime": "Data movimento",
+	"_MovementDateTime_report": "Data movimento",
+	"_MovementOrigin": "Origine movimento",
+	"_MovementOrigin_report": "Origine movimento",
+	"_ReplenishValue": "Quantità rifornimento",
+	"_ReplenishValue_report": "Quantità rifornimento",
+	"_ReservedValue": "Quantità impegnata",
+	"_ReservedValue_report": "Quantità impegnata",
+	"_UnitOfMeasure": "Unità di misura",
+	"_UnitOfMeasure_report": "Unità di misura",
+	"_WarehouseID": "ID magazzino",
+	"_WarehouseID_report": "ID magazzino",
+	"P2P - Forecast Inventory movements": "S2P - Previsione movimenti stock",
+	"P2P - Forecast Inventory movements__": "S2P - Previsione movimenti stock"
+}</process_it>
+      <process_sk>{
+	"_CompanyCode": "Kód spoločnosti",
+	"_CompanyCode_report": "Kód spoločnosti",
+	"_ItemNumber": "ID položky",
+	"_ItemNumber_report": "ID položky",
+	"_LineNumber": "Číslo riadku",
+	"_LineNumber_report": "Číslo riadku",
+	"_MovementDateTime": "Dátum pohybu",
+	"_MovementDateTime_report": "Dátum pohybu",
+	"_MovementOrigin": "Pôvod pohybu",
+	"_MovementOrigin_report": "Pôvod pohybu",
+	"_ReplenishValue": "Množstvo doplnenia",
+	"_ReplenishValue_report": "Množstvo doplnenia",
+	"_ReservedValue": "Rezervované množstvo",
+	"_ReservedValue_report": "Rezervované množstvo",
+	"_UnitOfMeasure": "Merná jednotka",
+	"_UnitOfMeasure_report": "Merná jednotka",
+	"_WarehouseID": "ID skladu",
+	"_WarehouseID_report": "ID skladu",
+	"P2P - Forecast Inventory movements": "S2P – Plánované pohyby zásob",
+	"P2P - Forecast Inventory movements__": "S2P – Plánované pohyby zásob"
+}</process_sk>
+      <process_zh-cn>{
+	"_CompanyCode": "公司代码",
+	"_CompanyCode_report": "公司代码",
+	"_ItemNumber": "物品 ID",
+	"_ItemNumber_report": "物品 ID",
+	"_LineNumber": "行数",
+	"_LineNumber_report": "行数",
+	"_MovementDateTime": "移动日期",
+	"_MovementDateTime_report": "移动日期",
+	"_MovementOrigin": "移动来源",
+	"_MovementOrigin_report": "移动来源",
+	"_ReplenishValue": "补货数量",
+	"_ReplenishValue_report": "补货数量",
+	"_ReservedValue": "预留数量",
+	"_ReservedValue_report": "预留数量",
+	"_UnitOfMeasure": "度量单位",
+	"_UnitOfMeasure_report": "度量单位",
+	"_WarehouseID": "仓库标识",
+	"_WarehouseID_report": "仓库标识",
+	"P2P - Forecast Inventory movements": "寻源到付款 - 预期库存走势",
+	"P2P - Forecast Inventory movements__": "寻源到付款 - 预期库存走势"
+}</process_zh-cn>
+      <process_pt-br>{
+	"_CompanyCode": "Código da empresa",
+	"_CompanyCode_report": "Código da empresa",
+	"_ItemNumber": "ID do item",
+	"_ItemNumber_report": "ID do item",
+	"_MovementDateTime": "Data do movimento",
+	"_MovementDateTime_report": "Data do movimento",
+	"_MovementOrigin": "Origem do movimento",
+	"_MovementOrigin_report": "Origem do movimento",
+	"_ReplenishValue": "Quantidade de reabastecimento",
+	"_ReplenishValue_report": "Quantidade de reabastecimento",
+	"_ReservedValue": "Quantidade reservada",
+	"_ReservedValue_report": "Quantidade reservada",
+	"_UnitOfMeasure": "Unidade de medida",
+	"_UnitOfMeasure_report": "Unidade de medida",
+	"_WarehouseID": "ID de armazém",
+	"_WarehouseID_report": "ID de armazém",
+	"P2P - Forecast Inventory movements": "S2P - Movimentos de estoque projetados",
+	"P2P - Forecast Inventory movements__": "S2P - Movimentos de estoque projetados"
+}</process_pt-br>
+    </lg>
+    <process>
+      <BUColumn>CompanyCode__</BUColumn>
+      <flowtype>processing</flowtype>
+      <EnableNegativeNumbersBetweenBrackets>true</EnableNegativeNumbersBetweenBrackets>
+      <homepagelabel>P2P - Forecast Inventory movements</homepagelabel>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <enablerounddecimal>true</enablerounddecimal>
+      <OverrideAllowedAttachmentExtensions>*</OverrideAllowedAttachmentExtensions>
+      <UseActionNameWithScriptApproval>true</UseActionNameWithScriptApproval>
+      <AllowUploadAttachment>0</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+      <shouldRollbackManualRecordEdits>true</shouldRollbackManualRecordEdits>
+      <shouldShowManualEditsWarning>false</shouldShowManualEditsWarning>
+      <UseCultureFormat>true</UseCultureFormat>
+      <TransportName>CustomTable</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+    </process>
+    <ui>
+      <customscriptIncludedScripts>[LIB_P2P_CUSTOMIZATION_TABLES_CLIENT]</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Sys/Sys_Helpers</customscriptIncludedScripts>
+      <CustomScript>"use strict";
+var CustomScript;
+(function (CustomScript) {
+    function Start() {
+        Sys.Helpers.TryCallFunction("Lib.P2P.Customization.Tables.Client.Common.OnHTMLScriptEnd");
+    }
+    Start();
+})(CustomScript || (CustomScript = {}));
+//# sourceMappingURL=customscript.js.map</CustomScript>
+      <restorationPanel>DataPanel</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 31,
+	"*": {
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"splitterType": "simple-v",
+				"backColor": "text-backgroundcolor-default",
+				"style": null,
+				"footerStyle": "default",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 2,
+					"options": {
+						"hidePanelsMenu": false,
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 3,
+					"options": {
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 4,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-center": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 5,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"width": "100%"
+										},
+										"hidden": false,
+										"hideSeparator": true
+									},
+									"*": {
+										"form-content-center-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 6,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"DataPanel": {
+													"type": "PanelData",
+													"data": [],
+													"stamp": 7,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": false,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"sameHeightAsSiblings": false,
+														"backgroundcolor": "default",
+														"labelsAlignment": "right",
+														"label": "_Document data",
+														"version": 0
+													},
+													"*": {
+														"FieldsManager": {
+															"type": "FieldsManager",
+															"data": [],
+															"stamp": 8,
+															"options": {
+																"version": 0,
+																"controlsAssociation": {
+																	"CompanyCode__": "LabelCompanyCode__",
+																	"LabelCompanyCode__": "CompanyCode__",
+																	"ItemNumber__": "LabelItemNumber__",
+																	"LabelItemNumber__": "ItemNumber__",
+																	"WarehouseID__": "LabelWarehouseID__",
+																	"LabelWarehouseID__": "WarehouseID__",
+																	"ReservedValue__": "LabelReservedValue__",
+																	"LabelReservedValue__": "ReservedValue__",
+																	"ReplenishValue__": "LabelReplenishValue__",
+																	"LabelReplenishValue__": "ReplenishValue__",
+																	"MovementDateTime__": "LabelMovementDateTime__",
+																	"LabelMovementDateTime__": "MovementDateTime__",
+																	"UnitOfMeasure__": "LabelUnitOfMeasure__",
+																	"LabelUnitOfMeasure__": "UnitOfMeasure__",
+																	"MovementOrigin__": "LabelMovementOrigin__",
+																	"LabelMovementOrigin__": "MovementOrigin__",
+																	"LineNumber__": "LabelLineNumber__",
+																	"LabelLineNumber__": "LineNumber__"
+																}
+															},
+															"*": {
+																"Grid": {
+																	"type": "GridLayout",
+																	"data": [
+																		"fields"
+																	],
+																	"stamp": 9,
+																	"options": {
+																		"version": 0,
+																		"lines": 9,
+																		"columns": 2,
+																		"ctrlsPos": {
+																			"LabelCompanyCode__": {
+																				"line": 1,
+																				"column": 1
+																			},
+																			"CompanyCode__": {
+																				"line": 1,
+																				"column": 2
+																			},
+																			"LabelItemNumber__": {
+																				"line": 2,
+																				"column": 1
+																			},
+																			"ItemNumber__": {
+																				"line": 2,
+																				"column": 2
+																			},
+																			"LabelWarehouseID__": {
+																				"line": 3,
+																				"column": 1
+																			},
+																			"WarehouseID__": {
+																				"line": 3,
+																				"column": 2
+																			},
+																			"LabelReservedValue__": {
+																				"line": 4,
+																				"column": 1
+																			},
+																			"ReservedValue__": {
+																				"line": 4,
+																				"column": 2
+																			},
+																			"LabelReplenishValue__": {
+																				"line": 5,
+																				"column": 1
+																			},
+																			"ReplenishValue__": {
+																				"line": 5,
+																				"column": 2
+																			},
+																			"LabelMovementDateTime__": {
+																				"line": 6,
+																				"column": 1
+																			},
+																			"MovementDateTime__": {
+																				"line": 6,
+																				"column": 2
+																			},
+																			"LabelUnitOfMeasure__": {
+																				"line": 7,
+																				"column": 1
+																			},
+																			"UnitOfMeasure__": {
+																				"line": 7,
+																				"column": 2
+																			},
+																			"LabelMovementOrigin__": {
+																				"line": 8,
+																				"column": 1
+																			},
+																			"MovementOrigin__": {
+																				"line": 8,
+																				"column": 2
+																			},
+																			"LabelLineNumber__": {
+																				"line": 9,
+																				"column": 1
+																			},
+																			"LineNumber__": {
+																				"line": 9,
+																				"column": 2
+																			}
+																		},
+																		"colspans": [
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[]
+																		]
+																	},
+																	"*": {
+																		"LabelCompanyCode__": {
+																			"type": "Label",
+																			"data": [
+																				"CompanyCode__"
+																			],
+																			"stamp": 11,
+																			"options": {
+																				"label": "_CompanyCode",
+																				"version": 0
+																			}
+																		},
+																		"CompanyCode__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"CompanyCode__"
+																			],
+																			"stamp": 10,
+																			"options": {
+																				"label": "_CompanyCode",
+																				"version": 1,
+																				"autoCompleteSearchMode": "contains",
+																				"searchMode": "contains",
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"minNbLines": 1,
+																				"maxNbLines": 1,
+																				"PreFillFTS": true,
+																				"RestrictSearch": true,
+																				"fTSmaxRecords": "20",
+																				"browsable": true
+																			}
+																		},
+																		"LabelItemNumber__": {
+																			"type": "Label",
+																			"data": [
+																				"ItemNumber__"
+																			],
+																			"stamp": 13,
+																			"options": {
+																				"label": "_ItemNumber",
+																				"version": 0
+																			}
+																		},
+																		"ItemNumber__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"ItemNumber__"
+																			],
+																			"stamp": 12,
+																			"options": {
+																				"label": "_ItemNumber",
+																				"version": 1,
+																				"autoCompleteSearchMode": "contains",
+																				"searchMode": "contains",
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"minNbLines": 1,
+																				"maxNbLines": 1,
+																				"fTSmaxRecords": "20",
+																				"browsable": true,
+																				"PreFillFTS": true,
+																				"RestrictSearch": true
+																			}
+																		},
+																		"LabelWarehouseID__": {
+																			"type": "Label",
+																			"data": [
+																				"WarehouseID__"
+																			],
+																			"stamp": 15,
+																			"options": {
+																				"label": "_WarehouseID",
+																				"version": 0
+																			}
+																		},
+																		"WarehouseID__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"WarehouseID__"
+																			],
+																			"stamp": 14,
+																			"options": {
+																				"label": "_WarehouseID",
+																				"version": 1,
+																				"autoCompleteSearchMode": "startswith",
+																				"searchMode": "matches",
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"minNbLines": 1,
+																				"maxNbLines": 1,
+																				"fTSmaxRecords": "20",
+																				"browsable": true,
+																				"PreFillFTS": true
+																			}
+																		},
+																		"LabelReservedValue__": {
+																			"type": "Label",
+																			"data": [
+																				"ReservedValue__"
+																			],
+																			"stamp": 17,
+																			"options": {
+																				"label": "_ReservedValue",
+																				"version": 0
+																			}
+																		},
+																		"ReservedValue__": {
+																			"type": "Decimal",
+																			"data": [
+																				"ReservedValue__"
+																			],
+																			"stamp": 16,
+																			"options": {
+																				"label": "_ReservedValue",
+																				"version": 2,
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"integer": false,
+																				"precision_internal": 2,
+																				"precision_current": 2,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"enablePlusMinus": false,
+																				"enableRoundedStyle": false,
+																				"forceRoundCurrencyPrecision": false
+																			}
+																		},
+																		"LabelReplenishValue__": {
+																			"type": "Label",
+																			"data": [
+																				"ReplenishValue__"
+																			],
+																			"stamp": 19,
+																			"options": {
+																				"label": "_ReplenishValue",
+																				"version": 0
+																			}
+																		},
+																		"ReplenishValue__": {
+																			"type": "Decimal",
+																			"data": [
+																				"ReplenishValue__"
+																			],
+																			"stamp": 18,
+																			"options": {
+																				"label": "_ReplenishValue",
+																				"version": 2,
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"integer": false,
+																				"precision_internal": 2,
+																				"precision_current": 2,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"enableRoundedStyle": false,
+																				"forceRoundCurrencyPrecision": false,
+																				"enablePlusMinus": false
+																			}
+																		},
+																		"LabelMovementDateTime__": {
+																			"type": "Label",
+																			"data": [
+																				"MovementDateTime__"
+																			],
+																			"stamp": 21,
+																			"options": {
+																				"label": "_MovementDateTime",
+																				"version": 0
+																			}
+																		},
+																		"MovementDateTime__": {
+																			"type": "RealDateTime",
+																			"data": [
+																				"MovementDateTime__"
+																			],
+																			"stamp": 20,
+																			"options": {
+																				"label": "_MovementDateTime",
+																				"readonly": true,
+																				"displayLongFormat": false,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"version": 0
+																			}
+																		},
+																		"LabelUnitOfMeasure__": {
+																			"type": "Label",
+																			"data": [
+																				"UnitOfMeasure__"
+																			],
+																			"stamp": 23,
+																			"options": {
+																				"label": "_UnitOfMeasure",
+																				"version": 0
+																			}
+																		},
+																		"UnitOfMeasure__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"UnitOfMeasure__"
+																			],
+																			"stamp": 22,
+																			"options": {
+																				"label": "_UnitOfMeasure",
+																				"version": 1,
+																				"autoCompleteSearchMode": "startswith",
+																				"searchMode": "matches",
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"minNbLines": 1,
+																				"maxNbLines": 1,
+																				"fTSmaxRecords": "20",
+																				"browsable": true
+																			}
+																		},
+																		"LabelMovementOrigin__": {
+																			"type": "Label",
+																			"data": [
+																				"MovementOrigin__"
+																			],
+																			"stamp": 25,
+																			"options": {
+																				"label": "_MovementOrigin",
+																				"version": 0
+																			}
+																		},
+																		"MovementOrigin__": {
+																			"type": "ShortText",
+																			"data": [
+																				"MovementOrigin__"
+																			],
+																			"stamp": 24,
+																			"options": {
+																				"label": "_MovementOrigin",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 1,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"browsable": false
+																			}
+																		},
+																		"LabelLineNumber__": {
+																			"type": "Label",
+																			"data": [
+																				"LineNumber__"
+																			],
+																			"stamp": 27,
+																			"options": {
+																				"label": "_LineNumber",
+																				"version": 0
+																			}
+																		},
+																		"LineNumber__": {
+																			"type": "ShortText",
+																			"data": [
+																				"LineNumber__"
+																			],
+																			"stamp": 26,
+																			"options": {
+																				"label": "_LineNumber",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 1,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"browsable": false,
+																				"autocompletable": false
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 28,
+					"options": {
+						"splitterType": "simple-h",
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 29,
+							"options": {
+								"label": "_Save",
+								"action": "savequit",
+								"submit": true,
+								"shortCut": "S",
+								"textSize": "S",
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 30,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"shortCut": "Q",
+								"textSize": "S",
+								"version": 0
+							}
+						},
+						"Delete": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 31,
+							"options": {
+								"label": "_Delete",
+								"action": "delete",
+								"submit": true,
+								"disabled": true,
+								"textSize": "S",
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <field deleted="0" format="" guid="FW45FP000PA9" id="K7FQT400153E" label="_CompanyCode" length="50" name="CompanyCode__" originalProcessID="ZOL4FP000PA9" precision="0" processid="J7FQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AK7FQT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/CompanyCode__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:26</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_CompanyCode</Label>
+        <Alias>AK7FQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>false</Editable>
+        <TableName>CT#BD8QT400153E</TableName>
+        <SortOrder>
+        </SortOrder>
+        <DisplayedColumns>CompanyCode__|CompanyName__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>CompanyCode__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ExposedColumns>
+        </ExposedColumns>
+        <ProcessName>PurchasingCompanycodes__</ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <KeyAttribute>
+        </KeyAttribute>
+        <CustomFilter>
+        </CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="LMG4FP000PA9" id="L7FQT400153E" label="_ItemNumber" length="50" name="ItemNumber__" originalProcessID="IPL4FP000PA9" precision="0" processid="J7FQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AL7FQT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ItemNumber__</fullname>
+        <jointable>PurchasingOrderedItems__</jointable>
+        <jointableid>CT#IIBQT400153E</jointableid>
+        <defaultvalue>
+        </defaultvalue>
+        <joincondition>(&amp;(source.ItemNumber__=dest.ItemNumber__)(source.CompanyCode__=dest.ItemCompanyCode__))</joincondition>
+        <RecordLastWrite>2026-11-04 11:10:26</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ItemNumber</Label>
+        <Alias>AL7FQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>false</Editable>
+        <TableName>CT#OMBQT400153E</TableName>
+        <SortOrder>
+        </SortOrder>
+        <DisplayedColumns>Description__|CompanyCode__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>ItemNumber__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ExposedColumns>
+        </ExposedColumns>
+        <ProcessName>P2P - CatalogItems__</ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <KeyAttribute>
+        </KeyAttribute>
+        <CustomFilter>
+        </CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="SK05FP000PA9" id="M7FQT400153E" label="_LineNumber_report" length="50" name="LineNumber__" originalProcessID="ZOL4FP000PA9" precision="0" processid="J7FQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AM7FQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/LineNumber__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:26</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_LineNumber_report</Label>
+        <Alias>AM7FQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="UOL4FP000PA9" id="N7FQT400153E" label="_MovementDateTime_report" length="0" name="MovementDateTime__" originalProcessID="ZOL4FP000PA9" precision="0" processid="J7FQT400153E" submitable="1" type="DATETIME">
+    <properties>
+      <db>
+        <alias>AN7FQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/MovementDateTime__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:26</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_MovementDateTime_report</Label>
+        <Alias>AN7FQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Date</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="WOL4FP000PA9" id="O7FQT400153E" label="_MovementOrigin_report" length="50" name="MovementOrigin__" originalProcessID="ZOL4FP000PA9" precision="0" processid="J7FQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AO7FQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/MovementOrigin__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:26</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_MovementOrigin_report</Label>
+        <Alias>AO7FQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="JHBIG0000SG1" id="P7FQT400153E" label="_ReplenishValue_report" length="17" name="ReplenishValue__" originalProcessID="ZOL4FP000PA9" precision="2" processid="J7FQT400153E" submitable="1" type="DECIMAL">
+    <properties>
+      <db>
+        <alias>AP7FQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ReplenishValue__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:26</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ReplenishValue_report</Label>
+        <Alias>AP7FQT400153E</Alias>
+        <DecimalPrecision vartype="INT">2</DecimalPrecision>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="TOL4FP000PA9" id="Q7FQT400153E" label="_ReservedValue_report" length="17" name="ReservedValue__" originalProcessID="ZOL4FP000PA9" precision="2" processid="J7FQT400153E" submitable="1" type="DECIMAL">
+    <properties>
+      <db>
+        <alias>AQ7FQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ReservedValue__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:26</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ReservedValue_report</Label>
+        <Alias>AQ7FQT400153E</Alias>
+        <DecimalPrecision vartype="INT">2</DecimalPrecision>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="VOL4FP000PA9" id="R7FQT400153E" label="_UnitOfMeasure" length="50" name="UnitOfMeasure__" originalProcessID="ZOL4FP000PA9" precision="0" processid="J7FQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AR7FQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/UnitOfMeasure__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:26</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_UnitOfMeasure</Label>
+        <Alias>AR7FQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>false</Editable>
+        <TableName>CT#DGBQT400153E</TableName>
+        <SortOrder>
+        </SortOrder>
+        <DisplayedColumns>CompanyCode__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>UnitOfMeasure__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ExposedColumns>
+        </ExposedColumns>
+        <ProcessName>P2P - UnitOfMeasure__</ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <KeyAttribute>
+        </KeyAttribute>
+        <CustomFilter>
+        </CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="KPL4FP000PA9" id="S7FQT400153E" label="_WarehouseID_report" length="50" name="WarehouseID__" originalProcessID="IPL4FP000PA9" precision="0" processid="J7FQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AS7FQT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/WarehouseID__</fullname>
+        <jointable>P2P - Warehouse__</jointable>
+        <jointableid>CT#RO8QT400153E</jointableid>
+        <defaultvalue>
+        </defaultvalue>
+        <joincondition>(&amp;(source.CompanyCode__=dest.CompanyCode__)(source.WarehouseID__=dest.WarehouseID__))</joincondition>
+        <RecordLastWrite>2026-11-04 11:10:26</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_WarehouseID_report</Label>
+        <Alias>AS7FQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>false</Editable>
+        <TableName>CT#RO8QT400153E</TableName>
+        <SortOrder>
+        </SortOrder>
+        <DisplayedColumns>WarehouseID__|Name__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>WarehouseID__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ExposedColumns>
+        </ExposedColumns>
+        <ProcessName>P2P - Warehouse__</ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <KeyAttribute>
+        </KeyAttribute>
+        <CustomFilter>
+        </CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <type id="KOLHG0000M4O" name="CT">
+  </type>
+</process>

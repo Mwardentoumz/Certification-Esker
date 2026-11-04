@@ -1,0 +1,616 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:07:21" deleted="0" eskerapplication="P2P" global="0" id="GWAQT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="Vendor invoice waiting GR" needvalidation="0" ootofilter="" ootoversion="0" originalProcessID="ECHO15249" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="0" version="1" visibility="0">
+  <properties>
+    <dataConditions>
+      <listDataConditions>
+				&lt;dataCondition&gt;
+					&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+					&lt;filter&gt;msnex=*&lt;/filter&gt;
+					&lt;labelKey&gt;_AP disabled&lt;/labelKey&gt;
+					&lt;conditions&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableAccountPayableGlobalSetting__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+					&lt;/conditions&gt;
+				&lt;/dataCondition&gt;
+			</listDataConditions>
+    </dataConditions>
+    <gdr>
+      <FinalizationScriptAllowRetry>
+      </FinalizationScriptAllowRetry>
+      <finalizationscriptIncludedScripts>Sys/Sys_Helpers_Date</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Sys/Sys_Helpers_String</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Sys/Sys_Helpers_CSVReader</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Sys/Sys_Helpers_SAP</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Sys/Sys_Parameters</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Lib_V12.0.566.0</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Lib_Parameters_P2P_V12.0.566.0</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>[Lib_Custom_Parameters]</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>[Lib_P2P_Custom_Parameters]</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Lib_AP_V12.0.566.0</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Lib_AP_ERPIncludes_Server_V12.0.566.0</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Lib_P2P_V12.0.566.0</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Lib_AP_UpdateWaitingGR_V12.0.566.0</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>[LIB_AP_CUSTOMIZATION_FINALIZATION]</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>[LIB_COMPONENTS]</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>[LIB_ERP_CUSTOMIZATION_COMMON]</finalizationscriptIncludedScripts>
+      <FinalizationScript>"use strict";
+const options = {
+    maxElementsPerRecall: 50,
+    limitHistoryToLastDays: 30
+};
+Process.SetTimeOut(3600);
+const NOT_FINISHED = 0;
+function run(withOptions) {
+    const UE_OnUpdateInvoicesWaitingForGR = "Lib.AP.Customization.Finalization.OnUpdateInvoicesWaitingForGR";
+    const UE_context = {
+        script: "finalizationscript",
+        context: "begin",
+        parameters: [withOptions]
+    };
+    Sys.Helpers.TryCallFunction(UE_OnUpdateInvoicesWaitingForGR, UE_context);
+    if (Lib.AP.UpdateWaitingGR.UpdateInvoicesWaitingForGR(withOptions) === NOT_FINISHED) {
+        Process.RecallScript("update_gr_in_progress", true);
+    }
+    Sys.Helpers.TryCallFunction(UE_OnUpdateInvoicesWaitingForGR, { ...UE_context, context: "end" });
+}
+run(options);
+//# sourceMappingURL=finalizationscript.js.map</FinalizationScript>
+      <ValidationScriptAllowRetry>
+      </ValidationScriptAllowRetry>
+      <ValidationScript>
+      </ValidationScript>
+      <AllowTagCoverPages>true</AllowTagCoverPages>
+      <AllowTagNewDocuments>true</AllowTagNewDocuments>
+      <AllowTagAttachments>true</AllowTagAttachments>
+      <ExtractionScriptAllowRetry>
+      </ExtractionScriptAllowRetry>
+      <ExtractionScript>
+      </ExtractionScript>
+      <AllowRemovePages>true</AllowRemovePages>
+      <AllowSwapPages>true</AllowSwapPages>
+      <PostProcessingScriptAllowRetry>
+      </PostProcessingScriptAllowRetry>
+      <PostProcessingScript>
+      </PostProcessingScript>
+    </gdr>
+    <lg>
+      <process_da>{
+	"Vendor invoice waiting GR": "Opdater fakturaer, der afventer kvittering for varer og serviceydelser",
+	"Consignment": "Konsignationsfaktura",
+	"Downpayment Invoice": "Forudbetalt faktura",
+	"Non-PO Invoice": "Faktura uden indkøbsordre",
+	"PO Invoice": "Faktura med indkøbsordre",
+	"PO Invoice (as FI)": "Faktura med indkøbsordre (ikke ERP-ordre)"
+}</process_da>
+      <process_de>{
+	"Vendor invoice waiting GR": "Aktualisierung von Rechnungen mit ausstehendem Wareneingangs- und Serviceerbringungsbeleg",
+	"Consignment": "Konsignationsrechnung",
+	"Downpayment Invoice": "Vorauszahlungsrechnung",
+	"Non-PO Invoice": "Rechnung ohne Bestellung",
+	"PO Invoice": "Rechnung mit Bestellung",
+	"PO Invoice (as FI)": "Rechnung mit Bestellung (Nicht-ERP-Bestellung)"
+}</process_de>
+      <process_JA>{
+	"Vendor invoice waiting GR": "品物とサービスの受領書待ちの請求書を更新",
+	"Consignment": "委託請求書",
+	"Downpayment Invoice": "前払い請求書",
+	"Non-PO Invoice": "PO なし請求書",
+	"PO Invoice": "PO 請求書",
+	"PO Invoice (as FI)": "PO 請求書（ERP以外の注文）"
+}</process_JA>
+      <process_en>{
+	"Vendor invoice waiting GR": "Update invoices waiting for goods and services receipt",
+	"Consignment": "Consignment invoice",
+	"Downpayment Invoice": "Prepayment invoice",
+	"Non-PO Invoice": "Non-PO Invoice",
+	"PO Invoice": "PO Invoice",
+	"PO Invoice (as FI)": "PO Invoice (non-ERP order)"
+}</process_en>
+      <process_es>{
+	"Vendor invoice waiting GR": "Actualización de facturas en espera de entrada de bienes y servicios",
+	"Consignment": "Factura de consignación",
+	"Downpayment Invoice": "Factura de anticipo",
+	"Non-PO Invoice": "Factura sin pedido de compra",
+	"PO Invoice": "Factura con pedido de compra",
+	"PO Invoice (as FI)": "Factura con pedido de compra (pedido fuera del ERP)"
+}</process_es>
+      <process_fr>{
+	"Vendor invoice waiting GR": "Mise à jour des factures en attente de l'entrée de biens et services",
+	"Consignment": "Facture de consignation",
+	"Downpayment Invoice": "Facture d'acompte",
+	"Non-PO Invoice": "Facture sans commande",
+	"PO Invoice": "Facture avec commande",
+	"PO Invoice (as FI)": "Facture avec commande (commande hors ERP)"
+}</process_fr>
+      <process_nl-NL>{
+	"Vendor invoice waiting GR": "Facturen bijwerken in afwachting van ontvangst goederen en services",
+	"Consignment": "Factuur zending",
+	"Downpayment Invoice": "Vooruitbetalingsfactuur",
+	"Non-PO Invoice": "Factuur zonder PO",
+	"PO Invoice": "Factuur met PO",
+	"PO Invoice (as FI)": "Factuur met PO (order niet in ERP)"
+}</process_nl-NL>
+      <process_pl>{
+	"Vendor invoice waiting GR": "Aktualizuj faktury oczekujące na przyjęcie materiałów i usług",
+	"Consignment": "Faktura konsygnacyjna",
+	"Downpayment Invoice": "Faktura z tytułu przedpłaty",
+	"Non-PO Invoice": "Faktura bez ZZ",
+	"PO Invoice": "Faktura ZZ",
+	"PO Invoice (as FI)": "Faktura ZZ (zamówienie bez ERP)"
+}</process_pl>
+      <process_it>{
+	"Vendor invoice waiting GR": "Aggiornamento fatture in attesa dell'entrata merci e servizi",
+	"Consignment": "Fattura conto deposito",
+	"Downpayment Invoice": "Fattura di acconto",
+	"Non-PO Invoice": "Fattura senza ordine",
+	"PO Invoice": "Fattura con ordine",
+	"PO Invoice (as FI)": "Fattura con ordine (ordine fuori ERP)"
+}</process_it>
+      <process_sk>{
+	"Vendor invoice waiting GR": "Aktualizovať faktúry čakajúce na prijatie tovaru a služieb",
+	"Consignment": "Faktúra za zásielku",
+	"Downpayment Invoice": "Zálohová faktúra",
+	"Non-PO Invoice": "Faktúra bez obj.",
+	"PO Invoice": "Faktúra s obj.",
+	"PO Invoice (as FI)": "Faktúra s obj. (obj. mimo ERP)"
+}</process_sk>
+      <process_zh-CN>{
+	"Vendor invoice waiting GR": "更新等待接收货物或服务的账单发票",
+	"Consignment": "寄售账单",
+	"Downpayment Invoice": "预付款账单发票",
+	"Non-PO Invoice": "无订单发票",
+	"PO Invoice": "有订单发票",
+	"PO Invoice (as FI)": "有订单发票（订单不在ERP中）"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"Vendor invoice waiting GR": "Atualizar faturas aguardando recebimento de bens e serviços",
+	"Consignment": "Fatura em consignação",
+	"Downpayment Invoice": "Fatura de pré-pagamento",
+	"Non-PO Invoice": "Fatura sem pedido",
+	"PO Invoice": "Fatura com pedido",
+	"PO Invoice (as FI)": "Fatura com pedido (pedido não ERP)"
+}</process_pt-BR>
+    </lg>
+    <ocr>
+      <trade-off>accurate</trade-off>
+      <image-binarization>no</image-binarization>
+      <image-draft-fax>no</image-draft-fax>
+      <image-despeckle>no</image-despeckle>
+      <allowed-language>0</allowed-language>
+      <image-resolution-enhancement>auto</image-resolution-enhancement>
+      <ocr_engine>Nuance222</ocr_engine>
+      <extractionAdditionalOptions>
+      </extractionAdditionalOptions>
+    </ocr>
+    <process>
+      <flowtype>processing</flowtype>
+      <ocrpreset>scan</ocrpreset>
+      <homepagelabel>_Vendor invoice waiting GR</homepagelabel>
+      <enableflexibleauditing>
+      </enableflexibleauditing>
+      <enableflexibleediting>
+      </enableflexibleediting>
+      <enableflexibleteaching>
+      </enableflexibleteaching>
+      <upgradable>yes</upgradable>
+      <disableocr>
+      </disableocr>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <disableautolearning>true</disableautolearning>
+      <backgroundprocessingthreshold>
+      </backgroundprocessingthreshold>
+      <EnablePreviewPrecomputation>
+      </EnablePreviewPrecomputation>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <archiveDuration>0</archiveDuration>
+      <OverrideAllowedDocumentExtensions>CSV</OverrideAllowedDocumentExtensions>
+      <ownhomepage>
+      </ownhomepage>
+      <ocrpagestoprocess>
+      </ocrpagestoprocess>
+      <ScriptEngineType>2</ScriptEngineType>
+      <displayWidth>
+      </displayWidth>
+      <AllowUploadAttachment>1</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>1</AllowUploadReferenceDocument>
+      <UseCultureFormat>true</UseCultureFormat>
+      <AllowRetryExtractCD>true</AllowRetryExtractCD>
+      <TransportName>CustomData</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+    </process>
+    <ui>
+      <CustomScriptDebug>false</CustomScriptDebug>
+      <CustomScriptReadonly>false</CustomScriptReadonly>
+      <CustomScript>
+      </CustomScript>
+      <restorationPanel>DataPanel</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 30,
+	"*": {
+		"GDRData": {
+			"type": "GDRData",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"version": 0
+			}
+		},
+		"OCRParams": {
+			"type": "OCRParams",
+			"data": [],
+			"stamp": 2,
+			"options": {
+				"version": 0
+			}
+		},
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 3,
+			"options": {
+				"splitterType": "complex",
+				"maxwidth": "",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 4,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 5,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 6,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-top": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 7,
+									"options": {
+										"autosize": true,
+										"version": 1,
+										"box": {
+											"top": 0,
+											"left": 0,
+											"width": 100,
+											"height": 17
+										},
+										"hidden": false
+									},
+									"*": {
+										"form-content-top-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 8,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"DocumentsPanel": {
+													"type": "PanelDocument",
+													"data": [],
+													"stamp": 9,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": false,
+														"hideTitleBar": false,
+														"label": "_Documents",
+														"version": 0
+													},
+													"*": {
+														"Document": {
+															"type": "Documents",
+															"data": [
+																"documentscontroldata"
+															],
+															"stamp": 10,
+															"options": {
+																"version": 1,
+																"previewButton": false,
+																"downloadButton": true
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								},
+								"form-content-bottom": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 11,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": "17%",
+											"left": "0%",
+											"width": null,
+											"height": "83%"
+										},
+										"hidden": false
+									},
+									"*": {
+										"form-content-left": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 12,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "0%",
+													"width": "45%",
+													"height": null
+												},
+												"hidden": false
+											},
+											"*": {
+												"form-content-left-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 13,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"DataPanel": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 14,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_Document data",
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 15,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 16,
+																			"options": {
+																				"version": 0,
+																				"lines": 0,
+																				"columns": 2,
+																				"ctrlsPos": {},
+																				"colspans": []
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-2": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 17,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"SystemData": {
+															"type": "PanelSystemData",
+															"data": [],
+															"stamp": 18,
+															"options": {
+																"multicolumn": false,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"label": "_System data",
+																"version": 0
+															}
+														}
+													}
+												},
+												"form-content-left-3": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 19,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"NextProcess": {
+															"type": "PanelNextProcess",
+															"data": [],
+															"stamp": 20,
+															"options": {
+																"hidden": true,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"label": "_Next Process",
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-right": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 21,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "45%",
+													"width": "55%",
+													"height": null
+												},
+												"hidden": false
+											},
+											"*": {
+												"form-content-right-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 22,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"PreviewPanel": {
+															"type": "PanelPreview",
+															"data": [],
+															"stamp": 23,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"label": "_Document Preview",
+																"version": 0
+															},
+															"*": {
+																"Preview": {
+																	"type": "Preview",
+																	"data": [
+																		"previewdata"
+																	],
+																	"stamp": 24,
+																	"options": {
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 25,
+					"options": {
+						"splitterType": "simple-h",
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 26,
+							"options": {
+								"label": "_Save",
+								"action": "save",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Approve": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 27,
+							"options": {
+								"label": "_Approve",
+								"action": "approve",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Reject": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 28,
+							"options": {
+								"label": "_Reject",
+								"action": "reject",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Reprocess": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 29,
+							"options": {
+								"label": "_Reprocess",
+								"action": "reprocess",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 30,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <type id="GOLHG0000M4O" name="CD">
+  </type>
+</process>

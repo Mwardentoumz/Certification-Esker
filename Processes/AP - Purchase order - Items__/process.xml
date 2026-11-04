@@ -1,0 +1,4719 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:05:56" deleted="0" eskerapplication="P2P" global="0" id="H29QT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="AP - Purchase order - Items__" needvalidation="1" ootofilter="" ootoversion="0" originalProcessID="NRVY1713" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomTable" upgradable="1" userid="0" version="1" visibility="0">
+  <properties>
+    <dataConditions>
+      <listDataConditions>
+				&lt;dataCondition&gt;
+					&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+					&lt;filter&gt;msnex=*&lt;/filter&gt;
+					&lt;labelKey&gt;_Purchasing or _AP disabled&lt;/labelKey&gt;
+					&lt;multipleConditionsLink&gt;or&lt;/multipleConditionsLink&gt;
+					&lt;conditions&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableAccountPayableGlobalSetting__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableStandardPurchasingGlobalSetting__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+					&lt;/conditions&gt;
+				&lt;/dataCondition&gt;</listDataConditions>
+    </dataConditions>
+    <dbIndex>
+      <AUTO_AC39QT400153EA>&lt;Index&gt;&lt;Ref Name="AC39QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AC39QT400153EA>
+      <AUTO_AJ29QT400153EA>&lt;Index&gt;&lt;Ref Name="AJ29QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AJ29QT400153EA>
+      <AUTO_AK39QT400153EA>&lt;Index&gt;&lt;Ref Name="AK39QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AK39QT400153EA>
+      <AUTO_AL39QT400153EA>&lt;Index&gt;&lt;Ref Name="AL39QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AL39QT400153EA>
+      <AUTO_AV39QT400153EA>&lt;Index&gt;&lt;Ref Name="AV39QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AV39QT400153EA>
+    </dbIndex>
+    <lg>
+      <process_da>{
+	"_AmountBased": "Beløb",
+	"_CapEx": "CapEx",
+	"_CostType": "Omkostningstype",
+	"_CostType_report": "Omkostningstype",
+	"_Group": "Udgiftskategori",
+	"_Group_report": "Udgiftskategori",
+	"_ItemType": "Varetype",
+	"_NoGoodsReceipt": "Intet krav om kvittering for varer og serviceydelser",
+	"_NoGoodsReceipt_report": "Intet krav om kvittering for varer og serviceydelser",
+	"_OpEx": "OpEx",
+	"_processFormula_Accrued expense": "Påløbet udgift",
+	"_QuantityBased": "Mængde",
+	"_RequestedDeliveryDate": "Dato for ønsket modtagelse",
+	"_RequestedDeliveryDate_report": "Dato for ønsket modtagelse",
+	"_Tax rate": "Afgiftssats",
+	"_Tax rate_report": "Afgiftssats",
+	"_UnitOfMeasureCode": "Enhed",
+	"_UnitOfMeasureCode_report": "Enhed",
+	"AP - Purchase order - Items": "S2P – indkøbsordre – varer",
+	"BudgetID": "Budget-id",
+	"Company code": "Virksomhedskode",
+	"Cost center": "Omkostningssted",
+	"Currency": "Valuta",
+	"Delivered amount": "Levereret beløb",
+	"Delivered quantity": "Leveret mængde",
+	"Description": "Beskrivelse",
+	"G/L account": "Artskonto",
+	"GR/IV": "Fakturamatchning baseret på varemodtagelse",
+	"Invoiced amount": "Faktureret beløb",
+	"Invoiced quantity": "Faktureret mængde",
+	"Is created in ERP": "Indkøbsordre oprettet i ERP",
+	"Is local PO_V2": "Indkøbsordre oprettet i modulet 'Indkøb'",
+	"Item number": "Linjenummer",
+	"No more invoice expected": "Markér som lukket",
+	"Order date": "Ordredato",
+	"Order number": "Ordrenummer",
+	"Ordered amount": "Bestilt antal",
+	"Ordered quantity": "Bestilt mængde",
+	"Part number": "Reference",
+	"Receiver": "Modtager",
+	"Tax code": "Afgiftskode",
+	"Unit price": "Stykpris",
+	"Vendor number": "Leverandørnummer",
+	"_ContractName": "Kontraktnavn",
+	"_ContractName_report": "Kontraktnavn",
+	"_ContractNumber": "Kontraktnummer",
+	"_ContractNumber_report": "Kontraktnummer",
+	"_ContractReferenceNumber": "Kontraktref.",
+	"_ContractReferenceNumber_report": "Kontraktref.",
+	"_ContractRUIDEX": "Udvidet id for kontrakt",
+	"_ContractRUIDEX_report": "Udvidet id for kontrakt",
+	"_ContractSpendingID": "Id for kontraktforbrug",
+	"_ContractSpendingID_report": "Id for kontraktforbrug",
+	"_CostCenter": "Omkostningssted",
+	"_CostCenter_report": "Omkostningssted",
+	"_CostCenterDescription": "Beskrivelse af omkostningssted",
+	"_CostCenterDescription_report": "Beskrivelse af omkostningssted",
+	"_DefaultCurrency": "Foreslået prisvaluta",
+	"_DefaultCurrency_report": "Foreslået prisvaluta",
+	"_DefaultPublicPrice": "Foreslået pris",
+	"_DefaultPublicPrice_report": "Foreslået pris",
+	"_FreeDimension1": "Brugerdefineret dimension 1",
+	"_FreeDimension1_report": "Brugerdefineret dimension 1",
+	"_FreeDimension1ID": "Brugerdefineret dimension 1 (id)",
+	"_FreeDimension1ID_report": "Brugerdefineret dimension 1 (id)",
+	"_InternalOrder": "Intern ordre",
+	"_InternalOrder_report": "Intern ordre",
+	"_IsReplenishmentItem": "Opfyldningsvare",
+	"_IsReplenishmentItem_report": "Opfyldningsvare",
+	"_ItemDeliveryAddressID": "Id for leveringsadresse",
+	"_ItemDeliveryAddressID_report": "Id for leveringsadresse",
+	"_ItemShipToAddress": "Leveringsadresse",
+	"_ItemShipToAddress_report": "Leveringsadresse",
+	"_ItemShipToCompany": "Modtagervirksomhed",
+	"_ItemShipToCompany_report": "Modtagervirksomhed",
+	"_NonDeductibleTaxRate": "Ikke-fradragsberettiget afgift",
+	"_NonDeductibleTaxRate_report": "Ikke-fradragsberettiget afgift",
+	"_OriginalContractRUIDEX": "Udvidet id for kontrakt (original version)",
+	"_OriginalContractRUIDEX_report": "Udvidet id for kontrakt (original version)",
+	"_PreviousContractSpendingID": "Tidligere id for kontraktforbrug",
+	"_PreviousContractSpendingID_report": "Tidligere id for kontraktforbrug",
+	"_ProfitCenter": "Profitcenter",
+	"_ProfitCenter_report": "Profitcenter",
+	"_ProjectCode": "Projektkode",
+	"_ProjectCode_report": "Projektkode",
+	"_ProjectCodeDescription": "Projektbeskrivelse",
+	"_ProjectCodeDescription_report": "Projektbeskrivelse",
+	"_ProjectName": "Projektnavn",
+	"_ProjectName_report": "Projektnavn",
+	"_ProjectNumber": "Projektnummer",
+	"_ProjectNumber_report": "Projektnummer",
+	"_PublicPrice": "Standardpris",
+	"_PublicPrice_report": "Standardpris",
+	"_VendorRegistrationID_report": "Id for leverandørregistrering",
+	"_WarehouseID": "Lager-id",
+	"_WarehouseID_report": "Lager-id",
+	"_WarehouseName": "Lagernavn",
+	"_WarehouseName_report": "Lagernavn",
+	"_WBSElement": "WBS-element",
+	"_WBSElement_report": "WBS-element",
+	"_WBSElementID": "WBS-element (id)",
+	"_WBSElementID_report": "WBS-element (id)",
+	"_EnergyConsumptionKgCO2ePerUnit": "GHG-emissioner pr. enhed (kg CO2e)",
+	"_EnergyConsumptionKgCO2ePerUnit_report": "GHG-emissioner pr. enhed (kg CO2e)",
+	"_GHGE_DefaultUnit": "kg CO2e"
+}</process_da>
+      <process_de>{
+	"_AmountBased": "Betrag",
+	"_CapEx": "CapEx",
+	"_CostType": "Kostenart",
+	"_CostType_report": "Kostenart",
+	"_Group": "Spesenkategorie",
+	"_Group_report": "Spesenkategorie",
+	"_ItemType": "Artikeltyp",
+	"_NoGoodsReceipt": "Kein Wareneingangs- und Serviceerbringungsbeleg erforderlich",
+	"_NoGoodsReceipt_report": "Kein Wareneingangs- und Serviceerbringungsbeleg erforderlich",
+	"_OpEx": "OpEx",
+	"_processFormula_Accrued expense": "Aufwand",
+	"_QuantityBased": "Menge",
+	"_RequestedDeliveryDate": "Gewünschtes Empfangsdatum",
+	"_RequestedDeliveryDate_report": "Gewünschtes Empfangsdatum",
+	"_Tax rate": "Steuersatz",
+	"_Tax rate_report": "Steuersatz",
+	"_UnitOfMeasureCode": "Einheit",
+	"_UnitOfMeasureCode_report": "Einheit",
+	"AP - Purchase order - Items": "S2P - Bestellung - Artikel",
+	"BudgetID": "Budget-ID",
+	"Company code": "Buchungskreis",
+	"Cost center": "Kostenstellen",
+	"Currency": "Währung",
+	"Delivered amount": "Gelieferter Betrag",
+	"Delivered quantity": "Liefermenge",
+	"Description": "Beschreibung",
+	"G/L account": "Sachkonto",
+	"GR/IV": "WE-bez. Rechnungsabgleich",
+	"Invoiced amount": "Rechnungsbetrag",
+	"Invoiced quantity": "Rechnungsmenge",
+	"Is created in ERP": "Bestellung im ERP erstellt",
+	"Is local PO_V2": "Bestellung im Modul 'Einkauf' erzeugt",
+	"Item number": "Positionsnummer",
+	"No more invoice expected": "Als geschlossen kennzeichnen",
+	"Order date": "Bestelldatum",
+	"Order number": "Bestellnummer",
+	"Ordered amount": "Bestellbetrag",
+	"Ordered quantity": "Bestellmenge",
+	"Part number": "Referenz",
+	"Receiver": "Empfänger",
+	"Tax code": "Steuerkennzeichen",
+	"Unit price": "Einzelpreis",
+	"Vendor number": "Lieferantennummer",
+	"_ContractName": "Vertragsname",
+	"_ContractName_report": "Vertragsname",
+	"_ContractNumber": "Vertragsnummer",
+	"_ContractNumber_report": "Vertragsnummer",
+	"_ContractReferenceNumber": "Vertragsreferenz",
+	"_ContractReferenceNumber_report": "Vertragsreferenz",
+	"_ContractRUIDEX": "Erweiterte Vertrags-ID",
+	"_ContractRUIDEX_report": "Erweiterte Vertrags-ID",
+	"_ContractSpendingID": "Vertragsausgaben-ID",
+	"_ContractSpendingID_report": "Vertragsausgaben-ID",
+	"_CostCenter": "Kostenstellen",
+	"_CostCenter_report": "Kostenstellen",
+	"_CostCenterDescription": "Kostenstellenbeschreibung",
+	"_CostCenterDescription_report": "Kostenstellenbeschreibung",
+	"_DefaultCurrency": "Währung des vorgeschlagenen Preises",
+	"_DefaultCurrency_report": "Währung des vorgeschlagenen Preises",
+	"_DefaultPublicPrice": "Vorgeschlagener Preis",
+	"_DefaultPublicPrice_report": "Vorgeschlagener Preis",
+	"_FreeDimension1": "Benutzerdefinierte Dimension 1",
+	"_FreeDimension1_report": "Benutzerdefinierte Dimension 1",
+	"_FreeDimension1ID": "Benutzerdefinierte Dimension 1 (ID)",
+	"_FreeDimension1ID_report": "Benutzerdefinierte Dimension 1 (ID)",
+	"_InternalOrder": "Innenauftrag",
+	"_InternalOrder_report": "Innenauftrag",
+	"_IsReplenishmentItem": "Nachschubartikel",
+	"_IsReplenishmentItem_report": "Nachschubartikel",
+	"_ItemDeliveryAddressID": "ID der Lieferadresse",
+	"_ItemDeliveryAddressID_report": "ID der Lieferadresse",
+	"_ItemShipToAddress": "Lieferadresse",
+	"_ItemShipToAddress_report": "Lieferadresse",
+	"_ItemShipToCompany": "Empfängerfirma",
+	"_ItemShipToCompany_report": "Empfängerfirma",
+	"_NonDeductibleTaxRate": "Nicht abzugsfähiger Steuersatz",
+	"_NonDeductibleTaxRate_report": "Nicht abzugsfähiger Steuersatz",
+	"_OriginalContractRUIDEX": "Erweiterte Vertrags-ID (ursprüngliche Version)",
+	"_OriginalContractRUIDEX_report": "Erweiterte Vertrags-ID (ursprüngliche Version)",
+	"_PreviousContractSpendingID": "Vorherige Vertragsausgaben-ID",
+	"_PreviousContractSpendingID_report": "Vorherige Vertragsausgaben-ID",
+	"_ProfitCenter": "Profit-Center",
+	"_ProfitCenter_report": "Profit-Center",
+	"_ProjectCode": "Projektcode",
+	"_ProjectCode_report": "Projektcode",
+	"_ProjectCodeDescription": "Projektbeschreibung",
+	"_ProjectCodeDescription_report": "Projektbeschreibung",
+	"_ProjectName": "Projektname",
+	"_ProjectName_report": "Projektname",
+	"_ProjectNumber": "Projektnummer",
+	"_ProjectNumber_report": "Projektnummer",
+	"_PublicPrice": "Standardpreis",
+	"_PublicPrice_report": "Standardpreis",
+	"_VendorRegistrationID_report": "Lieferantenregistrierungs-ID",
+	"_WarehouseID": "Lagerkennung",
+	"_WarehouseID_report": "Lagerkennung",
+	"_WarehouseName": "Lagerort",
+	"_WarehouseName_report": "Lagerort",
+	"_WBSElement": "PSP-Element",
+	"_WBSElement_report": "PSP-Element",
+	"_WBSElementID": "PSP-Element (ID)",
+	"_WBSElementID_report": "PSP-Element (ID)",
+	"_EnergyConsumptionKgCO2ePerUnit": "THG-Emissionen pro Einheit (kg CO2e)",
+	"_EnergyConsumptionKgCO2ePerUnit_report": "THG-Emissionen pro Einheit (kg CO2e)",
+	"_GHGE_DefaultUnit": "kg CO2e"
+}</process_de>
+      <process_ja>{
+	"_AmountBased": "金額",
+	"_CapEx": "CapEx",
+	"_CostType": "コスト種別",
+	"_CostType_report": "コスト種別",
+	"_Group": "費用分類",
+	"_Group_report": "費用分類",
+	"_ItemType": "品目種別",
+	"_NoGoodsReceipt": "品物とサービスの受領書不要",
+	"_NoGoodsReceipt_report": "品物とサービスの受領書不要",
+	"_OpEx": "OpEx",
+	"_processFormula_Accrued expense": "未払費用",
+	"_QuantityBased": "数量",
+	"_RequestedDeliveryDate": "受領希望日",
+	"_RequestedDeliveryDate_report": "受領希望日",
+	"_Tax rate": "税率",
+	"_Tax rate_report": "税率",
+	"_UnitOfMeasureCode": "単位",
+	"_UnitOfMeasureCode_report": "単位",
+	"AP - Purchase order - Items": "S2P - 発注書 - 品目",
+	"BudgetID": "予算ID",
+	"Company code": "会社コード",
+	"Cost center": "コストセンター",
+	"Currency": "通貨",
+	"Delivered amount": "納品金額",
+	"Delivered quantity": "納品数量",
+	"Description": "説明",
+	"G/L account": "勘定科目",
+	"GR/IV": "GR基準の請求書照合",
+	"Invoiced amount": "請求金額",
+	"Invoiced quantity": "請求数量",
+	"Is created in ERP": "ERPで作成されたPO",
+	"Is local PO_V2": "「調達」モジュールで作成されたPO",
+	"Item number": "明細番号",
+	"No more invoice expected": "クローズとしてマーク",
+	"Order date": "注文日",
+	"Order number": "注文番号",
+	"Ordered amount": "注文金額",
+	"Ordered quantity": "注文数量",
+	"Part number": "参照",
+	"Receiver": "受信者",
+	"Tax code": "税コード",
+	"Unit price": "単価",
+	"Vendor number": "仕入先番号",
+	"_ContractName": "契約者名",
+	"_ContractName_report": "契約者名",
+	"_ContractNumber": "契約番号",
+	"_ContractNumber_report": "契約番号",
+	"_ContractReferenceNumber": "契約参照",
+	"_ContractReferenceNumber_report": "契約参照",
+	"_ContractRUIDEX": "契約延長ID",
+	"_ContractRUIDEX_report": "契約延長ID",
+	"_ContractSpendingID": "契約支出ID",
+	"_ContractSpendingID_report": "契約支出ID",
+	"_CostCenter": "コストセンター",
+	"_CostCenter_report": "コストセンター",
+	"_CostCenterDescription": "コストセンター説明",
+	"_CostCenterDescription_report": "コストセンター説明",
+	"_DefaultCurrency": "希望価格の通貨",
+	"_DefaultCurrency_report": "推奨価格の通貨",
+	"_DefaultPublicPrice": "希望価格",
+	"_DefaultPublicPrice_report": "希望価格",
+	"_FreeDimension1": "カスタムサイズ 1",
+	"_FreeDimension1_report": "カスタムサイズ 1",
+	"_FreeDimension1ID": "カスタムサイズ 1 (ID)",
+	"_FreeDimension1ID_report": "カスタムサイズ 1 (ID)",
+	"_InternalOrder": "内部注文",
+	"_InternalOrder_report": "内部注文",
+	"_IsReplenishmentItem": "補充品目",
+	"_IsReplenishmentItem_report": "補充品目",
+	"_ItemDeliveryAddressID": "交付地址ID",
+	"_ItemDeliveryAddressID_report": "交付地址ID",
+	"_ItemShipToAddress": "交付地址",
+	"_ItemShipToAddress_report": "交付地址",
+	"_ItemShipToCompany": "受領会社",
+	"_ItemShipToCompany_report": "受領会社",
+	"_NonDeductibleTaxRate": "控除対象外の税率",
+	"_NonDeductibleTaxRate_report": "控除対象外の税率",
+	"_OriginalContractRUIDEX": "契約拡張ID (オリジナルバージョン)",
+	"_OriginalContractRUIDEX_report": "契約拡張ID (オリジナルバージョン)",
+	"_PreviousContractSpendingID": "以前の契約支出ID",
+	"_PreviousContractSpendingID_report": "以前の契約支出ID",
+	"_ProfitCenter": "プロフィットセンター",
+	"_ProfitCenter_report": "プロフィットセンター",
+	"_ProjectCode": "プロジェクトコード",
+	"_ProjectCode_report": "プロジェクトコード",
+	"_ProjectCodeDescription": "プロジェクトの説明",
+	"_ProjectCodeDescription_report": "プロジェクトの説明",
+	"_ProjectName": "プロジェクト名",
+	"_ProjectName_report": "プロジェクト名",
+	"_ProjectNumber": "プロジェクト番号",
+	"_ProjectNumber_report": "プロジェクト番号",
+	"_PublicPrice": "標準価格",
+	"_PublicPrice_report": "標準価格",
+	"_VendorRegistrationID_report": "仕入先登録ID",
+	"_WarehouseID": "倉庫ID",
+	"_WarehouseID_report": "倉庫ID",
+	"_WarehouseName": "倉庫名",
+	"_WarehouseName_report": "倉庫名",
+	"_WBSElement": "WBS 要素",
+	"_WBSElement_report": "WBS 要素",
+	"_WBSElementID": "WBS 要素（ID）",
+	"_WBSElementID_report": "WBS 要素（ID）",
+	"_EnergyConsumptionKgCO2ePerUnit": "ユニットあたりのGHG排出量 (kg CO2e)",
+	"_EnergyConsumptionKgCO2ePerUnit_report": "ユニットあたりのGHG排出量 (kg CO2e)",
+	"_GHGE_DefaultUnit": "kg CO2e"
+}</process_ja>
+      <process_en>{
+	"_AmountBased": "Amount",
+	"_CapEx": "CapEx",
+	"_CostType": "Cost type",
+	"_CostType_report": "Cost type",
+	"_Group": "Expense category",
+	"_Group_report": "Expense category",
+	"_ItemType": "Item type",
+	"_NoGoodsReceipt": "No goods and services receipt required",
+	"_NoGoodsReceipt_report": "No goods and services receipt required",
+	"_OpEx": "OpEx",
+	"_processFormula_Accrued expense": "Accrued expense",
+	"_QuantityBased": "Quantity",
+	"_RequestedDeliveryDate": "Requested receipt date",
+	"_RequestedDeliveryDate_report": "Requested receipt date",
+	"_Tax rate": "Tax rate",
+	"_Tax rate_report": "Tax rate",
+	"_UnitOfMeasureCode": "Unit",
+	"_UnitOfMeasureCode_report": "Unit",
+	"AP - Purchase order - Items": "S2P - Purchase order - Items",
+	"BudgetID": "Budget ID",
+	"Company code": "Company code",
+	"Cost center": "Cost center",
+	"Currency": "Currency",
+	"Delivered amount": "Delivered amount",
+	"Delivered quantity": "Delivered quantity",
+	"Description": "Description",
+	"G/L account": "G/L account",
+	"GR/IV": "GR-based invoice matching",
+	"Invoiced amount": "Invoiced amount",
+	"Invoiced quantity": "Invoiced quantity",
+	"Is created in ERP": "PO created in ERP",
+	"Is local PO_V2": "PO created in 'Procurement' module",
+	"Item number": "Line number",
+	"No more invoice expected": "Mark as closed",
+	"Order date": "Order date",
+	"Order number": "Order number",
+	"Ordered amount": "Ordered amount",
+	"Ordered quantity": "Ordered quantity",
+	"Part number": "Reference",
+	"Receiver": "Recipient",
+	"Tax code": "Tax code",
+	"Unit price": "Unit price",
+	"Vendor number": "Supplier number",
+	"_ContractName": "Contract name",
+	"_ContractName_report": "Contract name",
+	"_ContractNumber": "Contract number",
+	"_ContractNumber_report": "Contract number",
+	"_ContractReferenceNumber": "Contract ref.",
+	"_ContractReferenceNumber_report": "Contract ref.",
+	"_ContractRUIDEX": "Contract extended ID",
+	"_ContractRUIDEX_report": "Contract extended ID",
+	"_ContractSpendingID": "Contract spend ID",
+	"_ContractSpendingID_report": "Contract spend ID",
+	"_CostCenter": "Cost center",
+	"_CostCenter_report": "Cost center",
+	"_CostCenterDescription": "Cost center description",
+	"_CostCenterDescription_report": "Cost center description",
+	"_DefaultCurrency": "Suggested price currency",
+	"_DefaultCurrency_report": "Suggested price currency",
+	"_DefaultPublicPrice": "Suggested price",
+	"_DefaultPublicPrice_report": "Suggested price",
+	"_FreeDimension1": "Custom dimension 1",
+	"_FreeDimension1_report": "Custom dimension 1",
+	"_FreeDimension1ID": "Custom dimension 1 (ID)",
+	"_FreeDimension1ID_report": "Custom dimension 1 (ID)",
+	"_InternalOrder": "Internal order",
+	"_InternalOrder_report": "Internal order",
+	"_IsReplenishmentItem": "Replenishment item",
+	"_IsReplenishmentItem_report": "Replenishment item",
+	"_ItemDeliveryAddressID": "Delivery address ID",
+	"_ItemDeliveryAddressID_report": "Delivery address ID",
+	"_ItemShipToAddress": "Delivery address",
+	"_ItemShipToAddress_report": "Delivery address",
+	"_ItemShipToCompany": "Recipient company",
+	"_ItemShipToCompany_report": "Recipient company",
+	"_NonDeductibleTaxRate": "Non-deductible tax rate",
+	"_NonDeductibleTaxRate_report": "Non-deductible tax rate",
+	"_OriginalContractRUIDEX": "Contract extended ID (original version)",
+	"_OriginalContractRUIDEX_report": "Contract extended ID (original version)",
+	"_PreviousContractSpendingID": "Previous contract spend ID",
+	"_PreviousContractSpendingID_report": "Previous contract spend ID",
+	"_ProfitCenter": "Profit center",
+	"_ProfitCenter_report": "Profit center",
+	"_ProjectCode": "Project code",
+	"_ProjectCode_report": "Project code",
+	"_ProjectCodeDescription": "Project description",
+	"_ProjectCodeDescription_report": "Project description",
+	"_ProjectName": "Project name",
+	"_ProjectName_report": "Project name",
+	"_ProjectNumber": "Project number",
+	"_ProjectNumber_report": "Project number",
+	"_PublicPrice": "Standard price",
+	"_PublicPrice_report": "Standard price",
+	"_VendorRegistrationID_report": "Supplier registration ID",
+	"_WarehouseID": "Warehouse ID",
+	"_WarehouseID_report": "Warehouse ID",
+	"_WarehouseName": "Warehouse name",
+	"_WarehouseName_report": "Warehouse name",
+	"_WBSElement": "WBS element",
+	"_WBSElement_report": "WBS element",
+	"_WBSElementID": "WBS element (ID)",
+	"_WBSElementID_report": "WBS element (ID)",
+	"_EnergyConsumptionKgCO2ePerUnit": "GHG emissions per unit (kg CO2e)",
+	"_EnergyConsumptionKgCO2ePerUnit_report": "GHG emissions per unit (kg CO2e)",
+	"_GHGE_DefaultUnit": "kg CO2e"
+}</process_en>
+      <process_es>{
+	"_AmountBased": "Importe",
+	"_CapEx": "CapEx",
+	"_CostType": "Tipo de coste",
+	"_CostType_report": "Tipo de coste",
+	"_Group": "Categoría de gastos",
+	"_Group_report": "Categoría de gastos",
+	"_ItemType": "Tipo de artículo",
+	"_NoGoodsReceipt": "Entrada de bienes y servicios no requerida",
+	"_NoGoodsReceipt_report": "Entrada de bienes y servicios no requerida",
+	"_OpEx": "OpEx",
+	"_processFormula_Accrued expense": "Gasto devengado",
+	"_QuantityBased": "Cantidad",
+	"_RequestedDeliveryDate": "Fecha de recepción solicitada",
+	"_RequestedDeliveryDate_report": "Fecha de recepción solicitada",
+	"_Tax rate": "Tipo impositivo",
+	"_Tax rate_report": "Tipo impositivo",
+	"_UnitOfMeasureCode": "Unidad",
+	"_UnitOfMeasureCode_report": "Unidad",
+	"AP - Purchase order - Items": "S2P - Pedido de compra - Elementos",
+	"BudgetID": "ID de presupuesto",
+	"Company code": "Código de empresa",
+	"Cost center": "Centros de costes",
+	"Currency": "Divisa",
+	"Delivered amount": "Importe entregado",
+	"Delivered quantity": "Cant. entregada",
+	"Description": "Descripción",
+	"G/L account": "Cuentas del libro mayor",
+	"GR/IV": "Conciliación factura-EM",
+	"Invoiced amount": "Importe facturado",
+	"Invoiced quantity": "Cantidad facturada",
+	"Is created in ERP": "Pedido creado en el ERP",
+	"Is local PO_V2": "Pedido creado en el módulo 'Compras'",
+	"Item number": "Número de posición",
+	"No more invoice expected": "Marcar como cerrado",
+	"Order date": "Fecha de pedido",
+	"Order number": "Número de pedido",
+	"Ordered amount": "Importe pedido",
+	"Ordered quantity": "Cantidad pedida",
+	"Part number": "Referencia",
+	"Receiver": "Destinatario",
+	"Tax code": "Código de impuesto",
+	"Unit price": "Precio por unidad",
+	"Vendor number": "Número de proveedor",
+	"_ContractName": "Nombre del contrato",
+	"_ContractName_report": "Nombre del contrato",
+	"_ContractNumber": "Número de contrato",
+	"_ContractNumber_report": "Número de contrato",
+	"_ContractReferenceNumber": "Ref. del contrato",
+	"_ContractReferenceNumber_report": "Ref. del contrato",
+	"_ContractRUIDEX": "Id. largo del contrato",
+	"_ContractRUIDEX_report": "Id. largo del contrato",
+	"_ContractSpendingID": "ID de los gastos en contrato",
+	"_ContractSpendingID_report": "ID de los gastos en contrato",
+	"_CostCenter": "Centro de costes",
+	"_CostCenter_report": "Centro de costes",
+	"_CostCenterDescription": "Descripción del centro de costes",
+	"_CostCenterDescription_report": "Descripción del centro de costes",
+	"_DefaultCurrency": "Divisa del precio sugerido",
+	"_DefaultCurrency_report": "Divisa del precio sugerido",
+	"_DefaultPublicPrice": "Precio sugerido",
+	"_DefaultPublicPrice_report": "Precio sugerido",
+	"_FreeDimension1": "Dimensión personalizada 1",
+	"_FreeDimension1_report": "Dimensión personalizada 1",
+	"_FreeDimension1ID": "Dimensión personalizada 1 (ID)",
+	"_FreeDimension1ID_report": "Dimensión personalizada 1 (ID)",
+	"_InternalOrder": "Pedido interno",
+	"_InternalOrder_report": "Pedido interno",
+	"_IsReplenishmentItem": "Artículo de reposición",
+	"_IsReplenishmentItem_report": "Artículo de reposición",
+	"_ItemDeliveryAddressID": "ID de dirección de entrega",
+	"_ItemDeliveryAddressID_report": "ID de dirección de entrega",
+	"_ItemShipToAddress": "Dirección de entrega",
+	"_ItemShipToAddress_report": "Dirección de entrega",
+	"_ItemShipToCompany": "Empresa destinataria",
+	"_ItemShipToCompany_report": "Empresa destinataria",
+	"_NonDeductibleTaxRate": "Tipo impositivo no deducible",
+	"_NonDeductibleTaxRate_report": "Tipo impositivo no deducible",
+	"_OriginalContractRUIDEX": "Id. extendido del contrato (versión original)",
+	"_OriginalContractRUIDEX_report": "Id. extendido del contrato (versión original)",
+	"_PreviousContractSpendingID": "ID de los gastos en contrato anterior",
+	"_PreviousContractSpendingID_report": "ID de los gastos en contrato anterior",
+	"_ProfitCenter": "Centro de beneficio",
+	"_ProfitCenter_report": "Centro de beneficio",
+	"_ProjectCode": "Código proyecto",
+	"_ProjectCode_report": "Código proyecto",
+	"_ProjectCodeDescription": "Descripción del proyecto",
+	"_ProjectCodeDescription_report": "Descripción del proyecto",
+	"_ProjectName": "Nombre del proyecto",
+	"_ProjectName_report": "Nombre de proyecto",
+	"_ProjectNumber": "Número del proyecto ",
+	"_ProjectNumber_report": "Número del proyecto",
+	"_PublicPrice": "Precio de venta al público",
+	"_PublicPrice_report": "Precio de venta al público",
+	"_VendorRegistrationID_report": "ID de la solicitud de registro",
+	"_WarehouseID": "Identificador de almacén",
+	"_WarehouseID_report": "Identificador de almacén",
+	"_WarehouseName": "Nombre del almacén",
+	"_WarehouseName_report": "Nombre del almacén",
+	"_WBSElement": "Elemento PEP",
+	"_WBSElement_report": "Elemento PEP",
+	"_WBSElementID": "Elemento PEP (ID)",
+	"_WBSElementID_report": "Elemento PEP (ID)",
+	"_EnergyConsumptionKgCO2ePerUnit": "Emisiones de GEI por unidad (kg CO2e)",
+	"_EnergyConsumptionKgCO2ePerUnit_report": "Emisiones de GEI por unidad (kg CO2e)",
+	"_GHGE_DefaultUnit": "kg CO2e"
+}</process_es>
+      <process_fr>{
+	"_AmountBased": "Montant",
+	"_CapEx": "CapEx",
+	"_CostType": "Type de coût",
+	"_CostType_report": "Type de coût",
+	"_Group": "Catégorie de dépenses",
+	"_Group_report": "Catégorie de dépenses",
+	"_ItemType": "Type d'article",
+	"_NoGoodsReceipt": "Entrée de biens et services non requise",
+	"_NoGoodsReceipt_report": "Entrée de biens et services non requise",
+	"_OpEx": "OpEx",
+	"_processFormula_Accrued expense": "Montant à provisionner",
+	"_QuantityBased": "Quantité",
+	"_RequestedDeliveryDate": "Date de réception souhaitée",
+	"_RequestedDeliveryDate_report": "Date de réception souhaitée",
+	"_Tax rate": "Taux de TVA",
+	"_Tax rate_report": "Taux de TVA",
+	"_UnitOfMeasureCode": "Unité",
+	"_UnitOfMeasureCode_report": "Unité",
+	"AP - Purchase order - Items": "S2P - Commande fournisseur - Postes",
+	"BudgetID": "ID de budget",
+	"Company code": "Code société",
+	"Cost center": "Centres de coût",
+	"Currency": "Devise",
+	"Delivered amount": "Montant livré",
+	"Delivered quantity": "Qté livrée",
+	"Description": "Description",
+	"G/L account": "Compte général",
+	"GR/IV": "Réconciliation facture-EM",
+	"Invoiced amount": "Montant facturé",
+	"Invoiced quantity": "Qté facturée",
+	"Is created in ERP": "Commande créée dans l'ERP",
+	"Is local PO_V2": "Commande créée dans le module 'Achats'",
+	"Item number": "No poste",
+	"No more invoice expected": "Marquer comme soldé",
+	"Order date": "Date de commande",
+	"Order number": "Numéro de commande",
+	"Ordered amount": "Montant commandé",
+	"Ordered quantity": "Qté commandée",
+	"Part number": "Référence",
+	"Receiver": "Réceptionnaire",
+	"Tax code": "Code TVA",
+	"Unit price": "Prix unitaire",
+	"Vendor number": "Numéro du fournisseur",
+	"_ContractName": "Nom du contrat",
+	"_ContractName_report": "Nom du contrat",
+	"_ContractNumber": "Numéro de contrat",
+	"_ContractNumber_report": "Numéro de contrat",
+	"_ContractReferenceNumber": "Réf. du contrat",
+	"_ContractReferenceNumber_report": "Réf. du contrat",
+	"_ContractRUIDEX": "Identifiant long du contrat",
+	"_ContractRUIDEX_report": "Identifiant long du contrat",
+	"_ContractSpendingID": "ID des dépenses sur contrat",
+	"_ContractSpendingID_report": "ID des dépenses sur contrat",
+	"_CostCenter": "Centre de coût",
+	"_CostCenter_report": "Centre de coût",
+	"_CostCenterDescription": "Description du centre de coût",
+	"_CostCenterDescription_report": "Description du centre de coût",
+	"_DefaultCurrency": "Devise du prix conseillé",
+	"_DefaultCurrency_report": "Devise du prix conseillé",
+	"_DefaultPublicPrice": "Prix conseillé",
+	"_DefaultPublicPrice_report": "Prix conseillé",
+	"_FreeDimension1": "Axe analytique personnalisé 1",
+	"_FreeDimension1_report": "Axe analytique personnalisé 1",
+	"_FreeDimension1ID": "Axe analytique personnalisé 1 (ID)",
+	"_FreeDimension1ID_report": "Axe analytique personnalisé 1 (ID)",
+	"_InternalOrder": "Ordre interne",
+	"_InternalOrder_report": "Ordre interne",
+	"_IsReplenishmentItem": "Article de réapprovisionnement",
+	"_IsReplenishmentItem_report": "Article de réapprovisionnement",
+	"_ItemDeliveryAddressID": "Identifiant de l'adresse de livraison",
+	"_ItemDeliveryAddressID_report": "Identifiant de l'adresse de livraison",
+	"_ItemShipToAddress": "Adresse de livraison",
+	"_ItemShipToAddress_report": "Adresse de livraison",
+	"_ItemShipToCompany": "Société destinataire",
+	"_ItemShipToCompany_report": "Société destinataire",
+	"_NonDeductibleTaxRate": "Taux de TVA non déductible",
+	"_NonDeductibleTaxRate_report": "Taux de TVA non déductible",
+	"_OriginalContractRUIDEX": "Identifiant long du contrat (version originale)",
+	"_OriginalContractRUIDEX_report": "Identifiant long du contrat (version originale)",
+	"_PreviousContractSpendingID": "Ancien ID des dépenses sur contrat",
+	"_PreviousContractSpendingID_report": "Ancien ID des dépenses sur contrat",
+	"_ProfitCenter": "Centre de profit",
+	"_ProfitCenter_report": "Centre de profit",
+	"_ProjectCode": "Code projet",
+	"_ProjectCode_report": "Code projet",
+	"_ProjectCodeDescription": "Description du projet",
+	"_ProjectCodeDescription_report": "Description du projet",
+	"_ProjectName": "Nom du projet",
+	"_ProjectName_report": "Nom du projet",
+	"_ProjectNumber": "Numéro de projet",
+	"_ProjectNumber_report": "Numéro de projet",
+	"_PublicPrice": "Prix standard",
+	"_PublicPrice_report": "Prix standard",
+	"_VendorRegistrationID_report": "ID de la demande d'enregistrement",
+	"_WarehouseID": "Identifiant de l'entrepôt",
+	"_WarehouseID_report": "Identifiant de l'entrepôt",
+	"_WarehouseName": "Nom de l'entrepôt",
+	"_WarehouseName_report": "Nom de l'entrepôt",
+	"_WBSElement": "Élément d'OTP",
+	"_WBSElement_report": "Élément d'OTP",
+	"_WBSElementID": "Élément d'OTP (ID)",
+	"_WBSElementID_report": "Élément d'OTP (ID)",
+	"_EnergyConsumptionKgCO2ePerUnit": "Émissions de GES par unité (kg CO2e)",
+	"_EnergyConsumptionKgCO2ePerUnit_report": "Émissions de GES par unité (kg CO2e)",
+	"_GHGE_DefaultUnit": "kg CO2e"
+}</process_fr>
+      <process_nl-NL>{
+	"_AmountBased": "Bedrag",
+	"_CapEx": "CapEx",
+	"_CostType": "Type kosten",
+	"_CostType_report": "Type kosten",
+	"_Group": "Uitgavencategorie",
+	"_Group_report": "Uitgavencategorie",
+	"_ItemType": "Type item",
+	"_NoGoodsReceipt": "Geen ontvangstbewijs goederen en services vereist",
+	"_NoGoodsReceipt_report": "Geen ontvangstbewijs goederen en services vereist",
+	"_OpEx": "OpEx",
+	"_processFormula_Accrued expense": "Opgebouwde kosten",
+	"_QuantityBased": "Hoeveelheid",
+	"_RequestedDeliveryDate": "Datum ontvangstbewijs aangevraagd",
+	"_RequestedDeliveryDate_report": "Datum ontvangstbewijs aangevraagd",
+	"_Tax rate": "Belastingpercentage",
+	"_Tax rate_report": "Belastingpercentage",
+	"_UnitOfMeasureCode": "Eenheid",
+	"_UnitOfMeasureCode_report": "Eenheid",
+	"AP - Purchase order - Items": "S2P - Kooporder - Items",
+	"BudgetID": "Budget-ID",
+	"Company code": "Bedrijfscode",
+	"Cost center": "Kostenplaats",
+	"Currency": "Valuta",
+	"Delivered amount": "Bedrag geleverd",
+	"Delivered quantity": "Hoeveelheid geleverd",
+	"Description": "Beschrijving",
+	"G/L account": "Grootboekrekening",
+	"GR/IV": "Factuur afstemmen op basis van GR",
+	"Invoiced amount": "Gefactureerd bedrag",
+	"Invoiced quantity": "Gefactureerde hoeveelheid",
+	"Is created in ERP": "PO aangemaakt in ERP",
+	"Is local PO_V2": "PO aangemaakt in module ‘Inkoop’",
+	"Item number": "Regelnummer",
+	"No more invoice expected": "Markeer als gesloten",
+	"Order date": "Besteldatum",
+	"Order number": "Bestelnummer",
+	"Ordered amount": "Besteld bedrag",
+	"Ordered quantity": "Bestelde hoeveelheid",
+	"Part number": "Referentie",
+	"Receiver": "Ontvanger",
+	"Tax code": "Belastingcode",
+	"Unit price": "Eenheidsprijs",
+	"Vendor number": "Nummer leverancier",
+	"_ContractName": "Naam contract",
+	"_ContractName_report": "Naam contract",
+	"_ContractNumber": "Contractnummer",
+	"_ContractNumber_report": "Contractnummer",
+	"_ContractReferenceNumber": "Contractref.",
+	"_ContractReferenceNumber_report": "Contractref.",
+	"_ContractRUIDEX": "Uitgebreide contract-ID",
+	"_ContractRUIDEX_report": "Uitgebreide contract-ID",
+	"_ContractSpendingID": "ID uitgaven contract",
+	"_ContractSpendingID_report": "ID uitgaven contract",
+	"_CostCenter": "Kostenplaats",
+	"_CostCenter_report": "Kostenplaats",
+	"_CostCenterDescription": "Beschrijving kostenplaats",
+	"_CostCenterDescription_report": "Beschrijving kostenplaats",
+	"_DefaultCurrency": "Voorgestelde valuta prijs",
+	"_DefaultCurrency_report": "Voorgestelde valuta prijs",
+	"_DefaultPublicPrice": "Voorgestelde prijs",
+	"_DefaultPublicPrice_report": "Voorgestelde prijs",
+	"_FreeDimension1": "Aangepaste dimensie 1",
+	"_FreeDimension1_report": "Aangepaste dimensie 1",
+	"_FreeDimension1ID": "Aangepaste dimensie 1 (ID)",
+	"_FreeDimension1ID_report": "Aangepaste dimensie 1 (ID)",
+	"_InternalOrder": "Interne order",
+	"_InternalOrder_report": "Interne order",
+	"_IsReplenishmentItem": "Item bevoorrading",
+	"_IsReplenishmentItem_report": "Item bevoorrading",
+	"_ItemDeliveryAddressID": "Leveringsadres-ID",
+	"_ItemDeliveryAddressID_report": "Leveringsadres-ID",
+	"_ItemShipToAddress": "Leveringsadres",
+	"_ItemShipToAddress_report": "Leveringsadres",
+	"_ItemShipToCompany": "Bedrijf ontvanger",
+	"_ItemShipToCompany_report": "Bedrijf ontvanger",
+	"_NonDeductibleTaxRate": "Niet-aftrekbaar belastingpercentage",
+	"_NonDeductibleTaxRate_report": "Niet-aftrekbaar belastingpercentage",
+	"_OriginalContractRUIDEX": "Uitgebreide contract-ID (originele versie)",
+	"_OriginalContractRUIDEX_report": "Uitgebreide contract-ID (originele versie)",
+	"_PreviousContractSpendingID": "Vorige ID uitgaven contract",
+	"_PreviousContractSpendingID_report": "Vorige ID uitgaven contract",
+	"_ProfitCenter": "Winstcentrum",
+	"_ProfitCenter_report": "Winstcentrum",
+	"_ProjectCode": "Projectcode",
+	"_ProjectCode_report": "Projectcode",
+	"_ProjectCodeDescription": "Projectbeschrijving",
+	"_ProjectCodeDescription_report": "Projectbeschrijving",
+	"_ProjectName": "Projectnaam",
+	"_ProjectName_report": "Projectnaam",
+	"_ProjectNumber": "Projectnummer",
+	"_ProjectNumber_report": "Projectnummer",
+	"_PublicPrice": "Standaardprijs",
+	"_PublicPrice_report": "Standaardprijs",
+	"_VendorRegistrationID_report": "ID registratie leverancier",
+	"_WarehouseID": "Magazijn-ID",
+	"_WarehouseID_report": "Magazijn-ID",
+	"_WarehouseName": "Naam magazijn",
+	"_WarehouseName_report": "Naam magazijn",
+	"_WBSElement": "WBS-element",
+	"_WBSElement_report": "WBS-element",
+	"_WBSElementID": "WBS-element (ID)",
+	"_WBSElementID_report": "WBS-element (ID)",
+	"_EnergyConsumptionKgCO2ePerUnit": "BKG-emissies per eenheid (kg CO2e)",
+	"_EnergyConsumptionKgCO2ePerUnit_report": "BKG-emissies per eenheid (kg CO2e)",
+	"_GHGE_DefaultUnit": "kg CO2e"
+}</process_nl-NL>
+      <process_pl>{
+	"_AmountBased": "Kwota",
+	"_CapEx": "CapEx",
+	"_CostType": "Typ kosztów",
+	"_CostType_report": "Typ kosztów",
+	"_Group": "Kategoria wydatków",
+	"_Group_report": "Kategoria wydatków",
+	"_ItemType": "Typ pozycji",
+	"_NoGoodsReceipt": "Nie jest wymagane przyjęcie materiałów i usług",
+	"_NoGoodsReceipt_report": "Nie jest wymagane przyjęcie materiałów i usług",
+	"_OpEx": "OpEx",
+	"_processFormula_Accrued expense": "Rozliczenia międzyokresowe – wydatki",
+	"_QuantityBased": "Ilość",
+	"_RequestedDeliveryDate": "Wnioskowana data otrzymania",
+	"_RequestedDeliveryDate_report": "Wnioskowana data otrzymania",
+	"_Tax rate": "Stawka podatku",
+	"_Tax rate_report": "Stawka podatku",
+	"_UnitOfMeasureCode": "Jednostka",
+	"_UnitOfMeasureCode_report": "Jednostka",
+	"AP - Purchase order - Items": "S2P – zamówienie zakupu – pozycje",
+	"BudgetID": "Id. budżetu",
+	"Company code": "Kod firmy",
+	"Cost center": "Centrum kosztów",
+	"Currency": "Waluta",
+	"Delivered amount": "Dostarczona kwota",
+	"Delivered quantity": "Dostarczona ilość",
+	"Description": "Opis",
+	"G/L account": "Konto KG",
+	"GR/IV": "Dopasowywanie faktur na podstawie PM",
+	"Invoiced amount": "Zafakturowana kwota",
+	"Invoiced quantity": "Zafakturowana ilość",
+	"Is created in ERP": "ZZ utworzone w systemie ERP",
+	"Is local PO_V2": "ZZ utworzone w module Nabycie",
+	"Item number": "Numer wiersza",
+	"No more invoice expected": "Oznacz jako zamknięte",
+	"Order date": "Data zamówienia",
+	"Order number": "Numer zamówienia",
+	"Ordered amount": "Zamówiona kwota",
+	"Ordered quantity": "Zamówiona ilość",
+	"Part number": "Kod referencyjny",
+	"Receiver": "Odbiorca",
+	"Tax code": "Kod podatku",
+	"Unit price": "Cena jednostkowa",
+	"Vendor number": "Numer dostawcy",
+	"_ContractName": "Nazwa kontraktu",
+	"_ContractName_report": "Nazwa kontraktu",
+	"_ContractNumber": "Numer kontraktu",
+	"_ContractNumber_report": "Numer kontraktu",
+	"_ContractReferenceNumber": "Ref. kontraktu",
+	"_ContractReferenceNumber_report": "Ref. kontraktu",
+	"_ContractRUIDEX": "Rozszerzony id. kontraktu",
+	"_ContractRUIDEX_report": "Rozszerzony id. kontraktu",
+	"_ContractSpendingID": "Id. wydatków w ramach kontraktu",
+	"_ContractSpendingID_report": "Id. wydatków w ramach kontraktu",
+	"_CostCenter": "Centrum kosztów",
+	"_CostCenter_report": "Centrum kosztów",
+	"_CostCenterDescription": "Opis centrum kosztów",
+	"_CostCenterDescription_report": "Opis centrum kosztów",
+	"_DefaultCurrency": "Sugerowana waluta ceny",
+	"_DefaultCurrency_report": "Sugerowana waluta ceny",
+	"_DefaultPublicPrice": "Sugerowana cena",
+	"_DefaultPublicPrice_report": "Sugerowana cena",
+	"_FreeDimension1": "Wymiar niestandardowy 1",
+	"_FreeDimension1_report": "Wymiar niestandardowy 1",
+	"_FreeDimension1ID": "Wymiar niestandardowy 1 (id.)",
+	"_FreeDimension1ID_report": "Wymiar niestandardowy 1 (id.)",
+	"_InternalOrder": "Zamówienie wewnętrzne",
+	"_InternalOrder_report": "Zamówienie wewnętrzne",
+	"_IsReplenishmentItem": "Pozycja uzupełnienia",
+	"_IsReplenishmentItem_report": "Pozycja uzupełnienia",
+	"_ItemDeliveryAddressID": "Id. adresu dostawy",
+	"_ItemDeliveryAddressID_report": "Id. adresu dostawy",
+	"_ItemShipToAddress": "Adres dostawy",
+	"_ItemShipToAddress_report": "Adres dostawy",
+	"_ItemShipToCompany": "Firma odbiorcy",
+	"_ItemShipToCompany_report": "Firma odbiorcy",
+	"_NonDeductibleTaxRate": "Stawka podatku niepodlegającego odliczeniu",
+	"_NonDeductibleTaxRate_report": "Stawka podatku niepodlegającego odliczeniu",
+	"_OriginalContractRUIDEX": "Rozszerzony id. kontraktu (wersja oryginalna)",
+	"_OriginalContractRUIDEX_report": "Rozszerzony id. kontraktu (wersja oryginalna)",
+	"_PreviousContractSpendingID": "Poprzedni id. wydatków w ramach kontraktu",
+	"_PreviousContractSpendingID_report": "Poprzedni id. wydatków w ramach kontraktu",
+	"_ProfitCenter": "Centrum zysków",
+	"_ProfitCenter_report": "Centrum zysków",
+	"_ProjectCode": "Kod projektu",
+	"_ProjectCode_report": "Kod projektu",
+	"_ProjectCodeDescription": "Opis projektu",
+	"_ProjectCodeDescription_report": "Opis projektu",
+	"_ProjectName": "Nazwa projektu",
+	"_ProjectName_report": "Nazwa projektu",
+	"_ProjectNumber": "Numer projektu",
+	"_ProjectNumber_report": "Numer projektu",
+	"_PublicPrice": "Cena standardowa",
+	"_PublicPrice_report": "Cena standardowa",
+	"_VendorRegistrationID_report": "Id. rejestracji dostawcy",
+	"_WarehouseID": "Id. magazynu",
+	"_WarehouseID_report": "Id. magazynu",
+	"_WarehouseName": "Nazwa magazynu",
+	"_WarehouseName_report": "Nazwa magazynu",
+	"_WBSElement": "Element WBS",
+	"_WBSElement_report": "Element WBS",
+	"_WBSElementID": "Element WBS (id.)",
+	"_WBSElementID_report": "Element WBS (id.)",
+	"_EnergyConsumptionKgCO2ePerUnit": "Emisje GHG na jednostkę (kg CO2e)",
+	"_EnergyConsumptionKgCO2ePerUnit_report": "Emisje GHG na jednostkę (kg CO2e)",
+	"_GHGE_DefaultUnit": "kg CO2e"
+}</process_pl>
+      <process_it>{
+	"_AmountBased": "Importo",
+	"_CapEx": "CapEx",
+	"_CostType": "Tipo di costo",
+	"_CostType_report": "Tipo di costo",
+	"_Group": "Categoria di spesa",
+	"_Group_report": "Categoria di spesa",
+	"_ItemType": "Tipo di articolo",
+	"_NoGoodsReceipt": "Entrata merci e servizi non richiesta",
+	"_NoGoodsReceipt_report": "Entrata merci e servizi non richiesta",
+	"_OpEx": "OpEx",
+	"_processFormula_Accrued expense": "Spesa da pagare",
+	"_QuantityBased": "Quantità",
+	"_RequestedDeliveryDate": "Data di ricezione richiesta",
+	"_RequestedDeliveryDate_report": "Data di ricezione richiesta",
+	"_Tax rate": "Aliquota fiscale",
+	"_Tax rate_report": "Aliquota fiscale",
+	"_UnitOfMeasureCode": "Unità",
+	"_UnitOfMeasureCode_report": "Unità",
+	"AP - Purchase order - Items": "S2P - Ordine di acquisto - Elementi",
+	"BudgetID": "ID budget",
+	"Company code": "Codice società",
+	"Cost center": "Centro di costo",
+	"Currency": "Valuta",
+	"Delivered amount": "Importo recapitato",
+	"Delivered quantity": "Quantità consegnata",
+	"Description": "Descrizione",
+	"G/L account": "Conti generali",
+	"GR/IV": "Riconciliazione fattura-EM",
+	"Invoiced amount": "Importo fatturato",
+	"Invoiced quantity": "Quantità fatturata",
+	"Is created in ERP": "Ordine creato nell'ERP",
+	"Is local PO_V2": "Ordine creato nel modulo 'Acquisti'",
+	"Item number": "Numero posizione",
+	"No more invoice expected": "Segna come chiuso",
+	"Order date": "Data ordine",
+	"Order number": "Numero ordine",
+	"Ordered amount": "Importo ordinato",
+	"Ordered quantity": "Quantità ordinata",
+	"Part number": "Riferimento",
+	"Receiver": "Destinatario",
+	"Tax code": "Codice IVA",
+	"Unit price": "Prezzo unitario",
+	"Vendor number": "Numero fornitore",
+	"_ContractName": "Nome contratto",
+	"_ContractName_report": "Nome contratto",
+	"_ContractNumber": "Numero contratto",
+	"_ContractNumber_report": "Numero contratto",
+	"_ContractReferenceNumber": "Rif. contratto",
+	"_ContractReferenceNumber_report": "Rif. contratto",
+	"_ContractRUIDEX": "ID esteso contratto",
+	"_ContractRUIDEX_report": "ID esteso contratto",
+	"_ContractSpendingID": "ID spesa contratto",
+	"_ContractSpendingID_report": "ID spesa contratto",
+	"_CostCenter": "Centro di costo",
+	"_CostCenter_report": "Centro di costo",
+	"_CostCenterDescription": "Descrizione del centro di costo",
+	"_CostCenterDescription_report": "Descrizione del centro di costo",
+	"_DefaultCurrency": "Valuta del prezzo consigliato",
+	"_DefaultCurrency_report": "Valuta del prezzo consigliato",
+	"_DefaultPublicPrice": "Prezzo consigliato",
+	"_DefaultPublicPrice_report": "Prezzo consigliato",
+	"_FreeDimension1": "Dimensione personalizzata 1",
+	"_FreeDimension1_report": "Dimensione personalizzata 1",
+	"_FreeDimension1ID": "Dimensione personalizzata 1 (ID)",
+	"_FreeDimension1ID_report": "Dimensione personalizzata 1 (ID)",
+	"_InternalOrder": "Ordine interno",
+	"_InternalOrder_report": "Ordine interno",
+	"_IsReplenishmentItem": "Articolo di rifornimento",
+	"_IsReplenishmentItem_report": "Articolo di rifornimento",
+	"_ItemDeliveryAddressID": "ID indirizzo di spedizione",
+	"_ItemDeliveryAddressID_report": "ID indirizzo di spedizione",
+	"_ItemShipToAddress": "Indirizzo di spedizione",
+	"_ItemShipToAddress_report": "Indirizzo di spedizione",
+	"_ItemShipToCompany": "Società destinataria",
+	"_ItemShipToCompany_report": "Società destinataria",
+	"_NonDeductibleTaxRate": "Aliquota fiscale non deducibile",
+	"_NonDeductibleTaxRate_report": "Aliquota fiscale non deducibile",
+	"_OriginalContractRUIDEX": "ID esteso contratto (versione originale)",
+	"_OriginalContractRUIDEX_report": "ID esteso contratto (versione originale)",
+	"_PreviousContractSpendingID": "ID spesa contratto precedente",
+	"_PreviousContractSpendingID_report": "ID spesa contratto precedente",
+	"_ProfitCenter": "Centro di profitto",
+	"_ProfitCenter_report": "Centro di profitto",
+	"_ProjectCode": "Codice progetto",
+	"_ProjectCode_report": "Codice progetto",
+	"_ProjectCodeDescription": "Descrizione progetto",
+	"_ProjectCodeDescription_report": "Descrizione progetto",
+	"_ProjectName": "Nome progetto",
+	"_ProjectName_report": "Nome progetto",
+	"_ProjectNumber": "Numero progetto",
+	"_ProjectNumber_report": "Numero progetto",
+	"_PublicPrice": "Prezzo standard",
+	"_PublicPrice_report": "Prezzo standard",
+	"_VendorRegistrationID_report": "ID richiesta di registrazione",
+	"_WarehouseID": "ID magazzino",
+	"_WarehouseID_report": "ID magazzino",
+	"_WarehouseName": "Nome magazzino",
+	"_WarehouseName_report": "Nome magazzino",
+	"_WBSElement": "Elemento WBS",
+	"_WBSElement_report": "Elemento WBS",
+	"_WBSElementID": "Elemento WBS (ID)",
+	"_WBSElementID_report": "Elemento WBS (ID)",
+	"_EnergyConsumptionKgCO2ePerUnit": "Emissioni GES per unità (kg CO2e)",
+	"_EnergyConsumptionKgCO2ePerUnit_report": "Emissioni GES per unità (kg CO2e)",
+	"_GHGE_DefaultUnit": "kg CO2e"
+}</process_it>
+      <process_sk>{
+	"_AmountBased": "Suma",
+	"_CapEx": "CapEx",
+	"_CostType": "Typ nákladov",
+	"_CostType_report": "Typ nákladov",
+	"_Group": "Kategória výdavkov",
+	"_Group_report": "Kategória výdavkov",
+	"_ItemType": "Typ položky",
+	"_NoGoodsReceipt": "Nevyžaduje sa potvrdenie o prijatí tovaru a služieb",
+	"_NoGoodsReceipt_report": "Nevyžaduje sa potvrdenie o prijatí tovaru a služieb",
+	"_OpEx": "OpEx",
+	"_processFormula_Accrued expense": "Výdavky budúcich období",
+	"_QuantityBased": "Množstvo",
+	"_RequestedDeliveryDate": "Požadovaný dátum prijatia",
+	"_RequestedDeliveryDate_report": "Požadovaný dátum prijatia",
+	"_Tax rate": "Sadzba dane",
+	"_Tax rate_report": "Sadzba dane",
+	"_UnitOfMeasureCode": "Jednotka",
+	"_UnitOfMeasureCode_report": "Jednotka",
+	"AP - Purchase order - Items": "S2P – Objednávka – Položky",
+	"BudgetID": "Identifikácia rozpočtu",
+	"Company code": "Kód spoločnosti",
+	"Cost center": "Nákladové stredisko",
+	"Currency": "Mena",
+	"Delivered amount": "Dodané množstvo",
+	"Delivered quantity": "Dodané množstvo",
+	"Description": "Popis",
+	"G/L account": "Účet hlavnej knihy",
+	"GR/IV": "Porovnanie faktúr na základe GR",
+	"Invoiced amount": "Fakturovaná suma",
+	"Invoiced quantity": "Fakturované množstvo",
+	"Is created in ERP": "Objednávka vytvorená v ERP",
+	"Is local PO_V2": "Objednávka vytvorená v module 'Obstarávanie'",
+	"Item number": "Číslo riadku",
+	"No more invoice expected": "Označiť ako uzavreté",
+	"Order date": "Dátum objednávky",
+	"Order number": "Číslo objednávky",
+	"Ordered amount": "Objednaná suma",
+	"Ordered quantity": "Objednané množstvo",
+	"Part number": "Referencia",
+	"Receiver": "Príjemca",
+	"Tax code": "Kód dane",
+	"Unit price": "Jednotková cena",
+	"Vendor number": "Číslo dodávateľa",
+	"_ContractName": "Názov zmluvy",
+	"_ContractName_report": "Názov zmluvy",
+	"_ContractNumber": "Číslo zmluvy",
+	"_ContractNumber_report": "Číslo zmluvy",
+	"_ContractReferenceNumber": "Ref. č. zmluvy",
+	"_ContractReferenceNumber_report": "Ref. č. zmluvy",
+	"_ContractRUIDEX": "Rozšírené ID zmluvy",
+	"_ContractRUIDEX_report": "Rozšírené ID zmluvy",
+	"_ContractSpendingID": "ID výdavkov na zmluvu",
+	"_ContractSpendingID_report": "ID výdavkov na zmluvu",
+	"_CostCenter": "Nákladové stredisko",
+	"_CostCenter_report": "Nákladové stredisko",
+	"_CostCenterDescription": "Popis nákladového strediska",
+	"_CostCenterDescription_report": "Popis nákladového strediska",
+	"_DefaultCurrency": "Navrhovaná mena ceny",
+	"_DefaultCurrency_report": "Navrhovaná mena ceny",
+	"_DefaultPublicPrice": "Navrhovaná cena",
+	"_DefaultPublicPrice_report": "Navrhovaná cena",
+	"_FreeDimension1": "Vlastný rozmer 1",
+	"_FreeDimension1_report": "Vlastný rozmer 1",
+	"_FreeDimension1ID": "Vlastný rozmer 1 (ID)",
+	"_FreeDimension1ID_report": "Vlastný rozmer 1 (ID)",
+	"_InternalOrder": "Interná zákazka",
+	"_InternalOrder_report": "Interná zákazka",
+	"_IsReplenishmentItem": "Položka na doplnenie",
+	"_IsReplenishmentItem_report": "Položka na doplnenie",
+	"_ItemDeliveryAddressID": "ID adresy doručenia",
+	"_ItemDeliveryAddressID_report": "ID adresy doručenia",
+	"_ItemShipToAddress": "Adresa doručenia",
+	"_ItemShipToAddress_report": "Adresa doručenia",
+	"_ItemShipToCompany": "Spoločnosť príjemcu",
+	"_ItemShipToCompany_report": "Spoločnosť príjemcu",
+	"_NonDeductibleTaxRate": "Neodpočítateľná daňová sadzba",
+	"_NonDeductibleTaxRate_report": "Neodpočítateľná daňová sadzba",
+	"_OriginalContractRUIDEX": "Rozšírené ID zmluvy (pôvodná verzia)",
+	"_OriginalContractRUIDEX_report": "Rozšírené ID zmluvy (pôvodná verzia)",
+	"_PreviousContractSpendingID": "Predchádzajúce ID výdavkov na zmluvu",
+	"_PreviousContractSpendingID_report": "Predchádzajúce ID výdavkov na zmluvu",
+	"_ProfitCenter": "Ziskové stredisko",
+	"_ProfitCenter_report": "Ziskové stredisko",
+	"_ProjectCode": "Kód projektu",
+	"_ProjectCode_report": "Kód projektu",
+	"_ProjectCodeDescription": "Popis projektu",
+	"_ProjectCodeDescription_report": "Popis projektu",
+	"_ProjectName": "Názov projektu",
+	"_ProjectName_report": "Názov projektu",
+	"_ProjectNumber": "Číslo projektu",
+	"_ProjectNumber_report": "Číslo projektu",
+	"_PublicPrice": "Štandardná cena",
+	"_PublicPrice_report": "Štandardná cena",
+	"_VendorRegistrationID_report": "Registračné ID dodávateľa",
+	"_WarehouseID": "ID skladu",
+	"_WarehouseID_report": "ID skladu",
+	"_WarehouseName": "Názov skladu",
+	"_WarehouseName_report": "Názov skladu",
+	"_WBSElement": "Prvok WBS",
+	"_WBSElement_report": "Prvok WBS",
+	"_WBSElementID": "Prvok WBS (ID)",
+	"_WBSElementID_report": "Prvok WBS (ID)",
+	"_EnergyConsumptionKgCO2ePerUnit": "Emisie SP na jednotku (kg CO2e)",
+	"_EnergyConsumptionKgCO2ePerUnit_report": "Emisie SP na jednotku (kg CO2e)",
+	"_GHGE_DefaultUnit": "kg CO2e"
+}</process_sk>
+      <process_zh-CN>{
+	"_AmountBased": "金额",
+	"_CapEx": "资本性支出",
+	"_CostType": "成本类型",
+	"_CostType_report": "成本类型",
+	"_Group": "费用类别",
+	"_Group_report": "费用类别",
+	"_ItemType": "物料类型",
+	"_NoGoodsReceipt": "无需货物与服务接收单",
+	"_NoGoodsReceipt_report": "无需货物与服务接收单",
+	"_OpEx": "运营费用",
+	"_processFormula_Accrued expense": "应计费用",
+	"_QuantityBased": "数量",
+	"_RequestedDeliveryDate": "要求到货日期",
+	"_RequestedDeliveryDate_report": "要求到货日期",
+	"_Tax rate": "税率",
+	"_Tax rate_report": "税率",
+	"_UnitOfMeasureCode": "单位",
+	"_UnitOfMeasureCode_report": "单位",
+	"AP - Purchase order - Items": "寻源到付款 - 采购订单 - 项目",
+	"BudgetID": "预算ID",
+	"Company code": "公司代码",
+	"Cost center": "成本中心",
+	"Currency": "货币",
+	"Delivered amount": "交付金额",
+	"Delivered quantity": "交付数量",
+	"Description": "说明",
+	"G/L account": "总账科目",
+	"GR/IV": "基于收货进行采购对账",
+	"Invoiced amount": "开票金额",
+	"Invoiced quantity": "开票数量",
+	"Is created in ERP": "ERP中创建的订单",
+	"Is local PO_V2": "在“采购”模块中创建的采购订单",
+	"Item number": "行数",
+	"No more invoice expected": "标记为关闭",
+	"Order date": "订单日期",
+	"Order number": "订单号",
+	"Ordered amount": "订购金额",
+	"Ordered quantity": "订购数量",
+	"Part number": "参考编号",
+	"Receiver": "收货人",
+	"Tax code": "税码",
+	"Unit price": "单价",
+	"Vendor number": "供应商编号",
+	"_ContractName": "合同名称",
+	"_ContractName_report": "合同名称",
+	"_ContractNumber": "合同编号",
+	"_ContractNumber_report": "合同编号",
+	"_ContractReferenceNumber": "合同参考编号",
+	"_ContractReferenceNumber_report": "合同参考编号",
+	"_ContractRUIDEX": "合同扩展 ID",
+	"_ContractRUIDEX_report": "合同扩展 ID",
+	"_ContractSpendingID": "合同采购额 ID",
+	"_ContractSpendingID_report": "合同采购额 ID",
+	"_CostCenter": "成本中心",
+	"_CostCenter_report": "成本中心",
+	"_CostCenterDescription": "成本中心描述",
+	"_CostCenterDescription_report": "成本中心描述",
+	"_DefaultCurrency": "建议价格货币",
+	"_DefaultCurrency_report": "建议价格货币",
+	"_DefaultPublicPrice": "建议价格",
+	"_DefaultPublicPrice_report": "建议价格",
+	"_FreeDimension1": "自定义范围 1",
+	"_FreeDimension1_report": "自定义范围 1",
+	"_FreeDimension1ID": "自定义范围 1（ID）",
+	"_FreeDimension1ID_report": "自定义范围 1（ID）",
+	"_InternalOrder": "内部订单",
+	"_InternalOrder_report": "内部订单",
+	"_IsReplenishmentItem": "补货项目",
+	"_IsReplenishmentItem_report": "补货项目",
+	"_ItemDeliveryAddressID": "交付地址ID",
+	"_ItemDeliveryAddressID_report": "交付地址ID",
+	"_ItemShipToAddress": "交付地址",
+	"_ItemShipToAddress_report": "交付地址",
+	"_ItemShipToCompany": "收件人公司",
+	"_ItemShipToCompany_report": "收件人公司",
+	"_NonDeductibleTaxRate": "不可扣除税率",
+	"_NonDeductibleTaxRate_report": "不可扣除税率",
+	"_OriginalContractRUIDEX": "合同扩展 ID（原始版本）",
+	"_OriginalContractRUIDEX_report": "合同扩展 ID（原始版本）",
+	"_PreviousContractSpendingID": "前版合同购额 ID",
+	"_PreviousContractSpendingID_report": "前版合同购额 ID",
+	"_ProfitCenter": "利润中心",
+	"_ProfitCenter_report": "利润中心",
+	"_ProjectCode": "项目代码",
+	"_ProjectCode_report": "项目代码",
+	"_ProjectCodeDescription": "项目说明",
+	"_ProjectCodeDescription_report": "项目说明",
+	"_ProjectName": "项目名称",
+	"_ProjectName_report": "项目名称",
+	"_ProjectNumber": "项目编号",
+	"_ProjectNumber_report": "项目编号",
+	"_PublicPrice": "标准价格",
+	"_PublicPrice_report": "标准价格",
+	"_VendorRegistrationID_report": "供应商注册 ID",
+	"_WarehouseID": "仓库标识",
+	"_WarehouseID_report": "仓库标识",
+	"_WarehouseName": "仓库名称",
+	"_WarehouseName_report": "仓库名称",
+	"_WBSElement": "WBS 要素",
+	"_WBSElement_report": "WBS 要素",
+	"_WBSElementID": "WBS 要素（ID）",
+	"_WBSElementID_report": "WBS 要素（ID）",
+	"_EnergyConsumptionKgCO2ePerUnit": "每单位温室气体排放量（kg CO2e）",
+	"_EnergyConsumptionKgCO2ePerUnit_report": "每单位温室气体排放量（kg CO2e）",
+	"_GHGE_DefaultUnit": "kg CO2e"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"_AmountBased": "Valor",
+	"_CapEx": "Capex",
+	"_CostType": "Tipo de custo",
+	"_CostType_report": "Tipo de custo",
+	"_Group": "Categoria de despesa",
+	"_Group_report": "Categoria de despesa",
+	"_ItemType": "Tipo de item",
+	"_NoGoodsReceipt": "Nenhum recebimento de bens e serviços necessário",
+	"_NoGoodsReceipt_report": "Nenhum recebimento de bens e serviços necessário",
+	"_OpEx": "OpEx",
+	"_processFormula_Accrued expense": "Gasto acrescido",
+	"_QuantityBased": "Quantidade",
+	"_RequestedDeliveryDate": "Data de recebimento solicitada",
+	"_RequestedDeliveryDate_report": "Data de recebimento solicitada",
+	"_Tax rate": "Taxa de imposto",
+	"_Tax rate_report": "Taxa de imposto",
+	"_UnitOfMeasureCode": "Unidade",
+	"_UnitOfMeasureCode_report": "Unidade",
+	"AP - Purchase order - Items": "S2P - Pedido de compra - Itens",
+	"BudgetID": "ID do orçamento",
+	"Company code": "Código da empresa",
+	"Cost center": "Centro de custo",
+	"Currency": "Moeda",
+	"Delivered amount": "Valor entregue",
+	"Delivered quantity": "Quantidade entregue",
+	"Description": "Descrição",
+	"G/L account": "Conta do Razão",
+	"GR/IV": "Correspondência de fatura baseada em GR",
+	"Invoiced amount": "Valor faturado",
+	"Invoiced quantity": "Quantidade faturada",
+	"Is created in ERP": "Pedido criado no ERP",
+	"Is local PO_V2": "Pedido criado no módulo 'Compras'",
+	"Item number": "Número de linha",
+	"No more invoice expected": "Marcar como fechado",
+	"Order date": "Data do pedido",
+	"Order number": "Número de pedido",
+	"Ordered amount": "Valor pedido",
+	"Ordered quantity": "Quantidade pedida",
+	"Part number": "Referência",
+	"Receiver": "Destinatário",
+	"Tax code": "Código de imposto",
+	"Unit price": "Preço unitário",
+	"Vendor number": "Número do fornecedor",
+	"_ContractName": "Nome do contrato",
+	"_ContractName_report": "Nome do contrato",
+	"_ContractNumber": "Número de contrato",
+	"_ContractNumber_report": "Número de contrato",
+	"_ContractReferenceNumber": "Ref. do contrato",
+	"_ContractReferenceNumber_report": "Ref. do contrato",
+	"_ContractRUIDEX": "ID estendido do contrato",
+	"_ContractRUIDEX_report": "ID estendido do contrato",
+	"_ContractSpendingID": "ID de despesa do contrato",
+	"_ContractSpendingID_report": "ID de despesa do contrato",
+	"_CostCenter": "Centro de custo",
+	"_CostCenter_report": "Centro de custo",
+	"_CostCenterDescription": "Descrição do centro de custo",
+	"_CostCenterDescription_report": "Descrição do centro de custo",
+	"_DefaultCurrency": "Moeda do preço sugerido",
+	"_DefaultCurrency_report": "Moeda do preço sugerido",
+	"_DefaultPublicPrice": "Preço sugerido",
+	"_DefaultPublicPrice_report": "Preço sugerido",
+	"_FreeDimension1": "Dimensão personalizada 1",
+	"_FreeDimension1_report": "Dimensão personalizada 1",
+	"_FreeDimension1ID": "Dimensão personalizada 1 (ID)",
+	"_FreeDimension1ID_report": "Dimensão personalizada 1 (ID)",
+	"_InternalOrder": "Pedido interno",
+	"_InternalOrder_report": "Pedido interno",
+	"_IsReplenishmentItem": "Item de reposição",
+	"_IsReplenishmentItem_report": "Item de reposição",
+	"_ItemDeliveryAddressID": "ID do endereço de entrega",
+	"_ItemDeliveryAddressID_report": "ID do endereço de entrega",
+	"_ItemShipToAddress": "Endereço de entrega",
+	"_ItemShipToAddress_report": "Endereço de entrega",
+	"_ItemShipToCompany": "Empresa receptora",
+	"_ItemShipToCompany_report": "Empresa receptora",
+	"_NonDeductibleTaxRate": "Taxa de imposto não dedutível",
+	"_NonDeductibleTaxRate_report": "Taxa de imposto não dedutível",
+	"_OriginalContractRUIDEX": "ID estendida do contrato (versão original)",
+	"_OriginalContractRUIDEX_report": "ID estendida do contrato (versão original)",
+	"_PreviousContractSpendingID": "ID de despesa do contrato anterior",
+	"_PreviousContractSpendingID_report": "ID de despesa do contrato anterior",
+	"_ProfitCenter": "Centro de lucro",
+	"_ProfitCenter_report": "Centro de lucro",
+	"_ProjectCode": "Código do projeto",
+	"_ProjectCode_report": "Código do projeto",
+	"_ProjectCodeDescription": "Descrição do projeto",
+	"_ProjectCodeDescription_report": "Descrição do projeto",
+	"_ProjectName": "Nome do projeto",
+	"_ProjectName_report": "Nome do projeto",
+	"_ProjectNumber": "Número do projeto",
+	"_ProjectNumber_report": "Número do projeto",
+	"_PublicPrice": "Preço padrão",
+	"_PublicPrice_report": "Preço padrão",
+	"_VendorRegistrationID_report": "ID de registro de fornecedor",
+	"_WarehouseID": "ID de armazém",
+	"_WarehouseID_report": "ID de armazém",
+	"_WarehouseName": "Nome do armazém",
+	"_WarehouseName_report": "Nome do armazém",
+	"_WBSElement": "Elemento WBS",
+	"_WBSElement_report": "Elemento WBS",
+	"_WBSElementID": "Elemento WBS (ID)",
+	"_WBSElementID_report": "Elemento WBS (ID)",
+	"_EnergyConsumptionKgCO2ePerUnit": "Emissões de GEE por unidade (kg CO2e)",
+	"_EnergyConsumptionKgCO2ePerUnit_report": "Emissões de GEE por unidade (kg CO2e)",
+	"_GHGE_DefaultUnit": "kg CO2e"
+}</process_pt-BR>
+    </lg>
+    <process>
+      <BUColumn>CompanyCode__</BUColumn>
+      <flowtype>processing</flowtype>
+      <homepagelabel>AP - Purchase order - Items</homepagelabel>
+      <upgradable>yes</upgradable>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <OverrideAllowedAttachmentExtensions>*</OverrideAllowedAttachmentExtensions>
+      <displayWidth>
+      </displayWidth>
+      <AllowUploadAttachment>0</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+      <shouldRollbackManualRecordEdits>true</shouldRollbackManualRecordEdits>
+      <shouldShowManualEditsWarning>false</shouldShowManualEditsWarning>
+      <UseCultureFormat>true</UseCultureFormat>
+      <TransportName>CustomTable</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+    </process>
+    <ui>
+      <CustomScriptDebug>false</CustomScriptDebug>
+      <customscriptIncludedScripts>[LIB_P2P_CUSTOMIZATION_TABLES_CLIENT]</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Sys/Sys_Helpers</customscriptIncludedScripts>
+      <CustomScriptReadonly>false</CustomScriptReadonly>
+      <CustomScript>
+function Main()
+{
+	if (Data.GetValue("IsLocalPO__"))
+	{
+		Controls.DataPanel.SetReadOnly(true);
+	}
+
+	Sys.Helpers.TryCallFunction("Lib.P2P.Customization.Tables.Client.Common.OnHTMLScriptEnd");
+}
+
+Main();</CustomScript>
+      <restorationPanel>DataPanel</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 99,
+	"*": {
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"splitterType": "simple-v",
+				"backColor": "text-backgroundcolor-default",
+				"style": null,
+				"processHelpId": "5100",
+				"maxwidth": "",
+				"footerStyle": "default",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 2,
+					"options": {
+						"hidePanelsMenu": false,
+						"maxwidth": "",
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 3,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 4,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-center": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 5,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"width": "100%"
+										},
+										"hidden": false,
+										"hideSeparator": true
+									},
+									"*": {
+										"form-content-center-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 6,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"DataPanel": {
+													"type": "PanelData",
+													"data": [],
+													"stamp": 7,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"label": "_Document data",
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": false,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"backgroundcolor": "default",
+														"labelsAlignment": "right",
+														"sameHeightAsSiblings": false,
+														"version": 0
+													},
+													"*": {
+														"FieldsManager": {
+															"type": "FieldsManager",
+															"data": [],
+															"stamp": 8,
+															"options": {
+																"version": 0,
+																"controlsAssociation": {
+																	"CompanyCode__": "LabelCompanyCode__",
+																	"LabelCompanyCode__": "CompanyCode__",
+																	"VendorNumber__": "LabelVendorNumber__",
+																	"LabelVendorNumber__": "VendorNumber__",
+																	"ContractNumber__": "LabelContractNumber__",
+																	"LabelContractNumber__": "ContractNumber__",
+																	"ContractSpendingID__": "LabelContractSpendingID__",
+																	"LabelContractSpendingID__": "ContractSpendingID__",
+																	"OrderNumber__": "LabelOrderNumber__",
+																	"LabelOrderNumber__": "OrderNumber__",
+																	"OrderDate__": "LabelOrderDate__",
+																	"LabelOrderDate__": "OrderDate__",
+																	"ItemNumber__": "LabelItemNumber__",
+																	"LabelItemNumber__": "ItemNumber__",
+																	"PartNumber__": "LabelPartNumber__",
+																	"LabelPartNumber__": "PartNumber__",
+																	"ItemType__": "LabelItemType__",
+																	"LabelItemType__": "ItemType__",
+																	"Description__": "LabelDescription__",
+																	"LabelDescription__": "Description__",
+																	"GLAccount__": "LabelGLAccount__",
+																	"LabelGLAccount__": "GLAccount__",
+																	"Group__": "LabelGroup__",
+																	"LabelGroup__": "Group__",
+																	"CostCenter__": "LabelCostCenter__",
+																	"LabelCostCenter__": "CostCenter__",
+																	"ProjectCode__": "LabelProjectCode__",
+																	"LabelProjectCode__": "ProjectCode__",
+																	"ProjectNumber__": "LabelProjectNumber__",
+																	"LabelProjectNumber__": "ProjectNumber__",
+																	"ProjectName__": "LabelProjectName__",
+																	"LabelProjectName__": "ProjectName__",
+																	"InternalOrder__": "LabelInternalOrder__",
+																	"LabelInternalOrder__": "InternalOrder__",
+																	"WBSElement__": "LabelWBSElement__",
+																	"LabelWBSElement__": "WBSElement__",
+																	"WBSElementID__": "LabelWBSElementID__",
+																	"LabelWBSElementID__": "WBSElementID__",
+																	"FreeDimension1__": "LabelFreeDimension1__",
+																	"LabelFreeDimension1__": "FreeDimension1__",
+																	"FreeDimension1ID__": "LabelFreeDimension1ID__",
+																	"LabelFreeDimension1ID__": "FreeDimension1ID__",
+																	"BudgetID__": "LabelBudgetID__",
+																	"LabelBudgetID__": "BudgetID__",
+																	"RequestedDeliveryDate__": "LabelRequestedDeliveryDate__",
+																	"LabelRequestedDeliveryDate__": "RequestedDeliveryDate__",
+																	"UnitPrice__": "LabelUnitPrice__",
+																	"LabelUnitPrice__": "UnitPrice__",
+																	"OrderedAmount__": "LabelOrderedAmount__",
+																	"LabelOrderedAmount__": "OrderedAmount__",
+																	"UnitOfMeasureCode__": "LabelUnitOfMeasureCode__",
+																	"LabelUnitOfMeasureCode__": "UnitOfMeasureCode__",
+																	"OrderedQuantity__": "LabelOrderedQuantity__",
+																	"LabelOrderedQuantity__": "OrderedQuantity__",
+																	"InvoicedAmount__": "LabelInvoicedAmount__",
+																	"LabelInvoicedAmount__": "InvoicedAmount__",
+																	"InvoicedQuantity__": "LabelInvoicedQuantity__",
+																	"LabelInvoicedQuantity__": "InvoicedQuantity__",
+																	"DeliveredAmount__": "LabelDeliveredAmount__",
+																	"LabelDeliveredAmount__": "DeliveredAmount__",
+																	"DeliveredQuantity__": "LabelDeliveredQuantity__",
+																	"LabelDeliveredQuantity__": "DeliveredQuantity__",
+																	"Currency__": "LabelCurrency__",
+																	"LabelCurrency__": "Currency__",
+																	"TaxCode__": "LabelTaxCode__",
+																	"LabelTaxCode__": "TaxCode__",
+																	"TaxRate__": "LabelTaxRate__",
+																	"LabelTaxRate__": "TaxRate__",
+																	"NonDeductibleTaxRate__": "LabelNonDeductibleTaxRate__",
+																	"LabelNonDeductibleTaxRate__": "NonDeductibleTaxRate__",
+																	"Receiver__": "LabelReceiver__",
+																	"LabelReceiver__": "Receiver__",
+																	"EnergyConsumptionKgCO2ePerUnit__": "LabelEnergyConsumptionKgCO2ePerUnit__",
+																	"LabelEnergyConsumptionKgCO2ePerUnit__": "EnergyConsumptionKgCO2ePerUnit__",
+																	"CostType__": "LabelCostType__",
+																	"LabelCostType__": "CostType__",
+																	"IsLocalPO__": "LabelIsLocalPO__",
+																	"LabelIsLocalPO__": "IsLocalPO__",
+																	"IsCreatedInERP__": "LabelIsCreatedInERP__",
+																	"LabelIsCreatedInERP__": "IsCreatedInERP__",
+																	"GRIV__": "LabelGRIV__",
+																	"LabelGRIV__": "GRIV__",
+																	"NoMoreInvoiceExpected__": "LabelNoMoreInvoiceExpected__",
+																	"LabelNoMoreInvoiceExpected__": "NoMoreInvoiceExpected__",
+																	"NoGoodsReceipt__": "LabelNoGoodsReceipt__",
+																	"LabelNoGoodsReceipt__": "NoGoodsReceipt__"
+																}
+															},
+															"*": {
+																"Grid": {
+																	"type": "GridLayout",
+																	"data": [
+																		"fields"
+																	],
+																	"stamp": 9,
+																	"options": {
+																		"version": 0,
+																		"lines": 43,
+																		"columns": 2,
+																		"ctrlsPos": {
+																			"LabelCompanyCode__": {
+																				"line": 1,
+																				"column": 1
+																			},
+																			"CompanyCode__": {
+																				"line": 1,
+																				"column": 2
+																			},
+																			"LabelVendorNumber__": {
+																				"line": 2,
+																				"column": 1
+																			},
+																			"VendorNumber__": {
+																				"line": 2,
+																				"column": 2
+																			},
+																			"LabelContractNumber__": {
+																				"line": 3,
+																				"column": 1
+																			},
+																			"ContractNumber__": {
+																				"line": 3,
+																				"column": 2
+																			},
+																			"LabelContractSpendingID__": {
+																				"line": 4,
+																				"column": 1
+																			},
+																			"ContractSpendingID__": {
+																				"line": 4,
+																				"column": 2
+																			},
+																			"LabelOrderNumber__": {
+																				"line": 5,
+																				"column": 1
+																			},
+																			"OrderNumber__": {
+																				"line": 5,
+																				"column": 2
+																			},
+																			"LabelOrderDate__": {
+																				"line": 6,
+																				"column": 1
+																			},
+																			"OrderDate__": {
+																				"line": 6,
+																				"column": 2
+																			},
+																			"LabelItemNumber__": {
+																				"line": 7,
+																				"column": 1
+																			},
+																			"ItemNumber__": {
+																				"line": 7,
+																				"column": 2
+																			},
+																			"LabelPartNumber__": {
+																				"line": 8,
+																				"column": 1
+																			},
+																			"PartNumber__": {
+																				"line": 8,
+																				"column": 2
+																			},
+																			"LabelItemType__": {
+																				"line": 9,
+																				"column": 1
+																			},
+																			"ItemType__": {
+																				"line": 9,
+																				"column": 2
+																			},
+																			"LabelDescription__": {
+																				"line": 10,
+																				"column": 1
+																			},
+																			"Description__": {
+																				"line": 10,
+																				"column": 2
+																			},
+																			"LabelGLAccount__": {
+																				"line": 11,
+																				"column": 1
+																			},
+																			"GLAccount__": {
+																				"line": 11,
+																				"column": 2
+																			},
+																			"LabelGroup__": {
+																				"line": 12,
+																				"column": 1
+																			},
+																			"Group__": {
+																				"line": 12,
+																				"column": 2
+																			},
+																			"LabelCostCenter__": {
+																				"line": 13,
+																				"column": 1
+																			},
+																			"CostCenter__": {
+																				"line": 13,
+																				"column": 2
+																			},
+																			"LabelProjectCode__": {
+																				"line": 14,
+																				"column": 1
+																			},
+																			"ProjectCode__": {
+																				"line": 14,
+																				"column": 2
+																			},
+																			"LabelProjectNumber__": {
+																				"line": 15,
+																				"column": 1
+																			},
+																			"ProjectNumber__": {
+																				"line": 15,
+																				"column": 2
+																			},
+																			"LabelProjectName__": {
+																				"line": 16,
+																				"column": 1
+																			},
+																			"ProjectName__": {
+																				"line": 16,
+																				"column": 2
+																			},
+																			"LabelInternalOrder__": {
+																				"line": 17,
+																				"column": 1
+																			},
+																			"InternalOrder__": {
+																				"line": 17,
+																				"column": 2
+																			},
+																			"LabelWBSElement__": {
+																				"line": 18,
+																				"column": 1
+																			},
+																			"WBSElement__": {
+																				"line": 18,
+																				"column": 2
+																			},
+																			"LabelWBSElementID__": {
+																				"line": 19,
+																				"column": 1
+																			},
+																			"WBSElementID__": {
+																				"line": 19,
+																				"column": 2
+																			},
+																			"LabelFreeDimension1__": {
+																				"line": 20,
+																				"column": 1
+																			},
+																			"FreeDimension1__": {
+																				"line": 20,
+																				"column": 2
+																			},
+																			"LabelFreeDimension1ID__": {
+																				"line": 21,
+																				"column": 1
+																			},
+																			"FreeDimension1ID__": {
+																				"line": 21,
+																				"column": 2
+																			},
+																			"LabelBudgetID__": {
+																				"line": 22,
+																				"column": 1
+																			},
+																			"BudgetID__": {
+																				"line": 22,
+																				"column": 2
+																			},
+																			"LabelRequestedDeliveryDate__": {
+																				"line": 23,
+																				"column": 1
+																			},
+																			"RequestedDeliveryDate__": {
+																				"line": 23,
+																				"column": 2
+																			},
+																			"LabelUnitPrice__": {
+																				"line": 24,
+																				"column": 1
+																			},
+																			"UnitPrice__": {
+																				"line": 24,
+																				"column": 2
+																			},
+																			"LabelOrderedAmount__": {
+																				"line": 25,
+																				"column": 1
+																			},
+																			"OrderedAmount__": {
+																				"line": 25,
+																				"column": 2
+																			},
+																			"LabelUnitOfMeasureCode__": {
+																				"line": 26,
+																				"column": 1
+																			},
+																			"UnitOfMeasureCode__": {
+																				"line": 26,
+																				"column": 2
+																			},
+																			"LabelOrderedQuantity__": {
+																				"line": 27,
+																				"column": 1
+																			},
+																			"OrderedQuantity__": {
+																				"line": 27,
+																				"column": 2
+																			},
+																			"LabelInvoicedAmount__": {
+																				"line": 28,
+																				"column": 1
+																			},
+																			"InvoicedAmount__": {
+																				"line": 28,
+																				"column": 2
+																			},
+																			"LabelInvoicedQuantity__": {
+																				"line": 29,
+																				"column": 1
+																			},
+																			"InvoicedQuantity__": {
+																				"line": 29,
+																				"column": 2
+																			},
+																			"LabelDeliveredAmount__": {
+																				"line": 30,
+																				"column": 1
+																			},
+																			"DeliveredAmount__": {
+																				"line": 30,
+																				"column": 2
+																			},
+																			"LabelDeliveredQuantity__": {
+																				"line": 31,
+																				"column": 1
+																			},
+																			"DeliveredQuantity__": {
+																				"line": 31,
+																				"column": 2
+																			},
+																			"LabelCurrency__": {
+																				"line": 32,
+																				"column": 1
+																			},
+																			"Currency__": {
+																				"line": 32,
+																				"column": 2
+																			},
+																			"LabelTaxCode__": {
+																				"line": 33,
+																				"column": 1
+																			},
+																			"TaxCode__": {
+																				"line": 33,
+																				"column": 2
+																			},
+																			"LabelTaxRate__": {
+																				"line": 34,
+																				"column": 1
+																			},
+																			"TaxRate__": {
+																				"line": 34,
+																				"column": 2
+																			},
+																			"LabelNonDeductibleTaxRate__": {
+																				"line": 35,
+																				"column": 1
+																			},
+																			"NonDeductibleTaxRate__": {
+																				"line": 35,
+																				"column": 2
+																			},
+																			"LabelReceiver__": {
+																				"line": 36,
+																				"column": 1
+																			},
+																			"Receiver__": {
+																				"line": 36,
+																				"column": 2
+																			},
+																			"LabelEnergyConsumptionKgCO2ePerUnit__": {
+																				"line": 37,
+																				"column": 1
+																			},
+																			"EnergyConsumptionKgCO2ePerUnit__": {
+																				"line": 37,
+																				"column": 2
+																			},
+																			"LabelCostType__": {
+																				"line": 38,
+																				"column": 1
+																			},
+																			"CostType__": {
+																				"line": 38,
+																				"column": 2
+																			},
+																			"LabelIsLocalPO__": {
+																				"line": 39,
+																				"column": 1
+																			},
+																			"IsLocalPO__": {
+																				"line": 39,
+																				"column": 2
+																			},
+																			"LabelIsCreatedInERP__": {
+																				"line": 40,
+																				"column": 1
+																			},
+																			"IsCreatedInERP__": {
+																				"line": 40,
+																				"column": 2
+																			},
+																			"LabelGRIV__": {
+																				"line": 41,
+																				"column": 1
+																			},
+																			"GRIV__": {
+																				"line": 41,
+																				"column": 2
+																			},
+																			"LabelNoMoreInvoiceExpected__": {
+																				"line": 42,
+																				"column": 1
+																			},
+																			"NoMoreInvoiceExpected__": {
+																				"line": 42,
+																				"column": 2
+																			},
+																			"LabelNoGoodsReceipt__": {
+																				"line": 43,
+																				"column": 1
+																			},
+																			"NoGoodsReceipt__": {
+																				"line": 43,
+																				"column": 2
+																			}
+																		},
+																		"colspans": [
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[]
+																		]
+																	},
+																	"*": {
+																		"LabelCompanyCode__": {
+																			"type": "Label",
+																			"data": [
+																				"CompanyCode__"
+																			],
+																			"stamp": 11,
+																			"options": {
+																				"label": "Company code",
+																				"version": 0
+																			}
+																		},
+																		"CompanyCode__": {
+																			"type": "ShortText",
+																			"data": [
+																				"CompanyCode__"
+																			],
+																			"stamp": 10,
+																			"options": {
+																				"label": "Company code",
+																				"activable": true,
+																				"width": "500",
+																				"length": 20,
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"helpURL": "5100",
+																				"helpText": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"version": 0
+																			}
+																		},
+																		"LabelVendorNumber__": {
+																			"type": "Label",
+																			"data": [
+																				"VendorNumber__"
+																			],
+																			"stamp": 13,
+																			"options": {
+																				"label": "Vendor number",
+																				"version": 0
+																			}
+																		},
+																		"VendorNumber__": {
+																			"type": "ShortText",
+																			"data": [
+																				"VendorNumber__"
+																			],
+																			"stamp": 12,
+																			"options": {
+																				"label": "Vendor number",
+																				"activable": true,
+																				"width": "500",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 0
+																			}
+																		},
+																		"LabelContractNumber__": {
+																			"type": "Label",
+																			"data": [
+																				"ContractNumber__"
+																			],
+																			"stamp": 15,
+																			"options": {
+																				"label": "_ContractNumber",
+																				"version": 0
+																			}
+																		},
+																		"ContractNumber__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"ContractNumber__"
+																			],
+																			"stamp": 14,
+																			"options": {
+																				"label": "_ContractNumber",
+																				"version": 1,
+																				"autoCompleteSearchMode": "startswith",
+																				"searchMode": "contains",
+																				"activable": true,
+																				"width": "500",
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"minNbLines": 1,
+																				"maxNbLines": 1,
+																				"fTSmaxRecords": "20",
+																				"browsable": true,
+																				"PreFillFTS": true,
+																				"RestrictSearch": true
+																			}
+																		},
+																		"LabelContractSpendingID__": {
+																			"type": "Label",
+																			"data": [
+																				"ContractSpendingID__"
+																			],
+																			"stamp": 17,
+																			"options": {
+																				"label": "_ContractSpendingID",
+																				"version": 0
+																			}
+																		},
+																		"ContractSpendingID__": {
+																			"type": "ShortText",
+																			"data": [
+																				"ContractSpendingID__"
+																			],
+																			"stamp": 16,
+																			"options": {
+																				"label": "_ContractSpendingID",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 1,
+																				"activable": true,
+																				"width": "500",
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"browsable": false
+																			}
+																		},
+																		"LabelOrderNumber__": {
+																			"type": "Label",
+																			"data": [
+																				"OrderNumber__"
+																			],
+																			"stamp": 19,
+																			"options": {
+																				"label": "Order number",
+																				"version": 0
+																			}
+																		},
+																		"OrderNumber__": {
+																			"type": "ShortText",
+																			"data": [
+																				"OrderNumber__"
+																			],
+																			"stamp": 18,
+																			"options": {
+																				"label": "Order number",
+																				"activable": true,
+																				"width": "500",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 0
+																			}
+																		},
+																		"LabelOrderDate__": {
+																			"type": "Label",
+																			"data": [
+																				"OrderDate__"
+																			],
+																			"stamp": 21,
+																			"options": {
+																				"label": "Order date",
+																				"version": 0
+																			}
+																		},
+																		"OrderDate__": {
+																			"type": "DateTime",
+																			"data": [
+																				"OrderDate__"
+																			],
+																			"stamp": 20,
+																			"options": {
+																				"label": "Order date",
+																				"displayLongFormat": false,
+																				"activable": true,
+																				"width": "500",
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"showWeek": false,
+																				"hideButtonPanel": false,
+																				"showOtherMonths": false,
+																				"version": 0
+																			}
+																		},
+																		"LabelItemNumber__": {
+																			"type": "Label",
+																			"data": [
+																				"ItemNumber__"
+																			],
+																			"stamp": 23,
+																			"options": {
+																				"label": "Item number",
+																				"version": 0
+																			}
+																		},
+																		"ItemNumber__": {
+																			"type": "ShortText",
+																			"data": [
+																				"ItemNumber__"
+																			],
+																			"stamp": 22,
+																			"options": {
+																				"label": "Item number",
+																				"activable": true,
+																				"width": "500",
+																				"length": 80,
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 0
+																			}
+																		},
+																		"LabelPartNumber__": {
+																			"type": "Label",
+																			"data": [
+																				"PartNumber__"
+																			],
+																			"stamp": 25,
+																			"options": {
+																				"label": "Part number",
+																				"version": 0
+																			}
+																		},
+																		"PartNumber__": {
+																			"type": "ShortText",
+																			"data": [
+																				"PartNumber__"
+																			],
+																			"stamp": 24,
+																			"options": {
+																				"label": "Part number",
+																				"activable": true,
+																				"width": "500",
+																				"autocompletable": true,
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 0
+																			}
+																		},
+																		"LabelItemType__": {
+																			"type": "Label",
+																			"data": [
+																				"ItemType__"
+																			],
+																			"stamp": 27,
+																			"options": {
+																				"label": "_ItemType",
+																				"version": 0
+																			}
+																		},
+																		"ItemType__": {
+																			"type": "ComboBox",
+																			"data": [
+																				"ItemType__"
+																			],
+																			"stamp": 26,
+																			"options": {
+																				"label": "_ItemType",
+																				"possibleValues": {
+																					"0": "_QuantityBased",
+																					"1": "_AmountBased"
+																				},
+																				"version": 1,
+																				"keyValueMode": true,
+																				"possibleKeys": {
+																					"0": "QuantityBased",
+																					"1": "AmountBased"
+																				},
+																				"activable": true,
+																				"width": "500",
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"DataSourceOrigin": "Standalone",
+																				"DisplayedColumns": "",
+																				"maxNbLinesToDisplay": 10
+																			}
+																		},
+																		"LabelDescription__": {
+																			"type": "Label",
+																			"data": [
+																				"Description__"
+																			],
+																			"stamp": 29,
+																			"options": {
+																				"label": "Description",
+																				"version": 0
+																			}
+																		},
+																		"Description__": {
+																			"type": "ShortText",
+																			"data": [
+																				"Description__"
+																			],
+																			"stamp": 28,
+																			"options": {
+																				"label": "Description",
+																				"activable": true,
+																				"width": "500",
+																				"length": 100,
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 0
+																			}
+																		},
+																		"LabelGLAccount__": {
+																			"type": "Label",
+																			"data": [
+																				"GLAccount__"
+																			],
+																			"stamp": 31,
+																			"options": {
+																				"label": "G/L account",
+																				"version": 0
+																			}
+																		},
+																		"GLAccount__": {
+																			"type": "ShortText",
+																			"data": [
+																				"GLAccount__"
+																			],
+																			"stamp": 30,
+																			"options": {
+																				"label": "G/L account",
+																				"activable": true,
+																				"width": "500",
+																				"autocompletable": false,
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 0
+																			}
+																		},
+																		"LabelGroup__": {
+																			"type": "Label",
+																			"data": [
+																				"Group__"
+																			],
+																			"stamp": 33,
+																			"options": {
+																				"label": "_Group",
+																				"version": 0
+																			}
+																		},
+																		"Group__": {
+																			"type": "ShortText",
+																			"data": [
+																				"Group__"
+																			],
+																			"stamp": 32,
+																			"options": {
+																				"label": "_Group",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"activable": true,
+																				"width": "500",
+																				"length": 64,
+																				"browsable": false,
+																				"version": 0
+																			}
+																		},
+																		"LabelCostCenter__": {
+																			"type": "Label",
+																			"data": [
+																				"CostCenter__"
+																			],
+																			"stamp": 35,
+																			"options": {
+																				"label": "Cost center",
+																				"version": 0
+																			}
+																		},
+																		"CostCenter__": {
+																			"type": "ShortText",
+																			"data": [
+																				"CostCenter__"
+																			],
+																			"stamp": 34,
+																			"options": {
+																				"label": "Cost center",
+																				"activable": true,
+																				"width": "500",
+																				"autocompletable": true,
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 0
+																			}
+																		},
+																		"LabelProjectCode__": {
+																			"type": "Label",
+																			"data": [
+																				"ProjectCode__"
+																			],
+																			"stamp": 37,
+																			"options": {
+																				"label": "_ProjectCode",
+																				"version": 0
+																			}
+																		},
+																		"ProjectCode__": {
+																			"type": "ShortText",
+																			"data": [
+																				"ProjectCode__"
+																			],
+																			"stamp": 36,
+																			"options": {
+																				"label": "_ProjectCode",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 1,
+																				"activable": true,
+																				"width": "500",
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"browsable": false
+																			}
+																		},
+																		"LabelProjectNumber__": {
+																			"type": "Label",
+																			"data": [
+																				"ProjectNumber__"
+																			],
+																			"stamp": 39,
+																			"options": {
+																				"label": "_ProjectNumber",
+																				"version": 0
+																			}
+																		},
+																		"ProjectNumber__": {
+																			"type": "ShortText",
+																			"data": [
+																				"ProjectNumber__"
+																			],
+																			"stamp": 38,
+																			"options": {
+																				"label": "_ProjectNumber",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 1,
+																				"activable": true,
+																				"width": "500",
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"length": 50,
+																				"browsable": false
+																			}
+																		},
+																		"LabelProjectName__": {
+																			"type": "Label",
+																			"data": [
+																				"ProjectName__"
+																			],
+																			"stamp": 41,
+																			"options": {
+																				"label": "_ProjectName",
+																				"version": 0
+																			}
+																		},
+																		"ProjectName__": {
+																			"type": "ShortText",
+																			"data": [
+																				"ProjectName__"
+																			],
+																			"stamp": 40,
+																			"options": {
+																				"label": "_ProjectName",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 1,
+																				"activable": true,
+																				"width": "500",
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"length": 100,
+																				"browsable": false
+																			}
+																		},
+																		"LabelInternalOrder__": {
+																			"type": "Label",
+																			"data": [
+																				"InternalOrder__"
+																			],
+																			"stamp": 43,
+																			"options": {
+																				"label": "_InternalOrder",
+																				"version": 0
+																			}
+																		},
+																		"InternalOrder__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"InternalOrder__"
+																			],
+																			"stamp": 42,
+																			"options": {
+																				"label": "_InternalOrder",
+																				"version": 1,
+																				"autoCompleteSearchMode": "contains",
+																				"searchMode": "contains",
+																				"activable": true,
+																				"width": "500",
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"minNbLines": 1,
+																				"maxNbLines": 1,
+																				"PreFillFTS": true,
+																				"RestrictSearch": true,
+																				"fTSmaxRecords": "20",
+																				"browsable": true
+																			}
+																		},
+																		"LabelWBSElement__": {
+																			"type": "Label",
+																			"data": [
+																				"WBSElement__"
+																			],
+																			"stamp": 45,
+																			"options": {
+																				"label": "_WBSElement",
+																				"version": 0
+																			}
+																		},
+																		"WBSElement__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"WBSElement__"
+																			],
+																			"stamp": 44,
+																			"options": {
+																				"label": "_WBSElement",
+																				"version": 1,
+																				"autoCompleteSearchMode": "contains",
+																				"searchMode": "contains",
+																				"activable": true,
+																				"width": "500",
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"minNbLines": 1,
+																				"maxNbLines": 1,
+																				"PreFillFTS": true,
+																				"RestrictSearch": true,
+																				"fTSmaxRecords": "20",
+																				"browsable": true
+																			}
+																		},
+																		"LabelWBSElementID__": {
+																			"type": "Label",
+																			"data": [
+																				"WBSElementID__"
+																			],
+																			"stamp": 47,
+																			"options": {
+																				"label": "_WBSElementID",
+																				"version": 0
+																			}
+																		},
+																		"WBSElementID__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"WBSElementID__"
+																			],
+																			"stamp": 46,
+																			"options": {
+																				"label": "_WBSElementID",
+																				"version": 1,
+																				"autoCompleteSearchMode": "contains",
+																				"searchMode": "contains",
+																				"activable": true,
+																				"width": "500",
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"minNbLines": 1,
+																				"maxNbLines": 1,
+																				"PreFillFTS": true,
+																				"RestrictSearch": true,
+																				"fTSmaxRecords": "20",
+																				"browsable": true
+																			}
+																		},
+																		"LabelFreeDimension1__": {
+																			"type": "Label",
+																			"data": [
+																				"FreeDimension1__"
+																			],
+																			"stamp": 49,
+																			"options": {
+																				"label": "_FreeDimension1",
+																				"version": 0
+																			}
+																		},
+																		"FreeDimension1__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"FreeDimension1__"
+																			],
+																			"stamp": 48,
+																			"options": {
+																				"label": "_FreeDimension1",
+																				"version": 1,
+																				"autoCompleteSearchMode": "contains",
+																				"searchMode": "contains",
+																				"activable": true,
+																				"width": "500",
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"minNbLines": 1,
+																				"maxNbLines": 1,
+																				"RestrictSearch": true,
+																				"fTSmaxRecords": "20",
+																				"browsable": true,
+																				"PreFillFTS": true
+																			}
+																		},
+																		"LabelFreeDimension1ID__": {
+																			"type": "Label",
+																			"data": [
+																				"FreeDimension1ID__"
+																			],
+																			"stamp": 51,
+																			"options": {
+																				"label": "_FreeDimension1ID",
+																				"version": 0
+																			}
+																		},
+																		"FreeDimension1ID__": {
+																			"type": "ShortText",
+																			"data": [
+																				"FreeDimension1ID__"
+																			],
+																			"stamp": 50,
+																			"options": {
+																				"label": "_FreeDimension1ID",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 1,
+																				"activable": true,
+																				"width": "500",
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"length": 500,
+																				"browsable": false
+																			}
+																		},
+																		"LabelBudgetID__": {
+																			"type": "Label",
+																			"data": [
+																				"BudgetID__"
+																			],
+																			"stamp": 53,
+																			"options": {
+																				"label": "BudgetID",
+																				"version": 0
+																			}
+																		},
+																		"BudgetID__": {
+																			"type": "ShortText",
+																			"data": [
+																				"BudgetID__"
+																			],
+																			"stamp": 52,
+																			"options": {
+																				"label": "BudgetID",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"activable": true,
+																				"width": "500",
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"browsable": false,
+																				"length": 128,
+																				"version": 0
+																			}
+																		},
+																		"LabelRequestedDeliveryDate__": {
+																			"type": "Label",
+																			"data": [
+																				"RequestedDeliveryDate__"
+																			],
+																			"stamp": 55,
+																			"options": {
+																				"label": "_RequestedDeliveryDate",
+																				"version": 0
+																			}
+																		},
+																		"RequestedDeliveryDate__": {
+																			"type": "DateTime",
+																			"data": [
+																				"RequestedDeliveryDate__"
+																			],
+																			"stamp": 54,
+																			"options": {
+																				"label": "_RequestedDeliveryDate",
+																				"displayLongFormat": false,
+																				"showWeek": false,
+																				"hideButtonPanel": false,
+																				"showOtherMonths": false,
+																				"activable": true,
+																				"width": "500",
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"version": 0
+																			}
+																		},
+																		"LabelUnitPrice__": {
+																			"type": "Label",
+																			"data": [
+																				"UnitPrice__"
+																			],
+																			"stamp": 57,
+																			"options": {
+																				"label": "Unit price",
+																				"version": 0
+																			}
+																		},
+																		"UnitPrice__": {
+																			"type": "Decimal",
+																			"data": [
+																				"UnitPrice__"
+																			],
+																			"stamp": 56,
+																			"options": {
+																				"label": "Unit price",
+																				"integer": false,
+																				"precision_internal": 5,
+																				"activable": true,
+																				"width": "500",
+																				"autocompletable": true,
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"precision_current": 5,
+																				"precision_min": 2,
+																				"version": 0
+																			}
+																		},
+																		"LabelOrderedAmount__": {
+																			"type": "Label",
+																			"data": [
+																				"OrderedAmount__"
+																			],
+																			"stamp": 59,
+																			"options": {
+																				"label": "Ordered amount",
+																				"version": 0
+																			}
+																		},
+																		"OrderedAmount__": {
+																			"type": "Decimal",
+																			"data": [
+																				"OrderedAmount__"
+																			],
+																			"stamp": 58,
+																			"options": {
+																				"label": "Ordered amount",
+																				"integer": false,
+																				"precision_internal": 2,
+																				"activable": true,
+																				"width": "500",
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"precision_current": 2,
+																				"version": 0
+																			}
+																		},
+																		"LabelUnitOfMeasureCode__": {
+																			"type": "Label",
+																			"data": [
+																				"UnitOfMeasureCode__"
+																			],
+																			"stamp": 61,
+																			"options": {
+																				"label": "_UnitOfMeasureCode",
+																				"version": 0
+																			}
+																		},
+																		"UnitOfMeasureCode__": {
+																			"type": "ShortText",
+																			"data": [
+																				"UnitOfMeasureCode__"
+																			],
+																			"stamp": 60,
+																			"options": {
+																				"label": "_UnitOfMeasureCode",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 1,
+																				"activable": true,
+																				"width": "500",
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"browsable": false,
+																				"length": 500
+																			}
+																		},
+																		"LabelOrderedQuantity__": {
+																			"type": "Label",
+																			"data": [
+																				"OrderedQuantity__"
+																			],
+																			"stamp": 63,
+																			"options": {
+																				"label": "Ordered quantity",
+																				"version": 0
+																			}
+																		},
+																		"OrderedQuantity__": {
+																			"type": "Decimal",
+																			"data": [
+																				"OrderedQuantity__"
+																			],
+																			"stamp": 62,
+																			"options": {
+																				"label": "Ordered quantity",
+																				"integer": false,
+																				"precision_internal": 5,
+																				"activable": true,
+																				"width": "500",
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"precision_current": 5,
+																				"precision_min": 2,
+																				"version": 0
+																			}
+																		},
+																		"LabelInvoicedAmount__": {
+																			"type": "Label",
+																			"data": [
+																				"InvoicedAmount__"
+																			],
+																			"stamp": 65,
+																			"options": {
+																				"label": "Invoiced amount",
+																				"version": 0
+																			}
+																		},
+																		"InvoicedAmount__": {
+																			"type": "Decimal",
+																			"data": [
+																				"InvoicedAmount__"
+																			],
+																			"stamp": 64,
+																			"options": {
+																				"label": "Invoiced amount",
+																				"integer": false,
+																				"precision_internal": 2,
+																				"activable": true,
+																				"width": "500",
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"precision_current": 2,
+																				"version": 0
+																			}
+																		},
+																		"LabelInvoicedQuantity__": {
+																			"type": "Label",
+																			"data": [
+																				"InvoicedQuantity__"
+																			],
+																			"stamp": 67,
+																			"options": {
+																				"label": "Invoiced quantity",
+																				"version": 0
+																			}
+																		},
+																		"InvoicedQuantity__": {
+																			"type": "Decimal",
+																			"data": [
+																				"InvoicedQuantity__"
+																			],
+																			"stamp": 66,
+																			"options": {
+																				"label": "Invoiced quantity",
+																				"integer": false,
+																				"precision_internal": 5,
+																				"activable": true,
+																				"width": "500",
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"precision_current": 5,
+																				"precision_min": 2,
+																				"version": 0
+																			}
+																		},
+																		"LabelDeliveredAmount__": {
+																			"type": "Label",
+																			"data": [
+																				"DeliveredAmount__"
+																			],
+																			"stamp": 69,
+																			"options": {
+																				"label": "Delivered amount",
+																				"version": 0
+																			}
+																		},
+																		"DeliveredAmount__": {
+																			"type": "Decimal",
+																			"data": [
+																				"DeliveredAmount__"
+																			],
+																			"stamp": 68,
+																			"options": {
+																				"label": "Delivered amount",
+																				"integer": false,
+																				"precision_internal": 2,
+																				"activable": true,
+																				"width": "500",
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"precision_current": 2,
+																				"version": 0
+																			}
+																		},
+																		"LabelDeliveredQuantity__": {
+																			"type": "Label",
+																			"data": [
+																				"DeliveredQuantity__"
+																			],
+																			"stamp": 71,
+																			"options": {
+																				"label": "Delivered quantity",
+																				"version": 0
+																			}
+																		},
+																		"DeliveredQuantity__": {
+																			"type": "Decimal",
+																			"data": [
+																				"DeliveredQuantity__"
+																			],
+																			"stamp": 70,
+																			"options": {
+																				"label": "Delivered quantity",
+																				"integer": false,
+																				"precision_internal": 5,
+																				"activable": true,
+																				"width": "500",
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"precision_current": 5,
+																				"precision_min": 2,
+																				"version": 0
+																			}
+																		},
+																		"LabelCurrency__": {
+																			"type": "Label",
+																			"data": [
+																				"Currency__"
+																			],
+																			"stamp": 73,
+																			"options": {
+																				"label": "Currency",
+																				"version": 0
+																			}
+																		},
+																		"Currency__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"Currency__"
+																			],
+																			"stamp": 72,
+																			"options": {
+																				"label": "Currency",
+																				"version": 1,
+																				"activable": true,
+																				"width": "500",
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"minNbLines": 1,
+																				"maxNbLines": 1,
+																				"PreFillFTS": true,
+																				"fTSmaxRecords": "20",
+																				"browsable": true,
+																				"autoCompleteSearchMode": "startswith",
+																				"searchMode": "matches"
+																			}
+																		},
+																		"LabelTaxCode__": {
+																			"type": "Label",
+																			"data": [
+																				"TaxCode__"
+																			],
+																			"stamp": 75,
+																			"options": {
+																				"label": "Tax code",
+																				"version": 0
+																			}
+																		},
+																		"TaxCode__": {
+																			"type": "ShortText",
+																			"data": [
+																				"TaxCode__"
+																			],
+																			"stamp": 74,
+																			"options": {
+																				"label": "Tax code",
+																				"activable": true,
+																				"width": "500",
+																				"length": 600,
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"browsable": false,
+																				"version": 0
+																			}
+																		},
+																		"LabelTaxRate__": {
+																			"type": "Label",
+																			"data": [
+																				"TaxRate__"
+																			],
+																			"stamp": 77,
+																			"options": {
+																				"label": "_Tax rate",
+																				"version": 0
+																			}
+																		},
+																		"TaxRate__": {
+																			"type": "Decimal",
+																			"data": [
+																				"TaxRate__"
+																			],
+																			"stamp": 76,
+																			"options": {
+																				"label": "_Tax rate",
+																				"version": 2,
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"integer": false,
+																				"precision_internal": 3,
+																				"precision_current": 3,
+																				"precision_min": 2,
+																				"activable": true,
+																				"width": "500",
+																				"helpText": "Tax rate associated to Tax code.\nUsed specifically for EBS in multi jurisdiction. When one Po Line has multiple tax codes associated \n(so the tax code is not defined in the Tax Code table)",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"defaultValue": "0.00",
+																				"autocompletable": false
+																			}
+																		},
+																		"LabelNonDeductibleTaxRate__": {
+																			"type": "Label",
+																			"data": [
+																				"NonDeductibleTaxRate__"
+																			],
+																			"stamp": 79,
+																			"options": {
+																				"label": "_NonDeductibleTaxRate",
+																				"version": 0
+																			}
+																		},
+																		"NonDeductibleTaxRate__": {
+																			"type": "Decimal",
+																			"data": [
+																				"NonDeductibleTaxRate__"
+																			],
+																			"stamp": 78,
+																			"options": {
+																				"label": "_NonDeductibleTaxRate",
+																				"version": 2,
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"integer": false,
+																				"precision_internal": 3,
+																				"precision_current": 3,
+																				"activable": true,
+																				"width": "500",
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"precision_min": 2,
+																				"forceRoundCurrencyPrecision": false,
+																				"enablePlusMinus": false
+																			}
+																		},
+																		"LabelReceiver__": {
+																			"type": "Label",
+																			"data": [
+																				"Receiver__"
+																			],
+																			"stamp": 81,
+																			"options": {
+																				"label": "Receiver",
+																				"version": 0
+																			}
+																		},
+																		"Receiver__": {
+																			"type": "ShortText",
+																			"data": [
+																				"Receiver__"
+																			],
+																			"stamp": 80,
+																			"options": {
+																				"label": "Receiver",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"activable": true,
+																				"width": "500",
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"browsable": false,
+																				"version": 0
+																			}
+																		},
+																		"LabelEnergyConsumptionKgCO2ePerUnit__": {
+																			"type": "Label",
+																			"data": [
+																				"EnergyConsumptionKgCO2ePerUnit__"
+																			],
+																			"stamp": 83,
+																			"options": {
+																				"label": "_EnergyConsumptionKgCO2ePerUnit",
+																				"version": 0
+																			}
+																		},
+																		"EnergyConsumptionKgCO2ePerUnit__": {
+																			"type": "Decimal",
+																			"data": [
+																				"EnergyConsumptionKgCO2ePerUnit__"
+																			],
+																			"stamp": 82,
+																			"options": {
+																				"label": "_EnergyConsumptionKgCO2ePerUnit",
+																				"version": 2,
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"integer": false,
+																				"precision_internal": 6,
+																				"precision_current": 6,
+																				"activable": true,
+																				"width": "500",
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"enableRoundedStyle": false,
+																				"precision_min": 0,
+																				"precision_max_display": 6,
+																				"forceRoundCurrencyPrecision": false,
+																				"enablePlusMinus": false
+																			}
+																		},
+																		"LabelCostType__": {
+																			"type": "Label",
+																			"data": [
+																				"CostType__"
+																			],
+																			"stamp": 85,
+																			"options": {
+																				"label": "_CostType",
+																				"version": 0
+																			}
+																		},
+																		"CostType__": {
+																			"type": "ComboBox",
+																			"data": [
+																				"CostType__"
+																			],
+																			"stamp": 84,
+																			"options": {
+																				"label": "_CostType",
+																				"possibleValues": {
+																					"0": "",
+																					"1": "_OpEx",
+																					"2": "_CapEx"
+																				},
+																				"version": 1,
+																				"keyValueMode": true,
+																				"possibleKeys": {
+																					"0": "",
+																					"1": "OpEx",
+																					"2": "CapEx"
+																				},
+																				"activable": true,
+																				"width": 80,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"DataSourceOrigin": "Standalone",
+																				"DisplayedColumns": "",
+																				"maxNbLinesToDisplay": 10
+																			}
+																		},
+																		"LabelIsLocalPO__": {
+																			"type": "Label",
+																			"data": [
+																				"IsLocalPO__"
+																			],
+																			"stamp": 87,
+																			"options": {
+																				"label": "Is local PO_V2",
+																				"version": 0
+																			}
+																		},
+																		"IsLocalPO__": {
+																			"type": "CheckBox",
+																			"data": [
+																				"IsLocalPO__"
+																			],
+																			"stamp": 86,
+																			"options": {
+																				"label": "Is local PO_V2",
+																				"activable": true,
+																				"width": 230,
+																				"version": 0
+																			}
+																		},
+																		"LabelIsCreatedInERP__": {
+																			"type": "Label",
+																			"data": [
+																				"IsCreatedInERP__"
+																			],
+																			"stamp": 89,
+																			"options": {
+																				"label": "Is created in ERP",
+																				"version": 0
+																			}
+																		},
+																		"IsCreatedInERP__": {
+																			"type": "CheckBox",
+																			"data": [
+																				"IsCreatedInERP__"
+																			],
+																			"stamp": 88,
+																			"options": {
+																				"label": "Is created in ERP",
+																				"activable": true,
+																				"width": 230,
+																				"version": 0
+																			}
+																		},
+																		"LabelGRIV__": {
+																			"type": "Label",
+																			"data": [
+																				"GRIV__"
+																			],
+																			"stamp": 91,
+																			"options": {
+																				"label": "GR/IV",
+																				"version": 0
+																			}
+																		},
+																		"GRIV__": {
+																			"type": "CheckBox",
+																			"data": [
+																				"GRIV__"
+																			],
+																			"stamp": 90,
+																			"options": {
+																				"label": "GR/IV",
+																				"activable": true,
+																				"width": 230,
+																				"version": 0
+																			}
+																		},
+																		"LabelNoMoreInvoiceExpected__": {
+																			"type": "Label",
+																			"data": [
+																				"NoMoreInvoiceExpected__"
+																			],
+																			"stamp": 93,
+																			"options": {
+																				"label": "No more invoice expected",
+																				"version": 0
+																			}
+																		},
+																		"NoMoreInvoiceExpected__": {
+																			"type": "CheckBox",
+																			"data": [
+																				"NoMoreInvoiceExpected__"
+																			],
+																			"stamp": 92,
+																			"options": {
+																				"label": "No more invoice expected",
+																				"activable": true,
+																				"width": 230,
+																				"version": 0
+																			}
+																		},
+																		"LabelNoGoodsReceipt__": {
+																			"type": "Label",
+																			"data": [
+																				"NoGoodsReceipt__"
+																			],
+																			"stamp": 95,
+																			"options": {
+																				"label": "_NoGoodsReceipt",
+																				"version": 0
+																			}
+																		},
+																		"NoGoodsReceipt__": {
+																			"type": "CheckBox",
+																			"data": [
+																				"NoGoodsReceipt__"
+																			],
+																			"stamp": 94,
+																			"options": {
+																				"label": "_NoGoodsReceipt",
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"version": 0
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 96,
+					"options": {
+						"splitterType": "simple-h",
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 97,
+							"options": {
+								"label": "_Save",
+								"action": "savequit",
+								"submit": true,
+								"shortCut": "S",
+								"textSize": "S",
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 98,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"shortCut": "Q",
+								"textSize": "S",
+								"version": 0
+							}
+						},
+						"Delete": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 99,
+							"options": {
+								"label": "_Delete",
+								"action": "delete",
+								"submit": true,
+								"disabled": true,
+								"textSize": "S",
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <field deleted="0" format="" guid="LAYZ42294B18" id="I29QT400153E" label="BudgetID" length="128" name="BudgetID__" originalProcessID="NRVY1713" precision="0" processid="H29QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AI29QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/BudgetID__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:54</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>BudgetID</Label>
+        <Alias>AI29QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="GGBW667513" id="J29QT400153E" label="Company code" length="50" name="CompanyCode__" originalProcessID="NRVY1713" precision="0" processid="H29QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AJ29QT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/CompanyCode__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:54</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Company code</Label>
+        <Alias>AJ29QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"5100","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="WU9JG0000SG1" id="G29QT400153E" label="_ContractNumber_report" length="50" name="ContractNumber__" originalProcessID="NRVY1713" precision="0" processid="H29QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AG29QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ContractNumber__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:54</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ContractNumber_report</Label>
+        <Alias>AG29QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>false</Editable>
+        <SortOrder>
+        </SortOrder>
+        <SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+        <DisplayedColumns>Name__|ReferenceNumber__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>ReferenceNumber__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ExposedColumns>
+        </ExposedColumns>
+        <ProcessName>P2P - Contract</ProcessName>
+        <KeyColumnId>ReferenceNumber__</KeyColumnId>
+        <KeyAttribute>
+        </KeyAttribute>
+        <CustomFilter>
+        </CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="I1MIG0000VLT" id="K29QT400153E" label="_ContractSpendingID_report" length="50" name="ContractSpendingID__" originalProcessID="NRVY1713" precision="0" processid="H29QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AK29QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ContractSpendingID__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:54</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ContractSpendingID_report</Label>
+        <Alias>AK29QT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="HUME134934" id="L29QT400153E" label="Cost center" length="50" name="CostCenter__" originalProcessID="NRVY1713" precision="0" processid="H29QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AL29QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/CostCenter__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:54</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Cost center</Label>
+        <Alias>AL29QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="XBF3FP000M4H" id="M29QT400153E" label="_CostType_report" length="50" name="CostType__" originalProcessID="PAC242294E25" precision="0" processid="H29QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AM29QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/CostType__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:54</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Type>webaccess.Process.Columns.WithPossibleValues</Type>
+        <Label>_CostType_report</Label>
+        <Alias>AM29QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <TableName>
+        </TableName>
+        <DisplayedColumns>
+        </DisplayedColumns>
+        <DataSourceOrigin>Standalone</DataSourceOrigin>
+        <possibleKeys>
+OpEx
+CapEx</possibleKeys>
+        <SavedColumn>
+        </SavedColumn>
+        <possibleValues>
+_OpEx
+_CapEx</possibleValues>
+        <ProcessName>
+        </ProcessName>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="WMG2FP000IYP" id="N29QT400153E" label="Currency" length="50" name="Currency__" originalProcessID="NRVY1713" precision="0" processid="H29QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AN29QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Currency__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:54</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Currency</Label>
+        <Alias>AN29QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>true</Editable>
+        <TableName>CT#FF8QT400153E</TableName>
+        <SortOrder>ASC</SortOrder>
+        <DisplayedColumns>CurrencyFrom__|RatioFrom__|RatioTo__|Rate__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>CurrencyFrom__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ProcessName>P2P - Exchange rate__</ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <KeyAttribute>
+        </KeyAttribute>
+        <CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="HUME5868" id="O29QT400153E" label="Delivered amount" length="17" name="DeliveredAmount__" originalProcessID="NRVY1713" precision="2" processid="H29QT400153E" submitable="1" type="DECIMAL">
+    <properties>
+      <db>
+        <alias>AO29QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/DeliveredAmount__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:54</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Delivered amount</Label>
+        <Alias>AO29QT400153E</Alias>
+        <DecimalPrecision vartype="INT">2</DecimalPrecision>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="AYLN5869" id="P29QT400153E" label="Delivered quantity" length="17" name="DeliveredQuantity__" originalProcessID="NRVY1713" precision="5" processid="H29QT400153E" submitable="1" type="DECIMAL">
+    <properties>
+      <db>
+        <alias>AP29QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/DeliveredQuantity__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:54</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Delivered quantity</Label>
+        <Alias>AP29QT400153E</Alias>
+        <DecimalPrecision vartype="INT">5</DecimalPrecision>
+        <DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="AVHM1717" id="Q29QT400153E" label="Description" length="100" name="Description__" originalProcessID="NRVY1713" precision="0" processid="H29QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AQ29QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Description__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:54</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Description</Label>
+        <Alias>AQ29QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="UT8KG0000YRL" id="R29QT400153E" label="_EnergyConsumptionKgCO2ePerUnit_report" length="17" name="EnergyConsumptionKgCO2ePerUnit__" originalProcessID="NRVY1713" precision="6" processid="H29QT400153E" submitable="1" type="DECIMAL">
+    <properties>
+      <db>
+        <alias>AR29QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/EnergyConsumptionKgCO2ePerUnit__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:54</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_EnergyConsumptionKgCO2ePerUnit_report</Label>
+        <Alias>AR29QT400153E</Alias>
+        <DecimalPrecision vartype="INT">6</DecimalPrecision>
+        <DecimalPrecisionMaxDisplay>6</DecimalPrecisionMaxDisplay>
+        <DecimalPrecisionMinDisplay>0</DecimalPrecisionMinDisplay>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        <SetNullOnEmptyValue>1</SetNullOnEmptyValue>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="ZTB4FP000PA9" id="T29QT400153E" label="_FreeDimension1ID_report" length="500" name="FreeDimension1ID__" originalProcessID="NRVY1713" precision="0" processid="H29QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AT29QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/FreeDimension1ID__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:54</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_FreeDimension1ID_report</Label>
+        <Alias>AT29QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="SXE4FP000PA9" id="S29QT400153E" label="_FreeDimension1_report" length="500" name="FreeDimension1__" originalProcessID="NRVY1713" precision="0" processid="H29QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AS29QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/FreeDimension1__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:54</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_FreeDimension1_report</Label>
+        <Alias>AS29QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>false</Editable>
+        <SortOrder>ASC</SortOrder>
+        <DisplayedColumns>Description__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>Description__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ExposedColumns>
+        </ExposedColumns>
+        <ProcessName>P2P - Free Dimension1__</ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <KeyAttribute>
+        </KeyAttribute>
+        <CustomFilter>
+        </CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="PHQG134933" id="U29QT400153E" label="G/L account" length="50" name="GLAccount__" originalProcessID="NRVY1713" precision="0" processid="H29QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AU29QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/GLAccount__</fullname>
+        <jointable>AP - G/L accounts__</jointable>
+        <jointableid>CT#RQ8QT400153E</jointableid>
+        <defaultvalue>
+        </defaultvalue>
+        <joincondition>(&amp;(source.GLAccount__=dest.Account__)(source.CompanyCode__=dest.CompanyCode__))</joincondition>
+        <RecordLastWrite>2026-11-04 11:05:54</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>G/L account</Label>
+        <Alias>AU29QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="PHQGF9065" id="V29QT400153E" label="GR/IV" length="0" name="GRIV__" originalProcessID="NRVY1713" precision="0" processid="H29QT400153E" submitable="1" type="BOOL">
+    <properties>
+      <db>
+        <alias>AV29QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/GRIV__</fullname>
+        <defaultvalue>false</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:54</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>GR/IV</Label>
+        <Alias>AV29QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <ui>
+        <_type>Boolean</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="ZSQM133501" id="W29QT400153E" label="_Group_report" length="64" name="Group__" originalProcessID="NRVY1713" precision="0" processid="H29QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AW29QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Group__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:54</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Group_report</Label>
+        <Alias>AW29QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="UH74FP000M4H" id="X29QT400153E" label="_InternalOrder_report" length="50" name="InternalOrder__" originalProcessID="NRVY1713" precision="0" processid="H29QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AX29QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/InternalOrder__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:55</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_InternalOrder_report</Label>
+        <Alias>AX29QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>false</Editable>
+        <SortOrder>ASC</SortOrder>
+        <DisplayedColumns>InternalOrder__|Description__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>InternalOrder__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ExposedColumns>
+        </ExposedColumns>
+        <ProcessName>P2P - Internal order__</ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <KeyAttribute>
+        </KeyAttribute>
+        <CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="DMUC1720" id="Y29QT400153E" label="Invoiced amount" length="17" name="InvoicedAmount__" originalProcessID="NRVY1713" precision="2" processid="H29QT400153E" submitable="1" type="DECIMAL">
+    <properties>
+      <db>
+        <alias>AY29QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/InvoicedAmount__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:55</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Invoiced amount</Label>
+        <Alias>AY29QT400153E</Alias>
+        <DecimalPrecision vartype="INT">2</DecimalPrecision>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="FXQD1721" id="Z29QT400153E" label="Invoiced quantity" length="17" name="InvoicedQuantity__" originalProcessID="NRVY1713" precision="5" processid="H29QT400153E" submitable="1" type="DECIMAL">
+    <properties>
+      <db>
+        <alias>AZ29QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/InvoicedQuantity__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:55</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Invoiced quantity</Label>
+        <Alias>AZ29QT400153E</Alias>
+        <DecimalPrecision vartype="INT">5</DecimalPrecision>
+        <DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="PHQG42295224" id="A39QT400153E" label="Is created in ERP" length="0" name="IsCreatedInERP__" originalProcessID="NRVY1713" precision="0" processid="H29QT400153E" submitable="1" type="BOOL">
+    <properties>
+      <db>
+        <alias>AA39QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/IsCreatedInERP__</fullname>
+        <defaultvalue>false</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:55</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Is created in ERP</Label>
+        <Alias>AA39QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <ui>
+        <_type>Boolean</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="PHQG42294F50" id="B39QT400153E" label="Is local PO_V2" length="0" name="IsLocalPO__" originalProcessID="NRVY1713" precision="0" processid="H29QT400153E" submitable="1" type="BOOL">
+    <properties>
+      <db>
+        <alias>AB39QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/IsLocalPO__</fullname>
+        <defaultvalue>false</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:55</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Is local PO_V2</Label>
+        <Alias>AB39QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <ui>
+        <_type>Boolean</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="MAIU1716" id="C39QT400153E" label="Item number" length="80" name="ItemNumber__" originalProcessID="NRVY1713" precision="0" processid="H29QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AC39QT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ItemNumber__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:55</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Item number</Label>
+        <Alias>AC39QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="IV83FP000M4H" id="D39QT400153E" label="_ItemType" length="50" name="ItemType__" originalProcessID="NRVY1713" precision="0" processid="H29QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AD39QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ItemType__</fullname>
+        <defaultvalue>QuantityBased</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:55</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Type>webaccess.Process.Columns.WithPossibleValues</Type>
+        <Label>_ItemType</Label>
+        <Alias>AD39QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <TableName>
+        </TableName>
+        <DisplayedColumns>
+        </DisplayedColumns>
+        <DataSourceOrigin>Standalone</DataSourceOrigin>
+        <possibleKeys>QuantityBased
+AmountBased</possibleKeys>
+        <SavedColumn>
+        </SavedColumn>
+        <possibleValues>_QuantityBased
+_AmountBased</possibleValues>
+        <ProcessName>
+        </ProcessName>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="CNZ2FP000IYP" id="E39QT400153E" label="_NoGoodsReceipt_report" length="0" name="NoGoodsReceipt__" originalProcessID="NRVY1713" precision="0" processid="H29QT400153E" submitable="1" type="BOOL">
+    <properties>
+      <db>
+        <alias>AE39QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/NoGoodsReceipt__</fullname>
+        <defaultvalue>false</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:55</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_NoGoodsReceipt_report</Label>
+        <Alias>AE39QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>Boolean</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="QQVA77100FSX" id="F39QT400153E" label="No more invoice expected" length="0" name="NoMoreInvoiceExpected__" originalProcessID="NRVY1713" precision="0" processid="H29QT400153E" submitable="1" type="BOOL">
+    <properties>
+      <db>
+        <alias>AF39QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/NoMoreInvoiceExpected__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:55</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>No more invoice expected</Label>
+        <Alias>AF39QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <ui>
+        <_type>Boolean</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="AEZHG0000PA9" id="G39QT400153E" label="_NonDeductibleTaxRate_report" length="17" name="NonDeductibleTaxRate__" originalProcessID="NRVY1713" precision="3" processid="H29QT400153E" submitable="1" type="DECIMAL">
+    <properties>
+      <db>
+        <alias>AG39QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/NonDeductibleTaxRate__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:55</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_NonDeductibleTaxRate_report</Label>
+        <Alias>AG39QT400153E</Alias>
+        <DecimalPrecision vartype="INT">3</DecimalPrecision>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="PHQG42294B0B" id="H39QT400153E" label="Order date" length="0" name="OrderDate__" originalProcessID="NRVY1713" precision="0" processid="H29QT400153E" submitable="1" type="DATE">
+    <properties>
+      <db>
+        <alias>AH39QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/OrderDate__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:55</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Order date</Label>
+        <Alias>AH39QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>Date</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="YMPK1718" id="I39QT400153E" label="Ordered amount" length="17" name="OrderedAmount__" originalProcessID="NRVY1713" precision="2" processid="H29QT400153E" submitable="1" type="DECIMAL">
+    <properties>
+      <db>
+        <alias>AI39QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/OrderedAmount__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:55</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Ordered amount</Label>
+        <Alias>AI39QT400153E</Alias>
+        <DecimalPrecision vartype="INT">2</DecimalPrecision>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="HXDD1719" id="J39QT400153E" label="Ordered quantity" length="17" name="OrderedQuantity__" originalProcessID="NRVY1713" precision="5" processid="H29QT400153E" submitable="1" type="DECIMAL">
+    <properties>
+      <db>
+        <alias>AJ39QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/OrderedQuantity__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:55</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Ordered quantity</Label>
+        <Alias>AJ39QT400153E</Alias>
+        <DecimalPrecision vartype="INT">5</DecimalPrecision>
+        <DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="AFKI1715" id="K39QT400153E" label="Order number" length="50" name="OrderNumber__" originalProcessID="NRVY1713" precision="0" processid="H29QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AK39QT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/OrderNumber__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:55</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Order number</Label>
+        <Alias>AK39QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="YUHR63927" id="L39QT400153E" label="Part number" length="50" name="PartNumber__" originalProcessID="NRVY1713" precision="0" processid="H29QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AL39QT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/PartNumber__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:55</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Part number</Label>
+        <Alias>AL39QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="N2P110000M4H" id="M39QT400153E" label="_ProjectCode_report" length="50" name="ProjectCode__" originalProcessID="NRVY1713" precision="0" processid="H29QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AM39QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ProjectCode__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:55</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ProjectCode_report</Label>
+        <Alias>AM39QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="F888FP000VLT" id="N39QT400153E" label="_ProjectName_report" length="100" name="ProjectName__" originalProcessID="NRVY1713" precision="0" processid="H29QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AN39QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ProjectName__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:55</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ProjectName_report</Label>
+        <Alias>AN39QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="G888FP000VLT" id="O39QT400153E" label="_ProjectNumber_report" length="50" name="ProjectNumber__" originalProcessID="NRVY1713" precision="0" processid="H29QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AO39QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ProjectNumber__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:55</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ProjectNumber_report</Label>
+        <Alias>AO39QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="PHQG42294B40" id="P39QT400153E" label="Receiver" length="80" name="Receiver__" originalProcessID="NRVY1713" precision="0" processid="H29QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AP39QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Receiver__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:55</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Receiver</Label>
+        <Alias>AP39QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="A7G7000011XD" id="Q39QT400153E" label="_RequestedDeliveryDate_report" length="0" name="RequestedDeliveryDate__" originalProcessID="NRVY1713" precision="0" processid="H29QT400153E" submitable="1" type="DATE">
+    <properties>
+      <db>
+        <alias>AQ39QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/RequestedDeliveryDate__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:55</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_RequestedDeliveryDate_report</Label>
+        <Alias>AQ39QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Date</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="SOVX1722" id="R39QT400153E" label="Tax code" length="600" name="TaxCode__" originalProcessID="NRVY1713" precision="0" processid="H29QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AR39QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/TaxCode__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:55</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Tax code</Label>
+        <Alias>AR39QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="CMQEF27528" id="S39QT400153E" label="_Tax rate_report" length="17" name="TaxRate__" originalProcessID="NRVY1713" precision="3" processid="H29QT400153E" submitable="1" type="DECIMAL">
+    <properties>
+      <db>
+        <alias>AS39QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/TaxRate__</fullname>
+        <defaultvalue>0</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:55</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Tax rate_report</Label>
+        <Alias>AS39QT400153E</Alias>
+        <DecimalPrecision vartype="INT">3</DecimalPrecision>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"Tax rate associated to Tax code.\nUsed specifically for EBS for multi jurisdiction taxes. When one PO Line has multiple tax codes associated \n(so the tax code is not defined in the Tax Code table)","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="DINU00000IYP" id="T39QT400153E" label="_UnitOfMeasureCode_report" length="500" name="UnitOfMeasureCode__" originalProcessID="NRVY1713" precision="0" processid="H29QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AT39QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/UnitOfMeasureCode__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:55</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_UnitOfMeasureCode_report</Label>
+        <Alias>AT39QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="PKWQ63926" id="U39QT400153E" label="Unit price" length="17" name="UnitPrice__" originalProcessID="NRVY1713" precision="5" processid="H29QT400153E" submitable="1" type="DECIMAL">
+    <properties>
+      <db>
+        <alias>AU39QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/UnitPrice__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:55</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Unit price</Label>
+        <Alias>AU39QT400153E</Alias>
+        <DecimalPrecision vartype="INT">5</DecimalPrecision>
+        <DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="MHHX1714" id="V39QT400153E" label="Vendor number" length="50" name="VendorNumber__" originalProcessID="NRVY1713" precision="0" processid="H29QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AV39QT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/VendorNumber__</fullname>
+        <jointable>AP - Vendors__</jointable>
+        <jointableid>CT#SX8QT400153E</jointableid>
+        <defaultvalue>
+        </defaultvalue>
+        <joincondition>(&amp;(source.VendorNumber__=dest.Number__)(|(source.CompanyCode__=dest.CompanyCode__)(dest.CompanyCode__=)(dest.CompanyCode__!=*)))</joincondition>
+        <RecordLastWrite>2026-11-04 11:05:55</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Vendor number</Label>
+        <Alias>AV39QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="WH74FP000M4H" id="X39QT400153E" label="_WBSElementID_report" length="50" name="WBSElementID__" originalProcessID="NRVY1713" precision="0" processid="H29QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AX39QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/WBSElementID__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:55</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_WBSElementID_report</Label>
+        <Alias>AX39QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>true</Editable>
+        <SortOrder>ASC</SortOrder>
+        <DisplayedColumns>Description__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>WBSElement__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ExposedColumns>
+        </ExposedColumns>
+        <ProcessName>P2P - WBS Element__</ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <KeyAttribute>
+        </KeyAttribute>
+        <CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="VH74FP000M4H" id="W39QT400153E" label="_WBSElement_report" length="50" name="WBSElement__" originalProcessID="NRVY1713" precision="0" processid="H29QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AW39QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/WBSElement__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:55</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_WBSElement_report</Label>
+        <Alias>AW39QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>false</Editable>
+        <SortOrder>ASC</SortOrder>
+        <DisplayedColumns>WBSElement__|WBSElement__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>WBSElement__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ExposedColumns>
+        </ExposedColumns>
+        <ProcessName>P2P - WBS Element__</ProcessName>
+        <KeyColumnId>WBSElement__</KeyColumnId>
+        <KeyAttribute>WBSElementID__</KeyAttribute>
+        <CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <type id="KOLHG0000M4O" name="CT">
+  </type>
+</process>

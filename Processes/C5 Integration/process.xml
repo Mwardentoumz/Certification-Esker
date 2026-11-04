@@ -1,0 +1,2915 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:10:48" deleted="0" eskerapplication="P2P" global="0" id="WNFQT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="C5 Integration" needvalidation="0" ootofilter="" ootoversion="2" originalProcessID="LCA1000011XD" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="0" version="1" visibility="0">
+  <properties>
+    <dbIndex>
+      <AUTO_ABOFQT400153EA>&lt;Index&gt;&lt;Ref Name="ABOFQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_ABOFQT400153EA>
+      <AUTO_ADOFQT400153EA>&lt;Index&gt;&lt;Ref Name="ADOFQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_ADOFQT400153EA>
+      <AUTO_AEOFQT400153EA>&lt;Index&gt;&lt;Ref Name="AEOFQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AEOFQT400153EA>
+      <AUTO_AGOFQT400153EA>&lt;Index&gt;&lt;Ref Name="AGOFQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AGOFQT400153EA>
+      <AUTO_AJOFQT400153EA>&lt;Index&gt;&lt;Ref Name="AJOFQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AJOFQT400153EA>
+      <AUTO_AOOFQT400153EA>&lt;Index&gt;&lt;Ref Name="AOOFQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AOOFQT400153EA>
+    </dbIndex>
+    <externalvariables>
+      <NotificationProcessNameForC5>Update invoice with C5 Ack</NotificationProcessNameForC5>
+      <SFTPConfigurationNameForC5>EskerToEIntegration</SFTPConfigurationNameForC5>
+      <FTPFolderNameForC5>Out_C5</FTPFolderNameForC5>
+      <FTPAccountNameForC5>APInvoices</FTPAccountNameForC5>
+    </externalvariables>
+    <gdr>
+      <validationscriptIncludedScripts>Lib_AP_PeppolC5Reporting_Mapping_V12.0.566.0</validationscriptIncludedScripts>
+      <ValidationScript>"use strict";
+const errorState = 200;
+var DataExporter;
+(function (DataExporter) {
+    /**
+     * the following variables are used for exporting data:
+     * 	- SFTPConfigurationNameForC5
+     * 	- FTPAccountNameForC5
+     * 	- FTPFolderNameForC5
+     * 	- NotificationProcessNameForC5
+     **/
+    const notificationProcessName = Variable.GetValueAsString("NotificationProcessNameForC5");
+    const notificationProcessId = notificationProcessName ? Process.GetProcessID(notificationProcessName) : "";
+    const invoiceXmlFilePrefix = "Invoice";
+    const invoiceXmlFileSuffix = "_C5";
+    /**
+     * Try to guess the environment name parsing the OwnerID string looking for a sub-account
+     * @param ownerID
+     * @param ignoreDepartment
+     * @returns {string} the environment
+     */
+    function GuessEnvironment() {
+        const defaultEnvironment = "DEV";
+        const accountIdentifier = Lib.AP.PeppolC5Reporting.GuessEDIEnvironment(defaultEnvironment);
+        let environment = defaultEnvironment;
+        if (accountIdentifier === null) {
+            // Let's choose the default environment and log a trace if environment could not be extracted from ownerID
+            Log.Error("Unable to guess the environment from the OwnerID. Default environment " + defaultEnvironment + " is forced.");
+        }
+        else if (!["DEV", "QA", "PROD"].includes(accountIdentifier)) {
+            Log.Warn("Account identifier environment is not DEV, QA or PROD. Default environment " + defaultEnvironment + " is forced.");
+        }
+        else {
+            environment = accountIdentifier;
+        }
+        return environment;
+    }
+    /**
+     * Get the SFTP configuration to use
+     * @returns {string} the SFTP configuration coressponding to the environment
+     */
+    function GetSftpConfigurationName() {
+        let configuration = Variable.GetValueAsString("SFTPConfigurationNameForC5");
+        const isDEV = /^.*_DEV$/.exec(configuration);
+        const isQA = /^.*_QA$/.exec(configuration);
+        const isPROD = /^.*_PROD$/.exec(configuration);
+        if (isDEV) {
+            Log.Info("Use DEV EIntegration SFTP (determined from variable SFTPConfigurationNameForC5)");
+        }
+        else if (isQA) {
+            Log.Info("Use QA EIntegration SFTP (determined from variable SFTPConfigurationNameForC5)");
+        }
+        else if (isPROD) {
+            Log.Info("Use PROD EIntegration SFTP (determined from variable SFTPConfigurationNameForC5)");
+        }
+        else {
+            const environment = GuessEnvironment();
+            Log.Info(`Use ${environment} EIntegration SFTP (determined from ownerid)`);
+            configuration = `${configuration}_${environment}`;
+        }
+        return configuration;
+    }
+    /**
+     * Construct output path for the current SFTP configuration
+     * @returns {string} the output path
+     */
+    function GetOutputPath() {
+        let path = "";
+        const ftpAccountName = Variable.GetValueAsString("FTPAccountNameForC5");
+        const ftpFolderName = Variable.GetValueAsString("FTPFolderNameForC5");
+        if (ftpAccountName &amp;&amp; ftpAccountName !== "") {
+            path = `${ftpAccountName}\\`;
+        }
+        if (ftpFolderName &amp;&amp; ftpFolderName !== "") {
+            path += `${ftpFolderName}\\`;
+        }
+        return path;
+    }
+    /**
+    * Compute the full name of the xml file
+    * @returns {string} the xml file name
+    **/
+    function GetXmlFilename() {
+        return `${invoiceXmlFilePrefix}${Data.GetValue("msnex")}${invoiceXmlFileSuffix}`;
+    }
+    /**
+     * Retrieve the informations on the related supplier invoice
+     * @param supplierInvoiceRuidex the identifier of the invoice to retrieve
+     * @returns {xFormData} an xFormData of the invoice
+     */
+    function GetVIPData(supplierInvoiceRuidex) {
+        const query = Process.CreateQueryAsProcessAdmin();
+        query.SetSpecificTable("CDNAME#Vendor invoice");
+        query.SetAttributesList("*");
+        query.SetSearchInArchive(true);
+        const filter = Sys.Helpers.LdapUtil.FilterEqual("ruidex", supplierInvoiceRuidex).toString();
+        query.SetFilter(filter);
+        if (query.MoveFirst()) {
+            const trn = query.MoveNext();
+            if (trn) {
+                return trn.GetFormData();
+            }
+        }
+        return null;
+    }
+    /**
+     * Generate and write the pivot xml to the specified temporary file
+     * @param xmlFile a temporary file to write the xml to
+     * @returns {boolean} true is we manage to get invoice information or false otherwise
+     */
+    function GetXMLFile(xmlFile) {
+        const invoiceRuidex = Data.GetValue("InvoiceRuidEx__");
+        const vipData = GetVIPData(invoiceRuidex);
+        if (!vipData) {
+            return false;
+        }
+        const ediDocContent = Lib.AP.PeppolC5Reporting.Mapping.GenerateEdiDocument(vipData, notificationProcessId, GetXmlFilename());
+        TemporaryFile.Append(xmlFile, ediDocContent);
+        Attach.AddAttach(GetXmlFilename(), ediDocContent, "xml", "utf8");
+        return true;
+    }
+    /**
+     * Attach the pivot XML file to a CopyFile transport.
+     * @param {object} transport A xTransport on which the file will be attached
+     * @param {string} attachName The name of the attachment
+     * @returns {boolean} true is we manage to get invoice information or false otherwise
+     */
+    function AttachXmlFile(transport, attachName) {
+        //Create tempFile to avoid memory consumption issue
+        const tempInvoiceXml = TemporaryFile.CreateFile("xml", "utf8");
+        const succeed = GetXMLFile(tempInvoiceXml);
+        if (succeed) {
+            // Attach temporary file instead of using string
+            // Attach the temporary File to the transport.
+            const attachVars = transport.AddAttachEx(tempInvoiceXml).GetVars();
+            attachVars.AddValue_String("AttachEncoding", "UTF-8", true);
+            attachVars.AddValue_String("AttachOutputName", attachName, true);
+            attachVars.AddValue_String("AttachToDisplay", "converted", true);
+        }
+        return succeed;
+    }
+    /**
+     * Create a CopyFile transport to copy invoice data in a SFTP folder
+     */
+    function ToSFTP() {
+        let ruidex = null;
+        try {
+            const copyFileTransport = Process.CreateTransport("Copy");
+            if (copyFileTransport) {
+                const vars = copyFileTransport.GetUninheritedVars();
+                vars.AddValue_String("CopyPath", GetSftpConfigurationName(), true);
+                vars.AddValue_String("CreateIfNotExist", 1, true);
+                // Attach the XML file to the Copy transport
+                const succeed = AttachXmlFile(copyFileTransport, `${GetOutputPath()}${GetXmlFilename()}`);
+                if (succeed) {
+                    copyFileTransport.Process();
+                    ruidex = copyFileTransport.GetUninheritedVars().GetValue_String("RuidEx", 0);
+                    Log.Info("CopyFile RuidEx : " + ruidex);
+                }
+                else {
+                    Log.Error("Unable to get invoice information");
+                }
+            }
+            else {
+                Log.Error("Unable to create transport");
+            }
+        }
+        catch (err) {
+            Log.Error(err);
+            Log.Error("Unable to send the data XML data file to the specified SFTP configuration, please check your configuration.");
+        }
+        return ruidex;
+    }
+    DataExporter.ToSFTP = ToSFTP;
+})(DataExporter || (DataExporter = {}));
+var Action;
+(function (Action) {
+    function Reprocess() {
+        // Clear status and error
+        Variable.SetValueAsString("exportStatus", "");
+        Data.SetError("InvoiceSubmissionStatus__", "");
+        Data.SetValue("NeedValidation", false);
+    }
+    Action.Reprocess = Reprocess;
+    function ContinueAfterAck(exportStatus, actionResult) {
+        var _a;
+        // should finalize the C5 Integration
+        if (exportStatus === "inprogress") {
+            Log.Info("Continue after receiving the C5 ack");
+        }
+        else {
+            Log.Warn(`C5 ack received but the export status is not the expected one ('${exportStatus}' instead of 'inprogress')`);
+        }
+        Variable.SetValueAsString("exportStatus", "done");
+        const C5StatusCode = parseInt(Data.GetValue("C5Status_Code__"), 10);
+        if (C5StatusCode &gt; 0) {
+            const C5StatusType = Data.GetValue("C5Status_Type__");
+            const C5StatusMessage = Data.GetValue("C5Status_Message__");
+            Data.SetError("InvoiceSubmissionStatus__", `Error ack received: ${C5StatusCode} - ${C5StatusType} - ${C5StatusMessage}`);
+            if (((_a = Variable.GetValueAsString("AllowResubmit")) === null || _a === void 0 ? void 0 : _a.toLowerCase()) !== "true") {
+                actionResult.setInError = true;
+            }
+        }
+        actionResult.preventApproval = false;
+    }
+    Action.ContinueAfterAck = ContinueAfterAck;
+})(Action || (Action = {}));
+function handleActionResult(actionResult) {
+    // avoid the double execution of validation script to create 2 sftp outputs
+    if (actionResult.shouldExport &amp;&amp; DataExporter.ToSFTP()) {
+        Variable.SetValueAsString("exportStatus", "inprogress");
+        // wait for the acknoledgement
+        Log.Info("-- Wait for C5 Ack --");
+        Process.WaitForUpdate();
+        actionResult.preventApproval = false;
+    }
+    if (actionResult.preventApproval) {
+        Log.Info("handle all exceptions manually");
+        Process.PreventApproval();
+    }
+    else if (actionResult.setInError) {
+        Log.Info("Error ack received");
+        Data.SetValue("State", errorState);
+    }
+}
+function SetArchiveDuration() {
+    const archiveDuration = Variable.GetValueAsString("SupplierInvoice_ArchiveDuration__");
+    if (archiveDuration) {
+        Data.SetValue("ArchiveDuration", archiveDuration);
+    }
+}
+/**
+ * main entry point of the validation script
+ */
+function validationMain() {
+    var _a, _b;
+    const currentState = Data.GetValue("State");
+    const actionType = (_a = Data.GetActionType()) === null || _a === void 0 ? void 0 : _a.toLowerCase();
+    const actionName = (_b = Data.GetActionName()) === null || _b === void 0 ? void 0 : _b.toLowerCase();
+    const exportStatus = Variable.GetValueAsString("exportStatus") || "";
+    const actionResult = {
+        preventApproval: true,
+        setInError: false,
+        shouldExport: exportStatus === ""
+    };
+    Log.Info(`action type: ${actionType}`);
+    Log.Info(`action name: ${actionName}`);
+    Log.Info(`exportStatus: ${exportStatus}`);
+    Log.Info(`shouldExport: ${actionResult.shouldExport}`);
+    Log.Info(`currentState: ${currentState}`);
+    SetArchiveDuration();
+    if (currentState === 0) {
+        if (actionType === "reprocess") {
+            Action.Reprocess();
+        }
+        Log.Info(`Skip state ${currentState}`);
+    }
+    else {
+        if (actionName === "continueafterc5ack") {
+            Action.ContinueAfterAck(exportStatus, actionResult);
+        }
+        handleActionResult(actionResult);
+    }
+}
+validationMain();
+//# sourceMappingURL=validationscript.js.map</ValidationScript>
+      <AllowTagCoverPages>true</AllowTagCoverPages>
+      <AllowTagNewDocuments>true</AllowTagNewDocuments>
+      <AllowTagAttachments>true</AllowTagAttachments>
+      <AllowRemovePages>true</AllowRemovePages>
+      <AllowSwapPages>true</AllowSwapPages>
+    </gdr>
+    <lg>
+      <process_da>{
+	"_C5 information": "Transmission til skattemyndigheder",
+	"_C5Status_Code": "Kode",
+	"_C5Status_Code_report": "Statuskode",
+	"_C5Status_Date": "Dato",
+	"_C5Status_Date_report": "Statusdato",
+	"_C5Status_Message": "Meddelelse",
+	"_C5Status_Message_report": "Meddelelse",
+	"_C5Status_Type": "Type",
+	"_C5Status_Type_report": "Statustype",
+	"_Company code": "Virksomhedskode",
+	"_Company code_report": "Virksomhedskode",
+	"_Document UUID": "Dokument-id",
+	"_Document UUID_report": "Dokument-id",
+	"_ERP Invoice number": "Fakturanummer i ERP",
+	"_ERP Invoice number_report": "Fakturanummer i ERP",
+	"_Invoice information": "Fakturaoplysninger",
+	"_Invoice number": "Fakturanummer",
+	"_Invoice number_report": "Fakturanummer",
+	"_Invoice RuidEx": "Udvidet id for faktura",
+	"_Invoice RuidEx_report": "Udvidet id for faktura",
+	"_Invoice submission datetime": "Afsendelsesdato",
+	"_Invoice submission datetime_report": "Afsendelsesdato",
+	"_Invoice submission status": "Afsendelsesstatus",
+	"_Invoice submission status_report": "Afsendelsesstatus",
+	"_IRAS acknowledgment ID": "Skattemyndighedens bekræftelses-id",
+	"_IRAS acknowledgment ID_report": "Skattemyndighedens bekræftelses-id",
+	"_Last status": "Statusoplysninger",
+	"_Order number": "Ordrenummer",
+	"_Order number_report": "Ordrenummer",
+	"_Peppol ID": "Afsendelse af Peppol-id",
+	"_Peppol ID_report": "Afsendelse af Peppol-id",
+	"_Related invoice": "Link til faktura",
+	"_Related invoice_report": "Link til faktura",
+	"_Transmission UUID": "Transmissions-id",
+	"_Transmission UUID_report": "Transmissions-id",
+	"_Vendor name": "Leverandørnavn",
+	"_Vendor name_report": "Leverandørnavn",
+	"_Vendor number": "Leverandørnummer",
+	"_Vendor number_report": "Leverandørnummer",
+	"C5 Integration": "Transmission af e-fakturering for Peppol CTC  "
+}</process_da>
+      <process_de>{
+	"_C5 information": "Übermittlung an Steuerbehörde",
+	"_C5Status_Code": "Code",
+	"_C5Status_Code_report": "Statuscode",
+	"_C5Status_Date": "Datum",
+	"_C5Status_Date_report": "Statusdatum",
+	"_C5Status_Message": "Nachricht",
+	"_C5Status_Message_report": "Nachricht",
+	"_C5Status_Type": "Typ",
+	"_C5Status_Type_report": "Statustyp",
+	"_Company code": "Buchungskreis",
+	"_Company code_report": "Buchungskreis",
+	"_Document UUID": "Dokumenten-ID",
+	"_Document UUID_report": "Dokumenten-ID",
+	"_ERP Invoice number": "ERP-Rechnungsnummer",
+	"_ERP Invoice number_report": "ERP-Rechnungsnummer",
+	"_Invoice information": "Rechnungsdetails",
+	"_Invoice number": "Rechnungsnummer",
+	"_Invoice number_report": "Rechnungsnummer",
+	"_Invoice RuidEx": "Erweiterte Rechnungs-ID",
+	"_Invoice RuidEx_report": "Erweiterte Rechnungs-ID",
+	"_Invoice submission datetime": "Übermittlungsdatum",
+	"_Invoice submission datetime_report": "Übermittlungsdatum",
+	"_Invoice submission status": "Übermittlungsstatus",
+	"_Invoice submission status_report": "Übermittlungsstatus",
+	"_IRAS acknowledgment ID": "Bestätigungs-ID der Steuerbehörde",
+	"_IRAS acknowledgment ID_report": "Bestätigungs-ID der Steuerbehörde",
+	"_Last status": "Statusdetails",
+	"_Order number": "Bestellnummer",
+	"_Order number_report": "Bestellnummer",
+	"_Peppol ID": "Peppol-Übermittlungs-ID",
+	"_Peppol ID_report": "Peppol-Übermittlungs-ID",
+	"_Related invoice": "Link zur Rechnung",
+	"_Related invoice_report": "Link zur Rechnung",
+	"_Transmission UUID": "Übertragungs-ID",
+	"_Transmission UUID_report": "Übertragungs-ID",
+	"_Vendor name": "Lieferantenname",
+	"_Vendor name_report": "Lieferantenname",
+	"_Vendor number": "Lieferantennummer",
+	"_Vendor number_report": "Lieferantennummer",
+	"C5 Integration": "E-Berichterstattungs-Übertragung (Peppol CTC)"
+}</process_de>
+      <process_ja>{
+	"_C5 information": "税務当局への送信",
+	"_C5Status_Code": "Code",
+	"_C5Status_Code_report": "ステータスコード",
+	"_C5Status_Date": "日付",
+	"_C5Status_Date_report": "ステータス日時",
+	"_C5Status_Message": "メッセージ",
+	"_C5Status_Message_report": "メッセージ",
+	"_C5Status_Type": "タイプ",
+	"_C5Status_Type_report": "ステータスタイプ",
+	"_Company code": "会社コード",
+	"_Company code_report": "会社コード",
+	"_Document UUID": "ドキュメントID",
+	"_Document UUID_report": "ドキュメントID",
+	"_ERP Invoice number": "ERP 請求書番号",
+	"_ERP Invoice number_report": "ERP 請求書番号",
+	"_Invoice information": "請求書詳細",
+	"_Invoice number": "請求書番号",
+	"_Invoice number_report": "請求書番号",
+	"_Invoice RuidEx": "請求書拡張ID",
+	"_Invoice RuidEx_report": "請求書拡張ID",
+	"_Invoice submission datetime": "送信日",
+	"_Invoice submission datetime_report": "送信日",
+	"_Invoice submission status": "送信ステータス",
+	"_Invoice submission status_report": "送信ステータス",
+	"_IRAS acknowledgment ID": "税務当局の確認ID",
+	"_IRAS acknowledgment ID_report": "税務当局の確認ID",
+	"_Last status": "ステータスの詳細",
+	"_Order number": "注文番号",
+	"_Order number_report": "注文番号",
+	"_Peppol ID": "送信のPeppol ID",
+	"_Peppol ID_report": "送信のPeppol ID",
+	"_Related invoice": "請求書へのリンク",
+	"_Related invoice_report": "請求書へのリンク",
+	"_Transmission UUID": "送信ID",
+	"_Transmission UUID_report": "送信ID",
+	"_Vendor name": "仕入先名",
+	"_Vendor name_report": "仕入先名",
+	"_Vendor number": "仕入先番号",
+	"_Vendor number_report": "仕入先番号",
+	"C5 Integration": "Peppol CTC電子レポートトランスミッション"
+}</process_ja>
+      <process_en>{
+	"_C5 information": "Tax Authority Transmission",
+	"_C5Status_Code": "Code",
+	"_C5Status_Code_report": "Status code",
+	"_C5Status_Date": "Date",
+	"_C5Status_Date_report": "Status date",
+	"_C5Status_Message": "Message",
+	"_C5Status_Message_report": "Message",
+	"_C5Status_Type": "Type",
+	"_C5Status_Type_report": "Status type",
+	"_Company code": "Company code",
+	"_Company code_report": "Company code",
+	"_Document UUID": "Document ID",
+	"_Document UUID_report": "Document ID",
+	"_ERP Invoice number": "ERP invoice number",
+	"_ERP Invoice number_report": "ERP invoice number",
+	"_Invoice information": "Invoice Details",
+	"_Invoice number": "Invoice number",
+	"_Invoice number_report": "Invoice number",
+	"_Invoice RuidEx": "Invoice extended ID",
+	"_Invoice RuidEx_report": "Invoice extended ID",
+	"_Invoice submission datetime": "Submission date",
+	"_Invoice submission datetime_report": "Submission date",
+	"_Invoice submission status": "Submission status",
+	"_Invoice submission status_report": "Submission status",
+	"_IRAS acknowledgment ID": "Tax authority acknowledgment ID",
+	"_IRAS acknowledgment ID_report": "Tax authority acknowledgment ID",
+	"_Last status": "Status Details",
+	"_Order number": "Order number",
+	"_Order number_report": "Order number",
+	"_Peppol ID": "Submission Peppol ID",
+	"_Peppol ID_report": "Submission Peppol ID",
+	"_Related invoice": "Link to invoice",
+	"_Related invoice_report": "Link to invoice",
+	"_Transmission UUID": "Transmission ID",
+	"_Transmission UUID_report": "Transmission ID",
+	"_Vendor name": "Supplier name",
+	"_Vendor name_report": "Supplier name",
+	"_Vendor number": "Supplier number",
+	"_Vendor number_report": "Supplier number",
+	"C5 Integration": "Peppol CTC e-reporting transmission  "
+}</process_en>
+      <process_es>{
+	"_C5 information": "Transmisión a la autoridad fiscal",
+	"_C5Status_Code": "Código",
+	"_C5Status_Code_report": "Código de estado",
+	"_C5Status_Date": "Fecha",
+	"_C5Status_Date_report": "Fecha de estado",
+	"_C5Status_Message": "Mensaje",
+	"_C5Status_Message_report": "Mensaje",
+	"_C5Status_Type": "Tipo",
+	"_C5Status_Type_report": "Tipo de estado",
+	"_Company code": "Código de empresa",
+	"_Company code_report": "Código de empresa",
+	"_Document UUID": "ID del documento",
+	"_Document UUID_report": "ID del documento",
+	"_ERP Invoice number": "Número de factura en el ERP",
+	"_ERP Invoice number_report": "Número de factura en el ERP",
+	"_Invoice information": "Detalles de la factura",
+	"_Invoice number": "Número de factura",
+	"_Invoice number_report": "Número de factura",
+	"_Invoice RuidEx": "Id. largo de la factura",
+	"_Invoice RuidEx_report": "Id. largo de la factura",
+	"_Invoice submission datetime": "Fecha de envío",
+	"_Invoice submission datetime_report": "Fecha de envío",
+	"_Invoice submission status": "Estado del envío",
+	"_Invoice submission status_report": "Estado del envío",
+	"_IRAS acknowledgment ID": "ID de acuse de recibo de la autoridad fiscal",
+	"_IRAS acknowledgment ID_report": "ID de acuse de recibo de la autoridad fiscal",
+	"_Last status": "Detalles del estado",
+	"_Order number": "Número de pedido",
+	"_Order number_report": "Número de pedido",
+	"_Peppol ID": "ID Peppol de envío",
+	"_Peppol ID_report": "ID Peppol de envío",
+	"_Related invoice": "Enlace a la factura",
+	"_Related invoice_report": "Enlace a la factura",
+	"_Transmission UUID": "ID de la transmisión",
+	"_Transmission UUID_report": "ID de la transmisión",
+	"_Vendor name": "Nombre proveedor",
+	"_Vendor name_report": "Nombre proveedor",
+	"_Vendor number": "Número de proveedor",
+	"_Vendor number_report": "Número de proveedor",
+	"C5 Integration": "Transmisión de informes electrónicos Peppol CTC"
+}</process_es>
+      <process_fr>{
+	"_C5 information": "Transmission à l'administration fiscale",
+	"_C5Status_Code": "Code",
+	"_C5Status_Code_report": "Code de l'état",
+	"_C5Status_Date": "Date",
+	"_C5Status_Date_report": "Date de l'état",
+	"_C5Status_Message": "Message",
+	"_C5Status_Message_report": "Message",
+	"_C5Status_Type": "Type",
+	"_C5Status_Type_report": "Type d'état",
+	"_Company code": "Code société",
+	"_Company code_report": "Code société",
+	"_Document UUID": "ID du document",
+	"_Document UUID_report": "ID du document",
+	"_ERP Invoice number": "Identifiant ERP de la facture",
+	"_ERP Invoice number_report": "Identifiant ERP de la facture",
+	"_Invoice information": "Détails de la facture",
+	"_Invoice number": "Numéro de facture",
+	"_Invoice number_report": "Numéro de facture",
+	"_Invoice RuidEx": "Identifiant long de la facture",
+	"_Invoice RuidEx_report": "Identifiant long de la facture",
+	"_Invoice submission datetime": "Date de soumission",
+	"_Invoice submission datetime_report": "Date de soumission",
+	"_Invoice submission status": "État de la soumission",
+	"_Invoice submission status_report": "État de la soumission",
+	"_IRAS acknowledgment ID": "ID d’accusé de réception de l'administration fiscale",
+	"_IRAS acknowledgment ID_report": "ID d’accusé de réception de l'administration fiscale",
+	"_Last status": "Détails de l'état",
+	"_Order number": "Numéro de commande",
+	"_Order number_report": "Numéro de commande",
+	"_Peppol ID": "ID Peppol de soumission",
+	"_Peppol ID_report": "ID Peppol de soumission",
+	"_Related invoice": "Lien vers la facture",
+	"_Related invoice_report": "Lien vers la facture",
+	"_Transmission UUID": "ID de la transmission",
+	"_Transmission UUID_report": "ID de la transmission",
+	"_Vendor name": "Nom du fournisseur",
+	"_Vendor name_report": "Nom du fournisseur",
+	"_Vendor number": "Numéro du fournisseur",
+	"_Vendor number_report": "Numéro du fournisseur",
+	"C5 Integration": "Transmission e-reporting Peppol CTC"
+}</process_fr>
+      <process_nl-NL>{
+	"_C5 information": "Transmissie Belastingdienst",
+	"_C5Status_Code": "Code",
+	"_C5Status_Code_report": "Statuscode",
+	"_C5Status_Date": "Datum",
+	"_C5Status_Date_report": "Statuscode",
+	"_C5Status_Message": "Bericht",
+	"_C5Status_Message_report": "Bericht",
+	"_C5Status_Type": "Type",
+	"_C5Status_Type_report": "Statustype",
+	"_Company code": "Bedrijfscode",
+	"_Company code_report": "Bedrijfscode",
+	"_Document UUID": "Document-ID",
+	"_Document UUID_report": "Document-ID",
+	"_ERP Invoice number": "ERP-factuurnummer",
+	"_ERP Invoice number_report": "ERP-factuurnummer",
+	"_Invoice information": "Factuurgegevens",
+	"_Invoice number": "Factuurnummer",
+	"_Invoice number_report": "Factuurnummer",
+	"_Invoice RuidEx": "Uitgebreide factuur-ID",
+	"_Invoice RuidEx_report": "Uitgebreide factuur-ID",
+	"_Invoice submission datetime": "Datum invoering",
+	"_Invoice submission datetime_report": "Datum invoering",
+	"_Invoice submission status": "Indieningsstatus",
+	"_Invoice submission status_report": "Indieningsstatus",
+	"_IRAS acknowledgment ID": "Tax Authority ID-erkenning",
+	"_IRAS acknowledgment ID_report": "Tax Authority ID-erkenning",
+	"_Last status": "Statusdetails ",
+	"_Order number": "Bestelnummer",
+	"_Order number_report": "Bestelnummer",
+	"_Peppol ID": "Peppol-ID indienen.",
+	"_Peppol ID_report": "Peppol-ID indienen.",
+	"_Related invoice": "Koppeling naar factuur",
+	"_Related invoice_report": "Koppeling naar factuur",
+	"_Transmission UUID": "Transmissie-ID",
+	"_Transmission UUID_report": "Transmissie-ID",
+	"_Vendor name": "Naam leverancier",
+	"_Vendor name_report": "Naam leverancier",
+	"_Vendor number": "Nummer leverancier",
+	"_Vendor number_report": "Nummer leverancier",
+	"C5 Integration": "Peppol CTC e-rapportage transmissie  "
+}</process_nl-NL>
+      <process_pl>{
+	"_C5 information": "Transmisja do organu podatkowego",
+	"_C5Status_Code": "Kod",
+	"_C5Status_Code_report": "Kod statusu",
+	"_C5Status_Date": "Data",
+	"_C5Status_Date_report": "Data statusu",
+	"_C5Status_Message": "Wiadomość",
+	"_C5Status_Message_report": "Wiadomość",
+	"_C5Status_Type": "Typ statusu",
+	"_C5Status_Type_report": "Typ statusu",
+	"_Company code": "Kod firmy",
+	"_Company code_report": "Kod firmy",
+	"_Document UUID": "Id. dokumentu",
+	"_Document UUID_report": "Id. dokumentu",
+	"_ERP Invoice number": "Numer faktury w systemie ERP",
+	"_ERP Invoice number_report": "Numer faktury w systemie ERP",
+	"_Invoice information": "Szczegóły faktury",
+	"_Invoice number": "Numer faktury",
+	"_Invoice number_report": "Numer faktury",
+	"_Invoice RuidEx": "Rozszerzony id. faktury",
+	"_Invoice RuidEx_report": "Rozszerzony id. faktury",
+	"_Invoice submission datetime": "Data przesłania",
+	"_Invoice submission datetime_report": "Data przesłania",
+	"_Invoice submission status": "Status przesyłania",
+	"_Invoice submission status_report": "Status przesyłania",
+	"_IRAS acknowledgment ID": "Id. potwierdzenia organu podatkowego",
+	"_IRAS acknowledgment ID_report": "Id. potwierdzenia organu podatkowego",
+	"_Last status": "Szczegóły statusu",
+	"_Order number": "Numer zamówienia",
+	"_Order number_report": "Numer zamówienia",
+	"_Peppol ID": "Id. Peppol przesłania",
+	"_Peppol ID_report": "Id. Peppol przesłania",
+	"_Related invoice": "Link do faktury",
+	"_Related invoice_report": "Link do faktury",
+	"_Transmission UUID": "Id. transmisji",
+	"_Transmission UUID_report": "Id. transmisji",
+	"_Vendor name": "Nazwa dostawcy",
+	"_Vendor name_report": "Nazwa dostawcy",
+	"_Vendor number": "Numer dostawcy",
+	"_Vendor number_report": "Numer dostawcy",
+	"C5 Integration": "Transmisja e-raportowania według Peppol CTC"
+}</process_pl>
+      <process_it>{
+	"_C5 information": "Trasmissione all'autorità fiscale",
+	"_C5Status_Code": "Codice",
+	"_C5Status_Code_report": "Codice stato",
+	"_C5Status_Date": "Data",
+	"_C5Status_Date_report": "Data dello stato",
+	"_C5Status_Message": "Messaggio",
+	"_C5Status_Message_report": "Messaggio",
+	"_C5Status_Type": "Tipo",
+	"_C5Status_Type_report": "Tipo di stato",
+	"_Company code": "Codice società",
+	"_Company code_report": "Codice società",
+	"_Document UUID": "ID documento",
+	"_Document UUID_report": "ID documento",
+	"_ERP Invoice number": "Numero fattura ERP",
+	"_ERP Invoice number_report": "Numero fattura ERP",
+	"_Invoice information": "Dettagli fattura",
+	"_Invoice number": "Numero fattura",
+	"_Invoice number_report": "Numero fattura",
+	"_Invoice RuidEx": "ID esteso fattura",
+	"_Invoice RuidEx_report": "ID esteso fattura",
+	"_Invoice submission datetime": "Data di invio",
+	"_Invoice submission datetime_report": "Data di invio",
+	"_Invoice submission status": "Stato dell'invio",
+	"_Invoice submission status_report": "Stato dell'invio",
+	"_IRAS acknowledgment ID": "ID conferma di ricezione dell'autorità fiscale",
+	"_IRAS acknowledgment ID_report": "ID conferma di ricezione dell'autorità fiscale",
+	"_Last status": "Dettagli stato",
+	"_Order number": "Numero ordine",
+	"_Order number_report": "Numero ordine",
+	"_Peppol ID": "ID Peppol di invio",
+	"_Peppol ID_report": "ID Peppol di invio",
+	"_Related invoice": "Collegamento fattura",
+	"_Related invoice_report": "Collegamento fattura",
+	"_Transmission UUID": "ID trasmissione",
+	"_Transmission UUID_report": "ID trasmissione",
+	"_Vendor name": "Nome fornitore",
+	"_Vendor name_report": "Nome fornitore",
+	"_Vendor number": "Numero fornitore",
+	"_Vendor number_report": "Numero fornitore",
+	"C5 Integration": "Trasmissione e-reporting Peppol CTC"
+}</process_it>
+      <process_sk>{
+	"_C5 information": "Prenos daňového úradu",
+	"_C5Status_Code": "Kód",
+	"_C5Status_Code_report": "Stavový kód",
+	"_C5Status_Date": "Dátum potvrdenia",
+	"_C5Status_Date_report": "Dátum stavu",
+	"_C5Status_Message": "Správa",
+	"_C5Status_Message_report": "Správa",
+	"_C5Status_Type": "Typ stavu",
+	"_C5Status_Type_report": "Typ stavu",
+	"_Company code": "Kód spoločnosti",
+	"_Company code_report": "Kód spoločnosti",
+	"_Document UUID": "ID dokumentu",
+	"_Document UUID_report": "ID dokumentu",
+	"_ERP Invoice number": "Číslo faktúry ERP",
+	"_ERP Invoice number_report": "Číslo faktúry ERP",
+	"_Invoice information": "Detaily faktúry",
+	"_Invoice number": "Faktúra č.",
+	"_Invoice number_report": "Faktúra č.",
+	"_Invoice RuidEx": "Rozšírené ID faktúry",
+	"_Invoice RuidEx_report": "Rozšírené ID faktúry",
+	"_Invoice submission datetime": "Dátum predloženia",
+	"_Invoice submission datetime_report": "Dátum predloženia",
+	"_Invoice submission status": "Stav podania",
+	"_Invoice submission status_report": "Stav podania",
+	"_IRAS acknowledgment ID": "ID potvrdenia daňového úradu",
+	"_IRAS acknowledgment ID_report": "ID potvrdenia daňového úradu",
+	"_Last status": "Podrobnosti o stave",
+	"_Order number": "Číslo objednávky",
+	"_Order number_report": "Číslo objednávky",
+	"_Peppol ID": "Peppol ID odoslania",
+	"_Peppol ID_report": "Peppol ID odoslania",
+	"_Related invoice": "Odkaz na faktúru",
+	"_Related invoice_report": "Odkaz na faktúru",
+	"_Transmission UUID": "ID prenosu",
+	"_Transmission UUID_report": "ID prenosu",
+	"_Vendor name": "Názov dodávateľa",
+	"_Vendor name_report": "Názov dodávateľa",
+	"_Vendor number": "Číslo dodávateľa",
+	"_Vendor number_report": "Číslo dodávateľa",
+	"C5 Integration": "Prenos elektronických správ Peppol CTC  "
+}</process_sk>
+      <process_zh-CN>{
+	"_C5 information": "税务机关传输",
+	"_C5Status_Code": "代码",
+	"_C5Status_Code_report": "状态代码",
+	"_C5Status_Date": "日期",
+	"_C5Status_Date_report": "状态日期",
+	"_C5Status_Message": "消息",
+	"_C5Status_Message_report": "消息",
+	"_C5Status_Type": "类型",
+	"_C5Status_Type_report": "状态类型",
+	"_Company code": "公司代码",
+	"_Company code_report": "公司代码",
+	"_Document UUID": "文档 ID",
+	"_Document UUID_report": "文档 ID",
+	"_ERP Invoice number": "ERP 发票号码",
+	"_ERP Invoice number_report": "ERP 发票号码",
+	"_Invoice information": "发票详情",
+	"_Invoice number": "发票号",
+	"_Invoice number_report": "发票号",
+	"_Invoice RuidEx": "发票扩展ID",
+	"_Invoice RuidEx_report": "发票扩展ID",
+	"_Invoice submission datetime": "提交日期",
+	"_Invoice submission datetime_report": "提交日期",
+	"_Invoice submission status": "提交状态",
+	"_Invoice submission status_report": "提交状态",
+	"_IRAS acknowledgment ID": "税务机关确认 ID",
+	"_IRAS acknowledgment ID_report": "税务机关确认 ID",
+	"_Last status": "状态详情",
+	"_Order number": "订单号",
+	"_Order number_report": "订单号",
+	"_Peppol ID": "Peppol 提交 ID",
+	"_Peppol ID_report": "Peppol 提交 ID",
+	"_Related invoice": "账单链接",
+	"_Related invoice_report": "账单链接",
+	"_Transmission UUID": "传输 ID",
+	"_Transmission UUID_report": "传输 ID",
+	"_Vendor name": "供应商名称",
+	"_Vendor name_report": "供应商名称",
+	"_Vendor number": "供应商编号",
+	"_Vendor number_report": "供应商编号",
+	"C5 Integration": "Peppol CTC 电子报告传输"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"_C5 information": "Transmissão à autoridade fiscal",
+	"_C5Status_Code": "Código",
+	"_C5Status_Code_report": "Código de status",
+	"_C5Status_Date": "Datum",
+	"_C5Status_Date_report": "Data do status",
+	"_C5Status_Message": "Mensagem",
+	"_C5Status_Message_report": "Mensagem",
+	"_C5Status_Type": "Tipo",
+	"_C5Status_Type_report": "Tipo de status",
+	"_Company code": "Código da empresa",
+	"_Company code_report": "Código da empresa",
+	"_Document UUID": "ID do documento",
+	"_Document UUID_report": "ID do documento",
+	"_ERP Invoice number": "Número da fatura ERP",
+	"_ERP Invoice number_report": "Número da fatura ERP",
+	"_Invoice information": "Detalhes da fatura",
+	"_Invoice number": "Número da fatura",
+	"_Invoice number_report": "Número da fatura",
+	"_Invoice RuidEx": "ID estendido da fatura",
+	"_Invoice RuidEx_report": "ID estendido da fatura",
+	"_Invoice submission datetime": "Data de submissão",
+	"_Invoice submission datetime_report": "Data de submissão",
+	"_Invoice submission status": "Status do envio",
+	"_Invoice submission status_report": "Status do envio",
+	"_IRAS acknowledgment ID": "ID de confirmação de recebimento da autoridade fiscal",
+	"_IRAS acknowledgment ID_report": "ID de confirmação de recebimento da autoridade fiscal",
+	"_Last status": "Detalhes do estado",
+	"_Order number": "Número de pedido",
+	"_Order number_report": "Número de pedido",
+	"_Peppol ID": "ID Peppol de envio",
+	"_Peppol ID_report": "ID Peppol de envio",
+	"_Related invoice": "Link para fatura",
+	"_Related invoice_report": "Link para fatura",
+	"_Transmission UUID": "ID da transmissão",
+	"_Transmission UUID_report": "ID da transmissão",
+	"_Vendor name": "Nome do fornecedor",
+	"_Vendor name_report": "Nome do fornecedor",
+	"_Vendor number": "Número do fornecedor",
+	"_Vendor number_report": "Número do fornecedor",
+	"C5 Integration": "Transmissão de relatórios eletrônicos Peppol CTC"
+}</process_pt-BR>
+    </lg>
+    <ocr>
+      <trade-off>accurate</trade-off>
+      <image-ocr-timeout>
+      </image-ocr-timeout>
+      <image-binarization>no</image-binarization>
+      <image-draft-fax>no</image-draft-fax>
+      <image-despeckle>no</image-despeckle>
+      <allowed-language>0</allowed-language>
+      <image-resolution-enhancement>auto</image-resolution-enhancement>
+      <pdf-processing>no-ocr</pdf-processing>
+      <ocr_engine>Nuance210</ocr_engine>
+      <extractionAdditionalOptions>
+      </extractionAdditionalOptions>
+    </ocr>
+    <process>
+      <flowtype>processing</flowtype>
+      <ocrpreset>scan</ocrpreset>
+      <EnableCatchNetworkError>
+      </EnableCatchNetworkError>
+      <EnableNegativeNumbersBetweenBrackets>true</EnableNegativeNumbersBetweenBrackets>
+      <panelLabelWidth>
+      </panelLabelWidth>
+      <homepagelabel>C5 Integration</homepagelabel>
+      <enableflexibleauditing>
+      </enableflexibleauditing>
+      <enableflexibleediting>
+      </enableflexibleediting>
+      <enableflexibleteaching>
+      </enableflexibleteaching>
+      <disableocr>
+      </disableocr>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <disableautolearning>true</disableautolearning>
+      <backgroundprocessingthreshold>
+      </backgroundprocessingthreshold>
+      <EnablePreviewPrecomputation>
+      </EnablePreviewPrecomputation>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <enablerounddecimal>true</enablerounddecimal>
+      <pdfNormalizeFilter>
+      </pdfNormalizeFilter>
+      <archiveDuration>0</archiveDuration>
+      <ocrpagestoprocess>0</ocrpagestoprocess>
+      <ScriptEngineType>2</ScriptEngineType>
+      <UseActionNameWithScriptApproval>true</UseActionNameWithScriptApproval>
+      <displayWidth>
+      </displayWidth>
+      <AllowUploadAttachment>1</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>1</AllowUploadReferenceDocument>
+      <RemovePointWhenCastingIntToString>true</RemovePointWhenCastingIntToString>
+      <UseCultureFormat>true</UseCultureFormat>
+      <AllowRetryExtractCD>true</AllowRetryExtractCD>
+      <TransportName>CustomData</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+      <printToProcess>
+      </printToProcess>
+    </process>
+    <ui>
+      <CustomScriptDebug>false</CustomScriptDebug>
+      <customscriptIncludedScripts>Sys/Sys_Helpers</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Sys/Sys_Helpers_LdapUtil</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Sys/Sys_Helpers_Promise</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Sys/Sys_GenericAPI_Client</customscriptIncludedScripts>
+      <CustomScriptReadonly>true</CustomScriptReadonly>
+      <CustomScript>"use strict";
+/**
+ * Upate the field RelatedInvoice__ to display an anchor link to the invoice and store the ruidex if necessary
+ * @param invoiceLinkedRuidex the ruidex of the related invoice
+ * @param updateValues flag to store the related invoice ruidex
+ */
+function updateRelatedInvoiceLink(invoiceLinkedRuidex, updateValues = true) {
+    if (invoiceLinkedRuidex) {
+        Controls.RelatedInvoice__.SetReadOnly(true);
+        let displayAsOptions = { type: "Link" };
+        if (!Controls.RelatedInvoice__.GetValue()) {
+            displayAsOptions.text = Data.GetValue("InvoiceNumber__");
+        }
+        Controls.RelatedInvoice__.DisplayAs(displayAsOptions);
+        const openMessageParams = {
+            ruidEx: invoiceLinkedRuidex,
+            goBackOnQuit: false,
+            inNewTab: true,
+            additionalParameters: {
+                OnQuit: "CleanAndClose"
+            }
+        };
+        Controls.RelatedInvoice__.OnClick = function () {
+            Process.OpenMessage(openMessageParams);
+        };
+    }
+    else {
+        if (updateValues) {
+            Controls.RelatedInvoice__.SetValue("");
+        }
+        Controls.RelatedInvoice__.DisplayAs();
+        Controls.RelatedInvoice__.OnClick = () =&gt; void 0;
+        Controls.RelatedInvoice__.SetReadOnly(false);
+        Controls.RelatedInvoice__.SetBrowsable(true);
+        Controls.RelatedInvoice__.SetRemovable(false);
+    }
+    if (updateValues) {
+        Controls.InvoiceRuidEx__.SetValue(invoiceLinkedRuidex);
+    }
+}
+/**
+ * Event: handle the selection of item when browsing RelatedInvoice__
+ * @param item Selected item
+ */
+function onRelatedInvoiceSelectItem(item) {
+    if (item) {
+        updateRelatedInvoiceLink(item.GetValue("RuidEx"), true);
+    }
+    else {
+        Log.Error("onRelatedInvoiceSelectItem called with a null item");
+    }
+}
+/**
+ * Event: handle the manual change of RelatedInvoice__
+ */
+function onRelatedInvoiceChange() {
+    if (!Controls.InvoiceRuidEx__.GetValue() &amp;&amp; Controls.RelatedInvoice__.GetValue()) {
+        const filter = Sys.Helpers.LdapUtil.FilterAnd(Sys.Helpers.LdapUtil.FilterEqualOrExist("CompanyCode__", Data.GetValue("CompanyCode__")), Sys.Helpers.LdapUtil.FilterEqual("VendorNumber__", Data.GetValue("VendorNumber__")), Sys.Helpers.LdapUtil.FilterEqual("InvoiceNumber__", Data.GetValue("RelatedInvoice__"))).toString();
+        Sys.GenericAPI.PromisedQuery({
+            table: "CDNAME#Vendor invoice",
+            filter: filter,
+            attributes: ["RuidEx", "InvoiceNumber__", "OwnerID"],
+            maxRecords: 10,
+            additionalOptions: {
+                searchInArchive: true,
+                queryOptions: "FastSearch=1"
+            }
+        }).Then((queryResults) =&gt; {
+            if (queryResults &amp;&amp; queryResults.length &gt; 0) {
+                if (queryResults.length === 1) {
+                    updateRelatedInvoiceLink(queryResults[0].RuidEx, true);
+                }
+                else {
+                    Controls.RelatedInvoice__.SetWarning(Language.Translate("_Several invoices matching warning"));
+                }
+            }
+            else {
+                Controls.RelatedInvoice__.SetWarning(Language.Translate("_No matching invoice warning"));
+            }
+        });
+    }
+}
+/**
+ * Initialize the RelatedInvoice__ combobox setting required attributes (ruidex) and search criterii
+ */
+function initializeRelatedInvoiceDatabaseComboBox() {
+    function queryForAutoComplete(callback, table, attributes, filter, sort, maxRecords) {
+        const filterWithVendorNumber = Sys.Helpers.LdapUtil.FilterAnd(filter, Sys.Helpers.LdapUtil.FilterEqual("VendorNumber__", Data.GetValue("VendorNumber__"))).toString();
+        const promiseOptions = {
+            table: table,
+            filter: filterWithVendorNumber,
+            attributes: attributes.split("|"),
+            sortOrder: sort,
+            maxRecords: maxRecords
+        };
+        const promise = Sys.GenericAPI.PromisedQuery(promiseOptions).Then(queryResult =&gt; {
+            return queryResult;
+        });
+        callback(promise);
+    }
+    const getCustomizeFieldFunc = (fieldName) =&gt; {
+        return function (searchField) {
+            searchField.SetValue(Controls[fieldName].GetValue());
+        };
+    };
+    // Customize autocomplete query, to add filter on VendorNumber__
+    let configSharedBetweenQueries = {};
+    Controls.RelatedInvoice__.SetCustomQuery(null, null, queryForAutoComplete, configSharedBetweenQueries);
+    // Customize browse window and prefill VendorNumber__
+    Controls.RelatedInvoice__.ClearSearchFields();
+    Controls.RelatedInvoice__.AddSearchField({
+        type: "Text",
+        label: "_Invoice number",
+        id: "InvoiceNumber__",
+        customize: getCustomizeFieldFunc("RelatedInvoice__")
+    });
+    Controls.RelatedInvoice__.AddSearchField({
+        type: "Text",
+        label: "_Vendor number",
+        id: "VendorNumber__",
+        customize: getCustomizeFieldFunc("VendorNumber__")
+    });
+    // Customize filter and add RuidEx field retrieval
+    Controls.RelatedInvoice__.SetAttributes("RuidEx|OwnerID");
+    const ruidex = Data.GetValue("RuidEx");
+    const filter = Sys.Helpers.LdapUtil.FilterAnd(Controls.RelatedInvoice__.GetCustomFilter(false), Sys.Helpers.LdapUtil.FilterNot(Sys.Helpers.LdapUtil.FilterEqual("RuidEx", ruidex))).toString();
+    Controls.RelatedInvoice__.SetFilter(filter);
+}
+/**
+ * Main function that should be run first
+ */
+function run() {
+    Controls.RelatedInvoice__.OnSelectItem = onRelatedInvoiceSelectItem;
+    Controls.RelatedInvoice__.OnChange = onRelatedInvoiceChange;
+    initializeRelatedInvoiceDatabaseComboBox();
+    // ensure the update comes after dom loading
+    setTimeout(() =&gt; updateRelatedInvoiceLink(Data.GetValue("InvoiceRuidEx__"), false));
+}
+run();
+//# sourceMappingURL=customscript.js.map</CustomScript>
+      <restorationPanel>DataPanel</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 74,
+	"*": {
+		"GDRData": {
+			"type": "GDRData",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"version": 0
+			}
+		},
+		"OCRParams": {
+			"type": "OCRParams",
+			"data": [],
+			"stamp": 2,
+			"options": {
+				"version": 0
+			}
+		},
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 3,
+			"options": {
+				"splitterType": "complex",
+				"style": "FlexibleFormLight",
+				"maxwidth": "",
+				"backColor": "text-backgroundcolor-default",
+				"footerStyle": "default",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 4,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 5,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 6,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-top": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 7,
+									"options": {
+										"autosize": true,
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"height": "25%"
+										},
+										"hidden": false,
+										"hideSeparator": true
+									},
+									"*": {
+										"form-content-top-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 8,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"DocumentsPanel": {
+													"type": "PanelDocument",
+													"data": [],
+													"stamp": 9,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": false,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"sameHeightAsSiblings": false,
+														"label": "_Documents",
+														"hidden": false,
+														"version": 0
+													},
+													"*": {
+														"Document": {
+															"type": "Documents",
+															"data": [
+																"documentscontroldata"
+															],
+															"stamp": 10,
+															"options": {
+																"downloadButton": true,
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								},
+								"form-content-bottom": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 11,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": "25%",
+											"left": "0%",
+											"height": "75%"
+										},
+										"hidden": false
+									},
+									"*": {
+										"form-content-left": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 12,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "0%",
+													"width": "45%"
+												},
+												"hidden": false,
+												"hideSeparator": true
+											},
+											"*": {
+												"form-content-left-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 13,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"DataPanel": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 14,
+															"options": {
+																"border": {},
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": true,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_Invoice information",
+																"leftImageURL": "",
+																"removeMargins": false,
+																"elementsAlignment": "left",
+																"labelLength": "300px",
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 15,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {
+																			"CompanyCode__": "LabelCompanyCode__",
+																			"LabelCompanyCode__": "CompanyCode__",
+																			"VendorNumber__": "LabelVendorNumber__",
+																			"LabelVendorNumber__": "VendorNumber__",
+																			"VendorName__": "LabelVendorName__",
+																			"LabelVendorName__": "VendorName__",
+																			"InvoiceNumber__": "LabelInvoiceNumber__",
+																			"LabelInvoiceNumber__": "InvoiceNumber__",
+																			"RelatedInvoice__": "LabelRelatedInvoice__",
+																			"LabelRelatedInvoice__": "RelatedInvoice__",
+																			"OrderNumber__": "LabelOrderNumber__",
+																			"LabelOrderNumber__": "OrderNumber__",
+																			"ERPInvoiceNumber__": "LabelERPInvoiceNumber__",
+																			"LabelERPInvoiceNumber__": "ERPInvoiceNumber__",
+																			"InvoiceRuidEx__": "LabelInvoiceRuidEx__",
+																			"LabelInvoiceRuidEx__": "InvoiceRuidEx__"
+																		}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 16,
+																			"options": {
+																				"version": 0,
+																				"lines": 8,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"LabelCompanyCode__": {
+																						"line": 1,
+																						"column": 1
+																					},
+																					"CompanyCode__": {
+																						"line": 1,
+																						"column": 2
+																					},
+																					"LabelVendorNumber__": {
+																						"line": 2,
+																						"column": 1
+																					},
+																					"VendorNumber__": {
+																						"line": 2,
+																						"column": 2
+																					},
+																					"LabelVendorName__": {
+																						"line": 3,
+																						"column": 1
+																					},
+																					"VendorName__": {
+																						"line": 3,
+																						"column": 2
+																					},
+																					"LabelInvoiceNumber__": {
+																						"line": 4,
+																						"column": 1
+																					},
+																					"InvoiceNumber__": {
+																						"line": 4,
+																						"column": 2
+																					},
+																					"LabelRelatedInvoice__": {
+																						"line": 5,
+																						"column": 1
+																					},
+																					"RelatedInvoice__": {
+																						"line": 5,
+																						"column": 2
+																					},
+																					"LabelOrderNumber__": {
+																						"line": 6,
+																						"column": 1
+																					},
+																					"OrderNumber__": {
+																						"line": 6,
+																						"column": 2
+																					},
+																					"LabelERPInvoiceNumber__": {
+																						"line": 7,
+																						"column": 1
+																					},
+																					"ERPInvoiceNumber__": {
+																						"line": 7,
+																						"column": 2
+																					},
+																					"LabelInvoiceRuidEx__": {
+																						"line": 8,
+																						"column": 1
+																					},
+																					"InvoiceRuidEx__": {
+																						"line": 8,
+																						"column": 2
+																					}
+																				},
+																				"colspans": [
+																					[],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[]
+																				]
+																			},
+																			"*": {
+																				"LabelCompanyCode__": {
+																					"type": "Label",
+																					"data": [
+																						"CompanyCode__"
+																					],
+																					"stamp": 18,
+																					"options": {
+																						"label": "_Company code",
+																						"version": 0
+																					}
+																				},
+																				"CompanyCode__": {
+																					"type": "DatabaseComboBox",
+																					"data": [
+																						"CompanyCode__"
+																					],
+																					"stamp": 17,
+																					"options": {
+																						"label": "_Company code",
+																						"readonly": false,
+																						"browsable": true,
+																						"activable": true,
+																						"width": "250",
+																						"PreFillFTS": true,
+																						"fTSmaxRecords": "20",
+																						"autoCompleteSearchMode": "startswith",
+																						"searchMode": "matches",
+																						"version": 0
+																					}
+																				},
+																				"LabelVendorNumber__": {
+																					"type": "Label",
+																					"data": [
+																						"VendorNumber__"
+																					],
+																					"stamp": 20,
+																					"options": {
+																						"label": "_Vendor number",
+																						"version": 0
+																					}
+																				},
+																				"VendorNumber__": {
+																					"type": "DatabaseComboBox",
+																					"data": [
+																						"VendorNumber__"
+																					],
+																					"stamp": 19,
+																					"options": {
+																						"label": "_Vendor number",
+																						"readonly": false,
+																						"activable": true,
+																						"width": "250",
+																						"fTSmaxRecords": "20",
+																						"PreFillFTS": true,
+																						"browsable": true,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"autoCompleteSearchMode": "startswith",
+																						"searchMode": "matches",
+																						"helpIconPosition": "Right",
+																						"minNbLines": 1,
+																						"maxNbLines": 1,
+																						"version": 0
+																					}
+																				},
+																				"LabelVendorName__": {
+																					"type": "Label",
+																					"data": [
+																						"VendorName__"
+																					],
+																					"stamp": 22,
+																					"options": {
+																						"label": "_Vendor name",
+																						"version": 0
+																					}
+																				},
+																				"VendorName__": {
+																					"type": "DatabaseComboBox",
+																					"data": [
+																						"VendorName__"
+																					],
+																					"stamp": 21,
+																					"options": {
+																						"label": "_Vendor name",
+																						"readonly": false,
+																						"activable": true,
+																						"width": "250",
+																						"fTSmaxRecords": "20",
+																						"PreFillFTS": true,
+																						"browsable": true,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"autoCompleteSearchMode": "startswith",
+																						"searchMode": "matches",
+																						"version": 0
+																					}
+																				},
+																				"LabelInvoiceNumber__": {
+																					"type": "Label",
+																					"data": [
+																						"InvoiceNumber__"
+																					],
+																					"stamp": 24,
+																					"options": {
+																						"label": "_Invoice number",
+																						"version": 0
+																					}
+																				},
+																				"InvoiceNumber__": {
+																					"type": "ShortText",
+																					"data": [
+																						"InvoiceNumber__"
+																					],
+																					"stamp": 23,
+																					"options": {
+																						"label": "_Invoice number",
+																						"readonly": false,
+																						"hidden": true,
+																						"activable": true,
+																						"width": "250",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 0
+																					}
+																				},
+																				"LabelRelatedInvoice__": {
+																					"type": "Label",
+																					"data": [
+																						"RelatedInvoice__"
+																					],
+																					"stamp": 26,
+																					"options": {
+																						"label": "_Invoice number",
+																						"version": 0
+																					}
+																				},
+																				"RelatedInvoice__": {
+																					"type": "DatabaseComboBox",
+																					"data": [
+																						"RelatedInvoice__"
+																					],
+																					"stamp": 25,
+																					"options": {
+																						"label": "_Invoice number",
+																						"version": 1,
+																						"autoCompleteSearchMode": "startswith",
+																						"searchMode": "contains",
+																						"activable": true,
+																						"width": "250",
+																						"minNbLines": 1,
+																						"maxNbLines": 1,
+																						"PreFillFTS": true,
+																						"fTSmaxRecords": "20"
+																					}
+																				},
+																				"LabelOrderNumber__": {
+																					"type": "Label",
+																					"data": [
+																						"OrderNumber__"
+																					],
+																					"stamp": 28,
+																					"options": {
+																						"label": "_Order number",
+																						"version": 0
+																					}
+																				},
+																				"OrderNumber__": {
+																					"type": "ShortText",
+																					"data": [
+																						"OrderNumber__"
+																					],
+																					"stamp": 27,
+																					"options": {
+																						"label": "_Order number",
+																						"readonly": false,
+																						"activable": true,
+																						"width": "250",
+																						"browsable": true,
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 0
+																					}
+																				},
+																				"LabelERPInvoiceNumber__": {
+																					"type": "Label",
+																					"data": [
+																						"ERPInvoiceNumber__"
+																					],
+																					"stamp": 30,
+																					"options": {
+																						"label": "_ERP Invoice number",
+																						"version": 0
+																					}
+																				},
+																				"ERPInvoiceNumber__": {
+																					"type": "DatabaseComboBox",
+																					"data": [
+																						"ERPInvoiceNumber__"
+																					],
+																					"stamp": 29,
+																					"options": {
+																						"label": "_ERP Invoice number",
+																						"version": 1,
+																						"activable": true,
+																						"width": "250",
+																						"fTSmaxRecords": "20",
+																						"browsable": false,
+																						"readonly": false,
+																						"autocompletable": false,
+																						"autoCompleteSearchMode": "startswith",
+																						"searchMode": "matches"
+																					}
+																				},
+																				"LabelInvoiceRuidEx__": {
+																					"type": "Label",
+																					"data": [
+																						"InvoiceRuidEx__"
+																					],
+																					"stamp": 32,
+																					"options": {
+																						"label": "_Invoice RuidEx",
+																						"hidden": false,
+																						"version": 0
+																					}
+																				},
+																				"InvoiceRuidEx__": {
+																					"type": "ShortText",
+																					"data": [
+																						"InvoiceRuidEx__"
+																					],
+																					"stamp": 31,
+																					"options": {
+																						"label": "_Invoice RuidEx",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": "250",
+																						"hidden": true,
+																						"readonly": false
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-4": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 33,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"C5_information": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 34,
+															"options": {
+																"border": {},
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": true,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_C5 information",
+																"hidden": false,
+																"leftImageURL": "",
+																"removeMargins": false,
+																"elementsAlignment": "left",
+																"labelLength": "300px",
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 35,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {
+																			"TransmissionUUID__": "LabelTransmissionUUID__",
+																			"LabelTransmissionUUID__": "TransmissionUUID__",
+																			"DocumentUUID__": "LabelDocumentUUID__",
+																			"LabelDocumentUUID__": "DocumentUUID__",
+																			"PeppolID__": "LabelPeppolID__",
+																			"LabelPeppolID__": "PeppolID__",
+																			"InvoiceSubmissionDateTime__": "LabelInvoiceSubmissionDateTime__",
+																			"LabelInvoiceSubmissionDateTime__": "InvoiceSubmissionDateTime__",
+																			"InvoiceSubmissionStatus__": "LabelInvoiceSubmissionStatus__",
+																			"LabelInvoiceSubmissionStatus__": "InvoiceSubmissionStatus__",
+																			"IRASAcknowledgmentID__": "LabelIRASAcknowledgmentID__",
+																			"LabelIRASAcknowledgmentID__": "IRASAcknowledgmentID__"
+																		}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 36,
+																			"options": {
+																				"version": 0,
+																				"lines": 6,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"LabelTransmissionUUID__": {
+																						"line": 1,
+																						"column": 1
+																					},
+																					"TransmissionUUID__": {
+																						"line": 1,
+																						"column": 2
+																					},
+																					"LabelDocumentUUID__": {
+																						"line": 2,
+																						"column": 1
+																					},
+																					"DocumentUUID__": {
+																						"line": 2,
+																						"column": 2
+																					},
+																					"LabelPeppolID__": {
+																						"line": 3,
+																						"column": 1
+																					},
+																					"PeppolID__": {
+																						"line": 3,
+																						"column": 2
+																					},
+																					"LabelInvoiceSubmissionDateTime__": {
+																						"line": 4,
+																						"column": 1
+																					},
+																					"InvoiceSubmissionDateTime__": {
+																						"line": 4,
+																						"column": 2
+																					},
+																					"LabelInvoiceSubmissionStatus__": {
+																						"line": 5,
+																						"column": 1
+																					},
+																					"InvoiceSubmissionStatus__": {
+																						"line": 5,
+																						"column": 2
+																					},
+																					"LabelIRASAcknowledgmentID__": {
+																						"line": 6,
+																						"column": 1
+																					},
+																					"IRASAcknowledgmentID__": {
+																						"line": 6,
+																						"column": 2
+																					}
+																				},
+																				"colspans": [
+																					[],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[]
+																				]
+																			},
+																			"*": {
+																				"LabelTransmissionUUID__": {
+																					"type": "Label",
+																					"data": [
+																						"TransmissionUUID__"
+																					],
+																					"stamp": 38,
+																					"options": {
+																						"label": "_Transmission UUID",
+																						"version": 0
+																					}
+																				},
+																				"TransmissionUUID__": {
+																					"type": "ShortText",
+																					"data": [
+																						"TransmissionUUID__"
+																					],
+																					"stamp": 37,
+																					"options": {
+																						"label": "_Transmission UUID",
+																						"readonly": true,
+																						"activable": true,
+																						"width": "250",
+																						"browsable": false,
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 0
+																					}
+																				},
+																				"LabelDocumentUUID__": {
+																					"type": "Label",
+																					"data": [
+																						"DocumentUUID__"
+																					],
+																					"stamp": 40,
+																					"options": {
+																						"label": "_Document UUID",
+																						"version": 0
+																					}
+																				},
+																				"DocumentUUID__": {
+																					"type": "ShortText",
+																					"data": [
+																						"DocumentUUID__"
+																					],
+																					"stamp": 39,
+																					"options": {
+																						"label": "_Document UUID",
+																						"readonly": true,
+																						"activable": true,
+																						"width": "250",
+																						"browsable": false,
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 0
+																					}
+																				},
+																				"LabelPeppolID__": {
+																					"type": "Label",
+																					"data": [
+																						"PeppolID__"
+																					],
+																					"stamp": 42,
+																					"options": {
+																						"label": "_Peppol ID",
+																						"version": 0
+																					}
+																				},
+																				"PeppolID__": {
+																					"type": "ShortText",
+																					"data": [
+																						"PeppolID__"
+																					],
+																					"stamp": 41,
+																					"options": {
+																						"label": "_Peppol ID",
+																						"readonly": true,
+																						"activable": true,
+																						"width": "250",
+																						"browsable": false,
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 0
+																					}
+																				},
+																				"LabelInvoiceSubmissionDateTime__": {
+																					"type": "Label",
+																					"data": [
+																						"InvoiceSubmissionDateTime__"
+																					],
+																					"stamp": 44,
+																					"options": {
+																						"label": "_Invoice submission datetime",
+																						"version": 0
+																					}
+																				},
+																				"InvoiceSubmissionDateTime__": {
+																					"type": "RealDateTime",
+																					"data": [
+																						"InvoiceSubmissionDateTime__"
+																					],
+																					"stamp": 43,
+																					"options": {
+																						"label": "_Invoice submission datetime",
+																						"readonly": true,
+																						"displayLongFormat": true,
+																						"activable": true,
+																						"width": 250,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"version": 0
+																					}
+																				},
+																				"LabelInvoiceSubmissionStatus__": {
+																					"type": "Label",
+																					"data": [
+																						"InvoiceSubmissionStatus__"
+																					],
+																					"stamp": 46,
+																					"options": {
+																						"label": "_Invoice submission status",
+																						"version": 0
+																					}
+																				},
+																				"InvoiceSubmissionStatus__": {
+																					"type": "ShortText",
+																					"data": [
+																						"InvoiceSubmissionStatus__"
+																					],
+																					"stamp": 45,
+																					"options": {
+																						"label": "_Invoice submission status",
+																						"readonly": true,
+																						"activable": true,
+																						"width": "250",
+																						"browsable": false,
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 0
+																					}
+																				},
+																				"LabelIRASAcknowledgmentID__": {
+																					"type": "Label",
+																					"data": [
+																						"IRASAcknowledgmentID__"
+																					],
+																					"stamp": 48,
+																					"options": {
+																						"label": "_IRAS acknowledgment ID",
+																						"version": 0
+																					}
+																				},
+																				"IRASAcknowledgmentID__": {
+																					"type": "ShortText",
+																					"data": [
+																						"IRASAcknowledgmentID__"
+																					],
+																					"stamp": 47,
+																					"options": {
+																						"label": "_IRAS acknowledgment ID",
+																						"readonly": true,
+																						"activable": true,
+																						"width": "250",
+																						"browsable": false,
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 0
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-5": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 49,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"Last_status": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 50,
+															"options": {
+																"border": {},
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": true,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_Last status",
+																"hidden": true,
+																"leftImageURL": "",
+																"removeMargins": false,
+																"elementsAlignment": "left",
+																"labelLength": "300px",
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 51,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {
+																			"C5Status_Date__": "LabelC5Status_Date__",
+																			"LabelC5Status_Date__": "C5Status_Date__",
+																			"C5Status_Code__": "LabelC5Status_Code__",
+																			"LabelC5Status_Code__": "C5Status_Code__",
+																			"C5Status_Type__": "LabelC5Status_Type__",
+																			"LabelC5Status_Type__": "C5Status_Type__",
+																			"C5Status_Message__": "LabelC5Status_Message__",
+																			"LabelC5Status_Message__": "C5Status_Message__"
+																		}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 52,
+																			"options": {
+																				"version": 0,
+																				"lines": 4,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"LabelC5Status_Date__": {
+																						"line": 1,
+																						"column": 1
+																					},
+																					"C5Status_Date__": {
+																						"line": 1,
+																						"column": 2
+																					},
+																					"LabelC5Status_Code__": {
+																						"line": 2,
+																						"column": 1
+																					},
+																					"C5Status_Code__": {
+																						"line": 2,
+																						"column": 2
+																					},
+																					"LabelC5Status_Type__": {
+																						"line": 3,
+																						"column": 1
+																					},
+																					"C5Status_Type__": {
+																						"line": 3,
+																						"column": 2
+																					},
+																					"LabelC5Status_Message__": {
+																						"line": 4,
+																						"column": 1
+																					},
+																					"C5Status_Message__": {
+																						"line": 4,
+																						"column": 2
+																					}
+																				},
+																				"colspans": [
+																					[],
+																					[],
+																					[],
+																					[]
+																				]
+																			},
+																			"*": {
+																				"LabelC5Status_Date__": {
+																					"type": "Label",
+																					"data": [
+																						"C5Status_Date__"
+																					],
+																					"stamp": 54,
+																					"options": {
+																						"label": "_C5Status_Date",
+																						"version": 0
+																					}
+																				},
+																				"C5Status_Date__": {
+																					"type": "RealDateTime",
+																					"data": [
+																						"C5Status_Date__"
+																					],
+																					"stamp": 53,
+																					"options": {
+																						"label": "_C5Status_Date",
+																						"readonly": true,
+																						"displayLongFormat": true,
+																						"activable": true,
+																						"width": 250,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"version": 0
+																					}
+																				},
+																				"LabelC5Status_Code__": {
+																					"type": "Label",
+																					"data": [
+																						"C5Status_Code__"
+																					],
+																					"stamp": 56,
+																					"options": {
+																						"label": "_C5Status_Code",
+																						"hidden": false,
+																						"version": 0
+																					}
+																				},
+																				"C5Status_Code__": {
+																					"type": "ShortText",
+																					"data": [
+																						"C5Status_Code__"
+																					],
+																					"stamp": 55,
+																					"options": {
+																						"label": "_C5Status_Code",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": "250",
+																						"hidden": false,
+																						"readonly": false
+																					}
+																				},
+																				"LabelC5Status_Type__": {
+																					"type": "Label",
+																					"data": [
+																						"C5Status_Type__"
+																					],
+																					"stamp": 58,
+																					"options": {
+																						"label": "_C5Status_Type",
+																						"hidden": false,
+																						"version": 0
+																					}
+																				},
+																				"C5Status_Type__": {
+																					"type": "ShortText",
+																					"data": [
+																						"C5Status_Type__"
+																					],
+																					"stamp": 57,
+																					"options": {
+																						"label": "_C5Status_Type",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": "250",
+																						"hidden": false,
+																						"readonly": true
+																					}
+																				},
+																				"LabelC5Status_Message__": {
+																					"type": "Label",
+																					"data": [
+																						"C5Status_Message__"
+																					],
+																					"stamp": 60,
+																					"options": {
+																						"label": "_C5Status_Message",
+																						"hidden": false,
+																						"version": 0
+																					}
+																				},
+																				"C5Status_Message__": {
+																					"type": "ShortText",
+																					"data": [
+																						"C5Status_Message__"
+																					],
+																					"stamp": 59,
+																					"options": {
+																						"label": "_C5Status_Message",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": "250",
+																						"hidden": false,
+																						"readonly": true
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-2": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 61,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"SystemData": {
+															"type": "PanelSystemData",
+															"data": [],
+															"stamp": 62,
+															"options": {
+																"multicolumn": false,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_System data",
+																"hidden": true,
+																"version": 0
+															}
+														}
+													}
+												},
+												"form-content-left-3": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 63,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"NextProcess": {
+															"type": "PanelNextProcess",
+															"data": [],
+															"stamp": 64,
+															"options": {
+																"hidden": true,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_Next Process",
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-right": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 65,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "45%",
+													"width": "55%"
+												},
+												"hidden": true
+											},
+											"*": {
+												"form-content-right-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 66,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"PreviewPanel": {
+															"type": "PanelPreview",
+															"data": [],
+															"stamp": 67,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_Document Preview",
+																"version": 0
+															},
+															"*": {
+																"Preview": {
+																	"type": "Preview",
+																	"data": [
+																		"previewdata"
+																	],
+																	"stamp": 68,
+																	"options": {
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 69,
+					"options": {
+						"splitterType": "simple-h",
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 70,
+							"options": {
+								"label": "_Save",
+								"action": "save",
+								"submit": true,
+								"textSize": "S",
+								"version": 0
+							}
+						},
+						"Approve": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 71,
+							"options": {
+								"label": "_Approve",
+								"action": "approve",
+								"submit": true,
+								"textSize": "S",
+								"version": 0
+							}
+						},
+						"Reject": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 72,
+							"options": {
+								"label": "_Reject",
+								"action": "reject",
+								"submit": true,
+								"textSize": "S",
+								"version": 0
+							}
+						},
+						"Reprocess": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 73,
+							"options": {
+								"label": "_Reprocess",
+								"action": "reprocess",
+								"submit": true,
+								"textSize": "S",
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 74,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"textSize": "S",
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <field deleted="0" format="" guid="CZDE8229" id="XNFQT400153E" label="_C5Status_Code_report" length="50" name="C5Status_Code__" originalProcessID="LCA1000011XD" precision="0" processid="WNFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AXNFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/C5Status_Code__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:47</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_C5Status_Code_report</Label>
+        <Alias>AXNFQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <teachable>false</teachable>
+        <lazyTranslatable>
+        </lazyTranslatable>
+      </field>
+      <gdr>
+        <VarType>
+        </VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="CKRE8229" id="YNFQT400153E" label="_C5Status_Date_report" length="0" name="C5Status_Date__" originalProcessID="LCA1000011XD" precision="0" processid="WNFQT400153E" submitable="1" type="DATETIME">
+    <properties>
+      <db>
+        <alias>AYNFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/C5Status_Date__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:47</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_C5Status_Date_report</Label>
+        <Alias>AYNFQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+        <teachable>false</teachable>
+      </field>
+      <gdr>
+        <VarType>
+        </VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Date</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="CIPO8229" id="ZNFQT400153E" label="_C5Status_Message_report" length="50" name="C5Status_Message__" originalProcessID="LCA1000011XD" precision="0" processid="WNFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AZNFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/C5Status_Message__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:47</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_C5Status_Message_report</Label>
+        <Alias>AZNFQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <teachable>false</teachable>
+        <lazyTranslatable>
+        </lazyTranslatable>
+      </field>
+      <gdr>
+        <VarType>
+        </VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="CZAF8229" id="AOFQT400153E" label="_C5Status_Type_report" length="50" name="C5Status_Type__" originalProcessID="LCA1000011XD" precision="0" processid="WNFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AAOFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/C5Status_Type__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:47</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_C5Status_Type_report</Label>
+        <Alias>AAOFQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <teachable>false</teachable>
+        <lazyTranslatable>
+        </lazyTranslatable>
+      </field>
+      <gdr>
+        <VarType>
+        </VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="RKMJ7229" id="BOFQT400153E" label="_Company code_report" length="50" name="CompanyCode__" originalProcessID="LCA1000011XD" precision="0" processid="WNFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ABOFQT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/CompanyCode__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:47</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Company code_report</Label>
+        <Alias>ABOFQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>false</Editable>
+        <required>false</required>
+        <teachable>false</teachable>
+        <TableName>CT#BD8QT400153E</TableName>
+        <SortOrder>
+        </SortOrder>
+        <DisplayedColumns>CompanyCode__|CompanyName__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <SavedColumn>CompanyCode__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ProcessName>PurchasingCompanycodes__</ProcessName>
+        <CustomFilter>
+        </CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="SC5100000VLT" id="COFQT400153E" label="_Document UUID_report" length="50" name="DocumentUUID__" originalProcessID="LCA1000011XD" precision="0" processid="WNFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ACOFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/DocumentUUID__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:47</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Document UUID_report</Label>
+        <Alias>ACOFQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <teachable>false</teachable>
+        <lazyTranslatable>
+        </lazyTranslatable>
+      </field>
+      <gdr>
+        <VarType>
+        </VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="PPYN70775" id="DOFQT400153E" label="_ERP Invoice number_report" length="50" name="ERPInvoiceNumber__" originalProcessID="LCA1000011XD" precision="0" processid="WNFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ADOFQT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ERPInvoiceNumber__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:47</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ERP Invoice number_report</Label>
+        <Alias>ADOFQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>true</Editable>
+        <required>false</required>
+        <teachable>false</teachable>
+        <TableName>CD#U5AQT400153E</TableName>
+        <SortOrder>
+        </SortOrder>
+        <DisplayedColumns>ERPInvoiceNumber__|CompanyCode__|InvoiceNumber__|InvoiceDate__|ERPPostingDate__|InvoiceAmount__|InvoiceCurrency__|VendorNumber__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <SavedColumn>ERPInvoiceNumber__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ProcessName>Vendor invoice</ProcessName>
+        <CustomFilter>
+        </CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="XARY70771" id="EOFQT400153E" label="_Invoice number_report" length="50" name="InvoiceNumber__" originalProcessID="LCA1000011XD" precision="0" processid="WNFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AEOFQT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/InvoiceNumber__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:47</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Invoice number_report</Label>
+        <Alias>AEOFQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+        <teachable>true</teachable>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="RC5100000VLT" id="FOFQT400153E" label="_Invoice RuidEx_report" length="50" name="InvoiceRuidEx__" originalProcessID="LCA1000011XD" precision="0" processid="WNFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AFOFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/InvoiceRuidEx__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:47</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Invoice RuidEx_report</Label>
+        <Alias>AFOFQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <teachable>false</teachable>
+        <lazyTranslatable>
+        </lazyTranslatable>
+      </field>
+      <gdr>
+        <VarType>
+        </VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="EBGT33050" id="GOFQT400153E" label="_Invoice submission datetime_report" length="0" name="InvoiceSubmissionDatetime__" originalProcessID="LCA1000011XD" precision="0" processid="WNFQT400153E" submitable="1" type="DATETIME">
+    <properties>
+      <db>
+        <alias>AGOFQT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/InvoiceSubmissionDatetime__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:47</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Invoice submission datetime_report</Label>
+        <Alias>AGOFQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+        <teachable>false</teachable>
+      </field>
+      <gdr>
+        <VarType>
+        </VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Date</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="KL5100000VLT" id="HOFQT400153E" label="_Invoice submission status_report" length="50" name="InvoiceSubmissionStatus__" originalProcessID="LCA1000011XD" precision="0" processid="WNFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AHOFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/InvoiceSubmissionStatus__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:47</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Invoice submission status_report</Label>
+        <Alias>AHOFQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <teachable>false</teachable>
+        <lazyTranslatable>
+        </lazyTranslatable>
+      </field>
+      <gdr>
+        <VarType>
+        </VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="SD5100000VLT" id="IOFQT400153E" label="_IRAS acknowledgment ID_report" length="50" name="IRASAcknowledgmentID__" originalProcessID="LCA1000011XD" precision="0" processid="WNFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AIOFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/IRASAcknowledgmentID__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:47</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_IRAS acknowledgment ID_report</Label>
+        <Alias>AIOFQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <teachable>false</teachable>
+        <lazyTranslatable>
+        </lazyTranslatable>
+      </field>
+      <gdr>
+        <VarType>
+        </VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="FCEW667240" id="JOFQT400153E" label="_Order number_report" length="164" name="OrderNumber__" originalProcessID="LCA1000011XD" precision="0" processid="WNFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AJOFQT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/OrderNumber__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:47</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Order number_report</Label>
+        <Alias>AJOFQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+        <teachable>true</teachable>
+      </field>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="RT5100000VLT" id="KOFQT400153E" label="_Peppol ID_report" length="50" name="PeppolID__" originalProcessID="LCA1000011XD" precision="0" processid="WNFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AKOFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/PeppolID__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:47</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Peppol ID_report</Label>
+        <Alias>AKOFQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <teachable>false</teachable>
+        <lazyTranslatable>
+        </lazyTranslatable>
+      </field>
+      <gdr>
+        <VarType>
+        </VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="QC5100000VLT" id="LOFQT400153E" label="_Related invoice_report" length="50" name="RelatedInvoice__" originalProcessID="LCA1000011XD" precision="0" processid="WNFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ALOFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/RelatedInvoice__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:47</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Related invoice_report</Label>
+        <Alias>ALOFQT400153E</Alias>
+        <Group>Vendor_Invoice_Details</Group>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>true</Editable>
+        <teachable>true</teachable>
+        <TableName>CD#U5AQT400153E</TableName>
+        <SortOrder>ASC</SortOrder>
+        <SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+        <DisplayedColumns>InvoiceNumber__|InvoiceDate__|InvoiceAmount__|InvoiceCurrency__|InvoiceStatus__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>InvoiceNumber__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ExposedColumns>
+        </ExposedColumns>
+        <ProcessName>Vendor invoice</ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <KeyAttribute>
+        </KeyAttribute>
+        <CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(!(CompanyCode__=*)))</CustomFilter>
+      </field>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="QV5100000VLT" id="MOFQT400153E" label="_Transmission UUID_report" length="50" name="TransmissionUUID__" originalProcessID="LCA1000011XD" precision="0" processid="WNFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AMOFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/TransmissionUUID__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:47</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Transmission UUID_report</Label>
+        <Alias>AMOFQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <teachable>false</teachable>
+        <lazyTranslatable>
+        </lazyTranslatable>
+      </field>
+      <gdr>
+        <VarType>
+        </VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="DDDI12451" id="NOFQT400153E" label="_Vendor name_report" length="50" name="VendorName__" originalProcessID="LCA1000011XD" precision="0" processid="WNFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ANOFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/VendorName__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:47</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Vendor name_report</Label>
+        <Alias>ANOFQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>true</Editable>
+        <required>false</required>
+        <teachable>false</teachable>
+        <TableName>CT#SX8QT400153E</TableName>
+        <SortOrder>ASC</SortOrder>
+        <DisplayedColumns>Name__|Number__|Street__|PostOfficeBox__|City__|PostalCode__|Region__|Country__|Siret__|VATNumber__|PaymentTermCode__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>Name__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ProcessName>AP - Vendors__</ProcessName>
+        <CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(!(CompanyCode__=*)))</CustomFilter>
+      </field>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="HZQR12450" id="OOFQT400153E" label="_Vendor number_report" length="50" name="VendorNumber__" originalProcessID="LCA1000011XD" precision="0" processid="WNFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AOOFQT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/VendorNumber__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:47</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Vendor number_report</Label>
+        <Alias>AOOFQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>true</Editable>
+        <required>false</required>
+        <teachable>false</teachable>
+        <TableName>CT#SX8QT400153E</TableName>
+        <SortOrder>ASC</SortOrder>
+        <DisplayedColumns>Number__|Name__|Street__|PostOfficeBox__|City__|PostalCode__|Region__|Country__|Siret__|VATNumber__|PaymentTermCode__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>Number__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ProcessName>AP - Vendors__</ProcessName>
+        <CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(!(CompanyCode__=*)))</CustomFilter>
+      </field>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <type id="GOLHG0000M4O" name="CD">
+  </type>
+</process>

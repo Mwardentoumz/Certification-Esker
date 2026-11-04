@@ -1,0 +1,220 @@
+<process accountid="" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:06:04" deleted="0" eskerapplication="P2P" global="0" id="NoID" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="AP - BackdatingPeriods__" needvalidation="0" ootofilter="" ootoversion="1" originalProcessID="B34E77100SG1" ownerid="" ownerpb="" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomTable" upgradable="1" userid="" version="1" visibility="1">
+	<properties>
+		<dataConditions>
+			<listDataConditions>
+				&lt;dataCondition&gt;
+					&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt; &lt;filter&gt;msnex=*&lt;/filter&gt;
+					&lt;labelKey&gt;_AP disabled&lt;/labelKey&gt;
+					&lt;conditions&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableAccountPayableGlobalSetting__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+					&lt;/conditions&gt;
+				&lt;/dataCondition&gt;
+			</listDataConditions>
+		</dataConditions>
+		<dbIndex>
+			<AUTO_AZ99QT400153EA>&lt;Index&gt;&lt;Ref Name="AZ99QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AZ99QT400153EA>
+		</dbIndex>
+		<lg>
+			<!--*.xml-->
+		</lg>
+		<process>
+			<BUColumn>CompanyCode__</BUColumn>
+			<flowtype>processing</flowtype>
+			<EnableNegativeNumbersBetweenBrackets>true</EnableNegativeNumbersBetweenBrackets>
+			<homepagelabel>AP - BackdatingPeriods</homepagelabel>
+			<upgradable>yes</upgradable>
+			<instanciable>1</instanciable>
+			<disableScriptModification>true</disableScriptModification>
+			<enableUpgradableDesign>true</enableUpgradableDesign>
+			<ESDirectIndexing>1</ESDirectIndexing>
+			<enablerounddecimal>true</enablerounddecimal>
+			<OverrideAllowedAttachmentExtensions>*</OverrideAllowedAttachmentExtensions>
+			<UseActionNameWithScriptApproval>true</UseActionNameWithScriptApproval>
+			<AllowUploadAttachment>0</AllowUploadAttachment>
+			<AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+			<RemovePointWhenCastingIntToString>true</RemovePointWhenCastingIntToString>
+			<shouldRollbackManualRecordEdits>true</shouldRollbackManualRecordEdits>
+			<shouldShowManualEditsWarning>false</shouldShowManualEditsWarning>
+			<UseCultureFormat>true</UseCultureFormat>
+			<TransportName>CustomTable</TransportName>
+			<LayoutVersion>1.0</LayoutVersion>
+		</process>
+		<ui>
+			<customscriptIncludedScripts>[LIB_P2P_CUSTOMIZATION_TABLES_CLIENT]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers</customscriptIncludedScripts>
+			<CustomScript>
+				<!--customscript.js--></CustomScript>
+			<restorationPanel>DataPanel</restorationPanel>
+			<layout>
+				<!--layout.json--></layout>
+		</ui>
+	</properties>
+	<type id="NoID" name="CT" />
+	<field deleted="0" format="" guid="F34E77100SG1" id="NoID" label="_Backdating End Date_report" length="0" name="BackdatingEndDate__" originalProcessID="B34E77100SG1" precision="0" processid="" submitable="1" type="DATE">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/BackdatingEndDate__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Backdating End Date_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<required>true</required>
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="D34E77100SG1" id="NoID" label="_Backdating start date_report" length="0" name="BackdatingStartDate__" originalProcessID="B34E77100SG1" precision="0" processid="" submitable="1" type="DATE">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/BackdatingStartDate__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Backdating start date_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<required>true</required>
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="G34E77100SG1" id="NoID" label="_Backdating Target Date_report" length="0" name="BackdatingTargetDate__" originalProcessID="B34E77100SG1" precision="0" processid="" submitable="1" type="DATE">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/BackdatingTargetDate__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Backdating Target Date_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<required>true</required>
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="C34E77100SG1" id="NoID" label="_Company Code_report" length="50" name="CompanyCode__" originalProcessID="B34E77100SG1" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CompanyCode__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Company Code_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder />
+				<DisplayedColumns>CompanyCode__|CompanyName__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>CompanyCode__</SavedColumn>
+				<SavedColumnId />
+				<ExposedColumns />
+				<ProcessName>PurchasingCompanycodes__</ProcessName>
+				<KeyColumnId />
+				<KeyAttribute />
+				<CustomFilter />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="E34E77100SG1" id="NoID" label="_Invoice Type_report" length="50" name="InvoiceType__" originalProcessID="B34E77100SG1" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/InvoiceType__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_Invoice Type_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<TableName />
+				<DisplayedColumns />
+				<DataSourceOrigin>Standalone</DataSourceOrigin>
+				<possibleKeys>
+Non-PO Invoice
+PO Invoice
+PO Invoice (as FI)
+Consignment
+Downpayment Invoice</possibleKeys>
+				<SavedColumn />
+				<possibleValues>
+Non-PO Invoice
+PO Invoice
+PO Invoice (as FI)
+Consignment
+Downpayment Invoice</possibleValues>
+				<ProcessName />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+</process>

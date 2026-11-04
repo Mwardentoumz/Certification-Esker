@@ -1,0 +1,377 @@
+<process accountid="" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:06:03" deleted="0" eskerapplication="P2P" global="0" id="NoID" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="AP - Bank details__" needvalidation="1" ootofilter="" ootoversion="0" originalProcessID="HUME46914" ownerid="" ownerpb="" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomTable" upgradable="1" userid="" version="1" visibility="0">
+	<properties>
+		<dataConditions>
+			<listDataConditions>
+				&lt;dataCondition&gt;
+					&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+					&lt;filter&gt;msnex=*&lt;/filter&gt;
+					&lt;labelKey&gt;_AP disabled&lt;/labelKey&gt;
+					&lt;conditions&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableAccountPayableGlobalSetting__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+					&lt;/conditions&gt;
+				&lt;/dataCondition&gt;
+			</listDataConditions>
+		</dataConditions>
+		<dbIndex>
+			<AUTO_AA99QT400153EA>&lt;Index&gt;&lt;Ref Name="AA99QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AA99QT400153EA>
+			<AUTO_AD99QT400153EA>&lt;Index&gt;&lt;Ref Name="AD99QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AD99QT400153EA>
+			<AUTO_AG99QT400153EA>&lt;Index&gt;&lt;Ref Name="AG99QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AG99QT400153EA>
+		</dbIndex>
+		<lg>
+			<!--*.xml-->
+		</lg>
+		<process>
+			<BUColumn>CompanyCode__</BUColumn>
+			<flowtype>processing</flowtype>
+			<homepagelabel>AP - Bank details</homepagelabel>
+			<upgradable>yes</upgradable>
+			<instanciable>1</instanciable>
+			<disableScriptModification>true</disableScriptModification>
+			<enableUpgradableDesign>true</enableUpgradableDesign>
+			<OverrideAllowedAttachmentExtensions>*</OverrideAllowedAttachmentExtensions>
+			<UseActionNameWithScriptApproval>true</UseActionNameWithScriptApproval>
+			<AllowUploadAttachment>0</AllowUploadAttachment>
+			<AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+			<shouldRollbackManualRecordEdits>true</shouldRollbackManualRecordEdits>
+			<UseCultureFormat>true</UseCultureFormat>
+			<TransportName>CustomTable</TransportName>
+			<LayoutVersion>1.0</LayoutVersion>
+		</process>
+		<ui>
+			<customscriptIncludedScripts>[LIB_P2P_CUSTOMIZATION_TABLES_CLIENT]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers</customscriptIncludedScripts>
+			<CustomScript>
+				<!--customscript.js--></CustomScript>
+			<restorationPanel>DataPanel</restorationPanel>
+			<layout>
+				<!--layout.json--></layout>
+		</ui>
+	</properties>
+	<type id="NoID" name="CT" />
+	<field deleted="0" format="" guid="QNQQ46918" id="NoID" label="_AccountHolder" length="50" name="AccountHolder__" originalProcessID="HUME46914" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/AccountHolder__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_AccountHolder</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="KYAM46917" id="NoID" label="_BankAccount" length="50" name="BankAccount__" originalProcessID="HUME46914" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/BankAccount__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_BankAccount</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="GH6B77100FSX" id="NoID" label="_BankAccountID_report" length="50" name="BankAccountID__" originalProcessID="HUME46914" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/BankAccountID__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_BankAccountID_report</Label>
+				<Alias />
+				<Group>Advance</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<teachable>false</teachable>
+			</field>
+			<gdr>
+				<VarType />
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="MQIR46915" id="NoID" label="_BankCountry_report" length="50" name="BankCountry__" originalProcessID="HUME46914" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/BankCountry__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_BankCountry_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="DZON46916" id="NoID" label="_BankKey" length="50" name="BankKey__" originalProcessID="HUME46914" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/BankKey__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_BankKey</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="IUBY4691A" id="NoID" label="_BankName_report" length="50" name="BankName__" originalProcessID="HUME46914" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/BankName__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_BankName_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PHQG472DD" id="NoID" label="_CompanyCode" length="50" name="CompanyCode__" originalProcessID="HUME46914" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CompanyCode__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_CompanyCode</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<required>false</required>
+				<TableName>CT#NOID</TableName>
+				<SortOrder />
+				<DisplayedColumns>CompanyCode__|CompanyName__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>CompanyCode__</SavedColumn>
+				<SavedColumnId />
+				<ExposedColumns />
+				<ProcessName>PurchasingCompanycodes__</ProcessName>
+				<KeyColumnId />
+				<KeyAttribute />
+				<CustomFilter />
+			</field>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="DU4X00000IYP" id="NoID" label="_ControlKey_report" length="50" name="ControlKey__" originalProcessID="HUME46914" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ControlKey__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ControlKey_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="FU4X00000IYP" id="NoID" label="_Currency_report" length="50" name="Currency__" originalProcessID="HUME46914" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Currency__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Currency_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="ESUB46919" id="NoID" label="_IBAN" length="50" name="IBAN__" originalProcessID="HUME46914" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/IBAN__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_IBAN</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="GU4X00000IYP" id="NoID" label="_RoutingCode_report" length="50" name="RoutingCode__" originalProcessID="HUME46914" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/RoutingCode__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_RoutingCode_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="EU4X00000IYP" id="NoID" label="_SWIFT/BICCode_report" length="50" name="SWIFT_BICCode__" originalProcessID="HUME46914" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/SWIFT_BICCode__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_SWIFT/BICCode_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="KWQJ4691B" id="NoID" label="_VendorNumber_report" length="50" name="VendorNumber__" originalProcessID="HUME46914" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/VendorNumber__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_VendorNumber_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<required>true</required>
+				<TableName>CT#NOID</TableName>
+				<SortOrder>ASC</SortOrder>
+				<DisplayedColumns>Number__|Name__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<SavedColumn>Number__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>AP - Vendors__</ProcessName>
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(!(CompanyCode__=*)))</CustomFilter>
+			</field>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+</process>

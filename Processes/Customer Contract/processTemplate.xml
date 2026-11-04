@@ -1,0 +1,803 @@
+<process accountid="" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:10:50" deleted="0" eskerapplication="P2P-PAC" global="0" id="NoID" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="Customer Contract" needvalidation="0" ootofilter="" ootoversion="0" originalProcessID="PCON132681" ownerid="" ownerpb="" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="" version="1" visibility="1">
+	<properties>
+		<dataConditions>
+			<listDataConditions>
+				&lt;dataCondition&gt;
+					&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+					&lt;filter&gt;msnex=*&lt;/filter&gt;
+					&lt;labelKey&gt;_Contracts disabled&lt;/labelKey&gt;
+					&lt;multipleConditionsLink&gt;and&lt;/multipleConditionsLink&gt;
+					&lt;conditions&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableContractGlobalSetting__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableContractPublication__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+					&lt;/conditions&gt;
+				&lt;/dataCondition&gt;
+				</listDataConditions>
+		</dataConditions>
+		<dbIndex>
+			<AUTO_AHPFQT400153EA>&lt;Index&gt;&lt;Ref Name="AHPFQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AHPFQT400153EA>
+			<AUTO_AIPFQT400153EA>&lt;Index&gt;&lt;Ref Name="AIPFQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AIPFQT400153EA>
+			<AUTO_AJPFQT400153EA>&lt;Index&gt;&lt;Ref Name="AJPFQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AJPFQT400153EA>
+			<AUTO_AVPFQT400153EA>&lt;Index&gt;&lt;Ref Name="AVPFQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AVPFQT400153EA>
+		</dbIndex>
+		<gdr>
+			<ValidationScriptAllowRetry />
+			<validationscriptIncludedScripts>Sys/Sys_Parameters</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_CommonDialog_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>LIB_P2P_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Parameters_P2P_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_CustomerContract_Publication_Server_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Contract_Publication_Server_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>[Lib_Custom_Parameters]</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>[Lib_P2P_Custom_Parameters]</validationscriptIncludedScripts>
+			<ValidationScript>
+				<!--validationscript.js--></ValidationScript>
+			<AllowTagCoverPages>true</AllowTagCoverPages>
+			<AllowTagNewDocuments>true</AllowTagNewDocuments>
+			<AllowTagAttachments>true</AllowTagAttachments>
+			<ExtractionScriptAllowRetry />
+			<extractionscriptIncludedScripts>Lib_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_P2P_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_P2P_CompanyCodesValue_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_Contract_Publication_Server_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_CustomerContract_Publication_Server_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_Parameters_P2P_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>[Lib_Custom_Parameters]</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>[Lib_P2P_Custom_Parameters]</extractionscriptIncludedScripts>
+			<ExtractionScript>
+				<!--extractionscript.js--></ExtractionScript>
+			<AllowRemovePages>true</AllowRemovePages>
+			<AllowSwapPages>true</AllowSwapPages>
+		</gdr>
+		<lg>
+			<!--*.xml-->
+		</lg>
+		<ocr>
+			<trade-off>accurate</trade-off>
+			<image-ocr-timeout />
+			<image-binarization>no</image-binarization>
+			<image-draft-fax>no</image-draft-fax>
+			<image-despeckle>no</image-despeckle>
+			<allowed-language>0</allowed-language>
+			<image-resolution-enhancement>auto</image-resolution-enhancement>
+			<ocr_engine>Nuance222</ocr_engine>
+			<ocrpagestoprocess />
+			<extractionAdditionalOptions />
+		</ocr>
+		<process>
+			<Tags>PAC CO</Tags>
+			<flowtype>processing</flowtype>
+			<ocrpreset>scan</ocrpreset>
+			<EnableCatchNetworkError />
+			<panelLabelWidth />
+			<homepagelabel>Customer Contract</homepagelabel>
+			<enableflexibleauditing />
+			<enableflexibleediting />
+			<enableflexibleteaching />
+			<enableInternalConversation />
+			<upgradable>yes</upgradable>
+			<disableocr />
+			<instanciable>1</instanciable>
+			<disableScriptModification>true</disableScriptModification>
+			<disableautolearning>true</disableautolearning>
+			<backgroundprocessingthreshold />
+			<EnablePreviewPrecomputation />
+			<defaultConversionParam>DOCX|AttachOutputFormat:PDF</defaultConversionParam>
+			<enableUpgradableDesign>true</enableUpgradableDesign>
+			<MaxAttachments>1</MaxAttachments>
+			<keepUserDataWhenChangingDocument>true</keepUserDataWhenChangingDocument>
+			<pdfNormalizeFilter />
+			<archiveDuration>0</archiveDuration>
+			<OverrideAllowedDocumentExtensions>PDF,TIF,TXT,JPG,JPEG,EDI,DOCX</OverrideAllowedDocumentExtensions>
+			<ocrpagestoprocess>0</ocrpagestoprocess>
+			<ScriptEngineType>2</ScriptEngineType>
+			<displayWidth />
+			<AllowUploadAttachment>0</AllowUploadAttachment>
+			<AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+			<UseCultureFormat>true</UseCultureFormat>
+			<DoNotUseProcessState>1</DoNotUseProcessState>
+			<AllowRetryExtractCD>true</AllowRetryExtractCD>
+			<TransportName>CustomData</TransportName>
+			<LayoutVersion>1.0</LayoutVersion>
+			<printToProcess />
+		</process>
+		<ui>
+			<CustomScriptDebug>false</CustomScriptDebug>
+			<customscriptIncludedScripts>Lib_P2P_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_P2P_DataHandler_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_CommonDialog_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Contract_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Contract_Conversation_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_CustomerContract_Client_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_P2P_EmailNotification_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_CustomerContract_FormTemplate_Client_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers_Banner</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers_Data</customscriptIncludedScripts>
+			<CustomScriptReadonly>true</CustomScriptReadonly>
+			<CustomScript>
+				<!--customscript.js--></CustomScript>
+			<restorationPanel>ContractDetails</restorationPanel>
+			<layout>
+				<!--layout.json--></layout>
+		</ui>
+	</properties>
+	<datatable deleted="1" guid="YJGR13PCON" id="NoID" label="Conversation" name="Conversation__" originalProcessID="PCON132681">
+		<properties>
+			<field>
+				<DisableAutolearn>1</DisableAutolearn>
+			</field>
+			<ui>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</datatable>
+	<type id="NoID" name="CD" />
+	<field deleted="0" format="" guid="RPV4FP00PCON" id="NoID" label="_ApprovedDate_report" length="0" name="ApprovedDate__" originalProcessID="PCON132681" precision="0" processid="" submitable="1" type="DATETIME">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ApprovedDate__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ApprovedDate_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="V7UT200UIBN" id="NoID" label="_Comment_report" length="32766" name="Comment__" originalProcessID="PCON132681" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Comment__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Comment_report</Label>
+				<Alias />
+				<behavior>Default</behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<reportpreselectedorder>3</reportpreselectedorder>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="S7UT0000PCON" id="NoID" label="_Company code_report" length="50" name="CompanyCode__" originalProcessID="PCON132681" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CompanyCode__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Company code_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<required>false</required>
+				<TableName>CT#NOID</TableName>
+				<SortOrder />
+				<DisplayedColumns>CompanyCode__|CompanyName__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>CompanyCode__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>PurchasingCompanycodes__</ProcessName>
+				<CustomFilter />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="GD6IG000PCON" id="NoID" label="_ContractNumber_report" length="50" name="ContractNumber__" originalProcessID="PCON132681" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ContractNumber__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ContractNumber_report</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="J8UT0000PCON" id="NoID" label="_Contract status_report" length="50" name="ContractStatus__" originalProcessID="PCON132681" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ContractStatus__</fullname>
+				<defaultvalue>Draft</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_Contract status_report</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<TableName />
+				<DisplayedColumns />
+				<DisplayedColumnsIds />
+				<DataSourceOrigin>Standalone</DataSourceOrigin>
+				<possibleKeys>Draft
+ToValidate
+ApprovedPendingEnvelopeDesign
+ApprovedPendingSignature
+ApprovedPendingActivation
+Active
+Revoked
+Deleted
+Expired
+Deprecated
+Rejected</possibleKeys>
+				<SavedColumn />
+				<SavedColumnId />
+				<possibleValues>_Contract_Draft
+_Contract_ToValidate
+_Contract_ApprovedPendingEnvelopeDesign
+_Contract_ApprovedPendingSignature
+_Contract_ApprovedPendingActivation
+_Contract_Active
+_Contract_Revoked
+_Contract_Deleted
+_Contract_Expired
+_Contract_Deprecated
+_Contract_Rejected</possibleValues>
+				<ProcessName />
+				<KeyColumnId />
+				<lazyTranslatable />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="J3LIG000PCON" id="NoID" label="_ContractType_report" length="100" name="ContractType__" originalProcessID="PCON132681" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ContractType__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ContractType_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder>ASC</SortOrder>
+				<SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+				<DisplayedColumns>Name__|Description__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>Name__</SavedColumn>
+				<SavedColumnId />
+				<ExposedColumns>ContractTypeID__=ID__</ExposedColumns>
+				<ProcessName>P2P - Contract type__</ProcessName>
+				<KeyColumnId />
+				<KeyAttribute />
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="N37IG000PCON" id="NoID" label="_ContractTypeID_report" length="50" name="ContractTypeID__" originalProcessID="PCON132681" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ContractTypeID__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ContractTypeID_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder />
+				<SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+				<DisplayedColumns>ID__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>ID__</SavedColumn>
+				<SavedColumnId />
+				<ExposedColumns />
+				<ProcessName>P2P - Contract type__</ProcessName>
+				<KeyColumnId />
+				<KeyAttribute />
+				<CustomFilter />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="V7UT0000PCON" id="NoID" label="_Description_report" length="32766" name="Description__" originalProcessID="PCON132681" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Description__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Description_report</Label>
+				<Alias />
+				<behavior>Default</behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<reportpreselectedorder>3</reportpreselectedorder>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="F8UT0000PCON" id="NoID" label="_End date_report" length="0" name="EndDate__" originalProcessID="PCON132681" precision="0" processid="" submitable="1" type="DATE">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/EndDate__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_End date_report</Label>
+				<Alias />
+				<behavior>Default, ReportPreselectedForProcess</behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<reportpreselectedorder>8</reportpreselectedorder>
+			</extrainfo>
+			<field>
+				<required>false</required>
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="I304FP00PCON" id="NoID" label="_Initial end date_report" length="0" name="InitialEndDate__" originalProcessID="PCON132681" precision="0" processid="" submitable="1" type="DATE">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/InitialEndDate__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Initial end date_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="DWS3FP00PCON" id="NoID" label="_Initially expected end date_report" length="0" name="InitiallyExpectedEndDate__" originalProcessID="PCON132681" precision="0" processid="" submitable="1" type="DATE">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/InitiallyExpectedEndDate__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Initially expected end date_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="H304FP00PCON" id="NoID" label="_Initial start date_report" length="0" name="InitialStartDate__" originalProcessID="PCON132681" precision="0" processid="" submitable="1" type="DATE">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/InitialStartDate__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Initial start date_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="U7UT0000PCON" id="NoID" label="_Name_report" length="50" name="Name__" originalProcessID="PCON132681" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Name__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Name_report</Label>
+				<Alias />
+				<behavior>Default</behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<reportpreselectedorder>2</reportpreselectedorder>
+			</extrainfo>
+			<field>
+				<required>false</required>
+				<lazyTranslatable />
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="ZPA3FP00PCON" id="NoID" label="_OwnerLogin_report" length="50" name="OwnerLogin__" originalProcessID="PCON132681" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/OwnerLogin__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_OwnerLogin_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="IS85FP00PCON" id="NoID" label="_OwnerNiceName_report" length="50" name="OwnerNiceName__" originalProcessID="PCON132681" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/OwnerNiceName__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_OwnerNiceName_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<required>false</required>
+				<TableName>ODUSER</TableName>
+				<SortOrder>ASC</SortOrder>
+				<DisplayedColumns>DisplayName|Login|EmailAddress</DisplayedColumns>
+				<SavedColumn>DisplayName</SavedColumn>
+				<ExposedColumns>OwnerLogin__=Login</ExposedColumns>
+				<ProcessName />
+				<CustomFilter>(&amp;(|(ACCOUNTLOCKED=0)(!(ACCOUNTLOCKED=*)))(Customer=0)(Vendor=0)(|(PortalUser!=1)(PortalUser!=*)))</CustomFilter>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="T7UT0000PCON" id="NoID" label="_Reference number_report" length="50" name="ReferenceNumber__" originalProcessID="PCON132681" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ReferenceNumber__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Reference number_report</Label>
+				<Alias />
+				<behavior>Default</behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<reportpreselectedorder>1</reportpreselectedorder>
+			</extrainfo>
+			<field>
+				<required>false</required>
+				<lazyTranslatable />
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="I8UT0000PCON" id="NoID" label="_Renewal terms_report" length="0" name="RenewalTerms__" originalProcessID="PCON132681" precision="0" processid="" submitable="1" type="INT">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/RenewalTerms__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Renewal terms_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="UXT4FP00PCON" id="NoID" label="_RequesterLogin_report" length="50" name="RequesterLogin__" originalProcessID="PCON132681" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/RequesterLogin__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_RequesterLogin_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="VXT4FP00PCON" id="NoID" label="_RequesterNiceName_report" length="50" name="RequesterNiceName__" originalProcessID="PCON132681" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/RequesterNiceName__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_RequesterNiceName_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="E8UT0000PCON" id="NoID" label="_Start date_report" length="0" name="StartDate__" originalProcessID="PCON132681" precision="0" processid="" submitable="1" type="DATE">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/StartDate__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Start date_report</Label>
+				<Alias />
+				<behavior>Default, ReportPreselectedForProcess</behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<reportpreselectedorder>7</reportpreselectedorder>
+			</extrainfo>
+			<field>
+				<required>false</required>
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="H8UT0000PCON" id="NoID" label="_Tacit renewal_report" length="0" name="TacitRenewal__" originalProcessID="PCON132681" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TacitRenewal__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_Tacit renewal_report</Label>
+				<Alias />
+				<behavior>Default, ReportPreselectedForProcess</behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<reportpreselectedorder>9</reportpreselectedorder>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+</process>

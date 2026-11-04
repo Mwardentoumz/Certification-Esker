@@ -1,0 +1,2663 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:10:39" deleted="0" eskerapplication="P2P" global="0" id="QGFQT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="P2P - Notification__" needvalidation="0" ootofilter="" ootoversion="2" originalProcessID="WW5JG0000SG1" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomTable" upgradable="1" userid="0" version="1" visibility="1">
+  <properties>
+    <dataConditions>
+      <listDataConditions>
+				&lt;dataCondition&gt;
+					&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+					&lt;filter&gt;msnex=*&lt;/filter&gt;
+					&lt;labelKey&gt;_Contracts disabled&lt;/labelKey&gt;
+					&lt;conditions&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableContractGlobalSetting__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+					&lt;/conditions&gt;
+				&lt;/dataCondition&gt;
+			</listDataConditions>
+    </dataConditions>
+    <lg>
+      <process_da>{
+	"_Active": "Aktiveret",
+	"_backupUserAsCC": "CC til stedfortræder",
+	"_backupUserAsCC_report": "CC til stedfortræder",
+	"_Canceled": "Annulleret",
+	"_Details": "Oplysninger",
+	"_escapeCustomTags": "Escape brugerdefinerede tags",
+	"_escapeCustomTags_report": "Escape brugerdefinerede tags",
+	"_FromName": "Afsender",
+	"_FromName_report": "Afsender",
+	"_Notification_ConditionText": "Betingelse",
+	"_Notification_ConditionType": "Type",
+	"_Notification_ConditionType_AmountPercent": "Forbrug %",
+	"_Notification_ConditionType_AmountTimePercent": "Forbrugstendens (høj)",
+	"_Notification_ConditionType_ContractExecutionDate": "Udførelsesdato",
+	"_Notification_ConditionType_ExecutionDate": "Udførelsesdato",
+	"_Notification_ConditionType_ProjectAmountPercent": "Forbrug %",
+	"_Notification_ConditionType_ProjectExecutionDate": "Udførelsesdato",
+	"_Notification_ConditionType_ProjectTimePercent": "Projektvarighed %",
+	"_Notification_ConditionType_TimeAmountPercent": "Forbrugstendens (lav)",
+	"_Notification_ConditionType_TimePercent": "Kontraktløbetid %",
+	"_Notification_DialogCustomControl_Contract_%Spent": "Forbrug %",
+	"_Notification_DialogCustomControl_Contract_%Time": "Kontraktløbetid %",
+	"_Notification_DialogCustomControl_ExecutionDate": "Udførelsesdato",
+	"_Notification_DialogCustomControl_Project_%Spent": "Forbrug %",
+	"_Notification_DialogCustomControl_Project_%Time": "Projektvarighed %",
+	"_Notification_EditDialog_Title": "Ny meddelelse",
+	"_Notification_ExecutionDate": "Udførelsesdato",
+	"_Notification_ExecutionDate_report": "Udførelsesdato",
+	"_Notification_ExecutionSettings": "Meddelelse i JSON-format",
+	"_Notification_LastConsumedDateTime": "Fuldførelsesdato",
+	"_Notification_LastConsumedDateTime_report": "Fuldførelsesdato",
+	"_Notification_LastSentDateTime": "Dato for seneste afsendelse",
+	"_Notification_LastSentDateTime_report": "Dato for seneste afsendelse",
+	"_Notification_Name": "Navn",
+	"_Notification_Name_report": "Meddelelsesnavn",
+	"_Notification_OnScheduledTask": "Planlagt",
+	"_Notification_OnScheduledTask_report": "Planlagt",
+	"_Notification_OnUpdate": "Ved opdatering af oplysninger",
+	"_Notification_OnUpdate_report": "Ved opdatering af oplysninger",
+	"_Notification_Project_Text_TimePercent": "Når projektet når {0} % ({1}) af sin varighed",
+	"_Notification_Receivers": "Modtagere",
+	"_Notification_Receivers_Group_Group": "Grupper",
+	"_Notification_Receivers_Group_User": "Brugere",
+	"_Notification_Receivers_report": "Modtagere",
+	"_Notification_TemplateName": "Skabelon",
+	"_Notification_TemplateName_report": "Skabelon",
+	"_Notification_Text_AmountPercent": "Når det samlede forbrugte beløb når {0} % ({2} {1}) af det maksimale forbrugsbeløb",
+	"_Notification_Text_AmountTimePercent": "Når det forbrugte beløb når {0} % ({4} {1}) af det maksimale forbrugsbeløb, og kontrakten endnu ikke har nået {2} % ({3}) af sin løbetid",
+	"_Notification_Text_ExecutionDate": "Når den angivne udførelsesdato ({0}) er nået",
+	"_Notification_Text_TimeAmountPercent": "Når kontrakten når {0} % ({1}) af sin løbetid, og forbrugsbeløbet endnu ikke har nået {2} % ({4} {3}) af det definerede minimumsbeløb",
+	"_Notification_Text_TimePercent": "Når kontrakten når {0}% ({1}) af sin løbetid",
+	"_Notification_Type": "Type",
+	"_Notification_Type_report": "Type",
+	"_ProcessDetails": "Generelle oplysninger",
+	"_ProcessKeyName": "Navn på nøgle",
+	"_ProcessKeyName_report": "Navn på nøgle",
+	"_ProcessKeyValue": "Værdi af nøgle",
+	"_ProcessKeyValue_report": "Værdi af nøgle",
+	"_ProcessName": "Procesnavn",
+	"_ProcessName_report": "Procesnavn",
+	"_Project_%Time": "Projektvarighed %",
+	"_receiversBrowseTitle": "Vælg modtagere",
+	"_sendToAllMembersIfGroup": "Send individuelt til gruppemedlemmer",
+	"_sendToAllMembersIfGroup_report": "Send individuelt til gruppemedlemmer",
+	"_Status": "Meddelelsesstatus",
+	"_Status_report": "Meddelelsesstatus",
+	"_validationURL": "URL til formular",
+	"_validationURL_report": "URL til formular",
+	"_You can select up to {0} receivers": "Du kan vælge op til {0} modtagere.",
+	"P2P - Notification": "S2P – meddelelse",
+	"P2P - Notification__": "S2P – meddelelse"
+}</process_da>
+      <process_de>{
+	"_Active": "Aktiviert",
+	"_backupUserAsCC": "In Kopie: stellvertretender Benutzer",
+	"_backupUserAsCC_report": "In Kopie: stellvertretender Benutzer",
+	"_Canceled": "Storniert",
+	"_Details": "Details",
+	"_escapeCustomTags": "Escape custom tags",
+	"_escapeCustomTags_report": "Escape custom tags",
+	"_FromName": "Absender",
+	"_FromName_report": "Absender",
+	"_Notification_ConditionText": "Bedingung",
+	"_Notification_ConditionType": "Typ",
+	"_Notification_ConditionType_AmountPercent": "Ausgaben %",
+	"_Notification_ConditionType_AmountTimePercent": "Ausgabentrend (hoch)",
+	"_Notification_ConditionType_ContractExecutionDate": "Ausführungsdatum",
+	"_Notification_ConditionType_ExecutionDate": "Ausführungsdatum",
+	"_Notification_ConditionType_ProjectAmountPercent": "Ausgaben %",
+	"_Notification_ConditionType_ProjectExecutionDate": "Ausführungsdatum",
+	"_Notification_ConditionType_ProjectTimePercent": "Projektlaufzeit %",
+	"_Notification_ConditionType_TimeAmountPercent": "Ausgabentrend (niedrig)",
+	"_Notification_ConditionType_TimePercent": "Vertragslaufzeit %",
+	"_Notification_DialogCustomControl_Contract_%Spent": "Ausgaben %",
+	"_Notification_DialogCustomControl_Contract_%Time": "Vertragslaufzeit %",
+	"_Notification_DialogCustomControl_ExecutionDate": "Ausführungsdatum",
+	"_Notification_DialogCustomControl_Project_%Spent": "Ausgaben %",
+	"_Notification_DialogCustomControl_Project_%Time": "Projektlaufzeit %",
+	"_Notification_EditDialog_Title": "Neue Benachrichtigung",
+	"_Notification_ExecutionDate": "Ausführungsdatum",
+	"_Notification_ExecutionDate_report": "Ausführungsdatum",
+	"_Notification_ExecutionSettings": "Benachrichtigung im JSON-Format",
+	"_Notification_LastConsumedDateTime": "Abschlussdatum",
+	"_Notification_LastConsumedDateTime_report": "Abschlussdatum",
+	"_Notification_LastSentDateTime": "Datum zuletzt gesendet",
+	"_Notification_LastSentDateTime_report": "Datum zuletzt gesendet",
+	"_Notification_Name": "Name",
+	"_Notification_Name_report": "Benachrichtigungsname",
+	"_Notification_OnScheduledTask": "Geplant",
+	"_Notification_OnScheduledTask_report": "Geplant",
+	"_Notification_OnUpdate": "Auf der Aktualisierung der Angaben zu finden",
+	"_Notification_OnUpdate_report": "Auf der Aktualisierung der Angaben zu finden",
+	"_Notification_Project_Text_TimePercent": "Wenn das Projekt {0} % ({1}) seiner Laufzeit erreicht",
+	"_Notification_Receivers": "Empfänger",
+	"_Notification_Receivers_Group_Group": "Gruppen",
+	"_Notification_Receivers_Group_User": "Benutzer",
+	"_Notification_Receivers_report": "Empfänger",
+	"_Notification_TemplateName": "Vorlage",
+	"_Notification_TemplateName_report": "Vorlage",
+	"_Notification_Text_AmountPercent": "Wenn der insgesamt ausgegebene Betrag {0}% ({1} {2}) des maximalen Ausgabebetrags erreicht",
+	"_Notification_Text_AmountTimePercent": "Wenn der ausgegebene Betrag {0} % ({4} {1}) des maximalen Ausgabebetrags erreicht und der Vertrag {2} % ({3}) seiner Laufzeit noch nicht erreicht hat.",
+	"_Notification_Text_ExecutionDate": "Wenn das angegebene Ausführungsdatum ({0}) erreicht worden ist",
+	"_Notification_Text_TimeAmountPercent": "Wenn der Vertrag {0} % ({1}) seiner Laufzeit erreicht und der ausgegebene Betrag noch nicht {2} % ({4} {3}) des festgelegten Mindestbetrags erreicht hat.",
+	"_Notification_Text_TimePercent": "Wenn der Vertrag {0} % ({1}) seiner Laufzeit erreicht",
+	"_Notification_Type": "Typ",
+	"_Notification_Type_report": "Typ",
+	"_ProcessDetails": "Allgemeine Informationen",
+	"_ProcessKeyName": "Schlüsselname",
+	"_ProcessKeyName_report": "Schlüsselname",
+	"_ProcessKeyValue": "Schlüsselwert",
+	"_ProcessKeyValue_report": "Schlüsselwert",
+	"_ProcessName": "Prozessname",
+	"_ProcessName_report": "Prozessname",
+	"_Project_%Time": "Projektlaufzeit %",
+	"_receiversBrowseTitle": "Empfänger auswählen",
+	"_sendToAllMembersIfGroup": "Einzeln an Gruppenmitglieder senden",
+	"_sendToAllMembersIfGroup_report": "Einzeln an Gruppenmitglieder senden",
+	"_Status": "Benachrichtigungsstatus",
+	"_Status_report": "Benachrichtigungsstatus",
+	"_validationURL": "Formular-URL",
+	"_validationURL_report": "Formular-URL",
+	"_You can select up to {0} receivers": "Sie können maximal {0} Empfänger auswählen.",
+	"P2P - Notification": "S2P - Benachrichtigung",
+	"P2P - Notification__": "S2P - Benachrichtigung"
+}</process_de>
+      <process_ja>{
+	"_Active": "有効",
+	"_backupUserAsCC": "Cc 代理ユーザー",
+	"_backupUserAsCC_report": "Cc 代理ユーザー",
+	"_Canceled": "キャンセル済み",
+	"_Details": "詳細",
+	"_escapeCustomTags": "Escape custom tags",
+	"_escapeCustomTags_report": "Escape custom tags",
+	"_FromName": "送信者",
+	"_FromName_report": "送信者",
+	"_Notification_ConditionText": "条件",
+	"_Notification_ConditionType": "タイプ",
+	"_Notification_ConditionType_AmountPercent": "支出 %",
+	"_Notification_ConditionType_AmountTimePercent": "支出傾向 (高)",
+	"_Notification_ConditionType_ContractExecutionDate": "履行日",
+	"_Notification_ConditionType_ExecutionDate": "履行日",
+	"_Notification_ConditionType_ProjectAmountPercent": "支出 %",
+	"_Notification_ConditionType_ProjectExecutionDate": "履行日",
+	"_Notification_ConditionType_ProjectTimePercent": "プロジェクト期間のパーセンテージ",
+	"_Notification_ConditionType_TimeAmountPercent": "支出傾向 (低)",
+	"_Notification_ConditionType_TimePercent": "契約期間 %",
+	"_Notification_DialogCustomControl_Contract_%Spent": "支出 %",
+	"_Notification_DialogCustomControl_Contract_%Time": "契約期間 %",
+	"_Notification_DialogCustomControl_ExecutionDate": "履行日",
+	"_Notification_DialogCustomControl_Project_%Spent": "支出 %",
+	"_Notification_DialogCustomControl_Project_%Time": "プロジェクト期間のパーセンテージ",
+	"_Notification_EditDialog_Title": "新しい通知",
+	"_Notification_ExecutionDate": "履行日",
+	"_Notification_ExecutionDate_report": "履行日",
+	"_Notification_ExecutionSettings": "JSON形式の通知",
+	"_Notification_LastConsumedDateTime": "完了日",
+	"_Notification_LastConsumedDateTime_report": "完了日",
+	"_Notification_LastSentDateTime": "最終送信日",
+	"_Notification_LastSentDateTime_report": "最終送信日",
+	"_Notification_Name": "名前",
+	"_Notification_Name_report": "通知名",
+	"_Notification_OnScheduledTask": "スケジュール済み",
+	"_Notification_OnScheduledTask_report": "スケジュール済み",
+	"_Notification_OnUpdate": "情報更新",
+	"_Notification_OnUpdate_report": "情報更新",
+	"_Notification_Project_Text_TimePercent": "プロジェクトが期間の {0}% ({1}) に達する場合",
+	"_Notification_Receivers": "受信者",
+	"_Notification_Receivers_Group_Group": "グループ",
+	"_Notification_Receivers_Group_User": "ユーザー",
+	"_Notification_Receivers_report": "受信者",
+	"_Notification_TemplateName": "テンプレート",
+	"_Notification_TemplateName_report": "テンプレート",
+	"_Notification_Text_AmountPercent": "支出総額が最大支出額の {0}% ({2} {1}) に達する場合",
+	"_Notification_Text_AmountTimePercent": "支出額が最大支出額の {0}% ({4}{1}) に達し、契約期間の {2}% ({3}) に達していない場合。",
+	"_Notification_Text_ExecutionDate": "指定された実行日 ({0}) に達する場合",
+	"_Notification_Text_TimeAmountPercent": "契約が契約期間の {0}% ({1}) に達し、支出額が定義された最低額の {2}% ({4}{3}) に達していない場合。",
+	"_Notification_Text_TimePercent": "契約が契約期間の {0}%  ({1}) に達する場合",
+	"_Notification_Type": "タイプ",
+	"_Notification_Type_report": "タイプ",
+	"_ProcessDetails": "全般情報",
+	"_ProcessKeyName": "キー名",
+	"_ProcessKeyName_report": "キー名",
+	"_ProcessKeyValue": "キー値",
+	"_ProcessKeyValue_report": "キー値",
+	"_ProcessName": "処理名",
+	"_ProcessName_report": "処理名",
+	"_Project_%Time": "プロジェクト期間のパーセンテージ",
+	"_receiversBrowseTitle": "受信者を選択",
+	"_sendToAllMembersIfGroup": "グループメンバーに個別に送信",
+	"_sendToAllMembersIfGroup_report": "グループメンバーに個別に送信",
+	"_Status": "通知ステータス",
+	"_Status_report": "通知ステータス",
+	"_validationURL": "フォーム URL",
+	"_validationURL_report": "フォーム URL",
+	"_You can select up to {0} receivers": "最大 {0} 件の受信者を選択できます。",
+	"P2P - Notification": "S2P - 通知",
+	"P2P - Notification__": "S2P - 通知"
+}</process_ja>
+      <process_en>{
+	"_Active": "Activated",
+	"_backupUserAsCC": "Cc delegate user",
+	"_backupUserAsCC_report": "Cc delegate user",
+	"_Canceled": "Canceled",
+	"_Details": "Details",
+	"_escapeCustomTags": "Escape custom tags",
+	"_escapeCustomTags_report": "Escape custom tags",
+	"_FromName": "Sender",
+	"_FromName_report": "Sender",
+	"_Notification_ConditionText": "Condition",
+	"_Notification_ConditionType": "Type",
+	"_Notification_ConditionType_AmountPercent": "Spend %",
+	"_Notification_ConditionType_AmountTimePercent": "Spend trend (high)",
+	"_Notification_ConditionType_ContractExecutionDate": "Execution date",
+	"_Notification_ConditionType_ExecutionDate": "Execution date",
+	"_Notification_ConditionType_ProjectAmountPercent": "Spend %",
+	"_Notification_ConditionType_ProjectExecutionDate": "Execution date",
+	"_Notification_ConditionType_ProjectTimePercent": "Project duration %",
+	"_Notification_ConditionType_TimeAmountPercent": "Spend trend (low)",
+	"_Notification_ConditionType_TimePercent": "Contract term %",
+	"_Notification_DialogCustomControl_Contract_%Spent": "Spend %",
+	"_Notification_DialogCustomControl_Contract_%Time": "Contract term %",
+	"_Notification_DialogCustomControl_ExecutionDate": "Execution date",
+	"_Notification_DialogCustomControl_Project_%Spent": "Spend %",
+	"_Notification_DialogCustomControl_Project_%Time": "Project duration %",
+	"_Notification_EditDialog_Title": "New Notification",
+	"_Notification_ExecutionDate": "Execution date",
+	"_Notification_ExecutionDate_report": "Execution date",
+	"_Notification_ExecutionSettings": "Notification in JSON format",
+	"_Notification_LastConsumedDateTime": "Completion date",
+	"_Notification_LastConsumedDateTime_report": "Completion date",
+	"_Notification_LastSentDateTime": "Last sent date",
+	"_Notification_LastSentDateTime_report": "Last sent date",
+	"_Notification_Name": "Name",
+	"_Notification_Name_report": "Notification name",
+	"_Notification_OnScheduledTask": "Scheduled",
+	"_Notification_OnScheduledTask_report": "Scheduled",
+	"_Notification_OnUpdate": "On information update",
+	"_Notification_OnUpdate_report": "On information update",
+	"_Notification_Project_Text_TimePercent": "When the project reaches {0}% ({1}) of its duration",
+	"_Notification_Receivers": "Recipients",
+	"_Notification_Receivers_Group_Group": "Groups",
+	"_Notification_Receivers_Group_User": "Users",
+	"_Notification_Receivers_report": "Recipients",
+	"_Notification_TemplateName": "Template",
+	"_Notification_TemplateName_report": "Template",
+	"_Notification_Text_AmountPercent": "When the total spent amount reaches {0}% ({2} {1}) of the maximum spend amount",
+	"_Notification_Text_AmountTimePercent": "When the spent amount reaches {0}% ({4} {1}) of the maximum spend amount and the contract has not reached {2}% ({3}) of its term yet",
+	"_Notification_Text_ExecutionDate": "When the specified execution date ({0}) is reached",
+	"_Notification_Text_TimeAmountPercent": "When the contract reaches {0}% ({1}) of its term and the spent amount has not reached {2}% ({4} {3}) of the defined minimum amount yet",
+	"_Notification_Text_TimePercent": "When the contract reaches {0}% ({1}) of its term",
+	"_Notification_Type": "Type",
+	"_Notification_Type_report": "Type",
+	"_ProcessDetails": "General Information",
+	"_ProcessKeyName": "Key name",
+	"_ProcessKeyName_report": "Key name",
+	"_ProcessKeyValue": "Key value",
+	"_ProcessKeyValue_report": "Key value",
+	"_ProcessName": "Process name",
+	"_ProcessName_report": "Process name",
+	"_Project_%Time": "Project duration %",
+	"_receiversBrowseTitle": "Select Recipients",
+	"_sendToAllMembersIfGroup": "Send to group members individually",
+	"_sendToAllMembersIfGroup_report": "Send to group members individually",
+	"_Status": "Notification status",
+	"_Status_report": "Notification status",
+	"_validationURL": "Form URL",
+	"_validationURL_report": "Form URL",
+	"_You can select up to {0} receivers": "You can select up to {0} recipients.",
+	"P2P - Notification": "S2P - Notification",
+	"P2P - Notification__": "S2P - Notification"
+}</process_en>
+      <process_es>{
+	"_Active": "Activada",
+	"_backupUserAsCC": "Poner en copia al usuario delegado",
+	"_backupUserAsCC_report": "Poner en copia al usuario delegado",
+	"_Canceled": "Cancelada",
+	"_Details": "Detalles",
+	"_escapeCustomTags": "Escape custom tags",
+	"_escapeCustomTags_report": "Escape custom tags",
+	"_FromName": "Remitente",
+	"_FromName_report": "Remitente",
+	"_Notification_ConditionText": "Condición",
+	"_Notification_ConditionType": "Tipo",
+	"_Notification_ConditionType_AmountPercent": " % de gastos",
+	"_Notification_ConditionType_AmountTimePercent": "Evolución de gastos (alta)",
+	"_Notification_ConditionType_ContractExecutionDate": "Fecha de ejecución",
+	"_Notification_ConditionType_ExecutionDate": "Fecha de ejecución",
+	"_Notification_ConditionType_ProjectAmountPercent": " % de gastos",
+	"_Notification_ConditionType_ProjectExecutionDate": "Fecha de ejecución",
+	"_Notification_ConditionType_ProjectTimePercent": "% de la validez del proyecto",
+	"_Notification_ConditionType_TimeAmountPercent": "Evolución de gastos (baja)",
+	"_Notification_ConditionType_TimePercent": "% de la validez del contrato",
+	"_Notification_DialogCustomControl_Contract_%Spent": " % de gastos",
+	"_Notification_DialogCustomControl_Contract_%Time": "% de la validez del contrato",
+	"_Notification_DialogCustomControl_ExecutionDate": "Fecha de ejecución",
+	"_Notification_DialogCustomControl_Project_%Spent": " % de gastos",
+	"_Notification_DialogCustomControl_Project_%Time": "% de la validez del proyecto",
+	"_Notification_EditDialog_Title": "Nueva notificación",
+	"_Notification_ExecutionDate": "Fecha de ejecución",
+	"_Notification_ExecutionDate_report": "Fecha de ejecución",
+	"_Notification_ExecutionSettings": "Notificación en formato JSON",
+	"_Notification_LastConsumedDateTime": "Fecha de finalización",
+	"_Notification_LastConsumedDateTime_report": "Fecha de finalización",
+	"_Notification_LastSentDateTime": "Fecha del último envío",
+	"_Notification_LastSentDateTime_report": "Fecha del último envío",
+	"_Notification_Name": "Nombre",
+	"_Notification_Name_report": "Nombre de la notificación",
+	"_Notification_OnScheduledTask": "Envío programado",
+	"_Notification_OnScheduledTask_report": "Envío programado",
+	"_Notification_OnUpdate": "Al actualizar la información",
+	"_Notification_OnUpdate_report": "Al actualizar la información",
+	"_Notification_Project_Text_TimePercent": "Cuando el proyecto alcance el {0}% de su validez, es decir, el {1}",
+	"_Notification_Receivers": "Destinatarios",
+	"_Notification_Receivers_Group_Group": "Grupos",
+	"_Notification_Receivers_Group_User": "Usuarios",
+	"_Notification_Receivers_report": "Destinatarios",
+	"_Notification_TemplateName": "Plantilla",
+	"_Notification_TemplateName_report": "Plantilla",
+	"_Notification_Text_AmountPercent": "Cuando el importe total gastado alcance el {0}% ({2} {1}) del importe máximo de gasto",
+	"_Notification_Text_AmountTimePercent": "Cuando el importe de gasto alcanza el {0}% ({4} {1}) del importe máximo de gasto y el contrato aún no ha alcanzado el {2}% ({3}) de su vigencia.",
+	"_Notification_Text_ExecutionDate": "Al alcanzar la fecha de ejecución especificada ({0})",
+	"_Notification_Text_TimeAmountPercent": "Cuando el contrato alcanza el {0}% ({1}) de su vigencia y el importe de gasto aún no ha alcanzado el {2}% ({4} {3}) del importe mínimo definido.",
+	"_Notification_Text_TimePercent": "Cuando el contrato alcance el {0}% de su validez, es decir, el {1}",
+	"_Notification_Type": "Tipo",
+	"_Notification_Type_report": "Tipo",
+	"_ProcessDetails": "Información general",
+	"_ProcessKeyName": "Nombre de la llave",
+	"_ProcessKeyName_report": "Nombre de la llave",
+	"_ProcessKeyValue": "Valor de la llave",
+	"_ProcessKeyValue_report": "Valor de la llave",
+	"_ProcessName": "Nombre del proceso",
+	"_ProcessName_report": "Nombre del proceso",
+	"_Project_%Time": "% de la validez del proyecto",
+	"_receiversBrowseTitle": "Selección de destinatarios",
+	"_sendToAllMembersIfGroup": "Enviar a los miembros del grupo individualmente",
+	"_sendToAllMembersIfGroup_report": "Enviar a los miembros del grupo individualmente",
+	"_Status": "Estado de la notificación",
+	"_Status_report": "Estado de la notificación",
+	"_validationURL": "URL del formulario",
+	"_validationURL_report": "URL del formulario",
+	"_You can select up to {0} receivers": "Puede seleccionar un máximo de {0} destinatarios.",
+	"P2P - Notification": "S2P - Notificación",
+	"P2P - Notification__": "S2P - Notificación"
+}</process_es>
+      <process_fr>{
+	"_Active": "Activée",
+	"_backupUserAsCC": "Mettre en copie l'utilisateur délégué",
+	"_backupUserAsCC_report": "Mettre en copie l'utilisateur délégué",
+	"_Canceled": "Annulée",
+	"_Details": "Détails",
+	"_escapeCustomTags": "Escape custom tags",
+	"_escapeCustomTags_report": "Escape custom tags",
+	"_FromName": "Expéditeur",
+	"_FromName_report": "Expéditeur",
+	"_Notification_ConditionText": "Condition",
+	"_Notification_ConditionType": "Type",
+	"_Notification_ConditionType_AmountPercent": "% de dépenses",
+	"_Notification_ConditionType_AmountTimePercent": "Tendance des dépenses (élevée)",
+	"_Notification_ConditionType_ContractExecutionDate": "Date d'exécution",
+	"_Notification_ConditionType_ExecutionDate": "Date d'exécution",
+	"_Notification_ConditionType_ProjectAmountPercent": "% de dépenses",
+	"_Notification_ConditionType_ProjectExecutionDate": "Date d'exécution",
+	"_Notification_ConditionType_ProjectTimePercent": "% de la durée du projet",
+	"_Notification_ConditionType_TimeAmountPercent": "Tendance des dépenses (faible)",
+	"_Notification_ConditionType_TimePercent": "% de la durée du contrat",
+	"_Notification_DialogCustomControl_Contract_%Spent": "% de dépenses",
+	"_Notification_DialogCustomControl_Contract_%Time": "% de la durée du contrat",
+	"_Notification_DialogCustomControl_ExecutionDate": "Date d'exécution",
+	"_Notification_DialogCustomControl_Project_%Spent": "% de dépenses",
+	"_Notification_DialogCustomControl_Project_%Time": "% de la durée du projet",
+	"_Notification_EditDialog_Title": "Nouvelle notification",
+	"_Notification_ExecutionDate": "Date d'exécution",
+	"_Notification_ExecutionDate_report": "Date d'exécution",
+	"_Notification_ExecutionSettings": "Notification au format JSON",
+	"_Notification_LastConsumedDateTime": "Date de fin",
+	"_Notification_LastConsumedDateTime_report": "Date de fin",
+	"_Notification_LastSentDateTime": "Date du dernier envoi",
+	"_Notification_LastSentDateTime_report": "Date du dernier envoi",
+	"_Notification_Name": "Nom",
+	"_Notification_Name_report": "Nom de la notification",
+	"_Notification_OnScheduledTask": "Envoi planifié",
+	"_Notification_OnScheduledTask_report": "Envoi planifié",
+	"_Notification_OnUpdate": "Lors d'une mise à jour des informations",
+	"_Notification_OnUpdate_report": "Lors d'une mise à jour des informations",
+	"_Notification_Project_Text_TimePercent": "Lorsque le projet atteint {0} % ({1}) de sa durée",
+	"_Notification_Receivers": "Destinataires",
+	"_Notification_Receivers_Group_Group": "Groupes",
+	"_Notification_Receivers_Group_User": "Utilisateurs",
+	"_Notification_Receivers_report": "Destinataires",
+	"_Notification_TemplateName": "Modèle",
+	"_Notification_TemplateName_report": "Modèle",
+	"_Notification_Text_AmountPercent": "Lorsque le montant total dépensé atteint {0} % ({1} {2}) du montant maximum des dépenses",
+	"_Notification_Text_AmountTimePercent": "Lorsque le montant dépensé atteint {0} % ({1} {4}) du montant maximum des dépenses et que le contrat n'a pas encore atteint {2} % ({3}) de sa durée",
+	"_Notification_Text_ExecutionDate": "Lorsque la date d'exécution spécifiée ({0}) est atteinte",
+	"_Notification_Text_TimeAmountPercent": "Lorsque le contrat atteint {0} % ({1}) de sa durée et que le montant dépensé n'a pas encore atteint {2} % ({3} {4}) du minimum défini",
+	"_Notification_Text_TimePercent": "Lorsque le contrat atteint {0} % ({1}) de sa durée",
+	"_Notification_Type": "Type",
+	"_Notification_Type_report": "Type",
+	"_ProcessDetails": "Informations générales",
+	"_ProcessKeyName": "Nom de la clé",
+	"_ProcessKeyName_report": "Nom de la clé",
+	"_ProcessKeyValue": "Valeur de la clé",
+	"_ProcessKeyValue_report": "Valeur de la clé",
+	"_ProcessName": "Nom du processus",
+	"_ProcessName_report": "Nom du processus",
+	"_Project_%Time": "% de la durée du projet",
+	"_receiversBrowseTitle": "Sélection des destinataires",
+	"_sendToAllMembersIfGroup": "Envoyer aux membres du groupe individuellement",
+	"_sendToAllMembersIfGroup_report": "Envoyer aux membres du groupe individuellement",
+	"_Status": "État de la notification",
+	"_Status_report": "État de la notification",
+	"_validationURL": "URL du formulaire",
+	"_validationURL_report": "URL du formulaire",
+	"_You can select up to {0} receivers": "Vous pouvez sélectionner jusqu'à {0} destinataires.",
+	"P2P - Notification": "S2P - Notification",
+	"P2P - Notification__": "S2P - Notification"
+}</process_fr>
+      <process_nl-NL>{
+	"_Active": "Geactiveerd",
+	"_backupUserAsCC": "CC gemachtigde gebruikers",
+	"_backupUserAsCC_report": "CC gemachtigde gebruikers",
+	"_Canceled": "Geannuleerd",
+	"_Details": "Details",
+	"_escapeCustomTags": "Escape custom tags",
+	"_escapeCustomTags_report": "Escape custom tags",
+	"_FromName": "Afzender",
+	"_FromName_report": "Afzender",
+	"_Notification_ConditionText": "Voorwaarde",
+	"_Notification_ConditionType": "Type",
+	"_Notification_ConditionType_AmountPercent": "% uitgaven",
+	"_Notification_ConditionType_AmountTimePercent": "Trend uitgaven (hoog)",
+	"_Notification_ConditionType_ContractExecutionDate": "Datum uitvoering",
+	"_Notification_ConditionType_ExecutionDate": "Datum uitvoering",
+	"_Notification_ConditionType_ProjectAmountPercent": "% uitgaven",
+	"_Notification_ConditionType_ProjectExecutionDate": "Datum uitvoering",
+	"_Notification_ConditionType_ProjectTimePercent": "Duur project %",
+	"_Notification_ConditionType_TimeAmountPercent": "Trend uitgaven (laag)",
+	"_Notification_ConditionType_TimePercent": "% termijn contract",
+	"_Notification_DialogCustomControl_Contract_%Spent": "% uitgaven",
+	"_Notification_DialogCustomControl_Contract_%Time": "% termijn contract",
+	"_Notification_DialogCustomControl_ExecutionDate": "Datum uitvoering",
+	"_Notification_DialogCustomControl_Project_%Spent": "% uitgaven",
+	"_Notification_DialogCustomControl_Project_%Time": "Duur project %",
+	"_Notification_EditDialog_Title": "Nieuwe melding",
+	"_Notification_ExecutionDate": "Datum uitvoering",
+	"_Notification_ExecutionDate_report": "Datum uitvoering",
+	"_Notification_ExecutionSettings": "Melding in JSON-formaat",
+	"_Notification_LastConsumedDateTime": "Voltooiingsdatum",
+	"_Notification_LastConsumedDateTime_report": "Voltooiingsdatum",
+	"_Notification_LastSentDateTime": "Datum laatst verzonden",
+	"_Notification_LastSentDateTime_report": "Datum laatst verzonden",
+	"_Notification_Name": "Naam",
+	"_Notification_Name_report": "Naam melding",
+	"_Notification_OnScheduledTask": "Gepland",
+	"_Notification_OnScheduledTask_report": "Gepland",
+	"_Notification_OnUpdate": "Bij update informatie",
+	"_Notification_OnUpdate_report": "Bij update informatie",
+	"_Notification_Project_Text_TimePercent": "Wanneer het project {0}% ({1}) van de duur bereikt",
+	"_Notification_Receivers": "Ontvangers",
+	"_Notification_Receivers_Group_Group": "Groepen",
+	"_Notification_Receivers_Group_User": "Gebruikers",
+	"_Notification_Receivers_report": "Ontvangers",
+	"_Notification_TemplateName": "Template",
+	"_Notification_TemplateName_report": "Template",
+	"_Notification_Text_AmountPercent": "Wanneer het totale gespendeerde bedrag {0}% ({1} {2}) van het maximumbedrag uitgaven bereikt",
+	"_Notification_Text_AmountTimePercent": "Wanneer het gespendeerde bedrag {0}% ({4} {1}) van het maximumbedrag uitgaven bereikt en het contract {2}% ({3}) van de looptijd nog niet heeft bereikt.",
+	"_Notification_Text_ExecutionDate": "Wanneer de gespecificeerde datum uitvoering ({0}) is bereikt",
+	"_Notification_Text_TimeAmountPercent": "Wanneer het contract {0}% ({1}) van de looptijd bereikt en het gespendeerde bedrag {2}% ({4} {3}) van het gedefinieerde minimumbedrag nog niet heeft bereikt.",
+	"_Notification_Text_TimePercent": "Wanneer het contract {0}% ({1}) van de termijn bereikt",
+	"_Notification_Type": "Type",
+	"_Notification_Type_report": "Type",
+	"_ProcessDetails": "Algemene informatie",
+	"_ProcessKeyName": "Naam code",
+	"_ProcessKeyName_report": "Naam code",
+	"_ProcessKeyValue": "Waarde code",
+	"_ProcessKeyValue_report": "Waarde code",
+	"_ProcessName": "Procesnaam",
+	"_ProcessName_report": "Procesnaam",
+	"_Project_%Time": "Duur project %",
+	"_receiversBrowseTitle": "Ontvangers selecteren",
+	"_sendToAllMembersIfGroup": "Naar individuele groepsleden sturen",
+	"_sendToAllMembersIfGroup_report": "Naar individuele groepsleden sturen",
+	"_Status": "Status kennisgeving",
+	"_Status_report": "Status kennisgeving",
+	"_validationURL": "URL formulier",
+	"_validationURL_report": "URL formulier",
+	"_You can select up to {0} receivers": "U kunt maximaal {0} ontvangers selecteren.",
+	"P2P - Notification": "S2P - Melding",
+	"P2P - Notification__": "S2P - Melding"
+}</process_nl-NL>
+      <process_pl>{
+	"_Active": "Aktywowano",
+	"_backupUserAsCC": "DW użytkownika oddelegowanego",
+	"_backupUserAsCC_report": "DW użytkownika oddelegowanego",
+	"_Canceled": "Anulowane",
+	"_Details": "Szczegóły",
+	"_escapeCustomTags": "Escape’owanie tagów niestandardowych",
+	"_escapeCustomTags_report": "Escape’owanie tagów niestandardowych",
+	"_FromName": "Nadawca",
+	"_FromName_report": "Nadawca",
+	"_Notification_ConditionText": "Warunek",
+	"_Notification_ConditionType": "Typ",
+	"_Notification_ConditionType_AmountPercent": "Wydatki (%)",
+	"_Notification_ConditionType_AmountTimePercent": "Trend wydatków (wysoki)",
+	"_Notification_ConditionType_ContractExecutionDate": "Data wykonania",
+	"_Notification_ConditionType_ExecutionDate": "Data wykonania",
+	"_Notification_ConditionType_ProjectAmountPercent": "Wydatki (%)",
+	"_Notification_ConditionType_ProjectExecutionDate": "Data wykonania",
+	"_Notification_ConditionType_ProjectTimePercent": "Czas trwania projektu (%)",
+	"_Notification_ConditionType_TimeAmountPercent": "Trend wydatków (niski)",
+	"_Notification_ConditionType_TimePercent": "Okres obowiązywania kontraktu (%)",
+	"_Notification_DialogCustomControl_Contract_%Spent": "Wydatki (%)",
+	"_Notification_DialogCustomControl_Contract_%Time": "Okres obowiązywania kontraktu (%)",
+	"_Notification_DialogCustomControl_ExecutionDate": "Data wykonania",
+	"_Notification_DialogCustomControl_Project_%Spent": "Wydatki (%)",
+	"_Notification_DialogCustomControl_Project_%Time": "Czas trwania projektu (%)",
+	"_Notification_EditDialog_Title": "Nowe powiadomienie",
+	"_Notification_ExecutionDate": "Data wykonania",
+	"_Notification_ExecutionDate_report": "Data wykonania",
+	"_Notification_ExecutionSettings": "Powiadomienie w formacie JSON",
+	"_Notification_LastConsumedDateTime": "Data ukończenia",
+	"_Notification_LastConsumedDateTime_report": "Data ukończenia",
+	"_Notification_LastSentDateTime": "Data ostatniej wysyłki",
+	"_Notification_LastSentDateTime_report": "Data ostatniej wysyłki",
+	"_Notification_Name": "Nazwa",
+	"_Notification_Name_report": "Nazwa powiadomienia",
+	"_Notification_OnScheduledTask": "Według harmonogramu",
+	"_Notification_OnScheduledTask_report": "Według harmonogramu",
+	"_Notification_OnUpdate": "Po zaktualizowaniu informacji",
+	"_Notification_OnUpdate_report": "Po zaktualizowaniu informacji",
+	"_Notification_Project_Text_TimePercent": "Gdy projekt osiągnie {0}% ({1}) czasu trwania",
+	"_Notification_Receivers": "Odbiorcy",
+	"_Notification_Receivers_Group_Group": "Grupy",
+	"_Notification_Receivers_Group_User": "Użytkownicy",
+	"_Notification_Receivers_report": "Odbiorcy",
+	"_Notification_TemplateName": "Szablon",
+	"_Notification_TemplateName_report": "Szablon",
+	"_Notification_Text_AmountPercent": "Gdy łączna kwota wydatków osiągnie {0}% ({2} {1}) maksymalnej kwoty wydatków",
+	"_Notification_Text_AmountTimePercent": "Gdy łączna kwota wydatków osiągnie {0}% ({4} {1}) maksymalnej kwoty wydatków, a kontrakt jeszcze nie osiągnie {2}% ({3}) okresu obowiązywania",
+	"_Notification_Text_ExecutionDate": "Gdy nadejdzie określona data wykonania ({0})",
+	"_Notification_Text_TimeAmountPercent": "Gdy kontrakt osiągnie {0}% ({1}) okresu obowiązywania, a kwota wydatków jeszcze nie osiągnie {2}% ({4} {3}) zdefiniowanej kwoty maksymalnej",
+	"_Notification_Text_TimePercent": "Gdy kontrakt osiągnie {0}% ({1}) okresu obowiązywania",
+	"_Notification_Type": "Typ",
+	"_Notification_Type_report": "Typ",
+	"_ProcessDetails": "Informacje ogólne",
+	"_ProcessKeyName": "Nazwa klucza",
+	"_ProcessKeyName_report": "Nazwa klucza",
+	"_ProcessKeyValue": "Wartość klucza",
+	"_ProcessKeyValue_report": "Wartość klucza",
+	"_ProcessName": "Nazwa procesu",
+	"_ProcessName_report": "Nazwa procesu",
+	"_Project_%Time": "Czas trwania projektu (%)",
+	"_receiversBrowseTitle": "Wybierz odbiorców",
+	"_sendToAllMembersIfGroup": "Wyślij indywidualnie do członków grupy",
+	"_sendToAllMembersIfGroup_report": "Wyślij indywidualnie do członków grupy",
+	"_Status": "Status powiadomienia",
+	"_Status_report": "Status powiadomienia",
+	"_validationURL": "URL formularza",
+	"_validationURL_report": "URL formularza",
+	"_You can select up to {0} receivers": "Można wybrać do {0} odbiorców.",
+	"P2P - Notification": "S2P – powiadomienie",
+	"P2P - Notification__": "S2P – powiadomienie"
+}</process_pl>
+      <process_it>{
+	"_Active": "Attivata",
+	"_backupUserAsCC": "Aggiungi in copia utente delegato",
+	"_backupUserAsCC_report": "Aggiungi in copia utente delegato",
+	"_Canceled": "Annullata",
+	"_Details": "Dettagli",
+	"_escapeCustomTags": "Escape custom tags",
+	"_escapeCustomTags_report": "Escape custom tags",
+	"_FromName": "Mittente",
+	"_FromName_report": "Mittente",
+	"_Notification_ConditionText": "Condizione",
+	"_Notification_ConditionType": "Tipo",
+	"_Notification_ConditionType_AmountPercent": "% di spesa",
+	"_Notification_ConditionType_AmountTimePercent": "Tendenza spesa (elevata)",
+	"_Notification_ConditionType_ContractExecutionDate": "Data di esecuzione",
+	"_Notification_ConditionType_ExecutionDate": "Data di esecuzione",
+	"_Notification_ConditionType_ProjectAmountPercent": "% di spesa",
+	"_Notification_ConditionType_ProjectExecutionDate": "Data di esecuzione",
+	"_Notification_ConditionType_ProjectTimePercent": "% della durata del progetto",
+	"_Notification_ConditionType_TimeAmountPercent": "Tendenza spesa (bassa)",
+	"_Notification_ConditionType_TimePercent": "% della durata del contratto",
+	"_Notification_DialogCustomControl_Contract_%Spent": "% di spesa",
+	"_Notification_DialogCustomControl_Contract_%Time": "% della durata del contratto",
+	"_Notification_DialogCustomControl_ExecutionDate": "Data di esecuzione",
+	"_Notification_DialogCustomControl_Project_%Spent": "% di spesa",
+	"_Notification_DialogCustomControl_Project_%Time": "% della durata del progetto",
+	"_Notification_EditDialog_Title": "Nuova notifica",
+	"_Notification_ExecutionDate": "Data di esecuzione",
+	"_Notification_ExecutionDate_report": "Data di esecuzione",
+	"_Notification_ExecutionSettings": "Notifica in formato JSON",
+	"_Notification_LastConsumedDateTime": "Data di fine",
+	"_Notification_LastConsumedDateTime_report": "Data di fine",
+	"_Notification_LastSentDateTime": "Data ultimo invio",
+	"_Notification_LastSentDateTime_report": "Data ultimo invio",
+	"_Notification_Name": "Nome",
+	"_Notification_Name_report": "Nome notifica",
+	"_Notification_OnScheduledTask": "Invio pianificato",
+	"_Notification_OnScheduledTask_report": "Invio pianificato",
+	"_Notification_OnUpdate": "In caso di informazioni aggiornate",
+	"_Notification_OnUpdate_report": "In caso di informazioni aggiornate",
+	"_Notification_Project_Text_TimePercent": "Quando il progetto raggiunge la percentuale della durata definita ({0}% = {1})",
+	"_Notification_Receivers": "Destinatari",
+	"_Notification_Receivers_Group_Group": "Gruppi",
+	"_Notification_Receivers_Group_User": "Utenti",
+	"_Notification_Receivers_report": "Destinatari",
+	"_Notification_TemplateName": "Modello",
+	"_Notification_TemplateName_report": "Modello",
+	"_Notification_Text_AmountPercent": "Quando l'importo totale speso raggiunge la percentuale di spesa definita sull'importo massimo ({0}% = {1} {2})",
+	"_Notification_Text_AmountTimePercent": "Quando l'importo speso raggiunge la percentuale di spesa definita sull'importo massimo ({0}% = {1} {4}) e il contratto non ha ancora raggiunto la percentuale della durata definita ({2}% = {3})",
+	"_Notification_Text_ExecutionDate": "Quando la data di esecuzione specificata ({0}) è raggiunta",
+	"_Notification_Text_TimeAmountPercent": "Quando il contratto raggiunge la percentuale della durata definita ({0}% = {1})) e l'importo speso non ha ancora raggiunto la percentuale di spesa definita sull'importo minimo ({2}% = {3} {4})",
+	"_Notification_Text_TimePercent": "Quando il contratto raggiunge la percentuale della durata definita ({0}% = {1})",
+	"_Notification_Type": "Tipo",
+	"_Notification_Type_report": "Tipo",
+	"_ProcessDetails": "Informazioni generali",
+	"_ProcessKeyName": "Nome della chiave",
+	"_ProcessKeyName_report": "Nome della chiave",
+	"_ProcessKeyValue": "Valore della chiave",
+	"_ProcessKeyValue_report": "Valore della chiave",
+	"_ProcessName": "Nome del trattamento",
+	"_ProcessName_report": "Nome del trattamento",
+	"_Project_%Time": "% della durata del progetto",
+	"_receiversBrowseTitle": "Selezione destinatari",
+	"_sendToAllMembersIfGroup": "Invia individualmente ai membri del gruppo",
+	"_sendToAllMembersIfGroup_report": "Invia individualmente ai membri del gruppo",
+	"_Status": "Stato notifica",
+	"_Status_report": "Stato notifica",
+	"_validationURL": "URL del modulo",
+	"_validationURL_report": "URL del modulo",
+	"_You can select up to {0} receivers": "È possibile selezionare fino a {0} destinatari.",
+	"P2P - Notification": "S2P - Notifica",
+	"P2P - Notification__": "S2P - Notifica"
+}</process_it>
+      <process_sk>{
+	"_Active": "Aktivovaný",
+	"_backupUserAsCC": "Delegovaný používateľ v kópii",
+	"_backupUserAsCC_report": "Delegovaný používateľ v kópii",
+	"_Canceled": "Zrušený",
+	"_Details": "Podrobnosti",
+	"_escapeCustomTags": "Vlastné značky výstupu",
+	"_escapeCustomTags_report": "Vlastné značky výstupu",
+	"_FromName": "Odosielateľ",
+	"_FromName_report": "Odosielateľ",
+	"_Notification_ConditionText": "Stav",
+	"_Notification_ConditionType": "Typ",
+	"_Notification_ConditionType_AmountPercent": "Výdavky %",
+	"_Notification_ConditionType_AmountTimePercent": "Trend výdavkov (vysoký)",
+	"_Notification_ConditionType_ContractExecutionDate": "Dátum vykonania",
+	"_Notification_ConditionType_ExecutionDate": "Dátum vykonania",
+	"_Notification_ConditionType_ProjectAmountPercent": "Výdavky %",
+	"_Notification_ConditionType_ProjectExecutionDate": "Dátum vykonania",
+	"_Notification_ConditionType_ProjectTimePercent": "Trvanie projektu %",
+	"_Notification_ConditionType_TimeAmountPercent": "Trend výdavkov (nízky)",
+	"_Notification_ConditionType_TimePercent": "Doba platnosti zmluvy %",
+	"_Notification_DialogCustomControl_Contract_%Spent": "Výdavky %",
+	"_Notification_DialogCustomControl_Contract_%Time": "Doba platnosti zmluvy %",
+	"_Notification_DialogCustomControl_ExecutionDate": "Dátum vykonania",
+	"_Notification_DialogCustomControl_Project_%Spent": "Výdavky %",
+	"_Notification_DialogCustomControl_Project_%Time": "Trvanie projektu %",
+	"_Notification_EditDialog_Title": "Nové oznámenie",
+	"_Notification_ExecutionDate": "Dátum vykonania",
+	"_Notification_ExecutionDate_report": "Dátum vykonania",
+	"_Notification_ExecutionSettings": "Oznámenie vo formáte JSON",
+	"_Notification_LastConsumedDateTime": "Dátum ukončenia",
+	"_Notification_LastConsumedDateTime_report": "Dátum ukončenia",
+	"_Notification_LastSentDateTime": "Dátum posledného odoslania",
+	"_Notification_LastSentDateTime_report": "Dátum posledného odoslania",
+	"_Notification_Name": "Názov",
+	"_Notification_Name_report": "Názov oznámenia",
+	"_Notification_OnScheduledTask": "Plánovaný",
+	"_Notification_OnScheduledTask_report": "Plánovaný",
+	"_Notification_OnUpdate": "Pri aktualizácii informácií",
+	"_Notification_OnUpdate_report": "Pri aktualizácii informácií",
+	"_Notification_Project_Text_TimePercent": "Keď projekt dosiahne {0}% ({1}) svojho trvania",
+	"_Notification_Receivers": "Príjemcovia",
+	"_Notification_Receivers_Group_Group": "Skupiny",
+	"_Notification_Receivers_Group_User": "Používatelia",
+	"_Notification_Receivers_report": "Príjemcovia",
+	"_Notification_TemplateName": "Šablóna",
+	"_Notification_TemplateName_report": "Šablóna",
+	"_Notification_Text_AmountPercent": "Keď celková vynaložená suma dosiahne {0}% ({2} {1}) z maximálnej sumy výdavkov",
+	"_Notification_Text_AmountTimePercent": "Keď vynaložená suma dosiahne {0}% ({4} {1}) z maximálnej sumy výdavkov a zmluva ešte nedosiahla {2}% ({3}) svojej platnosti",
+	"_Notification_Text_ExecutionDate": "Keď sa dosiahne stanovený dátum vykonania ({0})",
+	"_Notification_Text_TimeAmountPercent": "Keď zmluva dosiahne {0}% ({1}) svojej doby platnosti a vynaložená suma ešte nedosiahla {2}% ({4} {3}) stanovenej minimálnej sumy",
+	"_Notification_Text_TimePercent": "Keď zmluva dosiahne {0}% ({1}) svojej doby platnosti",
+	"_Notification_Type": "Typ",
+	"_Notification_Type_report": "Typ",
+	"_ProcessDetails": "Všeobecné informácie",
+	"_ProcessKeyName": "Názov kľúča",
+	"_ProcessKeyName_report": "Názov kľúča",
+	"_ProcessKeyValue": "Hodnota kľúča",
+	"_ProcessKeyValue_report": "Hodnota kľúča",
+	"_ProcessName": "Názov procesu",
+	"_ProcessName_report": "Názov procesu",
+	"_Project_%Time": "Trvanie projektu %",
+	"_receiversBrowseTitle": "Vybrať príjemcov",
+	"_sendToAllMembersIfGroup": "Odoslať členom skupiny jednotlivo",
+	"_sendToAllMembersIfGroup_report": "Odoslať členom skupiny jednotlivo",
+	"_Status": "Stav oznámenia",
+	"_Status_report": "Stav oznámenia",
+	"_validationURL": "Adresa URL formulára",
+	"_validationURL_report": "Adresa URL formulára",
+	"_You can select up to {0} receivers": "Môžete vybrať až {0} príjemcov.",
+	"P2P - Notification": "S2P – Oznámenie",
+	"P2P - Notification__": "S2P – Oznámenie"
+}</process_sk>
+      <process_zh-CN>{
+	"_Active": "启用",
+	"_backupUserAsCC": "Cc 委托用户",
+	"_backupUserAsCC_report": "Cc 委托用户",
+	"_Canceled": "停用",
+	"_Details": "详细信息",
+	"_escapeCustomTags": "Escape custom tags",
+	"_escapeCustomTags_report": "Escape custom tags",
+	"_FromName": "发件人",
+	"_FromName_report": "发件人",
+	"_Notification_ConditionText": "条件",
+	"_Notification_ConditionType": "类型",
+	"_Notification_ConditionType_AmountPercent": "采购额 %",
+	"_Notification_ConditionType_AmountTimePercent": "消费趋势（高）",
+	"_Notification_ConditionType_ContractExecutionDate": "执行日期",
+	"_Notification_ConditionType_ExecutionDate": "执行日期",
+	"_Notification_ConditionType_ProjectAmountPercent": "采购额 %",
+	"_Notification_ConditionType_ProjectExecutionDate": "执行日期",
+	"_Notification_ConditionType_ProjectTimePercent": "项目工期 %",
+	"_Notification_ConditionType_TimeAmountPercent": "消费趋势（低）",
+	"_Notification_ConditionType_TimePercent": "合同期限 %",
+	"_Notification_DialogCustomControl_Contract_%Spent": "采购额 %",
+	"_Notification_DialogCustomControl_Contract_%Time": "合同期限 %",
+	"_Notification_DialogCustomControl_ExecutionDate": "执行日期",
+	"_Notification_DialogCustomControl_Project_%Spent": "采购额 %",
+	"_Notification_DialogCustomControl_Project_%Time": "项目工期 %",
+	"_Notification_EditDialog_Title": "新通知",
+	"_Notification_ExecutionDate": "执行日期",
+	"_Notification_ExecutionDate_report": "执行日期",
+	"_Notification_ExecutionSettings": "JSON 格式的通知",
+	"_Notification_LastConsumedDateTime": "完成日期",
+	"_Notification_LastConsumedDateTime_report": "完成日期",
+	"_Notification_LastSentDateTime": "最后发送日期",
+	"_Notification_LastSentDateTime_report": "最后发送日期",
+	"_Notification_Name": "名称",
+	"_Notification_Name_report": "通知名称",
+	"_Notification_OnScheduledTask": "已计划",
+	"_Notification_OnScheduledTask_report": "已计划",
+	"_Notification_OnUpdate": "关于信息更新",
+	"_Notification_OnUpdate_report": "关于信息更新",
+	"_Notification_Project_Text_TimePercent": "当项目达到其工期的 {0}%（{1}）时",
+	"_Notification_Receivers": "收件人",
+	"_Notification_Receivers_Group_Group": "组",
+	"_Notification_Receivers_Group_User": "用户",
+	"_Notification_Receivers_report": "收件人",
+	"_Notification_TemplateName": "模板",
+	"_Notification_TemplateName_report": "模板",
+	"_Notification_Text_AmountPercent": "当总花费金额达到最高采购额的 {0}%（{1} {2}）时",
+	"_Notification_Text_AmountTimePercent": "当采购额达到最高采购额的 {0}%（{4} {1}）且合同尚未达到其期限的 {2}％（{3}）时。",
+	"_Notification_Text_ExecutionDate": "当达到了指定的执行日期（{0}）时",
+	"_Notification_Text_TimeAmountPercent": "当合同达到其期限的 {0}%（{1}）而采购额尚未达到指定最低金额的 {2}%（{4} {3}）时。",
+	"_Notification_Text_TimePercent": "当合同达到其期限的 {0}%（{1}）时",
+	"_Notification_Type": "类型",
+	"_Notification_Type_report": "类型",
+	"_ProcessDetails": "常规信息",
+	"_ProcessKeyName": "代码名称",
+	"_ProcessKeyName_report": "代码名称",
+	"_ProcessKeyValue": "代码值",
+	"_ProcessKeyValue_report": "代码值",
+	"_ProcessName": "进程名称",
+	"_ProcessName_report": "进程名称",
+	"_Project_%Time": "项目工期 %",
+	"_receiversBrowseTitle": "选择收件人",
+	"_sendToAllMembersIfGroup": "单独发送给组成员",
+	"_sendToAllMembersIfGroup_report": "单独发送给组成员",
+	"_Status": "通知状态",
+	"_Status_report": "通知状态",
+	"_validationURL": "表单 URL",
+	"_validationURL_report": "表单 URL",
+	"_You can select up to {0} receivers": "最多可选 {0} 个收件人。",
+	"P2P - Notification": "寻源到付款 - 通知",
+	"P2P - Notification__": "寻源到付款 - 通知"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"_Active": "Ativada",
+	"_backupUserAsCC": "Cc usuário delegado",
+	"_backupUserAsCC_report": "Cc usuário delegado",
+	"_Canceled": "Cancelada",
+	"_Details": "Detalhes",
+	"_escapeCustomTags": "Escape custom tags",
+	"_escapeCustomTags_report": "Escape custom tags",
+	"_FromName": "Remetente",
+	"_FromName_report": "Remetente",
+	"_Notification_ConditionText": "Condição",
+	"_Notification_ConditionType": "Tipo",
+	"_Notification_ConditionType_AmountPercent": "Despesa %",
+	"_Notification_ConditionType_AmountTimePercent": "Tendência de gasto (superior)",
+	"_Notification_ConditionType_ContractExecutionDate": "Data de execução",
+	"_Notification_ConditionType_ExecutionDate": "Data de execução",
+	"_Notification_ConditionType_ProjectAmountPercent": "Despesa %",
+	"_Notification_ConditionType_ProjectExecutionDate": "Data de execução",
+	"_Notification_ConditionType_ProjectTimePercent": "% do prazo do projeto",
+	"_Notification_ConditionType_TimeAmountPercent": "Tendência de gasto (inferior)",
+	"_Notification_ConditionType_TimePercent": "% do prazo do contrato",
+	"_Notification_DialogCustomControl_Contract_%Spent": "Despesa %",
+	"_Notification_DialogCustomControl_Contract_%Time": "% do prazo do contrato",
+	"_Notification_DialogCustomControl_ExecutionDate": "Data de execução",
+	"_Notification_DialogCustomControl_Project_%Spent": "Despesa %",
+	"_Notification_DialogCustomControl_Project_%Time": "% do prazo do projeto",
+	"_Notification_EditDialog_Title": "Nova notificação",
+	"_Notification_ExecutionDate": "Data de execução",
+	"_Notification_ExecutionDate_report": "Data de execução",
+	"_Notification_ExecutionSettings": "Notificação em formato JSON",
+	"_Notification_LastConsumedDateTime": "Data de conclusão",
+	"_Notification_LastConsumedDateTime_report": "Data de conclusão",
+	"_Notification_LastSentDateTime": "Data do último envio",
+	"_Notification_LastSentDateTime_report": "Data do último envio",
+	"_Notification_Name": "Nome",
+	"_Notification_Name_report": "Nome da notificação",
+	"_Notification_OnScheduledTask": "Programado",
+	"_Notification_OnScheduledTask_report": "Programado",
+	"_Notification_OnUpdate": "Na atualização de informações",
+	"_Notification_OnUpdate_report": "Na atualização de informações",
+	"_Notification_Project_Text_TimePercent": "Quando o projeto atingir {0}% ({1}) de seu prazo e o valor gasto ainda não tiver atingido {2}% ({4} {3}) do valor mínimo definido.",
+	"_Notification_Receivers": "Destinatários",
+	"_Notification_Receivers_Group_Group": "Grupos",
+	"_Notification_Receivers_Group_User": "Usuários",
+	"_Notification_Receivers_report": "Destinatários",
+	"_Notification_TemplateName": "Modelo",
+	"_Notification_TemplateName_report": "Modelo",
+	"_Notification_Text_AmountPercent": "Quando o valor do total gasto atingir {0}% ({2}{1}) do valor de despesa máximo",
+	"_Notification_Text_AmountTimePercent": "Quando o valor gasto atingir {0}% ({4} {1}) do valor máximo gasto e o contrato ainda não tiver atingido {2}% ({3}) de seu prazo.",
+	"_Notification_Text_ExecutionDate": "Quando a data de execução especificada ({0}) for atingida",
+	"_Notification_Text_TimeAmountPercent": "Quando o contrato atingir {0}% ({1}) de seu prazo e o valor gasto ainda não tiver atingido {2}% ({4} {3}) do valor mínimo definido.",
+	"_Notification_Text_TimePercent": "Quando o projeto atingir {0}% ({1}) de seu prazo",
+	"_Notification_Type": "Tipo",
+	"_Notification_Type_report": "Tipo",
+	"_ProcessDetails": "Informação geral",
+	"_ProcessKeyName": "Nome chave",
+	"_ProcessKeyName_report": "Nome chave",
+	"_ProcessKeyValue": "Valor chave",
+	"_ProcessKeyValue_report": "Valor chave",
+	"_ProcessName": "Nome de processamento",
+	"_ProcessName_report": "Nome de processamento",
+	"_Project_%Time": "% do prazo do projeto",
+	"_receiversBrowseTitle": "Selecionar destinatários",
+	"_sendToAllMembersIfGroup": "Enviar aos membros do grupo individualmente",
+	"_sendToAllMembersIfGroup_report": "Enviar aos membros do grupo individualmente",
+	"_Status": "Status da notificação",
+	"_Status_report": "Status da notificação",
+	"_validationURL": "URL do formulário",
+	"_validationURL_report": "URL do formulário",
+	"_You can select up to {0} receivers": "Você pode selecionar até {0} destinatários.",
+	"P2P - Notification": "S2P - Notificação",
+	"P2P - Notification__": "S2P - Notificação"
+}</process_pt-BR>
+    </lg>
+    <process>
+      <flowtype>processing</flowtype>
+      <EnableNegativeNumbersBetweenBrackets>true</EnableNegativeNumbersBetweenBrackets>
+      <homepagelabel>P2P - Notification</homepagelabel>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <enablerounddecimal>true</enablerounddecimal>
+      <OverrideAllowedAttachmentExtensions>*</OverrideAllowedAttachmentExtensions>
+      <UseActionNameWithScriptApproval>true</UseActionNameWithScriptApproval>
+      <AllowUploadAttachment>0</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+      <RemovePointWhenCastingIntToString>true</RemovePointWhenCastingIntToString>
+      <shouldRollbackManualRecordEdits>true</shouldRollbackManualRecordEdits>
+      <shouldShowManualEditsWarning>false</shouldShowManualEditsWarning>
+      <UseCultureFormat>true</UseCultureFormat>
+      <TransportName>CustomTable</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+    </process>
+    <ui>
+      <customscriptIncludedScripts>[LIB_P2P_CUSTOMIZATION_TABLES_CLIENT]</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Sys/Sys_Helpers</customscriptIncludedScripts>
+      <CustomScript>"use strict";
+var CustomScript;
+(function (CustomScript) {
+    function Start() {
+        Sys.Helpers.TryCallFunction("Lib.P2P.Customization.Tables.Client.Common.OnHTMLScriptEnd");
+    }
+    Start();
+})(CustomScript || (CustomScript = {}));
+//# sourceMappingURL=customscript.js.map</CustomScript>
+      <restorationPanel>ProcessDetails</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 57,
+	"*": {
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"splitterType": "simple-v",
+				"style": "FlexibleFormLight",
+				"backColor": "text-backgroundcolor-color7",
+				"footerStyle": "LargeFooter",
+				"maxwidth": "",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 2,
+					"options": {
+						"hidePanelsMenu": false,
+						"maxwidth": "",
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 3,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 4,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-center": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 5,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"width": "100%"
+										},
+										"hidden": false,
+										"hideSeparator": true
+									},
+									"*": {
+										"form-content-center-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 6,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"ProcessDetails": {
+													"type": "PanelData",
+													"data": [],
+													"stamp": 7,
+													"options": {
+														"border": {},
+														"labelLength": "120px",
+														"iconURL": "",
+														"TitleFontSize": "L",
+														"hideActionButtons": true,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"sameHeightAsSiblings": false,
+														"backgroundcolor": "default",
+														"labelsAlignment": "right",
+														"label": "_ProcessDetails",
+														"leftImageURL": "",
+														"removeMargins": false,
+														"elementsAlignment": "left",
+														"version": 0
+													},
+													"*": {
+														"FieldsManager": {
+															"type": "FieldsManager",
+															"data": [],
+															"stamp": 8,
+															"options": {
+																"version": 0,
+																"controlsAssociation": {
+																	"ProcessName__": "LabelProcessName__",
+																	"LabelProcessName__": "ProcessName__",
+																	"ProcessKeyName__": "LabelProcessKeyName__",
+																	"LabelProcessKeyName__": "ProcessKeyName__",
+																	"ProcessKeyValue__": "LabelProcessKeyValue__",
+																	"LabelProcessKeyValue__": "ProcessKeyValue__",
+																	"Status__": "LabelStatus__",
+																	"LabelStatus__": "Status__"
+																}
+															},
+															"*": {
+																"Grid": {
+																	"type": "GridLayout",
+																	"data": [
+																		"fields"
+																	],
+																	"stamp": 9,
+																	"options": {
+																		"version": 0,
+																		"lines": 4,
+																		"columns": 2,
+																		"ctrlsPos": {
+																			"LabelProcessName__": {
+																				"line": 1,
+																				"column": 1
+																			},
+																			"ProcessName__": {
+																				"line": 1,
+																				"column": 2
+																			},
+																			"LabelProcessKeyName__": {
+																				"line": 2,
+																				"column": 1
+																			},
+																			"ProcessKeyName__": {
+																				"line": 2,
+																				"column": 2
+																			},
+																			"LabelProcessKeyValue__": {
+																				"line": 3,
+																				"column": 1
+																			},
+																			"ProcessKeyValue__": {
+																				"line": 3,
+																				"column": 2
+																			},
+																			"LabelStatus__": {
+																				"line": 4,
+																				"column": 1
+																			},
+																			"Status__": {
+																				"line": 4,
+																				"column": 2
+																			}
+																		},
+																		"colspans": [
+																			[],
+																			[],
+																			[],
+																			[]
+																		]
+																	},
+																	"*": {
+																		"LabelProcessName__": {
+																			"type": "Label",
+																			"data": [
+																				"ProcessName__"
+																			],
+																			"stamp": 11,
+																			"options": {
+																				"label": "_ProcessName",
+																				"version": 0
+																			}
+																		},
+																		"ProcessName__": {
+																			"type": "ShortText",
+																			"data": [
+																				"ProcessName__"
+																			],
+																			"stamp": 10,
+																			"options": {
+																				"label": "_ProcessName",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 1,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"browsable": false
+																			}
+																		},
+																		"LabelProcessKeyName__": {
+																			"type": "Label",
+																			"data": [
+																				"ProcessKeyName__"
+																			],
+																			"stamp": 13,
+																			"options": {
+																				"label": "_ProcessKeyName",
+																				"version": 0
+																			}
+																		},
+																		"ProcessKeyName__": {
+																			"type": "ShortText",
+																			"data": [
+																				"ProcessKeyName__"
+																			],
+																			"stamp": 12,
+																			"options": {
+																				"label": "_ProcessKeyName",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 1,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"browsable": false
+																			}
+																		},
+																		"LabelProcessKeyValue__": {
+																			"type": "Label",
+																			"data": [
+																				"ProcessKeyValue__"
+																			],
+																			"stamp": 15,
+																			"options": {
+																				"label": "_ProcessKeyValue",
+																				"version": 0
+																			}
+																		},
+																		"ProcessKeyValue__": {
+																			"type": "ShortText",
+																			"data": [
+																				"ProcessKeyValue__"
+																			],
+																			"stamp": 14,
+																			"options": {
+																				"label": "_ProcessKeyValue",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 1,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"browsable": false
+																			}
+																		},
+																		"LabelStatus__": {
+																			"type": "Label",
+																			"data": [
+																				"Status__"
+																			],
+																			"stamp": 17,
+																			"options": {
+																				"label": "_Status",
+																				"version": 0
+																			}
+																		},
+																		"Status__": {
+																			"type": "ComboBox",
+																			"data": [
+																				"Status__"
+																			],
+																			"stamp": 16,
+																			"options": {
+																				"label": "_Status",
+																				"possibleValues": {
+																					"0": "",
+																					"1": " _Canceled"
+																				},
+																				"maxNbLinesToDisplay": 10,
+																				"version": 1,
+																				"keyValueMode": true,
+																				"possibleKeys": {
+																					"0": "Active",
+																					"1": "Canceled "
+																				},
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"DataSourceOrigin": "Standalone",
+																				"SavedColumn": null,
+																				"DisplayedColumns": null,
+																				"NoEmptyValue": false
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-center-2": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 18,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"Details": {
+													"type": "PanelData",
+													"data": [],
+													"stamp": 19,
+													"options": {
+														"border": {},
+														"labelLength": "120px",
+														"iconURL": "",
+														"TitleFontSize": "L",
+														"hideActionButtons": true,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"sameHeightAsSiblings": false,
+														"backgroundcolor": "default",
+														"labelsAlignment": "right",
+														"label": "_Details",
+														"hidden": false,
+														"leftImageURL": "",
+														"removeMargins": false,
+														"elementsAlignment": "left",
+														"version": 0
+													},
+													"*": {
+														"FieldsManager": {
+															"type": "FieldsManager",
+															"data": [],
+															"stamp": 20,
+															"options": {
+																"version": 0,
+																"controlsAssociation": {
+																	"Name__": "LabelName__",
+																	"LabelName__": "Name__",
+																	"Type__": "LabelType__",
+																	"LabelType__": "Type__",
+																	"Receivers__": "LabelReceivers__",
+																	"LabelReceivers__": "Receivers__",
+																	"ExecutionDate__": "LabelExecutionDate__",
+																	"LabelExecutionDate__": "ExecutionDate__",
+																	"LastSentDateTime__": "LabelLastSentDateTime__",
+																	"LabelLastSentDateTime__": "LastSentDateTime__",
+																	"LastConsumedDateTime__": "LabelLastConsumedDateTime__",
+																	"LabelLastConsumedDateTime__": "LastConsumedDateTime__",
+																	"ExecutionSettings__": "LabelExecutionSettings__",
+																	"LabelExecutionSettings__": "ExecutionSettings__",
+																	"OnScheduledTask__": "LabelOnScheduledTask__",
+																	"LabelOnScheduledTask__": "OnScheduledTask__",
+																	"OnUpdate__": "LabelOnUpdate__",
+																	"LabelOnUpdate__": "OnUpdate__",
+																	"TemplateName__": "LabelTemplateName__",
+																	"LabelTemplateName__": "TemplateName__",
+																	"FromName__": "LabelFromName__",
+																	"LabelFromName__": "FromName__",
+																	"validationURL__": "LabelvalidationURL__",
+																	"LabelvalidationURL__": "validationURL__",
+																	"backupUserAsCC__": "LabelbackupUserAsCC__",
+																	"LabelbackupUserAsCC__": "backupUserAsCC__",
+																	"escapeCustomTags__": "LabelescapeCustomTags__",
+																	"LabelescapeCustomTags__": "escapeCustomTags__",
+																	"sendToAllMembersIfGroup__": "LabelsendToAllMembersIfGroup__",
+																	"LabelsendToAllMembersIfGroup__": "sendToAllMembersIfGroup__"
+																}
+															},
+															"*": {
+																"Grid": {
+																	"type": "GridLayout",
+																	"data": [
+																		"fields"
+																	],
+																	"stamp": 21,
+																	"options": {
+																		"version": 0,
+																		"lines": 17,
+																		"columns": 2,
+																		"ctrlsPos": {
+																			"LabelName__": {
+																				"line": 1,
+																				"column": 1
+																			},
+																			"Name__": {
+																				"line": 1,
+																				"column": 2
+																			},
+																			"LabelType__": {
+																				"line": 2,
+																				"column": 1
+																			},
+																			"Type__": {
+																				"line": 2,
+																				"column": 2
+																			},
+																			"LabelReceivers__": {
+																				"line": 3,
+																				"column": 1
+																			},
+																			"Receivers__": {
+																				"line": 3,
+																				"column": 2
+																			},
+																			"LabelExecutionDate__": {
+																				"line": 4,
+																				"column": 1
+																			},
+																			"ExecutionDate__": {
+																				"line": 4,
+																				"column": 2
+																			},
+																			"LabelLastSentDateTime__": {
+																				"line": 5,
+																				"column": 1
+																			},
+																			"LastSentDateTime__": {
+																				"line": 5,
+																				"column": 2
+																			},
+																			"LabelLastConsumedDateTime__": {
+																				"line": 6,
+																				"column": 1
+																			},
+																			"LastConsumedDateTime__": {
+																				"line": 6,
+																				"column": 2
+																			},
+																			"LabelExecutionSettings__": {
+																				"line": 7,
+																				"column": 1
+																			},
+																			"ExecutionSettings__": {
+																				"line": 7,
+																				"column": 2
+																			},
+																			"Spacer2__": {
+																				"line": 8,
+																				"column": 1
+																			},
+																			"LabelOnScheduledTask__": {
+																				"line": 9,
+																				"column": 1
+																			},
+																			"OnScheduledTask__": {
+																				"line": 9,
+																				"column": 2
+																			},
+																			"LabelOnUpdate__": {
+																				"line": 10,
+																				"column": 1
+																			},
+																			"OnUpdate__": {
+																				"line": 10,
+																				"column": 2
+																			},
+																			"Spacer__": {
+																				"line": 11,
+																				"column": 1
+																			},
+																			"LabelTemplateName__": {
+																				"line": 12,
+																				"column": 1
+																			},
+																			"TemplateName__": {
+																				"line": 12,
+																				"column": 2
+																			},
+																			"LabelFromName__": {
+																				"line": 13,
+																				"column": 1
+																			},
+																			"FromName__": {
+																				"line": 13,
+																				"column": 2
+																			},
+																			"LabelvalidationURL__": {
+																				"line": 14,
+																				"column": 1
+																			},
+																			"validationURL__": {
+																				"line": 14,
+																				"column": 2
+																			},
+																			"LabelbackupUserAsCC__": {
+																				"line": 15,
+																				"column": 1
+																			},
+																			"backupUserAsCC__": {
+																				"line": 15,
+																				"column": 2
+																			},
+																			"LabelescapeCustomTags__": {
+																				"line": 16,
+																				"column": 1
+																			},
+																			"escapeCustomTags__": {
+																				"line": 16,
+																				"column": 2
+																			},
+																			"LabelsendToAllMembersIfGroup__": {
+																				"line": 17,
+																				"column": 1
+																			},
+																			"sendToAllMembersIfGroup__": {
+																				"line": 17,
+																				"column": 2
+																			}
+																		},
+																		"colspans": [
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[
+																				{
+																					"index": 0,
+																					"length": 2
+																				}
+																			],
+																			[],
+																			[],
+																			[
+																				{
+																					"index": 0,
+																					"length": 2
+																				}
+																			],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[]
+																		]
+																	},
+																	"*": {
+																		"LabelName__": {
+																			"type": "Label",
+																			"data": [
+																				"Name__"
+																			],
+																			"stamp": 23,
+																			"options": {
+																				"label": "_Notification_Name",
+																				"version": 0
+																			}
+																		},
+																		"Name__": {
+																			"type": "ShortText",
+																			"data": [
+																				"Name__"
+																			],
+																			"stamp": 22,
+																			"options": {
+																				"label": "_Notification_Name",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 1,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"browsable": false
+																			}
+																		},
+																		"LabelType__": {
+																			"type": "Label",
+																			"data": [
+																				"Type__"
+																			],
+																			"stamp": 25,
+																			"options": {
+																				"label": "_Notification_Type",
+																				"version": 0
+																			}
+																		},
+																		"Type__": {
+																			"type": "ShortText",
+																			"data": [
+																				"Type__"
+																			],
+																			"stamp": 24,
+																			"options": {
+																				"label": "_Notification_Type",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 1,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"browsable": false
+																			}
+																		},
+																		"LabelReceivers__": {
+																			"type": "Label",
+																			"data": [
+																				"Receivers__"
+																			],
+																			"stamp": 27,
+																			"options": {
+																				"label": "_Notification_Receivers",
+																				"version": 0
+																			}
+																		},
+																		"Receivers__": {
+																			"type": "LongText",
+																			"data": [
+																				"Receivers__"
+																			],
+																			"stamp": 26,
+																			"options": {
+																				"label": "_Notification_Receivers",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 1,
+																				"minNbLines": 1,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"numberOfLines": 10,
+																				"readonly": true,
+																				"browsable": false
+																			}
+																		},
+																		"LabelExecutionDate__": {
+																			"type": "Label",
+																			"data": [
+																				"ExecutionDate__"
+																			],
+																			"stamp": 29,
+																			"options": {
+																				"label": "_Notification_ExecutionDate",
+																				"version": 0
+																			}
+																		},
+																		"ExecutionDate__": {
+																			"type": "DateTime",
+																			"data": [
+																				"ExecutionDate__"
+																			],
+																			"stamp": 28,
+																			"options": {
+																				"label": "_Notification_ExecutionDate",
+																				"displayLongFormat": false,
+																				"showWeek": false,
+																				"hideButtonPanel": false,
+																				"showOtherMonths": false,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"version": 0
+																			}
+																		},
+																		"LabelLastSentDateTime__": {
+																			"type": "Label",
+																			"data": [
+																				"LastSentDateTime__"
+																			],
+																			"stamp": 31,
+																			"options": {
+																				"label": "_Notification_LastSentDateTime",
+																				"version": 0
+																			}
+																		},
+																		"LastSentDateTime__": {
+																			"type": "RealDateTime",
+																			"data": [
+																				"LastSentDateTime__"
+																			],
+																			"stamp": 30,
+																			"options": {
+																				"label": "_Notification_LastSentDateTime",
+																				"readonly": true,
+																				"displayLongFormat": false,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"version": 0
+																			}
+																		},
+																		"LabelLastConsumedDateTime__": {
+																			"type": "Label",
+																			"data": [
+																				"LastConsumedDateTime__"
+																			],
+																			"stamp": 33,
+																			"options": {
+																				"label": "_Notification_LastConsumedDateTime",
+																				"version": 0
+																			}
+																		},
+																		"LastConsumedDateTime__": {
+																			"type": "RealDateTime",
+																			"data": [
+																				"LastConsumedDateTime__"
+																			],
+																			"stamp": 32,
+																			"options": {
+																				"label": "_Notification_LastConsumedDateTime",
+																				"readonly": true,
+																				"displayLongFormat": false,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"version": 0
+																			}
+																		},
+																		"LabelExecutionSettings__": {
+																			"type": "Label",
+																			"data": [
+																				"ExecutionSettings__"
+																			],
+																			"stamp": 35,
+																			"options": {
+																				"label": "_Notification_ExecutionSettings",
+																				"version": 0
+																			}
+																		},
+																		"ExecutionSettings__": {
+																			"type": "ShortText",
+																			"data": [
+																				"ExecutionSettings__"
+																			],
+																			"stamp": 34,
+																			"options": {
+																				"label": "_Notification_ExecutionSettings",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 1,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"readonly": false,
+																				"browsable": false
+																			}
+																		},
+																		"Spacer2__": {
+																			"type": "Spacer",
+																			"data": false,
+																			"stamp": 36,
+																			"options": {
+																				"label": "_Spacer2",
+																				"height": "",
+																				"width": "",
+																				"color": "default",
+																				"version": 0
+																			}
+																		},
+																		"LabelOnScheduledTask__": {
+																			"type": "Label",
+																			"data": [
+																				"OnScheduledTask__"
+																			],
+																			"stamp": 38,
+																			"options": {
+																				"label": "_Notification_OnScheduledTask",
+																				"version": 0
+																			}
+																		},
+																		"OnScheduledTask__": {
+																			"type": "CheckBox",
+																			"data": [
+																				"OnScheduledTask__"
+																			],
+																			"stamp": 37,
+																			"options": {
+																				"label": "_Notification_OnScheduledTask",
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"possibleValues": {},
+																				"possibleKeys": {},
+																				"version": 0
+																			}
+																		},
+																		"LabelOnUpdate__": {
+																			"type": "Label",
+																			"data": [
+																				"OnUpdate__"
+																			],
+																			"stamp": 40,
+																			"options": {
+																				"label": "_Notification_OnUpdate",
+																				"version": 0
+																			}
+																		},
+																		"OnUpdate__": {
+																			"type": "CheckBox",
+																			"data": [
+																				"OnUpdate__"
+																			],
+																			"stamp": 39,
+																			"options": {
+																				"label": "_Notification_OnUpdate",
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"possibleValues": {},
+																				"possibleKeys": {},
+																				"version": 0
+																			}
+																		},
+																		"Spacer__": {
+																			"type": "Spacer",
+																			"data": false,
+																			"stamp": 41,
+																			"options": {
+																				"label": "_Spacer",
+																				"height": "",
+																				"width": "",
+																				"color": "default",
+																				"version": 0
+																			}
+																		},
+																		"LabelTemplateName__": {
+																			"type": "Label",
+																			"data": [
+																				"TemplateName__"
+																			],
+																			"stamp": 43,
+																			"options": {
+																				"label": "_Notification_TemplateName",
+																				"version": 0
+																			}
+																		},
+																		"TemplateName__": {
+																			"type": "ShortText",
+																			"data": [
+																				"TemplateName__"
+																			],
+																			"stamp": 42,
+																			"options": {
+																				"label": "_Notification_TemplateName",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 1,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"browsable": false
+																			}
+																		},
+																		"LabelFromName__": {
+																			"type": "Label",
+																			"data": [
+																				"FromName__"
+																			],
+																			"stamp": 45,
+																			"options": {
+																				"label": "_FromName",
+																				"version": 0
+																			}
+																		},
+																		"FromName__": {
+																			"type": "ShortText",
+																			"data": [
+																				"FromName__"
+																			],
+																			"stamp": 44,
+																			"options": {
+																				"label": "_FromName",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 1,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"browsable": false
+																			}
+																		},
+																		"LabelvalidationURL__": {
+																			"type": "Label",
+																			"data": [
+																				"validationURL__"
+																			],
+																			"stamp": 47,
+																			"options": {
+																				"label": "_validationURL",
+																				"version": 0
+																			}
+																		},
+																		"validationURL__": {
+																			"type": "ShortText",
+																			"data": [
+																				"validationURL__"
+																			],
+																			"stamp": 46,
+																			"options": {
+																				"label": "_validationURL",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 1,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"browsable": false
+																			}
+																		},
+																		"LabelbackupUserAsCC__": {
+																			"type": "Label",
+																			"data": [
+																				"backupUserAsCC__"
+																			],
+																			"stamp": 49,
+																			"options": {
+																				"label": "_backupUserAsCC",
+																				"version": 0
+																			}
+																		},
+																		"backupUserAsCC__": {
+																			"type": "CheckBox",
+																			"data": [
+																				"backupUserAsCC__"
+																			],
+																			"stamp": 48,
+																			"options": {
+																				"label": "_backupUserAsCC",
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"possibleValues": {},
+																				"possibleKeys": {},
+																				"version": 0
+																			}
+																		},
+																		"LabelescapeCustomTags__": {
+																			"type": "Label",
+																			"data": [
+																				"escapeCustomTags__"
+																			],
+																			"stamp": 51,
+																			"options": {
+																				"label": "_escapeCustomTags",
+																				"version": 0
+																			}
+																		},
+																		"escapeCustomTags__": {
+																			"type": "CheckBox",
+																			"data": [
+																				"escapeCustomTags__"
+																			],
+																			"stamp": 50,
+																			"options": {
+																				"label": "_escapeCustomTags",
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"possibleValues": {},
+																				"possibleKeys": {},
+																				"version": 0
+																			}
+																		},
+																		"LabelsendToAllMembersIfGroup__": {
+																			"type": "Label",
+																			"data": [
+																				"sendToAllMembersIfGroup__"
+																			],
+																			"stamp": 53,
+																			"options": {
+																				"label": "_sendToAllMembersIfGroup",
+																				"version": 0
+																			}
+																		},
+																		"sendToAllMembersIfGroup__": {
+																			"type": "CheckBox",
+																			"data": [
+																				"sendToAllMembersIfGroup__"
+																			],
+																			"stamp": 52,
+																			"options": {
+																				"label": "_sendToAllMembersIfGroup",
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"possibleValues": {},
+																				"possibleKeys": {},
+																				"version": 0
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 54,
+					"options": {
+						"splitterType": "simple-h",
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"Delete": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 55,
+							"options": {
+								"label": "_Delete",
+								"action": "delete",
+								"submit": true,
+								"textSize": "S",
+								"disabled": true,
+								"textPosition": "text-right",
+								"textStyle": "default",
+								"textColor": "default",
+								"iconColor": "default",
+								"nextprocess": {
+									"processName": "AP - Application Settings__",
+									"attachmentsMode": "all",
+									"willBeChild": true,
+									"returnToOriginalUrl": false
+								},
+								"urlImageOverlay": "",
+								"style": 1,
+								"buttonLabel": "",
+								"isRounded": true,
+								"isOutline": false,
+								"url": "",
+								"position": null,
+								"version": 0
+							}
+						},
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 56,
+							"options": {
+								"label": "_Save",
+								"action": "savequit",
+								"submit": true,
+								"textSize": "S",
+								"shortCut": "S",
+								"textPosition": "text-right",
+								"textStyle": "default",
+								"textColor": "default",
+								"iconColor": "default",
+								"nextprocess": {
+									"processName": "AP - Application Settings__",
+									"attachmentsMode": "all",
+									"willBeChild": true,
+									"returnToOriginalUrl": false
+								},
+								"urlImageOverlay": "",
+								"style": 1,
+								"buttonLabel": "",
+								"isRounded": true,
+								"isOutline": false,
+								"url": "",
+								"position": null,
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 57,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"textSize": "S",
+								"shortCut": "Q",
+								"textPosition": "text-right",
+								"textStyle": "default",
+								"textColor": "default",
+								"iconColor": "default",
+								"nextprocess": {
+									"processName": "AP - Application Settings__",
+									"attachmentsMode": "all",
+									"willBeChild": true,
+									"returnToOriginalUrl": false
+								},
+								"urlImageOverlay": "",
+								"style": 1,
+								"buttonLabel": "",
+								"isRounded": true,
+								"isOutline": true,
+								"url": "",
+								"position": null,
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <field deleted="0" format="" guid="KTYHG0000SG1" id="RGFQT400153E" label="_backupUserAsCC_report" length="0" name="backupUserAsCC__" originalProcessID="WW5JG0000SG1" precision="0" processid="QGFQT400153E" submitable="1" type="BOOL">
+    <properties>
+      <db>
+        <alias>ARGFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/backupUserAsCC__</fullname>
+        <defaultvalue>false</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:37</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_backupUserAsCC_report</Label>
+        <Alias>ARGFQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Boolean</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="LTYHG0000SG1" id="SGFQT400153E" label="_escapeCustomTags_report" length="0" name="escapeCustomTags__" originalProcessID="WW5JG0000SG1" precision="0" processid="QGFQT400153E" submitable="1" type="BOOL">
+    <properties>
+      <db>
+        <alias>ASGFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/escapeCustomTags__</fullname>
+        <defaultvalue>false</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:37</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_escapeCustomTags_report</Label>
+        <Alias>ASGFQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Boolean</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="DX5JG0000SG1" id="TGFQT400153E" label="_Notification_ExecutionDate_report" length="0" name="ExecutionDate__" originalProcessID="WW5JG0000SG1" precision="0" processid="QGFQT400153E" submitable="1" type="DATE">
+    <properties>
+      <db>
+        <alias>ATGFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ExecutionDate__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:37</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Notification_ExecutionDate_report</Label>
+        <Alias>ATGFQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Date</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="SRRIG0000SG1" id="UGFQT400153E" label="_Notification_ExecutionSettings" length="4095" name="ExecutionSettings__" originalProcessID="WW5JG0000SG1" precision="0" processid="QGFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AUGFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ExecutionSettings__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:37</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Notification_ExecutionSettings</Label>
+        <Alias>AUGFQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        <DoNotShowInDM>
+        </DoNotShowInDM>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="JTYHG0000SG1" id="VGFQT400153E" label="_FromName_report" length="50" name="FromName__" originalProcessID="WW5JG0000SG1" precision="0" processid="QGFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AVGFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/FromName__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:37</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_FromName_report</Label>
+        <Alias>AVGFQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="VRRIG0000SG1" id="WGFQT400153E" label="_Notification_LastConsumedDateTime_report" length="0" name="LastConsumedDateTime__" originalProcessID="WW5JG0000SG1" precision="0" processid="QGFQT400153E" submitable="1" type="DATETIME">
+    <properties>
+      <db>
+        <alias>AWGFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/LastConsumedDateTime__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:38</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Notification_LastConsumedDateTime_report</Label>
+        <Alias>AWGFQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Date</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="EX5JG0000SG1" id="XGFQT400153E" label="_Notification_LastSentDateTime_report" length="0" name="LastSentDateTime__" originalProcessID="WW5JG0000SG1" precision="0" processid="QGFQT400153E" submitable="1" type="DATETIME">
+    <properties>
+      <db>
+        <alias>AXGFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/LastSentDateTime__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:38</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Notification_LastSentDateTime_report</Label>
+        <Alias>AXGFQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Date</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="N0WJG0000SG1" id="YGFQT400153E" label="_Notification_Name_report" length="50" name="Name__" originalProcessID="WW5JG0000SG1" precision="0" processid="QGFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AYGFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Name__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:38</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Notification_Name_report</Label>
+        <Alias>AYGFQT400153E</Alias>
+        <Behavior>None</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="TRRIG0000SG1" id="ZGFQT400153E" label="_Notification_OnScheduledTask_report" length="0" name="OnScheduledTask__" originalProcessID="WW5JG0000SG1" precision="0" processid="QGFQT400153E" submitable="1" type="BOOL">
+    <properties>
+      <db>
+        <alias>AZGFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/OnScheduledTask__</fullname>
+        <defaultvalue>false</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:38</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Notification_OnScheduledTask_report</Label>
+        <Alias>AZGFQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Boolean</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="URRIG0000SG1" id="AHFQT400153E" label="_Notification_OnUpdate_report" length="0" name="OnUpdate__" originalProcessID="WW5JG0000SG1" precision="0" processid="QGFQT400153E" submitable="1" type="BOOL">
+    <properties>
+      <db>
+        <alias>AAHFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/OnUpdate__</fullname>
+        <defaultvalue>false</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:38</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Notification_OnUpdate_report</Label>
+        <Alias>AAHFQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Boolean</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="YW5JG0000SG1" id="BHFQT400153E" label="_ProcessKeyName_report" length="50" name="ProcessKeyName__" originalProcessID="WW5JG0000SG1" precision="0" processid="QGFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ABHFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ProcessKeyName__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:38</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ProcessKeyName_report</Label>
+        <Alias>ABHFQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>true</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="ZW5JG0000SG1" id="CHFQT400153E" label="_ProcessKeyValue_report" length="50" name="ProcessKeyValue__" originalProcessID="WW5JG0000SG1" precision="0" processid="QGFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ACHFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ProcessKeyValue__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:38</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ProcessKeyValue_report</Label>
+        <Alias>ACHFQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>true</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="XW5JG0000SG1" id="DHFQT400153E" label="_ProcessName_report" length="50" name="ProcessName__" originalProcessID="WW5JG0000SG1" precision="0" processid="QGFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ADHFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ProcessName__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:38</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ProcessName_report</Label>
+        <Alias>ADHFQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>true</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="OJSIG0000SG1" id="EHFQT400153E" label="_Notification_Receivers_report" length="5000" name="Receivers__" originalProcessID="WW5JG0000SG1" precision="0" processid="QGFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AEHFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Receivers__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:38</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Notification_Receivers_report</Label>
+        <Alias>AEHFQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="MTYHG0000SG1" id="FHFQT400153E" label="_sendToAllMembersIfGroup_report" length="0" name="sendToAllMembersIfGroup__" originalProcessID="WW5JG0000SG1" precision="0" processid="QGFQT400153E" submitable="1" type="BOOL">
+    <properties>
+      <db>
+        <alias>AFHFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/sendToAllMembersIfGroup__</fullname>
+        <defaultvalue>false</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:38</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_sendToAllMembersIfGroup_report</Label>
+        <Alias>AFHFQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Boolean</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="MC2JG0000VLT" id="GHFQT400153E" label="_Status_report" length="50" name="Status__" originalProcessID="WW5JG0000SG1" precision="0" processid="QGFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AGHFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Status__</fullname>
+        <defaultvalue>Active</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:38</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Type>webaccess.Process.Columns.WithPossibleValues</Type>
+        <Label>_Status_report</Label>
+        <Alias>AGHFQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <TableName>
+        </TableName>
+        <DisplayedColumns>
+        </DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <DataSourceOrigin>Standalone</DataSourceOrigin>
+        <possibleKeys>Active
+Canceled</possibleKeys>
+        <SavedColumn>
+        </SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <possibleValues>_Active
+_Canceled</possibleValues>
+        <ProcessName>
+        </ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <lazyTranslatable>
+        </lazyTranslatable>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="BX5JG0000SG1" id="HHFQT400153E" label="_Notification_TemplateName_report" length="50" name="TemplateName__" originalProcessID="WW5JG0000SG1" precision="0" processid="QGFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AHHFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/TemplateName__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:38</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Notification_TemplateName_report</Label>
+        <Alias>AHHFQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="FN9JG0000VLT" id="IHFQT400153E" label="_Notification_Type_report" length="50" name="Type__" originalProcessID="WW5JG0000SG1" precision="0" processid="QGFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AIHFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Type__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:38</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Notification_Type_report</Label>
+        <Alias>AIHFQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="NTYHG0000SG1" id="JHFQT400153E" label="_validationURL_report" length="500" name="validationURL__" originalProcessID="WW5JG0000SG1" precision="0" processid="QGFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AJHFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/validationURL__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:38</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_validationURL_report</Label>
+        <Alias>AJHFQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <type id="KOLHG0000M4O" name="CT">
+  </type>
+</process>

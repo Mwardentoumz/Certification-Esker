@@ -1,0 +1,839 @@
+<process accountid="" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:09:09" deleted="0" eskerapplication="P2P" global="0" id="NoID" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="P2P - PunchoutSites__" needvalidation="0" ootofilter="" ootoversion="1" originalProcessID="URR1FP000FSX" ownerid="" ownerpb="" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomTable" upgradable="1" userid="" version="1" visibility="0">
+	<properties>
+		<dataConditions>
+			<listDataConditions>
+				&lt;dataCondition&gt;
+					&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+					&lt;filter&gt;msnex=*&lt;/filter&gt;
+					&lt;labelKey&gt;_Purchasing disabled&lt;/labelKey&gt;
+					&lt;conditions&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnablePurchasingGlobalSetting__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableStandardPurchasingGlobalSetting__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+					&lt;/conditions&gt;
+				&lt;/dataCondition&gt;</listDataConditions>
+		</dataConditions>
+		<dbIndex>
+			<Join>&lt;Index Join="1"&gt;
+				&lt;Ref Name="CompanyCode__" Option="ASC"/&gt;
+				&lt;Ref Name="ConfigurationName__" Option="ASC"/&gt;
+				&lt;/Index&gt;</Join>
+			<AUTO_AKDDQT400153EA>&lt;Index&gt;&lt;Ref Name="AKDDQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AKDDQT400153EA>
+		</dbIndex>
+		<lg>
+			<!--*.xml-->
+		</lg>
+		<process>
+			<BUColumn>CompanyCode__</BUColumn>
+			<flowtype>processing</flowtype>
+			<homepagelabel>P2P - PunchoutSites</homepagelabel>
+			<instanciable>1</instanciable>
+			<disableScriptModification>true</disableScriptModification>
+			<enableUpgradableDesign>true</enableUpgradableDesign>
+			<enablerounddecimal>true</enablerounddecimal>
+			<OverrideAllowedAttachmentExtensions>*</OverrideAllowedAttachmentExtensions>
+			<UseActionNameWithScriptApproval>true</UseActionNameWithScriptApproval>
+			<displayWidth />
+			<AllowNullableInteger>1</AllowNullableInteger>
+			<AllowUploadAttachment>0</AllowUploadAttachment>
+			<AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+			<shouldRollbackManualRecordEdits>true</shouldRollbackManualRecordEdits>
+			<shouldShowManualEditsWarning>false</shouldShowManualEditsWarning>
+			<UseCultureFormat>true</UseCultureFormat>
+			<TransportName>CustomTable</TransportName>
+			<LayoutVersion>1.0</LayoutVersion>
+		</process>
+		<ui>
+			<CustomScriptDebug>false</CustomScriptDebug>
+			<customscriptIncludedScripts>Lib_P2P_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_PARAMETERS_P2P_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_P2P_UsersBrowse_Client_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_P2P_UsersBrowseOptions_Client_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Purchasing_Contract_Client_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_P2P_CompanyCodesValue_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[Lib_PR_Customization_Client]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers_Synchronizer</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers_Promise</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[LIB_P2P_CUSTOMIZATION_TABLES_CLIENT]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers</customscriptIncludedScripts>
+			<CustomScriptReadonly>true</CustomScriptReadonly>
+			<CustomScript>
+				<!--customscript.js--></CustomScript>
+			<restorationPanel>GeneralInformations</restorationPanel>
+			<layout>
+				<!--layout.json--></layout>
+		</ui>
+	</properties>
+	<type id="NoID" name="CT" />
+	<field deleted="0" format="" guid="YZT1FP000FSX" id="NoID" label="_CompanyCode_report" length="50" name="CompanyCode__" originalProcessID="URR1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CompanyCode__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_CompanyCode_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder />
+				<DisplayedColumns>CompanyCode__|CompanyName__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>CompanyCode__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>PurchasingCompanycodes__</ProcessName>
+				<CustomFilter />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="LRR1FP000FSX" id="NoID" label="_ConfigurationName_report" length="50" name="ConfigurationName__" originalProcessID="URR1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ConfigurationName__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ConfigurationName_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="RRBJG0000SG1" id="NoID" label="_ContractName_report" length="50" name="ContractName__" originalProcessID="URR1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ContractName__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ContractName_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<TableName>CD#NOID</TableName>
+				<SortOrder />
+				<SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+				<DisplayedColumns>Name__|ReferenceNumber__|ContractNumber__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>Name__</SavedColumn>
+				<SavedColumnId />
+				<ExposedColumns />
+				<ProcessName>P2P - Contract</ProcessName>
+				<KeyColumnId>ContractNumber__</KeyColumnId>
+				<KeyAttribute>ContractNumber__</KeyAttribute>
+				<CustomFilter>(&amp;(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(!(CompanyCode__=*)))(VendorNumber__=%[SupplierID__]))</CustomFilter>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="SRBJG0000SG1" id="NoID" label="_ContractNumber_report" length="50" name="ContractNumber__" originalProcessID="URR1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ContractNumber__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ContractNumber_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<TableName>CD#NOID</TableName>
+				<SortOrder />
+				<SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+				<DisplayedColumns>Name__|ReferenceNumber__|ContractNumber__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>ContractNumber__</SavedColumn>
+				<SavedColumnId />
+				<ExposedColumns />
+				<ProcessName>P2P - Contract</ProcessName>
+				<KeyColumnId />
+				<KeyAttribute />
+				<CustomFilter>(&amp;(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(!(CompanyCode__=*)))(VendorNumber__=%[SupplierID__]))</CustomFilter>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="HMT000000VLT" id="NoID" label="_ContractReferenceNumber" length="50" name="ContractReferenceNumber__" originalProcessID="URR1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ContractReferenceNumber__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ContractReferenceNumber</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<TableName>CD#NOID</TableName>
+				<SortOrder />
+				<SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+				<DisplayedColumns>Name__|ReferenceNumber__|ContractNumber__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>ReferenceNumber__</SavedColumn>
+				<SavedColumnId />
+				<ExposedColumns />
+				<ProcessName>P2P - Contract</ProcessName>
+				<KeyColumnId>ContractNumber__</KeyColumnId>
+				<KeyAttribute>ContractNumber__</KeyAttribute>
+				<CustomFilter>(&amp;(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(!(CompanyCode__=*)))(VendorNumber__=%[SupplierID__]))</CustomFilter>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="QRBJG0000SG1" id="NoID" label="_ContractRUIDEX_report" length="50" name="ContractRUIDEX__" originalProcessID="URR1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ContractRUIDEX__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ContractRUIDEX_report</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="J0OIWM000M4H" id="NoID" label="_DefaultLeadTime_report" length="0" name="DefaultLeadTime__" originalProcessID="URR1FP000FSX" precision="0" processid="" submitable="1" type="INT">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/DefaultLeadTime__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_DefaultLeadTime_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="YVT000000VLT" id="NoID" label="_DisplayName_report" length="50" name="DisplayName__" originalProcessID="URR1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/DisplayName__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_DisplayName_report</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="RRR1FP000FSX" id="NoID" label="_Domain_report" length="50" name="Domain__" originalProcessID="URR1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Domain__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Domain_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="LFU1FP000FSX" id="NoID" label="_Enabled_report" length="0" name="Enabled__" originalProcessID="URR1FP000FSX" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Enabled__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_Enabled_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="YG4JG0000VLT" id="NoID" label="_EnableQuickAccess_report" length="0" name="EnableQuickAccess__" originalProcessID="URR1FP000FSX" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/EnableQuickAccess__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_EnableQuickAccess_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="SRR1FP000FSX" id="NoID" label="_Identity_report" length="50" name="Identity__" originalProcessID="URR1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Identity__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Identity_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="MRR1FP000FSX" id="NoID" label="_LogoURL_report" length="50" name="LogoURL__" originalProcessID="URR1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/LogoURL__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_LogoURL_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="VUZ000000YRL" id="NoID" label="_OriginalContractRUIDEX_report" length="500" name="OriginalContractRUIDEX__" originalProcessID="URR1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/OriginalContractRUIDEX__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_OriginalContractRUIDEX_report</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="KQT1FP000FSX" id="NoID" label="_PunchoutOrderURL_report" length="300" name="PunchoutOrderURL__" originalProcessID="URR1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/PunchoutOrderURL__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_PunchoutOrderURL_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="ORR1FP000FSX" id="NoID" label="_PunchoutURL_report" length="300" name="PunchoutURL__" originalProcessID="URR1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/PunchoutURL__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_PunchoutURL_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<required>true</required>
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="XVT000000VLT" id="NoID" label="_QuickAccessLogoURL_report" length="50" name="QuickAccessLogoURL__" originalProcessID="URR1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/QuickAccessLogoURL__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_QuickAccessLogoURL_report</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="TRR1FP000FSX" id="NoID" label="_Secret_report" length="50" name="Secret__" originalProcessID="URR1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Secret__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Secret_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<DoNotShowInDM>1</DoNotShowInDM>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PRR1FP000FSX" id="NoID" label="_SenderDomain_report" length="50" name="SenderDomain__" originalProcessID="URR1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/SenderDomain__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_SenderDomain_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="QRR1FP000FSX" id="NoID" label="_SenderIdentity_report" length="50" name="SenderIdentity__" originalProcessID="URR1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/SenderIdentity__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_SenderIdentity_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="ZZT1FP000FSX" id="NoID" label="_SupplierID_report" length="50" name="SupplierID__" originalProcessID="URR1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/SupplierID__</fullname>
+				<jointable>AP - Vendors__</jointable>
+				<jointableid>CT#SX8QT400153E</jointableid>
+				<defaultvalue />
+				<joincondition>(&amp;(source.SupplierID__=dest.Number__)(|(source.CompanyCode__=dest.CompanyCode__)(dest.CompanyCode__=)(dest.CompanyCode__!=*)))</joincondition>
+			</db>
+			<extrainfo>
+				<Label>_SupplierID_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder />
+				<DisplayedColumns>Number__|Name__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>Number__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>AP - Vendors__</ProcessName>
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="A0U1FP000FSX" id="NoID" label="_SupplyTypeId_report" length="50" name="SupplyTypeId__" originalProcessID="URR1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/SupplyTypeId__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_SupplyTypeId_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder />
+				<DisplayedColumns>Name__|FullName__|Description__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>true</UseTableForAutolearn>
+				<SavedColumn>SupplyID__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>PurchasingSupply__</ProcessName>
+				<KeyColumnId />
+				<KeyAttribute />
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="MRT1FP000FSX" id="NoID" label="_TechnicalAllowedUsersOrGroups_report" length="65535" name="TechnicalAllowedUsersOrGroups__" originalProcessID="URR1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TechnicalAllowedUsersOrGroups_report</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="N892FP000FSX" id="NoID" label="_TestMode report" length="0" name="TestMode__" originalProcessID="URR1FP000FSX" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TestMode__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_TestMode report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"_TestMode tooltip","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="TD06FP000PA9" id="NoID" label="_TransparentPunchout_report" length="0" name="TransparentPunchout__" originalProcessID="URR1FP000FSX" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TransparentPunchout__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_TransparentPunchout_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="NVS1FP000FSX" id="NoID" label="_User_report" length="80" name="User__" originalProcessID="URR1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/User__</fullname>
+				<defaultvalue />
+				<visibility>None</visibility>
+			</db>
+			<extrainfo>
+				<Label>_User_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<Visibility>None</Visibility>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+</process>

@@ -1,0 +1,499 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:05:43" deleted="0" eskerapplication="P2P" global="0" id="RS8QT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="AP - Payment method__" needvalidation="1" ootofilter="" ootoversion="0" originalProcessID="PHQG10001153" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomTable" upgradable="1" userid="0" version="1" visibility="0">
+  <properties>
+    <dbIndex>
+      <AUTO_ASS8QT400153EA>&lt;Index&gt;&lt;Ref Name="ASS8QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_ASS8QT400153EA>
+    </dbIndex>
+    <lg>
+      <process_da>{
+	"_CompanyCode": "Virksomhedskode",
+	"_Description": "Beskrivelse",
+	"_Payment method": "Betalingsmetode",
+	"_Payment method_report": "Betalingsmetode",
+	"AP - Payment method": "S2P – betalingsmetode"
+}</process_da>
+      <process_de>{
+	"_CompanyCode": "Buchungskreis",
+	"_Description": "Beschreibung",
+	"_Payment method": "Zahlungsmethode",
+	"_Payment method_report": "Zahlungsmethode",
+	"AP - Payment method": "S2P - Zahlungsmethode"
+}</process_de>
+      <process_JA>{
+	"_CompanyCode": "会社コード",
+	"_Description": "説明",
+	"_Payment method": "支払方法",
+	"_Payment method_report": "支払方法",
+	"AP - Payment method": "S2P - 支払方法"
+}</process_JA>
+      <process_en>{
+	"_CompanyCode": "Company code",
+	"_Description": "Description",
+	"_Payment method": "Payment method",
+	"_Payment method_report": "Payment method",
+	"AP - Payment method": "S2P - Payment method"
+}</process_en>
+      <process_es>{
+	"_CompanyCode": "Código de empresa",
+	"_Description": "Descripción",
+	"_Payment method": "Forma de pago",
+	"_Payment method_report": "Forma de pago",
+	"AP - Payment method": "S2P - Forma de pago"
+}</process_es>
+      <process_fr>{
+	"_CompanyCode": "Code société",
+	"_Description": "Description",
+	"_Payment method": "Moyen de paiement",
+	"_Payment method_report": "Moyen de paiement",
+	"AP - Payment method": "S2P - Moyen de paiement"
+}</process_fr>
+      <process_nl-NL>{
+	"_CompanyCode": "Bedrijfscode",
+	"_Description": "Beschrijving",
+	"_Payment method": "Betaalwijze",
+	"_Payment method_report": "Betaalwijze",
+	"AP - Payment method": "S2P - Betaalwijze"
+}</process_nl-NL>
+      <process_pl>{
+	"_CompanyCode": "Kod firmy",
+	"_Description": "Opis",
+	"_Payment method": "Metoda płatności",
+	"_Payment method_report": "Metoda płatności",
+	"AP - Payment method": "S2P – metoda płatności"
+}</process_pl>
+      <process_it>{
+	"_CompanyCode": "Codice società",
+	"_Description": "Descrizione",
+	"_Payment method": "Metodo di pagamento",
+	"_Payment method_report": "Metodo di pagamento",
+	"AP - Payment method": "S2P - Metodo di pagamento"
+}</process_it>
+      <process_sk>{
+	"_CompanyCode": "Kód spoločnosti",
+	"_Description": "Popis",
+	"_Payment method": "Spôsoby platby",
+	"_Payment method_report": "Spôsoby platby",
+	"AP - Payment method": "S2P – Platobný spôsob"
+}</process_sk>
+      <process_zh-CN>{
+	"_CompanyCode": "公司代码",
+	"_Description": "说明",
+	"_Payment method": "付款方式",
+	"_Payment method_report": "付款方式",
+	"AP - Payment method": "寻源到付款 - 付款方式"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"_CompanyCode": "Código da empresa",
+	"_Description": "Descrição",
+	"_Payment method": "Método de pagamento",
+	"_Payment method_report": "Método de pagamento",
+	"AP - Payment method": "S2P - Forma de pagamento"
+}</process_pt-BR>
+    </lg>
+    <process>
+      <BUColumn>CompanyCode__</BUColumn>
+      <flowtype>processing</flowtype>
+      <homepagelabel>AP - Payment method</homepagelabel>
+      <upgradable>yes</upgradable>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <OverrideAllowedAttachmentExtensions>*</OverrideAllowedAttachmentExtensions>
+      <UseActionNameWithScriptApproval>true</UseActionNameWithScriptApproval>
+      <AllowUploadAttachment>0</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+      <shouldRollbackManualRecordEdits>true</shouldRollbackManualRecordEdits>
+      <UseCultureFormat>true</UseCultureFormat>
+      <TransportName>CustomTable</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+    </process>
+    <ui>
+      <customscriptIncludedScripts>[LIB_P2P_CUSTOMIZATION_TABLES_CLIENT]</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Sys/Sys_Helpers</customscriptIncludedScripts>
+      <CustomScript>"use strict";
+var CustomScript;
+(function (CustomScript) {
+    function Start() {
+        Sys.Helpers.TryCallFunction("Lib.P2P.Customization.Tables.Client.Common.OnHTMLScriptEnd");
+    }
+    Start();
+})(CustomScript || (CustomScript = {}));
+//# sourceMappingURL=customscript.js.map</CustomScript>
+      <restorationPanel>DataPanel</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 19,
+	"*": {
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"splitterType": "simple-v",
+				"processHelpId": "5095",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 2,
+					"options": {
+						"hidePanelsMenu": false,
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 3,
+					"options": {
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 4,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-center": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 5,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"width": "100%"
+										},
+										"hidden": false
+									},
+									"*": {
+										"form-content-center-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 6,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"DataPanel": {
+													"type": "PanelData",
+													"data": [],
+													"stamp": 7,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": false,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"backgroundcolor": "default",
+														"labelsAlignment": "right",
+														"label": "_Document data",
+														"helpId": 5095,
+														"helpFormat": "HTML Format",
+														"version": 0
+													},
+													"*": {
+														"FieldsManager": {
+															"type": "FieldsManager",
+															"data": [],
+															"stamp": 8,
+															"options": {
+																"version": 0,
+																"controlsAssociation": {
+																	"CompanyCode__": "LabelCompanyCode__",
+																	"LabelCompanyCode__": "CompanyCode__",
+																	"ID__": "LabelID__",
+																	"LabelID__": "ID__",
+																	"Description__": "LabelDescription__",
+																	"LabelDescription__": "Description__"
+																}
+															},
+															"*": {
+																"Grid": {
+																	"type": "GridLayout",
+																	"data": [
+																		"fields"
+																	],
+																	"stamp": 9,
+																	"options": {
+																		"version": 0,
+																		"lines": 3,
+																		"columns": 2,
+																		"ctrlsPos": {
+																			"LabelCompanyCode__": {
+																				"line": 1,
+																				"column": 1
+																			},
+																			"CompanyCode__": {
+																				"line": 1,
+																				"column": 2
+																			},
+																			"LabelID__": {
+																				"line": 2,
+																				"column": 1
+																			},
+																			"ID__": {
+																				"line": 2,
+																				"column": 2
+																			},
+																			"LabelDescription__": {
+																				"line": 3,
+																				"column": 1
+																			},
+																			"Description__": {
+																				"line": 3,
+																				"column": 2
+																			}
+																		},
+																		"colspans": [
+																			[],
+																			[],
+																			[]
+																		]
+																	},
+																	"*": {
+																		"LabelCompanyCode__": {
+																			"type": "Label",
+																			"data": [
+																				"CompanyCode__"
+																			],
+																			"stamp": 11,
+																			"options": {
+																				"label": "_CompanyCode",
+																				"version": 0
+																			}
+																		},
+																		"CompanyCode__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"CompanyCode__"
+																			],
+																			"stamp": 10,
+																			"options": {
+																				"label": "_CompanyCode",
+																				"version": 1,
+																				"activable": true,
+																				"width": 230,
+																				"fTSmaxRecords": "20",
+																				"browsable": true
+																			}
+																		},
+																		"LabelID__": {
+																			"type": "Label",
+																			"data": [
+																				"ID__"
+																			],
+																			"stamp": 13,
+																			"options": {
+																				"label": "_Payment method",
+																				"version": 0
+																			}
+																		},
+																		"ID__": {
+																			"type": "ShortText",
+																			"data": [
+																				"ID__"
+																			],
+																			"stamp": 12,
+																			"options": {
+																				"label": "_Payment method",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"activable": true,
+																				"width": 230,
+																				"browsable": false,
+																				"version": 0
+																			}
+																		},
+																		"LabelDescription__": {
+																			"type": "Label",
+																			"data": [
+																				"Description__"
+																			],
+																			"stamp": 15,
+																			"options": {
+																				"label": "_Description",
+																				"version": 0
+																			}
+																		},
+																		"Description__": {
+																			"type": "ShortText",
+																			"data": [
+																				"Description__"
+																			],
+																			"stamp": 14,
+																			"options": {
+																				"label": "_Description",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"activable": true,
+																				"width": 230,
+																				"browsable": false,
+																				"version": 0
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 16,
+					"options": {
+						"splitterType": "simple-h",
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 17,
+							"options": {
+								"label": "_Save",
+								"action": "savequit",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 18,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Delete": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 19,
+							"options": {
+								"label": "_Delete",
+								"action": "delete",
+								"submit": true,
+								"disabled": true,
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <field deleted="0" format="" guid="DWRA10001458" id="SS8QT400153E" label="_CompanyCode" length="50" name="CompanyCode__" originalProcessID="PHQG10001153" precision="0" processid="RS8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ASS8QT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/CompanyCode__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:42</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_CompanyCode</Label>
+        <Alias>ASS8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>false</Editable>
+        <TableName>CT#BD8QT400153E</TableName>
+        <SortOrder>
+        </SortOrder>
+        <DisplayedColumns>CompanyCode__|CompanyName__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <SavedColumn>CompanyCode__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ProcessName>PurchasingCompanycodes__</ProcessName>
+        <CustomFilter>
+        </CustomFilter>
+      </field>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="AYLN10001155" id="TS8QT400153E" label="_Description" length="50" name="Description__" originalProcessID="PHQG10001153" precision="0" processid="RS8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ATS8QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Description__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:42</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Description</Label>
+        <Alias>ATS8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="HUME10001154" id="US8QT400153E" label="_Payment method_report" length="50" name="ID__" originalProcessID="PHQG10001153" precision="0" processid="RS8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AUS8QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ID__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:42</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Payment method_report</Label>
+        <Alias>AUS8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <type id="KOLHG0000M4O" name="CT">
+  </type>
+</process>

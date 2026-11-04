@@ -1,0 +1,3326 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:09:33" deleted="0" eskerapplication="P2P" global="0" id="FYDQT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="Transaction Parser" needvalidation="1" ootofilter="" ootoversion="2" originalProcessID="RR05FP000PA9" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="0" version="1" visibility="0">
+  <properties>
+    <gdr>
+      <FinalizationScriptAllowRetry>
+      </FinalizationScriptAllowRetry>
+      <FinalizationScript>
+      </FinalizationScript>
+      <ValidationScriptAllowRetry>
+      </ValidationScriptAllowRetry>
+      <validationscriptIncludedScripts>Lib_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_P2P_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_Expense_Transaction_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_Expense_Transaction_Server_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_Expense_Transaction_Validation_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_CommonDialog_V12.0.566.0</validationscriptIncludedScripts>
+      <ValidationScript>"use strict";
+var validationscript;
+(function (validationscript) {
+    function checkMandatoryFieldsForFillingForm() {
+        if (!Lib.Expense.Transaction.Server.CheckMandatoryFieldsForFillingForm()) {
+            if (!Lib.CommonDialog.NextAlert.GetNextAlert()) {
+                Lib.CommonDialog.NextAlert.Define("_All employee name are not completed title", "_All employee name are not completed description", { isError: false });
+            }
+            return false;
+        }
+        return true;
+    }
+    function approve() {
+        if (!checkMandatoryFieldsForFillingForm()) {
+            Process.PreventApproval();
+            return false;
+        }
+        else if (!Lib.Expense.Transaction.Validation.CreateAllEmployeeTransactionCD()) {
+            Process.PreventApproval();
+            Lib.CommonDialog.NextAlert.Define("_All employee transaction have not been created title", "_All employee transaction have not been created description", { isError: true });
+            return false;
+        }
+        return true;
+    }
+    validationscript.approve = approve;
+    function Run() {
+        //Dont do anything more on this record if IgnoreValidationScriptAndPutInError is set
+        if (Variable.GetValueAsString("IgnoreValidationScriptAndPutInError")) {
+            Log.Info("Ignoring validationScript and put as failure");
+            Data.SetValue("State", 200);
+            return;
+        }
+        const currentName = Data.GetActionName();
+        const currentAction = Data.GetActionType();
+        Log.Info("-- Transaction Parser Validation Script -- Name: '" + (currentName ? currentName : "&lt;empty&gt;") + "', Action: '" + (currentAction ? currentAction : "&lt;empty&gt;") + "' , Device: '" + Data.GetActionDevice());
+        // Is resubmit or autocomplete
+        if (currentAction === "reprocess" || currentAction === "autocomplete") {
+            Lib.CommonDialog.NextAlert.Reset();
+            checkMandatoryFieldsForFillingForm();
+        }
+        // Is coming from extraction script
+        else if (!currentName &amp;&amp; !currentAction) {
+            if (approve()) {
+                Data.SetValue("State", 100);
+            }
+            else {
+                //Send email to owner
+                const currentUser = Users.GetUser(Data.GetValue("OwnerId"));
+                Lib.Expense.Transaction.Validation.SendNotificationToReviewer(currentUser.GetValue("Login"));
+            }
+        }
+        // Is manual approbation
+        else {
+            Lib.CommonDialog.NextAlert.Reset();
+            switch (currentName) {
+                case "Save":
+                    Process.PreventApproval();
+                    break;
+                default:
+                    approve();
+                    break;
+            }
+        }
+        // must be done after configuration has been loaded
+        Lib.Expense.InitTechnicalFields();
+        if (Variable.GetValueAsString("Configuration")) {
+            Lib.Expense.SetRightForExpenseViewer();
+        }
+        else {
+            Log.Info("Configuration is not set on this transaction.");
+        }
+    }
+    validationscript.Run = Run;
+    Run();
+})(validationscript || (validationscript = {}));
+//# sourceMappingURL=validationscript.js.map</ValidationScript>
+      <AllowTagCoverPages>true</AllowTagCoverPages>
+      <AllowTagNewDocuments>true</AllowTagNewDocuments>
+      <AllowTagAttachments>true</AllowTagAttachments>
+      <ExtractionScriptAllowRetry>
+      </ExtractionScriptAllowRetry>
+      <extractionscriptIncludedScripts>Lib_Expense_Transaction_Parser_Management_V12.0.566.0</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>Lib_P2P_UserProperties_V12.0.566.0</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>Sys/Sys_Helpers_Data</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>Lib_CommonDialog_V12.0.566.0</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>Lib_Expense_V12.0.566.0</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>[Lib_Expense_Transaction_Customization_Server]</extractionscriptIncludedScripts>
+      <ExtractionScript>"use strict";
+var extractionscript;
+(function (extractionscript) {
+    let currentName = Data.GetActionName();
+    let currentAction = Data.GetActionType();
+    Log.Info(`-- Transaction Parser Extraction Script -- Name: '${currentName ? currentName : "&lt;empty&gt;"}', Action: '${currentAction ? currentAction : "&lt;empty&gt;"}'`);
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // MAIN
+    //#region  ISOCC (number) to CC (Alphabetic code)
+    const ISOCurrencyCodeToCurrencyCode = {
+        "971": "AFN",
+        "978": "EUR",
+        "008": "ALL",
+        "012": "DZD",
+        "840": "USD",
+        "973": "AOA",
+        "951": "XCD",
+        "032": "ARS",
+        "051": "AMD",
+        "533": "AWG",
+        "036": "AUD",
+        "944": "AZN",
+        "044": "BSD",
+        "048": "BHD",
+        "050": "BDT",
+        "052": "BBD",
+        "933": "BYN",
+        "084": "BZD",
+        "952": "XOF",
+        "060": "BMD",
+        "356": "INR",
+        "064": "BTN",
+        "068": "BOB",
+        "984": "BOV",
+        "977": "BAM",
+        "072": "BWP",
+        "578": "NOK",
+        "986": "BRL",
+        "096": "BND",
+        "975": "BGN",
+        "108": "BIF",
+        "132": "CVE",
+        "116": "KHR",
+        "950": "XAF",
+        "124": "CAD",
+        "136": "KYD",
+        "152": "CLP",
+        "990": "CLF",
+        "156": "CNY",
+        "170": "COP",
+        "970": "COU",
+        "174": "KMF",
+        "976": "CDF",
+        "554": "NZD",
+        "188": "CRC",
+        "191": "HRK",
+        "192": "CUP",
+        "931": "CUC",
+        "532": "ANG",
+        "203": "CZK",
+        "208": "DKK",
+        "262": "DJF",
+        "214": "DOP",
+        "818": "EGP",
+        "222": "SVC",
+        "232": "ERN",
+        "748": "SZL",
+        "230": "ETB",
+        "238": "FKP",
+        "242": "FJD",
+        "953": "XPF",
+        "270": "GMD",
+        "981": "GEL",
+        "936": "GHS",
+        "292": "GIP",
+        "320": "GTQ",
+        "826": "GBP",
+        "324": "GNF",
+        "328": "GYD",
+        "332": "HTG",
+        "340": "HNL",
+        "344": "HKD",
+        "348": "HUF",
+        "352": "ISK",
+        "360": "IDR",
+        "960": "XDR",
+        "364": "IRR",
+        "368": "IQD",
+        "376": "ILS",
+        "388": "JMD",
+        "392": "JPY",
+        "400": "JOD",
+        "398": "KZT",
+        "404": "KES",
+        "408": "KPW",
+        "410": "KRW",
+        "414": "KWD",
+        "417": "KGS",
+        "418": "LAK",
+        "422": "LBP",
+        "426": "LSL",
+        "710": "ZAR",
+        "430": "LRD",
+        "434": "LYD",
+        "756": "CHF",
+        "446": "MOP",
+        "807": "MKD",
+        "969": "MGA",
+        "454": "MWK",
+        "458": "MYR",
+        "462": "MVR",
+        "929": "MRU",
+        "480": "MUR",
+        "965": "XUA",
+        "484": "MXN",
+        "979": "MXV",
+        "498": "MDL",
+        "496": "MNT",
+        "504": "MAD",
+        "943": "MZN",
+        "104": "MMK",
+        "516": "NAD",
+        "524": "NPR",
+        "558": "NIO",
+        "566": "NGN",
+        "512": "OMR",
+        "586": "PKR",
+        "590": "PAB",
+        "598": "PGK",
+        "600": "PYG",
+        "604": "PEN",
+        "608": "PHP",
+        "985": "PLN",
+        "634": "QAR",
+        "946": "RON",
+        "643": "RUB",
+        "646": "RWF",
+        "654": "SHP",
+        "882": "WST",
+        "930": "STN",
+        "682": "SAR",
+        "941": "RSD",
+        "690": "SCR",
+        "694": "SLL",
+        "702": "SGD",
+        "994": "XSU",
+        "090": "SBD",
+        "706": "SOS",
+        "728": "SSP",
+        "144": "LKR",
+        "938": "SDG",
+        "968": "SRD",
+        "752": "SEK",
+        "947": "CHE",
+        "948": "CHW",
+        "760": "SYP",
+        "901": "TWD",
+        "972": "TJS",
+        "834": "TZS",
+        "764": "THB",
+        "776": "TOP",
+        "780": "TTD",
+        "788": "TND",
+        "949": "TRY",
+        "934": "TMT",
+        "800": "UGX",
+        "980": "UAH",
+        "784": "AED",
+        "997": "USN",
+        "858": "UYU",
+        "940": "UYI",
+        "927": "UYW",
+        "860": "UZS",
+        "548": "VUV",
+        "928": "VES",
+        "704": "VND",
+        "886": "YER",
+        "967": "ZMW",
+        "932": "ZWL",
+        "955": "XBA",
+        "956": "XBB",
+        "957": "XBC",
+        "958": "XBD",
+        "963": "XTS",
+        "999": "XXX",
+        "959": "XAU",
+        "964": "XPD",
+        "962": "XPT",
+        "961": "XAG"
+    };
+    //#endregion
+    async function Run() {
+        Lib.Expense.Transaction.Parser.Management.Init();
+        await Sys.Helpers.TryCallFunction("Lib.Expense.Transaction.Customization.Server.OnBeforeParsing");
+        await ParseTransaction();
+        await Sys.Helpers.TryCallFunction("Lib.Expense.Transaction.Customization.Server.OnAfterParsing");
+    }
+    extractionscript.Run = Run;
+    async function ParseTransaction() {
+        if (!Lib.Expense.Transaction.Parser.Management.RunParsing(0)) {
+            Log.Error("Something went wrong with parsing (No parser found for this file or error during parsing)");
+            let error = Lib.Expense.Transaction.Parser.Management.GetLastError();
+            Lib.CommonDialog.NextAlert.Define("_Extraction Error title", error.message, { isError: true });
+            Variable.SetValueAsString("IgnoreValidationScriptAndPutInError", "true");
+            const currentUser = Users.GetUser(Data.GetValue("OwnerId"));
+            Lib.Expense.Transaction.Parser.Management.SendExtractionErrorNotification(currentUser.GetValue("Login"));
+            return Sys.Helpers.Promise.Resolve();
+        }
+        const tableTransaction = Data.GetTable("LineTransaction__");
+        let userQuerypromises = [];
+        Sys.Helpers.Data.ForEachTableItem(tableTransaction, function (item) {
+            //Currency code
+            let isoLocalCurrencyCode = item.GetValue("ISOLocalCurrencyCode__");
+            let isoBilledCurrencyCode = item.GetValue("ISOBilledCurrencyCode__");
+            if (!item.GetValue("BilledCurrencyCode__") &amp;&amp; isoBilledCurrencyCode) {
+                if (isoBilledCurrencyCode in ISOCurrencyCodeToCurrencyCode) {
+                    item.SetValue("BilledCurrencyCode__", ISOCurrencyCodeToCurrencyCode[isoBilledCurrencyCode]);
+                }
+            }
+            if (!item.GetValue("LocalCurrencyCode__") &amp;&amp; isoLocalCurrencyCode) {
+                if (isoLocalCurrencyCode in ISOCurrencyCodeToCurrencyCode) {
+                    item.SetValue("LocalCurrencyCode__", ISOCurrencyCodeToCurrencyCode[isoLocalCurrencyCode]);
+                }
+            }
+            //EmployeeID__ EmployeeName__ EmployeeLogin__
+            //UserNumber__ CC4-123456 , Sam CCOwner4  UserLogin__ ccowner4process.acoq@esker.com
+            let employeeID = item.GetValue("EmployeeID__");
+            if (employeeID) {
+                userQuerypromises.push(Lib.P2P.UserProperties.QueryValuesByUserNumber(employeeID)
+                    .Then((result) =&gt; {
+                    item.SetValue("EmployeeLogin__", result.UserLogin__);
+                    const employee = Users.GetUser(result.UserLogin__);
+                    item.SetValue("EmployeeName__", employee.GetValue("DisplayName"));
+                    Log.Info(`Transaction ${item.GetValue("TransactionID__")} is linked to ${employee.GetValue("DisplayName")}`);
+                })
+                    .Catch((error) =&gt; {
+                    if (Lib.P2P.UserProperties.QueryNoResult != error) {
+                        Log.Error("Error in get user properties with user number " + employeeID + " error :" + error);
+                    }
+                }));
+            }
+            else {
+                Log.Warn(`Employee ID is missing for transaction ${item.GetValue("TransactionID__")}`);
+            }
+        });
+        return Sys.Helpers.Promise.All(userQuerypromises).Then(() =&gt; {
+            Log.Info("Parsing done");
+        });
+    }
+})(extractionscript || (extractionscript = {}));
+if (typeof _ENV_TEST_ENABLED === "undefined") {
+    extractionscript.Run();
+}
+//# sourceMappingURL=extractionscript.js.map</ExtractionScript>
+      <ExtractionScriptRunOnOCRFailed>
+      </ExtractionScriptRunOnOCRFailed>
+      <AllowRemovePages>true</AllowRemovePages>
+      <AllowSwapPages>true</AllowSwapPages>
+      <PostProcessingScriptAllowRetry>
+      </PostProcessingScriptAllowRetry>
+      <PostProcessingScript>
+      </PostProcessingScript>
+    </gdr>
+    <lg>
+      <process_da>{
+	"_All employee name are not completed description": "Angiv alle medarbejdernavne.",
+	"_All employee name are not completed title": "Manglende oplysninger",
+	"_All employee transaction have not been created description": "Der opstod en fejl under afsendelsen af transaktionerne til medarbejderne.",
+	"_All employee transaction have not been created title": "Fejl i afsendelse",
+	"_Approve": "Opdel og send til medarbejdere",
+	"_BilledAmount": "Transaktionsbeløb",
+	"_BilledAmount_report": "Transaktionsbeløb",
+	"_BilledCurrencyCode": "Transaktionsvaluta",
+	"_BilledCurrencyCode_report": "Transaktionsvaluta",
+	"_CardholderName": "Kortholders navn",
+	"_CurrencyExchangeRate": "Valutakurs",
+	"_CurrencyExchangeRate_report": "Valutakurs",
+	"_DefaultConversionErrorMessage": "Bankfilen kunne ikke importeres, fordi feltet '{0}' i linje {4} ikke er formateret korrekt: Værdi '{3}' indeholder uventede tegn. Bed din administrator om at kontrollere filformatet.",
+	"_DefaultSyntaxErrorMessage": "Bankfilen kunne importeres, fordi feltet '{0}' i linje {3} ikke er formateret korrekt: Værdi '{1}' matcher ikke det forventede format '{2}'. Bed din administrator om at kontrollere filformatet.",
+	"_DefaultTransactionLineErrorMessage": "Der opstod en fejl i linje {0} under udtrækning af transaktionerne fra bankfilen. Bed din administrator om at bekræfte, at filen overholder det forventede format.",
+	"_EmployeeID": "Brugernummer",
+	"_EmployeeID_report": "Brugernummer",
+	"_EmployeeLogin": "Bruger-id",
+	"_EmployeeLogin_report": "Bruger-id",
+	"_EmployeeName": "Medarbejderens navn",
+	"_EmployeeName_report": "Medarbejderens navn",
+	"_EskerExpenseManagement": "Esker Udgiftsstyring",
+	"_ExpenseDescription": "Transaktionsbeskrivelse",
+	"_ExpenseDescription_report": "Transaktionsbeskrivelse",
+	"_ExtractedTransactions": "Importerede transaktioner",
+	"_Extraction Error message": "Der opstod en fejl under udtrækning af transaktionerne fra bankfilen. Bed din administrator om at bekræfte, at filen overholder det forventede format.",
+	"_Extraction Error title": "Udtrækningsfejl",
+	"_ISOBilledCurrencyCode": "Transaktionsvaluta (numerisk kode)",
+	"_ISOBilledCurrencyCode_report": "Transaktionsvaluta (numerisk kode)",
+	"_ISOLocalCurrencyCode": "Lokal valuta (numerisk kode)",
+	"_ISOLocalCurrencyCode_report": "Lokal valuta (numerisk kode)",
+	"_LineTransaction": "Importerede transaktioner",
+	"_LineTransaction_report": "Importerede transaktioner",
+	"_LocalAmount": "Lokalt beløb",
+	"_LocalAmount_report": "Lokalt beløb",
+	"_LocalCurrencyCode": "Lokal valuta",
+	"_MerchantCategory": "Kategorikode for forhandler",
+	"_MerchantCategory_report": "Kategorikode for forhandler",
+	"_MerchantName": "Leverandør",
+	"_MerchantName_report": "Leverandør",
+	"_No compatible parser found": "Der blev ikke fundet nogen parser for dette bankfilformat. Bed din administrator om at bekræfte, at filen overholder det forventede format, eller lav en parser specielt til dette format. ",
+	"_Reprocess": "Træk transaktioner ud igen",
+	"_TransactionDate": "Transaktionsdato",
+	"_TransactionDate_report": "Transaktionsdato",
+	"_TransactionID": "Transaktions-id",
+	"_TransactionID_report": "Transaktions-id",
+	"_Unexpected error": "Fejl",
+	"_Unexpected error message": "Der opstod en fejl. Prøv igen. Kontakt din administrator, hvis problemet fortsætter.",
+	"_Unexpected error occurs during parsing": "Der opstod en fejl under parsing af bankfilen. Prøv igen. Kontakt din administrator, hvis problemet fortsætter.",
+	"_Wrong line length": "Bankfilen kunne ikke importeres på grund af en formateringsfejl: Linje {0} matcher ikke den forventede længde på 3000 tegn. Bed din administrator om at kontrollere, at den korrekte fil er blevet importeret.",
+	"_Wrong line length GL1076": "Bankfilen kunne ikke importeres på grund af en formateringsfejl: Linje {0} matcher ikke den forventede længde på 735 tegn. Bed din administrator om at kontrollere, at den korrekte fil er blevet importeret.",
+	"_Wrong line length VCF4": "Bankfilen kunne ikke importeres på grund af formateringsfejl: Linje {0} matcher ikke den forventede længde på 76 celler. Bed din administrator om at kontrollere, at den korrekte fil er blevet importeret.",
+	"Transaction Parser": "Import af firmakort"
+}</process_da>
+      <process_de>{
+	"_All employee name are not completed description": "Geben Sie bitte alle Mitarbeiternamen an.",
+	"_All employee name are not completed title": "Fehlende Informationen",
+	"_All employee transaction have not been created description": "Bei der Übermittlung der Transaktionen an die Mitarbeiter ist ein Fehler aufgetreten. ",
+	"_All employee transaction have not been created title": "Übermittlungsfehler",
+	"_Approve": "Teilen und an Mitarbeiter senden",
+	"_BilledAmount": "Transaktionsbetrag",
+	"_BilledAmount_report": "Transaktionsbetrag",
+	"_BilledCurrencyCode": "Transaktionswährung",
+	"_BilledCurrencyCode_report": "Transaktionswährung",
+	"_CardholderName": "Name des Karteninhabers",
+	"_CurrencyExchangeRate": "Wechselkurs",
+	"_CurrencyExchangeRate_report": "Wechselkurs",
+	"_DefaultConversionErrorMessage": "Die Bankdatei konnte nicht importiert werden, da das Feld '{0}' in Zeile {4} nicht richtig formatiert ist: Der Wert '{3}' enthält unerwartete Zeichen.\n\nBitten Sie Ihren Administrator, das Dateiformat zu überprüfen.",
+	"_DefaultSyntaxErrorMessage": "Die Bankdatei konnte nicht importiert werden, da das Feld '{0}' in Zeile {3} nicht richtig formatiert ist: Der Wert '{1}' entspricht nicht dem erwarteten Format '{2}'.\n\nBitten Sie Ihren Administrator, das Dateiformat zu überprüfen.",
+	"_DefaultTransactionLineErrorMessage": "Beim Extrahieren der Transaktionen aus der Bankdatei ist in Zeile {0} ein Fehler aufgetreten.\n\nBitten Sie Ihren Administrator zu überprüfen, dass die Datei mit dem erwarteten Format übereinstimmt.",
+	"_EmployeeID": "Benutzernummer",
+	"_EmployeeID_report": "Benutzernummer",
+	"_EmployeeLogin": "Benutzer-ID",
+	"_EmployeeLogin_report": "Benutzer-ID",
+	"_EmployeeName": "Mitarbeitername",
+	"_EmployeeName_report": "Mitarbeitername",
+	"_EskerExpenseManagement": "Esker Ausgabenberichte",
+	"_ExpenseDescription": "Transaktionsbeschreibung",
+	"_ExpenseDescription_report": "Transaktionsbeschreibung",
+	"_ExtractedTransactions": "Importierte Transaktionen",
+	"_Extraction Error message": "Beim Extrahieren der Transaktionen aus der Bankdatei ist ein Fehler aufgetreten.\n\nBitten Sie Ihren Administrator zu überprüfen, dass die Datei mit dem erwarteten Format übereinstimmt.",
+	"_Extraction Error title": "Extraktionsfehler",
+	"_ISOBilledCurrencyCode": "Transaktionswährung (numerischer Code)",
+	"_ISOBilledCurrencyCode_report": "Transaktionswährung (numerischer Code)",
+	"_ISOLocalCurrencyCode": "Lokale Währung (numerischer Code)",
+	"_ISOLocalCurrencyCode_report": "Lokale Währung (numerischer Code)",
+	"_LineTransaction": "Importierte Transaktionen",
+	"_LineTransaction_report": "Importierte Transaktionen",
+	"_LocalAmount": "Lokaler Betrag",
+	"_LocalAmount_report": "Lokaler Betrag",
+	"_LocalCurrencyCode": "Lokale Währung",
+	"_MerchantCategory": "Händlerkategoriencode",
+	"_MerchantCategory_report": "Händlerkategoriencode",
+	"_MerchantName": "Lieferant",
+	"_MerchantName_report": "Lieferant",
+	"_No compatible parser found": "Für dieses Bankdateiformat wurde kein Parser gefunden.\n\nBitten Sie Ihren Administrator zu überprüfen, dass die Datei mit dem erwarteten Format übereinstimmt, oder entwickeln für dieses Format Sie einen dedizierten Parser.",
+	"_Reprocess": "Transaktionen erneut extrahieren",
+	"_TransactionDate": "Transaktionsdatum",
+	"_TransactionDate_report": "Transaktionsdatum",
+	"_TransactionID": "Transaktions-ID",
+	"_TransactionID_report": "Transaktions-ID",
+	"_Unexpected error": "Fehler",
+	"_Unexpected error message": "Es ist ein Fehler aufgetreten, bitte wiederholen Sie den Vorgang. \nWenn das Problem weiterhin auftritt, wenden Sie sich an Ihren Administrator.",
+	"_Unexpected error occurs during parsing": "Bei der Analyse der Bankdatei ist ein Fehler aufgetreten. Bitte wiederholen Sie den Vorgang. \n\nWenn das Problem weiterhin auftritt, wenden Sie sich an Ihren Administrator.",
+	"_Wrong line length": "Die Bankdatei konnte aufgrund eines Formatierungsfehlers nicht importiert werden: Zeile {0} entspricht nicht der erwarteten Länge von 3000 Zeichen.\n\nBitten Sie Ihren Administrator zu überprüfen, dass die richtige Datei importiert wurde.",
+	"_Wrong line length GL1076": "Die Bankdatei konnte aufgrund eines Formatierungsfehlers nicht importiert werden: Zeile {0} entspricht nicht der erwarteten Länge von 735 Zeichen.\n\nBitten Sie Ihren Administrator zu überprüfen, dass die richtige Datei importiert wurde.",
+	"_Wrong line length VCF4": "Die Bankdatei konnte aufgrund eines Formatierungsfehlers nicht importiert werden: Zeile {0} entspricht nicht der erwarteten Länge von 76 Zellen. Bitten Sie Ihren Administrator zu überprüfen, dass die richtige Datei importiert wurde.",
+	"Transaction Parser": "Unternehmenskartenimport"
+}</process_de>
+      <process_ja>{
+	"_All employee name are not completed description": "すべての社員名を指定してください。",
+	"_All employee name are not completed title": "不足情報",
+	"_All employee transaction have not been created description": "社員に取引を送信中にエラーが発生しました。",
+	"_All employee transaction have not been created title": "送信エラー",
+	"_Approve": "分割して従業員に送信",
+	"_BilledAmount": "取引額",
+	"_BilledAmount_report": "取引額",
+	"_BilledCurrencyCode": "取引通貨",
+	"_BilledCurrencyCode_report": "取引通貨",
+	"_CardholderName": "Name of cardholder",
+	"_CurrencyExchangeRate": "換算レート",
+	"_CurrencyExchangeRate_report": "換算レート",
+	"_DefaultConversionErrorMessage": "銀行ファイルをインポートできませんでした。{4}行目の'{0}'フィールドが正しくフォーマットされていません。値 '{3}' に予期せぬ文字が含まれています。管理者に問い合わせてファイルフォーマットを確認してください。",
+	"_DefaultSyntaxErrorMessage": "銀行ファイルをインポートできませんでした。{3}行目の'{0}'フィールドが正しくフォーマットされていません。値 '{1}' が所定のフォーマット'{2}' と一致しません。管理者に問い合わせてファイルフォーマットを確認してください。",
+	"_DefaultTransactionLineErrorMessage": "銀行ファイルから取引を抽出する際に、{0} 行目でエラーが発生しました。管理者に連絡して、所定のフォーマットでファイルがコンパイルされていることを確認してください。",
+	"_EmployeeID": "ユーザー番号",
+	"_EmployeeID_report": "ユーザー番号",
+	"_EmployeeLogin": "ユーザーID",
+	"_EmployeeLogin_report": "ユーザーID",
+	"_EmployeeName": "社員名",
+	"_EmployeeName_report": "社員名",
+	"_EskerExpenseManagement": "Esker費用管理",
+	"_ExpenseDescription": "取引詳細",
+	"_ExpenseDescription_report": "取引詳細",
+	"_ExtractedTransactions": "インポートされた取引",
+	"_Extraction Error message": "銀行ファイルから取引を抽出する際にエラーが発生しました。\n\n管理者に連絡して、所定のフォーマットでインポートファイルがｋオンパイルされていることを確認してください。",
+	"_Extraction Error title": "抽出エラー",
+	"_ISOBilledCurrencyCode": "取引通貨（数値コード）",
+	"_ISOBilledCurrencyCode_report": "取引通貨（数値コード）",
+	"_ISOLocalCurrencyCode": "現地通貨（数値コード）",
+	"_ISOLocalCurrencyCode_report": "現地通貨（数値コード）",
+	"_LineTransaction": "インポートされた取引",
+	"_LineTransaction_report": "インポートされた取引",
+	"_LocalAmount": "現地金額",
+	"_LocalAmount_report": "現地金額",
+	"_LocalCurrencyCode": "現地通貨",
+	"_MerchantCategory": "マーチャントカテゴリーコード",
+	"_MerchantCategory_report": "マーチャントカテゴリーコード",
+	"_MerchantName": "仕入先",
+	"_MerchantName_report": "仕入先",
+	"_No compatible parser found": "この銀行ファイルフォーマットにはパーサーがありません。管理者に連絡して、所定のフォーマットでファイルがコンパイルされていることを確認するか、またはこのフォーマット用のパーサーを開発してください。",
+	"_Reprocess": "Re-extract transactions",
+	"_TransactionDate": "取引日",
+	"_TransactionDate_report": "取引日",
+	"_TransactionID": "取引ID",
+	"_TransactionID_report": "取引ID",
+	"_Unexpected error": "エラー",
+	"_Unexpected error message": "エラーが発生しました。もう一度行ってください。問題が解決しない場合は、管理者に連絡してください。",
+	"_Unexpected error occurs during parsing": "銀行ファイルを解析中にエラーが発生しました。もう一度行ってください。問題が解決しない場合は、管理者に連絡してください。",
+	"_Wrong line length": "フォーマットエラーのためファイルをインポートできませんでした。{0}行目が所定の300文字の長さと一致しません。管理者に問い合わせて、正しいファイルがインポートされたか確認してください。",
+	"_Wrong line length GL1076": "フォーマットエラーのためファイルをインポートできませんでした。{0}行目が所定の735文字の長さと一致しません。管理者に問い合わせて、正しいファイルがインポートされたか確認してください。",
+	"_Wrong line length VCF4": "フォーマットエラーのため銀行ファイルをインポートできませんでした。{0}行目が所定の76セルの長さと一致しません。\n\n管理者に問い合わせて、正しいファイルがインポートされたか確認してください。",
+	"Transaction Parser": "会社カードのインポート"
+}</process_ja>
+      <process_en>{
+	"_All employee name are not completed description": "Please specify all employee names.",
+	"_All employee name are not completed title": "Missing Information",
+	"_All employee transaction have not been created description": "An error occurred while submitting the transactions to the employees.",
+	"_All employee transaction have not been created title": "Submission Error",
+	"_Approve": "Split and send to employees",
+	"_BilledAmount": "Transaction amount",
+	"_BilledAmount_report": "Transaction amount",
+	"_BilledCurrencyCode": "Transaction currency",
+	"_BilledCurrencyCode_report": "Transaction currency",
+	"_CardholderName": "Name of cardholder",
+	"_CurrencyExchangeRate": "Exchange rate",
+	"_CurrencyExchangeRate_report": "Exchange rate",
+	"_DefaultConversionErrorMessage": "The bank file could not be imported because field '{0}' in line {4} is not correctly formatted: value '{3}' contains unexpected characters.\n\nPlease ask your administrator to check the file format.",
+	"_DefaultSyntaxErrorMessage": "The bank file could not be imported because field '{0}' in line {3} is not correctly formatted: value '{1}' does not match the expected format '{2}'.\n\nPlease ask your administrator to check the file format.",
+	"_DefaultTransactionLineErrorMessage": "An error occurred at line {0} while extracting the transactions from the bank file.\n\nPlease ask your administrator to verify that the file complies with the expected format.",
+	"_EmployeeID": "User number",
+	"_EmployeeID_report": "User number",
+	"_EmployeeLogin": "User ID",
+	"_EmployeeLogin_report": "User ID",
+	"_EmployeeName": "Employee name",
+	"_EmployeeName_report": "Employee name",
+	"_EskerExpenseManagement": "Esker Expense Management",
+	"_ExpenseDescription": "Transaction description",
+	"_ExpenseDescription_report": "Transaction description",
+	"_ExtractedTransactions": "Imported Transactions",
+	"_Extraction Error message": "An error occurred while extracting the transactions from the bank file.\n\nPlease ask your administrator to verify that the file complies with the expected format.",
+	"_Extraction Error title": "Extraction Error",
+	"_ISOBilledCurrencyCode": "Transaction currency (numeric code)",
+	"_ISOBilledCurrencyCode_report": "Transaction currency (numeric code)",
+	"_ISOLocalCurrencyCode": "Local currency (numeric code)",
+	"_ISOLocalCurrencyCode_report": "Local currency (numeric code)",
+	"_LineTransaction": "Imported Transactions",
+	"_LineTransaction_report": "Imported transactions",
+	"_LocalAmount": "Local amount",
+	"_LocalAmount_report": "Local amount",
+	"_LocalCurrencyCode": "Local currency",
+	"_MerchantCategory": "Merchant category code",
+	"_MerchantCategory_report": "Merchant category code",
+	"_MerchantName": "Supplier",
+	"_MerchantName_report": "Supplier",
+	"_No compatible parser found": "No parser was found for this bank file format.\n\nPlease ask your administrator to verify that the file complies with the expected format or develop a dedicated parser for this format. ",
+	"_Reprocess": "Re-extract transactions",
+	"_TransactionDate": "Transaction date",
+	"_TransactionDate_report": "Transaction date",
+	"_TransactionID": "Transaction ID",
+	"_TransactionID_report": "Transaction ID",
+	"_Unexpected error": "Error",
+	"_Unexpected error message": "An error occurred, please try again. \n\nIf the problem persists, contact your administrator.",
+	"_Unexpected error occurs during parsing": "An error occurred while parsing the bank file. Please try again. \n\nIf the problem persists, contact your administrator.",
+	"_Wrong line length": "The bank file could not be imported because of a formatting error: line {0} does not match the expected length of 3000 characters.\n\nPlease ask your administrator to ensure that the correct file was imported.",
+	"_Wrong line length GL1076": "The bank file could not be imported because of a formatting error: line {0} does not match the expected length of 735 characters.\n\nPlease ask your administrator to ensure that the correct file was imported.",
+	"_Wrong line length VCF4": "The bank file could not be imported because of a formatting error: line {0} does not match the expected length of 76 cells.\n\nPlease ask your administrator to ensure that the correct file was imported.",
+	"Transaction Parser": "Company Card Import"
+}</process_en>
+      <process_es>{
+	"_All employee name are not completed description": "Es necesario especificar todos los nombres de los empleados.",
+	"_All employee name are not completed title": "Información faltante",
+	"_All employee transaction have not been created description": "Se ha producido un error al enviar las transacciones a los empleados.",
+	"_All employee transaction have not been created title": "Error de envío",
+	"_Approve": "Dividir y enviar a los empleados",
+	"_BilledAmount": "Importe de la transacción",
+	"_BilledAmount_report": "Importe de la transacción",
+	"_BilledCurrencyCode": "Divisa de la transacción",
+	"_BilledCurrencyCode_report": "Divisa de la transacción",
+	"_CardholderName": "Nombre del titular de la tarjeta",
+	"_CurrencyExchangeRate": "Tipo de cambio",
+	"_CurrencyExchangeRate_report": "Tipo de cambio",
+	"_DefaultConversionErrorMessage": "El archivo bancario no se ha podido importar porque el campo '{0}' de la línea {4} no tiene el formato correcto: el valor '{3}' contiene caracteres inesperados.\n\nPor favor, pida a su administrador que verifique el formato del archivo.",
+	"_DefaultSyntaxErrorMessage": "El archivo bancario no se ha podido importar porque el campo '{0}' de la línea {3} no tiene el formato correcto: el valor '{1}' no coincide con el formato esperado '{2}'.\n\nPor favor, pida a su administrador que verifique el formato del archivo.\n",
+	"_DefaultTransactionLineErrorMessage": "Se ha producido un error en la línea {0} al extraer las transacciones del archivo bancario.\n\nPor favor, pida a su administrador que verifique el formato del archivo.",
+	"_EmployeeID": "Número del usuario",
+	"_EmployeeID_report": "Número del usuario",
+	"_EmployeeLogin": "ID de usuario",
+	"_EmployeeLogin_report": "ID de usuario",
+	"_EmployeeName": "Nombre del empleado",
+	"_EmployeeName_report": "Nombre del empleado",
+	"_EskerExpenseManagement": "Esker Informes de gastos",
+	"_ExpenseDescription": "Descripción de la transacción",
+	"_ExpenseDescription_report": "Descripción de la transacción",
+	"_ExtractedTransactions": "Transacciones importadas",
+	"_Extraction Error message": "Se ha producido un error al extraer las transacciones del fichero bancario.\n\nPor favor, pida a su administrador que verifique que el fichero cumpla con el formato esperado.",
+	"_Extraction Error title": "Error de extracción",
+	"_ISOBilledCurrencyCode": "Divisa de la transacción (código numérico)",
+	"_ISOBilledCurrencyCode_report": "Divisa de la transacción (código numérico)",
+	"_ISOLocalCurrencyCode": "Divisa local (código numérico)",
+	"_ISOLocalCurrencyCode_report": "Divisa local (código numérico)",
+	"_LineTransaction": "Transacciones importadas",
+	"_LineTransaction_report": "Transacciones importadas",
+	"_LocalAmount": "Importe local",
+	"_LocalAmount_report": "Importe local",
+	"_LocalCurrencyCode": "Divisa local",
+	"_MerchantCategory": "Código de categoría de comercio",
+	"_MerchantCategory_report": "Código de categoría de comercio",
+	"_MerchantName": "Proveedor",
+	"_MerchantName_report": "Proveedor",
+	"_No compatible parser found": "No se ha encontrado un analizador para este formato de archivo bancario.\n\nPor favor, pida a su administrador que verifique que el archivo cumpla con el formato esperado o que desarrolle un analizador dedicado a este formato.\n",
+	"_Reprocess": "Extraer de nuevo las transacciones",
+	"_TransactionDate": "Fecha de la transacción",
+	"_TransactionDate_report": "Fecha de la transacción",
+	"_TransactionID": "ID de la transacción",
+	"_TransactionID_report": "ID de la transacción",
+	"_Unexpected error": "Error",
+	"_Unexpected error message": "Se ha producido un error, inténtelo de nuevo. \n\nSi el problema persiste, póngase en contacto con el administrador.",
+	"_Unexpected error occurs during parsing": "Se ha producido un error al analizar el archivo del banco. Por favor, inténtelo de nuevo. \n\nSi el problema persiste, póngase en contacto con su administrador.",
+	"_Wrong line length": "El archivo del banco no pudo ser importado debido a un error de formato: la línea {0} no coincide con la longitud esperada de 3000 caracteres.\n\nPor favor, pida a su administrador que se asegure de que se ha importado el archivo correcto.\n",
+	"_Wrong line length GL1076": "El archivo del banco no pudo ser importado debido a un error de formato: la línea {0} no coincide con la longitud esperada de 735 caracteres.\n\nPor favor, pida a su administrador que se asegure de que se ha importado el archivo correcto.\n",
+	"_Wrong line length VCF4": "El archivo del banco no pudo ser importado debido a un error de formato: la línea {0} no coincide con la longitud esperada de 76 celdas.\n\nPor favor, pida a su administrador que se asegure de que se ha importado el archivo correcto.\n",
+	"Transaction Parser": "Importación de tarjetas de empresa"
+}</process_es>
+      <process_fr>{
+	"_All employee name are not completed description": "Veuillez renseigner tous les noms des employés.",
+	"_All employee name are not completed title": "Informations manquantes",
+	"_All employee transaction have not been created description": "Une erreur s'est produite lors de l'envoi des transactions aux employés.",
+	"_All employee transaction have not been created title": "Erreur d'envoi",
+	"_Approve": "Découper et envoyer aux employés",
+	"_BilledAmount": "Montant de la transaction",
+	"_BilledAmount_report": "Montant de la transaction",
+	"_BilledCurrencyCode": "Devise de transaction",
+	"_BilledCurrencyCode_report": "Devise de transaction",
+	"_CardholderName": "Nom du détenteur de la carte",
+	"_CurrencyExchangeRate": "Taux de change",
+	"_CurrencyExchangeRate_report": "Taux de change",
+	"_DefaultConversionErrorMessage": "Le fichier bancaire n'a pas pu être importé car le champ '{0}' à la ligne {4} n'est pas correctement formaté : la valeur '{3}' contient des caractères inattendus.\n\nDemandez à votre administrateur de vérifier le format du fichier.",
+	"_DefaultSyntaxErrorMessage": "Le fichier bancaire n'a pas pu être importé car le champ '{0}' à la ligne {3} n'est pas correctement formaté : la valeur '{1}' ne correspond pas au format attendu '{2}'.\n\nDemandez à votre administrateur de vérifier le format du fichier.",
+	"_DefaultTransactionLineErrorMessage": "Une erreur s'est produite lors de l'extraction des transactions du fichier bancaire à la ligne {0}.\n\nDemandez à votre administrateur de vérifier que le fichier est conforme au format attendu.",
+	"_EmployeeID": "Numéro d'utilisateur",
+	"_EmployeeID_report": "Numéro d'utilisateur",
+	"_EmployeeLogin": "Identifiant d'utilisateur",
+	"_EmployeeLogin_report": "Identifiant d'utilisateur",
+	"_EmployeeName": "Nom de l'employé",
+	"_EmployeeName_report": "Nom de l'employé",
+	"_EskerExpenseManagement": "Esker Notes de frais",
+	"_ExpenseDescription": "Description de la transaction",
+	"_ExpenseDescription_report": "Description de la transaction",
+	"_ExtractedTransactions": "Transactions importées",
+	"_Extraction Error message": "Une erreur s'est produite lors de l'extraction des transactions du fichier bancaire.\n\nDemandez à votre administrateur de vérifier que le fichier est conforme au format attendu.",
+	"_Extraction Error title": "Erreur d'extraction",
+	"_ISOBilledCurrencyCode": "Devise de transaction (code numérique)",
+	"_ISOBilledCurrencyCode_report": "Devise de transaction (code numérique)",
+	"_ISOLocalCurrencyCode": "Devise locale (code numérique)",
+	"_ISOLocalCurrencyCode_report": "Devise locale (code numérique)",
+	"_LineTransaction": "Transactions importées",
+	"_LineTransaction_report": "Transactions importées",
+	"_LocalAmount": "Montant local",
+	"_LocalAmount_report": "Montant local",
+	"_LocalCurrencyCode": "Devise locale",
+	"_MerchantCategory": "Code de catégorie commerçant",
+	"_MerchantCategory_report": "Code de catégorie commerçant",
+	"_MerchantName": "Fournisseur",
+	"_MerchantName_report": "Fournisseur",
+	"_No compatible parser found": "Aucun analyseur n'a été trouvé pour ce format de fichier bancaire.\n\nDemandez à votre administrateur de vérifier que le fichier est conforme au format attendu ou développez un analyseur dédié à ce format. ",
+	"_Reprocess": "Réextraire les transactions",
+	"_TransactionDate": "Date de la transaction",
+	"_TransactionDate_report": "Date de la transaction",
+	"_TransactionID": "ID de transaction",
+	"_TransactionID_report": "ID de transaction",
+	"_Unexpected error": "Erreur",
+	"_Unexpected error message": "Une erreur est survenue, veuillez réessayer. \n\nSi le problème persiste, contactez votre administrateur.",
+	"_Unexpected error occurs during parsing": "Une erreur est survenue lors de l'analyse du fichier bancaire. Veuillez réessayer. \n\nSi le problème persiste, contactez votre administrateur.",
+	"_Wrong line length": "Le fichier bancaire n'a pas pu être importé en raison d'une erreur de mise en forme : la ligne {0} ne correspond pas à la longueur attendue de 3000 caractères.\n\nDemandez à votre administrateur de vérifier que le bon fichier a été importé. ",
+	"_Wrong line length GL1076": "Le fichier bancaire n'a pas pu être importé en raison d'une erreur de mise en forme : la ligne {0} ne correspond pas à la longueur attendue de 735 caractères.\n\nDemandez à votre administrateur de vérifier que le bon fichier a été importé. ",
+	"_Wrong line length VCF4": "Le fichier bancaire n'a pas pu être importé en raison d'une erreur de mise en forme : la ligne {0} ne correspond pas à la longueur attendue de 76 cellules.\n\nDemandez à votre administrateur de vérifier que le bon fichier a été importé. ",
+	"Transaction Parser": "Importation de cartes d'entreprise"
+}</process_fr>
+      <process_nl-NL>{
+	"_All employee name are not completed description": "Geef de namen van alle werknemers op.",
+	"_All employee name are not completed title": "Ontbrekende informatie",
+	"_All employee transaction have not been created description": "Er is een fout opgetreden bij het indienen van de transacties naar de werknemers.",
+	"_All employee transaction have not been created title": "Fout bij indienen",
+	"_Approve": "Splitsen en verzenden naar werknemers",
+	"_BilledAmount": "Bedrag transactie",
+	"_BilledAmount_report": "Bedrag transactie",
+	"_BilledCurrencyCode": "Valuta transactie",
+	"_BilledCurrencyCode_report": "Valuta transactie",
+	"_CardholderName": "Naam van kaarthouder",
+	"_CurrencyExchangeRate": "Wisselkoers",
+	"_CurrencyExchangeRate_report": "Wisselkoers",
+	"_DefaultConversionErrorMessage": "Het bankbestand kon niet worden geïmporteerd omdat veld '{0}' in regel {4} niet correct is gevormd: Waarde '{3}' bevat onverwachte tekens. Vraag uw beheerder het bestandsformaat te controleren.",
+	"_DefaultSyntaxErrorMessage": "Het bankbestand kon niet worden geïmporteerd omdat veld '{0}' in regel {3} niet correct is gevormd: Waarde '{1}' komt niet overeen met het verwachte formaat '{2}'. Vraag uw beheerder het bestandsformaat te controleren.",
+	"_DefaultTransactionLineErrorMessage": "Er is een fout opgetreden op regel {0} bij de extractie van de transacties van het bankbestand. Vraag uw beheerder te verifiëren dat het bestand overeenstemt met het verwachte formaat.",
+	"_EmployeeID": "Gebruikersnummer",
+	"_EmployeeID_report": "Gebruikersnummer",
+	"_EmployeeLogin": "Gebruikers-ID",
+	"_EmployeeLogin_report": "Gebruikers-ID",
+	"_EmployeeName": "Naam werknemer",
+	"_EmployeeName_report": "Naam werknemer",
+	"_EskerExpenseManagement": "Esker Uitgavenbeheer",
+	"_ExpenseDescription": "Beschrijving transactie",
+	"_ExpenseDescription_report": "Beschrijving transactie",
+	"_ExtractedTransactions": "Geïmporteerde transacties",
+	"_Extraction Error message": "Er is een fout opgetreden bij de extractie van de transacties van het bankbestand. Vraag uw beheerder te verifiëren dat het importbestand overeenstemt met het verwachte formaat.",
+	"_Extraction Error title": "Fout bij extractie",
+	"_ISOBilledCurrencyCode": "Valuta transactie (cijfercode)",
+	"_ISOBilledCurrencyCode_report": "Valuta transactie (cijfercode)",
+	"_ISOLocalCurrencyCode": "Lokale valuta (cijfercode)",
+	"_ISOLocalCurrencyCode_report": "Lokale valuta (cijfercode)",
+	"_LineTransaction": "Geïmporteerde transacties",
+	"_LineTransaction_report": "Geïmporteerde transacties",
+	"_LocalAmount": "Lokaal bedrag",
+	"_LocalAmount_report": "Lokaal bedrag",
+	"_LocalCurrencyCode": "Lokale valuta",
+	"_MerchantCategory": "Categoriecode handelaar",
+	"_MerchantCategory_report": "Categoriecode handelaar",
+	"_MerchantName": "Leverancier",
+	"_MerchantName_report": "Leverancier",
+	"_No compatible parser found": "Er is geen parser gevonden voor dit formaat van bankbestand. Vraag uw beheerder te verifiëren dat het bestand overeenstemt met het verwachte formaat of ontwikkel een specifieke parser voor dit formaat.",
+	"_Reprocess": "Re-extract transactions",
+	"_TransactionDate": "Datum transactie",
+	"_TransactionDate_report": "Datum transactie",
+	"_TransactionID": "Transactie-ID",
+	"_TransactionID_report": "Transactie-ID",
+	"_Unexpected error": "Fout",
+	"_Unexpected error message": "Er is een fout opgetreden, probeer het opnieuw. Neem contact op met uw beheerder als het probleem aanhoudt.",
+	"_Unexpected error occurs during parsing": "Er is een fout opgetreden bij het parsen van het bankbestand. Probeer het opnieuw. Neem contact op met uw beheerder als het probleem aanhoudt.",
+	"_Wrong line length": "Het bankbestand kon niet worden geïmporteerd omwille van een fout met de formattering: Regel {0} komt niet overeen met de verwachte lengte van 3000 tekens. Vraag uw beheerder te garanderen dat het juiste bestand is geïmporteerd.",
+	"_Wrong line length GL1076": "Het bankbestand kon niet worden geïmporteerd omwille van een fout met de formattering: Regel {0} komt niet overeen met de verwachte lengte van 735 tekens.\n\nVraag uw beheerder te garanderen dat het juiste bestand is geïmporteerd.",
+	"_Wrong line length VCF4": "Het bankbestand kon niet worden geïmporteerd door een opmaaktfout: regel {0} voldoet niet aan de verwachte lengte van 76 cellen. \n\nGelieve bij de administrateur na te gaan of het juiste bestand geïmporteerd werd.",
+	"Transaction Parser": "Import bedrijfskaart"
+}</process_nl-NL>
+      <process_pl>{
+	"_All employee name are not completed description": "Określ wszystkie imiona i nazwiska pracowników.",
+	"_All employee name are not completed title": "Brak informacji",
+	"_All employee transaction have not been created description": "Podczas przesyłania transakcji do pracowników wystąpił błąd",
+	"_All employee transaction have not been created title": "Błąd przesyłania",
+	"_Approve": "Podziel i wyślij do pracowników",
+	"_BilledAmount": "Kwota transakcji",
+	"_BilledAmount_report": "Kwota transakcji",
+	"_BilledCurrencyCode": "Waluta transakcji",
+	"_BilledCurrencyCode_report": "Waluta transakcji",
+	"_CardholderName": "Imię i nazwisko posiadacza karty",
+	"_CurrencyExchangeRate": "Kurs wymiany",
+	"_CurrencyExchangeRate_report": "Kurs wymiany",
+	"_DefaultConversionErrorMessage": "Nie udało się zaimportować pliku bankowego, ponieważ pole „{0}” w wierszu {4} nie jest poprawnie sformatowane: wartość „{3}” zawiera nieoczekiwane znaki.\n\nPoproś administratora o sprawdzenie formatu pliku.",
+	"_DefaultSyntaxErrorMessage": "Nie udało się zaimportować pliku bankowego, ponieważ pole „{0}” w wierszu {3} nie jest poprawnie sformatowane: wartość „{1}” jest niezgodna z oczekiwanym formatem „{2}”.\n\nPoproś administratora o sprawdzenie formatu pliku.",
+	"_DefaultTransactionLineErrorMessage": "Podczas wyodrębniania transakcji z pliku bankowego wystąpił błąd w wierszu {0}.\n\nPoproś administratora o sprawdzenie, czy plik jest zgodny z oczekiwanym formatem.",
+	"_EmployeeID": "Numer użytkownika",
+	"_EmployeeID_report": "Numer użytkownika",
+	"_EmployeeLogin": "Id. użytkownika",
+	"_EmployeeLogin_report": "Id. użytkownika",
+	"_EmployeeName": "Nazwisko pracownika",
+	"_EmployeeName_report": "Nazwisko pracownika",
+	"_EskerExpenseManagement": "Esker Expense Management",
+	"_ExpenseDescription": "Opis transakcji",
+	"_ExpenseDescription_report": "Opis transakcji",
+	"_ExtractedTransactions": "Zaimportowane transakcje",
+	"_Extraction Error message": "Podczas wyodrębniania transakcji z pliku bankowego wystąpił błąd.\n\nPoproś administratora o sprawdzenie, czy plik jest zgodny z oczekiwanym formatem.",
+	"_Extraction Error title": "Błąd wyodrębniania",
+	"_ISOBilledCurrencyCode": "Waluta transakcji (kod liczbowy)",
+	"_ISOBilledCurrencyCode_report": "Waluta transakcji (kod liczbowy)",
+	"_ISOLocalCurrencyCode": "Waluta lokalna (kod liczbowy)",
+	"_ISOLocalCurrencyCode_report": "Waluta lokalna (kod liczbowy)",
+	"_LineTransaction": "Zaimportowane transakcje",
+	"_LineTransaction_report": "Zaimportowane transakcje",
+	"_LocalAmount": "Kwota lokalna",
+	"_LocalAmount_report": "Kwota lokalna",
+	"_LocalCurrencyCode": "Waluta lokalna",
+	"_MerchantCategory": "Kod kategorii handlowca",
+	"_MerchantCategory_report": "Kod kategorii handlowca",
+	"_MerchantName": "Dostawca",
+	"_MerchantName_report": "Dostawca",
+	"_No compatible parser found": "Nie znaleziono analizatora dla tego formatu pliku bankowego.\n\nPoproś administratora o sprawdzenie, czy plik jest zgodny z oczekiwanym formatem, lub o opracowanie specjalnego analizatora do tego formatu.",
+	"_Reprocess": "Wyodrębnij transakcje ponownie",
+	"_TransactionDate": "Data transakcji",
+	"_TransactionDate_report": "Data transakcji",
+	"_TransactionID": "Id. transakcji",
+	"_TransactionID_report": "Id. transakcji",
+	"_Unexpected error": "Błąd",
+	"_Unexpected error message": "Wystąpił błąd, spróbuj ponownie.\n\nJeśli problem nie ustąpi, skontaktuj się z administratorem.",
+	"_Unexpected error occurs during parsing": "Podczas analizowania pliku bankowego wystąpił błąd.\n\nSpróbuj ponownie. Jeśli problem nie ustąpi, skontaktuj się z administratorem.",
+	"_Wrong line length": "Nie udało się zaimportować pliku bankowego z powodu błędu formatowania: wiersz {0} nie odpowiada oczekiwanej długości 3000 znaków.\n\nPoproś administratora o sprawdzenie, czy został zaimportowany poprawny plik.",
+	"_Wrong line length GL1076": "Nie udało się zaimportować pliku bankowego z powodu błędu formatowania: wiersz {0} nie odpowiada oczekiwanej długości 735 znaków.\n\nPoproś administratora o sprawdzenie, czy został zaimportowany poprawny plik.",
+	"_Wrong line length VCF4": "Nie udało się zaimportować pliku bankowego z powodu błędu formatowania: wiersz {0} nie odpowiada oczekiwanej długości 76 komórek.\n\nPoproś administratora o sprawdzenie, czy został zaimportowany poprawny plik.",
+	"Transaction Parser": "Import kart firmowych"
+}</process_pl>
+      <process_it>{
+	"_All employee name are not completed description": "È necessario pecificare tutti i nomi dei dipendenti.",
+	"_All employee name are not completed title": "Informazioni mancanti",
+	"_All employee transaction have not been created description": "Si è verificato un errore durante l'invio delle transazioni ai dipendenti.",
+	"_All employee transaction have not been created title": "Errore di invio",
+	"_Approve": "Dividi e invia ai dipendenti",
+	"_BilledAmount": "Importo transazione",
+	"_BilledAmount_report": "Importo transazione",
+	"_BilledCurrencyCode": "Valuta transazione",
+	"_BilledCurrencyCode_report": "Valuta transazione",
+	"_CardholderName": "Nome titolare carta",
+	"_CurrencyExchangeRate": "Tasso di cambio",
+	"_CurrencyExchangeRate_report": "Tasso di cambio",
+	"_DefaultConversionErrorMessage": "Non è stato possibile importare il file bancario perché il campo '{0}' alla riga {4} non è formattato correttamente: Il valore '{3}' contiene caratteri imprevisti.\n\nChiedere all'amministratore di verificare il formato del file.",
+	"_DefaultSyntaxErrorMessage": "Non è stato possibile importare il file bancario perché il campo '{0}' alla riga {3} non è formattato correttamente: Il valore '{1}' non corrisponde al formato previsto '{2}'.\n\nChiedere all'amministratore di verificare il formato del file.",
+	"_DefaultTransactionLineErrorMessage": "Si è verificato un errore durante l'estrazione delle transazioni dal file bancario alla riga {0}.\n\nChiedere all'amministratore di verificare che il file sia conforme al formato previsto.",
+	"_EmployeeID": "Numero utente",
+	"_EmployeeID_report": "Numero utente",
+	"_EmployeeLogin": "ID utente",
+	"_EmployeeLogin_report": "ID utente",
+	"_EmployeeName": "Nome dipendente",
+	"_EmployeeName_report": "Nome dipendente",
+	"_EskerExpenseManagement": "Esker Note spese",
+	"_ExpenseDescription": "Descrizione transazione",
+	"_ExpenseDescription_report": "Descrizione transazione",
+	"_ExtractedTransactions": "Transazioni importate",
+	"_Extraction Error message": "Si è verificato un errore durante l'estrazione delle transazioni dal file bancario.\n\nChiedere all'amministratore di verificare che il file sia conforme al formato previsto.",
+	"_Extraction Error title": "Errore di estrazione",
+	"_ISOBilledCurrencyCode": "Valuta transazione (codice numerico)",
+	"_ISOBilledCurrencyCode_report": "Valuta transazione (codice numerico)",
+	"_ISOLocalCurrencyCode": "Valuta locale (codice numerico)",
+	"_ISOLocalCurrencyCode_report": "Valuta locale (codice numerico)",
+	"_LineTransaction": "Transazioni importate",
+	"_LineTransaction_report": "Transazioni importate",
+	"_LocalAmount": "Importo locale",
+	"_LocalAmount_report": "Importo locale",
+	"_LocalCurrencyCode": "Valuta locale",
+	"_MerchantCategory": "Codice categoria commerciante",
+	"_MerchantCategory_report": "Codice categoria commerciante",
+	"_MerchantName": "Fornitore",
+	"_MerchantName_report": "Fornitore",
+	"_No compatible parser found": "Non è stato trovato nessun parser per questo formato di file bancario.\n\nChiedere all'amministratore di verificare che il file sia conforme al formato previsto o sviluppare un parser dedicato a questo formato. ",
+	"_Reprocess": "Riestrai transazioni",
+	"_TransactionDate": "Data transazione",
+	"_TransactionDate_report": "Data transazione",
+	"_TransactionID": "ID transazione",
+	"_TransactionID_report": "ID transazione",
+	"_Unexpected error": "Errore",
+	"_Unexpected error message": "Si è verificato un errore, riprovare. \n\nSe il problema persiste, contattare l'amministratore.",
+	"_Unexpected error occurs during parsing": "Si è verificato un errore durante l'analisi del file bancario. Riprovare. \n\nSe il problema persiste, contattare l'amministratore.",
+	"_Wrong line length": "Non è stato possibile importare il file bancario a causa di un errore di formattazione: la riga {0} non corrisponde alla lunghezza prevista di 3000 caratteri.\n\nChiedere all'amministratore di verificare che sia stato importato il file corretto.",
+	"_Wrong line length GL1076": "Non è stato possibile importare il file bancario a causa di un errore di formattazione: la riga {0} non corrisponde alla lunghezza prevista di 735 caratteri.\n\nChiedere all'amministratore di verificare che sia stato importato il file corretto.",
+	"_Wrong line length VCF4": "Non è stato possibile importare il file bancario a causa di un errore di formattazione: la riga {0} non corrisponde alla lunghezza prevista di 76 celle.\n\nChiedere all'amministratore di verificare che sia stato importato il file corretto.",
+	"Transaction Parser": "Importazione carte aziendali"
+}</process_it>
+      <process_sk>{
+	"_All employee name are not completed description": "Uveďte všetky mená zamestnancov.",
+	"_All employee name are not completed title": "Chýbajúce informácie",
+	"_All employee transaction have not been created description": "Pri odosielaní transakcií zamestnancom došlo k chybe.",
+	"_All employee transaction have not been created title": "Chyba odoslania",
+	"_Approve": "Rozdeliť a odoslať zamestnancom",
+	"_BilledAmount": "Suma transakcie",
+	"_BilledAmount_report": "Suma transakcie",
+	"_BilledCurrencyCode": "Mena transakcie",
+	"_BilledCurrencyCode_report": "Mena transakcie",
+	"_CardholderName": "Meno držiteľa karty",
+	"_CurrencyExchangeRate": "Výmenný kurz",
+	"_CurrencyExchangeRate_report": "Výmenný kurz",
+	"_DefaultConversionErrorMessage": "Bankový súbor sa nepodarilo importovať, pretože pole '{0}' v riadku {4} nie je správne formátované: hodnota '{3}' obsahuje neočakávané znaky.\n\nPožiadajte administrátora, aby skontroloval formát súboru.",
+	"_DefaultSyntaxErrorMessage": "Bankový súbor sa nepodarilo importovať, pretože pole '{0}' v riadku {3} nie je správne formátované: hodnota '{1}' nezodpovedá očakávanému formátu '{2}'.\n\nPožiadajte administrátora, aby skontroloval formát súboru.",
+	"_DefaultTransactionLineErrorMessage": "Pri extrahovaní transakcií z bankového súboru došlo k chybe v riadku {0}.\n\nPožiadajte administrátora, aby overil, či súbor zodpovedá očakávanému formátu.",
+	"_EmployeeID": "Číslo používateľa",
+	"_EmployeeID_report": "Číslo používateľa",
+	"_EmployeeLogin": "ID už.",
+	"_EmployeeLogin_report": "ID už.",
+	"_EmployeeName": "Meno zamestnanca",
+	"_EmployeeName_report": "Meno zamestnanca",
+	"_EskerExpenseManagement": "Riadenie výdavkov Esker",
+	"_ExpenseDescription": "Popis transakcie",
+	"_ExpenseDescription_report": "Popis transakcie",
+	"_ExtractedTransactions": "Importované transakcie",
+	"_Extraction Error message": "Pri extrahovaní transakcií z bankového súboru došlo k chybe.\n\nPožiadajte administrátora, aby overil, či súbor zodpovedá očakávanému formátu.",
+	"_Extraction Error title": "Chyba extrahovania",
+	"_ISOBilledCurrencyCode": "Mena transakcie (číselný kód)",
+	"_ISOBilledCurrencyCode_report": "Mena transakcie (číselný kód)",
+	"_ISOLocalCurrencyCode": "Miestna mena (číselný kód)",
+	"_ISOLocalCurrencyCode_report": "Miestna mena (číselný kód)",
+	"_LineTransaction": "Importované transakcie",
+	"_LineTransaction_report": "Importované transakcie",
+	"_LocalAmount": "Miestna suma",
+	"_LocalAmount_report": "Miestna suma",
+	"_LocalCurrencyCode": "Miestna mena",
+	"_MerchantCategory": "Kód kategórie obchodníka",
+	"_MerchantCategory_report": "Kód kategórie obchodníka",
+	"_MerchantName": "Dodávateľ",
+	"_MerchantName_report": "Dodávateľ",
+	"_No compatible parser found": "Pre tento formát bankového súboru nebol nájdený žiadny analyzátor.\n\nPožiadajte administrátora, aby overil, či súbor zodpovedá očakávanému formátu, alebo vyvinul špeciálny analyzátor pre tento formát.",
+	"_Reprocess": "Opätovné extrahovanie transakcií",
+	"_TransactionDate": "Dátum transakcie",
+	"_TransactionDate_report": "Dátum transakcie",
+	"_TransactionID": "ID transakcie",
+	"_TransactionID_report": "ID transakcie",
+	"_Unexpected error": "Chyba",
+	"_Unexpected error message": "Vyskytla sa chyba, skúste to prosím znova.\n\nAk problém pretrváva, obráťte sa na svojho administrátora.",
+	"_Unexpected error occurs during parsing": "Pri analýze bankového súboru došlo k chybe. Skúste to znova.\n\nAk problém pretrváva, obráťte sa na svojho administrátora.",
+	"_Wrong line length": "Bankový súbor sa nedal importovať kvôli chybe formátovania: riadok {0} nezodpovedá očakávanej dĺžke 3000 znakov.\n\nPožiadajte administrátora, aby sa uistil, že bol importovaný správny súbor.",
+	"_Wrong line length GL1076": "Bankový súbor sa nedal importovať kvôli chybe formátovania: riadok {0} nezodpovedá očakávanej dĺžke 735 znakov.\n\nPožiadajte administrátora, aby sa uistil, že bol importovaný správny súbor.",
+	"_Wrong line length VCF4": "Bankový súbor sa nedal importovať kvôli chybe formátovania: riadok {0} nezodpovedá očakávanej dĺžke 76 buniek.\n\nPožiadajte administrátora, aby sa uistil, že bol importovaný správny súbor.",
+	"Transaction Parser": "Import firemných kariet"
+}</process_sk>
+      <process_zh-CN>{
+	"_All employee name are not completed description": "请指定所有员工姓名。",
+	"_All employee name are not completed title": "缺少信息",
+	"_All employee transaction have not been created description": "向员工提交交易时出错。",
+	"_All employee transaction have not been created title": "提交表单出错",
+	"_Approve": "拆分并发送给员工",
+	"_BilledAmount": "交易金额",
+	"_BilledAmount_report": "交易金额",
+	"_BilledCurrencyCode": "交易货币",
+	"_BilledCurrencyCode_report": "交易货币",
+	"_CardholderName": "持卡人姓名",
+	"_CurrencyExchangeRate": "汇率",
+	"_CurrencyExchangeRate_report": "汇率",
+	"_DefaultConversionErrorMessage": "第 {4} 行中的字段“{0}”格式不正确，无法导入银行文件：值“{3}”包含意外字符。\n\n请让管理员检查文件格式。",
+	"_DefaultSyntaxErrorMessage": "第 {3} 行中的字段“{0}”格式不正确，无法导入银行文件：值“{1}”不符合预期格式“{2}”。\n\n请让管理员检查文件格式。",
+	"_DefaultTransactionLineErrorMessage": "从银行文件中提取交易时于第 {0} 行发生错误。\n\n请让管理员检查文件是否符合预期格式。",
+	"_EmployeeID": "用户编号",
+	"_EmployeeID_report": "用户编号",
+	"_EmployeeLogin": "用户 ID",
+	"_EmployeeLogin_report": "用户 ID",
+	"_EmployeeName": "员工姓名",
+	"_EmployeeName_report": "员工姓名",
+	"_EskerExpenseManagement": "Esker 费用管理",
+	"_ExpenseDescription": "交易说明/描述",
+	"_ExpenseDescription_report": "交易说明/描述",
+	"_ExtractedTransactions": "导入的交易",
+	"_Extraction Error message": "从银行文件中提取交易时发生错误。\n\n请让管理员检查导入文件是否符合预期格式。",
+	"_Extraction Error title": "提取错误",
+	"_ISOBilledCurrencyCode": "交易货币（数字代码）",
+	"_ISOBilledCurrencyCode_report": "交易货币（数字代码）",
+	"_ISOLocalCurrencyCode": "本地货币（数字代码）",
+	"_ISOLocalCurrencyCode_report": "本地货币（数字代码）",
+	"_LineTransaction": "导入的交易",
+	"_LineTransaction_report": "导入的交易",
+	"_LocalAmount": "本地金额",
+	"_LocalAmount_report": "本地金额",
+	"_LocalCurrencyCode": "本地货币",
+	"_MerchantCategory": "商户类别代码",
+	"_MerchantCategory_report": "商户类别代码",
+	"_MerchantName": "供应商",
+	"_MerchantName_report": "供应商",
+	"_No compatible parser found": "没有找到这种银行文件格式的解析器。\n\n请让管理员验证文件是否符合预期格式，或为此格式开发专用解析器。",
+	"_Reprocess": "Re-extract transactions",
+	"_TransactionDate": "交易日期",
+	"_TransactionDate_report": "交易日期",
+	"_TransactionID": "交易 ID",
+	"_TransactionID_report": "交易 ID",
+	"_Unexpected error": "错误",
+	"_Unexpected error message": "错误，请重试。如果持续出错，请联系管理员。",
+	"_Unexpected error occurs during parsing": "解析银行文件时出错，请重试。\n\n如果持续出错，请联系管理员。",
+	"_Wrong line length": "格式错误，无法导入银行文件：第 {0} 行与 3000 字符的预期长度不匹配。\n\n请让管理员确保导入了正确的文件。",
+	"_Wrong line length GL1076": "格式错误，无法导入银行文件：第 {0} 行与 735 字符的预期长度不匹配。\n\n请让管理员确保导入了正确的文件。",
+	"_Wrong line length VCF4": "格式错误，无法导入银行文件：第 {0} 行与预期长度（76 单元格）不匹配。\n\n请让管理员确保导入了正确的文件。",
+	"Transaction Parser": "公司卡导入"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"_All employee name are not completed description": "Especifique todos os nomes dos funcionários.",
+	"_All employee name are not completed title": "Informação em falta",
+	"_All employee transaction have not been created description": "Ocorreu um erro ao submeter as transações para os funcionários.",
+	"_All employee transaction have not been created title": "Erro de envio",
+	"_Approve": "Dividir e enviar aos funcionários",
+	"_BilledAmount": "Valor da transação",
+	"_BilledAmount_report": "Valor da transação",
+	"_BilledCurrencyCode": "Moeda de transação",
+	"_BilledCurrencyCode_report": "Moeda de transação",
+	"_CardholderName": "Nome do titular do cartão",
+	"_CurrencyExchangeRate": "Taxa de câmbio",
+	"_CurrencyExchangeRate_report": "Taxa de câmbio",
+	"_DefaultConversionErrorMessage": "O arquivo do banco não pôde ser importado porque o campo '{0}' na linha {4} não está formatado corretamente: O valor '{3}' contém caracteres inesperados. Peça ao seu administrador para verificar o formato do arquivo.",
+	"_DefaultSyntaxErrorMessage": "O arquivo do banco não pôde ser importado porque o campo '{0}' na linha {3} não está formatado corretamente: O valor '{1}' não corresponde ao formato esperado '{2}'. Peça ao seu administrador para verificar o formato do arquivo.",
+	"_DefaultTransactionLineErrorMessage": "Ocorreu um erro na linha {0} ao extrair as transações do arquivo bancário. Peça ao seu administrador para verificar se o arquivo está de acordo com o formato esperado.",
+	"_EmployeeID": "Número de usuário",
+	"_EmployeeID_report": "Número de usuário",
+	"_EmployeeLogin": "ID do usuário",
+	"_EmployeeLogin_report": "ID do usuário",
+	"_EmployeeName": "Nome do funcionário",
+	"_EmployeeName_report": "Nome do funcionário",
+	"_EskerExpenseManagement": "Esker Declaração de despesas",
+	"_ExpenseDescription": "Descrição da transação",
+	"_ExpenseDescription_report": "Descrição da transação",
+	"_ExtractedTransactions": "Transações importadas",
+	"_Extraction Error message": "Ocorreu um erro ao extrair as transações do arquivo bancário. Peça ao seu administrador para verificar se o arquivo de importação está de acordo com o formato esperado.",
+	"_Extraction Error title": "Erro de extração",
+	"_ISOBilledCurrencyCode": "Moeda de transação (código numérico)",
+	"_ISOBilledCurrencyCode_report": "Moeda de transação (código numérico)",
+	"_ISOLocalCurrencyCode": "Moeda local (código numérico)",
+	"_ISOLocalCurrencyCode_report": "Moeda local (código numérico)",
+	"_LineTransaction": "Transações importadas",
+	"_LineTransaction_report": "Transações importadas",
+	"_LocalAmount": "Montante local",
+	"_LocalAmount_report": "Montante local",
+	"_LocalCurrencyCode": "Moeda local",
+	"_MerchantCategory": "Código de categoria de comerciante",
+	"_MerchantCategory_report": "Código de categoria de comerciante",
+	"_MerchantName": "Fornecedor",
+	"_MerchantName_report": "Fornecedor",
+	"_No compatible parser found": "Nenhum analisador foi encontrado para este formato de arquivo bancário. Peça ao administrador para verificar se o arquivo está de acordo com o formato esperado ou desenvolva um analisador dedicado para esse formato.",
+	"_Reprocess": "Re-extract transactions",
+	"_TransactionDate": "Data de transação",
+	"_TransactionDate_report": "Data de transação",
+	"_TransactionID": "ID de transação",
+	"_TransactionID_report": "ID de transação",
+	"_Unexpected error": "Erro",
+	"_Unexpected error message": "Ocorreu um erro. Por favor, tente novamente. Se o problema persistir, entre em contato com seu administrador.",
+	"_Unexpected error occurs during parsing": "Ocorreu um erro na análise do arquivo do banco. Por favor, tente novamente. Se o problema persistir, entre em contato com seu administrador.",
+	"_Wrong line length": "O arquivo do banco não pôde ser importado devido a um erro de formatação: A linha {0} não corresponde ao comprimento esperado de 3000 caracteres. Peça ao seu administrador para garantir que o arquivo correto foi importado.",
+	"_Wrong line length GL1076": "O arquivo do banco não pôde ser importado devido a um erro de formatação: A linha {0} não corresponde ao comprimento esperado de 735 caracteres. \n\nPeça ao seu administrador para garantir que o arquivo correto foi importado.",
+	"_Wrong line length VCF4": "O arquivo bancário não pôde ser importado devido a um erro de formatação: a linha {0} não corresponde ao comprimento esperado de 76 células. Peça ao seu administrador para garantir que o arquivo correto foi importado.",
+	"Transaction Parser": "Importação de cartão da empresa"
+}</process_pt-BR>
+    </lg>
+    <ocr>
+      <trade-off>accurate</trade-off>
+      <image-ocr-timeout>
+      </image-ocr-timeout>
+      <image-binarization>no</image-binarization>
+      <image-draft-fax>no</image-draft-fax>
+      <image-despeckle>no</image-despeckle>
+      <allowed-language>0</allowed-language>
+      <image-resolution-enhancement>auto</image-resolution-enhancement>
+      <pdf-processing>no-ocr</pdf-processing>
+      <ocr_engine>Nuance222</ocr_engine>
+      <ocrpagestoprocess>0</ocrpagestoprocess>
+      <extractionAdditionalOptions>
+      </extractionAdditionalOptions>
+    </ocr>
+    <process>
+      <flowtype>processing</flowtype>
+      <ocrpreset>scan</ocrpreset>
+      <EnableNegativeNumbersBetweenBrackets>true</EnableNegativeNumbersBetweenBrackets>
+      <homepagelabel>Transaction Parser</homepagelabel>
+      <enableflexibleauditing>
+      </enableflexibleauditing>
+      <enableflexibleediting>
+      </enableflexibleediting>
+      <enableflexibleteaching>
+      </enableflexibleteaching>
+      <enableInternalConversation>true</enableInternalConversation>
+      <disableocr>
+      </disableocr>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <disableautolearning>true</disableautolearning>
+      <backgroundprocessingthreshold>
+      </backgroundprocessingthreshold>
+      <EnableMinusSignBehindNumber>
+      </EnableMinusSignBehindNumber>
+      <EnablePreviewPrecomputation>
+      </EnablePreviewPrecomputation>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <enablerounddecimal>true</enablerounddecimal>
+      <pdfNormalizeFilter>
+      </pdfNormalizeFilter>
+      <archiveDuration>0</archiveDuration>
+      <FailoverOnConversionError>
+      </FailoverOnConversionError>
+      <ocrpagestoprocess>0</ocrpagestoprocess>
+      <ScriptEngineType>2</ScriptEngineType>
+      <UseActionNameWithScriptApproval>true</UseActionNameWithScriptApproval>
+      <displayWidth>1496</displayWidth>
+      <AllowUploadAttachment>1</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>1</AllowUploadReferenceDocument>
+      <ByPassComputedForSmartColumn>
+      </ByPassComputedForSmartColumn>
+      <RemovePointWhenCastingIntToString>true</RemovePointWhenCastingIntToString>
+      <UseCultureFormat>true</UseCultureFormat>
+      <AllowRetryExtractCD>true</AllowRetryExtractCD>
+      <TransportName>CustomData</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+      <StatusOnExtractCDLastTry>-1</StatusOnExtractCDLastTry>
+      <printToProcess>
+      </printToProcess>
+    </process>
+    <ui>
+      <CustomScriptDebug>false</CustomScriptDebug>
+      <customscriptIncludedScripts>Lib_CommonDialog_V12.0.566.0</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Sys/Sys_Helpers_Controls</customscriptIncludedScripts>
+      <customscriptIncludedScripts>[Lib_Expense_TransactionParser_Customization_Client]</customscriptIncludedScripts>
+      <CustomScriptReadonly>true</CustomScriptReadonly>
+      <CustomScript>"use strict";
+/* TransactionParser HTML page script */
+Log.Time("CustomScript");
+function InitLayout() {
+    Lib.CommonDialog.NextAlert.Show({});
+    /** @this DatabaseComboBox &amp; IControlInTable&lt;TransactionParserLineTransactionTableRow&gt;*/
+    let employeeOnSelectItem = function (item) {
+        let login = item.GetValue("Login");
+        this.GetRow().EmployeeLogin__.SetValue(login);
+    };
+    /** @this DatabaseComboBox &amp; IControlInTable&lt;TransactionParserLineTransactionTableRow&gt;*/
+    let employeeOnUnknownOrEmptyValue = function () {
+        this.GetRow().EmployeeLogin__.SetValue("");
+    };
+    Sys.Helpers.Controls.OnDatabaseComboboxEvents(Controls.LineTransaction__.EmployeeName__, employeeOnSelectItem, employeeOnUnknownOrEmptyValue, employeeOnUnknownOrEmptyValue);
+    Controls.DocumentsPanel.AllowChangeOrUploadReferenceDocument(false);
+    // set transactions table display
+    Controls.LineTransaction__.SetWidth("100%");
+    Controls.LineTransaction__.SetExtendableColumn("TransactionDescription__");
+    Controls.Approve.OnClick = function () {
+        //CheckRequiredFields();
+        if (Process.ShowFirstError() === null) {
+            ProcessInstance.Approve("Submit");
+        }
+        return false;
+    };
+    Sys.Helpers.TryCallFunction("Lib.Expense.TransactionParser.Customization.Client.CustomizeLayout");
+}
+////////////////////////////////////////////////////
+// START
+////////////////////////////////////////////////////
+InitLayout();
+Log.TimeEnd("CustomScript");
+//# sourceMappingURL=customscript.js.map</CustomScript>
+      <restorationPanel>DataPanel</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 104,
+	"*": {
+		"GDRData": {
+			"type": "GDRData",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"version": 0
+			}
+		},
+		"OCRParams": {
+			"type": "OCRParams",
+			"data": [],
+			"stamp": 2,
+			"options": {
+				"version": 0
+			}
+		},
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 3,
+			"options": {
+				"splitterType": "complex",
+				"style": "FlexibleFormLight",
+				"maxwidth": 1496,
+				"backColor": "text-backgroundcolor-default",
+				"processHelpId": "5052",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 4,
+					"options": {
+						"maxwidth": 1496,
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 5,
+					"options": {
+						"maxwidth": 1496,
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 6,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-top": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 7,
+									"options": {
+										"autosize": true,
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"height": "25%"
+										},
+										"hidden": false,
+										"hideSeparator": true
+									},
+									"*": {
+										"form-content-top-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 8,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"DocumentsPanel": {
+													"type": "PanelDocument",
+													"data": [],
+													"stamp": 9,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"iconURL": "",
+														"TitleFontSize": "L",
+														"hideActionButtons": true,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"sameHeightAsSiblings": false,
+														"label": "_Documents",
+														"version": 0
+													},
+													"*": {
+														"Document": {
+															"type": "Documents",
+															"data": [
+																"documentscontroldata"
+															],
+															"stamp": 10,
+															"options": {
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								},
+								"form-content-bottom": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 11,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": "25%",
+											"left": "0%",
+											"height": "75%"
+										},
+										"hidden": false
+									},
+									"*": {
+										"form-content-left": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 12,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "0%",
+													"width": "44%",
+													"height": null
+												},
+												"hidden": false,
+												"hideSeparator": true
+											},
+											"*": {
+												"form-content-left-5": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 13,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"ExtractedTransactions": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 14,
+															"options": {
+																"border": {},
+																"iconURL": "",
+																"TitleFontSize": "L",
+																"hideActionButtons": true,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_ExtractedTransactions",
+																"hidden": false,
+																"leftImageURL": "",
+																"removeMargins": false,
+																"elementsAlignment": "left",
+																"labelLength": 0,
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 15,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 16,
+																			"options": {
+																				"version": 0,
+																				"lines": 1,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"LineTransaction__": {
+																						"line": 1,
+																						"column": 1
+																					}
+																				},
+																				"colspans": [
+																					[
+																						{
+																							"index": 0,
+																							"length": 2
+																						}
+																					]
+																				]
+																			},
+																			"*": {
+																				"LineTransaction__": {
+																					"type": "Table",
+																					"data": [
+																						"LineTransaction__"
+																					],
+																					"stamp": 17,
+																					"options": {
+																						"columns": 16,
+																						"label": "_LineTransaction",
+																						"version": 5,
+																						"lines": 100,
+																						"displayEmptyLines": false,
+																						"alwaysOneLine": true,
+																						"menuOptions": {
+																							"disableInsertLine": true,
+																							"disableAddLine": true,
+																							"hideTopNavigation": false,
+																							"hideBottomNavigation": false,
+																							"hideTableRowMenu": true,
+																							"hideTableRowDelete": true,
+																							"hideTableRowAdd": true,
+																							"hideTableRowDuplicate": true,
+																							"hideTableRowButtonDuplicate": true,
+																							"addButtonShouldInsert": false
+																						},
+																						"item": {
+																							"display": null
+																						},
+																						"group": {
+																							"name": "GDR\nPage"
+																						},
+																						"subsection": null
+																					},
+																					"*": {
+																						"Actions": {
+																							"type": "$TableActions",
+																							"subtype": "Actions",
+																							"data": [],
+																							"stamp": 18,
+																							"options": {
+																								"version": 0
+																							},
+																							"*": {
+																								"Top": {
+																									"type": "$TableActions",
+																									"subtype": "Top",
+																									"data": [],
+																									"stamp": 19,
+																									"options": {
+																										"version": 0
+																									}
+																								},
+																								"Bottom": {
+																									"type": "$TableActions",
+																									"subtype": "Top",
+																									"data": [],
+																									"stamp": 20,
+																									"options": {
+																										"version": 0
+																									}
+																								}
+																							}
+																						},
+																						"Header": {
+																							"type": "$TableRow",
+																							"subtype": "Header",
+																							"data": [
+																								null
+																							],
+																							"stamp": 21,
+																							"options": {
+																								"version": 0
+																							},
+																							"*": {
+																								"Cell1": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 24,
+																									"options": {
+																										"minwidth": "0",
+																										"hidden": true,
+																										"version": 0
+																									},
+																									"*": {
+																										"TransactionID__": {
+																											"type": "Label",
+																											"data": [
+																												"TransactionID__"
+																											],
+																											"stamp": 25,
+																											"options": {
+																												"label": "_TransactionID",
+																												"type": "ShortText",
+																												"minwidth": "300",
+																												"hidden": true,
+																												"version": 0
+																											},
+																											"position": [
+																												"_TransactionID",
+																												false,
+																												false,
+																												"ShortText"
+																											]
+																										}
+																									}
+																								},
+																								"Cell2": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 28,
+																									"options": {
+																										"minwidth": "0",
+																										"hidden": false,
+																										"version": 0
+																									},
+																									"*": {
+																										"CardholderName__": {
+																											"type": "Label",
+																											"data": [
+																												"CardholderName__"
+																											],
+																											"stamp": 29,
+																											"options": {
+																												"label": "_CardholderName",
+																												"type": "ShortText",
+																												"minwidth": 140,
+																												"hidden": false,
+																												"version": 0
+																											},
+																											"position": [
+																												"_CardholderName",
+																												false,
+																												false,
+																												"ShortText"
+																											]
+																										}
+																									}
+																								},
+																								"Cell3": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 32,
+																									"options": {
+																										"minwidth": 140,
+																										"version": 0
+																									},
+																									"*": {
+																										"EmployeeID__": {
+																											"type": "Label",
+																											"data": [
+																												"EmployeeID__"
+																											],
+																											"stamp": 33,
+																											"options": {
+																												"label": "_EmployeeID",
+																												"type": "ShortText",
+																												"minwidth": 140,
+																												"version": 0
+																											},
+																											"position": [
+																												"_EmployeeID",
+																												false,
+																												false,
+																												"ShortText"
+																											]
+																										}
+																									}
+																								},
+																								"Cell4": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 36,
+																									"options": {
+																										"minwidth": 140,
+																										"version": 0
+																									},
+																									"*": {
+																										"EmployeeName__": {
+																											"type": "Label",
+																											"data": [
+																												"EmployeeName__"
+																											],
+																											"stamp": 37,
+																											"options": {
+																												"label": "_EmployeeName",
+																												"type": "DatabaseComboBox",
+																												"minwidth": 140,
+																												"version": 0
+																											},
+																											"position": [
+																												"_EmployeeName",
+																												false,
+																												false,
+																												"DatabaseComboBox"
+																											]
+																										}
+																									}
+																								},
+																								"Cell5": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 40,
+																									"options": {
+																										"minwidth": "0",
+																										"hidden": true,
+																										"version": 0
+																									},
+																									"*": {
+																										"EmployeeLogin__": {
+																											"type": "Label",
+																											"data": [
+																												"EmployeeLogin__"
+																											],
+																											"stamp": 41,
+																											"options": {
+																												"label": "_EmployeeLogin",
+																												"type": "ShortText",
+																												"minwidth": 140,
+																												"hidden": true,
+																												"version": 0
+																											},
+																											"position": [
+																												"_EmployeeLogin",
+																												false,
+																												false,
+																												"ShortText"
+																											]
+																										}
+																									}
+																								},
+																								"Cell6": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 44,
+																									"options": {
+																										"minwidth": "80",
+																										"version": 0
+																									},
+																									"*": {
+																										"TransactionDate__": {
+																											"type": "Label",
+																											"data": [
+																												"TransactionDate__"
+																											],
+																											"stamp": 45,
+																											"options": {
+																												"label": "_TransactionDate",
+																												"type": "DateTime",
+																												"minwidth": "80",
+																												"version": 0
+																											},
+																											"position": [
+																												"_TransactionDate",
+																												false,
+																												false,
+																												"DateTime"
+																											]
+																										}
+																									}
+																								},
+																								"Cell7": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 48,
+																									"options": {
+																										"minwidth": "0",
+																										"hidden": true,
+																										"version": 0
+																									},
+																									"*": {
+																										"BilledAmount__": {
+																											"type": "Label",
+																											"data": [
+																												"BilledAmount__"
+																											],
+																											"stamp": 49,
+																											"options": {
+																												"label": "_BilledAmount",
+																												"type": "Decimal",
+																												"minwidth": 140,
+																												"hidden": true,
+																												"version": 0
+																											},
+																											"position": [
+																												"_BilledAmount",
+																												false,
+																												false,
+																												"Decimal"
+																											]
+																										}
+																									}
+																								},
+																								"Cell8": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 52,
+																									"options": {
+																										"minwidth": "0",
+																										"hidden": true,
+																										"version": 0
+																									},
+																									"*": {
+																										"BilledCurrencyCode__": {
+																											"type": "Label",
+																											"data": [
+																												"BilledCurrencyCode__"
+																											],
+																											"stamp": 53,
+																											"options": {
+																												"label": "_BilledCurrencyCode",
+																												"type": "ShortText",
+																												"minwidth": 140,
+																												"hidden": true,
+																												"version": 0
+																											},
+																											"position": [
+																												"_BilledCurrencyCode",
+																												false,
+																												false,
+																												"ShortText"
+																											]
+																										}
+																									}
+																								},
+																								"Cell9": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 56,
+																									"options": {
+																										"minwidth": "0",
+																										"hidden": true,
+																										"version": 0
+																									},
+																									"*": {
+																										"ISOBilledCurrencyCode__": {
+																											"type": "Label",
+																											"data": [
+																												"ISOBilledCurrencyCode__"
+																											],
+																											"stamp": 57,
+																											"options": {
+																												"label": "_ISOBilledCurrencyCode",
+																												"type": "ShortText",
+																												"minwidth": 140,
+																												"hidden": true,
+																												"version": 0
+																											},
+																											"position": [
+																												"_ISOBilledCurrencyCode",
+																												false,
+																												false,
+																												"ShortText"
+																											]
+																										}
+																									}
+																								},
+																								"Cell10": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 60,
+																									"options": {
+																										"minwidth": "0",
+																										"hidden": true,
+																										"version": 0
+																									},
+																									"*": {
+																										"CurrencyExchangeRate__": {
+																											"type": "Label",
+																											"data": [
+																												"CurrencyExchangeRate__"
+																											],
+																											"stamp": 61,
+																											"options": {
+																												"label": "_CurrencyExchangeRate",
+																												"type": "Decimal",
+																												"minwidth": 140,
+																												"hidden": true,
+																												"version": 0
+																											},
+																											"position": [
+																												"_CurrencyExchangeRate",
+																												false,
+																												false,
+																												"Decimal"
+																											]
+																										}
+																									}
+																								},
+																								"Cell11": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 64,
+																									"options": {
+																										"minwidth": "90",
+																										"version": 0
+																									},
+																									"*": {
+																										"LocalAmount__": {
+																											"type": "Label",
+																											"data": [
+																												"LocalAmount__"
+																											],
+																											"stamp": 65,
+																											"options": {
+																												"label": "_LocalAmount",
+																												"type": "Decimal",
+																												"minwidth": "90",
+																												"version": 0
+																											},
+																											"position": [
+																												"_LocalAmount",
+																												false,
+																												false,
+																												"Decimal"
+																											]
+																										}
+																									}
+																								},
+																								"Cell12": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 68,
+																									"options": {
+																										"minwidth": 140,
+																										"version": 0
+																									},
+																									"*": {
+																										"LocalCurrencyCode__": {
+																											"type": "Label",
+																											"data": [
+																												"LocalCurrencyCode__"
+																											],
+																											"stamp": 69,
+																											"options": {
+																												"label": "",
+																												"type": "ShortText",
+																												"minwidth": 40,
+																												"version": 0
+																											},
+																											"position": [
+																												"",
+																												false,
+																												false,
+																												"ShortText"
+																											]
+																										}
+																									}
+																								},
+																								"Cell13": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 72,
+																									"options": {
+																										"minwidth": "0",
+																										"hidden": true,
+																										"version": 0
+																									},
+																									"*": {
+																										"ISOLocalCurrencyCode__": {
+																											"type": "Label",
+																											"data": [
+																												"ISOLocalCurrencyCode__"
+																											],
+																											"stamp": 73,
+																											"options": {
+																												"label": "_ISOLocalCurrencyCode",
+																												"type": "ShortText",
+																												"minwidth": 140,
+																												"hidden": true,
+																												"version": 0
+																											},
+																											"position": [
+																												"_ISOLocalCurrencyCode",
+																												false,
+																												false,
+																												"ShortText"
+																											]
+																										}
+																									}
+																								},
+																								"Cell14": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 76,
+																									"options": {
+																										"minwidth": "180",
+																										"version": 0
+																									},
+																									"*": {
+																										"MerchantName__": {
+																											"type": "Label",
+																											"data": [
+																												"MerchantName__"
+																											],
+																											"stamp": 77,
+																											"options": {
+																												"label": "_MerchantName",
+																												"type": "ShortText",
+																												"minwidth": "180",
+																												"version": 0
+																											},
+																											"position": [
+																												"_MerchantName",
+																												false,
+																												false,
+																												"ShortText"
+																											]
+																										}
+																									}
+																								},
+																								"Cell15": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 80,
+																									"options": {
+																										"minwidth": 140,
+																										"version": 0
+																									},
+																									"*": {
+																										"MerchantCategory__": {
+																											"type": "Label",
+																											"data": [
+																												"MerchantCategory__"
+																											],
+																											"stamp": 81,
+																											"options": {
+																												"label": "_MerchantCategory",
+																												"type": "ShortText",
+																												"minwidth": 140,
+																												"version": 0
+																											},
+																											"position": [
+																												"_MerchantCategory",
+																												false,
+																												false,
+																												"ShortText"
+																											]
+																										}
+																									}
+																								},
+																								"Cell16": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 84,
+																									"options": {
+																										"minwidth": "300",
+																										"version": 0
+																									},
+																									"*": {
+																										"ExpenseDescription__": {
+																											"type": "Label",
+																											"data": [
+																												"ExpenseDescription__"
+																											],
+																											"stamp": 85,
+																											"options": {
+																												"label": "_ExpenseDescription",
+																												"type": "LongText",
+																												"minwidth": "300",
+																												"version": 0
+																											},
+																											"position": [
+																												"_ExpenseDescription",
+																												false,
+																												false,
+																												"LongText"
+																											]
+																										}
+																									}
+																								}
+																							}
+																						},
+																						"Clipboard": {
+																							"type": "$TableRow",
+																							"subtype": "Clipboard",
+																							"data": [
+																								null
+																							],
+																							"stamp": 22,
+																							"options": {
+																								"version": 0
+																							},
+																							"*": {
+																								"Cell1": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 26,
+																									"options": {
+																										"hidden": true,
+																										"version": 0
+																									},
+																									"*": {
+																										"TransactionID__": {
+																											"type": "ShortText",
+																											"data": [
+																												"TransactionID__"
+																											],
+																											"stamp": 23,
+																											"options": {
+																												"label": "_TransactionID",
+																												"textSize": "S",
+																												"textAlignment": "left",
+																												"textStyle": "default",
+																												"textColor": "default",
+																												"version": 1,
+																												"activable": true,
+																												"width": "300",
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"helpIconPosition": "Right",
+																												"length": 100,
+																												"readonly": true,
+																												"browsable": false,
+																												"hidden": true
+																											},
+																											"position": [
+																												"_TransactionID"
+																											]
+																										}
+																									}
+																								},
+																								"Cell2": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 30,
+																									"options": {
+																										"hidden": false,
+																										"version": 0
+																									},
+																									"*": {
+																										"CardholderName__": {
+																											"type": "ShortText",
+																											"data": [
+																												"CardholderName__"
+																											],
+																											"stamp": 27,
+																											"options": {
+																												"label": "_CardholderName",
+																												"textSize": "S",
+																												"textAlignment": "left",
+																												"textStyle": "default",
+																												"textColor": "default",
+																												"version": 1,
+																												"activable": true,
+																												"width": 140,
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"helpIconPosition": "Right",
+																												"hidden": false,
+																												"readonly": true,
+																												"browsable": false
+																											},
+																											"position": [
+																												"_CardholderName"
+																											]
+																										}
+																									}
+																								},
+																								"Cell3": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 34,
+																									"options": {
+																										"version": 0
+																									},
+																									"*": {
+																										"EmployeeID__": {
+																											"type": "ShortText",
+																											"data": [
+																												"EmployeeID__"
+																											],
+																											"stamp": 31,
+																											"options": {
+																												"label": "_EmployeeID",
+																												"textSize": "S",
+																												"textAlignment": "left",
+																												"textStyle": "default",
+																												"textColor": "default",
+																												"version": 1,
+																												"activable": true,
+																												"width": 140,
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"helpIconPosition": "Right",
+																												"browsable": false,
+																												"readonly": true
+																											},
+																											"position": [
+																												"_EmployeeID"
+																											]
+																										}
+																									}
+																								},
+																								"Cell4": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 38,
+																									"options": {
+																										"version": 0
+																									},
+																									"*": {
+																										"EmployeeName__": {
+																											"type": "DatabaseComboBox",
+																											"data": [
+																												"EmployeeName__"
+																											],
+																											"stamp": 35,
+																											"options": {
+																												"label": "_EmployeeName",
+																												"version": 1,
+																												"autoCompleteSearchMode": "contains",
+																												"searchMode": "contains",
+																												"activable": true,
+																												"width": 140,
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"helpIconPosition": "Right",
+																												"minNbLines": 1,
+																												"maxNbLines": 1,
+																												"fTSmaxRecords": "20",
+																												"browsable": true,
+																												"PreFillFTS": true,
+																												"RestrictSearch": true
+																											},
+																											"position": [
+																												"_EmployeeName"
+																											]
+																										}
+																									}
+																								},
+																								"Cell5": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 42,
+																									"options": {
+																										"hidden": true,
+																										"version": 0
+																									},
+																									"*": {
+																										"EmployeeLogin__": {
+																											"type": "ShortText",
+																											"data": [
+																												"EmployeeLogin__"
+																											],
+																											"stamp": 39,
+																											"options": {
+																												"label": "_EmployeeLogin",
+																												"textSize": "S",
+																												"textAlignment": "left",
+																												"textStyle": "default",
+																												"textColor": "default",
+																												"version": 1,
+																												"activable": true,
+																												"width": 140,
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"helpIconPosition": "Right",
+																												"length": 80,
+																												"hidden": true,
+																												"readonly": true,
+																												"browsable": false
+																											},
+																											"position": [
+																												"_EmployeeLogin"
+																											]
+																										}
+																									}
+																								},
+																								"Cell6": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 46,
+																									"options": {
+																										"version": 0
+																									},
+																									"*": {
+																										"TransactionDate__": {
+																											"type": "DateTime",
+																											"data": [
+																												"TransactionDate__"
+																											],
+																											"stamp": 43,
+																											"options": {
+																												"label": "_TransactionDate",
+																												"displayLongFormat": false,
+																												"showWeek": false,
+																												"hideButtonPanel": false,
+																												"showOtherMonths": false,
+																												"activable": true,
+																												"width": "80",
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"helpIconPosition": "Right",
+																												"readonly": true,
+																												"version": 0
+																											},
+																											"position": [
+																												"_TransactionDate"
+																											]
+																										}
+																									}
+																								},
+																								"Cell7": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 50,
+																									"options": {
+																										"hidden": true,
+																										"version": 0
+																									},
+																									"*": {
+																										"BilledAmount__": {
+																											"type": "Decimal",
+																											"data": [
+																												"BilledAmount__"
+																											],
+																											"stamp": 47,
+																											"options": {
+																												"label": "_BilledAmount",
+																												"version": 2,
+																												"textSize": "S",
+																												"textAlignment": "right",
+																												"textStyle": "default",
+																												"textColor": "default",
+																												"integer": false,
+																												"precision_internal": 2,
+																												"precision_current": 2,
+																												"activable": true,
+																												"width": 140,
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"helpIconPosition": "Right",
+																												"forceRoundCurrencyPrecision": false,
+																												"enablePlusMinus": false,
+																												"readonly": true,
+																												"autocompletable": false,
+																												"hidden": true
+																											},
+																											"position": [
+																												"_BilledAmount"
+																											]
+																										}
+																									}
+																								},
+																								"Cell8": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 54,
+																									"options": {
+																										"hidden": true,
+																										"version": 0
+																									},
+																									"*": {
+																										"BilledCurrencyCode__": {
+																											"type": "ShortText",
+																											"data": [
+																												"BilledCurrencyCode__"
+																											],
+																											"stamp": 51,
+																											"options": {
+																												"label": "_BilledCurrencyCode",
+																												"textSize": "S",
+																												"textAlignment": "left",
+																												"textStyle": "default",
+																												"textColor": "default",
+																												"version": 1,
+																												"activable": true,
+																												"width": 140,
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"helpIconPosition": "Right",
+																												"browsable": false,
+																												"readonly": true,
+																												"hidden": true
+																											},
+																											"position": [
+																												"_BilledCurrencyCode"
+																											]
+																										}
+																									}
+																								},
+																								"Cell9": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 58,
+																									"options": {
+																										"hidden": true,
+																										"version": 0
+																									},
+																									"*": {
+																										"ISOBilledCurrencyCode__": {
+																											"type": "ShortText",
+																											"data": [
+																												"ISOBilledCurrencyCode__"
+																											],
+																											"stamp": 55,
+																											"options": {
+																												"label": "_ISOBilledCurrencyCode",
+																												"textSize": "S",
+																												"textAlignment": "left",
+																												"textStyle": "default",
+																												"textColor": "default",
+																												"version": 1,
+																												"activable": true,
+																												"width": 140,
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"helpIconPosition": "Right",
+																												"hidden": true,
+																												"readonly": true,
+																												"browsable": false
+																											},
+																											"position": [
+																												"_ISOBilledCurrencyCode"
+																											]
+																										}
+																									}
+																								},
+																								"Cell10": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 62,
+																									"options": {
+																										"hidden": true,
+																										"version": 0
+																									},
+																									"*": {
+																										"CurrencyExchangeRate__": {
+																											"type": "Decimal",
+																											"data": [
+																												"CurrencyExchangeRate__"
+																											],
+																											"stamp": 59,
+																											"options": {
+																												"label": "_CurrencyExchangeRate",
+																												"version": 2,
+																												"textSize": "S",
+																												"textAlignment": "right",
+																												"textStyle": "default",
+																												"textColor": "default",
+																												"integer": false,
+																												"precision_internal": 2,
+																												"precision_current": 2,
+																												"activable": true,
+																												"width": 140,
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"helpIconPosition": "Right",
+																												"forceRoundCurrencyPrecision": false,
+																												"enablePlusMinus": false,
+																												"readonly": true,
+																												"hidden": true
+																											},
+																											"position": [
+																												"_CurrencyExchangeRate"
+																											]
+																										}
+																									}
+																								},
+																								"Cell11": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 66,
+																									"options": {
+																										"version": 0
+																									},
+																									"*": {
+																										"LocalAmount__": {
+																											"type": "Decimal",
+																											"data": [
+																												"LocalAmount__"
+																											],
+																											"stamp": 63,
+																											"options": {
+																												"label": "_LocalAmount",
+																												"version": 2,
+																												"textSize": "S",
+																												"textAlignment": "right",
+																												"textStyle": "default",
+																												"textColor": "default",
+																												"integer": false,
+																												"precision_internal": 2,
+																												"precision_current": 2,
+																												"activable": true,
+																												"width": "90",
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"helpIconPosition": "Right",
+																												"forceRoundCurrencyPrecision": false,
+																												"enablePlusMinus": false,
+																												"readonly": true,
+																												"enableRoundedStyle": false
+																											},
+																											"position": [
+																												"_LocalAmount"
+																											]
+																										}
+																									}
+																								},
+																								"Cell12": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 70,
+																									"options": {
+																										"version": 0
+																									},
+																									"*": {
+																										"LocalCurrencyCode__": {
+																											"type": "ShortText",
+																											"data": [
+																												"LocalCurrencyCode__"
+																											],
+																											"stamp": 67,
+																											"options": {
+																												"label": "",
+																												"textSize": "S",
+																												"textAlignment": "left",
+																												"textStyle": "default",
+																												"textColor": "default",
+																												"version": 1,
+																												"activable": true,
+																												"width": 40,
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"helpIconPosition": "Right",
+																												"readonly": true,
+																												"browsable": false
+																											},
+																											"position": [
+																												""
+																											]
+																										}
+																									}
+																								},
+																								"Cell13": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 74,
+																									"options": {
+																										"hidden": true,
+																										"version": 0
+																									},
+																									"*": {
+																										"ISOLocalCurrencyCode__": {
+																											"type": "ShortText",
+																											"data": [
+																												"ISOLocalCurrencyCode__"
+																											],
+																											"stamp": 71,
+																											"options": {
+																												"label": "_ISOLocalCurrencyCode",
+																												"textSize": "S",
+																												"textAlignment": "left",
+																												"textStyle": "default",
+																												"textColor": "default",
+																												"version": 1,
+																												"activable": true,
+																												"width": 140,
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"helpIconPosition": "Right",
+																												"hidden": true,
+																												"readonly": true,
+																												"browsable": false
+																											},
+																											"position": [
+																												"_ISOLocalCurrencyCode"
+																											]
+																										}
+																									}
+																								},
+																								"Cell14": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 78,
+																									"options": {
+																										"version": 0
+																									},
+																									"*": {
+																										"MerchantName__": {
+																											"type": "ShortText",
+																											"data": [
+																												"MerchantName__"
+																											],
+																											"stamp": 75,
+																											"options": {
+																												"label": "_MerchantName",
+																												"textSize": "S",
+																												"textAlignment": "left",
+																												"textStyle": "default",
+																												"textColor": "default",
+																												"version": 1,
+																												"activable": true,
+																												"width": "180",
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"helpIconPosition": "Right",
+																												"browsable": false,
+																												"readonly": true
+																											},
+																											"position": [
+																												"_MerchantName"
+																											]
+																										}
+																									}
+																								},
+																								"Cell15": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 82,
+																									"options": {
+																										"version": 0
+																									},
+																									"*": {
+																										"MerchantCategory__": {
+																											"type": "ShortText",
+																											"data": [
+																												"MerchantCategory__"
+																											],
+																											"stamp": 79,
+																											"options": {
+																												"label": "_MerchantCategory",
+																												"textSize": "S",
+																												"textAlignment": "left",
+																												"textStyle": "default",
+																												"textColor": "default",
+																												"version": 1,
+																												"activable": true,
+																												"width": 140,
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"helpIconPosition": "Right",
+																												"browsable": false,
+																												"readonly": true
+																											},
+																											"position": [
+																												"_MerchantCategory"
+																											]
+																										}
+																									}
+																								},
+																								"Cell16": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 86,
+																									"options": {
+																										"version": 0
+																									},
+																									"*": {
+																										"ExpenseDescription__": {
+																											"type": "LongText",
+																											"data": [
+																												"ExpenseDescription__"
+																											],
+																											"stamp": 83,
+																											"options": {
+																												"label": "_ExpenseDescription",
+																												"textSize": "S",
+																												"textAlignment": "left",
+																												"textStyle": "default",
+																												"textColor": "default",
+																												"version": 1,
+																												"minNbLines": 1,
+																												"maxNbLines": 3,
+																												"activable": true,
+																												"width": "300",
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"helpIconPosition": "Right",
+																												"browsable": false,
+																												"readonly": true
+																											},
+																											"position": [
+																												"_ExpenseDescription"
+																											]
+																										}
+																									}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 87,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"DataPanel": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 88,
+															"options": {
+																"hidden": true,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_Document data",
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 89,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 90,
+																			"options": {
+																				"version": 0,
+																				"lines": 0,
+																				"columns": 2,
+																				"ctrlsPos": {},
+																				"colspans": []
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-2": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 91,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"SystemData": {
+															"type": "PanelSystemData",
+															"data": [],
+															"stamp": 92,
+															"options": {
+																"hidden": true,
+																"multicolumn": false,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_System data",
+																"version": 0
+															}
+														}
+													}
+												},
+												"form-content-left-3": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 93,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"NextProcess": {
+															"type": "PanelNextProcess",
+															"data": [],
+															"stamp": 94,
+															"options": {
+																"hidden": true,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_Next Process",
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-right": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 95,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": 0,
+													"left": 44,
+													"width": 56,
+													"height": 99
+												},
+												"hidden": true
+											},
+											"*": {
+												"form-content-right-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 96,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"PreviewPanel": {
+															"type": "PanelPreview",
+															"data": [],
+															"stamp": 97,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_Document Preview",
+																"hidden": true,
+																"version": 0
+															},
+															"*": {
+																"Preview": {
+																	"type": "Preview",
+																	"data": [
+																		"previewdata"
+																	],
+																	"stamp": 98,
+																	"options": {
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 99,
+					"options": {
+						"splitterType": "simple-h",
+						"maxwidth": 1496,
+						"version": 0
+					},
+					"*": {
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 100,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 101,
+							"options": {
+								"label": "_Save",
+								"action": "save",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Reject": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 102,
+							"options": {
+								"label": "_Reject",
+								"action": "reject",
+								"submit": true,
+								"style": 3,
+								"version": 0
+							}
+						},
+						"Reprocess": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 103,
+							"options": {
+								"label": "_Reprocess",
+								"action": "reprocess",
+								"submit": true,
+								"style": 2,
+								"version": 0
+							}
+						},
+						"Approve": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 104,
+							"options": {
+								"label": "_Approve",
+								"action": "approve",
+								"submit": true,
+								"style": 1,
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <datatable deleted="0" guid="ER05FP000PA9" id="GYDQT400153E" label="_LineTransaction_report" name="LineTransaction__" originalProcessID="RR05FP000PA9">
+    <properties>
+      <field>
+        <DisableAutolearn>1</DisableAutolearn>
+        <Extractable>0</Extractable>
+      </field>
+      <ui>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+    <field datatableid="GYDQT400153E" deleted="0" format="" guid="FR05FP000PA9" id="HYDQT400153E" label="_BilledAmount_report" length="17" name="BilledAmount__" originalProcessID="RR05FP000PA9" precision="2" submitable="1" type="DECIMAL">
+      <properties>
+        <db>
+          <alias>AHYDQT400153E</alias>
+          <noxml>1</noxml>
+          <fullname>/job/processfields/BilledAmount__</fullname>
+          <defaultvalue>
+          </defaultvalue>
+          <RecordLastWrite>2026-11-04 11:09:32</RecordLastWrite>
+        </db>
+        <extrainfo>
+          <Label>_BilledAmount_report</Label>
+          <Alias>AHYDQT400153E</Alias>
+          <DecimalPrecision vartype="INT">2</DecimalPrecision>
+          <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        </extrainfo>
+        <field>
+          <required>true</required>
+        </field>
+        <gdr>
+          <VarType>Area</VarType>
+          <DisableAutolearn>1</DisableAutolearn>
+        </gdr>
+        <help>
+          <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+        </help>
+        <ui>
+          <_type>Number</_type>
+          <automatic>true</automatic>
+        </ui>
+      </properties>
+    </field>
+    <field datatableid="GYDQT400153E" deleted="0" format="" guid="GR05FP000PA9" id="IYDQT400153E" label="_BilledCurrencyCode_report" length="50" name="BilledCurrencyCode__" originalProcessID="RR05FP000PA9" precision="0" submitable="1" type="STR">
+      <properties>
+        <db>
+          <alias>AIYDQT400153E</alias>
+          <noxml>1</noxml>
+          <fullname>/job/processfields/BilledCurrencyCode__</fullname>
+          <defaultvalue>
+          </defaultvalue>
+          <RecordLastWrite>2026-11-04 11:09:32</RecordLastWrite>
+        </db>
+        <extrainfo>
+          <Label>_BilledCurrencyCode_report</Label>
+          <Alias>AIYDQT400153E</Alias>
+          <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        </extrainfo>
+        <field>
+          <required>true</required>
+        </field>
+        <gdr>
+          <VarType>Area</VarType>
+          <DisableAutolearn>1</DisableAutolearn>
+        </gdr>
+        <help>
+          <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+        </help>
+        <ui>
+          <_type>String</_type>
+          <automatic>true</automatic>
+        </ui>
+      </properties>
+    </field>
+    <field datatableid="GYDQT400153E" deleted="0" format="" guid="UDUHG0000PA9" id="JYDQT400153E" label="_CardholderName_report" length="50" name="CardholderName__" originalProcessID="RR05FP000PA9" precision="0" submitable="1" type="STR">
+      <properties>
+        <db>
+          <alias>AJYDQT400153E</alias>
+          <noxml>1</noxml>
+          <fullname>/job/processfields/CardholderName__</fullname>
+          <defaultvalue>
+          </defaultvalue>
+          <RecordLastWrite>2026-11-04 11:09:32</RecordLastWrite>
+        </db>
+        <extrainfo>
+          <Label>_CardholderName_report</Label>
+          <Alias>AJYDQT400153E</Alias>
+          <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        </extrainfo>
+        <gdr>
+          <VarType>Area</VarType>
+          <DisableAutolearn>1</DisableAutolearn>
+        </gdr>
+        <help>
+          <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+        </help>
+        <ui>
+          <_type>String</_type>
+          <automatic>true</automatic>
+        </ui>
+      </properties>
+    </field>
+    <field datatableid="GYDQT400153E" deleted="0" format="" guid="WR05FP000PA9" id="KYDQT400153E" label="_CurrencyExchangeRate_report" length="17" name="CurrencyExchangeRate__" originalProcessID="RR05FP000PA9" precision="2" submitable="1" type="DECIMAL">
+      <properties>
+        <db>
+          <alias>AKYDQT400153E</alias>
+          <noxml>1</noxml>
+          <fullname>/job/processfields/CurrencyExchangeRate__</fullname>
+          <defaultvalue>
+          </defaultvalue>
+          <RecordLastWrite>2026-11-04 11:09:32</RecordLastWrite>
+        </db>
+        <extrainfo>
+          <Label>_CurrencyExchangeRate_report</Label>
+          <Alias>AKYDQT400153E</Alias>
+          <DecimalPrecision vartype="INT">2</DecimalPrecision>
+          <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        </extrainfo>
+        <gdr>
+          <VarType>Area</VarType>
+          <DisableAutolearn>1</DisableAutolearn>
+        </gdr>
+        <help>
+          <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+        </help>
+        <ui>
+          <_type>Number</_type>
+          <automatic>true</automatic>
+        </ui>
+      </properties>
+    </field>
+    <field datatableid="GYDQT400153E" deleted="0" format="" guid="IR05FP000PA9" id="LYDQT400153E" label="_EmployeeID_report" length="50" name="EmployeeID__" originalProcessID="RR05FP000PA9" precision="0" submitable="1" type="STR">
+      <properties>
+        <db>
+          <alias>ALYDQT400153E</alias>
+          <noxml>1</noxml>
+          <fullname>/job/processfields/EmployeeID__</fullname>
+          <defaultvalue>
+          </defaultvalue>
+          <RecordLastWrite>2026-11-04 11:09:32</RecordLastWrite>
+        </db>
+        <extrainfo>
+          <Label>_EmployeeID_report</Label>
+          <Alias>ALYDQT400153E</Alias>
+          <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        </extrainfo>
+        <gdr>
+          <VarType>Area</VarType>
+          <DisableAutolearn>1</DisableAutolearn>
+        </gdr>
+        <help>
+          <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+        </help>
+        <ui>
+          <_type>String</_type>
+          <automatic>true</automatic>
+        </ui>
+      </properties>
+    </field>
+    <field datatableid="GYDQT400153E" deleted="0" format="" guid="VE75FP000PA9" id="MYDQT400153E" label="_EmployeeLogin_report" length="80" name="EmployeeLogin__" originalProcessID="RR05FP000PA9" precision="0" submitable="1" type="STR">
+      <properties>
+        <db>
+          <alias>AMYDQT400153E</alias>
+          <noxml>1</noxml>
+          <fullname>/job/processfields/EmployeeLogin__</fullname>
+          <defaultvalue>
+          </defaultvalue>
+          <RecordLastWrite>2026-11-04 11:09:32</RecordLastWrite>
+        </db>
+        <extrainfo>
+          <Label>_EmployeeLogin_report</Label>
+          <Alias>AMYDQT400153E</Alias>
+          <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        </extrainfo>
+        <gdr>
+          <VarType>Area</VarType>
+          <DisableAutolearn>1</DisableAutolearn>
+        </gdr>
+        <help>
+          <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+        </help>
+        <ui>
+          <_type>String</_type>
+          <automatic>true</automatic>
+        </ui>
+      </properties>
+    </field>
+    <field datatableid="GYDQT400153E" deleted="0" format="" guid="KR05FP000PA9" id="NYDQT400153E" label="_EmployeeName_report" length="50" name="EmployeeName__" originalProcessID="RR05FP000PA9" precision="0" submitable="1" type="STR">
+      <properties>
+        <db>
+          <alias>ANYDQT400153E</alias>
+          <noxml>1</noxml>
+          <fullname>/job/processfields/EmployeeName__</fullname>
+          <defaultvalue>
+          </defaultvalue>
+          <RecordLastWrite>2026-11-04 11:09:32</RecordLastWrite>
+        </db>
+        <extrainfo>
+          <Label>_EmployeeName_report</Label>
+          <Alias>ANYDQT400153E</Alias>
+          <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        </extrainfo>
+        <field>
+          <Editable>false</Editable>
+          <required>true</required>
+          <TableName>ODUSER</TableName>
+          <SortOrder>ASC</SortOrder>
+          <DisplayedColumns>DisplayName|Login|EmailAddress</DisplayedColumns>
+          <SavedColumn>DisplayName</SavedColumn>
+          <ExposedColumns>
+          </ExposedColumns>
+          <ProcessName>
+          </ProcessName>
+          <KeyColumnId>Login</KeyColumnId>
+          <KeyAttribute>EmployeeLogin__</KeyAttribute>
+          <CustomFilter>(&amp;(|(ACCOUNTLOCKED=0)(!(ACCOUNTLOCKED=*)))(|(ISGROUP=0)(!(ISGROUP=*)))(Customer=0)(Vendor=0)(|(PortalUser!=1)(PortalUser!=*)))</CustomFilter>
+        </field>
+        <gdr>
+          <DisableAutolearn>1</DisableAutolearn>
+        </gdr>
+        <help>
+          <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+        </help>
+        <ui>
+          <_type>String</_type>
+          <automatic>true</automatic>
+        </ui>
+      </properties>
+    </field>
+    <field datatableid="GYDQT400153E" deleted="0" format="" guid="TR05FP000PA9" id="OYDQT400153E" label="_ExpenseDescription_report" length="32766" name="ExpenseDescription__" originalProcessID="RR05FP000PA9" precision="0" submitable="1" type="STR">
+      <properties>
+        <db>
+          <alias>AOYDQT400153E</alias>
+          <noxml>1</noxml>
+          <fullname>/job/processfields/ExpenseDescription__</fullname>
+          <defaultvalue>
+          </defaultvalue>
+          <RecordLastWrite>2026-11-04 11:09:32</RecordLastWrite>
+        </db>
+        <extrainfo>
+          <Label>_ExpenseDescription_report</Label>
+          <Alias>AOYDQT400153E</Alias>
+          <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        </extrainfo>
+        <gdr>
+          <DisableAutolearn>1</DisableAutolearn>
+        </gdr>
+        <help>
+          <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+        </help>
+        <ui>
+          <_type>String</_type>
+          <automatic>true</automatic>
+        </ui>
+      </properties>
+    </field>
+    <field datatableid="GYDQT400153E" deleted="0" format="" guid="VR05FP000PA9" id="PYDQT400153E" label="_ISOBilledCurrencyCode_report" length="50" name="ISOBilledCurrencyCode__" originalProcessID="RR05FP000PA9" precision="0" submitable="1" type="STR">
+      <properties>
+        <db>
+          <alias>APYDQT400153E</alias>
+          <noxml>1</noxml>
+          <fullname>/job/processfields/ISOBilledCurrencyCode__</fullname>
+          <defaultvalue>
+          </defaultvalue>
+          <RecordLastWrite>2026-11-04 11:09:32</RecordLastWrite>
+        </db>
+        <extrainfo>
+          <Label>_ISOBilledCurrencyCode_report</Label>
+          <Alias>APYDQT400153E</Alias>
+          <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        </extrainfo>
+        <gdr>
+          <VarType>Area</VarType>
+          <DisableAutolearn>1</DisableAutolearn>
+        </gdr>
+        <help>
+          <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+        </help>
+        <ui>
+          <_type>String</_type>
+          <automatic>true</automatic>
+        </ui>
+      </properties>
+    </field>
+    <field datatableid="GYDQT400153E" deleted="0" format="" guid="P415FP000PA9" id="QYDQT400153E" label="_ISOLocalCurrencyCode_report" length="50" name="ISOLocalCurrencyCode__" originalProcessID="RR05FP000PA9" precision="0" submitable="1" type="STR">
+      <properties>
+        <db>
+          <alias>AQYDQT400153E</alias>
+          <noxml>1</noxml>
+          <fullname>/job/processfields/ISOLocalCurrencyCode__</fullname>
+          <defaultvalue>
+          </defaultvalue>
+          <RecordLastWrite>2026-11-04 11:09:32</RecordLastWrite>
+        </db>
+        <extrainfo>
+          <Label>_ISOLocalCurrencyCode_report</Label>
+          <Alias>AQYDQT400153E</Alias>
+          <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        </extrainfo>
+        <gdr>
+          <VarType>Area</VarType>
+          <DisableAutolearn>1</DisableAutolearn>
+        </gdr>
+        <help>
+          <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+        </help>
+        <ui>
+          <_type>String</_type>
+          <automatic>true</automatic>
+        </ui>
+      </properties>
+    </field>
+    <field datatableid="GYDQT400153E" deleted="0" format="" guid="ZR05FP000PA9" id="RYDQT400153E" label="_LocalAmount_report" length="17" name="LocalAmount__" originalProcessID="RR05FP000PA9" precision="2" submitable="1" type="DECIMAL">
+      <properties>
+        <db>
+          <alias>ARYDQT400153E</alias>
+          <noxml>1</noxml>
+          <fullname>/job/processfields/LocalAmount__</fullname>
+          <defaultvalue>
+          </defaultvalue>
+          <RecordLastWrite>2026-11-04 11:09:32</RecordLastWrite>
+        </db>
+        <extrainfo>
+          <Label>_LocalAmount_report</Label>
+          <Alias>ARYDQT400153E</Alias>
+          <DecimalPrecision vartype="INT">2</DecimalPrecision>
+          <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        </extrainfo>
+        <gdr>
+          <VarType>Area</VarType>
+          <DisableAutolearn>1</DisableAutolearn>
+        </gdr>
+        <help>
+          <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+        </help>
+        <ui>
+          <_type>Number</_type>
+          <automatic>true</automatic>
+        </ui>
+      </properties>
+    </field>
+    <field datatableid="GYDQT400153E" deleted="0" format="" guid="YR05FP000PA9" id="SYDQT400153E" label="_LocalCurrencyCode" length="50" name="LocalCurrencyCode__" originalProcessID="RR05FP000PA9" precision="0" submitable="1" type="STR">
+      <properties>
+        <db>
+          <alias>ASYDQT400153E</alias>
+          <noxml>1</noxml>
+          <fullname>/job/processfields/LocalCurrencyCode__</fullname>
+          <defaultvalue>
+          </defaultvalue>
+          <RecordLastWrite>2026-11-04 11:09:32</RecordLastWrite>
+        </db>
+        <extrainfo>
+          <Label>_LocalCurrencyCode</Label>
+          <Alias>ASYDQT400153E</Alias>
+          <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        </extrainfo>
+        <gdr>
+          <VarType>Area</VarType>
+          <DisableAutolearn>1</DisableAutolearn>
+        </gdr>
+        <help>
+          <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+        </help>
+        <ui>
+          <_type>String</_type>
+          <automatic>true</automatic>
+        </ui>
+      </properties>
+    </field>
+    <field datatableid="GYDQT400153E" deleted="0" format="" guid="LR05FP000PA9" id="TYDQT400153E" label="_MerchantCategory_report" length="50" name="MerchantCategory__" originalProcessID="RR05FP000PA9" precision="0" submitable="1" type="STR">
+      <properties>
+        <db>
+          <alias>ATYDQT400153E</alias>
+          <noxml>1</noxml>
+          <fullname>/job/processfields/MerchantCategory__</fullname>
+          <defaultvalue>
+          </defaultvalue>
+          <RecordLastWrite>2026-11-04 11:09:32</RecordLastWrite>
+        </db>
+        <extrainfo>
+          <Label>_MerchantCategory_report</Label>
+          <Alias>ATYDQT400153E</Alias>
+          <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        </extrainfo>
+        <gdr>
+          <VarType>Area</VarType>
+          <DisableAutolearn>1</DisableAutolearn>
+        </gdr>
+        <help>
+          <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+        </help>
+        <ui>
+          <_type>String</_type>
+          <automatic>true</automatic>
+        </ui>
+      </properties>
+    </field>
+    <field datatableid="GYDQT400153E" deleted="0" format="" guid="MR05FP000PA9" id="UYDQT400153E" label="_MerchantName_report" length="50" name="MerchantName__" originalProcessID="RR05FP000PA9" precision="0" submitable="1" type="STR">
+      <properties>
+        <db>
+          <alias>AUYDQT400153E</alias>
+          <noxml>1</noxml>
+          <fullname>/job/processfields/MerchantName__</fullname>
+          <defaultvalue>
+          </defaultvalue>
+          <RecordLastWrite>2026-11-04 11:09:32</RecordLastWrite>
+        </db>
+        <extrainfo>
+          <Label>_MerchantName_report</Label>
+          <Alias>AUYDQT400153E</Alias>
+          <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        </extrainfo>
+        <field>
+          <required>false</required>
+        </field>
+        <gdr>
+          <VarType>Area</VarType>
+          <DisableAutolearn>1</DisableAutolearn>
+        </gdr>
+        <help>
+          <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+        </help>
+        <ui>
+          <_type>String</_type>
+          <automatic>true</automatic>
+        </ui>
+      </properties>
+    </field>
+    <field datatableid="GYDQT400153E" deleted="0" format="" guid="PR05FP000PA9" id="VYDQT400153E" label="_TransactionDate_report" length="0" name="TransactionDate__" originalProcessID="RR05FP000PA9" precision="0" submitable="1" type="DATE">
+      <properties>
+        <db>
+          <alias>AVYDQT400153E</alias>
+          <noxml>1</noxml>
+          <fullname>/job/processfields/TransactionDate__</fullname>
+          <defaultvalue>
+          </defaultvalue>
+          <RecordLastWrite>2026-11-04 11:09:32</RecordLastWrite>
+        </db>
+        <extrainfo>
+          <Label>_TransactionDate_report</Label>
+          <Alias>AVYDQT400153E</Alias>
+          <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        </extrainfo>
+        <gdr>
+          <VarType>Area</VarType>
+          <DisableAutolearn>1</DisableAutolearn>
+        </gdr>
+        <help>
+          <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+        </help>
+        <ui>
+          <_type>Date</_type>
+          <automatic>true</automatic>
+        </ui>
+      </properties>
+    </field>
+    <field datatableid="GYDQT400153E" deleted="0" format="" guid="QR05FP000PA9" id="WYDQT400153E" label="_TransactionID_report" length="100" name="TransactionID__" originalProcessID="RR05FP000PA9" precision="0" submitable="1" type="STR">
+      <properties>
+        <db>
+          <alias>AWYDQT400153E</alias>
+          <noxml>1</noxml>
+          <fullname>/job/processfields/TransactionID__</fullname>
+          <defaultvalue>
+          </defaultvalue>
+          <RecordLastWrite>2026-11-04 11:09:32</RecordLastWrite>
+        </db>
+        <extrainfo>
+          <Label>_TransactionID_report</Label>
+          <Alias>AWYDQT400153E</Alias>
+          <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        </extrainfo>
+        <field>
+          <required>true</required>
+        </field>
+        <gdr>
+          <VarType>Area</VarType>
+          <DisableAutolearn>1</DisableAutolearn>
+        </gdr>
+        <help>
+          <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+        </help>
+        <ui>
+          <_type>String</_type>
+          <automatic>true</automatic>
+        </ui>
+      </properties>
+    </field>
+  </datatable>
+  <type id="GOLHG0000M4O" name="CD">
+  </type>
+</process>

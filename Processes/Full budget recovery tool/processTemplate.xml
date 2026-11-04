@@ -1,0 +1,560 @@
+<process accountid="" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:10:08" deleted="0" eskerapplication="P2P" global="0" id="NoID" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="Full budget recovery tool" needvalidation="1" ootofilter="" ootoversion="2" originalProcessID="KS42FP000IYP" ownerid="" ownerpb="" public="1" pushnotification="1" reuseengine="1" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="" version="1" visibility="1">
+	<properties>
+		<gdr>
+			<ValidationScriptAllowRetry />
+			<validationscriptIncludedScripts>Lib_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Sys/Sys_Helpers</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Sys/Sys_Helpers_Date</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Sys/Sys_Helpers_Promise</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Sys/Sys_Helpers_String</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Sys/Sys_Helpers_Array</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Sys/SYS_EmailNotification</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Sys/Sys_Helpers_QueryIterator</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Sys/Sys_Helpers_TimeoutHelper</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Sys/Sys_Helpers_Promise_Server_Tools</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Parameters_P2P_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>[Lib_Custom_Parameters]</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>[Lib_P2P_Custom_Parameters]</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Purchasing_PRSpending_Budget_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Purchasing_POSpending_Budget_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Purchasing_GRBudget_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_AP_Spending_Budget_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Spending_Budget_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Spending_Budget_Recovery_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Spending_Budget_FullRecovery_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_P2P_EmailNotification_Server_V12.0.566.0</validationscriptIncludedScripts>
+			<ValidationScript>
+				<!--validationscript.js--></ValidationScript>
+			<AllowTagCoverPages>true</AllowTagCoverPages>
+			<AllowTagNewDocuments>true</AllowTagNewDocuments>
+			<AllowTagAttachments>true</AllowTagAttachments>
+			<AllowRemovePages>true</AllowRemovePages>
+			<AllowSwapPages>true</AllowSwapPages>
+		</gdr>
+		<lg>
+			<!--*.xml-->
+		</lg>
+		<process>
+			<flowtype>processing</flowtype>
+			<ocrpreset>scan</ocrpreset>
+			<homepagelabel>Full budget recovery tool</homepagelabel>
+			<enableflexibleauditing />
+			<enableflexibleediting />
+			<enableflexibleteaching />
+			<disableocr />
+			<instanciable>1</instanciable>
+			<disableScriptModification>true</disableScriptModification>
+			<disableautolearning>true</disableautolearning>
+			<backgroundprocessingthreshold />
+			<EnablePreviewPrecomputation />
+			<enableUpgradableDesign>true</enableUpgradableDesign>
+			<enablerounddecimal>true</enablerounddecimal>
+			<pdfNormalizeFilter />
+			<archiveDuration>0</archiveDuration>
+			<ocrpagestoprocess>0</ocrpagestoprocess>
+			<ScriptEngineType>2</ScriptEngineType>
+			<UseActionNameWithScriptApproval>true</UseActionNameWithScriptApproval>
+			<displayWidth>1024</displayWidth>
+			<AllowUploadAttachment>1</AllowUploadAttachment>
+			<AllowUploadReferenceDocument>1</AllowUploadReferenceDocument>
+			<UseCultureFormat>true</UseCultureFormat>
+			<AllowRetryExtractCD>true</AllowRetryExtractCD>
+			<TransportName>CustomData</TransportName>
+			<LayoutVersion>1.0</LayoutVersion>
+			<printToProcess />
+		</process>
+		<ui>
+			<CustomScriptDebug>false</CustomScriptDebug>
+			<customscriptIncludedScripts>Sys/Sys_Helpers</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_GenericAPI_Client</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers_Promise</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers_String</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_CommonDialog_V12.0.566.0</customscriptIncludedScripts>
+			<CustomScriptReadonly>true</CustomScriptReadonly>
+			<CustomScript>
+				<!--customscript.js--></CustomScript>
+			<restorationPanel>TMPStepPanel</restorationPanel>
+			<layout>
+				<!--layout.json--></layout>
+		</ui>
+	</properties>
+	<datatable deleted="0" guid="KKG2FP000IYP" id="NoID" label="_CheckTable_report" name="CheckTable__" originalProcessID="KS42FP000IYP">
+		<properties>
+			<field>
+				<DisableAutolearn>1</DisableAutolearn>
+				<Extractable>0</Extractable>
+			</field>
+			<ui>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+		<field datatableid="" deleted="0" format="" guid="NKG2FP000IYP" id="NoID" label="_CheckDetails_report" length="32766" name="CheckDetails__" originalProcessID="KS42FP000IYP" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/CheckDetails__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_CheckDetails_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="LKG2FP000IYP" id="NoID" label="_CheckDocRuidEx_report" length="50" name="CheckDocRuidEx__" originalProcessID="KS42FP000IYP" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/CheckDocRuidEx__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_CheckDocRuidEx_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="OKG2FP000IYP" id="NoID" label="_CheckLevel_report" length="50" name="CheckLevel__" originalProcessID="KS42FP000IYP" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/CheckLevel__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_CheckLevel_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="MKG2FP000IYP" id="NoID" label="_CheckType_report" length="50" name="CheckType__" originalProcessID="KS42FP000IYP" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/CheckType__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_CheckType_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+	</datatable>
+	<datatable deleted="0" guid="VKG2FP000IYP" id="NoID" label="_PendingRecoveriesTable_report" name="PendingRecoveriesTable__" originalProcessID="KS42FP000IYP">
+		<properties>
+			<field>
+				<DisableAutolearn>1</DisableAutolearn>
+				<Extractable>0</Extractable>
+			</field>
+			<ui>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+		<field datatableid="" deleted="0" format="" guid="WKG2FP000IYP" id="NoID" label="_PendingRecoveryDocRuidEx_report" length="50" name="PendingRecoveryDocRuidEx__" originalProcessID="KS42FP000IYP" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/PendingRecoveryDocRuidEx__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_PendingRecoveryDocRuidEx_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+	</datatable>
+	<datatable deleted="0" guid="XKG2FP000IYP" id="NoID" label="_RecomputeBudgetTable_report" name="RecomputeBudgetTable__" originalProcessID="KS42FP000IYP">
+		<properties>
+			<field>
+				<DisableAutolearn>1</DisableAutolearn>
+				<Extractable>0</Extractable>
+			</field>
+			<ui>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+		<field datatableid="" deleted="0" format="" guid="YKG2FP000IYP" id="NoID" label="_RecomputeBudgetID_report" length="128" name="RecomputeBudgetID__" originalProcessID="KS42FP000IYP" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/RecomputeBudgetID__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_RecomputeBudgetID_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="ALG2FP000IYP" id="NoID" label="_RecomputeErrorDetails_report" length="32766" name="RecomputeErrorDetails__" originalProcessID="KS42FP000IYP" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/RecomputeErrorDetails__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_RecomputeErrorDetails_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="ZKG2FP000IYP" id="NoID" label="_RecomputeErrorType_report" length="50" name="RecomputeErrorType__" originalProcessID="KS42FP000IYP" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/RecomputeErrorType__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_RecomputeErrorType_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+	</datatable>
+	<datatable deleted="0" guid="SKG2FP000IYP" id="NoID" label="_RecoveryErrorsTable_report" name="RecoveryErrorsTable__" originalProcessID="KS42FP000IYP">
+		<properties>
+			<field>
+				<DisableAutolearn>1</DisableAutolearn>
+				<Extractable>0</Extractable>
+			</field>
+			<ui>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+		<field datatableid="" deleted="0" format="" guid="UKG2FP000IYP" id="NoID" label="_RecoveryErrorDetails_report" length="32766" name="RecoveryErrorDetails__" originalProcessID="KS42FP000IYP" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/RecoveryErrorDetails__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_RecoveryErrorDetails_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="TKG2FP000IYP" id="NoID" label="_RecoveryErrorDocRuidEx_report" length="50" name="RecoveryErrorDocRuidEx__" originalProcessID="KS42FP000IYP" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/RecoveryErrorDocRuidEx__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_RecoveryErrorDocRuidEx_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+	</datatable>
+	<datatable deleted="0" guid="PKG2FP000IYP" id="NoID" label="_RecoveryRequestErrorsTable_report" name="RecoveryRequestErrorsTable__" originalProcessID="KS42FP000IYP">
+		<properties>
+			<field>
+				<DisableAutolearn>1</DisableAutolearn>
+				<Extractable>0</Extractable>
+			</field>
+			<ui>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+		<field datatableid="" deleted="0" format="" guid="RKG2FP000IYP" id="NoID" label="_RecoveryRequestErrorDetails_report" length="32766" name="RecoveryRequestErrorDetails__" originalProcessID="KS42FP000IYP" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/RecoveryRequestErrorDetails__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_RecoveryRequestErrorDetails_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="QKG2FP000IYP" id="NoID" label="_RecoveryRequestErrorDocRuidEx_report" length="50" name="RecoveryRequestErrorDocRuidEx__" originalProcessID="KS42FP000IYP" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/RecoveryRequestErrorDocRuidEx__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_RecoveryRequestErrorDocRuidEx_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+	</datatable>
+	<type id="NoID" name="CD" />
+	<field deleted="0" format="" guid="Z362FP000IYP" id="NoID" label="_BudgetIDs_report" length="32766" name="BudgetIDs__" originalProcessID="KS42FP000IYP" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/BudgetIDs__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_BudgetIDs_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<required>false</required>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="Q362FP000IYP" id="NoID" label="_CurrentStep_report" length="50" name="CurrentStep__" originalProcessID="KS42FP000IYP" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CurrentStep__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_CurrentStep_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="NS42FP000IYP" id="NoID" label="_Filter_report" length="200" name="Filter__" originalProcessID="KS42FP000IYP" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Filter__</fullname>
+				<defaultvalue>MsnEx=*</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_Filter_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<required>true</required>
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"5040","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="MS42FP000IYP" id="NoID" label="_SelectionMethod_report" length="50" name="SelectionMethod__" originalProcessID="KS42FP000IYP" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/SelectionMethod__</fullname>
+				<defaultvalue>_Doc</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_SelectionMethod_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<possibleKeys>_Doc
+_DocItems</possibleKeys>
+				<possibleValues>_Doc
+_DocItems</possibleValues>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+</process>

@@ -1,0 +1,636 @@
+<process accountid="" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:10:48" deleted="0" eskerapplication="P2P" global="0" id="NoID" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="C5 Integration" needvalidation="0" ootofilter="" ootoversion="2" originalProcessID="LCA1000011XD" ownerid="" ownerpb="" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="" version="1" visibility="0">
+	<properties>
+		<dbIndex>
+			<AUTO_ABOFQT400153EA>&lt;Index&gt;&lt;Ref Name="ABOFQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_ABOFQT400153EA>
+			<AUTO_ADOFQT400153EA>&lt;Index&gt;&lt;Ref Name="ADOFQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_ADOFQT400153EA>
+			<AUTO_AEOFQT400153EA>&lt;Index&gt;&lt;Ref Name="AEOFQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AEOFQT400153EA>
+			<AUTO_AGOFQT400153EA>&lt;Index&gt;&lt;Ref Name="AGOFQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AGOFQT400153EA>
+			<AUTO_AJOFQT400153EA>&lt;Index&gt;&lt;Ref Name="AJOFQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AJOFQT400153EA>
+			<AUTO_AOOFQT400153EA>&lt;Index&gt;&lt;Ref Name="AOOFQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AOOFQT400153EA>
+		</dbIndex>
+		<externalvariables>
+			<NotificationProcessNameForC5>Update invoice with C5 Ack</NotificationProcessNameForC5>
+			<SFTPConfigurationNameForC5>EskerToEIntegration</SFTPConfigurationNameForC5>
+			<FTPFolderNameForC5>Out_C5</FTPFolderNameForC5>
+			<FTPAccountNameForC5>APInvoices</FTPAccountNameForC5>
+		</externalvariables>
+		<gdr>
+			<validationscriptIncludedScripts>Lib_AP_PeppolC5Reporting_Mapping_V12.0.566.0</validationscriptIncludedScripts>
+			<ValidationScript>
+				<!--validationscript.js--></ValidationScript>
+			<AllowTagCoverPages>true</AllowTagCoverPages>
+			<AllowTagNewDocuments>true</AllowTagNewDocuments>
+			<AllowTagAttachments>true</AllowTagAttachments>
+			<AllowRemovePages>true</AllowRemovePages>
+			<AllowSwapPages>true</AllowSwapPages>
+		</gdr>
+		<lg>
+			<!--*.xml-->
+		</lg>
+		<ocr>
+			<trade-off>accurate</trade-off>
+			<image-ocr-timeout />
+			<image-binarization>no</image-binarization>
+			<image-draft-fax>no</image-draft-fax>
+			<image-despeckle>no</image-despeckle>
+			<allowed-language>0</allowed-language>
+			<image-resolution-enhancement>auto</image-resolution-enhancement>
+			<pdf-processing>no-ocr</pdf-processing>
+			<ocr_engine>Nuance210</ocr_engine>
+			<extractionAdditionalOptions />
+		</ocr>
+		<process>
+			<flowtype>processing</flowtype>
+			<ocrpreset>scan</ocrpreset>
+			<EnableCatchNetworkError />
+			<EnableNegativeNumbersBetweenBrackets>true</EnableNegativeNumbersBetweenBrackets>
+			<panelLabelWidth />
+			<homepagelabel>C5 Integration</homepagelabel>
+			<enableflexibleauditing />
+			<enableflexibleediting />
+			<enableflexibleteaching />
+			<disableocr />
+			<instanciable>1</instanciable>
+			<disableScriptModification>true</disableScriptModification>
+			<disableautolearning>true</disableautolearning>
+			<backgroundprocessingthreshold />
+			<EnablePreviewPrecomputation />
+			<enableUpgradableDesign>true</enableUpgradableDesign>
+			<enablerounddecimal>true</enablerounddecimal>
+			<pdfNormalizeFilter />
+			<archiveDuration>0</archiveDuration>
+			<ocrpagestoprocess>0</ocrpagestoprocess>
+			<ScriptEngineType>2</ScriptEngineType>
+			<UseActionNameWithScriptApproval>true</UseActionNameWithScriptApproval>
+			<displayWidth />
+			<AllowUploadAttachment>1</AllowUploadAttachment>
+			<AllowUploadReferenceDocument>1</AllowUploadReferenceDocument>
+			<RemovePointWhenCastingIntToString>true</RemovePointWhenCastingIntToString>
+			<UseCultureFormat>true</UseCultureFormat>
+			<AllowRetryExtractCD>true</AllowRetryExtractCD>
+			<TransportName>CustomData</TransportName>
+			<LayoutVersion>1.0</LayoutVersion>
+			<printToProcess />
+		</process>
+		<ui>
+			<CustomScriptDebug>false</CustomScriptDebug>
+			<customscriptIncludedScripts>Sys/Sys_Helpers</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers_LdapUtil</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers_Promise</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_GenericAPI_Client</customscriptIncludedScripts>
+			<CustomScriptReadonly>true</CustomScriptReadonly>
+			<CustomScript>
+				<!--customscript.js--></CustomScript>
+			<restorationPanel>DataPanel</restorationPanel>
+			<layout>
+				<!--layout.json--></layout>
+		</ui>
+	</properties>
+	<type id="NoID" name="CD" />
+	<field deleted="0" format="" guid="CZDE8229" id="NoID" label="_C5Status_Code_report" length="50" name="C5Status_Code__" originalProcessID="LCA1000011XD" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/C5Status_Code__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_C5Status_Code_report</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<teachable>false</teachable>
+				<lazyTranslatable />
+			</field>
+			<gdr>
+				<VarType />
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="CKRE8229" id="NoID" label="_C5Status_Date_report" length="0" name="C5Status_Date__" originalProcessID="LCA1000011XD" precision="0" processid="" submitable="1" type="DATETIME">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/C5Status_Date__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_C5Status_Date_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<required>false</required>
+				<teachable>false</teachable>
+			</field>
+			<gdr>
+				<VarType />
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="CIPO8229" id="NoID" label="_C5Status_Message_report" length="50" name="C5Status_Message__" originalProcessID="LCA1000011XD" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/C5Status_Message__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_C5Status_Message_report</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<teachable>false</teachable>
+				<lazyTranslatable />
+			</field>
+			<gdr>
+				<VarType />
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="CZAF8229" id="NoID" label="_C5Status_Type_report" length="50" name="C5Status_Type__" originalProcessID="LCA1000011XD" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/C5Status_Type__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_C5Status_Type_report</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<teachable>false</teachable>
+				<lazyTranslatable />
+			</field>
+			<gdr>
+				<VarType />
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="RKMJ7229" id="NoID" label="_Company code_report" length="50" name="CompanyCode__" originalProcessID="LCA1000011XD" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CompanyCode__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Company code_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<required>false</required>
+				<teachable>false</teachable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder />
+				<DisplayedColumns>CompanyCode__|CompanyName__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<SavedColumn>CompanyCode__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>PurchasingCompanycodes__</ProcessName>
+				<CustomFilter />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="SC5100000VLT" id="NoID" label="_Document UUID_report" length="50" name="DocumentUUID__" originalProcessID="LCA1000011XD" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/DocumentUUID__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Document UUID_report</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<teachable>false</teachable>
+				<lazyTranslatable />
+			</field>
+			<gdr>
+				<VarType />
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PPYN70775" id="NoID" label="_ERP Invoice number_report" length="50" name="ERPInvoiceNumber__" originalProcessID="LCA1000011XD" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ERPInvoiceNumber__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ERP Invoice number_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>true</Editable>
+				<required>false</required>
+				<teachable>false</teachable>
+				<TableName>CD#NOID</TableName>
+				<SortOrder />
+				<DisplayedColumns>ERPInvoiceNumber__|CompanyCode__|InvoiceNumber__|InvoiceDate__|ERPPostingDate__|InvoiceAmount__|InvoiceCurrency__|VendorNumber__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<SavedColumn>ERPInvoiceNumber__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>Vendor invoice</ProcessName>
+				<CustomFilter />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="XARY70771" id="NoID" label="_Invoice number_report" length="50" name="InvoiceNumber__" originalProcessID="LCA1000011XD" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/InvoiceNumber__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Invoice number_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<required>false</required>
+				<teachable>true</teachable>
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="RC5100000VLT" id="NoID" label="_Invoice RuidEx_report" length="50" name="InvoiceRuidEx__" originalProcessID="LCA1000011XD" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/InvoiceRuidEx__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Invoice RuidEx_report</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<teachable>false</teachable>
+				<lazyTranslatable />
+			</field>
+			<gdr>
+				<VarType />
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="EBGT33050" id="NoID" label="_Invoice submission datetime_report" length="0" name="InvoiceSubmissionDatetime__" originalProcessID="LCA1000011XD" precision="0" processid="" submitable="1" type="DATETIME">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/InvoiceSubmissionDatetime__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Invoice submission datetime_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<required>false</required>
+				<teachable>false</teachable>
+			</field>
+			<gdr>
+				<VarType />
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="KL5100000VLT" id="NoID" label="_Invoice submission status_report" length="50" name="InvoiceSubmissionStatus__" originalProcessID="LCA1000011XD" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/InvoiceSubmissionStatus__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Invoice submission status_report</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<teachable>false</teachable>
+				<lazyTranslatable />
+			</field>
+			<gdr>
+				<VarType />
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="SD5100000VLT" id="NoID" label="_IRAS acknowledgment ID_report" length="50" name="IRASAcknowledgmentID__" originalProcessID="LCA1000011XD" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/IRASAcknowledgmentID__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_IRAS acknowledgment ID_report</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<teachable>false</teachable>
+				<lazyTranslatable />
+			</field>
+			<gdr>
+				<VarType />
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="FCEW667240" id="NoID" label="_Order number_report" length="164" name="OrderNumber__" originalProcessID="LCA1000011XD" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/OrderNumber__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Order number_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<required>false</required>
+				<teachable>true</teachable>
+			</field>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="RT5100000VLT" id="NoID" label="_Peppol ID_report" length="50" name="PeppolID__" originalProcessID="LCA1000011XD" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/PeppolID__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Peppol ID_report</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<teachable>false</teachable>
+				<lazyTranslatable />
+			</field>
+			<gdr>
+				<VarType />
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="QC5100000VLT" id="NoID" label="_Related invoice_report" length="50" name="RelatedInvoice__" originalProcessID="LCA1000011XD" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/RelatedInvoice__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Related invoice_report</Label>
+				<Alias />
+				<Group>Vendor_Invoice_Details</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>true</Editable>
+				<teachable>true</teachable>
+				<TableName>CD#NOID</TableName>
+				<SortOrder>ASC</SortOrder>
+				<SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+				<DisplayedColumns>InvoiceNumber__|InvoiceDate__|InvoiceAmount__|InvoiceCurrency__|InvoiceStatus__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>InvoiceNumber__</SavedColumn>
+				<SavedColumnId />
+				<ExposedColumns />
+				<ProcessName>Vendor invoice</ProcessName>
+				<KeyColumnId />
+				<KeyAttribute />
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(!(CompanyCode__=*)))</CustomFilter>
+			</field>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="QV5100000VLT" id="NoID" label="_Transmission UUID_report" length="50" name="TransmissionUUID__" originalProcessID="LCA1000011XD" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TransmissionUUID__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Transmission UUID_report</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<teachable>false</teachable>
+				<lazyTranslatable />
+			</field>
+			<gdr>
+				<VarType />
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="DDDI12451" id="NoID" label="_Vendor name_report" length="50" name="VendorName__" originalProcessID="LCA1000011XD" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/VendorName__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Vendor name_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>true</Editable>
+				<required>false</required>
+				<teachable>false</teachable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder>ASC</SortOrder>
+				<DisplayedColumns>Name__|Number__|Street__|PostOfficeBox__|City__|PostalCode__|Region__|Country__|Siret__|VATNumber__|PaymentTermCode__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>Name__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>AP - Vendors__</ProcessName>
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(!(CompanyCode__=*)))</CustomFilter>
+			</field>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="HZQR12450" id="NoID" label="_Vendor number_report" length="50" name="VendorNumber__" originalProcessID="LCA1000011XD" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/VendorNumber__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Vendor number_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>true</Editable>
+				<required>false</required>
+				<teachable>false</teachable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder>ASC</SortOrder>
+				<DisplayedColumns>Number__|Name__|Street__|PostOfficeBox__|City__|PostalCode__|Region__|Country__|Siret__|VATNumber__|PaymentTermCode__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>Number__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>AP - Vendors__</ProcessName>
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(!(CompanyCode__=*)))</CustomFilter>
+			</field>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+</process>

@@ -1,0 +1,2370 @@
+<process accountid="" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:10:45" deleted="0" eskerapplication="P2P" global="0" id="NoID" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="Request For Quote" needvalidation="0" ootofilter="" ootoversion="2" originalProcessID="OWM0000011XD" ownerid="" ownerpb="" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="" version="1" visibility="0">
+	<properties>
+		<dataConditions>
+			<listDataConditions>
+				&lt;dataCondition&gt;
+					&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+					&lt;filter&gt;msnex=*&lt;/filter&gt;
+					&lt;labelKey&gt;_Sourcing enabled&lt;/labelKey&gt;
+					&lt;conditions&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableMarketDojoIntegration__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableRequestForQuote__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+							&lt;/allowCondition&gt;
+					&lt;/conditions&gt;
+				&lt;/dataCondition&gt;</listDataConditions>
+		</dataConditions>
+		<dbIndex>
+			<AUTO_AKKFQT400153EA>&lt;Index&gt;&lt;Ref Name="AKKFQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AKKFQT400153EA>
+		</dbIndex>
+		<externalvariables>
+			<EnableSRO>1</EnableSRO>
+		</externalvariables>
+		<gdr>
+			<AttachAsConverted>1</AttachAsConverted>
+			<validationscriptIncludedScripts>Lib_P2P_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>LIB_P2P_Conversation_Server_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Sourcing_Conversation_Server_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Sourcing_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Sourcing_RFQ_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Sourcing_RFQ_Edition_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Sourcing_RFQ_Server_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Sourcing_DocumentsTable_Server_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Parameters_P2P_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>[LIB_RFQ_CUSTOMIZATION_SERVER]</validationscriptIncludedScripts>
+			<ValidationScript>
+				<!--validationscript.js--></ValidationScript>
+			<AllowTagCoverPages>true</AllowTagCoverPages>
+			<AllowTagNewDocuments>true</AllowTagNewDocuments>
+			<AllowTagAttachments>true</AllowTagAttachments>
+			<extractionscriptIncludedScripts>Lib_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_P2P_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_P2P_CompanyCodesValue_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_P2P_Logger_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_P2P_UserProperties_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_P2P_EmailNotification_Server_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_Sourcing_RFQ_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_Sourcing_RFQ_Checks_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_Sourcing_RFQ_Server_V12.0.566.0</extractionscriptIncludedScripts>
+			<ExtractionScript>
+				<!--extractionscript.js--></ExtractionScript>
+			<AllowRemovePages>true</AllowRemovePages>
+			<AllowSwapPages>true</AllowSwapPages>
+		</gdr>
+		<lg>
+			<!--*.xml-->
+		</lg>
+		<ocr>
+			<trade-off>accurate</trade-off>
+			<image-ocr-timeout />
+			<image-binarization>no</image-binarization>
+			<image-draft-fax>no</image-draft-fax>
+			<image-despeckle>no</image-despeckle>
+			<allowed-language>0</allowed-language>
+			<image-resolution-enhancement>auto</image-resolution-enhancement>
+			<pdf-processing>no-ocr</pdf-processing>
+			<ocr_engine>Nuance210</ocr_engine>
+			<extractionAdditionalOptions />
+		</ocr>
+		<process>
+			<flowtype>processing</flowtype>
+			<ocrpreset>scan</ocrpreset>
+			<cacheableprocess>P2P - User properties__</cacheableprocess>
+			<cacheableprocess>AP - Vendors links__</cacheableprocess>
+			<cacheableprocess>AP - Vendors__</cacheableprocess>
+			<cacheableprocess>P2P - Exchange rate__</cacheableprocess>
+			<cacheableprocess>P2P - UnitOfMeasure__</cacheableprocess>
+			<cacheableprocess>PurchasingSupply__</cacheableprocess>
+			<cacheableprocess>PurchasingCompanycodes__</cacheableprocess>
+			<cacheableprocess>P2P - Global Application Settings__</cacheableprocess>
+			<cacheableprocess>AP - Application Settings__</cacheableprocess>
+			<cacheableprocess>P2P - Mapping SupplyType to FavoriteSupplier__</cacheableprocess>
+			<cacheableprocess>P2P - Mapping UNSPSC to SupplyType__</cacheableprocess>
+			<EnableCatchNetworkError>true</EnableCatchNetworkError>
+			<EnableNegativeNumbersBetweenBrackets>true</EnableNegativeNumbersBetweenBrackets>
+			<panelLabelWidth />
+			<homepagelabel>_Create a request for quote</homepagelabel>
+			<enableflexibleauditing />
+			<enableflexibleediting>true</enableflexibleediting>
+			<enableflexibleteaching />
+			<enableInternalConversation>true</enableInternalConversation>
+			<disableocr />
+			<instanciable>1</instanciable>
+			<disableScriptModification>true</disableScriptModification>
+			<disableautolearning>true</disableautolearning>
+			<backgroundprocessingthreshold />
+			<EnablePreviewPrecomputation />
+			<enableUpgradableDesign>true</enableUpgradableDesign>
+			<enablerounddecimal>true</enablerounddecimal>
+			<pdfNormalizeFilter />
+			<archiveDuration>0</archiveDuration>
+			<ocrpagestoprocess>0</ocrpagestoprocess>
+			<ScriptEngineType>2</ScriptEngineType>
+			<UseActionNameWithScriptApproval>true</UseActionNameWithScriptApproval>
+			<displayWidth />
+			<AllowUploadAttachment>0</AllowUploadAttachment>
+			<AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+			<RemovePointWhenCastingIntToString>true</RemovePointWhenCastingIntToString>
+			<UseCultureFormat>true</UseCultureFormat>
+			<AllowRetryExtractCD>true</AllowRetryExtractCD>
+			<TransportName>CustomData</TransportName>
+			<LayoutVersion>1.0</LayoutVersion>
+			<printToProcess />
+		</process>
+		<ui>
+			<CustomScriptDebug>false</CustomScriptDebug>
+			<customscriptIncludedScripts>Sys/Sys_Helpers_Banner</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_P2P_SIM_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_AP_Parameters_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Parameters_P2P_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[Lib_Custom_Parameters]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>LIB_ERP_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>LIB_ERP_Generic_Manager_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>LIB_ERP_SAP_Manager_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>LIB_ERP_EBS_Manager_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>LIB_ERP_JDE_Manager_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>LIB_ERP_NAV_Manager_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>LIB_ERP_Universal_Manager_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Sourcing_RFQ_AI_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Sourcing_RFQ_Questionnaire_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Sourcing_RFQ_Client_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Sourcing_RFQ_Suppliers_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Sourcing_RFQ_ButtonsBar_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Sourcing_RFQ_Comparator_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Sourcing_RFQ_Conversation_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Sourcing_RFQ_Checks_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Sourcing_DocumentsTable_Client_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Sourcing_RFQ_FormTemplate_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Sourcing_RFQ_Viewer_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Sourcing_RFQ_Edition_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[LIB_RFQ_CUSTOMIZATION_COMMON]</customscriptIncludedScripts>
+			<CustomScriptReadonly>true</CustomScriptReadonly>
+			<CustomScript>
+				<!--customscript.js--></CustomScript>
+			<restorationPanel>GeneralInformationPane</restorationPanel>
+			<layout>
+				<!--layout.json--></layout>
+		</ui>
+	</properties>
+	<datatable deleted="0" guid="MPR0000011XD" id="NoID" label="_ItemsToSource" name="ItemsToSource__" originalProcessID="OWM0000011XD">
+		<properties>
+			<field>
+				<DisableAutolearn>1</DisableAutolearn>
+				<Extractable>0</Extractable>
+			</field>
+			<ui>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+		<field datatableid="" deleted="0" format="" guid="YCE000001535" id="NoID" label="_IsSupplyTypeManuallySet" length="0" name="IsSupplyTypeManuallySet__" originalProcessID="OWM0000011XD" precision="0" submitable="1" type="BOOL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/IsSupplyTypeManuallySet__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_IsSupplyTypeManuallySet</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+					<DoNotShowInDM>1</DoNotShowInDM>
+				</extrainfo>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Boolean</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="ZZ81000011XD" id="NoID" label="_ItemAwardedResponseRuidEx_report" length="50" name="ItemAwardedResponseRuidEx__" originalProcessID="OWM0000011XD" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ItemAwardedResponseRuidEx__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ItemAwardedResponseRuidEx_report</Label>
+					<Alias />
+					<Behavior>Default</Behavior>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+					<DoNotShowInDM>1</DoNotShowInDM>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="FGV1000011XD" id="NoID" label="_ItemAwardedSupplierNumber_report" length="50" name="ItemAwardedSupplierNumber__" originalProcessID="OWM0000011XD" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ItemAwardedSupplierNumber__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ItemAwardedSupplierNumber_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<Editable>true</Editable>
+					<TableName>CT#NOID</TableName>
+					<SortOrder>ASC</SortOrder>
+					<SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+					<DisplayedColumns>Number__|Name__</DisplayedColumns>
+					<DisplayedColumnsIds />
+					<SavedColumn>Number__</SavedColumn>
+					<SavedColumnId />
+					<ExposedColumns />
+					<ProcessName>AP - Vendors__</ProcessName>
+					<KeyColumnId />
+					<KeyAttribute />
+					<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+				</field>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="YDV1000011XD" id="NoID" label="_ItemAwardedSupplierTotalPrice" length="17" name="ItemAwardedSupplierTotalPrice__" originalProcessID="OWM0000011XD" precision="5" submitable="1" type="DECIMAL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ItemAwardedSupplierTotalPrice__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ItemAwardedSupplierTotalPrice</Label>
+					<Alias />
+					<DecimalPrecision vartype="INT">5</DecimalPrecision>
+					<DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="YZ81000011XD" id="NoID" label="_ItemBestResponseRuidEx_report" length="50" name="ItemBestResponseRuidEx__" originalProcessID="OWM0000011XD" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ItemBestResponseRuidEx__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ItemBestResponseRuidEx_report</Label>
+					<Alias />
+					<Behavior>Default</Behavior>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+					<DoNotShowInDM>1</DoNotShowInDM>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="UH01000011XD" id="NoID" label="_ItemBestSupplierNumber_report" length="50" name="ItemBestSupplierNumber__" originalProcessID="OWM0000011XD" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ItemBestSupplierNumber__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ItemBestSupplierNumber_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<Editable>true</Editable>
+					<TableName>CT#NOID</TableName>
+					<SortOrder>ASC</SortOrder>
+					<SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+					<DisplayedColumns>Number__|Name__</DisplayedColumns>
+					<DisplayedColumnsIds />
+					<SavedColumn>Number__</SavedColumn>
+					<SavedColumnId />
+					<ExposedColumns />
+					<ProcessName>AP - Vendors__</ProcessName>
+					<KeyColumnId />
+					<KeyAttribute />
+					<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+				</field>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="VG01000011XD" id="NoID" label="_ItemBestUnitPrice_report" length="17" name="ItemBestUnitPrice__" originalProcessID="OWM0000011XD" precision="5" submitable="1" type="DECIMAL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ItemBestUnitPrice__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ItemBestUnitPrice_report</Label>
+					<Alias />
+					<DecimalPrecision vartype="INT">5</DecimalPrecision>
+					<DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="OPR0000011XD" id="NoID" label="_ItemDescription_report" length="32766" name="ItemDescription__" originalProcessID="OWM0000011XD" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ItemDescription__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ItemDescription_report</Label>
+					<Alias />
+					<Behavior>Default</Behavior>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="EPX1000011XD" id="NoID" label="_ItemEstimatedNetAmount_report" length="17" name="ItemEstimatedNetAmount__" originalProcessID="OWM0000011XD" precision="5" submitable="1" type="DECIMAL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ItemEstimatedNetAmount__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ItemEstimatedNetAmount_report</Label>
+					<Alias />
+					<DecimalPrecision vartype="INT">5</DecimalPrecision>
+					<DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<required>false</required>
+				</field>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="JSG100001535" id="NoID" label="_ItemEstimatedUnitPrice_report" length="17" name="ItemEstimatedUnitPrice__" originalProcessID="OWM0000011XD" precision="2" submitable="1" type="DECIMAL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ItemEstimatedUnitPrice__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ItemEstimatedUnitPrice_report</Label>
+					<Alias />
+					<DecimalPrecision vartype="INT">2</DecimalPrecision>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="NPR0000011XD" id="NoID" label="_ItemName_report" length="150" name="ItemName__" originalProcessID="OWM0000011XD" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ItemName__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ItemName_report</Label>
+					<Alias />
+					<Behavior>Default</Behavior>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<required>true</required>
+				</field>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="RPR0000011XD" id="NoID" label="_ItemQuantity_report" length="17" name="ItemQuantity__" originalProcessID="OWM0000011XD" precision="5" submitable="1" type="DECIMAL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ItemQuantity__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ItemQuantity_report</Label>
+					<Alias />
+					<DecimalPrecision vartype="INT">5</DecimalPrecision>
+					<DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<required>false</required>
+				</field>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="QPR0000011XD" id="NoID" label="_ItemRequestedDeliveryDate_report" length="0" name="ItemRequestedDeliveryDate__" originalProcessID="OWM0000011XD" precision="0" submitable="1" type="DATE">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ItemRequestedDeliveryDate__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ItemRequestedDeliveryDate_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<required>true</required>
+				</field>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Date</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="ISX1000011XD" id="NoID" label="_ItemSavings_report" length="17" name="ItemSavings__" originalProcessID="OWM0000011XD" precision="5" submitable="1" type="DECIMAL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ItemSavings__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ItemSavings_report</Label>
+					<Alias />
+					<DecimalPrecision vartype="INT">5</DecimalPrecision>
+					<DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="UKY1000011XD" id="NoID" label="_ItemSupplyTypeFullpath_report" length="500" name="ItemSupplyTypeFullpath__" originalProcessID="OWM0000011XD" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ItemSupplyTypeFullpath__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ItemSupplyTypeFullpath_report</Label>
+					<Alias />
+					<Behavior>Default</Behavior>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="TKY1000011XD" id="NoID" label="_ItemSupplyTypeID_report" length="0" name="ItemSupplyTypeID__" originalProcessID="OWM0000011XD" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ItemSupplyTypeID__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ItemSupplyTypeID_report</Label>
+					<Alias />
+					<Behavior>Default</Behavior>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="PPR0000011XD" id="NoID" label="_ItemSupplyTypeName_report" length="100" name="ItemSupplyTypeName__" originalProcessID="OWM0000011XD" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ItemSupplyTypeName__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ItemSupplyTypeName_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<Editable>false</Editable>
+					<required>true</required>
+					<TableName>CT#NOID</TableName>
+					<SortOrder>ASC</SortOrder>
+					<SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+					<DisplayedColumns>FullName__|Description__</DisplayedColumns>
+					<DisplayedColumnsIds />
+					<SavedColumn>Name__</SavedColumn>
+					<SavedColumnId />
+					<ExposedColumns />
+					<ProcessName>PurchasingSupply__</ProcessName>
+					<KeyColumnId>SupplyID__</KeyColumnId>
+					<KeyAttribute>ItemSupplyTypeID__</KeyAttribute>
+					<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+				</field>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="TH01000011XD" id="NoID" label="_ItemTotalBestUnitPrice_report" length="17" name="ItemTotalBestUnitPrice__" originalProcessID="OWM0000011XD" precision="5" submitable="1" type="DECIMAL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ItemTotalBestUnitPrice__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ItemTotalBestUnitPrice_report</Label>
+					<Alias />
+					<DecimalPrecision vartype="INT">5</DecimalPrecision>
+					<DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="CC81000011XD" id="NoID" label="_ItemType_report" length="50" name="ItemType__" originalProcessID="OWM0000011XD" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ItemType__</fullname>
+					<defaultvalue>QuantityBased</defaultvalue>
+				</db>
+				<extrainfo>
+					<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+					<Label>_ItemType_report</Label>
+					<Alias />
+					<Behavior>Default</Behavior>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<TableName />
+					<DisplayedColumns />
+					<DisplayedColumnsIds />
+					<DataSourceOrigin>Standalone</DataSourceOrigin>
+					<possibleKeys>QuantityBased
+AmountBased</possibleKeys>
+					<SavedColumn />
+					<SavedColumnId />
+					<possibleValues>_QuantityBased
+_AmountBased</possibleValues>
+					<ProcessName />
+					<KeyColumnId />
+					<lazyTranslatable />
+				</field>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="SPR0000011XD" id="NoID" label="_ItemUoM_report" length="50" name="ItemUoM__" originalProcessID="OWM0000011XD" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ItemUoM__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ItemUoM_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<Editable>false</Editable>
+					<TableName>CT#NOID</TableName>
+					<SortOrder>ASC</SortOrder>
+					<SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+					<DisplayedColumns>UnitOfMeasure__|Description__</DisplayedColumns>
+					<DisplayedColumnsIds />
+					<SavedColumn>UnitOfMeasure__</SavedColumn>
+					<SavedColumnId />
+					<ExposedColumns />
+					<ProcessName>P2P - UnitOfMeasure__</ProcessName>
+					<KeyColumnId />
+					<KeyAttribute />
+					<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+				</field>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="BV51000011XD" id="NoID" label="_PRLineItemNumber_report" length="0" name="PRLineItemNumber__" originalProcessID="OWM0000011XD" precision="0" submitable="1" type="INT">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/PRLineItemNumber__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_PRLineItemNumber_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+					<SetNullOnEmptyValue>0</SetNullOnEmptyValue>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+	</datatable>
+	<datatable deleted="0" guid="H7Z100001535" id="NoID" label="_QuestionnaireDesigner" name="QuestionnaireDesigner__" originalProcessID="OWM0000011XD">
+		<properties>
+			<field>
+				<DisableAutolearn>1</DisableAutolearn>
+				<Extractable>0</Extractable>
+			</field>
+			<ui>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+		<field datatableid="" deleted="0" format="" guid="E7E000001535" id="NoID" label="_Answers_report" length="4000" name="Answers__" originalProcessID="OWM0000011XD" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/Answers__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_Answers_report</Label>
+					<Alias />
+					<Behavior>Default</Behavior>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="K7Z100001535" id="NoID" label="_Description" length="32766" name="Description__" originalProcessID="OWM0000011XD" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/Description__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_Description</Label>
+					<Alias />
+					<Behavior>Default</Behavior>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+					<DoNotShowInDM>1</DoNotShowInDM>
+				</extrainfo>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="J7Z100001535" id="NoID" label="_ID" length="0" name="ID__" originalProcessID="OWM0000011XD" precision="0" submitable="1" type="INT">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ID__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ID</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+					<SetNullOnEmptyValue>0</SetNullOnEmptyValue>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="I7Z100001535" id="NoID" label="_Label" length="250" name="Label__" originalProcessID="OWM0000011XD" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/Label__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_Label</Label>
+					<Alias />
+					<Behavior>Default</Behavior>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+					<DoNotShowInDM>1</DoNotShowInDM>
+				</extrainfo>
+				<field>
+					<required>true</required>
+					<lazyTranslatable />
+				</field>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="L7Z100001535" id="NoID" label="_LineType" length="50" name="LineType__" originalProcessID="OWM0000011XD" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/LineType__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_LineType</Label>
+					<Alias />
+					<Behavior>Default</Behavior>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="N7Z100001535" id="NoID" label="_Mandatory" length="0" name="Mandatory__" originalProcessID="OWM0000011XD" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/Mandatory__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+					<Label>_Mandatory</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+					<DoNotShowInDM>1</DoNotShowInDM>
+				</extrainfo>
+				<field>
+					<TableName />
+					<DisplayedColumns />
+					<DisplayedColumnsIds />
+					<DataSourceOrigin>Standalone</DataSourceOrigin>
+					<possibleKeys>None
+Yes
+No</possibleKeys>
+					<SavedColumn />
+					<SavedColumnId />
+					<possibleValues>
+_Yes
+_No</possibleValues>
+					<ProcessName />
+					<KeyColumnId />
+					<lazyTranslatable />
+				</field>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="M7Z100001535" id="NoID" label="_QuestionType" length="50" name="Type__" originalProcessID="OWM0000011XD" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/Type__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+					<Label>_QuestionType</Label>
+					<Alias />
+					<Behavior>Default</Behavior>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+					<DoNotShowInDM>1</DoNotShowInDM>
+				</extrainfo>
+				<field>
+					<required>true</required>
+					<TableName />
+					<DisplayedColumns />
+					<DisplayedColumnsIds />
+					<DataSourceOrigin>Standalone</DataSourceOrigin>
+					<possibleKeys>None
+YesNo
+ShortText
+LongText
+Integer
+DateTime
+ComboBox</possibleKeys>
+					<SavedColumn />
+					<SavedColumnId />
+					<possibleValues>
+_Yes/No
+_One line text
+_Paragraph text
+_Numeric (integer)
+_Date
+_Pick one from list</possibleValues>
+					<ProcessName />
+					<KeyColumnId />
+					<lazyTranslatable />
+				</field>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+	</datatable>
+	<datatable deleted="0" guid="JYR0000011XD" id="NoID" label="_Suppliers_report" name="Suppliers__" originalProcessID="OWM0000011XD">
+		<properties>
+			<field>
+				<DisableAutolearn>1</DisableAutolearn>
+				<Extractable>0</Extractable>
+			</field>
+			<ui>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+		<field datatableid="" deleted="0" format="" guid="E9T0000011XD" id="NoID" label="_CombinedVendor_report" length="500" name="CombinedVendor__" originalProcessID="OWM0000011XD" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/CombinedVendor__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_CombinedVendor_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<Editable>true</Editable>
+					<TableName>CT#NOID</TableName>
+					<SortOrder>ASC</SortOrder>
+					<DisplayedColumns>Name__|Number__|Sub__|Street__|PostOfficeBox__|City__|PostalCode__|Region__|Country__|Currency__</DisplayedColumns>
+					<DisplayedColumnsIds />
+					<SavedColumn>Name__</SavedColumn>
+					<SavedColumnId />
+					<ProcessName>AP - Vendors__</ProcessName>
+					<KeyColumnId />
+					<KeyAttribute />
+					<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+				</field>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="E9S0000011XD" id="NoID" label="_SupplierCity" length="50" name="SupplierCity__" originalProcessID="OWM0000011XD" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/SupplierCity__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_SupplierCity</Label>
+					<Alias />
+					<Behavior>Default</Behavior>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+					<DoNotShowInDM>1</DoNotShowInDM>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="VKU1000011XD" id="NoID" label="_SupplierComment_report" length="32766" name="SupplierComment__" originalProcessID="OWM0000011XD" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/SupplierComment__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_SupplierComment_report</Label>
+					<Alias />
+					<Behavior>Default</Behavior>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="F7S0000011XD" id="NoID" label="_SupplierContactEmailAddress" length="50" name="SupplierContactEmailAddress__" originalProcessID="OWM0000011XD" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/SupplierContactEmailAddress__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_SupplierContactEmailAddress</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<Editable>true</Editable>
+					<required>true</required>
+					<TableName>ODUSER</TableName>
+					<SortOrder />
+					<SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+					<DisplayedColumns>EmailAddress|FirstName|LastName</DisplayedColumns>
+					<SavedColumn>EmailAddress</SavedColumn>
+					<ExposedColumns />
+					<ProcessName />
+					<KeyColumnId />
+					<KeyAttribute />
+					<CustomFilter>(&amp;(CUSTOMER=0)(|(PORTALUSER!=1)(PORTALUSER!=*))(|(ISGROUP=0)(ISGROUP!=*))(TECHNICAL=0)(DESCRIPTION=%[Item:SupplierNumber__]))</CustomFilter>
+				</field>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="ULW0000011XD" id="NoID" label="_SupplierContactLogin_report" length="100" name="SupplierContactLogin__" originalProcessID="OWM0000011XD" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/SupplierContactLogin__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_SupplierContactLogin_report</Label>
+					<Alias />
+					<Behavior>Default</Behavior>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+					<DoNotShowInDM>1</DoNotShowInDM>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="AB51000011XD" id="NoID" label="_SupplierContactName" length="50" name="SupplierContactName__" originalProcessID="OWM0000011XD" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/SupplierContactName__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_SupplierContactName</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<Editable>true</Editable>
+					<required>false</required>
+					<TableName>ODUSER</TableName>
+					<SortOrder />
+					<SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+					<DisplayedColumns>FirstName|LastName|EmailAddress</DisplayedColumns>
+					<SavedColumn>DisplayName</SavedColumn>
+					<ExposedColumns />
+					<ProcessName />
+					<KeyColumnId />
+					<KeyAttribute />
+					<CustomFilter>(&amp;(CUSTOMER=0)(|(PORTALUSER!=1)(PORTALUSER!=*))(|(ISGROUP=0)(ISGROUP!=*))(TECHNICAL=0)(DISPLAYNAME!=)(DESCRIPTION=%[Item:SupplierNumber__]))</CustomFilter>
+				</field>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="CA81000012XD" id="NoID" label="_SupplierConversationID_report" length="50" name="SupplierConversationID__" originalProcessID="OWM0000011XD" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/SupplierConversationID__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_SupplierConversationID_report</Label>
+					<Alias />
+					<Behavior>Default</Behavior>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+					<DoNotShowInDM>1</DoNotShowInDM>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="E7Q0000011XD" id="NoID" label="_SupplierCountry" length="50" name="SupplierCountry__" originalProcessID="OWM0000011XD" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/SupplierCountry__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_SupplierCountry</Label>
+					<Alias />
+					<Behavior>Default</Behavior>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+					<DoNotShowInDM>1</DoNotShowInDM>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="UKU1000011XD" id="NoID" label="_SupplierLastUpdateDateTime_report" length="0" name="SupplierLastUpdateDateTime__" originalProcessID="OWM0000011XD" precision="0" submitable="1" type="DATETIME">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/SupplierLastUpdateDateTime__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_SupplierLastUpdateDateTime_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Date</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="LYR0000011XD" id="NoID" label="_SupplierName" length="50" name="SupplierName__" originalProcessID="OWM0000011XD" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/SupplierName__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_SupplierName</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+					<DoNotShowInDM>1</DoNotShowInDM>
+				</extrainfo>
+				<field>
+					<Editable>false</Editable>
+					<required>false</required>
+					<TableName>CT#NOID</TableName>
+					<SortOrder>ASC</SortOrder>
+					<SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+					<DisplayedColumns>Name__|Number__|Number__.InternalScore__|Street__|PostOfficeBox__|City__|PostalCode__|Region__|Country__|Currency__</DisplayedColumns>
+					<DisplayedColumnsIds />
+					<SavedColumn>Name__</SavedColumn>
+					<SavedColumnId />
+					<ExposedColumns />
+					<ProcessName>AP - Vendors__</ProcessName>
+					<KeyColumnId>Number__</KeyColumnId>
+					<KeyAttribute>SupplierNumber__</KeyAttribute>
+					<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+				</field>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="E7S0000011XD" id="NoID" label="_SupplierNumber" length="50" name="SupplierNumber__" originalProcessID="OWM0000011XD" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/SupplierNumber__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_SupplierNumber</Label>
+					<Alias />
+					<Behavior>Default</Behavior>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+					<DoNotShowInDM>1</DoNotShowInDM>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="CA81000011XD" id="NoID" label="_SupplierResponseRuidEx_report" length="50" name="SupplierResponseRuidEx__" originalProcessID="OWM0000011XD" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/SupplierResponseRuidEx__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_SupplierResponseRuidEx_report</Label>
+					<Alias />
+					<Behavior>Default</Behavior>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+					<DoNotShowInDM>1</DoNotShowInDM>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="KM51000011XD" id="NoID" label="_SupplierScore_report" length="17" name="SupplierScore__" originalProcessID="OWM0000011XD" precision="2" submitable="1" type="DECIMAL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/SupplierScore__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_SupplierScore_report</Label>
+					<Alias />
+					<DecimalPrecision vartype="INT">2</DecimalPrecision>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+					<SetNullOnEmptyValue>1</SetNullOnEmptyValue>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="TKU1000011XD" id="NoID" label="_SupplierStatus_report" length="50" name="SupplierStatus__" originalProcessID="OWM0000011XD" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/SupplierStatus__</fullname>
+					<defaultvalue>Draft</defaultvalue>
+				</db>
+				<extrainfo>
+					<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+					<Label>_SupplierStatus_report</Label>
+					<Alias />
+					<Behavior>Default</Behavior>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<TableName />
+					<DisplayedColumns />
+					<DisplayedColumnsIds />
+					<DataSourceOrigin>Standalone</DataSourceOrigin>
+					<possibleKeys>Draft
+Rejected
+Pending evaluation
+No answer</possibleKeys>
+					<SavedColumn />
+					<SavedColumnId />
+					<possibleValues>_RFQVendor draft
+_RFQVendor Rejected
+_RFQVendor pending evaluation
+_RFQVendor no answer</possibleValues>
+					<ProcessName />
+					<KeyColumnId />
+					<lazyTranslatable />
+				</field>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="E9U0000011XD" id="NoID" label="_VendorRegistration_report" length="60" name="VendorRegistration__" originalProcessID="OWM0000011XD" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/VendorRegistration__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_VendorRegistration_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<Editable>true</Editable>
+					<TableName>CD#NOID</TableName>
+					<SortOrder>ASC</SortOrder>
+					<SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+					<DisplayedColumns>Company__|VendorNumber__|VendorCategory__|Street__|City__|Zip_Code__|Country__|CompanyCode__|ProcessStatus__</DisplayedColumns>
+					<DisplayedColumnsIds />
+					<SavedColumn>Company__</SavedColumn>
+					<SavedColumnId />
+					<ProcessName>Vendor Registration</ProcessName>
+					<KeyColumnId />
+					<KeyAttribute />
+					<CustomFilter>(&amp;(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))(ProcessStatus__!=Approved)(ProcessStatus__!=Rejected)(Company__!=))</CustomFilter>
+				</field>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="E9V0000011XD" id="NoID" label="_VendorRegistrationID_report" length="50" name="VendorRegistrationID__" originalProcessID="OWM0000011XD" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/VendorRegistrationID__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_VendorRegistrationID_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+	</datatable>
+	<type id="NoID" name="CD" />
+	<field deleted="0" format="" guid="R1X000001535" id="NoID" label="_AllowQuestionnaire" length="0" name="AllowQuestionnaire__" originalProcessID="OWM0000011XD" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/AllowQuestionnaire__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_AllowQuestionnaire</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<possibleKeys>0
+1</possibleKeys>
+				<possibleValues>_No
+_Yes</possibleValues>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="XBL200001535" id="NoID" label="_AutomaticRFQSubmit_report" length="0" name="AutomaticRFQSubmit__" originalProcessID="OWM0000011XD" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/AutomaticRFQSubmit__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_AutomaticRFQSubmit_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="I0A2000011XD" id="NoID" label="_Brief" length="32766" name="Brief__" originalProcessID="OWM0000011XD" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Brief__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Brief</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<DoNotShowInDM>1</DoNotShowInDM>
+			</extrainfo>
+			<field>
+				<required>false</required>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="ZWM0000011XD" id="NoID" label="_CompanyCode_report" length="50" name="CompanyCode__" originalProcessID="OWM0000011XD" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CompanyCode__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_CompanyCode_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder />
+				<SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+				<DisplayedColumns>CompanyCode__|CompanyName__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>CompanyCode__</SavedColumn>
+				<SavedColumnId />
+				<ExposedColumns />
+				<ProcessName>PurchasingCompanycodes__</ProcessName>
+				<KeyColumnId />
+				<KeyAttribute />
+				<CustomFilter />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="AXM0000011XD" id="NoID" label="_CompanyName_report" length="50" name="CompanyName__" originalProcessID="OWM0000011XD" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CompanyName__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_CompanyName_report</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="BXM0000011XD" id="NoID" label="_Currency_report" length="50" name="Currency__" originalProcessID="OWM0000011XD" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Currency__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Currency_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder>ASC</SortOrder>
+				<SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+				<DisplayedColumns>CurrencyFrom__|RatioFrom__|RatioTo__|Rate__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>CurrencyFrom__</SavedColumn>
+				<SavedColumnId />
+				<ExposedColumns />
+				<ProcessName>P2P - Exchange rate__</ProcessName>
+				<KeyColumnId />
+				<KeyAttribute />
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="CYM0000011XD" id="NoID" label="_ERP_report" length="50" name="ERP__" originalProcessID="OWM0000011XD" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ERP__</fullname>
+				<defaultvalue>SAP</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_ERP_report</Label>
+				<Alias />
+				<Group>Advance</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<DisplayedColumns />
+				<DataSourceOrigin>Standalone</DataSourceOrigin>
+				<possibleKeys>SAP
+generic
+universal</possibleKeys>
+				<SavedColumn />
+				<possibleValues>_SAP
+_GenericProcurement
+_universal</possibleValues>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="EXM0000011XD" id="NoID" label="_InitialRFQDeadline_report" length="0" name="InitialRFQDeadline__" originalProcessID="OWM0000011XD" precision="0" processid="" submitable="1" type="DATETIME">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/InitialRFQDeadline__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_InitialRFQDeadline_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<required>false</required>
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="LFI5000011XD" id="NoID" label="_IntakeRequestNumber_report" length="50" name="IntakeRequestNumber__" originalProcessID="OWM0000011XD" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/IntakeRequestNumber__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_IntakeRequestNumber_report</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="TS01000011XD" id="NoID" label="_ItemsCount_report" length="0" name="ItemsCount__" originalProcessID="OWM0000011XD" precision="0" processid="" submitable="1" type="INT">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ItemsCount__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ItemsCount_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<SetNullOnEmptyValue>0</SetNullOnEmptyValue>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="CF41000011XD" id="NoID" label="_PRNumber_report" length="50" name="PRNumber__" originalProcessID="OWM0000011XD" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/PRNumber__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_PRNumber_report</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="BF41000011XD" id="NoID" label="_PRRUIDEX_report" length="50" name="PRRUIDEX__" originalProcessID="OWM0000011XD" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/PRRUIDEX__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_PRRUIDEX_report</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="XWM0000011XD" id="NoID" label="_RequesterID_report" length="50" name="RequesterID__" originalProcessID="OWM0000011XD" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/RequesterID__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_RequesterID_report</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="WWM0000011XD" id="NoID" label="_RequesterName_report" length="50" name="RequesterName__" originalProcessID="OWM0000011XD" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/RequesterName__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_RequesterName_report</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="DXM0000011XD" id="NoID" label="_RFQDeadline_report" length="0" name="RFQDeadline__" originalProcessID="OWM0000011XD" precision="0" processid="" submitable="1" type="DATETIME">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/RFQDeadline__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_RFQDeadline_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<required>true</required>
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="YWM0000011XD" id="NoID" label="_RFQDescription_report" length="32766" name="RFQDescription__" originalProcessID="OWM0000011XD" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/RFQDescription__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_RFQDescription_report</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="WEI0000011XD" id="NoID" label="_RFQName_report" length="50" name="RFQName__" originalProcessID="OWM0000011XD" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/RFQName__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_RFQName_report</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<required>true</required>
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="VWM0000011XD" id="NoID" label="_RFQNumber_report" length="50" name="RFQNumber__" originalProcessID="OWM0000011XD" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/RFQNumber__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_RFQNumber_report</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="CXM0000011XD" id="NoID" label="_RFQStatus_report" length="50" name="RFQStatus__" originalProcessID="OWM0000011XD" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/RFQStatus__</fullname>
+				<defaultvalue>Draft</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_RFQStatus_report</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<TableName />
+				<DisplayedColumns />
+				<DisplayedColumnsIds />
+				<DataSourceOrigin>Standalone</DataSourceOrigin>
+				<possibleKeys>Draft
+Pending response
+Canceled
+Closed</possibleKeys>
+				<SavedColumn />
+				<SavedColumnId />
+				<possibleValues>_RFQ draft
+_RFQ pending response
+_RFQ canceled
+_RFQ closed</possibleValues>
+				<ProcessName />
+				<KeyColumnId />
+				<lazyTranslatable />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="K7W1000011XD" id="NoID" label="_RFQSubmissionDateTime_report" length="0" name="RFQSubmissionDateTime__" originalProcessID="OWM0000011XD" precision="0" processid="" submitable="1" type="DATETIME">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/RFQSubmissionDateTime__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_RFQSubmissionDateTime_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="CLL1000011XD" id="NoID" label="_SuppliersWhoDeclined" length="0" name="SuppliersWhoDeclined__" originalProcessID="OWM0000011XD" precision="0" processid="" submitable="1" type="INT">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/SuppliersWhoDeclined__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_SuppliersWhoDeclined</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<SetNullOnEmptyValue>0</SetNullOnEmptyValue>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="BLL1000011XD" id="NoID" label="_SuppliersWhoResponded" length="0" name="SuppliersWhoResponded__" originalProcessID="OWM0000011XD" precision="0" processid="" submitable="1" type="INT">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/SuppliersWhoResponded__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_SuppliersWhoResponded</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<SetNullOnEmptyValue>0</SetNullOnEmptyValue>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="IO3200001535" id="NoID" label="_TechnicalData_report" length="5000" name="TechnicalData__" originalProcessID="OWM0000011XD" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TechnicalData__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TechnicalData_report</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<llmDescription />
+				<llmExtraction>false</llmExtraction>
+				<lazyTranslatable />
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="RND1000011XD" id="NoID" label="_TotalNetAmount" length="17" name="TotalNetAmount__" originalProcessID="OWM0000011XD" precision="5" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TotalNetAmount__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TotalNetAmount</Label>
+				<Alias />
+				<DecimalPrecision vartype="INT">5</DecimalPrecision>
+				<DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="TSX1000011XD" id="NoID" label="_TotalSavings_report" length="17" name="TotalSavings__" originalProcessID="OWM0000011XD" precision="5" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TotalSavings__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TotalSavings_report</Label>
+				<Alias />
+				<DecimalPrecision vartype="INT">5</DecimalPrecision>
+				<DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="ALL1000011XD" id="NoID" label="_TotalSuppliers" length="0" name="TotalSuppliers__" originalProcessID="OWM0000011XD" precision="0" processid="" submitable="1" type="INT">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TotalSuppliers__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TotalSuppliers</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<SetNullOnEmptyValue>0</SetNullOnEmptyValue>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+</process>

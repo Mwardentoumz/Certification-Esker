@@ -1,0 +1,401 @@
+<process accountid="" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:09:41" deleted="0" eskerapplication="P2P" global="0" id="NoID" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="P2P - ProjectSpending__" needvalidation="1" ootofilter="" ootoversion="0" originalProcessID="PAC20230406" ownerid="" ownerpb="" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomTable" upgradable="1" userid="" version="1" visibility="0">
+	<properties>
+		<dataConditions>
+			<listDataConditions>
+				&lt;dataCondition&gt;
+					&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+					&lt;filter&gt;msnex=*&lt;/filter&gt;
+					&lt;labelKey&gt;_Project disabled&lt;/labelKey&gt;
+					&lt;conditions&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableProject__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+					&lt;/conditions&gt;
+				&lt;/dataCondition&gt;
+			</listDataConditions>
+		</dataConditions>
+		<dbIndex>
+			<AUTO_AK5EQT400153EA>&lt;Index&gt;&lt;Ref Name="AK5EQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AK5EQT400153EA>
+		</dbIndex>
+		<lg>
+			<!--*.xml-->
+		</lg>
+		<process>
+			<flowtype>processing</flowtype>
+			<homepagelabel>P2P - ProjectSpending</homepagelabel>
+			<upgradable>yes</upgradable>
+			<instanciable>1</instanciable>
+			<disableScriptModification>true</disableScriptModification>
+			<isTableReadOnly>true</isTableReadOnly>
+			<enableUpgradableDesign>true</enableUpgradableDesign>
+			<OverrideAllowedAttachmentExtensions>*</OverrideAllowedAttachmentExtensions>
+			<displayWidth />
+			<AllowUploadAttachment>0</AllowUploadAttachment>
+			<AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+			<shouldRollbackManualRecordEdits>true</shouldRollbackManualRecordEdits>
+			<shouldShowManualEditsWarning>false</shouldShowManualEditsWarning>
+			<UseCultureFormat>true</UseCultureFormat>
+			<TransportName>CustomTable</TransportName>
+			<LayoutVersion>1.0</LayoutVersion>
+		</process>
+		<ui>
+			<CustomScriptDebug>false</CustomScriptDebug>
+			<customscriptIncludedScripts>Lib_Parameters_P2P_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Spending_Project_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Spending_Budget_Management_Mixin_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers_Array</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[LIB_P2P_CUSTOMIZATION_TABLES_CLIENT]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers</customscriptIncludedScripts>
+			<CustomScriptReadonly>true</CustomScriptReadonly>
+			<CustomScript>
+				<!--customscript.js--></CustomScript>
+			<restorationPanel>DataPanel</restorationPanel>
+			<layout>
+				<!--layout.json--></layout>
+		</ui>
+	</properties>
+	<type id="NoID" name="CT" />
+	<field deleted="0" format="" guid="LFDX132294" id="NoID" label="_Committed_report" length="17" name="Committed__" originalProcessID="PAC20230406" precision="5" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Committed__</fullname>
+				<defaultvalue>0</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_Committed_report</Label>
+				<Alias />
+				<DecimalPrecision vartype="INT">5</DecimalPrecision>
+				<DecimalPrecisionMaxDisplay>2</DecimalPrecisionMaxDisplay>
+				<DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="B22JG0000SG1" id="NoID" label="_CompanyCode_report" length="50" name="CompanyCode__" originalProcessID="PAC20230406" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CompanyCode__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_CompanyCode_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder />
+				<SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+				<DisplayedColumns>CompanyCode__|CompanyName__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>CompanyCode__</SavedColumn>
+				<SavedColumnId />
+				<ExposedColumns />
+				<ProcessName>PurchasingCompanycodes__</ProcessName>
+				<KeyColumnId />
+				<KeyAttribute />
+				<CustomFilter />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="YDMIG0000SG1" id="NoID" label="_ComputedRemaining_report" length="17" name="ComputedRemaining__" originalProcessID="PAC20230406" precision="5" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ComputedRemaining__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ComputedRemaining_report</Label>
+				<Alias />
+				<DecimalPrecision vartype="INT">5</DecimalPrecision>
+				<DecimalPrecisionMaxDisplay>2</DecimalPrecisionMaxDisplay>
+				<DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="MR0IG0000VLT" id="NoID" label="_Currency_report" length="50" name="Currency__" originalProcessID="PAC20230406" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Currency__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Currency_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<TableName>Currencies</TableName>
+				<SortOrder>ASC</SortOrder>
+				<SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+				<DisplayedColumns>Code</DisplayedColumns>
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>Code</SavedColumn>
+				<ExposedColumns />
+				<ProcessName />
+				<KeyColumnId>Code</KeyColumnId>
+				<KeyAttribute>Currency__</KeyAttribute>
+				<CustomFilter />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PHQG1000091" id="NoID" label="_InvoicedNonPo_report" length="17" name="InvoicedNonPO__" originalProcessID="PAC20230406" precision="5" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/InvoicedNonPO__</fullname>
+				<defaultvalue>0</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_InvoicedNonPo_report</Label>
+				<Alias />
+				<DecimalPrecision vartype="INT">5</DecimalPrecision>
+				<DecimalPrecisionMaxDisplay>2</DecimalPrecisionMaxDisplay>
+				<DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PNVR1011847" id="NoID" label="_InvoicedPo_report" length="17" name="InvoicedPO__" originalProcessID="PAC20230406" precision="5" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/InvoicedPO__</fullname>
+				<defaultvalue>0</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_InvoicedPo_report</Label>
+				<Alias />
+				<DecimalPrecision vartype="INT">5</DecimalPrecision>
+				<DecimalPrecisionMaxDisplay>2</DecimalPrecisionMaxDisplay>
+				<DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="AYLN132293" id="NoID" label="_Max_report" length="17" name="Max__" originalProcessID="PAC20230406" precision="5" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Max__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Max_report</Label>
+				<Alias />
+				<behavior>Default, ReportPreselectedForProcess</behavior>
+				<DecimalPrecision vartype="INT">5</DecimalPrecision>
+				<DecimalPrecisionMaxDisplay>2</DecimalPrecisionMaxDisplay>
+				<DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<reportpreselectedorder>3</reportpreselectedorder>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PHQG134808" id="NoID" label="_Ordered_report" length="17" name="Ordered__" originalProcessID="PAC20230406" precision="5" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Ordered__</fullname>
+				<defaultvalue>0</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_Ordered_report</Label>
+				<Alias />
+				<DecimalPrecision vartype="INT">5</DecimalPrecision>
+				<DecimalPrecisionMaxDisplay>2</DecimalPrecisionMaxDisplay>
+				<DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="ADUIG0000SG1" id="NoID" label="_OutOfAmountBehavior" length="50" name="OutOfAmountBehavior__" originalProcessID="PAC20221121" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/OutOfAmountBehavior__</fullname>
+				<defaultvalue>Ignore</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_OutOfAmountBehavior</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<TableName />
+				<DisplayedColumns />
+				<DataSourceOrigin>Standalone</DataSourceOrigin>
+				<possibleKeys>Ignore
+Warn
+Block</possibleKeys>
+				<SavedColumn />
+				<possibleValues>_OutOfAmountBehavior_Ignore
+_OutOfAmountBehavior_Warn
+_OutOfAmountBehavior_Block</possibleValues>
+				<ProcessName />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="H4ZHG0000VLT" id="NoID" label="_ProjectNumber_report" length="50" name="ProjectNumber__" originalProcessID="PAC20230406" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ProjectNumber__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ProjectNumber_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="FIRC132295" id="NoID" label="_ToApprove_report" length="17" name="ToApprove__" originalProcessID="PAC20230406" precision="5" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ToApprove__</fullname>
+				<defaultvalue>0</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_ToApprove_report</Label>
+				<Alias />
+				<DecimalPrecision vartype="INT">5</DecimalPrecision>
+				<DecimalPrecisionMaxDisplay>2</DecimalPrecisionMaxDisplay>
+				<DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+</process>

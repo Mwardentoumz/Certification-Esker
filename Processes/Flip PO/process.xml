@@ -1,0 +1,607 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:07:27" deleted="0" eskerapplication="P2P" global="0" id="Q1BQT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="Flip PO" needvalidation="0" ootofilter="" ootoversion="1" originalProcessID="YBFU00000IYP" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="0" version="1" visibility="1">
+  <properties>
+    <gdr>
+      <FinalizationScriptAllowRetry>
+      </FinalizationScriptAllowRetry>
+      <finalizationscriptIncludedScripts>Sys/Sys_Helpers_CSVReader</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Lib_AP_VendorPortal_V12.0.566.0</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Lib_AP_Mapping_UBL_V12.0.566.0</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Lib_Parameters_P2P_V12.0.566.0</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>[Lib_Custom_Parameters]</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>[Lib_P2P_Custom_Parameters]</finalizationscriptIncludedScripts>
+      <FinalizationScript>"use strict";
+const options = {
+    maxElementsPerRecall: 500
+};
+Process.SetTimeOut(3600);
+const NOT_FINISHED = 0;
+const FINISHED = 1;
+/**
+ * Create the CIData and the CI instance with the CIData attached to the instance
+ *
+ * @param {string} companyCode
+ * @param {string} vendorNumber
+ * @param {string} orderNumber
+ * @param {additionnalData} structure which contains additionnal data
+ */
+function createCIInstance(order, interactive) {
+    const ciData = Lib.AP.VendorPortal.createCIDataFromPO(order.companyCode, order.vendorNumber, order.orderNumber, order.additionnalData);
+    Log.Info("Got CIData: " + JSON.stringify(ciData));
+    if (ciData) {
+        Lib.AP.VendorPortal.CreateCIFromCIData(ciData, interactive);
+    }
+    else {
+        Log.Warn("Cannot find the PO " + order.orderNumber);
+    }
+}
+function generateCIsFromCSV() {
+    const csvHelper = getCSVReader();
+    const poList = [];
+    let lineCount = 0;
+    let line = csvHelper.GetNextLine();
+    while (line !== null) {
+        lineCount++;
+        const lineArray = csvHelper.GetCurrentLineArray();
+        if (!isPOAlreadyHandle(lineArray, poList)) {
+            if (!Lib.AP.VendorPortal.GetOrCreateVendor({ CompanyCode__: lineArray[0], VendorNumber__: lineArray[1] })) {
+                Log.Error("Unable to create the vendor login", lineArray[1], "for the PO", lineArray[2]);
+                line = csvHelper.GetNextLine();
+                continue;
+            }
+            createCIInstance({ companyCode: lineArray[0], vendorNumber: lineArray[1], orderNumber: lineArray[2] }, false);
+            if (lineCount &gt;= options.maxElementsPerRecall) {
+                csvHelper.SerializeCurrentState();
+                return NOT_FINISHED;
+            }
+        }
+        line = csvHelper.GetNextLine();
+    }
+    return FINISHED;
+}
+/**
+ * Reload the current CSVReader from the Variables or create a new one if none exists
+ */
+function getCSVReader() {
+    let csvHelper;
+    if (!Variable.GetValueAsString(Sys.Helpers.CSVReader.GetSerializeIdentifier())) {
+        csvHelper = Sys.Helpers.CSVReader.CreateInstance(0, "V2");
+        csvHelper.ReturnSeparator = "\n";
+        // read first line (Header line) and guess the separator
+        csvHelper.GuessSeparator();
+    }
+    else {
+        csvHelper = Sys.Helpers.CSVReader.ReloadInstance("V2");
+    }
+    return csvHelper;
+}
+/**
+ * Check is a PO was already read from the CSV to avoid duplicate generation of invoice
+ * for the same PO number
+ * @param {string[]} lineArray The CSV line array to check
+ * @param {string[]} postList The list of PO already processed
+ * @return {boolean} True if the PO was already processed, false if not
+ */
+function isPOAlreadyHandle(lineArray, poList) {
+    const poLine = lineArray.map(s =&gt; s.trim()).join("-");
+    if (poList.indexOf(poLine) &gt; -1) {
+        Log.Warn(`PO ${lineArray[2]} found twice in the CSV, skipping`);
+        return true;
+    }
+    poList.push(poLine);
+    return false;
+}
+function generateCIFromExternalVariable() {
+    // If no CSV is provided, check JSON serialize in external variable
+    const jsonOrder = Variable.GetValueAsString(Lib.AP.VendorPortal.FlipPO.VariableOrderToConvert);
+    if (jsonOrder) {
+        try {
+            createCIInstance(JSON.parse(jsonOrder), true);
+        }
+        catch (_a) {
+            Log.Warn(`Unable to extract the order information from OrderToConvert variable: ${jsonOrder}`);
+        }
+    }
+}
+function main() {
+    if (Attach.GetNbAttach() &gt; 0) {
+        if (generateCIsFromCSV() === NOT_FINISHED) {
+            Process.RecallScript("flip_po_in_progress", true);
+        }
+    }
+    else {
+        generateCIFromExternalVariable();
+    }
+}
+main();
+//# sourceMappingURL=finalizationscript.js.map</FinalizationScript>
+      <AllowTagCoverPages>true</AllowTagCoverPages>
+      <AllowTagNewDocuments>true</AllowTagNewDocuments>
+      <AllowTagAttachments>true</AllowTagAttachments>
+      <AllowRemovePages>true</AllowRemovePages>
+      <AllowSwapPages>true</AllowSwapPages>
+    </gdr>
+    <lg>
+      <process_da>{
+	"Flip PO": "Konvertér ordre til faktura"
+}</process_da>
+      <process_DE>{
+	"Flip PO": "Bestellumwandlung in Rechnung"
+}</process_DE>
+      <process_JA>{
+	"Flip PO": "注文を請求書に変換"
+}</process_JA>
+      <process_en>{
+	"Flip PO": "Convert Order to Invoice"
+}</process_en>
+      <process_ES>{
+	"Flip PO": "Conversión de pedido en factura"
+}</process_ES>
+      <process_FR>{
+	"Flip PO": "Conversion de commande en facture"
+}</process_FR>
+      <process_nl-NL>{
+	"Flip PO": "Order omvormen tot factuur"
+}</process_nl-NL>
+      <process_pl>{
+	"Flip PO": "Konwertuj zamówienie na fakturę"
+}</process_pl>
+      <process_IT>{
+	"Flip PO": "Conversione ordine in fattura"
+}</process_IT>
+      <process_sk>{
+	"Flip PO": "Previesť objednávku na faktúru"
+}</process_sk>
+      <process_ZH-CN>{
+	"Flip PO": "从订单生成账单"
+}</process_ZH-CN>
+      <process_pt-BR>{
+	"Flip PO": "Converter pedido em fatura"
+}</process_pt-BR>
+    </lg>
+    <ocr>
+      <trade-off>accurate</trade-off>
+      <image-binarization>no</image-binarization>
+      <image-draft-fax>no</image-draft-fax>
+      <image-despeckle>no</image-despeckle>
+      <allowed-language>0</allowed-language>
+      <image-resolution-enhancement>auto</image-resolution-enhancement>
+      <pdf-processing>no-ocr</pdf-processing>
+      <ocr_engine>Nuance222</ocr_engine>
+      <ocrpagestoprocess>0</ocrpagestoprocess>
+      <extractionAdditionalOptions>
+      </extractionAdditionalOptions>
+    </ocr>
+    <process>
+      <flowtype>processing</flowtype>
+      <ocrpreset>scan</ocrpreset>
+      <homepagelabel>Flip PO</homepagelabel>
+      <enableflexibleauditing>
+      </enableflexibleauditing>
+      <enableflexibleediting>
+      </enableflexibleediting>
+      <enableflexibleteaching>
+      </enableflexibleteaching>
+      <disableocr>
+      </disableocr>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <disableautolearning>true</disableautolearning>
+      <backgroundprocessingthreshold>
+      </backgroundprocessingthreshold>
+      <EnablePreviewPrecomputation>
+      </EnablePreviewPrecomputation>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <enablerounddecimal>true</enablerounddecimal>
+      <pdfNormalizeFilter>
+      </pdfNormalizeFilter>
+      <archiveDuration>0</archiveDuration>
+      <OverrideAllowedDocumentExtensions>CSV</OverrideAllowedDocumentExtensions>
+      <ownhomepage>
+      </ownhomepage>
+      <ocrpagestoprocess>0</ocrpagestoprocess>
+      <ScriptEngineType>2</ScriptEngineType>
+      <UseActionNameWithScriptApproval>true</UseActionNameWithScriptApproval>
+      <displayWidth>1024</displayWidth>
+      <AllowUploadAttachment>1</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>1</AllowUploadReferenceDocument>
+      <UseCultureFormat>true</UseCultureFormat>
+      <AllowRetryExtractCD>true</AllowRetryExtractCD>
+      <TransportName>CustomData</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+      <printToProcess>
+      </printToProcess>
+    </process>
+    <ui>
+      <restorationPanel>DataPanel</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 30,
+	"*": {
+		"GDRData": {
+			"type": "GDRData",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"version": 0
+			}
+		},
+		"OCRParams": {
+			"type": "OCRParams",
+			"data": [],
+			"stamp": 2,
+			"options": {
+				"version": 0
+			}
+		},
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 3,
+			"options": {
+				"splitterType": "complex",
+				"maxwidth": 1024,
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 4,
+					"options": {
+						"maxwidth": 1024,
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 5,
+					"options": {
+						"maxwidth": 1024,
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 6,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-top": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 7,
+									"options": {
+										"autosize": true,
+										"version": 1,
+										"box": {
+											"top": 0,
+											"left": 0,
+											"width": 100,
+											"height": 17
+										},
+										"hidden": false
+									},
+									"*": {
+										"form-content-top-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 8,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"DocumentsPanel": {
+													"type": "PanelDocument",
+													"data": [],
+													"stamp": 9,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": false,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"label": "_Documents",
+														"version": 0
+													},
+													"*": {
+														"Document": {
+															"type": "Documents",
+															"data": [
+																"documentscontroldata"
+															],
+															"stamp": 10,
+															"options": {
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								},
+								"form-content-bottom": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 11,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": 17,
+											"left": 0,
+											"width": 100,
+											"height": 83
+										},
+										"hidden": false
+									},
+									"*": {
+										"form-content-left": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 12,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": 0,
+													"left": 0,
+													"width": 100,
+													"height": 99
+												},
+												"hidden": false
+											},
+											"*": {
+												"form-content-left-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 13,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"DataPanel": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 14,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_Document data",
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 15,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 16,
+																			"options": {
+																				"version": 0,
+																				"lines": 0,
+																				"columns": 2,
+																				"ctrlsPos": {},
+																				"colspans": []
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-2": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 17,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"SystemData": {
+															"type": "PanelSystemData",
+															"data": [],
+															"stamp": 18,
+															"options": {
+																"multicolumn": false,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"label": "_System data",
+																"version": 0
+															}
+														}
+													}
+												},
+												"form-content-left-3": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 19,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"NextProcess": {
+															"type": "PanelNextProcess",
+															"data": [],
+															"stamp": 20,
+															"options": {
+																"hidden": true,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"label": "_Next Process",
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-right": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 21,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": 0,
+													"left": 45,
+													"width": 55,
+													"height": 99
+												},
+												"hidden": true,
+												"hideSeparator": true
+											},
+											"*": {
+												"form-content-right-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 22,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"PreviewPanel": {
+															"type": "PanelPreview",
+															"data": [],
+															"stamp": 23,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"label": "_Document Preview",
+																"version": 0
+															},
+															"*": {
+																"Preview": {
+																	"type": "Preview",
+																	"data": [
+																		"previewdata"
+																	],
+																	"stamp": 24,
+																	"options": {
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 25,
+					"options": {
+						"splitterType": "simple-h",
+						"maxwidth": 1024,
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 26,
+							"options": {
+								"label": "_Save",
+								"action": "save",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Approve": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 27,
+							"options": {
+								"label": "_Approve",
+								"action": "approve",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Reject": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 28,
+							"options": {
+								"label": "_Reject",
+								"action": "reject",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Reprocess": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 29,
+							"options": {
+								"label": "_Reprocess",
+								"action": "reprocess",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 30,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <type id="GOLHG0000M4O" name="CD">
+  </type>
+</process>

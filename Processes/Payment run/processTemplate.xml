@@ -1,0 +1,2190 @@
+<process accountid="" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:10:36" deleted="0" eskerapplication="P2P" global="0" id="NoID" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="Payment run" needvalidation="0" ootofilter="" ootoversion="2" originalProcessID="IWTG135131" ownerid="" ownerpb="" public="1" pushnotification="1" reuseengine="1" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="" version="1" visibility="0">
+	<properties>
+		<dbIndex>
+			<AUTO_AADFQT400153EA>&lt;Index&gt;&lt;Ref Name="AADFQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AADFQT400153EA>
+			<AUTO_ABDFQT400153EA>&lt;Index&gt;&lt;Ref Name="ABDFQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_ABDFQT400153EA>
+			<AUTO_AGDFQT400153EA>&lt;Index&gt;&lt;Ref Name="AGDFQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AGDFQT400153EA>
+			<AUTO_AHDFQT400153EA>&lt;Index&gt;&lt;Ref Name="AHDFQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AHDFQT400153EA>
+			<AUTO_ALCFQT400153EA>&lt;Index&gt;&lt;Ref Name="ALCFQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_ALCFQT400153EA>
+			<AUTO_APCFQT400153EA>&lt;Index&gt;&lt;Ref Name="APCFQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_APCFQT400153EA>
+			<AUTO_AQCFQT400153EA>&lt;Index&gt;&lt;Ref Name="AQCFQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AQCFQT400153EA>
+			<AUTO_ASCFQT400153EA>&lt;Index&gt;&lt;Ref Name="ASCFQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_ASCFQT400153EA>
+			<AUTO_ATCFQT400153EA>&lt;Index&gt;&lt;Ref Name="ATCFQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_ATCFQT400153EA>
+		</dbIndex>
+		<externalvariables>
+			<EnableSRO>1</EnableSRO>
+			<EnablePaymentOutput>1</EnablePaymentOutput>
+			<ApplicationType>PaymentRun</ApplicationType>
+			<Configuration>Default</Configuration>
+			<SFTPConfigurationName>SFTP2</SFTPConfigurationName>
+			<FTPFolderName>Out_PaidInvoices</FTPFolderName>
+			<FTPAccountName>Invoices</FTPAccountName>
+			<ProcessName>Vendor invoice</ProcessName>
+			<CurrentNumberOfRetries>0</CurrentNumberOfRetries>
+		</externalvariables>
+		<gdr>
+			<FinalizationScriptAllowRetry />
+			<finalizationscriptIncludedScripts>Sys/Sys_Parameters</finalizationscriptIncludedScripts>
+			<finalizationscriptIncludedScripts>Lib_V12.0.566.0</finalizationscriptIncludedScripts>
+			<finalizationscriptIncludedScripts>Lib_Parameters_P2P_V12.0.566.0</finalizationscriptIncludedScripts>
+			<finalizationscriptIncludedScripts>Lib_AP_PaymentRun_Server_V12.0.566.0</finalizationscriptIncludedScripts>
+			<finalizationscriptIncludedScripts>Lib_AP_V12.0.566.0</finalizationscriptIncludedScripts>
+			<finalizationscriptIncludedScripts>Lib_AP_PaymentRunProvider_NvoicePay_V12.0.566.0</finalizationscriptIncludedScripts>
+			<FinalizationScript>
+				<!--finalizationscript.js--></FinalizationScript>
+			<ValidationScriptAllowRetry />
+			<validationscriptIncludedScripts>[Log_V12.0.566.0]</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Sys/Sys_EmailNotification</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Sys/Sys_GenericAPI_Server</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Sys/Sys_Helpers</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Sys/Sys_Helpers_Array</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Sys/Sys_Helpers_Cache</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Sys/Sys_Helpers_Date</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Sys/Sys_Helpers_String</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Sys/Sys_OnDemand_Users</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Sys/Sys_Parameters</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Sys/Sys_WorkflowController</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Sys/Sys_WorkflowEngine</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_AP_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Parameters_P2P_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_AP_PaymentRun_Server_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_AP_PaymentRun_Exporter_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_AP_Comment_Helper_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_AP_PaymentRunProvider_NvoicePay_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_AP_VendorInvoice_WorkflowTimeParser_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>[LIB_AP_CUSTOMIZATION_PAYMENTRUN_VALIDATION]</validationscriptIncludedScripts>
+			<ValidationScript>
+				<!--validationscript.js--></ValidationScript>
+			<AllowTagCoverPages>true</AllowTagCoverPages>
+			<AllowTagNewDocuments>true</AllowTagNewDocuments>
+			<AllowTagAttachments>true</AllowTagAttachments>
+			<ExtractionScriptAllowRetry>true</ExtractionScriptAllowRetry>
+			<ExtractionScript>
+				<!--extractionscript.js--></ExtractionScript>
+			<ExtractionScriptRunOnOCRFailed>true</ExtractionScriptRunOnOCRFailed>
+			<AllowRemovePages>true</AllowRemovePages>
+			<AllowSwapPages>true</AllowSwapPages>
+			<PostProcessingScriptAllowRetry />
+			<PostProcessingScript>
+				<!--postprocessingscript.js--></PostProcessingScript>
+		</gdr>
+		<lg>
+			<!--*.xml-->
+		</lg>
+		<ocr>
+			<trade-off>accurate</trade-off>
+			<image-ocr-timeout />
+			<image-binarization>no</image-binarization>
+			<image-draft-fax>no</image-draft-fax>
+			<image-despeckle>no</image-despeckle>
+			<allowed-language>0</allowed-language>
+			<image-resolution-enhancement>auto</image-resolution-enhancement>
+			<pdf-processing>ocr-pdf-text-and-image</pdf-processing>
+			<ocr-tolerant-word-separation>yes</ocr-tolerant-word-separation>
+			<ocr_engine>Nuance222</ocr_engine>
+			<ocrpagestoprocess>0</ocrpagestoprocess>
+			<extractionAdditionalOptions>lineTolerance=3</extractionAdditionalOptions>
+		</ocr>
+		<openInProcess>
+			<startWithoutProcessing>true</startWithoutProcessing>
+		</openInProcess>
+		<process>
+			<flowtype>processing</flowtype>
+			<ocrpreset>custom</ocrpreset>
+			<cacheableprocess>AP - Bank details__</cacheableprocess>
+			<cacheableprocess>AP - Vendors__</cacheableprocess>
+			<cacheableprocess>P2P - Exchange rate__</cacheableprocess>
+			<cacheableprocess>P2P - User properties__</cacheableprocess>
+			<EnablePrecomputedPngPreview>0</EnablePrecomputedPngPreview>
+			<EnablePrecomputedPngPreviewForAttachments>0</EnablePrecomputedPngPreviewForAttachments>
+			<alconfidencelevel>0</alconfidencelevel>
+			<homepagelabel>Payment run</homepagelabel>
+			<enableflexibleauditing>true</enableflexibleauditing>
+			<enableflexibleediting>true</enableflexibleediting>
+			<enableflexibleteaching />
+			<enableflexiblewalkme />
+			<disableocr>no</disableocr>
+			<instanciable>1</instanciable>
+			<disableScriptModification>true</disableScriptModification>
+			<ocrconfidencelevel>0</ocrconfidencelevel>
+			<disableautolearning>true</disableautolearning>
+			<backgroundprocessingthreshold>15</backgroundprocessingthreshold>
+			<EnablePreviewPrecomputation />
+			<enableUpgradableDesign>true</enableUpgradableDesign>
+			<enablerounddecimal>true</enablerounddecimal>
+			<pdfNormalizeFilter />
+			<archiveDuration>0</archiveDuration>
+			<OverrideAllowedDocumentExtensions>CSV,TXT,PDF,TIFF,TIF,XLSX,DOCX,XLS,DOC</OverrideAllowedDocumentExtensions>
+			<FailoverOnConversionError>true</FailoverOnConversionError>
+			<ocrpagestoprocess>10</ocrpagestoprocess>
+			<ScriptEngineType>2</ScriptEngineType>
+			<displayWidth>1400</displayWidth>
+			<AllowUploadAttachment>0</AllowUploadAttachment>
+			<AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+			<ByPassComputedForSmartColumn />
+			<UseCultureFormat>true</UseCultureFormat>
+			<AllowRetryExtractCD>true</AllowRetryExtractCD>
+			<TransportName>CustomData</TransportName>
+			<LayoutVersion>1.0</LayoutVersion>
+			<StatusOnExtractCDLastTry>70</StatusOnExtractCDLastTry>
+			<printToProcess />
+		</process>
+		<ui>
+			<CustomScriptDebug>false</CustomScriptDebug>
+			<customscriptIncludedScripts>[Log_V12.0.566.0]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_GenericAPI_Client</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers_Array</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers_Cache</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers_Date</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers_String</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers_Object</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_OnDemand_Users</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Parameters</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_WorkflowController</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_WorkflowEngine</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers_LdapUtil</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers_SAP_Client</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_AP_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_P2P_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Parameters_P2P_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[LIB_AP_CUSTOMIZATION_PAYMENTRUN_HTMLSCRIPTS]</customscriptIncludedScripts>
+			<CustomScriptReadonly>true</CustomScriptReadonly>
+			<CustomScript>
+				<!--customscript.js--></CustomScript>
+			<restorationPanel>HeaderPanel</restorationPanel>
+			<layout>
+				<!--layout.json--></layout>
+		</ui>
+	</properties>
+	<datatable deleted="0" guid="PHQG19E176D" id="NoID" label="_GroupedLineItems" name="GroupedLineItems__" originalProcessID="IWTG135131">
+		<properties>
+			<field>
+				<DisableAutolearn>1</DisableAutolearn>
+			</field>
+			<ui>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+		<field datatableid="" deleted="0" format="" guid="HUME19E176E" id="NoID" label="_CompanyCode" length="50" name="CompanyCode__" originalProcessID="IWTG135131" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/CompanyCode__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_CompanyCode</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="LL8IG0000SG1" id="NoID" label="_EstimatedDiscountAmount" length="17" name="EstimatedDiscountAmount__" originalProcessID="IWTG135131" precision="2" submitable="1" type="DECIMAL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/EstimatedDiscountAmount__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_EstimatedDiscountAmount</Label>
+					<Alias />
+					<DecimalPrecision vartype="INT">2</DecimalPrecision>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="AWJQ19E1778" id="NoID" label="_Amount" length="17" name="InvoiceAmount__" originalProcessID="IWTG135131" precision="2" submitable="1" type="DECIMAL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/InvoiceAmount__</fullname>
+					<defaultvalue>0</defaultvalue>
+				</db>
+				<extrainfo>
+					<Label>_Amount</Label>
+					<Alias />
+					<DecimalPrecision vartype="INT">2</DecimalPrecision>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="HUME1A0BFC4" id="NoID" label="_InvoiceCount" length="0" name="InvoiceCount__" originalProcessID="IWTG135131" precision="0" submitable="1" type="INT">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/InvoiceCount__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_InvoiceCount</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="PHQG1EE1CFC" id="NoID" label="_Invoice currencies" length="155" name="InvoiceCurrencies__" originalProcessID="IWTG135131" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/InvoiceCurrencies__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_Invoice currencies</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+					<DoNotShowInDM>1</DoNotShowInDM>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="CFBP19E1772" id="NoID" label="_InvoiceCurrency" length="3" name="InvoiceCurrency__" originalProcessID="IWTG135131" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/InvoiceCurrency__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_InvoiceCurrency</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="LOOB19E1779" id="NoID" label="_Line number" length="0" name="LineNumber__" originalProcessID="IWTG135131" precision="0" submitable="1" type="INT">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/LineNumber__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_Line number</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="PHQG1ECBBEF" id="NoID" label="_Vendor email" length="155" name="VendorContactEmail__" originalProcessID="IWTG135131" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/VendorContactEmail__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_Vendor email</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<Editable>true</Editable>
+					<TableName>CT#NOID</TableName>
+					<SortOrder>ASC</SortOrder>
+					<DisplayedColumns>Email__</DisplayedColumns>
+					<DisplayedColumnsIds />
+					<SavedColumn>Email__</SavedColumn>
+					<SavedColumnId />
+					<ExposedColumns />
+					<ProcessName>AP - Vendors__</ProcessName>
+					<KeyColumnId>Email__</KeyColumnId>
+					<KeyAttribute />
+					<CustomFilter>(&amp;(CompanyCode__=%[CompanyCode__])(Number__=%[VendorNumber__]))</CustomFilter>
+				</field>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="HUME19E1770" id="NoID" label="_VendorName" length="50" name="VendorName__" originalProcessID="IWTG135131" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/VendorName__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_VendorName</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="PHQG19E176F" id="NoID" label="_VendorNumber" length="50" name="VendorNumber__" originalProcessID="IWTG135131" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/VendorNumber__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_VendorNumber</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+	</datatable>
+	<datatable deleted="0" guid="PHQG18C909A" id="NoID" label="_LineItems" name="LineItems__" originalProcessID="IWTG135131">
+		<properties>
+			<field>
+				<DisableAutolearn>1</DisableAutolearn>
+			</field>
+			<ui>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+		<field datatableid="" deleted="0" format="" guid="ZUBH18C90BE" id="NoID" label="_CompanyCode" length="50" name="CompanyCode__" originalProcessID="IWTG135131" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/CompanyCode__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_CompanyCode</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="CNMIG0000SG1" id="NoID" label="_DiscountLimitDate" length="0" name="DiscountLimitDate__" originalProcessID="IWTG135131" precision="0" submitable="1" type="DATE">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/DiscountLimitDate__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_DiscountLimitDate</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>Date</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="PHQG18C90BB" id="NoID" label="_DueDate" length="0" name="DueDate__" originalProcessID="IWTG135131" precision="0" submitable="1" type="DATE">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/DueDate__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_DueDate</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>Date</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="STSB18C90BF" id="NoID" label="_ERPInvoiceNumber" length="50" name="ERPInvoiceNumber__" originalProcessID="IWTG135131" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ERPInvoiceNumber__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ERPInvoiceNumber</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="DNMIG0000SG1" id="NoID" label="_EstimatedDiscountAmount" length="17" name="EstimatedDiscountAmount__" originalProcessID="IWTG135131" precision="2" submitable="1" type="DECIMAL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/EstimatedDiscountAmount__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_EstimatedDiscountAmount</Label>
+					<Alias />
+					<DecimalPrecision vartype="INT">2</DecimalPrecision>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="PHQG1EDC221" id="NoID" label="_Exchange rate" length="17" name="ExchangeRate__" originalProcessID="IWTG135131" precision="6" submitable="1" type="DECIMAL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ExchangeRate__</fullname>
+					<defaultvalue>1</defaultvalue>
+				</db>
+				<extrainfo>
+					<Label>_Exchange rate</Label>
+					<Alias />
+					<DecimalPrecision vartype="INT">6</DecimalPrecision>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="HUME18C90B7" id="NoID" label="_InvoiceAmount" length="17" name="InvoiceAmount__" originalProcessID="IWTG135131" precision="2" submitable="1" type="DECIMAL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/InvoiceAmount__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_InvoiceAmount</Label>
+					<Alias />
+					<DecimalPrecision vartype="INT">2</DecimalPrecision>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="AYLN18C90B8" id="NoID" label="_InvoiceCurrency" length="3" name="InvoiceCurrency__" originalProcessID="IWTG135131" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/InvoiceCurrency__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_InvoiceCurrency</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="LFDX18C90B9" id="NoID" label="_InvoiceDate" length="0" name="InvoiceDate__" originalProcessID="IWTG135131" precision="0" submitable="1" type="DATE">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/InvoiceDate__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_InvoiceDate</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>Date</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="HUME18C909F" id="NoID" label="_Invoice number" length="25" name="InvoiceNumber__" originalProcessID="IWTG135131" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/InvoiceNumber__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_Invoice number</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="GTFJG0000PA9" id="NoID" label="_InvoiceStatus" length="50" name="InvoiceStatus__" originalProcessID="IWTG135131" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/InvoiceStatus__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+					<Label>_InvoiceStatus</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<required>false</required>
+					<teachable>false</teachable>
+					<TableName />
+					<DisplayedColumns />
+					<DataSourceOrigin>Standalone</DataSourceOrigin>
+					<possibleKeys>To pay
+Paid
+RejectedByProvider
+Payment being processed by provider</possibleKeys>
+					<SavedColumn />
+					<possibleValues>To pay
+Paid
+RejectedByProvider
+Payment being processed by provider</possibleValues>
+					<ProcessName />
+				</field>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="NURP19B9132" id="NoID" label="_Line number" length="0" name="LineNumber__" originalProcessID="IWTG135131" precision="0" submitable="1" type="INT">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/LineNumber__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_Line number</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="HUME1EDC222" id="NoID" label="_Local currency" length="3" name="LocalCurrency__" originalProcessID="IWTG135131" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/LocalCurrency__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_Local currency</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="DNMIG0000SG2" id="NoID" label="_Local Estimated Discount Amount" length="17" name="LocalEstimatedDiscountAmount__" originalProcessID="IWTG135131" precision="2" submitable="1" type="DECIMAL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/LocalEstimatedDiscountAmount__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_Local Estimated Discount Amount</Label>
+					<Alias />
+					<DecimalPrecision vartype="INT">2</DecimalPrecision>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="AYLN1EDC223" id="NoID" label="_Invoice amount (local)" length="17" name="LocalInvoiceAmount__" originalProcessID="IWTG135131" precision="2" submitable="1" type="DECIMAL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/LocalInvoiceAmount__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_Invoice amount (local)</Label>
+					<Alias />
+					<DecimalPrecision vartype="INT">2</DecimalPrecision>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="QDDE18C90BC" id="NoID" label="_NetAmount" length="17" name="NetAmount__" originalProcessID="IWTG135131" precision="2" submitable="1" type="DECIMAL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/NetAmount__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_NetAmount</Label>
+					<Alias />
+					<DecimalPrecision vartype="INT">2</DecimalPrecision>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="LCHL77100PA9" id="NoID" label="_Order number" length="164" name="OrderNumber__" originalProcessID="IWTG135131" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/OrderNumber__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_Order number</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="HUME19EEF76" id="NoID" label="_PortalRuidEx" length="50" name="PortalRuidEx__" originalProcessID="IWTG135131" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/PortalRuidEx__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_PortalRuidEx</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+					<DoNotShowInDM>1</DoNotShowInDM>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="EDDD18C90C0" id="NoID" label="_PostingDate" length="0" name="PostingDate__" originalProcessID="IWTG135131" precision="0" submitable="1" type="DATE">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/PostingDate__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_PostingDate</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>Date</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="PHQG18C909E" id="NoID" label="_Reject line" length="0" name="Rejected__" originalProcessID="IWTG135131" precision="0" submitable="1" type="BOOL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/Rejected__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_Reject line</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Boolean</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="HUME18C909B" id="NoID" label="_RuidEx" length="80" name="RuidEx__" originalProcessID="IWTG135131" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/RuidEx__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_RuidEx</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+					<DoNotShowInDM>1</DoNotShowInDM>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="VKGF18C90BD" id="NoID" label="_TaxAmount" length="17" name="TaxAmount__" originalProcessID="IWTG135131" precision="2" submitable="1" type="DECIMAL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/TaxAmount__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_TaxAmount</Label>
+					<Alias />
+					<DecimalPrecision vartype="INT">2</DecimalPrecision>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="PHQG18C90CB" id="NoID" label="_ValidationURL" length="300" name="ValidationURL__" originalProcessID="IWTG135131" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ValidationURL__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ValidationURL</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+					<DoNotShowInDM>1</DoNotShowInDM>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="ZVSR1B566D6" id="NoID" label="_Vendor email" length="155" name="VendorContactEmail__" originalProcessID="IWTG135131" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/VendorContactEmail__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_Vendor email</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="FIRC18C90BA" id="NoID" label="_VendorName" length="50" name="VendorName__" originalProcessID="IWTG135131" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/VendorName__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_VendorName</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="PHQG198E866" id="NoID" label="_VendorNumber" length="50" name="VendorNumber__" originalProcessID="IWTG135131" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/VendorNumber__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_VendorNumber</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+	</datatable>
+	<datatable deleted="0" guid="LUWR135138" id="NoID" label="Table" name="Workflow__" originalProcessID="IWTG135131">
+		<properties>
+			<field>
+				<DisableAutolearn>1</DisableAutolearn>
+			</field>
+			<ui>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+		<field datatableid="" deleted="0" format="" guid="LVHW135136" id="NoID" label="_WRKFAction_report" length="50" name="Action__" originalProcessID="IWTG135131" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/Action__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_WRKFAction_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="XLDGH0000M4O" id="NoID" label="_Actual approver login" length="255" name="ActualApproverLogin__" originalProcessID="IWTG135131" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ActualApproverLogin__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_Actual approver login</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="YLDGH0000M4O" id="NoID" label="_Actual approver name" length="100" name="ActualApproverName__" originalProcessID="IWTG135131" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ActualApproverName__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_Actual approver name</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="HUMEDAB541" id="NoID" label="_Approved" length="0" name="Approved__" originalProcessID="IWTG135131" precision="0" submitable="1" type="BOOL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/Approved__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_Approved</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>Boolean</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="HUMEE9A2F8" id="NoID" label="_WRKFComment" length="32766" name="Comment__" originalProcessID="IWTG135131" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/Comment__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_WRKFComment</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="QEZV9CDAA0" id="NoID" label="_WRKFDate_report" length="0" name="Date__" originalProcessID="IWTG135131" precision="0" submitable="1" type="DATETIME">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/Date__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_WRKFDate_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>Date</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="AYLNDAB542" id="NoID" label="_Email" length="255" name="Email__" originalProcessID="IWTG135131" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/Email__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_Email</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="PHQGDAB540" id="NoID" label="_Approver ID" length="155" name="ID__" originalProcessID="IWTG135131" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ID__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_Approver ID</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="PHQGDCFEB8" id="NoID" label="_WRKFIsGroup_report" length="1" name="IsGroup__" originalProcessID="IWTG135131" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/IsGroup__</fullname>
+					<defaultvalue>0</defaultvalue>
+				</db>
+				<extrainfo>
+					<Label>_WRKFIsGroup_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="FMSI135132" id="NoID" label="_" length="0" name="Marker__" originalProcessID="IWTG135131" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/Marker__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+					<DoNotShowInDM>1</DoNotShowInDM>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+				</gdr>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="MISN135134" id="NoID" label="_WRKFRole_report" length="50" name="Role__" originalProcessID="IWTG135131" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/Role__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_WRKFRole_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="REFQ135133" id="NoID" label="_WRKFUserName_report" length="50" name="User__" originalProcessID="IWTG135131" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/User__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_WRKFUserName_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="HGGD135137" id="NoID" label="_WRKFIndex_report" length="3" name="Workflow_index__" originalProcessID="IWTG135131" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/Workflow_index__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_WRKFIndex_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+	</datatable>
+	<type id="NoID" name="CD" />
+	<field deleted="0" format="" guid="HUMEDA75CA" id="NoID" label="_BackToAPReason" length="50" name="BackToFirstReason__" originalProcessID="IWTG135131" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/BackToFirstReason__</fullname>
+				<defaultvalue>-- none --</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_BackToAPReason</Label>
+				<Alias />
+				<Group>Workflow</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<DisplayedColumns />
+				<DataSourceOrigin>Standalone</DataSourceOrigin>
+				<possibleKeys>-- none --
+Invalid data
+Wrong workflow
+Other reason</possibleKeys>
+				<SavedColumn />
+				<possibleValues>
+Invalid data
+Wrong workflow
+Other reason</possibleValues>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="U7WIH0000M4O" id="NoID" label="_Comments report" length="32766" name="Comments__" originalProcessID="IWTG135131" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Comments__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Comments report</Label>
+				<Alias />
+				<Group>Workflow</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="QAEB19A3AEE" id="NoID" label="_Currency" length="3" name="Currency__" originalProcessID="IWTG135131" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Currency__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Currency</Label>
+				<Alias />
+				<Group>Payment_Run_Details</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PHQGD85921" id="NoID" label="_Disabled mobile actions" length="255" name="DisableMobileActions__" originalProcessID="IWTG135131" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/DisableMobileActions__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Disabled mobile actions</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<DoNotShowInDM>1</DoNotShowInDM>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="XMPO13670C6" id="NoID" label="_Document date" length="0" name="DocumentDate__" originalProcessID="IWTG135131" precision="0" processid="" submitable="1" type="DATE">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/DocumentDate__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Document date</Label>
+				<Alias />
+				<Group>Payment_Run_Details</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PHQGDA75DB" id="NoID" label="_Document number report" length="50" name="DocumentNumber__" originalProcessID="IWTG135131" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/DocumentNumber__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Document number report</Label>
+				<Alias />
+				<Group>Payment_Run_Details</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<DoNotShowInDM>1</DoNotShowInDM>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PHQG1A46724" id="NoID" label="_Add invoice" length="50" name="DocumentSearch__" originalProcessID="IWTG135131" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/DocumentSearch__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Add invoice</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<DoNotShowInDM>1</DoNotShowInDM>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<TableName>CD#NOID</TableName>
+				<SortOrder>ASC</SortOrder>
+				<DisplayedColumns>InvoiceNumber__|VendorNumber__|VendorName__|InvoiceDate__|PostingDate__|DueDate__|InvoiceAmount__|NetAmount__|TaxAmount__|InvoiceCurrency__|DiscountLimitDate__|EstimatedDiscountAmount__|CompanyCode__|ERPInvoiceNumber__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>InvoiceNumber__</SavedColumn>
+				<SavedColumnId />
+				<ExposedColumns />
+				<ProcessName>Vendor invoice</ProcessName>
+				<KeyColumnId />
+				<KeyAttribute />
+				<CustomFilter />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="MEUTDCAF35" id="NoID" label="_Last validator name report" length="155" name="LastValidatorName__" originalProcessID="IWTG135131" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/LastValidatorName__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Last validator name report</Label>
+				<Alias />
+				<Group>Workflow</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PHQGD8593B" id="NoID" label="_Last validator user ID report" length="155" name="LastValidatorUserID__" originalProcessID="IWTG135131" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/LastValidatorUserID__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Last validator user ID report</Label>
+				<Alias />
+				<Group>Workflow</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="S8RFH0000M4O" id="NoID" label="_Nb approved invoices" length="0" name="NbApprovedInvoices__" originalProcessID="IWTG135131" precision="0" processid="" submitable="1" type="INT">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/NbApprovedInvoices__</fullname>
+				<defaultvalue>0</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_Nb approved invoices</Label>
+				<Alias />
+				<Group>Processing_Data</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<DoNotShowInDM>1</DoNotShowInDM>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="Y3FGH0000M4O" id="NoID" label="_Nb invoices" length="0" name="NbInvoices__" originalProcessID="IWTG135131" precision="0" processid="" submitable="1" type="INT">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/NbInvoices__</fullname>
+				<defaultvalue>0</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_Nb invoices</Label>
+				<Alias />
+				<Group>Payment_Run_Details</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="Z3FGH0000M4O" id="NoID" label="_Nb payments" length="0" name="NbPayments__" originalProcessID="IWTG135131" precision="0" processid="" submitable="1" type="INT">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/NbPayments__</fullname>
+				<defaultvalue>0</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_Nb payments</Label>
+				<Alias />
+				<Group>Payment_Run_Details</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="LLYX00000PA9" id="NoID" label="_PaymentRunDate" length="0" name="PaymentRunDate__" originalProcessID="IWTG135131" precision="0" processid="" submitable="1" type="DATE">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/PaymentRunDate__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_PaymentRunDate</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="JZOZ00000PA9" id="NoID" label="_PaymentRunDateDisplay" length="50" name="PaymentRunDateDisplay__" originalProcessID="IWTG135131" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/PaymentRunDateDisplay__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_PaymentRunDateDisplay</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="KLYX00000PA9" id="NoID" label="_PaymentRunId" length="50" name="PaymentRunId__" originalProcessID="IWTG135131" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/PaymentRunId__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_PaymentRunId</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="AYLNDA75CB" id="NoID" label="_RejectionReason" length="50" name="RejectionReason__" originalProcessID="IWTG135131" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/RejectionReason__</fullname>
+				<defaultvalue>-- none --</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_RejectionReason</Label>
+				<Alias />
+				<Group>Workflow</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<DisplayedColumns />
+				<DataSourceOrigin>Standalone</DataSourceOrigin>
+				<possibleKeys>-- none --
+Invalid data
+Wrong workflow: not in charge
+Other reason</possibleKeys>
+				<SavedColumn />
+				<possibleValues>
+Invalid data
+Wrong workflow: not in charge
+Other reason</possibleValues>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PHQGDA1DA0" id="NoID" label="_Status report" length="50" name="Status__" originalProcessID="IWTG135131" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Status__</fullname>
+				<defaultvalue>New</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_Status report</Label>
+				<Alias />
+				<Group>Workflow</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<DisplayedColumns />
+				<DataSourceOrigin>Standalone</DataSourceOrigin>
+				<possibleKeys>New
+To verify
+To approve
+Approved pending status
+Approved
+Rejected
+Cancelled
+Approved to pay
+Paid
+Failed</possibleKeys>
+				<SavedColumn />
+				<possibleValues>New
+To verify
+To approve
+Approved pending status
+Approved
+Rejected
+Cancelled
+Approved to pay
+Paid
+Failed</possibleValues>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="GGBW19E1769" id="NoID" label="_TotalAmount report" length="17" name="TotalAmount__" originalProcessID="IWTG135131" precision="2" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TotalAmount__</fullname>
+				<defaultvalue>0</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_TotalAmount report</Label>
+				<Alias />
+				<Group>Payment_Run_Details</Group>
+				<DecimalPrecision vartype="INT">2</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="NLYX00000PA9" id="NoID" label="_TotalAmountWithCurrency" length="50" name="TotalAmountWithCurrency__" originalProcessID="IWTG135131" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TotalAmountWithCurrency__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TotalAmountWithCurrency</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PHQG19A3AED" id="NoID" label="_Amount report" length="17" name="TotalNonRejectedAmount__" originalProcessID="IWTG135131" precision="2" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TotalNonRejectedAmount__</fullname>
+				<defaultvalue>0</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_Amount report</Label>
+				<Alias />
+				<Group>Payment_Run_Details</Group>
+				<DecimalPrecision vartype="INT">2</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="MLYX00000PA9" id="NoID" label="_TotalNonRejectedAmountWithCurrency" length="50" name="TotalNonRejectedAmountWithCurrency__" originalProcessID="IWTG135131" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TotalNonRejectedAmountWithCurrency__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TotalNonRejectedAmountWithCurrency</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="LFDXDAB543" id="NoID" label="_Workflow initiator ID report" length="155" name="WorkflowInitiatorID__" originalProcessID="IWTG135131" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/WorkflowInitiatorID__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Workflow initiator ID report</Label>
+				<Alias />
+				<Group>Workflow</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PHQGDA75D0" id="NoID" label="_Workflow initiator name report" length="155" name="WorkflowInitiatorName__" originalProcessID="IWTG135131" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/WorkflowInitiatorName__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Workflow initiator name report</Label>
+				<Alias />
+				<Group>Workflow</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+</process>

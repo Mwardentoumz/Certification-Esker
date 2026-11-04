@@ -1,0 +1,1712 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:10:53" deleted="0" eskerapplication="P2P" global="0" id="ESFQT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="EDI French B2B Notification" needvalidation="0" ootofilter="" ootoversion="2" originalProcessID="VTN100000VLT" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="1" reuseengine="0" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="0" version="1" visibility="0">
+  <properties>
+    <gdr>
+      <FinalizationScriptAllowRetry>true</FinalizationScriptAllowRetry>
+      <ValidationScriptAllowRetry>true</ValidationScriptAllowRetry>
+      <AllowTagCoverPages>true</AllowTagCoverPages>
+      <AllowTagNewDocuments>true</AllowTagNewDocuments>
+      <AllowTagAttachments>true</AllowTagAttachments>
+      <ExtractionScriptAllowRetry>true</ExtractionScriptAllowRetry>
+      <extractionscriptIncludedScripts>LIB_PARAMETERS_P2P_V12.0.566.0</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>Sys/Sys_FRB2B_CDV_AP_Mapping</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>Sys/SYS_EDI_FRB2B_CDV_UTILS</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>Sys/Sys_EDI_FRB2B_XMLExtraction_CDV</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>Sys/Sys_Helpers_LDAPutil</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>Lib_AP_CompanyCodeDetermination_V12.0.566.0</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>Lib_AP_V12.0.566.0</extractionscriptIncludedScripts>
+      <ExtractionScript>"use strict";
+class MandatoryInfo {
+    constructor(invoiceNumber, invoiceIssueDate) {
+        this.invoiceNumber = invoiceNumber;
+        this.invoiceIssueDate = invoiceIssueDate;
+        this.vendorId = {
+            SIREN: "",
+            SIRET: "",
+            vendorNumber: ""
+        };
+        this.customerId = {
+            SIREN: "",
+            SIRET: "",
+            companyCode: ""
+        };
+    }
+}
+function tryGetFirstVendorRecord(searchedField, value, companyCode) {
+    let firstRecordResult = null;
+    let filter = Sys.Helpers.LdapUtil.FilterEqual(searchedField, value).toString();
+    filter = filter.AddCompanyCodeFilter(companyCode);
+    const attributes = Lib.AP.GetExtendedVendorAttributes();
+    Sys.GenericAPI.Query(Lib.P2P.TableNames.Vendors, filter, attributes, function (records, error) {
+        if (!error &amp;&amp; records &amp;&amp; records.length === 1) {
+            firstRecordResult = records[0];
+        }
+        else if (records.length &gt; 1) {
+            Log.Error("More than one Vendor Number have been retrieved");
+        }
+        else {
+            Log.Error("No Vendor Number retrieved");
+        }
+    });
+    return firstRecordResult;
+}
+function tryQueryVendorFromTable(mandatoryInfo, companyCode) {
+    let result;
+    if (mandatoryInfo.vendorId.SIREN) {
+        const vendorVat = Lib.AP.GetVATFromSIREN(mandatoryInfo.vendorId.SIREN);
+        Data.SetValue("VATNumber__", vendorVat);
+        result = tryGetFirstVendorRecord("VATNumber__", vendorVat, companyCode);
+    }
+    if (!result &amp;&amp; mandatoryInfo.vendorId.SIRET) {
+        result = tryGetFirstVendorRecord("Siret__", mandatoryInfo.vendorId.SIRET, companyCode);
+    }
+    return result;
+}
+function getCompanyCode(mandatoryInfo) {
+    var _a;
+    let customerVat;
+    Log.Verbose(JSON.stringify(mandatoryInfo));
+    if (mandatoryInfo.customerId.SIREN) {
+        customerVat = Lib.AP.GetVATFromSIREN(mandatoryInfo.customerId.SIREN);
+    }
+    let foundCompanyCode;
+    if (customerVat || mandatoryInfo.customerId.SIRET) {
+        foundCompanyCode = (_a = Lib.AP.CompanyCodeDetermination.DetermineWithTaxInformationNoFormReprocess({
+            vatNumber: customerVat, siret: mandatoryInfo.customerId.SIRET
+        })) === null || _a === void 0 ? void 0 : _a.companyCode;
+    }
+    if (!foundCompanyCode) {
+        return false;
+    }
+    mandatoryInfo.customerId.companyCode = foundCompanyCode;
+    return true;
+}
+function FindUniqueVICDVWithoutCompanyCode(mandatoryInfo) {
+    Log.Info(`Searching a unique Vendor Invoice CDV by invoice '${mandatoryInfo.invoiceNumber}'`);
+    const query = Process.CreateQueryAsProcessAdmin();
+    query.SetSpecificTable("CDNAME#Vendor Invoice CDV");
+    query.SetAttributesList("CompanyCode__,VendorNumber__,InvoiceNumber__");
+    query.SetFilter(Sys.Helpers.LdapUtil.FilterAnd(Sys.Helpers.LdapUtil.FilterEqual("InvoiceNumber__", mandatoryInfo.invoiceNumber), Sys.Helpers.LdapUtil.FilterLesserOrEqual("State", "100")).toString());
+    query.SetOptionEx("FastSearch=1");
+    query.SetOptionEx("Limit=-1");
+    if (!query.MoveFirst()) {
+        Log.Error(`Could not search Vendor Invoice CDV for fallback: (${query.GetLastError()}) ${query.GetLastErrorMessage()}`);
+        return null;
+    }
+    const matches = [];
+    for (let record = query.MoveNext(); record !== null; record = query.MoveNext()) {
+        const vars = record.GetUninheritedVars();
+        const companyCode = vars.GetValue_String("CompanyCode__", 0);
+        const vendorNumber = vars.GetValue_String("VendorNumber__", 0);
+        matches.push({
+            companyCode: companyCode,
+            vendorNumber: vendorNumber,
+            invoiceNumber: mandatoryInfo.invoiceNumber,
+            PDPConfigurationName: Variable.GetValueAsString(Sys.EDI.FRB2B.Helpers.PDPConfigurationName) || ""
+        });
+    }
+    if (matches.length !== 1) {
+        Log.Warn(`CDV fallback without buyer found ${matches.length} matching Vendor Invoice CDV processes for invoice '${mandatoryInfo.invoiceNumber}'`);
+        return null;
+    }
+    Log.Info(`CDV fallback without buyer found Vendor Invoice CDV for company '${matches[0].companyCode}' and vendor '${matches[0].vendorNumber}'`);
+    return matches[0];
+}
+function UpdateOrCreateVICDVFromNotificationAndAvoidConcurrency(sharedInfo, cdvRaw, cdvInfo) {
+    // Prevent several incoming CDVs that target the same VICDV from being processed at the same time.
+    // Without this lock, two notifications for the same invoice could be handled concurrently and:
+    //  - miss the existing VICDV during the double-check and create duplicate VICDV processes, and/or
+    // The lock key is the VICDV identity (AccountId + companyCode + vendorNumber + invoiceNumber), so only notifications
+    // targeting the same invoice are serialized.
+    const accessKey = `APEdiFrenchB2BCdvNotification#${Data.GetValue("AccountId")}#${sharedInfo.companyCode}#${sharedInfo.vendorNumber}#${sharedInfo.invoiceNumber}`;
+    let isVICDVUpdatedOrCreated = false;
+    const lockAcquired = Process.PreventConcurrentAccess(accessKey, function () {
+        isVICDVUpdatedOrCreated = Sys.FRB2B.AP.UpdateOrCreateVICDVFromNotification(sharedInfo, cdvRaw, true, cdvInfo);
+    }, null, 60);
+    if (!lockAcquired) {
+        const message = `Could not get concurrent access for UpdateOrCreateVICDVFromNotification (key: ${accessKey})`;
+        Log.Error(message);
+        if (Process.GetScriptRetryCount() &gt;= Process.GetScriptMaxRetryCount() - 1) {
+            Log.Error(`Could not get concurrent access for UpdateOrCreateVICDVFromNotification (key: ${accessKey}) on the last retry`);
+            return false;
+        }
+        Log.Info("Retrying...");
+        throw message;
+    }
+    return isVICDVUpdatedOrCreated;
+}
+function run() {
+    const cdvRaw = Attach.GetAttach(0).GetInputFile();
+    let cdvData = null;
+    try {
+        cdvData = Sys.EDI.FRB2B.XMLExtraction.CDV.Extract();
+    }
+    catch (e) {
+        Log.Error("Failed to extract CDV data from attachment");
+        return false;
+    }
+    let parties = cdvData.recipients;
+    if (cdvData.issuer) {
+        parties.push(cdvData.issuer);
+    }
+    if (cdvData.sender) {
+        parties.push(cdvData.sender);
+    }
+    if (!cdvData.document.objectID || !cdvData.document.objectReceiptTimestamp) {
+        Log.Error("Miss mandatory infos in CDV (invoice number and/or Invoice receipt timestamps)");
+        return false;
+    }
+    Data.SetValue("InvoiceNumber__", cdvData.document.objectID);
+    Data.SetValue("InvoiceReceivedDate__", cdvData.document.objectReceiptTimestamp);
+    let mandatoryInfo = new MandatoryInfo(cdvData.document.objectID, cdvData.document.objectReceiptTimestamp);
+    const notificationParty = Sys.EDI.FRB2B.CDV.Utils.tryGetEDIFrenchB2BNotificationParty(parties, Sys.EDI.FRB2B.CDV.Utils.RoleCode.Seller, mandatoryInfo.vendorId);
+    if (!notificationParty) {
+        Log.Error("Needed/Mandatory information about Supplier/Seller not found");
+        return false;
+    }
+    Data.SetValue("VendorSIREN__", mandatoryInfo.vendorId.SIREN);
+    Data.SetValue("VendorSIRET__", mandatoryInfo.vendorId.SIRET);
+    Sys.EDI.FRB2B.CDV.Utils.tryGetEDIFrenchB2BNotificationParty(parties, Sys.EDI.FRB2B.CDV.Utils.RoleCode.Buyer, mandatoryInfo.customerId);
+    Data.SetValue("CustomerSIREN__", mandatoryInfo.customerId.SIREN);
+    Data.SetValue("CustomerSIRET__", mandatoryInfo.customerId.SIRET);
+    if (!getCompanyCode(mandatoryInfo)) {
+        Log.Info("Cannot retrieve CompanyCode from the CDV buyer, trying to find a unique matching Vendor Invoice CDV");
+        let fallbackVICDVInfo = FindUniqueVICDVWithoutCompanyCode(mandatoryInfo);
+        if (!fallbackVICDVInfo) {
+            Log.Error("Cannot retrieve CompanyCode and no unique matching Vendor Invoice CDV was found");
+            return false;
+        }
+        mandatoryInfo.customerId.companyCode = fallbackVICDVInfo.companyCode;
+        mandatoryInfo.vendorId.vendorNumber = fallbackVICDVInfo.vendorNumber;
+    }
+    Data.SetValue("CompanyCode__", mandatoryInfo.customerId.companyCode);
+    // Do not query the vendor if we got it from the fallback
+    if (!mandatoryInfo.vendorId.vendorNumber) {
+        let result = tryQueryVendorFromTable(mandatoryInfo, mandatoryInfo.customerId.companyCode);
+        if (!result) {
+            Log.Error("Cannot retrieve Vendor Number");
+            return false;
+        }
+        mandatoryInfo.vendorId.vendorNumber = result.Number__;
+    }
+    Data.SetValue("VendorNumber__", mandatoryInfo.vendorId.vendorNumber);
+    if (!mandatoryInfo.invoiceNumber || !mandatoryInfo.vendorId.vendorNumber || !mandatoryInfo.customerId.companyCode || !mandatoryInfo.invoiceIssueDate) {
+        Log.Error("Miss needed informations for querying for RuidEx VIP");
+        return false;
+    }
+    // Derive the CDV status from the inbound notification code so the invoice lifecycle history
+    const cdvInfo = {
+        status: Sys.FRB2B.CDV.AP.Mapping.GetCDVStatusFromNotificationCode(cdvData.status.code),
+        issueTimestamp: cdvData.issueTimestamp,
+        source: Sys.FRB2B.AP.CDVHistorySource.PDP
+    };
+    const sharedInfo = {
+        companyCode: mandatoryInfo.customerId.companyCode,
+        vendorNumber: mandatoryInfo.vendorId.vendorNumber,
+        invoiceNumber: mandatoryInfo.invoiceNumber,
+        PDPConfigurationName: Variable.GetValueAsString(Sys.EDI.FRB2B.Helpers.PDPConfigurationName) || ""
+    };
+    return UpdateOrCreateVICDVFromNotificationAndAvoidConcurrency(sharedInfo, cdvRaw, cdvInfo);
+}
+if (run()) {
+    Data.SetValue("State", 100);
+}
+else {
+    Data.SetValue("State", 200);
+}
+//# sourceMappingURL=extractionscript.js.map</ExtractionScript>
+      <AllowRemovePages>true</AllowRemovePages>
+      <AllowSwapPages>true</AllowSwapPages>
+    </gdr>
+    <lg>
+      <process_da>{
+	"_CompanyCode": "Virksomhedskode",
+	"_CompanyCode_report": "Virksomhedskode",
+	"_CustomerSIREN": "SIREN",
+	"_CustomerSIREN_report": "SIREN",
+	"_CustomerSIRET": "SIRET",
+	"_CustomerSIRET_report": "SIRET",
+	"_InvoiceDetails": "Fakturaoplysninger",
+	"_InvoiceNumber": "Fakturanummer",
+	"_InvoiceNumber_report": "Fakturanummer",
+	"_InvoiceReceivedDate": "PA-modtagelsesdato",
+	"_InvoiceReceivedDate_report": "PA-modtagelsesdato",
+	"_VATNumber": "Leverandørens CVR-nummer/momsnummer ",
+	"_VATNumber_report": "Leverandørens CVR-nummer/momsnummer ",
+	"_VendorNumber": "Leverandørnummer",
+	"_VendorNumber_report": "Leverandørnummer",
+	"_VendorSIREN": "Leverandørens SIREN-nummer",
+	"_VendorSIREN_report": "Leverandørens SIREN-nummer",
+	"_VendorSIRET": "Leverandørens SIRET-nummer",
+	"_VendorSIRET_report": "Leverandørens SIRET-nummer",
+	"_VIPRuidEx": "Udvidet id for faktura",
+	"_VIPRuidEx_report": "Udvidet id for faktura",
+	"EDI French B2B Notification": "Statusmeddelelse for e-faktura (Frankrig)"
+}</process_da>
+      <process_de>{
+	"_CompanyCode": "Buchungskreis",
+	"_CompanyCode_report": "Buchungskreis",
+	"_CustomerSIREN": "SIREN",
+	"_CustomerSIREN_report": "SIREN",
+	"_CustomerSIRET": "SIRET",
+	"_CustomerSIRET_report": "SIRET",
+	"_InvoiceDetails": "Rechnungsdetails",
+	"_InvoiceNumber": "Rechnungsnummer",
+	"_InvoiceNumber_report": "Rechnungsnummer",
+	"_InvoiceReceivedDate": "PA-Eingangsdatum",
+	"_InvoiceReceivedDate_report": "PA-Eingangsdatum",
+	"_VATNumber": "Umsatzsteuernummer des Lieferanten",
+	"_VATNumber_report": "Umsatzsteuernummer des Lieferanten",
+	"_VendorNumber": "Lieferantennummer",
+	"_VendorNumber_report": "Lieferantennummer",
+	"_VendorSIREN": "Lieferanten-SIREN",
+	"_VendorSIREN_report": "Lieferanten-SIREN",
+	"_VendorSIRET": "Lieferanten-SIRET",
+	"_VendorSIRET_report": "Lieferanten-SIRET",
+	"_VIPRuidEx": "Erweiterte Rechnungs-ID",
+	"_VIPRuidEx_report": "Erweiterte Rechnungs-ID",
+	"EDI French B2B Notification": "Statusbenachrichtigung E-Rechnung (Frankreich)"
+}</process_de>
+      <process_ja>{
+	"_CompanyCode": "会社コード",
+	"_CompanyCode_report": "会社コード",
+	"_CustomerSIREN": "SIREN",
+	"_CustomerSIREN_report": "SIREN",
+	"_CustomerSIRET": "SIRET",
+	"_CustomerSIRET_report": "SIRET",
+	"_InvoiceDetails": "請求書詳細",
+	"_InvoiceNumber": "請求書番号",
+	"_InvoiceNumber_report": "請求書番号",
+	"_InvoiceReceivedDate": "PA受信日",
+	"_InvoiceReceivedDate_report": "PA受信日",
+	"_VATNumber": "仕入先の付加価値税 (VAT) 登録番号",
+	"_VATNumber_report": "仕入先の付加価値税 (VAT) 登録番号",
+	"_VendorNumber": "仕入先番号",
+	"_VendorNumber_report": "仕入先番号",
+	"_VendorSIREN": "仕入先のSIREN",
+	"_VendorSIREN_report": "仕入先のSIREN",
+	"_VendorSIRET": "仕入先のSIRET",
+	"_VendorSIRET_report": "仕入先のSIRET",
+	"_VIPRuidEx": "請求書拡張ID",
+	"_VIPRuidEx_report": "請求書拡張ID",
+	"EDI French B2B Notification": "電子請求書 (フランス) ステータス通知"
+}</process_ja>
+      <process_en>{
+	"_CompanyCode": "Company code",
+	"_CompanyCode_report": "Company code",
+	"_CustomerSIREN": "SIREN",
+	"_CustomerSIREN_report": "SIREN",
+	"_CustomerSIRET": "SIRET",
+	"_CustomerSIRET_report": "SIRET",
+	"_InvoiceDetails": "Invoice Details",
+	"_InvoiceNumber": "Invoice number",
+	"_InvoiceNumber_report": "Invoice number",
+	"_InvoiceReceivedDate": "PA receipt date",
+	"_InvoiceReceivedDate_report": "PA receipt date",
+	"_VATNumber": "Supplier VAT number ",
+	"_VATNumber_report": "Supplier VAT number ",
+	"_VendorNumber": "Supplier number",
+	"_VendorNumber_report": "Supplier number",
+	"_VendorSIREN": "Supplier SIREN",
+	"_VendorSIREN_report": "Supplier SIREN",
+	"_VendorSIRET": "Supplier SIRET",
+	"_VendorSIRET_report": "Supplier SIRET",
+	"_VIPRuidEx": "Invoice extended ID",
+	"_VIPRuidEx_report": "Invoice extended ID",
+	"EDI French B2B Notification": "E-invoice (France) status notification"
+}</process_en>
+      <process_es>{
+	"_CompanyCode": "Código de empresa",
+	"_CompanyCode_report": "Código de empresa",
+	"_CustomerSIREN": "SIREN",
+	"_CustomerSIREN_report": "SIREN",
+	"_CustomerSIRET": "SIRET",
+	"_CustomerSIRET_report": "SIRET",
+	"_InvoiceDetails": "Detalles de la factura",
+	"_InvoiceNumber": "Número de factura",
+	"_InvoiceNumber_report": "Número de factura",
+	"_InvoiceReceivedDate": "Fecha de recepción en la PA",
+	"_InvoiceReceivedDate_report": "Fecha de recepción en la PA",
+	"_VATNumber": "Nº de IVA del proveedor",
+	"_VATNumber_report": "Nº de IVA del proveedor",
+	"_VendorNumber": "Número del proveedor",
+	"_VendorNumber_report": "Número del proveedor",
+	"_VendorSIREN": "SIREN del proveedor",
+	"_VendorSIREN_report": "SIREN del proveedor",
+	"_VendorSIRET": "SIRET del proveedor",
+	"_VendorSIRET_report": "SIRET del proveedor",
+	"_VIPRuidEx": "Id. largo de la factura",
+	"_VIPRuidEx_report": "Id. largo de la factura",
+	"EDI French B2B Notification": "Notificación de estado de facturas electrónicas (Francia)"
+}</process_es>
+      <process_fr>{
+	"_CompanyCode": "Code société",
+	"_CompanyCode_report": "Code société",
+	"_CustomerSIREN": "SIREN",
+	"_CustomerSIREN_report": "SIREN",
+	"_CustomerSIRET": "SIRET",
+	"_CustomerSIRET_report": "SIRET",
+	"_InvoiceDetails": "Détails de la facture",
+	"_InvoiceNumber": "Numéro de facture",
+	"_InvoiceNumber_report": "Numéro de facture",
+	"_InvoiceReceivedDate": "Date de réception sur la PA",
+	"_InvoiceReceivedDate_report": "Date de réception sur la PA",
+	"_VATNumber": "Numéro de TVA du fournisseur",
+	"_VATNumber_report": "Numéro de TVA du fournisseur",
+	"_VendorNumber": "Numéro du fournisseur",
+	"_VendorNumber_report": "Numéro du fournisseur",
+	"_VendorSIREN": "SIREN du fournisseur",
+	"_VendorSIREN_report": "SIREN du fournisseur",
+	"_VendorSIRET": "SIRET du fournisseur",
+	"_VendorSIRET_report": "SIRET du fournisseur",
+	"_VIPRuidEx": "Identifiant long de la facture",
+	"_VIPRuidEx_report": "Identifiant long de la facture",
+	"EDI French B2B Notification": "Notification d'état facture électronique (France)"
+}</process_fr>
+      <process_nl-NL>{
+	"_CompanyCode": "Bedrijfscode",
+	"_CompanyCode_report": "Bedrijfscode",
+	"_CustomerSIREN": "SIREN",
+	"_CustomerSIREN_report": "SIREN",
+	"_CustomerSIRET": "SIRET",
+	"_CustomerSIRET_report": "SIRET",
+	"_InvoiceDetails": "Factuurgegevens",
+	"_InvoiceNumber": "Factuurnummer",
+	"_InvoiceNumber_report": "Factuurnummer",
+	"_InvoiceReceivedDate": "Datum ontvangstbewijs PA",
+	"_InvoiceReceivedDate_report": "Datum ontvangstbewijs PA",
+	"_VATNumber": "Btw-nummer leverancier",
+	"_VATNumber_report": "Btw-nummer leverancier",
+	"_VendorNumber": "Nummer leverancier",
+	"_VendorNumber_report": "Nummer leverancier",
+	"_VendorSIREN": "SIREN leverancier",
+	"_VendorSIREN_report": "SIREN leverancier",
+	"_VendorSIRET": "SIRET leverancier",
+	"_VendorSIRET_report": "SIRET leverancier",
+	"_VIPRuidEx": "Uitgebreide factuur-ID",
+	"_VIPRuidEx_report": "Uitgebreide factuur-ID",
+	"EDI French B2B Notification": "Melding status e-facturering (Frankrijk)"
+}</process_nl-NL>
+      <process_pl>{
+	"_CompanyCode": "Kod firmy",
+	"_CompanyCode_report": "Kod firmy",
+	"_CustomerSIREN": "SIREN",
+	"_CustomerSIREN_report": "SIREN",
+	"_CustomerSIRET": "SIRET",
+	"_CustomerSIRET_report": "SIRET",
+	"_InvoiceDetails": "Szczegóły faktury",
+	"_InvoiceNumber": "Numer faktury",
+	"_InvoiceNumber_report": "Numer faktury",
+	"_InvoiceReceivedDate": "Data otrzymania PA",
+	"_InvoiceReceivedDate_report": "Data otrzymania PA",
+	"_VATNumber": "Numer VAT dostawcy",
+	"_VATNumber_report": "Numer VAT dostawcy",
+	"_VendorNumber": "Numer dostawcy",
+	"_VendorNumber_report": "Numer dostawcy",
+	"_VendorSIREN": "SIREN dostawcy",
+	"_VendorSIREN_report": "SIREN dostawcy",
+	"_VendorSIRET": "SIRET dostawcy",
+	"_VendorSIRET_report": "SIRET dostawcy",
+	"_VIPRuidEx": "Rozszerzony id. faktury",
+	"_VIPRuidEx_report": "Rozszerzony id. faktury",
+	"EDI French B2B Notification": "Powiadomienie o statusie e-faktury (Francja)"
+}</process_pl>
+      <process_it>{
+	"_CompanyCode": "Codice società",
+	"_CompanyCode_report": "Codice società",
+	"_CustomerSIREN": "SIREN",
+	"_CustomerSIREN_report": "SIREN",
+	"_CustomerSIRET": "SIRET",
+	"_CustomerSIRET_report": "SIRET",
+	"_InvoiceDetails": "Dettagli fattura",
+	"_InvoiceNumber": "Numero fattura",
+	"_InvoiceNumber_report": "Numero fattura",
+	"_InvoiceReceivedDate": "Data ricezione sulla PA",
+	"_InvoiceReceivedDate_report": "Data ricezione sulla PA",
+	"_VATNumber": "Partita IVA fornitore",
+	"_VATNumber_report": "Partita IVA fornitore",
+	"_VendorNumber": "Numero fornitore",
+	"_VendorNumber_report": "Numero fornitore",
+	"_VendorSIREN": "SIREN fornitore",
+	"_VendorSIREN_report": "SIREN fornitore",
+	"_VendorSIRET": "SIRET fornitore",
+	"_VendorSIRET_report": "SIRET fornitore",
+	"_VIPRuidEx": "ID esteso fattura",
+	"_VIPRuidEx_report": "ID esteso fattura",
+	"EDI French B2B Notification": "Notifica stato fattura elettronica (Francia)"
+}</process_it>
+      <process_sk>{
+	"_CompanyCode": "Kód spoločnosti",
+	"_CompanyCode_report": "Kód spoločnosti",
+	"_CustomerSIREN": "SIREN",
+	"_CustomerSIREN_report": "SIREN",
+	"_CustomerSIRET": "SIRET",
+	"_CustomerSIRET_report": "SIRET",
+	"_InvoiceDetails": "Detaily faktúry",
+	"_InvoiceNumber": "Faktúra č.",
+	"_InvoiceNumber_report": "Faktúra č.",
+	"_InvoiceReceivedDate": "Dátum prijatia PA",
+	"_InvoiceReceivedDate_report": "Dátum prijatia PA",
+	"_VATNumber": "IČ DPH dodávateľa",
+	"_VATNumber_report": "IČ DPH dodávateľa",
+	"_VendorNumber": "Číslo dodávateľa",
+	"_VendorNumber_report": "Číslo dodávateľa",
+	"_VendorSIREN": "SIREN dodávateľa",
+	"_VendorSIREN_report": "SIREN dodávateľa",
+	"_VendorSIRET": "SIRET dodávateľa",
+	"_VendorSIRET_report": "SIRET dodávateľa",
+	"_VIPRuidEx": "Rozšírené ID faktúry",
+	"_VIPRuidEx_report": "Rozšírené ID faktúry",
+	"EDI French B2B Notification": "Oznámenie o stave e-faktúry (Francúzsko)"
+}</process_sk>
+      <process_zh-CN>{
+	"_CompanyCode": "公司代码",
+	"_CompanyCode_report": "公司代码",
+	"_CustomerSIREN": "SIREN",
+	"_CustomerSIREN_report": "SIREN",
+	"_CustomerSIRET": "SIRET",
+	"_CustomerSIRET_report": "SIRET",
+	"_InvoiceDetails": "发票详情",
+	"_InvoiceNumber": "发票号",
+	"_InvoiceNumber_report": "发票号",
+	"_InvoiceReceivedDate": "PA 接收日期",
+	"_InvoiceReceivedDate_report": "PA 接收日期",
+	"_VATNumber": "供应商增值税（VAT）号",
+	"_VATNumber_report": "供应商增值税（VAT）号",
+	"_VendorNumber": "供应商编号",
+	"_VendorNumber_report": "供应商编号",
+	"_VendorSIREN": "供应商企业信息库识别系统（SIREN）编号",
+	"_VendorSIREN_report": "供应商企业信息库识别系统（SIREN）编号",
+	"_VendorSIRET": "供应商机构信息库识别系统（SIRET）编号",
+	"_VendorSIRET_report": "供应商机构信息库识别系统（SIRET）编号",
+	"_VIPRuidEx": "发票扩展ID",
+	"_VIPRuidEx_report": "发票扩展ID",
+	"EDI French B2B Notification": "电子发票（法国）状态通知"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"_CompanyCode": "Código da empresa",
+	"_CompanyCode_report": "Código da empresa",
+	"_CustomerSIREN": "SIREN",
+	"_CustomerSIREN_report": "SIREN",
+	"_CustomerSIRET": "SIRET",
+	"_CustomerSIRET_report": "SIRET",
+	"_InvoiceDetails": "Detalhes da fatura",
+	"_InvoiceNumber": "Número da fatura",
+	"_InvoiceNumber_report": "Número da fatura",
+	"_InvoiceReceivedDate": "Data de recebimento PA",
+	"_InvoiceReceivedDate_report": "Data de recebimento PA",
+	"_VATNumber": "Número de IVA do fornecedor",
+	"_VATNumber_report": "Número de IVA do fornecedor",
+	"_VendorNumber": "Número do fornecedor",
+	"_VendorNumber_report": "Número do fornecedor",
+	"_VendorSIREN": "SIREN de fornecedor",
+	"_VendorSIREN_report": "SIREN de fornecedor",
+	"_VendorSIRET": "SIRET de fornecedor",
+	"_VendorSIRET_report": "SIRET de fornecedor",
+	"_VIPRuidEx": "ID estendido da fatura",
+	"_VIPRuidEx_report": "ID estendido da fatura",
+	"EDI French B2B Notification": "Notificações de status de faturas eletrônicas (França)"
+}</process_pt-BR>
+    </lg>
+    <process>
+      <flowtype>processing</flowtype>
+      <ocrpreset>scan</ocrpreset>
+      <EnableNegativeNumbersBetweenBrackets>true</EnableNegativeNumbersBetweenBrackets>
+      <homepagelabel>AP System EDI French B2B Notification</homepagelabel>
+      <enableflexibleauditing>
+      </enableflexibleauditing>
+      <enableflexibleediting>
+      </enableflexibleediting>
+      <enableflexibleteaching>
+      </enableflexibleteaching>
+      <enableInternalConversation>true</enableInternalConversation>
+      <disableocr>
+      </disableocr>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <disableautolearning>
+      </disableautolearning>
+      <backgroundprocessingthreshold>
+      </backgroundprocessingthreshold>
+      <EnablePreviewPrecomputation>
+      </EnablePreviewPrecomputation>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <enablerounddecimal>true</enablerounddecimal>
+      <pdfNormalizeFilter>
+      </pdfNormalizeFilter>
+      <archiveDuration>0</archiveDuration>
+      <ownhomepage>
+      </ownhomepage>
+      <ocrpagestoprocess>0</ocrpagestoprocess>
+      <ScriptEngineType>2</ScriptEngineType>
+      <UseActionNameWithScriptApproval>true</UseActionNameWithScriptApproval>
+      <displayWidth>
+      </displayWidth>
+      <AllowUploadAttachment>1</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>1</AllowUploadReferenceDocument>
+      <RemovePointWhenCastingIntToString>true</RemovePointWhenCastingIntToString>
+      <UseCultureFormat>true</UseCultureFormat>
+      <AllowRetryExtractCD>true</AllowRetryExtractCD>
+      <TransportName>CustomData</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+      <printToProcess>
+      </printToProcess>
+    </process>
+    <ui>
+      <restorationPanel>DataPanel</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 51,
+	"*": {
+		"GDRData": {
+			"type": "GDRData",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"version": 0
+			}
+		},
+		"OCRParams": {
+			"type": "OCRParams",
+			"data": [],
+			"stamp": 2,
+			"options": {
+				"version": 0
+			}
+		},
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 3,
+			"options": {
+				"splitterType": "complex",
+				"style": "FlexibleFormLight",
+				"maxwidth": "",
+				"backColor": "text-backgroundcolor-default",
+				"footerStyle": "default",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 4,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 5,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 6,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-top": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 7,
+									"options": {
+										"autosize": true,
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"height": "25%"
+										},
+										"hidden": false,
+										"hideSeparator": true
+									},
+									"*": {
+										"form-content-top-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 8,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"DocumentsPanel": {
+													"type": "PanelDocument",
+													"data": [],
+													"stamp": 9,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": false,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"sameHeightAsSiblings": false,
+														"label": "_Documents",
+														"version": 0
+													},
+													"*": {
+														"Document": {
+															"type": "Documents",
+															"data": [
+																"documentscontroldata"
+															],
+															"stamp": 10,
+															"options": {
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								},
+								"form-content-bottom": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 11,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": "25%",
+											"left": "0%",
+											"height": "75%"
+										},
+										"hidden": false
+									},
+									"*": {
+										"form-content-left": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 12,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "0%",
+													"width": "45%"
+												},
+												"hidden": false,
+												"hideSeparator": true
+											},
+											"*": {
+												"form-content-left-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 13,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"DataPanel": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 14,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_InvoiceDetails",
+																"hidden": false,
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 15,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {
+																			"VATNumber__": "LabelVATNumber__",
+																			"LabelVATNumber__": "VATNumber__",
+																			"VendorSIREN__": "LabelVendorSIREN__",
+																			"LabelVendorSIREN__": "VendorSIREN__",
+																			"VendorSIRET__": "LabelVendorSIRET__",
+																			"LabelVendorSIRET__": "VendorSIRET__",
+																			"VendorNumber__": "LabelVendorNumber__",
+																			"LabelVendorNumber__": "VendorNumber__",
+																			"CompanyCode__": "LabelCompanyCode__",
+																			"LabelCompanyCode__": "CompanyCode__",
+																			"CustomerSIREN__": "LabelCustomerSIREN__",
+																			"LabelCustomerSIREN__": "CustomerSIREN__",
+																			"CustomerSIRET__": "LabelCustomerSIRET__",
+																			"LabelCustomerSIRET__": "CustomerSIRET__",
+																			"VIPRuidEx__": "LabelVIPRuidEx__",
+																			"LabelVIPRuidEx__": "VIPRuidEx__",
+																			"InvoiceNumber__": "LabelInvoiceNumber__",
+																			"LabelInvoiceNumber__": "InvoiceNumber__",
+																			"InvoiceReceivedDate__": "LabelInvoiceReceivedDate__",
+																			"LabelInvoiceReceivedDate__": "InvoiceReceivedDate__"
+																		}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 16,
+																			"options": {
+																				"version": 0,
+																				"lines": 11,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"LabelVATNumber__": {
+																						"line": 1,
+																						"column": 1
+																					},
+																					"VATNumber__": {
+																						"line": 1,
+																						"column": 2
+																					},
+																					"Treeview__": {
+																						"line": 2,
+																						"column": 1
+																					},
+																					"LabelVendorSIREN__": {
+																						"line": 3,
+																						"column": 1
+																					},
+																					"VendorSIREN__": {
+																						"line": 3,
+																						"column": 2
+																					},
+																					"LabelVendorSIRET__": {
+																						"line": 4,
+																						"column": 1
+																					},
+																					"VendorSIRET__": {
+																						"line": 4,
+																						"column": 2
+																					},
+																					"LabelVendorNumber__": {
+																						"line": 5,
+																						"column": 1
+																					},
+																					"VendorNumber__": {
+																						"line": 5,
+																						"column": 2
+																					},
+																					"LabelCompanyCode__": {
+																						"line": 6,
+																						"column": 1
+																					},
+																					"CompanyCode__": {
+																						"line": 6,
+																						"column": 2
+																					},
+																					"LabelCustomerSIREN__": {
+																						"line": 7,
+																						"column": 1
+																					},
+																					"CustomerSIREN__": {
+																						"line": 7,
+																						"column": 2
+																					},
+																					"LabelCustomerSIRET__": {
+																						"line": 8,
+																						"column": 1
+																					},
+																					"CustomerSIRET__": {
+																						"line": 8,
+																						"column": 2
+																					},
+																					"LabelVIPRuidEx__": {
+																						"line": 9,
+																						"column": 1
+																					},
+																					"VIPRuidEx__": {
+																						"line": 9,
+																						"column": 2
+																					},
+																					"LabelInvoiceNumber__": {
+																						"line": 10,
+																						"column": 1
+																					},
+																					"InvoiceNumber__": {
+																						"line": 10,
+																						"column": 2
+																					},
+																					"LabelInvoiceReceivedDate__": {
+																						"line": 11,
+																						"column": 1
+																					},
+																					"InvoiceReceivedDate__": {
+																						"line": 11,
+																						"column": 2
+																					}
+																				},
+																				"colspans": [
+																					[],
+																					[
+																						{
+																							"index": 0,
+																							"length": 2
+																						}
+																					],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[]
+																				]
+																			},
+																			"*": {
+																				"LabelVATNumber__": {
+																					"type": "Label",
+																					"data": [
+																						"VATNumber__"
+																					],
+																					"stamp": 18,
+																					"options": {
+																						"label": "_VATNumber",
+																						"version": 0
+																					}
+																				},
+																				"VATNumber__": {
+																					"type": "ShortText",
+																					"data": [
+																						"VATNumber__"
+																					],
+																					"stamp": 17,
+																					"options": {
+																						"label": "_VATNumber",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"browsable": false
+																					}
+																				},
+																				"Treeview__": {
+																					"type": "Treeview",
+																					"data": false,
+																					"stamp": 19,
+																					"options": {
+																						"label": "_Treeview",
+																						"version": 1
+																					}
+																				},
+																				"LabelVendorSIREN__": {
+																					"type": "Label",
+																					"data": [
+																						"VendorSIREN__"
+																					],
+																					"stamp": 21,
+																					"options": {
+																						"label": "_VendorSIREN",
+																						"version": 0
+																					}
+																				},
+																				"VendorSIREN__": {
+																					"type": "ShortText",
+																					"data": [
+																						"VendorSIREN__"
+																					],
+																					"stamp": 20,
+																					"options": {
+																						"label": "_VendorSIREN",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"browsable": false
+																					}
+																				},
+																				"LabelVendorSIRET__": {
+																					"type": "Label",
+																					"data": [
+																						"VendorSIRET__"
+																					],
+																					"stamp": 23,
+																					"options": {
+																						"label": "_VendorSIRET",
+																						"version": 0
+																					}
+																				},
+																				"VendorSIRET__": {
+																					"type": "ShortText",
+																					"data": [
+																						"VendorSIRET__"
+																					],
+																					"stamp": 22,
+																					"options": {
+																						"label": "_VendorSIRET",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"browsable": false
+																					}
+																				},
+																				"LabelVendorNumber__": {
+																					"type": "Label",
+																					"data": [
+																						"VendorNumber__"
+																					],
+																					"stamp": 25,
+																					"options": {
+																						"label": "_VendorNumber",
+																						"version": 0
+																					}
+																				},
+																				"VendorNumber__": {
+																					"type": "ShortText",
+																					"data": [
+																						"VendorNumber__"
+																					],
+																					"stamp": 24,
+																					"options": {
+																						"label": "_VendorNumber",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"browsable": false
+																					}
+																				},
+																				"LabelCompanyCode__": {
+																					"type": "Label",
+																					"data": [
+																						"CompanyCode__"
+																					],
+																					"stamp": 27,
+																					"options": {
+																						"label": "_CompanyCode",
+																						"version": 0
+																					}
+																				},
+																				"CompanyCode__": {
+																					"type": "ShortText",
+																					"data": [
+																						"CompanyCode__"
+																					],
+																					"stamp": 26,
+																					"options": {
+																						"label": "_CompanyCode",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"browsable": false
+																					}
+																				},
+																				"LabelCustomerSIREN__": {
+																					"type": "Label",
+																					"data": [
+																						"CustomerSIREN__"
+																					],
+																					"stamp": 29,
+																					"options": {
+																						"label": "_CustomerSIREN",
+																						"version": 0
+																					}
+																				},
+																				"CustomerSIREN__": {
+																					"type": "ShortText",
+																					"data": [
+																						"CustomerSIREN__"
+																					],
+																					"stamp": 28,
+																					"options": {
+																						"label": "_CustomerSIREN",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"browsable": false
+																					}
+																				},
+																				"LabelCustomerSIRET__": {
+																					"type": "Label",
+																					"data": [
+																						"CustomerSIRET__"
+																					],
+																					"stamp": 31,
+																					"options": {
+																						"label": "_CustomerSIRET",
+																						"version": 0
+																					}
+																				},
+																				"CustomerSIRET__": {
+																					"type": "ShortText",
+																					"data": [
+																						"CustomerSIRET__"
+																					],
+																					"stamp": 30,
+																					"options": {
+																						"label": "_CustomerSIRET",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"browsable": false
+																					}
+																				},
+																				"LabelVIPRuidEx__": {
+																					"type": "Label",
+																					"data": [
+																						"VIPRuidEx__"
+																					],
+																					"stamp": 33,
+																					"options": {
+																						"label": "_VIPRuidEx",
+																						"version": 0
+																					}
+																				},
+																				"VIPRuidEx__": {
+																					"type": "ShortText",
+																					"data": [
+																						"VIPRuidEx__"
+																					],
+																					"stamp": 32,
+																					"options": {
+																						"label": "_VIPRuidEx",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"browsable": false
+																					}
+																				},
+																				"LabelInvoiceNumber__": {
+																					"type": "Label",
+																					"data": [
+																						"InvoiceNumber__"
+																					],
+																					"stamp": 35,
+																					"options": {
+																						"label": "_InvoiceNumber",
+																						"version": 0
+																					}
+																				},
+																				"InvoiceNumber__": {
+																					"type": "ShortText",
+																					"data": [
+																						"InvoiceNumber__"
+																					],
+																					"stamp": 34,
+																					"options": {
+																						"label": "_InvoiceNumber",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"browsable": false
+																					}
+																				},
+																				"LabelInvoiceReceivedDate__": {
+																					"type": "Label",
+																					"data": [
+																						"InvoiceReceivedDate__"
+																					],
+																					"stamp": 37,
+																					"options": {
+																						"label": "_InvoiceReceivedDate",
+																						"version": 0
+																					}
+																				},
+																				"InvoiceReceivedDate__": {
+																					"type": "ShortText",
+																					"data": [
+																						"InvoiceReceivedDate__"
+																					],
+																					"stamp": 36,
+																					"options": {
+																						"label": "_InvoiceReceivedDate",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"browsable": false
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-2": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 38,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"SystemData": {
+															"type": "PanelSystemData",
+															"data": [],
+															"stamp": 39,
+															"options": {
+																"multicolumn": false,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_System data",
+																"version": 0
+															}
+														}
+													}
+												},
+												"form-content-left-3": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 40,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"NextProcess": {
+															"type": "PanelNextProcess",
+															"data": [],
+															"stamp": 41,
+															"options": {
+																"hidden": true,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_Next Process",
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-right": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 42,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "45%",
+													"width": "55%"
+												},
+												"hidden": false
+											},
+											"*": {
+												"form-content-right-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 43,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"PreviewPanel": {
+															"type": "PanelPreview",
+															"data": [],
+															"stamp": 44,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_Document Preview",
+																"version": 0
+															},
+															"*": {
+																"Preview": {
+																	"type": "Preview",
+																	"data": [
+																		"previewdata"
+																	],
+																	"stamp": 45,
+																	"options": {
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 46,
+					"options": {
+						"splitterType": "simple-h",
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 47,
+							"options": {
+								"label": "_Save",
+								"action": "save",
+								"submit": true,
+								"textSize": "S",
+								"version": 0
+							}
+						},
+						"Approve": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 48,
+							"options": {
+								"label": "_Approve",
+								"action": "approve",
+								"submit": true,
+								"textSize": "S",
+								"version": 0
+							}
+						},
+						"Reject": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 49,
+							"options": {
+								"label": "_Reject",
+								"action": "reject",
+								"submit": true,
+								"textSize": "S",
+								"version": 0
+							}
+						},
+						"Reprocess": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 50,
+							"options": {
+								"label": "_Reprocess",
+								"action": "reprocess",
+								"submit": true,
+								"textSize": "S",
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 51,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"textSize": "S",
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <field deleted="0" format="" guid="FHC000000VLT" id="FSFQT400153E" label="_CompanyCode_report" length="50" name="CompanyCode__" originalProcessID="VTN100000VLT" precision="0" processid="ESFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AFSFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/CompanyCode__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:52</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_CompanyCode_report</Label>
+        <Alias>AFSFQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="GHC000000VLT" id="GSFQT400153E" label="_CustomerSIREN_report" length="50" name="CustomerSIREN__" originalProcessID="VTN100000VLT" precision="0" processid="ESFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AGSFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/CustomerSIREN__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:52</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_CustomerSIREN_report</Label>
+        <Alias>AGSFQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="HHC000000VLT" id="HSFQT400153E" label="_CustomerSIRET_report" length="50" name="CustomerSIRET__" originalProcessID="VTN100000VLT" precision="0" processid="ESFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AHSFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/CustomerSIRET__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:52</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_CustomerSIRET_report</Label>
+        <Alias>AHSFQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="CBL000000VLT" id="ISFQT400153E" label="_InvoiceNumber_report" length="50" name="InvoiceNumber__" originalProcessID="VTN100000VLT" precision="0" processid="ESFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AISFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/InvoiceNumber__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:52</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_InvoiceNumber_report</Label>
+        <Alias>AISFQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="DBL000000VLT" id="JSFQT400153E" label="_InvoiceReceivedDate_report" length="50" name="InvoiceReceivedDate__" originalProcessID="VTN100000VLT" precision="0" processid="ESFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AJSFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/InvoiceReceivedDate__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:52</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_InvoiceReceivedDate_report</Label>
+        <Alias>AJSFQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="BHC000000VLT" id="KSFQT400153E" label="_VATNumber_report" length="50" name="VATNumber__" originalProcessID="VTN100000VLT" precision="0" processid="ESFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AKSFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/VATNumber__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:52</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_VATNumber_report</Label>
+        <Alias>AKSFQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="EHC000000VLT" id="LSFQT400153E" label="_VendorNumber_report" length="50" name="VendorNumber__" originalProcessID="VTN100000VLT" precision="0" processid="ESFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ALSFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/VendorNumber__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:52</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_VendorNumber_report</Label>
+        <Alias>ALSFQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="CHC000000VLT" id="MSFQT400153E" label="_VendorSIREN_report" length="50" name="VendorSIREN__" originalProcessID="VTN100000VLT" precision="0" processid="ESFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AMSFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/VendorSIREN__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:52</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_VendorSIREN_report</Label>
+        <Alias>AMSFQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="DHC000000VLT" id="NSFQT400153E" label="_VendorSIRET_report" length="50" name="VendorSIRET__" originalProcessID="VTN100000VLT" precision="0" processid="ESFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ANSFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/VendorSIRET__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:52</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_VendorSIRET_report</Label>
+        <Alias>ANSFQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="IHC000000VLT" id="OSFQT400153E" label="_VIPRuidEx_report" length="50" name="VIPRuidEx__" originalProcessID="VTN100000VLT" precision="0" processid="ESFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AOSFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/VIPRuidEx__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:52</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_VIPRuidEx_report</Label>
+        <Alias>AOSFQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <type id="GOLHG0000M4O" name="CD">
+  </type>
+</process>

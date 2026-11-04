@@ -1,0 +1,550 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:11:03" deleted="0" eskerapplication="P2P" global="0" id="C1GQT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="Vendor invoice payment split" needvalidation="0" ootofilter="" ootoversion="0" originalProcessID="ENGLG0000VLT" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="0" version="1" visibility="0">
+  <properties>
+    <dataConditions>
+      <listDataConditions>
+				&lt;dataCondition&gt;
+					&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+					&lt;filter&gt;msnex=*&lt;/filter&gt;
+					&lt;labelKey&gt;_AP disabled&lt;/labelKey&gt;
+					&lt;conditions&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableAccountPayableGlobalSetting__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+					&lt;/conditions&gt;
+				&lt;/dataCondition&gt;
+			</listDataConditions>
+    </dataConditions>
+    <gdr>
+      <FinalizationScriptAllowRetry>
+      </FinalizationScriptAllowRetry>
+      <finalizationscriptIncludedScripts>Lib_V12.0.566.0</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Lib_CSVSplitting_V12.0.566.0</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>[LIB_AP_CUSTOMIZATION_PAYMENT]</finalizationscriptIncludedScripts>
+      <FinalizationScript>"use strict";
+function getNbConfigurations() {
+    const query = Process.CreateQueryAsProcessAdmin();
+    query.SetSpecificTable("AP - Application Settings__");
+    let nbConfs = query.GetRecordCount();
+    return nbConfs;
+}
+function CalculateNumberOfLinesToSplit() {
+    const customizedNbLines = Sys.Helpers.TryCallFunction("Lib.AP.Customization.Payment.CustomizeNbLinesSplit");
+    if (customizedNbLines &amp;&amp; customizedNbLines &gt; 0) {
+        return customizedNbLines;
+    }
+    const minLinesToSplit = 1000;
+    const maxLinesToSplit = 100000;
+    let nbConfs = getNbConfigurations();
+    let magicNumberToSplit = (101 - nbConfs) * 1000;
+    magicNumberToSplit = Math.min(magicNumberToSplit, maxLinesToSplit);
+    magicNumberToSplit = Math.max(magicNumberToSplit, minLinesToSplit);
+    return magicNumberToSplit;
+}
+function run() {
+    let success = Lib.CSVSplitting.readAndSplit("Vendor invoice payment (SAP)", CalculateNumberOfLinesToSplit());
+    if (!success) {
+        Data.SetValue("State", 200);
+    }
+}
+run();
+//# sourceMappingURL=finalizationscript.js.map</FinalizationScript>
+      <ValidationScriptAllowRetry>
+      </ValidationScriptAllowRetry>
+      <ValidationScript>
+      </ValidationScript>
+      <AllowTagCoverPages>true</AllowTagCoverPages>
+      <AllowTagNewDocuments>true</AllowTagNewDocuments>
+      <AllowTagAttachments>true</AllowTagAttachments>
+      <ExtractionScriptAllowRetry>
+      </ExtractionScriptAllowRetry>
+      <ExtractionScript>
+      </ExtractionScript>
+      <AllowRemovePages>true</AllowRemovePages>
+      <AllowSwapPages>true</AllowSwapPages>
+      <PostProcessingScriptAllowRetry>
+      </PostProcessingScriptAllowRetry>
+      <PostProcessingScript>
+      </PostProcessingScript>
+    </gdr>
+    <lg>
+      <process_da>{
+	"_Vendor invoice payment split": "Opdeling af betaling for leverandørfaktura (SAP)",
+	"Vendor invoice payment split": "Opdeling af betaling for leverandørfaktura (SAP)"
+}</process_da>
+      <process_de>{
+	"_Vendor invoice payment split": "Aufteilen von Lieferantenrechnungen (SAP)",
+	"Vendor invoice payment split": "Aufteilen von Lieferantenrechnungen (SAP)"
+}</process_de>
+      <process_ja>{
+	"_Vendor invoice payment split": "仕入先請求書支払分割 (SAP)",
+	"Vendor invoice payment split": "仕入先請求書支払分割 (SAP)"
+}</process_ja>
+      <process_en>{
+	"_Vendor invoice payment split": "Supplier invoice payment splitting (SAP)",
+	"Vendor invoice payment split": "Supplier invoice payment splitting (SAP)"
+}</process_en>
+      <process_es>{
+	"_Vendor invoice payment split": "División de pagos de facturas de proveedor (SAP)",
+	"Vendor invoice payment split": "División de pagos de facturas de proveedor (SAP)"
+}</process_es>
+      <process_fr>{
+	"_Vendor invoice payment split": "Découpage de paiements de factures fournisseurs (SAP)",
+	"Vendor invoice payment split": "Découpage de paiements de factures fournisseurs (SAP)"
+}</process_fr>
+      <process_nl-NL>{
+	"_Vendor invoice payment split": "Betaling leveranciersfacturen splitsen (SAP)",
+	"Vendor invoice payment split": "Betaling leveranciersfacturen splitsen (SAP)"
+}</process_nl-NL>
+      <process_pl>{
+	"_Vendor invoice payment split": "Dzielenie płatność za fakturę dostawcy (SAP)",
+	"Vendor invoice payment split": "Dzielenie płatność za fakturę dostawcy (SAP)"
+}</process_pl>
+      <process_it>{
+	"_Vendor invoice payment split": "Divisione pagamenti fatture fornitore (SAP)",
+	"Vendor invoice payment split": "Divisione pagamenti fatture fornitore (SAP)"
+}</process_it>
+      <process_sk>{
+	"_Vendor invoice payment split": "Rozdelenie platby faktúry dodávateľa (SAP)",
+	"Vendor invoice payment split": "Rozdelenie platby faktúry dodávateľa (SAP)"
+}</process_sk>
+      <process_zh-CN>{
+	"_Vendor invoice payment split": "供应商账单支付拆分（SAP）",
+	"Vendor invoice payment split": "供应商账单支付拆分（SAP）"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"_Vendor invoice payment split": "Divisão de pagamentos de fatura do fornecedor (SAP)",
+	"Vendor invoice payment split": "Divisão de pagamentos de fatura do fornecedor (SAP)"
+}</process_pt-BR>
+    </lg>
+    <process>
+      <flowtype>processing</flowtype>
+      <ocrpreset>scan</ocrpreset>
+      <homepagelabel>_Vendor invoice payment split</homepagelabel>
+      <enableflexibleauditing>
+      </enableflexibleauditing>
+      <enableflexibleediting>
+      </enableflexibleediting>
+      <enableflexibleteaching>
+      </enableflexibleteaching>
+      <upgradable>yes</upgradable>
+      <disableocr>
+      </disableocr>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <disableautolearning>true</disableautolearning>
+      <backgroundprocessingthreshold>
+      </backgroundprocessingthreshold>
+      <EnablePreviewPrecomputation>
+      </EnablePreviewPrecomputation>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <archiveDuration>0</archiveDuration>
+      <OverrideAllowedDocumentExtensions>CSV</OverrideAllowedDocumentExtensions>
+      <ownhomepage>
+      </ownhomepage>
+      <ocrpagestoprocess>
+      </ocrpagestoprocess>
+      <ScriptEngineType>2</ScriptEngineType>
+      <displayWidth>
+      </displayWidth>
+      <AllowUploadAttachment>1</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>1</AllowUploadReferenceDocument>
+      <UseCultureFormat>true</UseCultureFormat>
+      <AllowRetryExtractCD>true</AllowRetryExtractCD>
+      <TransportName>CustomData</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+    </process>
+    <ui>
+      <CustomScriptDebug>false</CustomScriptDebug>
+      <CustomScriptReadonly>false</CustomScriptReadonly>
+      <CustomScript>
+      </CustomScript>
+      <restorationPanel>DataPanel</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 30,
+	"*": {
+		"GDRData": {
+			"type": "GDRData",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"version": 0
+			}
+		},
+		"OCRParams": {
+			"type": "OCRParams",
+			"data": [],
+			"stamp": 2,
+			"options": {
+				"version": 0
+			}
+		},
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 3,
+			"options": {
+				"splitterType": "complex",
+				"maxwidth": "",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 4,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 5,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 6,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-top": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 7,
+									"options": {
+										"autosize": true,
+										"version": 1,
+										"box": {
+											"top": 0,
+											"left": 0,
+											"width": 100,
+											"height": 17
+										},
+										"hidden": false
+									},
+									"*": {
+										"form-content-top-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 8,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"DocumentsPanel": {
+													"type": "PanelDocument",
+													"data": [],
+													"stamp": 9,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": false,
+														"hideTitleBar": false,
+														"label": "_Documents",
+														"version": 0
+													},
+													"*": {
+														"Document": {
+															"type": "Documents",
+															"data": [
+																"documentscontroldata"
+															],
+															"stamp": 10,
+															"options": {
+																"version": 1,
+																"previewButton": false,
+																"downloadButton": true
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								},
+								"form-content-bottom": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 11,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": "17%",
+											"left": "0%",
+											"width": null,
+											"height": "83%"
+										},
+										"hidden": false
+									},
+									"*": {
+										"form-content-left": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 12,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "0%",
+													"width": "45%",
+													"height": null
+												},
+												"hidden": false
+											},
+											"*": {
+												"form-content-left-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 13,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"DataPanel": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 14,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_Document data",
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 15,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 16,
+																			"options": {
+																				"version": 0,
+																				"lines": 0,
+																				"columns": 2,
+																				"ctrlsPos": {},
+																				"colspans": []
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-2": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 17,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"SystemData": {
+															"type": "PanelSystemData",
+															"data": [],
+															"stamp": 18,
+															"options": {
+																"multicolumn": false,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"label": "_System data",
+																"version": 0
+															}
+														}
+													}
+												},
+												"form-content-left-3": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 19,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"NextProcess": {
+															"type": "PanelNextProcess",
+															"data": [],
+															"stamp": 20,
+															"options": {
+																"hidden": true,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"label": "_Next Process",
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-right": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 21,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "45%",
+													"width": "55%",
+													"height": null
+												},
+												"hidden": false
+											},
+											"*": {
+												"form-content-right-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 22,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"PreviewPanel": {
+															"type": "PanelPreview",
+															"data": [],
+															"stamp": 23,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"label": "_Document Preview",
+																"version": 0
+															},
+															"*": {
+																"Preview": {
+																	"type": "Preview",
+																	"data": [
+																		"previewdata"
+																	],
+																	"stamp": 24,
+																	"options": {
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 25,
+					"options": {
+						"splitterType": "simple-h",
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 26,
+							"options": {
+								"label": "_Save",
+								"action": "save",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Approve": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 27,
+							"options": {
+								"label": "_Approve",
+								"action": "approve",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Reject": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 28,
+							"options": {
+								"label": "_Reject",
+								"action": "reject",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Reprocess": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 29,
+							"options": {
+								"label": "_Reprocess",
+								"action": "reprocess",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 30,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <type id="GOLHG0000M4O" name="CD">
+  </type>
+</process>

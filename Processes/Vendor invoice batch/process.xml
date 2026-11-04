@@ -1,0 +1,1506 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:07:08" deleted="0" eskerapplication="P2P" global="0" id="IKAQT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="Vendor invoice batch" needvalidation="0" ootofilter="" ootoversion="0" originalProcessID="VSDC667212" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="0" version="1" visibility="0">
+  <properties>
+    <dataConditions>
+      <listDataConditions>
+				&lt;dataCondition&gt;
+					&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+					&lt;filter&gt;msnex=*&lt;/filter&gt;
+					&lt;labelKey&gt;_AP disabled&lt;/labelKey&gt;
+					&lt;conditions&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableAccountPayableGlobalSetting__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+					&lt;/conditions&gt;
+				&lt;/dataCondition&gt;
+			</listDataConditions>
+    </dataConditions>
+    <dbIndex>
+      <AUTO_AKKAQT400153EA>&lt;Index&gt;&lt;Ref Name="AKKAQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AKKAQT400153EA>
+      <AUTO_ALKAQT400153EA>&lt;Index&gt;&lt;Ref Name="ALKAQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_ALKAQT400153EA>
+      <AUTO_AMKAQT400153EA>&lt;Index&gt;&lt;Ref Name="AMKAQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AMKAQT400153EA>
+      <AUTO_ANKAQT400153EA>&lt;Index&gt;&lt;Ref Name="ANKAQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_ANKAQT400153EA>
+      <AUTO_AOKAQT400153EA>&lt;Index&gt;&lt;Ref Name="AOKAQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AOKAQT400153EA>
+      <AUTO_APKAQT400153EA>&lt;Index&gt;&lt;Ref Name="APKAQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_APKAQT400153EA>
+      <AUTO_AQKAQT400153EA>&lt;Index&gt;&lt;Ref Name="AQKAQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AQKAQT400153EA>
+    </dbIndex>
+    <externalvariables>
+      <GenerateEmbeddingsForModelCreation>enable</GenerateEmbeddingsForModelCreation>
+      <Configuration>Default</Configuration>
+      <minimum_number_of_training>25</minimum_number_of_training>
+    </externalvariables>
+    <gdr>
+      <FinalizationScriptAllowRetry>false</FinalizationScriptAllowRetry>
+      <FinalizationScript>
+      </FinalizationScript>
+      <ValidationScriptAllowRetry>false</ValidationScriptAllowRetry>
+      <validationscriptIncludedScripts>Sys/Sys_Helpers_Batch</validationscriptIncludedScripts>
+      <ValidationScript>"use strict";
+const runValidationScript = function () {
+    const currentModel = Data.GetValue("ModelName__");
+    if (!currentModel) {
+        const splitWSResponse = Sys.Helpers.Batch.getWSResponse();
+        if (splitWSResponse) {
+            let lengthSplitState = Document.GetPageCount() - 1;
+            if (splitWSResponse.batch)
+                lengthSplitState = splitWSResponse.batch.length;
+            Data.SetValue("ModelName__", splitWSResponse.ModelID);
+            Data.SetValue("splitStateLength__", lengthSplitState);
+            let nbPredictedPagesToMerge = 0;
+            let nbPredictedPagesToSplit = 0;
+            let nbPredictedPagesAsAttachment = 0;
+            if (lengthSplitState &lt; 1)
+                lengthSplitState = Document.GetPageCount() - 1;
+            const splitStateTabular = Sys.Helpers.Batch.buildTabularSplitState(splitWSResponse.splitstate, lengthSplitState);
+            for (let i = 0; i &lt; lengthSplitState; i++) {
+                if (splitStateTabular[i] === 0)
+                    nbPredictedPagesToMerge++;
+                else if (splitStateTabular[i] === 1)
+                    nbPredictedPagesToSplit++;
+                else if (splitStateTabular[i] === 2)
+                    nbPredictedPagesAsAttachment++;
+            }
+            Data.SetValue("nbPredictedPagesToMerge__", nbPredictedPagesToMerge);
+            Data.SetValue("nbPredictedPagesToSplit__", nbPredictedPagesToSplit);
+            Data.SetValue("nbPredictedPagesAsAttachment__", nbPredictedPagesAsAttachment);
+        }
+    }
+};
+runValidationScript();
+//# sourceMappingURL=validationscript.js.map</ValidationScript>
+      <AllowTagCoverPages>true</AllowTagCoverPages>
+      <AllowTagNewDocuments>true</AllowTagNewDocuments>
+      <AllowTagAttachments>true</AllowTagAttachments>
+      <ExtractionScriptAllowRetry>false</ExtractionScriptAllowRetry>
+      <extractionscriptIncludedScripts>Sys/Sys_Helpers</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>Lib_P2P_V12.0.566.0</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>Lib_Parameters_P2P_V12.0.566.0</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>[Lib_Custom_Parameters]</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>[Lib_P2P_Custom_Parameters]</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>[LIB_AP_CUSTOMIZATION_EXTRACTION]</extractionscriptIncludedScripts>
+      <ExtractionScript>"use strict";
+const runExtraction = function () {
+    Sys.Helpers.TryCallFunction("Lib.AP.Customization.Extraction.OnBatchExtractionScriptBegin");
+    // Set the subject of the form
+    Data.SetValue("Subject", Language.Translate("_Received file: {0}", false, Document.GetName()));
+    // Set the splitting recipient
+    const nextProcessid = Process.GetNextProcessID();
+    if (nextProcessid) {
+        Data.SetValue("SplitToProcessId", nextProcessid);
+        handleSplitOwner();
+    }
+    // Serialize the configuration on the record
+    Sys.Parameters.GetInstance("P2P").Serialize();
+    Sys.Parameters.GetInstance("AP").Serialize();
+    handleSplitAndValidation();
+    Sys.Helpers.TryCallFunction("Lib.AP.Customization.Extraction.OnBatchExtractionScriptEnd");
+};
+function handleSplitOwner() {
+    if (Data.GetValue("OriginalJobID")) {
+        setSplitToOwner(Users.GetUser(Data.GetValue("OwnerId")));
+    }
+    else {
+        let specificVendorInvoiceOwner = Variable.GetValueAsString("VendorInvoiceOwner");
+        if (specificVendorInvoiceOwner) {
+            specificVendorInvoiceOwner = Lib.P2P.ResolveDemoLogin(specificVendorInvoiceOwner);
+            Log.Info(`'VendorInvoiceOwner' variable set to '${specificVendorInvoiceOwner}', forwarding process and setting 'SplitToOwner' to this owner.`);
+            Process.Forward(specificVendorInvoiceOwner);
+            setSplitToOwner(Users.GetUser(specificVendorInvoiceOwner));
+        }
+        else {
+            const nextProcessUser = Process.GetNextProcessUser();
+            if (nextProcessUser) {
+                setSplitToOwner(nextProcessUser);
+            }
+        }
+    }
+}
+function handleSplitAndValidation() {
+    const nPages = Document.GetPageCount();
+    const nPagesMinimum = Sys.Helpers.TryCallFunction("Lib.AP.Customization.Extraction.DetermineMinimumPageCountToSplit") || 1;
+    let isTxtFile = false;
+    if (nPages &gt; nPagesMinimum) {
+        let fileName = Attach.GetAttachFileName(0);
+        if (fileName) {
+            fileName = fileName.toLocaleLowerCase();
+            isTxtFile = fileName.endsWith(".txt");
+        }
+        else {
+            // Legacy code
+            const processedDoc = Attach.GetProcessedDocument();
+            if (processedDoc) {
+                const processedFile = processedDoc.GetInputFile();
+                const ext = processedFile.GetExtension().toLowerCase();
+                isTxtFile = ext === ".txt";
+            }
+        }
+    }
+    if (nPages &lt;= nPagesMinimum || isTxtFile) {
+        Log.Info(`${isTxtFile ? "Txt file" : "Single page"} - auto approve (pages=${nPages})`);
+        // No split required
+    }
+    else {
+        Log.Info(`Multiple pages - splitting required (pages=${nPages})`);
+        Data.SetValue("Split", 1);
+        Data.SetValue("NeedValidation", 1);
+    }
+}
+function setSplitToOwner(user) {
+    Data.SetValue("SplitToOwnerID", user.GetValue("FullDn"));
+    Data.SetValue("SplitToOwnerPB", user.GetValue("OwnerPB"));
+}
+runExtraction();
+//# sourceMappingURL=extractionscript.js.map</ExtractionScript>
+      <AllowRemovePages>true</AllowRemovePages>
+      <AllowSwapPages>true</AllowSwapPages>
+      <PostProcessingScriptAllowRetry>false</PostProcessingScriptAllowRetry>
+      <postprocessingscriptIncludedScripts>Sys/Sys_Helpers_Batch</postprocessingscriptIncludedScripts>
+      <PostProcessingScript>"use strict";
+const addRecords = function (splitState, splitWSResponse, splitStateTabular) {
+    let nbRecordAdded = 0;
+    for (let i = 0; i &lt; splitWSResponse.batch.length; i++) {
+        if (splitStateTabular[i] &lt; 3) {
+            const inputData = splitWSResponse.batch[i];
+            const validateData = {
+                page_no: i + 1,
+                split_state: splitStateTabular[i],
+                batch_split_state: splitState
+            };
+            if (Sys.Helpers.Batch.createRecordForLearningStep(inputData, validateData, splitWSResponse.Model_Version, splitWSResponse.Model_Type)) {
+                nbRecordAdded++;
+            }
+        }
+    }
+    Log.Info(`${nbRecordAdded} records added for the model ${splitWSResponse.Model_Version} associated to the document type ${splitWSResponse.Model_Type}`);
+};
+const runPostProcessing = function () {
+    const splitWSResponse = Sys.Helpers.Batch.getWSResponse();
+    if (splitWSResponse) {
+        // Use ReadValue instead of Read because Read returns false when the feature has not been explicitly opted in
+        // (i.e., no record exists in the database), whereas ReadValue returns the actual stored value.
+        const batchSplittingV2Enabled = FeatureToggle.ReadValue("AllowMLBatchSplittingV2") !== "0";
+        const generateUserActions = Variable.GetValueAsString("GenerateEmbeddingsForModelCreation") || "disable";
+        const splitState = Data.GetValue("SplitState");
+        const formState = Data.GetValue("State");
+        let lengthSplitState = Document.GetPageCount() - 1;
+        if (splitWSResponse.batch)
+            lengthSplitState = splitWSResponse.batch.length;
+        const splitStateTabular = Sys.Helpers.Batch.buildTabularSplitState(splitState, lengthSplitState);
+        if ((batchSplittingV2Enabled || generateUserActions.toLowerCase() == "enable") &amp;&amp; splitState &amp;&amp; formState === 100) {
+            const currentModelType = Variable.GetValueAsString("model_type") || "INVOICE";
+            if (splitWSResponse.Model_Type === currentModelType) {
+                addRecords(splitState, splitWSResponse, splitStateTabular);
+            }
+            else {
+                Log.Warn(`The model type during prediction was ${splitWSResponse.Model_Type} whereas the current model type is ${currentModelType}`);
+            }
+        }
+        let nbExpectedPagesToMerge = 0;
+        let nbExpectedPagesToSplit = 0;
+        let nbExpectedPagesAsAttachment = 0;
+        for (let i = 0; i &lt; lengthSplitState; i++) {
+            if (splitStateTabular[i] &lt; 3) {
+                if (splitStateTabular[i] === 0)
+                    nbExpectedPagesToMerge++;
+                else if (splitStateTabular[i] === 1)
+                    nbExpectedPagesToSplit++;
+                else if (splitStateTabular[i] === 2)
+                    nbExpectedPagesAsAttachment++;
+            }
+        }
+        Data.SetValue("nbExpectedPagesToMerge__", nbExpectedPagesToMerge);
+        Data.SetValue("nbExpectedPagesToSplit__", nbExpectedPagesToSplit);
+        Data.SetValue("nbExpectedPagesAsAttachment__", nbExpectedPagesAsAttachment);
+    }
+};
+runPostProcessing();
+//# sourceMappingURL=postprocessingscript.js.map</PostProcessingScript>
+    </gdr>
+    <lg>
+      <process_da>{
+	"_ModelName": "Anvendt model",
+	"_nbExpectedPagesAsAttachment": "Antal vedhæftede filer angivet af brugeren",
+	"_nbExpectedPagesToMerge": "Antal fletninger foretaget af brugeren",
+	"_nbExpectedPagesToSplit": "Antal opdelinger foretaget af brugeren",
+	"_nbPredictedPagesAsAttachment": "Antal forventede vedhæftede filer",
+	"_nbPredictedPagesToMerge": "Antal forventede fletninger",
+	"_NbPredictedPagesToSplit": "Antal forventede opdelinger",
+	"_Received file: {0}": "Modtaget fil: {0}",
+	"_Split a batch of vendor invoices": "Opdel batch med leverandørfakturaer",
+	"_splitStateLength": "Antal mulige handlinger",
+	"Statistics": "Statistikker for batchopdeling",
+	"Vendor invoice batch": "Batch med leverandørfakturaer"
+}</process_da>
+      <process_de>{
+	"_ModelName": "Verwendetes Modell",
+	"_nbExpectedPagesAsAttachment": "Anzahl der vom Benutzer angegebenen Anlagen",
+	"_nbExpectedPagesToMerge": "Anzahl der vom Benutzer vorgenommenen Seitenzusammenführungen",
+	"_nbExpectedPagesToSplit": "Anzahl der vom Benutzer erstellten Seitenaufteilungen",
+	"_nbPredictedPagesAsAttachment": "Anzahl der vorhergesagten Anlagen",
+	"_nbPredictedPagesToMerge": "Anzahl der vorhergesagten Seitenzusammenführungen",
+	"_NbPredictedPagesToSplit": "Anzahl der vorhergesagten Seitenaufteilungen",
+	"_Received file: {0}": "Empfangene Datei: {0}",
+	"_Split a batch of vendor invoices": "Einen Stapel von Lieferantenrechnungen aufteilen",
+	"_splitStateLength": "Anzahl der möglichen Maßnahmen",
+	"Statistics": "Chargentrennungs-Statistik",
+	"Vendor invoice batch": "Stapel von Lieferantenrechnungen"
+}</process_de>
+      <process_JA>{
+	"_ModelName": "使用モデル",
+	"_nbExpectedPagesAsAttachment": "ユーザーが示す添付ファイルの数",
+	"_nbExpectedPagesToMerge": "ユーザーによるページのマージ数",
+	"_nbExpectedPagesToSplit": "ユーザーによるページの分割数",
+	"_nbPredictedPagesAsAttachment": "予測される添付ファイルの数",
+	"_nbPredictedPagesToMerge": "予測されるページのマージ数",
+	"_NbPredictedPagesToSplit": "予測されるページの分割数",
+	"_Received file: {0}": "受信ファイル: {0}",
+	"_Split a batch of vendor invoices": "仕入先請求書のバッチを分割",
+	"_splitStateLength": "予想されるアクション数",
+	"Statistics": "ロット分割統計",
+	"Vendor invoice batch": "仕入先請求書バッチ"
+}</process_JA>
+      <process_en>{
+	"_ModelName": "Model used",
+	"_nbExpectedPagesAsAttachment": "Number of attachments indicated by the user",
+	"_nbExpectedPagesToMerge": "Number of merges made by the user",
+	"_nbExpectedPagesToSplit": "Number of splits made by the user",
+	"_nbPredictedPagesAsAttachment": "Number of predicted attachments",
+	"_nbPredictedPagesToMerge": "Number of predicted merges",
+	"_NbPredictedPagesToSplit": "Number of predicted splits",
+	"_Received file: {0}": "Received file: {0}",
+	"_Split a batch of vendor invoices": "Split a supplier invoice batch",
+	"_splitStateLength": "Number of possible actions",
+	"Statistics": "Batch Splitting Statistics",
+	"Vendor invoice batch": "Supplier invoice batch"
+}</process_en>
+      <process_es>{
+	"_ModelName": "Modelo utilizado",
+	"_nbExpectedPagesAsAttachment": "Número de archivos adjuntos indicados por el usuario",
+	"_nbExpectedPagesToMerge": "Número de combinaciones realizadas por el usuario",
+	"_nbExpectedPagesToSplit": "Número de divisiones realizadas por el usuario",
+	"_nbPredictedPagesAsAttachment": "Número de anexos pronosticados",
+	"_nbPredictedPagesToMerge": "Número de combinaciones pronosticadas",
+	"_NbPredictedPagesToSplit": "Número de divisiones pronosticadas",
+	"_Received file: {0}": "Archivo recibido: {0}",
+	"_Split a batch of vendor invoices": "Dividir un lote de facturas de proveedor",
+	"_splitStateLength": "Número de acciones posibles",
+	"Statistics": "Estadísticas de la división del lote",
+	"Vendor invoice batch": "Lote de facturas de proveedor"
+}</process_es>
+      <process_fr>{
+	"_ModelName": "Modèle utilisé",
+	"_nbExpectedPagesAsAttachment": "Nombre de pièces jointes indiquées par l'utilisateur",
+	"_nbExpectedPagesToMerge": "Nombre de fusions effectuées par l'utilisateur",
+	"_nbExpectedPagesToSplit": "Nombre de découpages effectués par l'utilisateur",
+	"_nbPredictedPagesAsAttachment": "Nombre de pièces jointes prédites",
+	"_nbPredictedPagesToMerge": "Nombre de fusions prédites",
+	"_NbPredictedPagesToSplit": "Nombre de découpages prédits",
+	"_Received file: {0}": "Fichier reçu : {0}",
+	"_Split a batch of vendor invoices": "Découper un lot de factures fournisseurs",
+	"_splitStateLength": "Nombre d'actions possibles",
+	"Statistics": "Statistiques sur le découpage du lot",
+	"Vendor invoice batch": "Lot de factures fournisseurs"
+}</process_fr>
+      <process_nl-NL>{
+	"_ModelName": "Gebruikt model",
+	"_nbExpectedPagesAsAttachment": "Aantal bijlagen aangegeven door de gebruiker",
+	"_nbExpectedPagesToMerge": "Aantal pagina samenvoegingen gedaan door de gebruiker",
+	"_nbExpectedPagesToSplit": "Aantal pagina splitsingen gedaan door de gebruiker",
+	"_nbPredictedPagesAsAttachment": "Voorspelde aantal bijlagen",
+	"_nbPredictedPagesToMerge": "Voorspelde aantal pagina samenvoegingen",
+	"_NbPredictedPagesToSplit": "Voorspelde aantal pagina splitsingen",
+	"_Received file: {0}": "Ontvangen bestand: {0}",
+	"_Split a batch of vendor invoices": "Batch van leveranciersfacturen splitsen",
+	"_splitStateLength": "Aantal mogelijke acties",
+	"Statistics": "Statistieken batch splitsingen",
+	"Vendor invoice batch": "Batch van leveranciersfacturen"
+}</process_nl-NL>
+      <process_pl>{
+	"_ModelName": "Użyty model",
+	"_nbExpectedPagesAsAttachment": "Liczba załączników wskazanych przez użytkownika",
+	"_nbExpectedPagesToMerge": "Liczba scaleń wykonanych przez użytkownika",
+	"_nbExpectedPagesToSplit": "Liczba podziałów wykonanych przez użytkownika",
+	"_nbPredictedPagesAsAttachment": "Liczba przewidywanych załączników",
+	"_nbPredictedPagesToMerge": "Liczba przewidywanych scaleń",
+	"_NbPredictedPagesToSplit": "Liczba przewidywanych podziałów",
+	"_Received file: {0}": "Odebrany plik: {0}",
+	"_Split a batch of vendor invoices": "Podziel partię faktur dostawców",
+	"_splitStateLength": "Liczba możliwych działań",
+	"Statistics": "Statystyki podziału partii",
+	"Vendor invoice batch": "Partia faktur dostawców"
+}</process_pl>
+      <process_it>{
+	"_ModelName": "Modello usato",
+	"_nbExpectedPagesAsAttachment": "Numero di allegati indicato dall'utente",
+	"_nbExpectedPagesToMerge": "Numero di unioni effettuate dall'utente",
+	"_nbExpectedPagesToSplit": "Numero di divisioni effettuate dall'utente",
+	"_nbPredictedPagesAsAttachment": "Numero di allegati previsti",
+	"_nbPredictedPagesToMerge": "Numero di unioni previste",
+	"_NbPredictedPagesToSplit": "Numero di divisioni previste",
+	"_Received file: {0}": "File ricevuto: {0}",
+	"_Split a batch of vendor invoices": "Dividi un batch di fatture fornitori",
+	"_splitStateLength": "Numero di azioni possibili",
+	"Statistics": "Statistiche sulla divisione del batch",
+	"Vendor invoice batch": "Batch di fatture fornitori"
+}</process_it>
+      <process_sk>{
+	"_ModelName": "Použitý model",
+	"_nbExpectedPagesAsAttachment": "Počet príloh uvedených používateľom",
+	"_nbExpectedPagesToMerge": "Počet zlúčení vykonaných používateľom",
+	"_nbExpectedPagesToSplit": "Počet rozdelení vykonaných používateľom",
+	"_nbPredictedPagesAsAttachment": "Počet predpokladaných príloh",
+	"_nbPredictedPagesToMerge": "Počet predpokladaných zlúčení",
+	"_NbPredictedPagesToSplit": "Počet predpokladaných rozdelení",
+	"_Received file: {0}": "Prijatý súbor: {0}",
+	"_Split a batch of vendor invoices": "Rozdeliť dávku faktúr dodávateľa",
+	"_splitStateLength": "Počet možných akcií",
+	"Statistics": "Štatistiky rozdelenia dávky",
+	"Vendor invoice batch": "Dávka faktúr dodávateľa"
+}</process_sk>
+      <process_zh-CN>{
+	"_ModelName": "使用的模型",
+	"_nbExpectedPagesAsAttachment": "用户所指示的附件数",
+	"_nbExpectedPagesToMerge": "用户所进行的页面合并次数",
+	"_nbExpectedPagesToSplit": "用户所进行的页面分割次数",
+	"_nbPredictedPagesAsAttachment": "预测附件数",
+	"_nbPredictedPagesToMerge": "预测页面合并次数",
+	"_NbPredictedPagesToSplit": "预测页面分割次数",
+	"_Received file: {0}": "收到文件：{0}",
+	"_Split a batch of vendor invoices": "拆分供应商账单批",
+	"_splitStateLength": "可能操作数量",
+	"Statistics": "批量拆分统计数据",
+	"Vendor invoice batch": "供应商账单批"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"_ModelName": "Modelo usado",
+	"_nbExpectedPagesAsAttachment": "Número de anexos indicados pelo usuário",
+	"_nbExpectedPagesToMerge": "Número de mesclagens de páginas feitas pelo usuário",
+	"_nbExpectedPagesToSplit": "Número de divisões de página feitas pelo usuário",
+	"_nbPredictedPagesAsAttachment": "Número de anexos previstos",
+	"_nbPredictedPagesToMerge": "Número de mesclagens de páginas previstas",
+	"_NbPredictedPagesToSplit": "Número de divisões de página previstas",
+	"_Received file: {0}": "Arquivo recebido: {0}",
+	"_Split a batch of vendor invoices": "Dividir um lote de faturas de fornecedor",
+	"_splitStateLength": "Número de ações possíveis",
+	"Statistics": "Estatísticas de divisão do lote",
+	"Vendor invoice batch": "Lotes de faturas de fornecedor"
+}</process_pt-BR>
+    </lg>
+    <ocr>
+      <trade-off>accurate</trade-off>
+      <image-binarization>no</image-binarization>
+      <image-draft-fax>no</image-draft-fax>
+      <image-despeckle>no</image-despeckle>
+      <allowed-language>0</allowed-language>
+      <image-resolution-enhancement>auto</image-resolution-enhancement>
+      <ocr_engine>Nuance222</ocr_engine>
+      <extractionAdditionalOptions>
+      </extractionAdditionalOptions>
+    </ocr>
+    <process>
+      <flowtype>processing</flowtype>
+      <ocrpreset>custom</ocrpreset>
+      <EnablePrecomputedPngPreview>1</EnablePrecomputedPngPreview>
+      <homepagelabel>_Split a batch of vendor invoices</homepagelabel>
+      <enableflexibleauditing>
+      </enableflexibleauditing>
+      <enableflexibleediting>
+      </enableflexibleediting>
+      <enableflexibleteaching>
+      </enableflexibleteaching>
+      <upgradable>yes</upgradable>
+      <disableocr>yes</disableocr>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <disableautolearning>true</disableautolearning>
+      <backgroundprocessingthreshold>
+      </backgroundprocessingthreshold>
+      <EnablePreviewPrecomputation>true</EnablePreviewPrecomputation>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <archiveDuration>0</archiveDuration>
+      <ocrpagestoprocess>0</ocrpagestoprocess>
+      <ScriptEngineType>2</ScriptEngineType>
+      <displayWidth>
+      </displayWidth>
+      <AllowUploadAttachment>1</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>1</AllowUploadReferenceDocument>
+      <UseCultureFormat>true</UseCultureFormat>
+      <AllowRetryExtractCD>true</AllowRetryExtractCD>
+      <TransportName>CustomData</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+    </process>
+    <ui>
+      <CustomScriptDebug>false</CustomScriptDebug>
+      <CustomScriptReadonly>false</CustomScriptReadonly>
+      <CustomScript>
+      </CustomScript>
+      <restorationPanel>DataPanel</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 50,
+	"*": {
+		"GDRData": {
+			"type": "GDRData",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"version": 0
+			}
+		},
+		"OCRParams": {
+			"type": "OCRParams",
+			"data": [],
+			"stamp": 2,
+			"options": {
+				"version": 0
+			}
+		},
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 3,
+			"options": {
+				"splitterType": "complex",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 4,
+					"options": {
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 5,
+					"options": {
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 6,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-top": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 7,
+									"options": {
+										"autosize": true,
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"width": null,
+											"height": "13%"
+										},
+										"hidden": true
+									}
+								},
+								"form-content-bottom": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 8,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"width": null,
+											"height": "100%"
+										},
+										"hidden": false,
+										"hideSeparator": true
+									},
+									"*": {
+										"form-content-left": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 9,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "0%",
+													"width": "45%",
+													"height": null
+												},
+												"hidden": false
+											},
+											"*": {
+												"form-content-left-4": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 10,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"DocumentsPanel": {
+															"type": "PanelDocument",
+															"data": [],
+															"stamp": 11,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"label": "_Documents",
+																"version": 0
+															},
+															"*": {
+																"Document": {
+																	"type": "Documents",
+																	"data": [
+																		"documentscontroldata"
+																	],
+																	"stamp": 12,
+																	"options": {
+																		"version": 1,
+																		"previewButton": true,
+																		"downloadButton": true
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-5": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 13,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"NextProcess": {
+															"type": "PanelNextProcess",
+															"data": [],
+															"stamp": 14,
+															"options": {
+																"hidden": false,
+																"border": {},
+																"labelLength": 0,
+																"label": "_Next Process",
+																"version": 0
+															}
+														}
+													}
+												},
+												"form-content-left-2": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 15,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"SystemData": {
+															"type": "PanelSystemData",
+															"data": [],
+															"stamp": 16,
+															"options": {
+																"multicolumn": false,
+																"border": {
+																	"collapsed": true
+																},
+																"labelLength": 0,
+																"label": "_System data",
+																"version": 0
+															}
+														}
+													}
+												},
+												"form-content-left-8": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 17,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"DataPanel": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 18,
+															"options": {
+																"border": {
+																	"collapsed": true
+																},
+																"labelLength": 0,
+																"label": "_Document data",
+																"hidden": true,
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 19,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 20,
+																			"options": {
+																				"version": 0,
+																				"lines": 0,
+																				"columns": 2,
+																				"ctrlsPos": {},
+																				"colspans": []
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 21,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"Statistics": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 22,
+															"options": {
+																"border": {},
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "Statistics",
+																"hidden": true,
+																"leftImageURL": "",
+																"removeMargins": false,
+																"elementsAlignment": "left",
+																"labelLength": 0,
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 23,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {
+																			"ModelName__": "LabelModelName__",
+																			"LabelModelName__": "ModelName__",
+																			"splitStateLength__": "LabelsplitStateLength__",
+																			"LabelsplitStateLength__": "splitStateLength__",
+																			"nbPredictedPagesToMerge__": "LabelnbPredictedPagesToMerge__",
+																			"LabelnbPredictedPagesToMerge__": "nbPredictedPagesToMerge__",
+																			"nbExpectedPagesToMerge__": "LabelnbExpectedPagesToMerge__",
+																			"LabelnbExpectedPagesToMerge__": "nbExpectedPagesToMerge__",
+																			"NbPredictedPagesToSplit__": "LabelNbPredictedPagesToSplit__",
+																			"LabelNbPredictedPagesToSplit__": "NbPredictedPagesToSplit__",
+																			"nbExpectedPagesToSplit__": "LabelnbExpectedPagesToSplit__",
+																			"LabelnbExpectedPagesToSplit__": "nbExpectedPagesToSplit__",
+																			"nbPredictedPagesAsAttachment__": "LabelnbPredictedPagesAsAttachment__",
+																			"LabelnbPredictedPagesAsAttachment__": "nbPredictedPagesAsAttachment__",
+																			"nbExpectedPagesAsAttachment__": "LabelnbExpectedPagesAsAttachment__",
+																			"LabelnbExpectedPagesAsAttachment__": "nbExpectedPagesAsAttachment__"
+																		}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 24,
+																			"options": {
+																				"version": 0,
+																				"lines": 8,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"LabelModelName__": {
+																						"line": 1,
+																						"column": 1
+																					},
+																					"ModelName__": {
+																						"line": 1,
+																						"column": 2
+																					},
+																					"LabelsplitStateLength__": {
+																						"line": 2,
+																						"column": 1
+																					},
+																					"splitStateLength__": {
+																						"line": 2,
+																						"column": 2
+																					},
+																					"LabelnbPredictedPagesToMerge__": {
+																						"line": 3,
+																						"column": 1
+																					},
+																					"nbPredictedPagesToMerge__": {
+																						"line": 3,
+																						"column": 2
+																					},
+																					"LabelnbExpectedPagesToMerge__": {
+																						"line": 4,
+																						"column": 1
+																					},
+																					"nbExpectedPagesToMerge__": {
+																						"line": 4,
+																						"column": 2
+																					},
+																					"LabelNbPredictedPagesToSplit__": {
+																						"line": 5,
+																						"column": 1
+																					},
+																					"NbPredictedPagesToSplit__": {
+																						"line": 5,
+																						"column": 2
+																					},
+																					"LabelnbExpectedPagesToSplit__": {
+																						"line": 6,
+																						"column": 1
+																					},
+																					"nbExpectedPagesToSplit__": {
+																						"line": 6,
+																						"column": 2
+																					},
+																					"LabelnbPredictedPagesAsAttachment__": {
+																						"line": 7,
+																						"column": 1
+																					},
+																					"nbPredictedPagesAsAttachment__": {
+																						"line": 7,
+																						"column": 2
+																					},
+																					"LabelnbExpectedPagesAsAttachment__": {
+																						"line": 8,
+																						"column": 1
+																					},
+																					"nbExpectedPagesAsAttachment__": {
+																						"line": 8,
+																						"column": 2
+																					}
+																				},
+																				"colspans": [
+																					[],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[]
+																				]
+																			},
+																			"*": {
+																				"LabelModelName__": {
+																					"type": "Label",
+																					"data": [
+																						"ModelName__"
+																					],
+																					"stamp": 26,
+																					"options": {
+																						"label": "_ModelName",
+																						"version": 0
+																					}
+																				},
+																				"ModelName__": {
+																					"type": "ShortText",
+																					"data": [
+																						"ModelName__"
+																					],
+																					"stamp": 25,
+																					"options": {
+																						"label": "_ModelName",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"readonly": true,
+																						"browsable": false
+																					}
+																				},
+																				"LabelsplitStateLength__": {
+																					"type": "Label",
+																					"data": [
+																						"splitStateLength__"
+																					],
+																					"stamp": 28,
+																					"options": {
+																						"label": "_splitStateLength",
+																						"version": 0
+																					}
+																				},
+																				"splitStateLength__": {
+																					"type": "Integer",
+																					"data": [
+																						"splitStateLength__"
+																					],
+																					"stamp": 27,
+																					"options": {
+																						"label": "_splitStateLength",
+																						"version": 2,
+																						"textSize": "S",
+																						"textAlignment": "right",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"integer": true,
+																						"precision_internal": 0,
+																						"precision_current": 0,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"enableRoundedStyle": false,
+																						"enablePlusMinus": false,
+																						"readonly": true,
+																						"browsable": false
+																					}
+																				},
+																				"LabelnbPredictedPagesToMerge__": {
+																					"type": "Label",
+																					"data": [
+																						"nbPredictedPagesToMerge__"
+																					],
+																					"stamp": 30,
+																					"options": {
+																						"label": "_nbPredictedPagesToMerge",
+																						"version": 0
+																					}
+																				},
+																				"nbPredictedPagesToMerge__": {
+																					"type": "Integer",
+																					"data": [
+																						"nbPredictedPagesToMerge__"
+																					],
+																					"stamp": 29,
+																					"options": {
+																						"label": "_nbPredictedPagesToMerge",
+																						"version": 2,
+																						"textSize": "S",
+																						"textAlignment": "right",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"integer": true,
+																						"precision_internal": 0,
+																						"precision_current": 0,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"enableRoundedStyle": false,
+																						"enablePlusMinus": false,
+																						"readonly": true,
+																						"browsable": false
+																					}
+																				},
+																				"LabelnbExpectedPagesToMerge__": {
+																					"type": "Label",
+																					"data": [
+																						"nbExpectedPagesToMerge__"
+																					],
+																					"stamp": 32,
+																					"options": {
+																						"label": "_nbExpectedPagesToMerge",
+																						"version": 0
+																					}
+																				},
+																				"nbExpectedPagesToMerge__": {
+																					"type": "Integer",
+																					"data": [
+																						"nbExpectedPagesToMerge__"
+																					],
+																					"stamp": 31,
+																					"options": {
+																						"label": "_nbExpectedPagesToMerge",
+																						"version": 2,
+																						"textSize": "S",
+																						"textAlignment": "right",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"integer": true,
+																						"precision_internal": 0,
+																						"precision_current": 0,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"enableRoundedStyle": false,
+																						"enablePlusMinus": false,
+																						"readonly": true,
+																						"browsable": false
+																					}
+																				},
+																				"LabelNbPredictedPagesToSplit__": {
+																					"type": "Label",
+																					"data": [
+																						"NbPredictedPagesToSplit__"
+																					],
+																					"stamp": 34,
+																					"options": {
+																						"label": "_NbPredictedPagesToSplit",
+																						"version": 0
+																					}
+																				},
+																				"NbPredictedPagesToSplit__": {
+																					"type": "Integer",
+																					"data": [
+																						"NbPredictedPagesToSplit__"
+																					],
+																					"stamp": 33,
+																					"options": {
+																						"label": "_NbPredictedPagesToSplit",
+																						"version": 2,
+																						"textSize": "S",
+																						"textAlignment": "right",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"integer": true,
+																						"precision_internal": 0,
+																						"precision_current": 0,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"enableRoundedStyle": false,
+																						"enablePlusMinus": false,
+																						"readonly": true,
+																						"browsable": false
+																					}
+																				},
+																				"LabelnbExpectedPagesToSplit__": {
+																					"type": "Label",
+																					"data": [
+																						"nbExpectedPagesToSplit__"
+																					],
+																					"stamp": 36,
+																					"options": {
+																						"label": "_nbExpectedPagesToSplit",
+																						"version": 0
+																					}
+																				},
+																				"nbExpectedPagesToSplit__": {
+																					"type": "Integer",
+																					"data": [
+																						"nbExpectedPagesToSplit__"
+																					],
+																					"stamp": 35,
+																					"options": {
+																						"label": "_nbExpectedPagesToSplit",
+																						"version": 2,
+																						"textSize": "S",
+																						"textAlignment": "right",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"integer": true,
+																						"precision_internal": 0,
+																						"precision_current": 0,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"enableRoundedStyle": false,
+																						"enablePlusMinus": false,
+																						"readonly": true,
+																						"browsable": false
+																					}
+																				},
+																				"LabelnbPredictedPagesAsAttachment__": {
+																					"type": "Label",
+																					"data": [
+																						"nbPredictedPagesAsAttachment__"
+																					],
+																					"stamp": 38,
+																					"options": {
+																						"label": "_nbPredictedPagesAsAttachment",
+																						"version": 0
+																					}
+																				},
+																				"nbPredictedPagesAsAttachment__": {
+																					"type": "Integer",
+																					"data": [
+																						"nbPredictedPagesAsAttachment__"
+																					],
+																					"stamp": 37,
+																					"options": {
+																						"label": "_nbPredictedPagesAsAttachment",
+																						"version": 2,
+																						"textSize": "S",
+																						"textAlignment": "right",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"integer": true,
+																						"precision_internal": 0,
+																						"precision_current": 0,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"enableRoundedStyle": false,
+																						"enablePlusMinus": false,
+																						"readonly": true,
+																						"browsable": false
+																					}
+																				},
+																				"LabelnbExpectedPagesAsAttachment__": {
+																					"type": "Label",
+																					"data": [
+																						"nbExpectedPagesAsAttachment__"
+																					],
+																					"stamp": 40,
+																					"options": {
+																						"label": "_nbExpectedPagesAsAttachment",
+																						"version": 0
+																					}
+																				},
+																				"nbExpectedPagesAsAttachment__": {
+																					"type": "Integer",
+																					"data": [
+																						"nbExpectedPagesAsAttachment__"
+																					],
+																					"stamp": 39,
+																					"options": {
+																						"label": "_nbExpectedPagesAsAttachment",
+																						"version": 2,
+																						"textSize": "S",
+																						"textAlignment": "right",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"integer": true,
+																						"precision_internal": 0,
+																						"precision_current": 0,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"enableRoundedStyle": false,
+																						"enablePlusMinus": false,
+																						"readonly": true,
+																						"browsable": false
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-right": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 41,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "45%",
+													"width": "55%",
+													"height": null
+												},
+												"hidden": false
+											},
+											"*": {
+												"form-content-right-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 42,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"PreviewPanel": {
+															"type": "PanelPreview",
+															"data": [],
+															"stamp": 43,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"label": "_Document Preview",
+																"version": 0
+															},
+															"*": {
+																"Preview": {
+																	"type": "Preview",
+																	"data": [
+																		"previewdata"
+																	],
+																	"stamp": 44,
+																	"options": {
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 45,
+					"options": {
+						"splitterType": "simple-h",
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": false,
+							"stamp": 46,
+							"options": {
+								"label": "_Save",
+								"action": "save",
+								"version": 0
+							}
+						},
+						"Reject": {
+							"type": "SubmitButton",
+							"data": false,
+							"stamp": 47,
+							"options": {
+								"label": "_Reject",
+								"action": "reject",
+								"version": 0
+							}
+						},
+						"Quit": {
+							"type": "SubmitButton",
+							"data": false,
+							"stamp": 48,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"version": 0
+							}
+						},
+						"Approve": {
+							"type": "SubmitButton",
+							"data": false,
+							"stamp": 49,
+							"options": {
+								"label": "_Approve",
+								"action": "approve",
+								"version": 0
+							}
+						},
+						"Split": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 50,
+							"options": {
+								"label": "_Split",
+								"action": "split",
+								"submit": true,
+								"disabled": true,
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <field deleted="0" format="" guid="AW4E77100VLT" id="JKAQT400153E" label="_ModelName" length="50" name="ModelName__" originalProcessID="VSDC667212" precision="0" processid="IKAQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AJKAQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ModelName__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:07</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ModelName</Label>
+        <Alias>AJKAQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="GW4E77100VLT" id="KKAQT400153E" label="_nbExpectedPagesAsAttachment" length="0" name="nbExpectedPagesAsAttachment__" originalProcessID="VSDC667212" precision="0" processid="IKAQT400153E" submitable="1" type="INT">
+    <properties>
+      <db>
+        <alias>AKKAQT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/nbExpectedPagesAsAttachment__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:07</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_nbExpectedPagesAsAttachment</Label>
+        <Alias>AKKAQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        <SetNullOnEmptyValue>0</SetNullOnEmptyValue>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="FW4E77100VLT" id="LKAQT400153E" label="_nbExpectedPagesToMerge" length="0" name="nbExpectedPagesToMerge__" originalProcessID="VSDC667212" precision="0" processid="IKAQT400153E" submitable="1" type="INT">
+    <properties>
+      <db>
+        <alias>ALKAQT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/nbExpectedPagesToMerge__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:07</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_nbExpectedPagesToMerge</Label>
+        <Alias>ALKAQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        <SetNullOnEmptyValue>0</SetNullOnEmptyValue>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="HW4E77100VLT" id="MKAQT400153E" label="_nbExpectedPagesToSplit" length="0" name="nbExpectedPagesToSplit__" originalProcessID="VSDC667212" precision="0" processid="IKAQT400153E" submitable="1" type="INT">
+    <properties>
+      <db>
+        <alias>AMKAQT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/nbExpectedPagesToSplit__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:07</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_nbExpectedPagesToSplit</Label>
+        <Alias>AMKAQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        <SetNullOnEmptyValue>0</SetNullOnEmptyValue>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="EW4E77100VLT" id="NKAQT400153E" label="_nbPredictedPagesAsAttachment" length="0" name="nbPredictedPagesAsAttachment__" originalProcessID="VSDC667212" precision="0" processid="IKAQT400153E" submitable="1" type="INT">
+    <properties>
+      <db>
+        <alias>ANKAQT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/nbPredictedPagesAsAttachment__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:07</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_nbPredictedPagesAsAttachment</Label>
+        <Alias>ANKAQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        <SetNullOnEmptyValue>0</SetNullOnEmptyValue>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="CW4E77100VLT" id="OKAQT400153E" label="_nbPredictedPagesToMerge" length="0" name="nbPredictedPagesToMerge__" originalProcessID="VSDC667212" precision="0" processid="IKAQT400153E" submitable="1" type="INT">
+    <properties>
+      <db>
+        <alias>AOKAQT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/nbPredictedPagesToMerge__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:07</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_nbPredictedPagesToMerge</Label>
+        <Alias>AOKAQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        <SetNullOnEmptyValue>0</SetNullOnEmptyValue>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="DW4E77100VLT" id="PKAQT400153E" label="_NbPredictedPagesToSplit" length="0" name="NbPredictedPagesToSplit__" originalProcessID="VSDC667212" precision="0" processid="IKAQT400153E" submitable="1" type="INT">
+    <properties>
+      <db>
+        <alias>APKAQT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/NbPredictedPagesToSplit__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:07</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_NbPredictedPagesToSplit</Label>
+        <Alias>APKAQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        <SetNullOnEmptyValue>0</SetNullOnEmptyValue>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="BW4E77100VLT" id="QKAQT400153E" label="_splitStateLength" length="0" name="splitStateLength__" originalProcessID="VSDC667212" precision="0" processid="IKAQT400153E" submitable="1" type="INT">
+    <properties>
+      <db>
+        <alias>AQKAQT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/splitStateLength__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:07</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_splitStateLength</Label>
+        <Alias>AQKAQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        <SetNullOnEmptyValue>0</SetNullOnEmptyValue>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <processlink condition="" deleted="0" destinationProcessID="U5AQT400153E" guid="G2GQT400153E" id="G2GQT400153E" name="next_process" originalProcessID="VSDC667212" position="0" type="" userid="" userpb="">
+    <properties>
+      <link>
+        <ProcessName>Vendor invoice</ProcessName>
+      </link>
+    </properties>
+  </processlink>
+  <type id="GOLHG0000M4O" name="CD">
+  </type>
+</process>

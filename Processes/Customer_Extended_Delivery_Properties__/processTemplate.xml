@@ -1,0 +1,4532 @@
+<process accountid="" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:00:27" deleted="0" eskerapplication="AR" global="0" id="NoID" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="Customer_Extended_Delivery_Properties__" needvalidation="1" ootofilter="" ootoversion="0" originalProcessID="REPG20003325" ownerid="" ownerpb="" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomTable" upgradable="1" userid="" version="1" visibility="1">
+	<properties>
+		<dbIndex>
+			<ExtendIndexWithLongMaid>
+				&lt;Index&gt;
+				&lt;Ref Name="LongMaid" Option="ASC"/&gt;
+				&lt;Ref Name="CustomerID__" Option="ASC"/&gt;
+				&lt;/Index&gt;
+			</ExtendIndexWithLongMaid>
+		</dbIndex>
+		<dbTrigger>
+			<Builtin_FillLongMaid>&lt;Trigger Name="OwnerID_Field#LongMaid" Module="trgfnot.dll" EntryPoint="MainAccountID2UsingTargetFieldNameFromTriggerName" Operations="ADD" /&gt;</Builtin_FillLongMaid>
+			<Builtin_FillLongMaid>&lt;Trigger Name="OwnerID_Field#LongMaid" Module="trgfnot.dll" EntryPoint="MainAccountID2UsingTargetFieldNameFromTriggerName" Operations="MOD" /&gt;</Builtin_FillLongMaid>
+			<Builtin_NewInUserPortal>&lt;Trigger Name="New Userportal In ES From CT" Module="IndexTrigger.dll" EntryPoint="AddUserPortalInESFromCT" Operations="ADD|AFTERSAVE" /&gt;</Builtin_NewInUserPortal>
+			<Builtin_DuplicateInUserPortal>&lt;Trigger Name="Duplicate UserPortal In ES From CT" Module="IndexTrigger.dll" EntryPoint="DuplicateUserPortalInESFromCT" Operations="MOD|AFTERSAVE" /&gt;</Builtin_DuplicateInUserPortal>
+		</dbTrigger>
+		<deprecatedFields>
+			<panel>CoverageParametersPane</panel>
+			<fields>
+				{
+				"fields": [
+				{ "guid": "", "name": "Spacer_line10__" },
+				{ "guid": "", "name": "CustDetailsName__" },
+				{ "guid": "", "name": "Spacer_line8__" },
+				{ "guid": "", "name": "CustDetailsID__" },
+				{ "guid": "", "name": "CustDetailsEmail__" },
+				{ "guid": "", "name": "CustDetailsPhoneNumber__" },
+				{ "guid": "", "name": "CustDetailsDeliveryMethod__" },
+				{ "guid": "", "name": "Spacer_line11__" },
+				{ "guid": "PPXHG0000SG1", "name": "ChildCustomerIDs__" },
+				{ "guid":"NDNKG0000SG1", "name": "FrenchB2B_Company_Name__"},
+				{ "guid": "UVA100000YRL", "name": "FinancialAnalysis__" },
+				{ "guid": "QZI123540YRL", "name": "InsurerInformationTableJSON__" },
+				{ "guid": "PDNKG0000SG1", "name": "FrenchB2B_Service_Name__" },
+				{ "guid": "SN1LG0000SG1", "name": "FrenchB2B_Service_Code_Type__" },
+				]
+				}
+			</fields>
+		</deprecatedFields>
+		<lg>
+			<!--*.xml-->
+		</lg>
+		<openInProcess>
+			<processName>O2C - Combine Companies</processName>
+		</openInProcess>
+		<process>
+			<flowtype>processing</flowtype>
+			<homepagelabel>_Customer_Extended_Delivery_Properties</homepagelabel>
+			<addBasePropsInUrl>false</addBasePropsInUrl>
+			<upgradable>yes</upgradable>
+			<instanciable>1</instanciable>
+			<disableScriptModification>true</disableScriptModification>
+			<enableUpgradableDesign>true</enableUpgradableDesign>
+			<OverrideAllowedAttachmentExtensions>*</OverrideAllowedAttachmentExtensions>
+			<ConfigurationTableName>AR - Application Global Settings__</ConfigurationTableName>
+			<ExternalLgFilePrefix>ARApplication</ExternalLgFilePrefix>
+			<AllowUploadAttachment>0</AllowUploadAttachment>
+			<AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+			<TriggerUserChangeAuditOnSave>Login={CustomerID__}</TriggerUserChangeAuditOnSave>
+			<shouldRollbackManualRecordEdits>true</shouldRollbackManualRecordEdits>
+			<IsMultiTenant>1</IsMultiTenant>
+			<shouldShowManualEditsWarning>false</shouldShowManualEditsWarning>
+			<UseCultureFormat>true</UseCultureFormat>
+			<TransportName>CustomTable</TransportName>
+			<LayoutVersion>1.0</LayoutVersion>
+		</process>
+		<ui>
+			<CustomScriptDebug>false</CustomScriptDebug>
+			<customscriptIncludedScripts>Lib_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers_Date</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers_Promise</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers_Browse</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers_Records_Client</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_AR</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_AR_Client</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_AR_Customer</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_AR_Client_Billexco_PA</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_AR_Client_ChorusPro</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_AR_Client_Peppol</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_AR_Client_FrenchB2B</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_GenericAPI_Client</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/SYS_AR_TERMSYNC_CLIENT</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_OM_GlobalSettings</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers_LdapUtil</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Cognitive</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Locale_Country</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_CM_Coface_Common</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[Lib_CM_V12.0.566.0]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[Lib_O2C_Audit_V12.0.566.0]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[Lib_AR_Customization_ExternalPortal]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[Lib_AR_Customization_EDI_Portals]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[Lib_AR_AlertHelper_V12.0.566.0]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[Lib_CM_ScoringProviders_V12.0.566.0]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[Lib_CM_ScoringProvidersCommon_V12.0.566.0]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[Lib_CM_Client_CreditApplicationReview_V12.0.566.0]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[Lib_CM_CustomerHelper_V12.0.566.0]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[Lib_CM_CombinedCustomerHelper_V12.0.566.0]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[LIB_CM_PARTNERS_V12.0.566.0]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[LIB_CM_PARTNERS_COFACE_V12.0.566.0]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[Lib_O2C_Customization_CIM]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[Lib_CM_SuggestedCreditValues_V12.0.566.0]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[Lib_CM_FinancialStatementClient_V12.0.566.0]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[Lib_CM_ScoreCalculationHelperCommon_V12.0.566.0]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[Lib_CM_ScoreCalculationHelperClient_V12.0.566.0]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[Lib_CM_Insurance_V12.0.566.0]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[Lib_CM_InsuranceClient_V12.0.566.0]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[Lib_CM_DemoData]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[Lib_Collection_PaymentStrategyHelperCommon_V12.0.566.0]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[Lib_Collection_TimelineClient_V12.0.566.0]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[Lib_Customization_CustomerExtendedProperties]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[Lib_CM_Customization_FinancialStatement]</customscriptIncludedScripts>
+			<CustomScriptReadonly>true</CustomScriptReadonly>
+			<CustomScript>
+				<!--customscript.js--></CustomScript>
+			<restorationPanel>RestoredFields</restorationPanel>
+			<layout>
+				<!--layout.json--></layout>
+		</ui>
+	</properties>
+	<datatable deleted="0" guid="OGM450001YRL" id="NoID" label="_InsurerInformationTable" name="InsurerInformationTable__" originalProcessID="REPG20003325">
+		<properties>
+			<field>
+				<DisableAutolearn>1</DisableAutolearn>
+			</field>
+			<packagespecific>
+				<cm_excludeFromScoreRuleActivationConditions>1</cm_excludeFromScoreRuleActivationConditions>
+			</packagespecific>
+			<ui>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+		<field datatableid="" deleted="0" format="" guid="YNXW00000M4H" id="NoID" label="_DRAScore" length="2" name="DRAScore__" originalProcessID="REPG20003325" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/DRAScore__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_DRAScore</Label>
+					<alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<teachable>false</teachable>
+				</field>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="B3CIG0000RFT" id="NoID" label="_EffectDate" length="0" name="EffectDate__" originalProcessID="REPG20003325" precision="0" submitable="1" type="DATE">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/EffectDate__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_EffectDate</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Date</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="B2TIG0000VLT" id="NoID" label="_EndDate" length="0" name="EndDate__" originalProcessID="REPG20003325" precision="0" submitable="1" type="DATE">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/EndDate__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_EndDate</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Date</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="LFDX1318BB8" id="NoID" label="_ProductAmount" length="17" name="ProductAmount__" originalProcessID="REPG20003325" precision="2" submitable="1" type="DECIMAL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ProductAmount__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ProductAmount</Label>
+					<Alias />
+					<DecimalPrecision vartype="INT">2</DecimalPrecision>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="PGM200040YRL" id="NoID" label="_ProductCode" length="150" name="ProductCode__" originalProcessID="REPG20003325" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ProductCode__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ProductCode</Label>
+					<Alias />
+					<Behavior>Default</Behavior>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+	</datatable>
+	<type id="NoID" name="CT" />
+	<field deleted="0" format="" guid="EIBMG0000M4H" id="NoID" label="ABN" length="50" name="ABN__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ABN__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>ABN</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="WYBIG0000SG1" id="NoID" label="_AccountStatementNotifications" length="0" name="AccountStatementNotifications__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/AccountStatementNotifications__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_AccountStatementNotifications</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="OZ5NG0000PA9" id="NoID" label="_AverageDaysToPay" length="17" name="ADP__" originalProcessID="REPG20003325" precision="1" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ADP__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_AverageDaysToPay</Label>
+				<Alias />
+				<DecimalPrecision vartype="INT">1</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="VJBNG0000PA9" id="NoID" label="_ASN EDI format_report" length="50" name="ASN_EDI_format__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ASN_EDI_format__</fullname>
+				<defaultvalue>EDIFACT</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_ASN EDI format_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<TableName />
+				<DisplayedColumns />
+				<DataSourceOrigin>Standalone</DataSourceOrigin>
+				<possibleKeys />
+				<SavedColumn />
+				<possibleValues>EDIFACT
+					Other</possibleValues>
+				<ProcessName />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="UJBNG0000PA9" id="NoID" label="_ASN publish on portal_report" length="0" name="ASN_publish_on_portal__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ASN_publish_on_portal__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_ASN publish on portal_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"_ASN publish on portal_tooltip","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="TJBNG0000PA9" id="NoID" label="_ASN send EDI_report" length="0" name="ASN_send_EDI__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ASN_send_EDI__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_ASN send EDI_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="SJBNG0000PA9" id="NoID" label="_ASN send email_report" length="0" name="ASN_send_email__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ASN_send_email__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_ASN send email_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"_ASN send email_tooltip","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="OI0MG0000PA9" id="NoID" label="_ASN_send_pdf_attached_report" length="0" name="ASN_send_pdf_attached__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ASN_send_pdf_attached__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_ASN_send_pdf_attached_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"_ASN_send_pdf_attached_tooltip","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PHQG131AC61" id="NoID" label="_Billing Country" length="2" name="Billing_Country__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Billing_Country__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Billing Country</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="AYLN131AC60" id="NoID" label="_Billing Identifier" length="50" name="Billing_Identifier__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Billing_Identifier__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Billing Identifier</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="HUME131AC5F" id="NoID" label="_Billing Identifier type" length="50" name="Billing_Identifier_type__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Billing_Identifier_type__</fullname>
+				<defaultvalue>1</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_Billing Identifier type</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<possibleKeys>EMPTY
+					1
+					2
+					3
+					4
+					5
+					6</possibleKeys>
+				<possibleValues>
+					_Siret
+					_UE Entity
+					_Not UE Entity
+					_RIDET
+					_Tahiti Number
+					_Pending Immatriculation</possibleValues>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PHQG131AC5E" id="NoID" label="_Billing Invoice Type" length="50" name="Billing_Invoice_Type__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Billing_Invoice_Type__</fullname>
+				<defaultvalue>A1</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_Billing Invoice Type</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<possibleKeys>EMPTY
+					A1
+					A9
+					A12</possibleKeys>
+				<possibleValues>
+					_Invoice sent by supplier
+					_Invoice sent by subcontractor
+					_Invoice sent by cocontractor</possibleValues>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="HUME131AC62" id="NoID" label="_Billing Registered Name" length="50" name="Billing_Registered_Name__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Billing_Registered_Name__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Billing Registered Name</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="BLND00000ABC" id="NoID" label="_BlindCover" length="50" name="BlindCover__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/BlindCover__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_BlindCover</Label>
+				<Alias />
+				<DecimalPrecision vartype="INT">0</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<teachable>false</teachable>
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="DUXW20013132" id="NoID" label="_Business area" length="50" name="Business_area__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Business_area__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Business area</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="NNDM20004292" id="NoID" label="_BusinessPartnerId" length="50" name="BusinessPartnerId__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/BusinessPartnerId__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_BusinessPartnerId</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="VYBIG0000SG1" id="NoID" label="_BusinessUnit" length="50" name="BusinessUnit__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/BusinessUnit__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_BusinessUnit</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PHQG1316183" id="NoID" label="_Cash Collection Group" length="50" name="CashCollectionGroup__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CashCollectionGroup__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Cash Collection Group</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="HUME1316184" id="NoID" label="_Chat Enabled" length="0" name="ChatEnabled__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ChatEnabled__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_Chat Enabled</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="EDPU20086847" id="NoID" label="_CHORUS_Code_service_executant_report" length="100" name="CHORUS_CodeServiceExecutant__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CHORUS_CodeServiceExecutant__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_CHORUS_Code_service_executant_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="TTAL131A91F" id="NoID" label="_Chorus EJ Number Required" length="0" name="Chorus_EJ_Number_Required__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Chorus_EJ_Number_Required__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Chorus EJ Number Required</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="TXWL131A920" id="NoID" label="_Chorus EJ Or Service Code Required" length="0" name="Chorus_EJ_Or_Service_Code_Required__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Chorus_EJ_Or_Service_Code_Required__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Chorus EJ Or Service Code Required</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="DWWH131A91E" id="NoID" label="_Chorus Executing Service Code Required" length="0" name="Chorus_Executing_Service_Code_Required__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Chorus_Executing_Service_Code_Required__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Chorus Executing Service Code Required</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="AAKR131C30C" id="NoID" label="__Chorus_isContractingAuthorityOnly" length="0" name="Chorus_isContractingAuthorityOnly__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Chorus_isContractingAuthorityOnly__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>__Chorus_isContractingAuthorityOnly</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="TLGS131A921" id="NoID" label="_Chorus Payment" length="0" name="Chorus_Payment__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Chorus_Payment__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Chorus Payment</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="XRDC131A924" id="NoID" label="_Chorus Service Identifier" length="100" name="Chorus_Service_Identifier__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Chorus_Service_Identifier__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Chorus Service Identifier</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<TableName>CHORUSPRO_SERVICE</TableName>
+				<SortOrder />
+				<DisplayedColumns>Nom|Description|Actif</DisplayedColumns>
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>CodeService</SavedColumn>
+				<ProcessName />
+				<CustomFilter>(IdentifiantStructure=%[Chorus_Structure_Identifier__])</CustomFilter>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="IPID131A91C" id="NoID" label="_Siret" length="50" name="Chorus_Structure_Identifier__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Chorus_Structure_Identifier__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Siret</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<TableName>CHORUSPRO_STRUCTURE</TableName>
+				<SortOrder />
+				<DisplayedColumns>RaisonSociale|CodePostal|Ville|Actif</DisplayedColumns>
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>IdentifiantStructure</SavedColumn>
+				<ProcessName />
+				<CustomFilter />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="W9ONG0000M4H" id="NoID" label="CodeAPE" length="50" name="CodeAPE__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CodeAPE__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>CodeAPE</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="EFB0000011XD" id="NoID" label="_CompanyStructure" length="50" name="CompanyStructure__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CompanyStructure__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_CompanyStructure</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<TableName />
+				<DisplayedColumns />
+				<DisplayedColumnsIds />
+				<DataSourceOrigin>Standalone</DataSourceOrigin>
+				<possibleKeys>
+					Corp
+					Partner
+					Props
+					LLC
+					LLP
+					PublicAdministration
+				</possibleKeys>
+				<SavedColumn />
+				<SavedColumnId />
+				<possibleValues>
+					_Corporation
+					_Partnership
+					_Proprietorship
+					_LLC
+					_LLP
+					_PublicAdministration
+				</possibleValues>
+				<ProcessName />
+				<KeyColumnId />
+				<lazyTranslatable />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="MZNLG0000PA9" id="NoID" label="_Coupa Customer Contract Id" length="50" name="Coupa_Customer_Contract_Id__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Coupa_Customer_Contract_Id__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Coupa Customer Contract Id</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="FZNLG0000PA9" id="NoID" label="_Coupa Customer Domain" length="50" name="Coupa_Customer_Domain__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Coupa_Customer_Domain__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Coupa Customer Domain</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"_Coupa Customer Domain Tooltip","helpURL":"1851","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="GZNLG0000PA9" id="NoID" label="_Coupa Customer Id" length="50" name="Coupa_Customer_Id__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Coupa_Customer_Id__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Coupa Customer Id</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"_Coupa Customer Id Tooltip","helpURL":"1851","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="JZNLG0000PA9" id="NoID" label="_Coupa Customer Secret" length="0" name="Coupa_Customer_Password__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Coupa_Customer_Password__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Coupa Customer Secret</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<DoNotShowInDM>1</DoNotShowInDM>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="MKCMG0000PA9" id="NoID" label="_Coupa Customer URL Domain" length="50" name="Coupa_Customer_URL_Domain__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Coupa_Customer_URL_Domain__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Coupa Customer URL Domain</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"_Coupa Customer URL Domain Tooltip","helpURL":"1851","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="HZNLG0000PA9" id="NoID" label="_Coupa Supplier Domain" length="50" name="Coupa_Supplier_Domain__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Coupa_Supplier_Domain__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Coupa Supplier Domain</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="IZNLG0000PA9" id="NoID" label="_Coupa Supplier Id" length="50" name="Coupa_Supplier_Id__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Coupa_Supplier_Id__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Coupa Supplier Id</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="P1SHG0000SG1" id="NoID" label="_CreditHold" length="0" name="CreditHold__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CreditHold__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_CreditHold</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="WSJKG0000IYP" id="NoID" label="_CreditLimit" length="17" name="CreditLimit__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CreditLimit__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_CreditLimit</Label>
+				<Alias />
+				<DecimalPrecision vartype="INT">0</DecimalPrecision>
+				<IgnoreChangedType vartype="INT">1</IgnoreChangedType>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="QZI000000YRL" id="NoID" label="_CreditLimitStrategyFieldName" length="50" name="CreditLimitStrategy__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CreditLimitStrategy__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_CreditLimitStrategyFieldName</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<DoNotShowInDM>1</DoNotShowInDM>
+			</extrainfo>
+			<field>
+				<DataSourceOrigin>Standalone</DataSourceOrigin>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="UPXJG0000IYP" id="NoID" label="_CreditScore_CompanyIdentifier" length="50" name="CreditScore_CompanyIdentifier__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CreditScore_CompanyIdentifier__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_CreditScore_CompanyIdentifier</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="EBNIG0000IYP" id="NoID" label="_CreditScore_Enabled" length="0" name="CreditScore_Enabled__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CreditScore_Enabled__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_CreditScore_Enabled</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"_tooltipEnableCreditMonitoring","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Left"}</helpData>
+			</help>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="LNONG0000PA9" id="NoID" label="_CreditUsage" length="15" name="CreditUsage__" originalProcessID="REPG20003325" precision="2" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CreditUsage__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_CreditUsage</Label>
+				<Alias />
+				<DecimalPrecision vartype="INT">2</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="RY1MG0000IYP" id="NoID" label="_Currency" length="50" name="Currency__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Currency__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Currency</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="SGNIG0000FSX" id="NoID" label="_Customer AP portal" length="50" name="Customer_AP_portal__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Customer_AP_portal__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Customer AP portal</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="CWWIG0000FSX" id="NoID" label="_Customer AP portal login" length="50" name="Customer_AP_portal_login__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Customer_AP_portal_login__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Customer AP portal login</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="DWWIG0000FSX" id="NoID" label="_Customer AP portal password" length="3000" name="Customer_AP_portal_password__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Customer_AP_portal_password__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Customer AP portal password</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<DoNotShowInDM>1</DoNotShowInDM>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="BKQIG0000FSX" id="NoID" label="_Save as draft" length="0" name="Customer_AP_portal_save_as_draft__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Customer_AP_portal_save_as_draft__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_Save as draft</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="COFNG0000SG1" id="NoID" label="_Customer Currency" length="3" name="Customer_Currency__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Customer_Currency__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Customer Currency</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="ODNKG0000GO1" id="NoID" label="_Customer FrenchB2B Address Id Readiness_report" length="50" name="Customer_FrenchB2B_Address_Id_Readiness__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Customer_FrenchB2B_Address_Id_Readiness__</fullname>
+				<defaultvalue>Unknown</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_Customer FrenchB2B Address Id Readiness_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<DisplayedColumns />
+				<DataSourceOrigin>Standalone</DataSourceOrigin>
+				<possibleKeys>AddressNotPresent
+					AddressNotActiveButRegistered
+					AddressNotActiveAndNotRegistered
+					AddressActive
+					NoAddress
+					Unknown</possibleKeys>
+				<SavedColumn />
+				<possibleValues>_AddressNotPresent
+					_AddressNotActiveButRegistered
+					_AddressNotActiveAndNotRegistered
+					_AddressActive
+					_NoAddress
+					_Unknown</possibleValues>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="AMZP20003326" id="NoID" label="_CustomerLogin" length="80" name="CustomerID__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CustomerID__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<type>webaccess.db.ui.LoginID</type>
+				<Label>_CustomerLogin</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<FinalizationScript />
+				<ValidationScript />
+				<ExtractionScript />
+				<PostProcessingScript />
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="YYBIG0000SG1" id="NoID" label="_CustomerServiceRepresentative" length="50" name="CustomerServiceRepresentative__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CustomerServiceRepresentative__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_CustomerServiceRepresentative</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="SH1KG0000IYP" id="NoID" label="_Disable_ESignature" length="0" name="Disable_ESignature__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Disable_ESignature__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_Disable_ESignature</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="KFNQ20013131" id="NoID" label="_Distribution channel" length="50" name="Distribution_channel__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Distribution_channel__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Distribution channel</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="L5ZIG0000FSX" id="NoID" label="_Do not group emails" length="0" name="DoNotGroupEmails__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/DoNotGroupEmails__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_Do not group emails</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="T9ONG0000M4H" id="NoID" label="DUNS" length="50" name="DUNS__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/DUNS__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>DUNS</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="RSPV134200" id="NoID" label="_EDI_invoice_format" length="50" name="EDI_invoice_format__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/EDI_invoice_format__</fullname>
+				<defaultvalue>default</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_EDI_invoice_format</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<DisplayedColumns />
+				<DataSourceOrigin>Standalone</DataSourceOrigin>
+				<possibleKeys>default
+					edifact_d96a
+				</possibleKeys>
+				<SavedColumn />
+				<possibleValues>default_format
+					edifact_d96a
+				</possibleValues>
+			</field>
+			<help>
+				<helpData>{"helpText":"_tooltip_EDI_invoice_format","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Left"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="VPPLOP00BOUL" id="NoID" label="_Edifact_output_format" length="50" name="Edifact_output_format__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Edifact_output_format__</fullname>
+				<defaultvalue>UNOW</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_Edifact_output_format</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<TableName />
+				<DisplayedColumns />
+				<DisplayedColumnsIds />
+				<DataSourceOrigin>standalone</DataSourceOrigin>
+				<possibleKeys>UNOA
+UNOC
+UNOW</possibleKeys>
+				<SavedColumn />
+				<SavedColumnId />
+				<possibleValues>_UNOA
+_UNOC
+_UNOW</possibleValues>
+				<ProcessName />
+				<KeyColumnId />
+				<lazyTranslatable />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="RSPV134199" id="NoID" label="_Delivery system" length="50" name="EDIPartnerCustomer__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/EDIPartnerCustomer__</fullname>
+				<defaultvalue>EMPTY</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_Delivery system</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<DisplayedColumns />
+				<DataSourceOrigin>Standalone</DataSourceOrigin>
+				<possibleKeys>EMPTY
+					agena3000
+					ariba
+					ariba_cxml
+					bavel
+					b-process
+					cegedim
+					coupa
+					edicom
+					edt
+					generix
+					obs
+					prologue
+					seres
+					direct-commerce
+					pec
+					intecon
+					tradeshift
+					basware
+					io-market
+					osakidetza
+					pagero
+					saphety
+					esker-edi-services
+					e-integration
+					ob10
+					tenor
+					peppol-3.0
+					peppol-sg
+					peppol-hr
+					peppol-anz
+					peppol-pint-my
+					peppol-pint-sg
+					peppol-pint-aus
+					peppol-pint-nz
+					austria-pa
+					belgium-pa
+					england-pa
+					denmark-pa
+					germany-b2b
+					germany-pa
+					germany-pa-bbw
+					germany-pa-email
+					netherlands-pa
+					chorus-pro
+					italian-pa
+					italian-b2b
+					luxembourg-pa
+					norway-pa
+					poland-pa
+					peppol-sg-with-iras
+					peppol-pint-sg-with-iras
+					spanish-pa
+					spanish-b2b
+					sweden-pa
+					swiss-pa
+					french-b2b
+					freedz
+					peppol-bis-3.0
+					peppol-bis-en16931
+					belgium-b2b
+					belgium-b2b-en16931
+					peppol-sg-ees
+					germany-b2b-email-zugferd
+					germany-b2b-email-xrechnung
+					germany-b2b-peppol
+					poland-b2b
+					poland-b2b-email
+					monto-generic</possibleKeys>
+				<SavedColumn />
+				<possibleValues>
+					agena3000
+					ariba
+					ariba_cxml
+					bavel
+					b-process
+					cegedim
+					coupa
+					edicom
+					edt
+					generix
+					obs
+					prologue
+					seres
+					direct-commerce
+					pec
+					intecon
+					tradeshift
+					basware
+					io-market
+					osakidetza
+					pagero
+					saphety
+					esker-edi-services
+					e-integration
+					ob10
+					tenor
+					peppol-3.0
+					peppol-sg
+					peppol-hr
+					peppol-anz
+					peppol-pint-my
+					peppol-pint-sg
+					peppol-pint-aus
+					peppol-pint-nz
+					austria-pa
+					belgium-pa
+					england-pa
+					denmark-pa
+					germany-b2b
+					germany-pa
+					germany-pa-bbw
+					germany-pa-email
+					netherlands-pa
+					chorus-pro
+					italian-pa
+					italian-b2b
+					luxembourg-pa
+					norway-pa
+					poland-pa
+					peppol-sg-with-iras
+					peppol-pint-sg-with-iras
+					spanish-pa
+					spanish-b2b
+					sweden-pa
+					swiss-pa
+					french-b2b
+					freedz
+					peppol-bis-3.0
+					peppol-bis-en16931
+					belgium-b2b
+					belgium-b2b-en16931
+					peppol-sg-ees
+					germany-b2b-email-zugferd
+					germany-b2b-email-xrechnung
+					germany-b2b-peppol
+					poland-b2b
+					poland-b2b-email
+					monto-generic</possibleValues>
+			</field>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="MAENG0000PA9" id="NoID" label="_EnableCreditSuggestion" length="0" name="EnableCreditSuggestion__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/EnableCreditSuggestion__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_EnableCreditSuggestion</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"_tooltipEnableInternalCreditScore","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Left"}</helpData>
+			</help>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="ZUFNG0000M4H" id="NoID" label="_EnableHistoric" length="0" name="EnableHistoric__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/EnableHistoric__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_EnableHistoric</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"_tooltipEnableReceivablesMonitoring","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Left"}</helpData>
+			</help>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="CATMG1004M4H" id="NoID" label="_Exposure" length="17" name="Exposure__" originalProcessID="REPG20003325" precision="2" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Exposure__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Exposure</Label>
+				<Alias />
+				<DecimalPrecision vartype="INT">2</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="CEZY134204" id="NoID" label="_FACE_CenterBuilding_1_report" length="50" name="FACE_CenterBuilding_1__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FACE_CenterBuilding_1__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_FACE_CenterBuilding_1_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="AYLN132232" id="NoID" label="_FACE_CenterBuilding_2_report" length="50" name="FACE_CenterBuilding_2__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FACE_CenterBuilding_2__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_FACE_CenterBuilding_2_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="TKJP132241" id="NoID" label="_FACE_CenterBuilding_3_report" length="50" name="FACE_CenterBuilding_3__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FACE_CenterBuilding_3__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_FACE_CenterBuilding_3_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="WMVR134208" id="NoID" label="_FACE_CenterCity_1_report" length="50" name="FACE_CenterCity_1__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FACE_CenterCity_1__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_FACE_CenterCity_1_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="GGBW132236" id="NoID" label="_FACE_CenterCity_2_report" length="50" name="FACE_CenterCity_2__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FACE_CenterCity_2__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_FACE_CenterCity_2_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="STMW132245" id="NoID" label="_FACE_CenterCity_3_report" length="50" name="FACE_CenterCity_3__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FACE_CenterCity_3__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_FACE_CenterCity_3_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="GKMH132228" id="NoID" label="_FACE_CenterCountry_1_report" length="50" name="FACE_CenterCountry_1__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FACE_CenterCountry_1__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_FACE_CenterCountry_1_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="DUXW132238" id="NoID" label="_FACE_CenterCountry_2_report" length="50" name="FACE_CenterCountry_2__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FACE_CenterCountry_2__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_FACE_CenterCountry_2_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="YCQP132247" id="NoID" label="_FACE_CenterCountry_3_report" length="50" name="FACE_CenterCountry_3__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FACE_CenterCountry_3__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_FACE_CenterCountry_3_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="JEBB134202" id="NoID" label="_FACE_CenterID_1_report" length="100" name="FACE_CenterID_1__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FACE_CenterID_1__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_FACE_CenterID_1_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PHQG132230" id="NoID" label="_FACE_CenterID_2_report" length="100" name="FACE_CenterID_2__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FACE_CenterID_2__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_FACE_CenterID_2_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="FNFO132239" id="NoID" label="_FACE_CenterID_3_report" length="100" name="FACE_CenterID_3__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FACE_CenterID_3__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_FACE_CenterID_3_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="OUAG134203" id="NoID" label="_FACE_CenterName_1_report" length="100" name="FACE_CenterName_1__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FACE_CenterName_1__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_FACE_CenterName_1_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="HUME132231" id="NoID" label="_FACE_CenterName_2_report" length="100" name="FACE_CenterName_2__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FACE_CenterName_2__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_FACE_CenterName_2_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="ZVSR132240" id="NoID" label="_FACE_CenterName_3_report" length="100" name="FACE_CenterName_3__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FACE_CenterName_3__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_FACE_CenterName_3_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="SATG134206" id="NoID" label="_FACE_CenterPOBox_1_report" length="50" name="FACE_CenterPOBox_1__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FACE_CenterPOBox_1__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_FACE_CenterPOBox_1_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="FIRC132234" id="NoID" label="_FACE_CenterPOBox_2_report" length="50" name="FACE_CenterPOBox_2__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FACE_CenterPOBox_2__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_FACE_CenterPOBox_2_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="GXRP132243" id="NoID" label="_FACE_CenterPOBox_3_report" length="50" name="FACE_CenterPOBox_3__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FACE_CenterPOBox_3__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_FACE_CenterPOBox_3_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="XKCJ134209" id="NoID" label="_FACE_CenterState_1_report" length="50" name="FACE_CenterState_1__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FACE_CenterState_1__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_FACE_CenterState_1_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="KFNQ132237" id="NoID" label="_FACE_CenterState_2_report" length="50" name="FACE_CenterState_2__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FACE_CenterState_2__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_FACE_CenterState_2_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="CYSY132246" id="NoID" label="_FACE_CenterState_3_report" length="50" name="FACE_CenterState_3__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FACE_CenterState_3__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_FACE_CenterState_3_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="ZDLD134205" id="NoID" label="_FACE_CenterStreet_1_report" length="50" name="FACE_CenterStreet_1__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FACE_CenterStreet_1__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_FACE_CenterStreet_1_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="LFDX132233" id="NoID" label="_FACE_CenterStreet_2_report" length="50" name="FACE_CenterStreet_2__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FACE_CenterStreet_2__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_FACE_CenterStreet_2_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="REPG132242" id="NoID" label="_FACE_CenterStreet_3_report" length="50" name="FACE_CenterStreet_3__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FACE_CenterStreet_3__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_FACE_CenterStreet_3_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="LYOE134207" id="NoID" label="_FACE_CenterZipCode_1_report" length="50" name="FACE_CenterZipCode_1__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FACE_CenterZipCode_1__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_FACE_CenterZipCode_1_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="VSCX132235" id="NoID" label="_FACE_CenterZipCode_2_report" length="50" name="FACE_CenterZipCode_2__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FACE_CenterZipCode_2__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_FACE_CenterZipCode_2_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="NRVY132244" id="NoID" label="_FACE_CenterZipCode_3_report" length="50" name="FACE_CenterZipCode_3__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FACE_CenterZipCode_3__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_FACE_CenterZipCode_3_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="OPSS86556173" id="NoID" label="_FACE_VAT_ID_report" length="50" name="FACE_VAT_ID__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FACE_VAT_ID__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_FACE_VAT_ID_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="S9ONG0000M4H" id="NoID" label="FederalTaxId" length="50" name="FederalTaxId__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FederalTaxId__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>FederalTaxId</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="XCNGG0000SG1" id="NoID" label="_FrenchB2B Address ID" length="130" name="FrenchB2B_Address_ID__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FrenchB2B_Address_ID__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_FrenchB2B Address ID</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="UDNKG0000SG1" id="NoID" label="_FrenchB2B Commitment number required" length="0" name="FrenchB2B_Commitment_number_required__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FrenchB2B_Commitment_number_required__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_FrenchB2B Commitment number required</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="BENKG0000SG1" id="NoID" label="_FrenchB2B Commitment or service required" length="0" name="FrenchB2B_Commitment_or_service_required__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FrenchB2B_Commitment_or_service_required__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_FrenchB2B Commitment or service required</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="ZDNKG0000SG1" id="NoID" label="_FrenchB2B Is MOA" length="0" name="FrenchB2B_Is_MOA__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FrenchB2B_Is_MOA__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_FrenchB2B Is MOA</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="AENKG0000SG1" id="NoID" label="_FrenchB2B Is MOA Only" length="0" name="FrenchB2B_Is_MOA_Only__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FrenchB2B_Is_MOA_Only__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_FrenchB2B Is MOA Only</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="ODNKG0000SG1" id="NoID" label="_FrenchB2B Is Public" length="0" name="FrenchB2B_Is_Public__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FrenchB2B_Is_Public__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_FrenchB2B Is Public</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="XDNKG0000SG1" id="NoID" label="_FrenchB2B Service Code" length="50" name="FrenchB2B_Service_Code__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FrenchB2B_Service_Code__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_FrenchB2B Service Code</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="VDNKG0000SG1" id="NoID" label="_FrenchB2B Service code required" length="0" name="FrenchB2B_Service_code_required__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FrenchB2B_Service_code_required__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_FrenchB2B Service code required</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="YCNGG0000SG1" id="NoID" label="_FrenchB2B Suffix" length="50" name="FrenchB2B_Suffix__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FrenchB2B_Suffix__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_FrenchB2B Suffix</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="YDNKG0000SG1" id="NoID" label="_FrenchB2B Supports payment status" length="0" name="FrenchB2B_Supports_payment_status__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FrenchB2B_Supports_payment_status__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_FrenchB2B Supports payment status</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="RSPV134201" id="NoID" label="_German B2B version" length="50" name="German_B2B_version__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/German_B2B_version__</fullname>
+				<defaultvalue>EMPTY</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_German B2B version</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<DisplayedColumns />
+				<DataSourceOrigin>Standalone</DataSourceOrigin>
+				<possibleKeys>EMPTY
+1.0
+2.0
+2.1
+2.2
+2.X</possibleKeys>
+				<SavedColumn />
+				<possibleValues>
+_germany-b2b-version-1.0
+_germany-b2b-version-2.0
+_germany-b2b-version-2.1
+_germany-b2b-version-2.2
+_germany-b2b-version-2.X</possibleValues>
+			</field>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="CQONG0000PA9" id="NoID" label="_InsuranceAmount" length="0" name="InsuranceAmount__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/InsuranceAmount__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_InsuranceAmount</Label>
+				<Alias />
+				<DecimalPrecision vartype="INT">0</DecimalPrecision>
+				<IgnoreChangedType vartype="INT">1</IgnoreChangedType>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="I6U000000VLT" id="NoID" label="_InsuranceAmountSource" length="50" name="InsuranceAmountSource__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/InsuranceAmountSource__</fullname>
+				<defaultvalue>erp</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_InsuranceAmountSource</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<TableName />
+				<DisplayedColumns />
+				<DisplayedColumnsIds />
+				<DataSourceOrigin>Standalone</DataSourceOrigin>
+				<possibleKeys>
+					manual
+					erp
+					atradius
+					coface
+				</possibleKeys>
+				<SavedColumn />
+				<SavedColumnId />
+				<possibleValues>
+					_manual
+					_erpSystem
+					_Atradius
+					_Coface
+				</possibleValues>
+				<ProcessName />
+				<KeyColumnId />
+				<lazyTranslatable />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="EFB0022011XD" id="NoID" label="_InsuranceType" length="50" name="InsuranceType__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/InsuranceType__</fullname>
+				<defaultvalue>NotCovered</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_InsuranceType</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<TableName />
+				<DisplayedColumns />
+				<DisplayedColumnsIds />
+				<DataSourceOrigin>Standalone</DataSourceOrigin>
+				<possibleKeys>
+					NotCovered
+					BlindCover
+					DCL
+					Named
+					NotNeeded
+				</possibleKeys>
+				<SavedColumn />
+				<SavedColumnId />
+				<possibleValues>
+					_NotCovered
+					_BlindCover
+					_DCL
+					_Named
+					_NotNeeded
+				</possibleValues>
+				<ProcessName />
+				<KeyColumnId />
+				<lazyTranslatable />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="CKFNG0000PA9" id="NoID" label="_InternalScore" length="17" name="InternalScore__" originalProcessID="REPG20003325" precision="2" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/InternalScore__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_InternalScore</Label>
+				<Alias />
+				<DecimalPrecision vartype="INT">2</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="XYBIG0000SG1" id="NoID" label="_InvoiceDelivery" length="0" name="InvoiceDelivery__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/InvoiceDelivery__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_InvoiceDelivery</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="ZJYHG0000SG1" id="NoID" label="_IsCompany" length="0" name="IsCompany__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/IsCompany__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_IsCompany</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="CAJOG6549M4H" id="NoID" label="_IsExposureImported" length="0" name="IsExposureImported__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/IsExposureImported__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_IsExposureImported</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="I94IG0000SG1" id="NoID" label="_IsInactive" length="0" name="IsInactive__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/IsInactive__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_IsInactive</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<packagespecific>
+				<cm_excludeFromScoreRuleActivationConditions>1</cm_excludeFromScoreRuleActivationConditions>
+			</packagespecific>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="ZYBIG0000SG1" id="NoID" label="_JobTitle" length="50" name="JobTitle__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/JobTitle__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_JobTitle</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PK2IG0000SG1" id="NoID" label="_LastInternalScoreUpdate" length="0" name="LastInternalScoreUpdate__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="DATE">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/LastInternalScoreUpdate__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_LastInternalScoreUpdate</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PC01000011XD" id="NoID" label="_MaxDiscretionaryCreditLimit" length="17" name="MaxDiscretionaryCreditLimit__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/MaxDiscretionaryCreditLimit__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_MaxDiscretionaryCreditLimit</Label>
+				<Alias />
+				<DecimalPrecision vartype="INT">0</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<teachable>false</teachable>
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="NMDTG0000PA9" id="NoID" label="_Monto settings id" length="250" name="Monto_Settings_ID__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Monto_Settings_ID__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Monto settings id</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PHQG8308" id="NoID" label="_NbAdditionalModCopies" length="0" name="NbAdditionalModCopies__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="INT">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/NbAdditionalModCopies__</fullname>
+				<defaultvalue>0</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_NbAdditionalModCopies</Label>
+				<alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="G53JG0000IYP" id="NoID" label="_NextReviewCM" length="0" name="NextReviewCM__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="DATE">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/NextReviewCM__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_NextReviewCM</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="TMGNG0000M4H" id="NoID" label="NIC" length="50" name="NIC__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/NIC__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>NIC</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="IFB0000011XD" id="NoID" label="_NumberOfEmployees" length="0" name="NumberOfEmployees__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="INT">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/NumberOfEmployees__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_NumberOfEmployees</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<SetNullOnEmptyValue>1</SetNullOnEmptyValue>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="SMFLG0000PA9" id="NoID" label="_OMConfiguration" length="50" name="OMConfiguration__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/OMConfiguration__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_OMConfiguration</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<SortOrder>ASC</SortOrder>
+				<DisplayedColumns>ConfigurationName__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>ConfigurationName__</SavedColumn>
+				<SavedColumnId />
+				<ExposedColumns />
+				<ProcessName>SO - Configuration__</ProcessName>
+				<KeyColumnId>ConfigurationName__</KeyColumnId>
+				<KeyAttribute />
+				<CustomFilter />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="CATMG0000M4H" id="NoID" label="_Outstanding" length="17" name="Outstanding__" originalProcessID="REPG20003325" precision="2" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Outstanding__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Outstanding</Label>
+				<Alias />
+				<DecimalPrecision vartype="INT">2</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="BIBKG0000M4H" id="NoID" label="_OutstandingAlert" length="0" name="OutstandingAlert__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/OutstandingAlert__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_OutstandingAlert</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="DATMG0000M4H" id="NoID" label="_OverCreditLimit" length="17" name="OverCreditLimit__" originalProcessID="REPG20003325" precision="2" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/OverCreditLimit__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_OverCreditLimit</Label>
+				<Alias />
+				<DecimalPrecision vartype="INT">2</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="ANCJG0000YRL" id="NoID" label="_ParentCustomerIDs" length="65535" name="ParentCustomerIDs__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ParentCustomerIDs</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="QQPB134201" id="NoID" label="_Partner Custom ID" length="130" name="PartnerCustomID__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/PartnerCustomID__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Partner Custom ID</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PHQG131D67C" id="NoID" label="_Partner Custom ID Type" length="50" name="PartnerCustomIDType__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/PartnerCustomIDType__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Partner Custom ID Type</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="OF3LG0000M4H" id="NoID" label="_Party identification_reports" length="50" name="Party_identification__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Party_identification__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Party identification_reports</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PF3LG0000M4H" id="NoID" label="_Party identification type_reports" length="50" name="Party_identification_type__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Party_identification_type__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Party identification type_reports</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="M0CJG0000IYP" id="NoID" label="_Payer ID" length="1024" name="Payer_ID__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Payer_ID__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Payer ID</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<DoNotShowInDM>1</DoNotShowInDM>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="QXLNG0000SG1" id="NoID" label="_Payment Profile" length="50" name="Payment_Profile__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Payment_Profile__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Payment Profile</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<SortOrder />
+				<DisplayedColumns>Profile__|Allowed_currencies__|Esker_Payment_Vendor_ID__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>Profile__</SavedColumn>
+				<SavedColumnId />
+				<ExposedColumns />
+				<ProcessName>AR - Payment Settings__</ProcessName>
+				<KeyColumnId />
+				<KeyAttribute />
+				<CustomFilter />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="JRRLG0000IYP" id="NoID" label="_PaymentTerms" length="50" name="PaymentTerms__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/PaymentTerms__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Type>webaccess.Edd.ui.LazyTranslation</Type>
+				<Label>_PaymentTerms</Label>
+				<Alias />
+				<Group>Customer</Group>
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<lazyTranslatable>true</lazyTranslatable>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="AYLN20068519" id="NoID" label="_PEC_Email" length="120" name="PEC_Email__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/PEC_Email__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_PEC_Email</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="HIBKG0000M4H" id="NoID" label="_PollingAlert" length="0" name="PollingAlert__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/PollingAlert__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_PollingAlert</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="CY3100000YRL" id="NoID" label="_PollingAlertAgencies" length="32766" name="PollingAlertAgencies__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/PollingAlertAgencies__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_PollingAlertAgencies</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="UYBIG0000SG1" id="NoID" label="_Region" length="50" name="Region__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Region__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Region</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="AYLN1316185" id="NoID" label="_Reminders" length="0" name="Reminders__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Reminders__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_Reminders</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PHQG20033923" id="NoID" label="_Request validation for all invoices" length="0" name="Request_validation_for_all_invoices__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Request_validation_for_all_invoices__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_Request validation for all invoices</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="HGJMG0000M4H" id="NoID" label="_RiskCategory" length="50" name="RiskCategory__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/RiskCategory__</fullname>
+				<defaultvalue>_RISKCATEGORY00</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Edd.ui.LazyTranslation</Type>
+				<Label>_RiskCategory</Label>
+				<Alias />
+				<Group>Customer</Group>
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<lazyTranslatable>true</lazyTranslatable>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="GGBW20013130" id="NoID" label="_Sales organization" length="50" name="Sales_organization__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">0</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Sales_organization__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Sales organization</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="VB3KG0000IYP" id="NoID" label="_Sales representative" length="50" name="Sales_representative__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Sales_representative__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Sales representative</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="WG2LG0000SG1" id="NoID" label="_SalesRep" length="50" name="SalesRep__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/SalesRep__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_SalesRep</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<TableName>ODUSER</TableName>
+				<SortOrder>ASC</SortOrder>
+				<DisplayedColumns>Login|DisplayName|EmailAddress</DisplayedColumns>
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>Login</SavedColumn>
+				<ExposedColumns />
+				<ProcessName />
+				<KeyColumnId />
+				<KeyAttribute />
+				<CustomFilter>(&amp;(customer=0)(Vendor=0)(|(PortalUser!=1)(PortalUser!=*)))</CustomFilter>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="LNIPG0000PA9" id="NoID" label="_ScoringRulesIdApplied" length="50" name="ScoringRulesIdApplied__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ScoringRulesIdApplied__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ScoringRulesIdApplied</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<packagespecific>
+				<cm_excludeFromScoreRuleActivationConditions>1</cm_excludeFromScoreRuleActivationConditions>
+			</packagespecific>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="KGZS20003399" id="NoID" label="_Send confirmation notification" length="0" name="Send_confirmation_notification__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Send_confirmation_notification__</fullname>
+				<defaultvalue>true</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_Send confirmation notification</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="Y44MG0000PA9" id="NoID" label="_SendOrderConfirmation_EDI_report" length="0" name="SendOrderConfirmation_EDI__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/SendOrderConfirmation_EDI__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_SendOrderConfirmation_EDI_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="Z44MG0000PA9" id="NoID" label="_SendOrderConfirmation_EDIFormat_report" length="50" name="SendOrderConfirmation_EDIFormat__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/SendOrderConfirmation_EDIFormat__</fullname>
+				<defaultvalue>EDIFACT</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_SendOrderConfirmation_EDIFormat_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<TableName />
+				<DisplayedColumns />
+				<DataSourceOrigin>Standalone</DataSourceOrigin>
+				<possibleKeys>EDIFACT
+					X12
+					IDOC
+					Other</possibleKeys>
+				<SavedColumn />
+				<possibleValues>EDIFACT
+					X12
+					IDOC
+					Other</possibleValues>
+				<ProcessName />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="W44MG0000PA9" id="NoID" label="_SendOrderConfirmation_Email_report" length="0" name="SendOrderConfirmation_Email__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/SendOrderConfirmation_Email__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_SendOrderConfirmation_Email_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"_SendOrderConfirmation_Email_tooltip","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="X44MG0000PA9" id="NoID" label="_SendOrderConfirmation_Portal_report" length="0" name="SendOrderConfirmation_Portal__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/SendOrderConfirmation_Portal__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_SendOrderConfirmation_Portal_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"_SendOrderConfirmation_Portal_tooltip","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="NI0MG0000PA9" id="NoID" label="_SendOrderConfirmationPDFAttached_report" length="0" name="SendOrderConfirmationPDFAttached__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/SendOrderConfirmationPDFAttached__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_SendOrderConfirmationPDFAttached_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"_SendOrderConfirmationPDFAttached_tooltip","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="BWMJG0000M4H" id="NoID" label="_ShowAlerts" length="0" name="ShowAlerts__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ShowAlerts__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_ShowAlerts</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="ST31000011XD" id="NoID" label="_SicCode" length="50" name="SicCode__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/SicCode__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_SicCode</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="V9ONG0000M4H" id="NoID" label="SIREN" length="50" name="SIREN__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/SIREN__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>SIREN</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="U9ONG0000M4H" id="NoID" label="SIRET" length="50" name="SIRET__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/SIRET__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>SIRET</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="TYBIG0000SG1" id="NoID" label="_SupplierCompanyCode" length="50" name="SupplierCompanyCode__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/SupplierCompanyCode__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_SupplierCompanyCode</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="Q9ONG0000M4H" id="NoID" label="TaxID" length="50" name="TaxID__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TaxID__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>TaxID</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="LVWKG0000M4H" id="NoID" label="_ThirdPartiesIds" length="32766" name="ThirdPartiesIds__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ThirdPartiesIds__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ThirdPartiesIds</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="X9ONG0000M4H" id="NoID" label="TIN" length="50" name="TIN__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TIN__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>TIN</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="R9ONG0000M4H" id="NoID" label="TvaIntra" length="50" name="TvaIntra__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TvaIntra__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>TvaIntra</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="GFB0000011XD" id="NoID" label="_TypeOfBusiness" length="50" name="TypeOfBusiness__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TypeOfBusiness__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TypeOfBusiness</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="FFB0000011XD" id="NoID" label="_TypeOfCompany" length="50" name="TypeOfCompany__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TypeOfCompany__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_TypeOfCompany</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<TableName />
+				<DisplayedColumns />
+				<DisplayedColumnsIds />
+				<DataSourceOrigin>Standalone</DataSourceOrigin>
+				<possibleKeys>
+					public
+					private
+					government
+				</possibleKeys>
+				<SavedColumn />
+				<SavedColumnId />
+				<possibleValues>
+					_public
+					_private
+					_government
+				</possibleValues>
+				<ProcessName />
+				<KeyColumnId />
+				<lazyTranslatable />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="HFB0000011XD" id="NoID" label="_YearsInBusiness" length="0" name="YearsInBusiness__" originalProcessID="REPG20003325" precision="0" processid="" submitable="1" type="INT">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/YearsInBusiness__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_YearsInBusiness</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<SetNullOnEmptyValue>1</SetNullOnEmptyValue>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+</process>

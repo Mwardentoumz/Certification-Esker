@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<viewType xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<navigateField></navigateField>
+	<headers>
+		<header name="ProcessName__" column="ProcessId__" type="webaccess.Process.Columns.ProcessNameColumn" visibility="Default, ApplicationOnDemand" translatefromflexible="true">
+			<join key="ID" table="EDD_PROCESS" display="Name" />
+			<navigateField>ProcessId__</navigateField>
+			<navigateFormatString>~/FlexibleForm/FlexibleForm.aspx?action=run&amp;layout=_flexibleform&amp;pId={0}</navigateFormatString>
+		</header>
+		<header name="OwnerId__" column="OwnerID" translate-key="_OwnerID" allow-raw-export="true" type="webaccess.EDDShortOwner" visibility="Default, ApplicationOnDemand" behavior="Filterable">
+			<navigateField>OwnerId__</navigateField>
+		</header>
+	</headers>
+</viewType>

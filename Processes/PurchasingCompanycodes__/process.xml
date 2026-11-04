@@ -1,0 +1,3117 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:05:23" deleted="0" eskerapplication="P2P" global="0" id="BD8QT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="PurchasingCompanycodes__" needvalidation="1" ootofilter="" ootoversion="0" originalProcessID="FPYU134561" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomTable" upgradable="1" userid="0" version="1" visibility="0">
+  <properties>
+    <dbIndex>
+      <Join>&lt;Index Join="1"&gt;
+				&lt;Ref Name="CompanyCode__" Option="ASC"/&gt;					
+				&lt;/Index&gt;</Join>
+      <AUTO_ADD8QT400153EA>&lt;Index Option="Unique"&gt;&lt;Ref Name="ADD8QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_ADD8QT400153EA>
+      <AUTO_AED8QT400153EA>&lt;Index&gt;&lt;Ref Name="AED8QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AED8QT400153EA>
+    </dbIndex>
+    <lg>
+      <process_da>{
+	"_CF_C5_EDI_Identifier": "Id for elektronisk adresse (Peppol CTC)",
+	"_CF_C5_EDI_Identifier_report": "Id for elektronisk adresse (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType": "Skema-id for elektronisk adresse (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType_report": "Skema-id for elektronisk adresse (Peppol CTC)",
+	"_CompanyAddress": "Virksomhedens adresse",
+	"_CompanyAddressFormated": "Adresseeksempel",
+	"_CompanyInfo": "Virksomhedsoplysninger",
+	"_DefaultConfiguration": "Standardkonfiguration",
+	"_DefaultConfiguration_report": "Standardkonfiguration",
+	"_DefaultExpenseReportType": "Standard udgiftsrapporttype",
+	"_DefaultExpenseReportType_report": "Standard udgiftsrapporttype",
+	"_DeliveryAddressID": "Id for standard leveringsadresse",
+	"_DeliveryAddressID_report": "Id for standard leveringsadresse",
+	"_DeterminationKeyword": "Nøgleord anvendt til automatisk fastsættelse",
+	"_DeterminationKeyword_report": "Nøgleord anvendt til automatisk fastsættelse",
+	"_Document data": "Dokumentdata",
+	"_ERP": "ERP-integration",
+	"_errorExistingCompanyCode": "Denne virksomhedskode findes allerede i tabellen",
+	"_PDPConfiguration": "PA-konfiguration af e-rapportering (Frankrig)",
+	"_PDPConfiguration_report": "PA-konfiguration af e-rapportering (Frankrig)",
+	"_PurchasingGroup": "Indkøbsgruppe",
+	"_PurchasingGroup_report": "Indkøbsgruppe",
+	"_PurchasingOrganization": "Indkøbsorganisation",
+	"_PurchasingOrganization_report": "Indkøbsorganisation",
+	"_Sub": "Bygning, IA, service...",
+	"_Sub report": "Bygning, IA, service...",
+	"_TaxMode": "E-rapportal (Frankrig) skattepunkt",
+	"_TaxMode_report": "E-rapportal (Frankrig) skattepunkt",
+	"_TVAModeNotDefined": " ",
+	"_TVAOverCredit": "Ved modtagelse af betaling",
+	"_TVAOverDebit": "Ved udstedelse af faktura",
+	"_WorkingDays": "Arbejdsdage",
+	"_WorkingDays_report": "Arbejdsdage",
+	"City": "By",
+	"Company code": "Virksomhedskode",
+	"Company name": "Virksomhedsnavn",
+	"Contact email": "Mail",
+	"Country": "Landekode",
+	"Currency": "Valuta",
+	"Fax number": "Faxnummer",
+	"P2P - Company codes": "Virksomhedskode",
+	"P2P - Company codes__": "Virksomhedskode",
+	"Phone number": "Telefonnummer",
+	"Postal code": "Postnummer",
+	"PostOfficeBox": "Sted eller postboks",
+	"PurchasingCompanycodes": "S2P – virksomhedskoder",
+	"Region": "Stat/region",
+	"SIRET": "Momsregistreringsnummer (kun USA)",
+	"Street": "Adresse",
+	"VAT number": "Momsnummer",
+	"_EBS": "Oracle E-Business Suite",
+	"_ERPProcurement_can_be_SAP_only_when_AP_is_SAP": "Vælg 'SAP' til integration af Kreditorer for at integrere Indkøb med SAP.",
+	"_Generic": "Universel",
+	"_GenericProcurement": "Ingen",
+	"_JDE": "JD Edwards EnterpriseOne",
+	"_NAV": "Dynamics NAV/365 BC (OnPrem)",
+	"_noIntegration": "Ingen",
+	"_SAP": "SAP",
+	"_SAPS4CLOUD": "SAP S/4HANA Cloud",
+	"_Universal": "Universel",
+	"_CorporateDistanceUnit": "Distance unit",
+	"_CorporateDistanceUnit_report": "Distance unit",
+	"_km": "km",
+	"_mi": "mi",
+	"_MileageRateUnit": "Mileage rate unit"
+}</process_da>
+      <process_de>{
+	"_CF_C5_EDI_Identifier": "ID der elektronischen Adresse (Peppol CTC)",
+	"_CF_C5_EDI_Identifier_report": "ID der elektronischen Adresse (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType": "ID des Schemas der elektronischen Adresse (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType_report": "ID des Schemas der elektronischen Adresse (Peppol CTC)",
+	"_CompanyAddress": "Firmenandresse",
+	"_CompanyAddressFormated": "Adressvorschau",
+	"_CompanyInfo": "Firmeninformationen",
+	"_DefaultConfiguration": "Standard-Konfiguration",
+	"_DefaultConfiguration_report": "Standard-Konfiguration",
+	"_DefaultExpenseReportType": "Standard-Ausgabenberichtstyp",
+	"_DefaultExpenseReportType_report": "Standard-Ausgabenberichtstyp",
+	"_DeliveryAddressID": "ID der Standardlieferadresse",
+	"_DeliveryAddressID_report": "ID der Standardlieferadresse",
+	"_DeterminationKeyword": "Schlüsselwörter für automatische Buchungskreisermittlung",
+	"_DeterminationKeyword_report": "Schlüsselwörter für automatische Buchungskreisermittlung",
+	"_Document data": "Dokumentdaten",
+	"_ERP": "ERP-Integration",
+	"_errorExistingCompanyCode": "Dieser Buchungskreis ist bereits in der Tabelle enthalten.",
+	"_PDPConfiguration": "PA-Konfiguration für die E-Berichterstattung (Frankreich)",
+	"_PDPConfiguration_report": "PA-Konfiguration für die E-Berichterstattung (Frankreich)",
+	"_PurchasingGroup": "Einkäufergruppe",
+	"_PurchasingGroup_report": "Einkäufergruppe",
+	"_PurchasingOrganization": "Einkaufsorganisation",
+	"_PurchasingOrganization_report": "Einkaufsorganisation",
+	"_Sub": "Gebäude, Industriegebiet, Dienst...",
+	"_Sub report": "Gebäude, Industriegebiet, Dienst...",
+	"_TaxMode": "Umsatzsteuer-Besteuerungszeitpunkt für die E-Berichterstattung (Frankreich)",
+	"_TaxMode_report": "Umsatzsteuer-Besteuerungszeitpunkt für die E-Berichterstattung (Frankreich)",
+	"_TVAModeNotDefined": " ",
+	"_TVAOverCredit": "Bei Erhalt der Zahlung",
+	"_TVAOverDebit": "Bei Ausstellung der Rechnung",
+	"_WorkingDays": "Werktage",
+	"_WorkingDays_report": "Werktage",
+	"City": "Ort",
+	"Company code": "Buchungskreis",
+	"Company name": "Firmenname",
+	"Contact email": "E-Mail-Adresse",
+	"Country": "Ländercode",
+	"Currency": "Währung",
+	"Fax number": "Faxnummer",
+	"P2P - Company codes": "Buchungskreis",
+	"P2P - Company codes__": "Buchungskreis",
+	"Phone number": "Telefonnummer",
+	"Postal code": "PLZ",
+	"PostOfficeBox": "Ort oder Postfach",
+	"PurchasingCompanycodes": "S2P - Buchungskreise",
+	"Region": "Bundesland/Region",
+	"SIRET": "Steuernummer",
+	"Street": "Straße",
+	"VAT number": "Umsatzsteuernummer",
+	"_EBS": "Oracle E-Business Suite",
+	"_ERPProcurement_can_be_SAP_only_when_AP_is_SAP": "Wählen Sie 'SAP' als Integration für Lieferantenrechnungen aus, um den Einkauf mit SAP zu integrieren.",
+	"_Generic": "Allumfassend",
+	"_GenericProcurement": "Keine",
+	"_JDE": "JD Edwards EnterpriseOne",
+	"_NAV": "Dynamics NAV/365 BC (OnPrem)",
+	"_noIntegration": "Keine",
+	"_SAP": "SAP",
+	"_SAPS4CLOUD": "SAP S/4HANA Cloud",
+	"_Universal": "Allumfassend",
+	"_CorporateDistanceUnit": "Distance unit",
+	"_CorporateDistanceUnit_report": "Distance unit",
+	"_km": "km",
+	"_mi": "mi",
+	"_MileageRateUnit": "Mileage rate unit"
+}</process_de>
+      <process_ja>{
+	"_CF_C5_EDI_Identifier": "電子アドレスID (Peppol CTC)",
+	"_CF_C5_EDI_Identifier_report": "電子アドレスID (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType": "電子アドレススキームID (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType_report": "電子アドレススキームID (Peppol CTC)",
+	"_CompanyAddress": "会社住所",
+	"_CompanyAddressFormated": "住所プレビュー",
+	"_CompanyInfo": "会社情報",
+	"_DefaultConfiguration": "既定の設定",
+	"_DefaultConfiguration_report": "既定の設定",
+	"_DefaultExpenseReportType": "既定の費用レポート種別",
+	"_DefaultExpenseReportType_report": "既定の費用レポート種別",
+	"_DeliveryAddressID": "既定の納品先住所ID",
+	"_DeliveryAddressID_report": "既定の納品先住所ID",
+	"_DeterminationKeyword": "自動決定用キーワード",
+	"_DeterminationKeyword_report": "自動決定用キーワード",
+	"_Document data": "文書データ",
+	"_ERP": "ERP統合",
+	"_errorExistingCompanyCode": "この会社カードはテーブルに存在します",
+	"_PDPConfiguration": "電子レポート（フランス）PA設定",
+	"_PDPConfiguration_report": "電子レポート（フランス）PA設定",
+	"_PurchasingGroup": "購買グループ",
+	"_PurchasingGroup_report": "購買グループ",
+	"_PurchasingOrganization": "購買組織",
+	"_PurchasingOrganization_report": "購買組織",
+	"_Sub": "建物、IA、サービス...",
+	"_Sub report": "建物、IA、サービス...",
+	"_TaxMode": "電子レポート (フランス) 付加価値税納税義務成立日",
+	"_TaxMode_report": "電子レポート (フランス) 付加価値税納税義務成立日",
+	"_TVAModeNotDefined": " ",
+	"_TVAOverCredit": "支払い受領時",
+	"_TVAOverDebit": "請求書発行時",
+	"_WorkingDays": "営業日",
+	"_WorkingDays_report": "営業日",
+	"City": "市区町村",
+	"Company code": "会社コード",
+	"Company name": "会社名",
+	"Contact email": "電子メール",
+	"Country": "国コード",
+	"Currency": "通貨",
+	"Fax number": "Fax番号",
+	"P2P - Company codes": "会社コード",
+	"P2P - Company codes__": "会社コード",
+	"Phone number": "電話番号",
+	"Postal code": "郵便番号",
+	"PostOfficeBox": "私書箱",
+	"PurchasingCompanycodes": "S2P - 会社コード",
+	"Region": "都道府県/地域",
+	"SIRET": "納税者識別番号",
+	"Street": "番地",
+	"VAT number": "付加価値税登録番号",
+	"_EBS": "Oracle E-Business Suite",
+	"_ERPProcurement_can_be_SAP_only_when_AP_is_SAP": "買掛金統合として 'SAP' を選択して、調達をSAPと統合します。",
+	"_Generic": "汎用",
+	"_GenericProcurement": "なし",
+	"_JDE": "JD Edwards EnterpriseOne",
+	"_NAV": "Dynamics NAV/365 BC (OnPrem)",
+	"_noIntegration": "なし",
+	"_SAP": "SAP",
+	"_SAPS4CLOUD": "SAP S/4HANAクラウド",
+	"_Universal": "汎用",
+	"_CorporateDistanceUnit": "Distance unit",
+	"_CorporateDistanceUnit_report": "Distance unit",
+	"_km": "km",
+	"_mi": "mi",
+	"_MileageRateUnit": "Mileage rate unit"
+}</process_ja>
+      <process_en>{
+	"_CF_C5_EDI_Identifier": "Electronic address ID (Peppol CTC)",
+	"_CF_C5_EDI_Identifier_report": "Electronic address ID (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType": "Electronic address scheme ID (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType_report": "Electronic address scheme ID (Peppol CTC)",
+	"_CompanyAddress": "Company Address",
+	"_CompanyAddressFormated": "Address preview",
+	"_CompanyInfo": "Company Information",
+	"_DefaultConfiguration": "Default configuration",
+	"_DefaultConfiguration_report": "Default configuration",
+	"_DefaultExpenseReportType": "Default expense report type",
+	"_DefaultExpenseReportType_report": "Default expense report type",
+	"_DeliveryAddressID": "ID of default delivery address",
+	"_DeliveryAddressID_report": "ID of default delivery address",
+	"_DeterminationKeyword": "Keywords used for automatic determination",
+	"_DeterminationKeyword_report": "Keywords used for automatic determination",
+	"_Document data": "Document data",
+	"_ERP": "ERP integration",
+	"_errorExistingCompanyCode": "This company code already exists in the table",
+	"_PurchasingGroup": "Purchasing group",
+	"_PurchasingGroup_report": "Purchasing group",
+	"_PurchasingOrganization": "Purchasing organization",
+	"_PurchasingOrganization_report": "Purchasing organization",
+	"_Sub": "Building, IA, Service...",
+	"_Sub report": "Building, IA, Service...",
+	"_TaxMode": "E-reporting (France) tax point",
+	"_TaxMode_report": "E-reporting (France) tax point",
+	"_PDPConfiguration": "E-reporting (France) PA configuration",
+	"_PDPConfiguration_report": "E-reporting (France) PA configuration",
+	"_TVAModeNotDefined": " ",
+	"_TVAOverCredit": "On payment received",
+	"_TVAOverDebit": "On invoice issued",
+	"_WorkingDays": "Working days",
+	"_WorkingDays_report": "Working days",
+	"City": "City",
+	"Company code": "Company code",
+	"Company name": "Company name",
+	"Contact email": "Email",
+	"Country": "Country code",
+	"Currency": "Currency",
+	"Fax number": "Fax number",
+	"P2P - Company codes": "Company code",
+	"P2P - Company codes__": "Company code",
+	"Phone number": "Phone number",
+	"Postal code": "Postal code",
+	"PostOfficeBox": "Locality or P.O. Box",
+	"PurchasingCompanycodes": "S2P - Company codes",
+	"Region": "State/Region",
+	"SIRET": "Tax identification number",
+	"Street": "Street",
+	"VAT number": "VAT number",
+	"_EBS": "Oracle E-Business Suite",
+	"_ERPProcurement_can_be_SAP_only_when_AP_is_SAP": "Select 'SAP' as Accounts Payable integration to integrate Procurement with SAP.",
+	"_Generic": "Universal",
+	"_GenericProcurement": "None",
+	"_JDE": "JD Edwards EnterpriseOne",
+	"_NAV": "Dynamics NAV/365 BC (OnPrem)",
+	"_noIntegration": "None",
+	"_SAP": "SAP",
+	"_SAPS4CLOUD": "SAP S/4HANA Cloud",
+	"_Universal": "Universal",
+	"_CorporateDistanceUnit": "Distance unit",
+	"_CorporateDistanceUnit_report": "Distance unit",
+	"_km": "km",
+	"_mi": "mi",
+	"_MileageRateUnit": "Mileage rate unit"
+}</process_en>
+      <process_es>{
+	"_CF_C5_EDI_Identifier": "ID de la dirección de correo electrónico (Peppol CTC)",
+	"_CF_C5_EDI_Identifier_report": "ID de la dirección de correo electrónico (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType": "ID del esquema de dirección de correo electrónico (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType_report": "ID del esquema de dirección de correo electrónico (Peppol CTC)",
+	"_CompanyAddress": "Dirección de la empresa",
+	"_CompanyAddressFormated": "Vista previa de la dirección",
+	"_CompanyInfo": "Información de la empresa",
+	"_DefaultConfiguration": "Configuración predeterminada",
+	"_DefaultConfiguration_report": "Configuración predeterminada",
+	"_DefaultExpenseReportType": "Tipo de informe de gastos predeterminado",
+	"_DefaultExpenseReportType_report": "Tipo de informe de gastos predeterminado",
+	"_DeliveryAddressID": "ID de dirección de entrega predeterminada",
+	"_DeliveryAddressID_report": "ID de dirección de entrega predeterminada",
+	"_DeterminationKeyword": "Palabras clave usadas para la determinación automática",
+	"_DeterminationKeyword_report": "Palabras clave usadas para la determinación automática",
+	"_Document data": "Datos del documento",
+	"_ERP": "Integración ERP",
+	"_errorExistingCompanyCode": "Este código de empresa ya existe en la tabla",
+	"_PDPConfiguration": "Configuración PA (Informe electrónico Francia)",
+	"_PDPConfiguration_report": "Configuración PA (Informe electrónico Francia)",
+	"_PurchasingGroup": "Grupo de compras",
+	"_PurchasingGroup_report": "Grupo de compras",
+	"_PurchasingOrganization": "Organización de compras",
+	"_PurchasingOrganization_report": "Organización de compras",
+	"_Sub": "Edificio, P.I., Servicio...",
+	"_Sub report": "Edificio, P.I., Servicio...",
+	"_TaxMode": "Informes electrónicos (Francia) punto fiscal",
+	"_TaxMode_report": "Informes electrónicos (Francia) punto fiscal",
+	"_TVAModeNotDefined": " ",
+	"_TVAOverCredit": "Al recibir el pago",
+	"_TVAOverDebit": "Al emitir la factura",
+	"_WorkingDays": "Días laborables",
+	"_WorkingDays_report": "Días laborables",
+	"City": "Ciudad",
+	"Company code": "Código de empresa",
+	"Company name": "Nombre de la empresa",
+	"Contact email": "Dirección de e-mail",
+	"Country": "Código de país",
+	"Currency": "Divisa",
+	"Fax number": "Número de fax",
+	"P2P - Company codes": "Código de empresa",
+	"P2P - Company codes__": "Código de empresa",
+	"Phone number": "Número de teléfono",
+	"Postal code": "Código postal",
+	"PostOfficeBox": "Localidad o apartado postal",
+	"PurchasingCompanycodes": "S2P - Códigos de empresa",
+	"Region": "Estado/Provincia",
+	"SIRET": "N° ident. fiscal",
+	"Street": "Calle",
+	"VAT number": "Nº de IVA",
+	"_EBS": "Oracle E-Business Suite",
+	"_ERPProcurement_can_be_SAP_only_when_AP_is_SAP": "Seleccione 'SAP' como integración de Facturas de proveedor para integrar el módulo de Compras con SAP.",
+	"_Generic": "Universal",
+	"_GenericProcurement": "Ninguna",
+	"_JDE": "JD Edwards EnterpriseOne",
+	"_NAV": "Dynamics NAV/365 BC (OnPrem)",
+	"_noIntegration": "Ninguna",
+	"_SAP": "SAP",
+	"_SAPS4CLOUD": "SAP S/4HANA Cloud",
+	"_Universal": "Universal",
+	"_CorporateDistanceUnit": "Unidad de distancia",
+	"_CorporateDistanceUnit_report": "Unidad de distancia",
+	"_km": "km",
+	"_mi": "mi",
+	"_MileageRateUnit": "Unidad de tarifa de kilometraje"
+}</process_es>
+      <process_fr>{
+	"_CF_C5_EDI_Identifier": "ID de l'adresse électronique (Peppol CTC)",
+	"_CF_C5_EDI_Identifier_report": "ID de l'adresse électronique (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType": "ID du schéma de l'adresse électronique (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType_report": "ID du schéma de l'adresse électronique (Peppol CTC)",
+	"_CompanyAddress": "Adresse de la société",
+	"_CompanyAddressFormated": "Aperçu de l'adresse",
+	"_CompanyInfo": "Informations sur la société",
+	"_DefaultConfiguration": "Configuration par défaut",
+	"_DefaultConfiguration_report": "Configuration par défaut",
+	"_DefaultExpenseReportType": "Type de note de frais par défaut",
+	"_DefaultExpenseReportType_report": "Type de note de frais par défaut",
+	"_DeliveryAddressID": "Identifiant de l'adresse de livraison par défaut",
+	"_DeliveryAddressID_report": "Identifiant de l'adresse de livraison par défaut",
+	"_DeterminationKeyword": "Mots-clés utilisés pour la détermination automatique",
+	"_DeterminationKeyword_report": "Mots-clés utilisés pour la détermination automatique",
+	"_Document data": "Données du document",
+	"_ERP": "Intégration ERP",
+	"_errorExistingCompanyCode": "Ce code société existe déjà dans la table",
+	"_PDPConfiguration": "Configuration PA (E-reporting France)",
+	"_PDPConfiguration_report": "Configuration PA (E-reporting France)",
+	"_PurchasingGroup": "Groupe d'acheteurs",
+	"_PurchasingGroup_report": "Groupe d'acheteurs",
+	"_PurchasingOrganization": "Organisation d'achats",
+	"_PurchasingOrganization_report": "Organisation d'achats",
+	"_Sub": "Bâtiment, ZI, Service...",
+	"_Sub report": "Bâtiment, ZI, Service...",
+	"_TaxMode": "Régime d'exigibilité TVA (E-reporting France)",
+	"_TaxMode_report": "Régime d'exigibilité TVA (E-reporting France)",
+	"_TVAModeNotDefined": " ",
+	"_TVAOverCredit": "TVA sur les encaissements",
+	"_TVAOverDebit": "TVA sur les débits",
+	"_WorkingDays": "Jours ouvrés",
+	"_WorkingDays_report": "Jours ouvrés",
+	"City": "Ville",
+	"Company code": "Code société",
+	"Company name": "Nom de la société",
+	"Contact email": "Adresse e-mail",
+	"Country": "Code pays",
+	"Currency": "Devise",
+	"Fax number": "Numéro de fax",
+	"P2P - Company codes": "Code société",
+	"P2P - Company codes__": "Code société",
+	"Phone number": "Numéro de téléphone",
+	"Postal code": "Code postal",
+	"PostOfficeBox": "Lieu-dit ou boîte postale",
+	"PurchasingCompanycodes": "S2P - Codes société",
+	"Region": "État/Région",
+	"SIRET": "SIRET",
+	"Street": "Rue",
+	"VAT number": "Numéro de TVA",
+	"_EBS": "Oracle E-Business Suite",
+	"_ERPProcurement_can_be_SAP_only_when_AP_is_SAP": "Sélectionnez 'SAP' comme intégration de Factures fournisseurs pour activer l'intégration de Achats avec SAP.",
+	"_Generic": "Universelle",
+	"_GenericProcurement": "Aucune",
+	"_JDE": "JD Edwards EnterpriseOne",
+	"_NAV": "Dynamics NAV/365 BC (OnPrem)",
+	"_noIntegration": "Aucune",
+	"_SAP": "SAP",
+	"_SAPS4CLOUD": "SAP S/4HANA Cloud",
+	"_Universal": "Universelle",
+	"_CorporateDistanceUnit": "Unité de distance",
+	"_CorporateDistanceUnit_report": "Unité de distance",
+	"_km": "km",
+	"_mi": "mi",
+	"_MileageRateUnit": "Unité du taux kilométrique"
+}</process_fr>
+      <process_nl-NL>{
+	"_CF_C5_EDI_Identifier": "ID-electronisch adres (Peppol CTC)",
+	"_CF_C5_EDI_Identifier_report": "ID-electronisch adres (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType": "ID-schema electronisch adres (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType_report": "ID-schema electronisch adres (Peppol CTC)",
+	"_CompanyAddress": "Adres bedrijf",
+	"_CompanyAddressFormated": "Voorbeeldweergave adres",
+	"_CompanyInfo": "Informatie bedrijf",
+	"_DefaultConfiguration": "Standaardconfiguratie",
+	"_DefaultConfiguration_report": "Standaardconfiguratie",
+	"_DefaultExpenseReportType": "Standaardtype uitgavenstaat",
+	"_DefaultExpenseReportType_report": "Standaardtype uitgavenstaat",
+	"_DeliveryAddressID": "ID van standaard leveringsadres",
+	"_DeliveryAddressID_report": "ID van standaard leveringsadres",
+	"_DeterminationKeyword": "Trefwoorden gebruikt voor automatische bepaling",
+	"_DeterminationKeyword_report": "Trefwoorden gebruikt voor automatische bepaling",
+	"_Document data": "Documentgegevens",
+	"_ERP": "ERP-integratie",
+	"_errorExistingCompanyCode": "Deze bedrijfscode bestaat al in de tabel",
+	"_PDPConfiguration": "PA-configuratie E-rapportage (Frankrijk)",
+	"_PDPConfiguration_report": "PA-configuratie E-rapportage (Frankrijk)",
+	"_PurchasingGroup": "Inkoopgroep",
+	"_PurchasingGroup_report": "Inkoopgroep",
+	"_PurchasingOrganization": "Inkooporganisatie",
+	"_PurchasingOrganization_report": "Inkooporganisatie",
+	"_Sub": "Gebouw, IZ, service",
+	"_Sub report": "Gebouw, IZ, service",
+	"_TaxMode": "Aangrijpingspunt btw e-rapportage (Frankrijk)",
+	"_TaxMode_report": "Aangrijpingspunt btw e-rapportage (Frankrijk)",
+	"_TVAModeNotDefined": " ",
+	"_TVAOverCredit": "Bij ontvangen bedrag",
+	"_TVAOverDebit": "Bij uitgave factuur",
+	"_WorkingDays": "Werkdagen",
+	"_WorkingDays_report": "Werkdagen",
+	"City": "Stad",
+	"Company code": "Bedrijfscode",
+	"Company name": "Bedrijfsnaam",
+	"Contact email": "E-mail",
+	"Country": "Landcode",
+	"Currency": "Valuta",
+	"Fax number": "Faxnummer",
+	"P2P - Company codes": "Bedrijfscode",
+	"P2P - Company codes__": "Bedrijfscode",
+	"Phone number": "Telefoonnummer",
+	"Postal code": "Postcode",
+	"PostOfficeBox": "Locatie of postbus",
+	"PurchasingCompanycodes": "S2P - Bedrijfscodes",
+	"Region": "Staat/Regio",
+	"SIRET": "Belastingnummer",
+	"Street": "Straat",
+	"VAT number": "Btw-nummer",
+	"_EBS": "Oracle E-Business Suite",
+	"_ERPProcurement_can_be_SAP_only_when_AP_is_SAP": "Selecteer 'SAP' als Crediteuren integratie om Inkoop te integreren met SAP.",
+	"_Generic": "Universeel",
+	"_GenericProcurement": "Geen",
+	"_JDE": "JD Edwards EnterpriseOne",
+	"_NAV": "Dynamics NAV/365 BC (OnPrem)",
+	"_noIntegration": "Geen",
+	"_SAP": "SAP",
+	"_SAPS4CLOUD": "SAP S/4HANA Cloud",
+	"_Universal": "Universeel",
+	"_CorporateDistanceUnit": "Distance unit",
+	"_CorporateDistanceUnit_report": "Distance unit",
+	"_km": "km",
+	"_mi": "mi",
+	"_MileageRateUnit": "Mileage rate unit"
+}</process_nl-NL>
+      <process_pl>{
+	"_CF_C5_EDI_Identifier": "Id. adresu elektronicznego (Peppol CTC)",
+	"_CF_C5_EDI_Identifier_report": "Id. adresu elektronicznego (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType": "Id. schematu adresu elektronicznego (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType_report": "Id. schematu adresu elektronicznego (Peppol CTC)",
+	"_CompanyAddress": "Adres firmy",
+	"_CompanyAddressFormated": "Podgląd adresu",
+	"_CompanyInfo": "Informacje o firmie",
+	"_DefaultConfiguration": "Konfiguracja domyślna",
+	"_DefaultConfiguration_report": "Konfiguracja domyślna",
+	"_DefaultExpenseReportType": "Domyślny typ raportu z wydatków",
+	"_DefaultExpenseReportType_report": "Domyślny typ raportu z wydatków",
+	"_DeliveryAddressID": "Id. domyślnego adresu dostawy",
+	"_DeliveryAddressID_report": "Id. domyślnego adresu dostawy",
+	"_DeterminationKeyword": "Słowa kluczowe używane do automatycznego ustalania",
+	"_DeterminationKeyword_report": "Słowa kluczowe używane do automatycznego ustalania",
+	"_Document data": "Dane dokumentu",
+	"_ERP": "Integracja ERP",
+	"_errorExistingCompanyCode": "Ten kod firmy już istnieje w tabeli",
+	"_PDPConfiguration": "System e-raportowania (Francja) – konfiguracja PA",
+	"_PDPConfiguration_report": "System e-raportowania (Francja) – konfiguracja PA",
+	"_PurchasingGroup": "Grupa nabycia",
+	"_PurchasingGroup_report": "Grupa nabycia",
+	"_PurchasingOrganization": "Dział nabycia",
+	"_PurchasingOrganization_report": "Dział nabycia",
+	"_Sub": "Budynek, strefa przemysłowa, dział...",
+	"_Sub report": "Budynek, strefa przemysłowa, dział...",
+	"_TaxMode": "Moment powstania obowiązku podatkowego dla e-raportowania (Francja)",
+	"_TaxMode_report": "Moment powstania obowiązku podatkowego dla e-raportowania (Francja)",
+	"_TVAModeNotDefined": "",
+	"_TVAOverCredit": "W chwili otrzymania płatności",
+	"_TVAOverDebit": "W chwili wystawienia faktury",
+	"_WorkingDays": "Dni robocze",
+	"_WorkingDays_report": "Dni robocze",
+	"City": "Miejscowość",
+	"Company code": "Kod firmy",
+	"Company name": "Nazwa firmy",
+	"Contact email": "E-mail",
+	"Country": "Kod kraju",
+	"Currency": "Waluta",
+	"Fax number": "Numer faksu",
+	"P2P - Company codes": "Kod firmy",
+	"P2P - Company codes__": "Kod firmy",
+	"Phone number": "Numer telefonu",
+	"Postal code": "Kod pocztowy",
+	"PostOfficeBox": "Okręg lub skrytka pocztowa",
+	"PurchasingCompanycodes": "S2P – kody firm",
+	"Region": "Województwo/region",
+	"SIRET": "Numer identyfikacji podatkowej",
+	"Street": "Ulica",
+	"VAT number": "Numer VAT",
+	"_EBS": "Oracle E-Business Suite",
+	"_ERPProcurement_can_be_SAP_only_when_AP_is_SAP": "Wybierz „SAP” jako integrację rozrachunków z dostawcami, aby zintegrować system nabycia z SAP.",
+	"_Generic": "Uniwersalne",
+	"_GenericProcurement": "Brak",
+	"_JDE": "JD Edwards EnterpriseOne",
+	"_NAV": "Dynamics NAV/365 BC (OnPrem)",
+	"_noIntegration": "Brak",
+	"_SAP": "SAP",
+	"_SAPS4CLOUD": "SAP S/4HANA Cloud",
+	"_Universal": "Uniwersalne",
+	"_CorporateDistanceUnit": "Distance unit",
+	"_CorporateDistanceUnit_report": "Distance unit",
+	"_km": "km",
+	"_mi": "mi",
+	"_MileageRateUnit": "Mileage rate unit"
+}</process_pl>
+      <process_it>{
+	"_CF_C5_EDI_Identifier": "ID indirizzo elettronico (Peppol CTC)",
+	"_CF_C5_EDI_Identifier_report": "ID indirizzo elettronico (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType": "ID schema dell'indirizzo elettronico (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType_report": "ID schema dell'indirizzo elettronico (Peppol CTC)",
+	"_CompanyAddress": "Indirizzo società",
+	"_CompanyAddressFormated": "Anteprima indirizzo",
+	"_CompanyInfo": "Informazioni società",
+	"_DefaultConfiguration": "Configurazione predefinita",
+	"_DefaultConfiguration_report": "Configurazione predefinita",
+	"_DefaultExpenseReportType": "Tipo di nota spese predefinito",
+	"_DefaultExpenseReportType_report": "Tipo di nota spese predefinito",
+	"_DeliveryAddressID": "ID indirizzo di spedizione predefinito",
+	"_DeliveryAddressID_report": "ID indirizzo di spedizione predefinito",
+	"_DeterminationKeyword": "Parole chiave per la determinazione automatica del codice società",
+	"_DeterminationKeyword_report": "Parole chiave per la determinazione automatica del codice società",
+	"_Document data": "Dati documento",
+	"_ERP": "Integrazione ERP",
+	"_errorExistingCompanyCode": "Questo codice società esiste già nella tabella",
+	"_PDPConfiguration": "Configurazione PA (E-reporting Francia)",
+	"_PDPConfiguration_report": "Configurazione PA (E-reporting Francia)",
+	"_PurchasingGroup": "Gruppo acquisti",
+	"_PurchasingGroup_report": "Gruppo acquisti",
+	"_PurchasingOrganization": "Organizzazione acquisti",
+	"_PurchasingOrganization_report": "Organizzazione acquisti",
+	"_Sub": "Edificio, ZI, Servizio...",
+	"_Sub report": "Edificio, ZI, Servizio...",
+	"_TaxMode": "Regime di esigibilità IVA (E-reporting Francia)",
+	"_TaxMode_report": "Regime di esigibilità IVA (E-reporting Francia)",
+	"_TVAModeNotDefined": " ",
+	"_TVAOverCredit": "Differita",
+	"_TVAOverDebit": "Immediata",
+	"_WorkingDays": "Giorni lavorativi",
+	"_WorkingDays_report": "Giorni lavorativi",
+	"City": "Città",
+	"Company code": "Codice società",
+	"Company name": "Nome società",
+	"Contact email": "Indirizzo e-mail",
+	"Country": "Codice paese",
+	"Currency": "Valuta",
+	"Fax number": "Numero fax",
+	"P2P - Company codes": "Codice società",
+	"P2P - Company codes__": "Codice società",
+	"Phone number": "Numero di telefono",
+	"Postal code": "CAP",
+	"PostOfficeBox": "Località o casella postale",
+	"PurchasingCompanycodes": "S2P - Codici società",
+	"Region": "Stato/Regione",
+	"SIRET": "Codice di identificazione fiscale",
+	"Street": "Via",
+	"VAT number": "Partita IVA",
+	"_EBS": "Oracle E-Business Suite",
+	"_ERPProcurement_can_be_SAP_only_when_AP_is_SAP": "Selezionare 'SAP' come integrazione di Fatture fornitori per attivare l'integrazione di Acquisti con SAP.",
+	"_Generic": "Universale",
+	"_GenericProcurement": "Nessuna",
+	"_JDE": "JD Edwards EnterpriseOne",
+	"_NAV": "Dynamics NAV/365 BC (OnPrem)",
+	"_noIntegration": "Nessuna",
+	"_SAP": "SAP",
+	"_SAPS4CLOUD": "SAP S/4HANA Cloud",
+	"_Universal": "Universale",
+	"_CorporateDistanceUnit": "Unità di distanza",
+	"_CorporateDistanceUnit_report": "Unità di distanza",
+	"_km": "km",
+	"_mi": "mi",
+	"_MileageRateUnit": "Unità tasso di chilometraggio"
+}</process_it>
+      <process_sk>{
+	"_CF_C5_EDI_Identifier": "ID elektronickej adresy (Peppol CTC)",
+	"_CF_C5_EDI_Identifier_report": "ID elektronickej adresy (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType": "ID schémy elektronickej adresy (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType_report": "ID schémy elektronickej adresy (Peppol CTC)",
+	"_CompanyAddress": "Adresa spoločnosti",
+	"_CompanyAddressFormated": "Náhľad adresy",
+	"_CompanyInfo": "Informácie o spoločnosti",
+	"_DefaultConfiguration": "Predvolená konfigurácia",
+	"_DefaultConfiguration_report": "Predvolená konfigurácia",
+	"_DefaultExpenseReportType": "Predvolený typ výkazu výdavkov",
+	"_DefaultExpenseReportType_report": "Predvolený typ výkazu výdavkov",
+	"_DeliveryAddressID": "ID predvolenej doručovacej adresy",
+	"_DeliveryAddressID_report": "ID predvolenej doručovacej adresy",
+	"_DeterminationKeyword": "Kľúčové slová používané na automatické určenie",
+	"_DeterminationKeyword_report": "Kľúčové slová používané na automatické určenie",
+	"_Document data": "Dáta dokumentu",
+	"_ERP": "Integrácia ERP",
+	"_errorExistingCompanyCode": "Tento kód spoločnosti už existuje v tabuľke",
+	"_PDPConfiguration": "Konfigurácia PA pre elektronické výkazníctvo (Francúzsko)",
+	"_PDPConfiguration_report": "Konfigurácia PA pre elektronické výkazníctvo (Francúzsko)",
+	"_PurchasingGroup": "Nákupná skupina",
+	"_PurchasingGroup_report": "Nákupná skupina",
+	"_PurchasingOrganization": "Nákupná organizácia",
+	"_PurchasingOrganization_report": "Nákupná organizácia",
+	"_Sub": "Budova, PZ, Servis...",
+	"_Sub report": "Budova, PZ, Servis...",
+	"_TaxMode": "Daňová lokalita pre elektronické výkazníctvo (Francúzsko)",
+	"_TaxMode_report": "Daňová lokalita pre elektronické výkazníctvo (Francúzsko)",
+	"_TVAModeNotDefined": "",
+	"_TVAOverCredit": "Pri prijatí platby",
+	"_TVAOverDebit": "Pri vystavení faktúry",
+	"_WorkingDays": "Pracovné dni",
+	"_WorkingDays_report": "Pracovné dni",
+	"City": "Mesto",
+	"Company code": "Kód spoločnosti",
+	"Company name": "Meno spoločnosti",
+	"Contact email": "E-mail",
+	"Country": "Kód krajiny",
+	"Currency": "Mena",
+	"Fax number": "Faxové číslo",
+	"P2P - Company codes": "Kód spoločnosti",
+	"P2P - Company codes__": "Kód spoločnosti",
+	"Phone number": "Telefónne číslo",
+	"Postal code": "PSČ",
+	"PostOfficeBox": "Lokalita alebo P.O. Box",
+	"PurchasingCompanycodes": "S2P – Kódy spoločnosti",
+	"Region": "Štát/región",
+	"SIRET": "Identifikačné číslo pre daň",
+	"Street": "Ulica",
+	"VAT number": "IČ DPH",
+	"_EBS": "Oracle E-Business Suite",
+	"_ERPProcurement_can_be_SAP_only_when_AP_is_SAP": "Vyberte 'SAP' ako integráciu Záväzky, aby ste integrovali Obstarávanie so systémom SAP.",
+	"_Generic": "Univerzálna",
+	"_GenericProcurement": "Žiadna",
+	"_JDE": "JD Edwards EnterpriseOne",
+	"_NAV": "Dynamics NAV/365 BC (OnPrem)",
+	"_noIntegration": "Žiadna",
+	"_SAP": "SAP",
+	"_SAPS4CLOUD": "SAP S/4HANA Cloud",
+	"_Universal": "Univerzálna",
+	"_CorporateDistanceUnit": "Distance unit",
+	"_CorporateDistanceUnit_report": "Distance unit",
+	"_km": "km",
+	"_mi": "mi",
+	"_MileageRateUnit": "Mileage rate unit"
+}</process_sk>
+      <process_zh-CN>{
+	"_CF_C5_EDI_Identifier": "电子地址 ID (Peppol CTC)",
+	"_CF_C5_EDI_Identifier_report": "电子地址 ID (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType": "电子地址方案 ID (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType_report": "电子地址方案 ID (Peppol CTC)",
+	"_CompanyAddress": "公司地址",
+	"_CompanyAddressFormated": "地址预览",
+	"_CompanyInfo": "公司信息",
+	"_DefaultConfiguration": "默认配置",
+	"_DefaultConfiguration_report": "默认配置",
+	"_DefaultExpenseReportType": "默认费用报销单类型",
+	"_DefaultExpenseReportType_report": "默认费用报销单类型",
+	"_DeliveryAddressID": "默认交付地址的ID",
+	"_DeliveryAddressID_report": "默认交付地址的ID",
+	"_DeterminationKeyword": "自动决定使用的关键字",
+	"_DeterminationKeyword_report": "自动决定使用的关键字",
+	"_Document data": "文档数据",
+	"_ERP": "ERP 集成",
+	"_errorExistingCompanyCode": "此公司代码已存在于表中",
+	"_PDPConfiguration": "电子申报（法国）PA 配置",
+	"_PDPConfiguration_report": "电子申报（法国）PA 配置",
+	"_PurchasingGroup": "采购组",
+	"_PurchasingGroup_report": "采购组",
+	"_PurchasingOrganization": "采购组织",
+	"_PurchasingOrganization_report": "采购组织",
+	"_Sub": "楼号、工业区、部门……",
+	"_Sub report": "楼号、工业区、部门……",
+	"_TaxMode": "电子申报（法国）税点日（tax point）",
+	"_TaxMode_report": "电子申报（法国）税点日（tax point）",
+	"_TVAModeNotDefined": " ",
+	"_TVAOverCredit": "收到付款后",
+	"_TVAOverDebit": "开账单发票后",
+	"_WorkingDays": "工作日",
+	"_WorkingDays_report": "工作日",
+	"City": "城市",
+	"Company code": "公司代码",
+	"Company name": "公司名",
+	"Contact email": "电子邮件",
+	"Country": "国家/地区代码",
+	"Currency": "货币",
+	"Fax number": "传真号码",
+	"P2P - Company codes": "公司代码",
+	"P2P - Company codes__": "公司代码",
+	"Phone number": "电话号码",
+	"Postal code": "邮政编码",
+	"PostOfficeBox": "地点或邮政信箱",
+	"PurchasingCompanycodes": "寻源到付款 - 公司代码",
+	"Region": "州/省/大区",
+	"SIRET": "税务识别号",
+	"Street": "街道地址",
+	"VAT number": "增值税号(VAT)",
+	"_EBS": "甲骨文电子商务套件",
+	"_ERPProcurement_can_be_SAP_only_when_AP_is_SAP": "请选择“SAP”作为应付账款集成，以便集成采购与 SAP。",
+	"_Generic": "通用",
+	"_GenericProcurement": "无",
+	"_JDE": "JD Edwards EnterpriseOne",
+	"_NAV": "Dynamics NAV/365 BC (OnPrem)",
+	"_noIntegration": "无",
+	"_SAP": "SAP",
+	"_SAPS4CLOUD": "SAP S/4HANA Cloud",
+	"_Universal": "通用",
+	"_CorporateDistanceUnit": "Distance unit",
+	"_CorporateDistanceUnit_report": "Distance unit",
+	"_km": "km",
+	"_mi": "mi",
+	"_MileageRateUnit": "Mileage rate unit"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"_CF_C5_EDI_Identifier": "ID do endereço de e-mail (Peppol CTC)",
+	"_CF_C5_EDI_Identifier_report": "ID do endereço de e-mail (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType": "ID do esquema do endereço de e-mail (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType_report": "ID do esquema do endereço de e-mail (Peppol CTC)",
+	"_CompanyAddress": "Endereço da empresa",
+	"_CompanyAddressFormated": "Visualização do endereço",
+	"_CompanyInfo": "Informações sobre a empresa",
+	"_DefaultConfiguration": "Configuração padrão",
+	"_DefaultConfiguration_report": "Configuração padrão",
+	"_DefaultExpenseReportType": "Tipo de relatório de despesas padrão",
+	"_DefaultExpenseReportType_report": "Tipo de relatório de despesas padrão",
+	"_DeliveryAddressID": "ID do endereço de entrega padrão",
+	"_DeliveryAddressID_report": "ID do endereço de entrega padrão",
+	"_DeterminationKeyword": "Palavras-chave usadas para determinação automática",
+	"_DeterminationKeyword_report": "Palavras-chave usadas para determinação automática",
+	"_Document data": "Informação de documento",
+	"_ERP": "Integração ERP",
+	"_errorExistingCompanyCode": "Essa empresa já existe na tabela",
+	"_PDPConfiguration": "Configuração de relatórios eletrônicos AP (França)",
+	"_PDPConfiguration_report": "Configuração de relatórios eletrônicos AP (França)",
+	"_PurchasingGroup": "Grupo de compras",
+	"_PurchasingGroup_report": "Grupo de compras",
+	"_PurchasingOrganization": "Organização de compras",
+	"_PurchasingOrganization_report": "Organização de compras",
+	"_Sub": "Prédio, área industrial, serviço",
+	"_Sub report": "Prédio, área industrial, serviço",
+	"_TaxMode": "Ponto fiscal de relatórios eletrônicos (França)",
+	"_TaxMode_report": "Ponto fiscal de relatórios eletrônicos (França)",
+	"_TVAModeNotDefined": " ",
+	"_TVAOverCredit": "No pagamento recebido",
+	"_TVAOverDebit": "Na fatura emitida",
+	"_WorkingDays": "Dias úteis",
+	"_WorkingDays_report": "Dias úteis",
+	"City": "Cidade",
+	"Company code": "Código da empresa",
+	"Company name": "Nome da empresa",
+	"Contact email": "E-mail",
+	"Country": "Código do país",
+	"Currency": "Moeda",
+	"Fax number": "Número de fax",
+	"P2P - Company codes": "Código da empresa",
+	"P2P - Company codes__": "Código da empresa",
+	"Phone number": "Número de telefone",
+	"Postal code": "Código postal",
+	"PostOfficeBox": "Localidade ou apartado",
+	"PurchasingCompanycodes": "S2P - Códigos da empresa",
+	"Region": "Estado/Região",
+	"SIRET": "Número de identificação fiscal",
+	"Street": "Rua",
+	"VAT number": "Número de IVA",
+	"_EBS": "Oracle E-Business Suite",
+	"_ERPProcurement_can_be_SAP_only_when_AP_is_SAP": "Selecione “SAP” como integração de Contas a pagar para integrar o módulo Compras ao SAP.",
+	"_Generic": "Universal",
+	"_GenericProcurement": "Nenhuma",
+	"_JDE": "JD Edwards EnterpriseOne",
+	"_NAV": "Dynamics NAV/365 BC (OnPrem)",
+	"_noIntegration": "Nenhuma",
+	"_SAP": "SAP",
+	"_SAPS4CLOUD": "SAP S/4HANA Cloud",
+	"_Universal": "Universal",
+	"_CorporateDistanceUnit": "Distance unit",
+	"_CorporateDistanceUnit_report": "Distance unit",
+	"_km": "km",
+	"_mi": "mi",
+	"_MileageRateUnit": "Mileage rate unit"
+}</process_pt-BR>
+      <process_sv>{}</process_sv>
+    </lg>
+    <process>
+      <BUColumn>CompanyCode__</BUColumn>
+      <flowtype>processing</flowtype>
+      <homepagelabel>_Purchasing Company codes</homepagelabel>
+      <upgradable>yes</upgradable>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <OverrideAllowedAttachmentExtensions>*</OverrideAllowedAttachmentExtensions>
+      <AllowUploadAttachment>0</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+      <shouldRollbackManualRecordEdits>true</shouldRollbackManualRecordEdits>
+      <BusinessUnitMainTable>1</BusinessUnitMainTable>
+      <shouldShowManualEditsWarning>false</shouldShowManualEditsWarning>
+      <UseCultureFormat>true</UseCultureFormat>
+      <TransportName>CustomTable</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+    </process>
+    <ui>
+      <CustomScriptDebug>false</CustomScriptDebug>
+      <customscriptIncludedScripts>Lib_P2P_Address_V12.0.566.0</customscriptIncludedScripts>
+      <customscriptIncludedScripts>[LIB_P2P_CUSTOMIZATION_TABLES_CLIENT]</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Sys/Sys_Helpers</customscriptIncludedScripts>
+      <CustomScriptReadonly>true</CustomScriptReadonly>
+      <CustomScript>"use strict";
+Lib.P2P.Address.SetFormattedAddressControl(Controls.CompanyAddress__);
+function OnSave() {
+    const companyCode = Controls.CompanyCode__.GetValue();
+    if (companyCode) {
+        const options = {
+            table: Process.GetName(),
+            filter: `(&amp;(CompanyCode__=${companyCode})(!(MSNEX=${Data.GetValue("MSNEX")})))`,
+            attributes: ["CompanyCode__"],
+            maxRecords: 1,
+            additionalOptions: {
+                queryOptions: "FastSearch=1"
+            }
+        };
+        Sys.GenericAPI.PromisedQuery(options).Then(function (results) {
+            if (results.length &gt; 0) {
+                Controls.CompanyCode__.SetError("_errorExistingCompanyCode");
+                Process.ShowFirstError();
+            }
+            else {
+                ProcessInstance.SaveAndQuit("Save");
+            }
+        });
+    }
+    else {
+        Process.ShowFirstError();
+    }
+    return false;
+}
+function eReportingFieldsDisplay() {
+    const hasEReportingEnabled = this &amp;&amp; this.GetQueryValue() &amp;&amp; this.GetRecordsCount() &gt; 0;
+    Controls.TaxMode__.Hide(!hasEReportingEnabled);
+    Controls.PDPConfiguration__.Hide(!hasEReportingEnabled);
+}
+const eReportingFilter = Sys.Helpers.LdapUtil.FilterEqual("EnableInternationalEReporting__", "1").toString();
+Query.DBQuery(eReportingFieldsDisplay, "AP - Application Settings__", "EnableInternationalEReporting__", eReportingFilter, "", 1);
+Controls.CompanyCode__.SetRequired(true);
+Controls.Sub__.OnChange = Lib.P2P.Address.ComputeFormattedAddress;
+Controls.Street__.OnChange = Lib.P2P.Address.ComputeFormattedAddress;
+Controls.PostalCode__.OnChange = Lib.P2P.Address.ComputeFormattedAddress;
+Controls.Country__.OnChange = Lib.P2P.Address.ComputeFormattedAddress;
+Controls.Region__.OnChange = Lib.P2P.Address.ComputeFormattedAddress;
+Controls.City__.OnChange = Lib.P2P.Address.ComputeFormattedAddress;
+Controls.PostOfficeBox__.OnChange = Lib.P2P.Address.ComputeFormattedAddress;
+Controls.Save.OnClick = OnSave;
+Lib.P2P.Address.ComputeFormattedAddress();
+Sys.Helpers.TryCallFunction("Lib.P2P.Customization.Tables.Client.Common.OnHTMLScriptEnd");
+//# sourceMappingURL=customscript.js.map</CustomScript>
+      <restorationPanel>CompanyInfo</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 70,
+	"*": {
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"splitterType": "simple-v",
+				"backColor": "text-backgroundcolor-default",
+				"style": null,
+				"processHelpId": "5086",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 2,
+					"options": {
+						"hidePanelsMenu": false,
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 3,
+					"options": {
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 4,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-center": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 5,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"width": "100%"
+										},
+										"hidden": false
+									},
+									"*": {
+										"form-content-center-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 6,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"CompanyInfo": {
+													"type": "PanelData",
+													"data": [],
+													"stamp": 7,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"iconURL": "",
+														"TitleFontSize": "M",
+														"hideActionButtons": true,
+														"hideTitleBar": false,
+														"backgroundcolor": "default",
+														"labelsAlignment": "right",
+														"label": "_CompanyInfo",
+														"hideTitle": false,
+														"leftImageURL": "",
+														"removeMargins": false,
+														"elementsAlignment": "left",
+														"sameHeightAsSiblings": false,
+														"version": 0
+													},
+													"*": {
+														"FieldsManager": {
+															"type": "FieldsManager",
+															"data": [],
+															"stamp": 8,
+															"options": {
+																"version": 0,
+																"controlsAssociation": {
+																	"CompanyCode__": "LabelCompanyCode__",
+																	"LabelCompanyCode__": "CompanyCode__",
+																	"CompanyName__": "LabelCompanyName__",
+																	"LabelCompanyName__": "CompanyName__",
+																	"SIRET__": "LabelSIRET__",
+																	"LabelSIRET__": "SIRET__",
+																	"PhoneNumber__": "LabelPhoneNumber__",
+																	"LabelPhoneNumber__": "PhoneNumber__",
+																	"FaxNumber__": "LabelFaxNumber__",
+																	"LabelFaxNumber__": "FaxNumber__",
+																	"VATNumber__": "LabelVATNumber__",
+																	"LabelVATNumber__": "VATNumber__",
+																	"ContactEmail__": "LabelContactEmail__",
+																	"LabelContactEmail__": "ContactEmail__",
+																	"Currency__": "LabelCurrency__",
+																	"LabelCurrency__": "Currency__",
+																	"CorporateDistanceUnit__": "LabelCorporateDistanceUnit__",
+																	"LabelCorporateDistanceUnit__": "CorporateDistanceUnit__",
+																	"PurchasingOrganization__": "LabelPurchasingOrganization__",
+																	"LabelPurchasingOrganization__": "PurchasingOrganization__",
+																	"PurchasingGroup__": "LabelPurchasingGroup__",
+																	"LabelPurchasingGroup__": "PurchasingGroup__",
+																	"DeliveryAddressID__": "LabelDeliveryAddressID__",
+																	"LabelDeliveryAddressID__": "DeliveryAddressID__",
+																	"ERP__": "LabelERP__",
+																	"LabelERP__": "ERP__",
+																	"DefaultConfiguration__": "LabelDefaultConfiguration__",
+																	"LabelDefaultConfiguration__": "DefaultConfiguration__",
+																	"DefaultExpenseReportType__": "LabelDefaultExpenseReportType__",
+																	"LabelDefaultExpenseReportType__": "DefaultExpenseReportType__",
+																	"DeterminationKeyword__": "LabelDeterminationKeyword__",
+																	"LabelDeterminationKeyword__": "DeterminationKeyword__",
+																	"WorkingDays__": "LabelWorkingDays__",
+																	"LabelWorkingDays__": "WorkingDays__",
+																	"PDPConfiguration__": "LabelPDPConfiguration__",
+																	"LabelPDPConfiguration__": "PDPConfiguration__",
+																	"TaxMode__": "LabelTaxMode__",
+																	"LabelTaxMode__": "TaxMode__"
+																}
+															},
+															"*": {
+																"Grid": {
+																	"type": "GridLayout",
+																	"data": [
+																		"fields"
+																	],
+																	"stamp": 9,
+																	"options": {
+																		"version": 0,
+																		"lines": 19,
+																		"columns": 2,
+																		"ctrlsPos": {
+																			"LabelCompanyCode__": {
+																				"line": 1,
+																				"column": 1
+																			},
+																			"CompanyCode__": {
+																				"line": 1,
+																				"column": 2
+																			},
+																			"LabelCompanyName__": {
+																				"line": 2,
+																				"column": 1
+																			},
+																			"CompanyName__": {
+																				"line": 2,
+																				"column": 2
+																			},
+																			"LabelSIRET__": {
+																				"line": 3,
+																				"column": 1
+																			},
+																			"SIRET__": {
+																				"line": 3,
+																				"column": 2
+																			},
+																			"LabelPhoneNumber__": {
+																				"line": 4,
+																				"column": 1
+																			},
+																			"PhoneNumber__": {
+																				"line": 4,
+																				"column": 2
+																			},
+																			"LabelFaxNumber__": {
+																				"line": 5,
+																				"column": 1
+																			},
+																			"FaxNumber__": {
+																				"line": 5,
+																				"column": 2
+																			},
+																			"LabelVATNumber__": {
+																				"line": 6,
+																				"column": 1
+																			},
+																			"VATNumber__": {
+																				"line": 6,
+																				"column": 2
+																			},
+																			"LabelContactEmail__": {
+																				"line": 7,
+																				"column": 1
+																			},
+																			"ContactEmail__": {
+																				"line": 7,
+																				"column": 2
+																			},
+																			"LabelCurrency__": {
+																				"line": 8,
+																				"column": 1
+																			},
+																			"Currency__": {
+																				"line": 8,
+																				"column": 2
+																			},
+																			"LabelCorporateDistanceUnit__": {
+																				"line": 9,
+																				"column": 1
+																			},
+																			"CorporateDistanceUnit__": {
+																				"line": 9,
+																				"column": 2
+																			},
+																			"LabelPurchasingOrganization__": {
+																				"line": 10,
+																				"column": 1
+																			},
+																			"PurchasingOrganization__": {
+																				"line": 10,
+																				"column": 2
+																			},
+																			"LabelPurchasingGroup__": {
+																				"line": 11,
+																				"column": 1
+																			},
+																			"PurchasingGroup__": {
+																				"line": 11,
+																				"column": 2
+																			},
+																			"LabelDeliveryAddressID__": {
+																				"line": 12,
+																				"column": 1
+																			},
+																			"DeliveryAddressID__": {
+																				"line": 12,
+																				"column": 2
+																			},
+																			"LabelERP__": {
+																				"line": 13,
+																				"column": 1
+																			},
+																			"ERP__": {
+																				"line": 13,
+																				"column": 2
+																			},
+																			"LabelDefaultConfiguration__": {
+																				"line": 14,
+																				"column": 1
+																			},
+																			"DefaultConfiguration__": {
+																				"line": 14,
+																				"column": 2
+																			},
+																			"LabelDefaultExpenseReportType__": {
+																				"line": 15,
+																				"column": 1
+																			},
+																			"DefaultExpenseReportType__": {
+																				"line": 15,
+																				"column": 2
+																			},
+																			"LabelDeterminationKeyword__": {
+																				"line": 16,
+																				"column": 1
+																			},
+																			"DeterminationKeyword__": {
+																				"line": 16,
+																				"column": 2
+																			},
+																			"LabelWorkingDays__": {
+																				"line": 17,
+																				"column": 1
+																			},
+																			"WorkingDays__": {
+																				"line": 17,
+																				"column": 2
+																			},
+																			"LabelPDPConfiguration__": {
+																				"line": 18,
+																				"column": 1
+																			},
+																			"PDPConfiguration__": {
+																				"line": 18,
+																				"column": 2
+																			},
+																			"LabelTaxMode__": {
+																				"line": 19,
+																				"column": 1
+																			},
+																			"TaxMode__": {
+																				"line": 19,
+																				"column": 2
+																			}
+																		},
+																		"colspans": [
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[]
+																		]
+																	},
+																	"*": {
+																		"LabelCompanyCode__": {
+																			"type": "Label",
+																			"data": [
+																				"CompanyCode__"
+																			],
+																			"stamp": 11,
+																			"options": {
+																				"label": "Company code",
+																				"version": 0
+																			}
+																		},
+																		"CompanyCode__": {
+																			"type": "ShortText",
+																			"data": [
+																				"CompanyCode__"
+																			],
+																			"stamp": 10,
+																			"options": {
+																				"label": "Company code",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"activable": true,
+																				"width": "50",
+																				"browsable": false,
+																				"helpURL": "5086",
+																				"helpText": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"version": 0
+																			}
+																		},
+																		"LabelCompanyName__": {
+																			"type": "Label",
+																			"data": [
+																				"CompanyName__"
+																			],
+																			"stamp": 13,
+																			"options": {
+																				"label": "Company name",
+																				"version": 0
+																			}
+																		},
+																		"CompanyName__": {
+																			"type": "ShortText",
+																			"data": [
+																				"CompanyName__"
+																			],
+																			"stamp": 12,
+																			"options": {
+																				"label": "Company name",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"activable": true,
+																				"width": 230,
+																				"browsable": false,
+																				"version": 0
+																			}
+																		},
+																		"LabelSIRET__": {
+																			"type": "Label",
+																			"data": [
+																				"SIRET__"
+																			],
+																			"stamp": 15,
+																			"options": {
+																				"label": "SIRET",
+																				"version": 0
+																			}
+																		},
+																		"SIRET__": {
+																			"type": "ShortText",
+																			"data": [
+																				"SIRET__"
+																			],
+																			"stamp": 14,
+																			"options": {
+																				"label": "SIRET",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"browsable": false,
+																				"version": 0
+																			}
+																		},
+																		"LabelPhoneNumber__": {
+																			"type": "Label",
+																			"data": [
+																				"PhoneNumber__"
+																			],
+																			"stamp": 17,
+																			"options": {
+																				"label": "Phone number",
+																				"version": 0
+																			}
+																		},
+																		"PhoneNumber__": {
+																			"type": "ShortText",
+																			"data": [
+																				"PhoneNumber__"
+																			],
+																			"stamp": 16,
+																			"options": {
+																				"label": "Phone number",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"browsable": false,
+																				"length": 32,
+																				"version": 0
+																			}
+																		},
+																		"LabelFaxNumber__": {
+																			"type": "Label",
+																			"data": [
+																				"FaxNumber__"
+																			],
+																			"stamp": 19,
+																			"options": {
+																				"label": "Fax number",
+																				"version": 0
+																			}
+																		},
+																		"FaxNumber__": {
+																			"type": "ShortText",
+																			"data": [
+																				"FaxNumber__"
+																			],
+																			"stamp": 18,
+																			"options": {
+																				"label": "Fax number",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"browsable": false,
+																				"length": 32,
+																				"version": 0
+																			}
+																		},
+																		"LabelVATNumber__": {
+																			"type": "Label",
+																			"data": [
+																				"VATNumber__"
+																			],
+																			"stamp": 21,
+																			"options": {
+																				"label": "VAT number",
+																				"version": 0
+																			}
+																		},
+																		"VATNumber__": {
+																			"type": "ShortText",
+																			"data": [
+																				"VATNumber__"
+																			],
+																			"stamp": 20,
+																			"options": {
+																				"label": "VAT number",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"browsable": false,
+																				"length": 20,
+																				"version": 0
+																			}
+																		},
+																		"LabelContactEmail__": {
+																			"type": "Label",
+																			"data": [
+																				"ContactEmail__"
+																			],
+																			"stamp": 23,
+																			"options": {
+																				"label": "Contact email",
+																				"version": 0
+																			}
+																		},
+																		"ContactEmail__": {
+																			"type": "ShortText",
+																			"data": [
+																				"ContactEmail__"
+																			],
+																			"stamp": 22,
+																			"options": {
+																				"label": "Contact email",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"activable": true,
+																				"width": 230,
+																				"version": 0
+																			}
+																		},
+																		"LabelCurrency__": {
+																			"type": "Label",
+																			"data": [
+																				"Currency__"
+																			],
+																			"stamp": 25,
+																			"options": {
+																				"label": "Currency",
+																				"version": 0
+																			}
+																		},
+																		"Currency__": {
+																			"type": "ShortText",
+																			"data": [
+																				"Currency__"
+																			],
+																			"stamp": 24,
+																			"options": {
+																				"label": "Currency",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"activable": true,
+																				"width": 230,
+																				"version": 0
+																			}
+																		},
+																		"LabelCorporateDistanceUnit__": {
+																			"type": "Label",
+																			"data": [
+																				"CorporateDistanceUnit__"
+																			],
+																			"stamp": 27,
+																			"options": {
+																				"label": "_CorporateDistanceUnit",
+																				"version": 0
+																			}
+																		},
+																		"CorporateDistanceUnit__": {
+																			"type": "ComboBox",
+																			"data": [
+																				"CorporateDistanceUnit__"
+																			],
+																			"stamp": 26,
+																			"options": {
+																				"label": "_CorporateDistanceUnit",
+																				"possibleValues": {
+																					"0": "",
+																					"1": "_km",
+																					"2": "_mi"
+																				},
+																				"possibleKeys": {
+																					"0": "EMPTY",
+																					"1": "km",
+																					"2": "mi"
+																				},
+																				"keyValueMode": true,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"version": 0
+																			}
+																		},
+																		"LabelPurchasingOrganization__": {
+																			"type": "Label",
+																			"data": [
+																				"PurchasingOrganization__"
+																			],
+																			"stamp": 29,
+																			"options": {
+																				"label": "_PurchasingOrganization",
+																				"version": 0
+																			}
+																		},
+																		"PurchasingOrganization__": {
+																			"type": "ShortText",
+																			"data": [
+																				"PurchasingOrganization__"
+																			],
+																			"stamp": 28,
+																			"options": {
+																				"label": "_PurchasingOrganization",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"activable": true,
+																				"width": 230,
+																				"browsable": false,
+																				"version": 0
+																			}
+																		},
+																		"LabelPurchasingGroup__": {
+																			"type": "Label",
+																			"data": [
+																				"PurchasingGroup__"
+																			],
+																			"stamp": 31,
+																			"options": {
+																				"label": "_PurchasingGroup",
+																				"version": 0
+																			}
+																		},
+																		"PurchasingGroup__": {
+																			"type": "ShortText",
+																			"data": [
+																				"PurchasingGroup__"
+																			],
+																			"stamp": 30,
+																			"options": {
+																				"label": "_PurchasingGroup",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"activable": true,
+																				"width": 230,
+																				"browsable": false,
+																				"version": 0
+																			}
+																		},
+																		"LabelDeliveryAddressID__": {
+																			"type": "Label",
+																			"data": [
+																				"DeliveryAddressID__"
+																			],
+																			"stamp": 33,
+																			"options": {
+																				"label": "_DeliveryAddressID",
+																				"version": 0
+																			}
+																		},
+																		"DeliveryAddressID__": {
+																			"type": "ShortText",
+																			"data": [
+																				"DeliveryAddressID__"
+																			],
+																			"stamp": 32,
+																			"options": {
+																				"label": "_DeliveryAddressID",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"activable": true,
+																				"width": 230,
+																				"browsable": false,
+																				"version": 0
+																			}
+																		},
+																		"LabelERP__": {
+																			"type": "Label",
+																			"data": [
+																				"ERP__"
+																			],
+																			"stamp": 35,
+																			"options": {
+																				"label": "_ERP",
+																				"version": 0
+																			}
+																		},
+																		"ERP__": {
+																			"type": "ComboBox",
+																			"data": [
+																				"ERP__"
+																			],
+																			"stamp": 34,
+																			"options": {
+																				"label": "_ERP",
+																				"possibleValues": {
+																					"0": "",
+																					"1": "_SAP",
+																					"2": "_Generic",
+																					"3": "_EBS",
+																					"4": "_NAV",
+																					"5": "_JDE",
+																					"6": "_SAPS4CLOUD"
+																				},
+																				"version": 1,
+																				"keyValueMode": true,
+																				"possibleKeys": {
+																					"0": "",
+																					"1": "SAP",
+																					"2": "generic",
+																					"3": "EBS",
+																					"4": "NAV",
+																					"5": "JDE",
+																					"6": "SAPS4CLOUD"
+																				},
+																				"activable": true,
+																				"width": 230,
+																				"maxNbLinesToDisplay": 10
+																			}
+																		},
+																		"LabelDefaultConfiguration__": {
+																			"type": "Label",
+																			"data": [
+																				"DefaultConfiguration__"
+																			],
+																			"stamp": 37,
+																			"options": {
+																				"label": "_DefaultConfiguration",
+																				"version": 0
+																			}
+																		},
+																		"DefaultConfiguration__": {
+																			"type": "ShortText",
+																			"data": [
+																				"DefaultConfiguration__"
+																			],
+																			"stamp": 36,
+																			"options": {
+																				"label": "_DefaultConfiguration",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"browsable": false,
+																				"version": 0
+																			}
+																		},
+																		"LabelDefaultExpenseReportType__": {
+																			"type": "Label",
+																			"data": [
+																				"DefaultExpenseReportType__"
+																			],
+																			"stamp": 39,
+																			"options": {
+																				"label": "_DefaultExpenseReportType",
+																				"version": 0
+																			}
+																		},
+																		"DefaultExpenseReportType__": {
+																			"type": "ShortText",
+																			"data": [
+																				"DefaultExpenseReportType__"
+																			],
+																			"stamp": 38,
+																			"options": {
+																				"label": "_DefaultExpenseReportType",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 1,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"browsable": false
+																			}
+																		},
+																		"LabelDeterminationKeyword__": {
+																			"type": "Label",
+																			"data": [
+																				"DeterminationKeyword__"
+																			],
+																			"stamp": 41,
+																			"options": {
+																				"label": "_DeterminationKeyword",
+																				"version": 0
+																			}
+																		},
+																		"DeterminationKeyword__": {
+																			"type": "ShortText",
+																			"data": [
+																				"DeterminationKeyword__"
+																			],
+																			"stamp": 40,
+																			"options": {
+																				"label": "_DeterminationKeyword",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 1,
+																				"activable": true,
+																				"width": 700,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"length": 400,
+																				"browsable": false
+																			}
+																		},
+																		"LabelWorkingDays__": {
+																			"type": "Label",
+																			"data": [
+																				"WorkingDays__"
+																			],
+																			"stamp": 43,
+																			"options": {
+																				"label": "_WorkingDays",
+																				"version": 0
+																			}
+																		},
+																		"WorkingDays__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"WorkingDays__"
+																			],
+																			"stamp": 42,
+																			"options": {
+																				"label": "_WorkingDays",
+																				"version": 1,
+																				"autoCompleteSearchMode": "startswith",
+																				"searchMode": "matches",
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"minNbLines": 1,
+																				"maxNbLines": 1,
+																				"fTSmaxRecords": "20",
+																				"browsable": true,
+																				"length": 100,
+																				"PreFillFTS": true
+																			}
+																		},
+																		"LabelPDPConfiguration__": {
+																			"type": "Label",
+																			"data": [
+																				"PDPConfiguration__"
+																			],
+																			"stamp": 45,
+																			"options": {
+																				"label": "_PDPConfiguration",
+																				"version": 0
+																			}
+																		},
+																		"PDPConfiguration__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"PDPConfiguration__"
+																			],
+																			"stamp": 44,
+																			"options": {
+																				"label": "_PDPConfiguration",
+																				"version": 1,
+																				"autoCompleteSearchMode": "startswith",
+																				"searchMode": "matches",
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"minNbLines": 1,
+																				"maxNbLines": 1,
+																				"fTSmaxRecords": "20",
+																				"browsable": true,
+																				"length": 50,
+																				"PreFillFTS": true,
+																				"hidden": true
+																			}
+																		},
+																		"LabelTaxMode__": {
+																			"type": "Label",
+																			"data": [
+																				"TaxMode__"
+																			],
+																			"stamp": 47,
+																			"options": {
+																				"label": "_TaxMode",
+																				"version": 0
+																			}
+																		},
+																		"TaxMode__": {
+																			"type": "ComboBox",
+																			"data": [
+																				"TaxMode__"
+																			],
+																			"stamp": 46,
+																			"options": {
+																				"label": "_TaxMode",
+																				"possibleValues": {
+																					"0": "_TVAModeNotDefined",
+																					"1": "_TVAOverDebit",
+																					"2": "_TVAOverCredit"
+																				},
+																				"maxNbLinesToDisplay": 10,
+																				"version": 1,
+																				"keyValueMode": true,
+																				"possibleKeys": {
+																					"0": "",
+																					"1": "TVAOverDebit",
+																					"2": "TVAOverCredit"
+																				},
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"DataSourceOrigin": "Standalone",
+																				"SavedColumn": null,
+																				"DisplayedColumns": null,
+																				"NoEmptyValue": false,
+																				"hidden": true
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"CompanyAddress": {
+													"type": "PanelData",
+													"data": [],
+													"stamp": 48,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"iconURL": "",
+														"TitleFontSize": "M",
+														"hideActionButtons": true,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"backgroundcolor": "default",
+														"labelsAlignment": "right",
+														"label": "_CompanyAddress",
+														"leftImageURL": "",
+														"removeMargins": false,
+														"elementsAlignment": "left",
+														"sameHeightAsSiblings": false,
+														"version": 0
+													},
+													"*": {
+														"FieldsManager": {
+															"type": "FieldsManager",
+															"data": [],
+															"stamp": 49,
+															"options": {
+																"version": 0,
+																"controlsAssociation": {
+																	"Sub__": "LabelSub__",
+																	"LabelSub__": "Sub__",
+																	"Street__": "LabelStreet__",
+																	"LabelStreet__": "Street__",
+																	"PostOfficeBox__": "LabelPostOfficeBox__",
+																	"LabelPostOfficeBox__": "PostOfficeBox__",
+																	"City__": "LabelCity__",
+																	"LabelCity__": "City__",
+																	"PostalCode__": "LabelPostalCode__",
+																	"LabelPostalCode__": "PostalCode__",
+																	"Region__": "LabelRegion__",
+																	"LabelRegion__": "Region__",
+																	"Country__": "LabelCountry__",
+																	"LabelCountry__": "Country__",
+																	"CompanyAddress__": "LabelCompanyAddress__",
+																	"LabelCompanyAddress__": "CompanyAddress__"
+																}
+															},
+															"*": {
+																"Grid": {
+																	"type": "GridLayout",
+																	"data": [
+																		"fields"
+																	],
+																	"stamp": 50,
+																	"options": {
+																		"version": 0,
+																		"lines": 8,
+																		"columns": 2,
+																		"ctrlsPos": {
+																			"LabelSub__": {
+																				"line": 1,
+																				"column": 1
+																			},
+																			"Sub__": {
+																				"line": 1,
+																				"column": 2
+																			},
+																			"LabelStreet__": {
+																				"line": 2,
+																				"column": 1
+																			},
+																			"Street__": {
+																				"line": 2,
+																				"column": 2
+																			},
+																			"LabelPostOfficeBox__": {
+																				"line": 3,
+																				"column": 1
+																			},
+																			"PostOfficeBox__": {
+																				"line": 3,
+																				"column": 2
+																			},
+																			"LabelCity__": {
+																				"line": 4,
+																				"column": 1
+																			},
+																			"City__": {
+																				"line": 4,
+																				"column": 2
+																			},
+																			"LabelPostalCode__": {
+																				"line": 5,
+																				"column": 1
+																			},
+																			"PostalCode__": {
+																				"line": 5,
+																				"column": 2
+																			},
+																			"LabelRegion__": {
+																				"line": 6,
+																				"column": 1
+																			},
+																			"Region__": {
+																				"line": 6,
+																				"column": 2
+																			},
+																			"LabelCountry__": {
+																				"line": 7,
+																				"column": 1
+																			},
+																			"Country__": {
+																				"line": 7,
+																				"column": 2
+																			},
+																			"LabelCompanyAddress__": {
+																				"line": 8,
+																				"column": 1
+																			},
+																			"CompanyAddress__": {
+																				"line": 8,
+																				"column": 2
+																			}
+																		},
+																		"colspans": [
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[]
+																		]
+																	},
+																	"*": {
+																		"LabelSub__": {
+																			"type": "Label",
+																			"data": [
+																				"Sub__"
+																			],
+																			"stamp": 52,
+																			"options": {
+																				"label": "_Sub",
+																				"version": 0
+																			}
+																		},
+																		"Sub__": {
+																			"type": "ShortText",
+																			"data": [
+																				"Sub__"
+																			],
+																			"stamp": 51,
+																			"options": {
+																				"label": "_Sub",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 1,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"browsable": false
+																			}
+																		},
+																		"LabelStreet__": {
+																			"type": "Label",
+																			"data": [
+																				"Street__"
+																			],
+																			"stamp": 54,
+																			"options": {
+																				"label": "Street",
+																				"version": 0
+																			}
+																		},
+																		"Street__": {
+																			"type": "ShortText",
+																			"data": [
+																				"Street__"
+																			],
+																			"stamp": 53,
+																			"options": {
+																				"label": "Street",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"length": 50,
+																				"browsable": false,
+																				"version": 0
+																			}
+																		},
+																		"LabelPostOfficeBox__": {
+																			"type": "Label",
+																			"data": [
+																				"PostOfficeBox__"
+																			],
+																			"stamp": 56,
+																			"options": {
+																				"label": "PostOfficeBox",
+																				"version": 0
+																			}
+																		},
+																		"PostOfficeBox__": {
+																			"type": "ShortText",
+																			"data": [
+																				"PostOfficeBox__"
+																			],
+																			"stamp": 55,
+																			"options": {
+																				"label": "PostOfficeBox",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"length": 20,
+																				"browsable": false,
+																				"version": 0
+																			}
+																		},
+																		"LabelCity__": {
+																			"type": "Label",
+																			"data": [
+																				"City__"
+																			],
+																			"stamp": 58,
+																			"options": {
+																				"label": "City",
+																				"version": 0
+																			}
+																		},
+																		"City__": {
+																			"type": "ShortText",
+																			"data": [
+																				"City__"
+																			],
+																			"stamp": 57,
+																			"options": {
+																				"label": "City",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"length": 35,
+																				"browsable": false,
+																				"version": 0
+																			}
+																		},
+																		"LabelPostalCode__": {
+																			"type": "Label",
+																			"data": [
+																				"PostalCode__"
+																			],
+																			"stamp": 60,
+																			"options": {
+																				"label": "Postal code",
+																				"version": 0
+																			}
+																		},
+																		"PostalCode__": {
+																			"type": "ShortText",
+																			"data": [
+																				"PostalCode__"
+																			],
+																			"stamp": 59,
+																			"options": {
+																				"label": "Postal code",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"length": 10,
+																				"browsable": false,
+																				"version": 0
+																			}
+																		},
+																		"LabelRegion__": {
+																			"type": "Label",
+																			"data": [
+																				"Region__"
+																			],
+																			"stamp": 62,
+																			"options": {
+																				"label": "Region",
+																				"version": 0
+																			}
+																		},
+																		"Region__": {
+																			"type": "ShortText",
+																			"data": [
+																				"Region__"
+																			],
+																			"stamp": 61,
+																			"options": {
+																				"label": "Region",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"length": 3,
+																				"browsable": false,
+																				"version": 0
+																			}
+																		},
+																		"LabelCountry__": {
+																			"type": "Label",
+																			"data": [
+																				"Country__"
+																			],
+																			"stamp": 64,
+																			"options": {
+																				"label": "Country",
+																				"version": 0
+																			}
+																		},
+																		"Country__": {
+																			"type": "ShortText",
+																			"data": [
+																				"Country__"
+																			],
+																			"stamp": 63,
+																			"options": {
+																				"label": "Country",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"length": 3,
+																				"browsable": false,
+																				"version": 0
+																			}
+																		},
+																		"LabelCompanyAddress__": {
+																			"type": "Label",
+																			"data": [],
+																			"stamp": 66,
+																			"options": {
+																				"label": "_CompanyAddressFormated",
+																				"version": 0
+																			}
+																		},
+																		"CompanyAddress__": {
+																			"type": "LongText",
+																			"data": [],
+																			"stamp": 65,
+																			"options": {
+																				"label": "_CompanyAddressFormated",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 1,
+																				"minNbLines": 5,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"numberOfLines": 5,
+																				"readonly": true,
+																				"notInDB": true,
+																				"dataType": "String",
+																				"browsable": false
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 67,
+					"options": {
+						"splitterType": "simple-h",
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 68,
+							"options": {
+								"label": "_Save",
+								"action": "savequit",
+								"submit": true,
+								"shortCut": "S",
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 69,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"shortCut": "Q",
+								"version": 0
+							}
+						},
+						"Delete": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 70,
+							"options": {
+								"label": "_Delete",
+								"action": "delete",
+								"submit": true,
+								"disabled": true,
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <field deleted="0" format="" guid="ZVSR42294CFF" id="CD8QT400153E" label="City" length="35" name="City__" originalProcessID="FPYU134561" precision="0" processid="BD8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ACD8QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/City__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:22</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>City</Label>
+        <Alias>ACD8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="HUME134563" id="DD8QT400153E" label="Company code" length="50" name="CompanyCode__" originalProcessID="FPYU134561" precision="0" processid="BD8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ADD8QT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/CompanyCode__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:22</RecordLastWrite>
+        <uniqueindex>1</uniqueindex>
+      </db>
+      <extrainfo>
+        <Label>Company code</Label>
+        <Alias>ADD8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"5086","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="PHQG134562" id="ED8QT400153E" label="Company name" length="50" name="CompanyName__" originalProcessID="FPYU134561" precision="0" processid="BD8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AED8QT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/CompanyName__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:22</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Company name</Label>
+        <Alias>AED8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="LFDX42294CFC" id="FD8QT400153E" label="Contact email" length="50" name="ContactEmail__" originalProcessID="FPYU134561" precision="0" processid="BD8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AFD8QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ContactEmail__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:22</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Contact email</Label>
+        <Alias>AFD8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="DUNIT00000CC" id="ID8QT400153E" label="_CorporateDistanceUnit_report" length="50" name="CorporateDistanceUnit__" originalProcessID="FPYU134561" precision="0" processid="BD8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AID8QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/CorporateDistanceUnit__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:22</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Type>webaccess.Process.Columns.WithPossibleValues</Type>
+        <Label>_CorporateDistanceUnit_report</Label>
+        <Alias>AID8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <TableName>
+        </TableName>
+        <DisplayedColumns>
+        </DisplayedColumns>
+        <DataSourceOrigin>Standalone</DataSourceOrigin>
+        <possibleKeys>EMPTY
+km
+mi</possibleKeys>
+        <SavedColumn>
+        </SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <possibleValues>
+_km
+_mi</possibleValues>
+        <ProcessName>
+        </ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <lazyTranslatable>
+        </lazyTranslatable>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="GXRP42294D02" id="GD8QT400153E" label="Country" length="3" name="Country__" originalProcessID="FPYU134561" precision="0" processid="BD8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AGD8QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Country__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:22</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Country</Label>
+        <Alias>AGD8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="ZBWI176042" id="HD8QT400153E" label="Currency" length="50" name="Currency__" originalProcessID="FPYU134561" precision="0" processid="BD8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AHD8QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Currency__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:22</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Currency</Label>
+        <Alias>AHD8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="SWT1FP000FSX" id="JD8QT400153E" label="_DefaultConfiguration_report" length="50" name="DefaultConfiguration__" originalProcessID="FPYU134561" precision="0" processid="BD8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AJD8QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/DefaultConfiguration__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:22</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_DefaultConfiguration_report</Label>
+        <Alias>AJD8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="EJJ2FP000FSX" id="KD8QT400153E" label="_DefaultExpenseReportType_report" length="50" name="DefaultExpenseReportType__" originalProcessID="FPYU134561" precision="0" processid="BD8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AKD8QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/DefaultExpenseReportType__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:22</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_DefaultExpenseReportType_report</Label>
+        <Alias>AKD8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="KHSR10000591" id="LD8QT400153E" label="_DeliveryAddressID" length="50" name="DeliveryAddressID__" originalProcessID="FPYU134561" precision="0" processid="BD8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ALD8QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/DeliveryAddressID__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:22</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_DeliveryAddressID</Label>
+        <Alias>ALD8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="D9YV00000M4H" id="MD8QT400153E" label="_DeterminationKeyword_report" length="400" name="DeterminationKeyword__" originalProcessID="FPYU134561" precision="0" processid="BD8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AMD8QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/DeterminationKeyword__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:22</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_DeterminationKeyword_report</Label>
+        <Alias>AMD8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="OCAF10007057" id="ND8QT400153E" label="_ERP" length="50" name="ERP__" originalProcessID="FPYU134561" precision="0" processid="BD8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AND8QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ERP__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:22</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Type>webaccess.Process.Columns.WithPossibleValues</Type>
+        <Label>_ERP</Label>
+        <Alias>AND8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <possibleKeys>
+SAP
+generic
+EBS
+NAV
+JDE
+SAPS4CLOUD</possibleKeys>
+        <possibleValues>
+_SAP
+_Generic
+_EBS
+_NAV
+_JDE
+_SAPS4CLOUD</possibleValues>
+      </field>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="PHQG42294CF9" id="OD8QT400153E" label="Fax number" length="32" name="FaxNumber__" originalProcessID="FPYU134561" precision="0" processid="BD8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AOD8QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/FaxNumber__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:22</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Fax number</Label>
+        <Alias>AOD8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="BTKY0000PDPC" id="ZC8QT400153E" label="_PDPConfiguration_report" length="50" name="PDPConfiguration__" originalProcessID="FPYU134561" precision="0" processid="BD8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AZC8QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/PDPConfiguration__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:22</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_PDPConfiguration_report</Label>
+        <Alias>AZC8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>false</Editable>
+        <SortOrder>
+        </SortOrder>
+        <DisplayedColumns>Name__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>Name__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ExposedColumns>
+        </ExposedColumns>
+        <ProcessName>P2P - PDP Connection Parameters__</ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <KeyAttribute>
+        </KeyAttribute>
+        <CustomFilter>
+        </CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="AYLN42294CFB" id="PD8QT400153E" label="Phone number" length="32" name="PhoneNumber__" originalProcessID="FPYU134561" precision="0" processid="BD8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>APD8QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/PhoneNumber__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:22</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Phone number</Label>
+        <Alias>APD8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="TKJP42294D00" id="QD8QT400153E" label="Postal code" length="10" name="PostalCode__" originalProcessID="FPYU134561" precision="0" processid="BD8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AQD8QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/PostalCode__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:22</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Postal code</Label>
+        <Alias>AQD8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="FNFO42294CFE" id="RD8QT400153E" label="PostOfficeBox" length="20" name="PostOfficeBox__" originalProcessID="FPYU134561" precision="0" processid="BD8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ARD8QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/PostOfficeBox__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:22</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>PostOfficeBox</Label>
+        <Alias>ARD8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="FPMU138657" id="SD8QT400153E" label="_PurchasingGroup_report" length="50" name="PurchasingGroup__" originalProcessID="FPYU134561" precision="0" processid="BD8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ASD8QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/PurchasingGroup__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:22</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_PurchasingGroup_report</Label>
+        <Alias>ASD8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="QDFY138656" id="TD8QT400153E" label="_PurchasingOrganization_report" length="50" name="PurchasingOrganization__" originalProcessID="FPYU134561" precision="0" processid="BD8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ATD8QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/PurchasingOrganization__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:22</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_PurchasingOrganization_report</Label>
+        <Alias>ATD8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="REPG42294D01" id="UD8QT400153E" label="Region" length="3" name="Region__" originalProcessID="FPYU134561" precision="0" processid="BD8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AUD8QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Region__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:22</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Region</Label>
+        <Alias>AUD8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="PHQG422950EB" id="VD8QT400153E" label="SIRET" length="50" name="SIRET__" originalProcessID="FPYU134561" precision="0" processid="BD8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AVD8QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/SIRET__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:22</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>SIRET</Label>
+        <Alias>AVD8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="DUXW42294CFD" id="WD8QT400153E" label="Street" length="50" name="Street__" originalProcessID="FPYU134561" precision="0" processid="BD8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AWD8QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Street__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:22</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Street</Label>
+        <Alias>AWD8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="PZK2FP000IYP" id="XD8QT400153E" label="_Sub report" length="50" name="Sub__" originalProcessID="FPYU134561" precision="0" processid="BD8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AXD8QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Sub__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:22</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Sub report</Label>
+        <Alias>AXD8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="VZ5100000VLT" id="YD8QT400153E" label="_TaxMode_report" length="50" name="TaxMode__" originalProcessID="FPYU134561" precision="0" processid="BD8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AYD8QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/TaxMode__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:22</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Type>webaccess.Edd.ui.LazyTranslation</Type>
+        <Label>_TaxMode_report</Label>
+        <Alias>AYD8QT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <TableName>
+        </TableName>
+        <DisplayedColumns>
+        </DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <DataSourceOrigin>Standalone</DataSourceOrigin>
+        <possibleKeys>
+TVAOverDebit
+TVAOverCredit</possibleKeys>
+        <SavedColumn>
+        </SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <possibleValues>_TVAModeNotDefined
+_TVAOverDebit
+_TVAOverCredit</possibleValues>
+        <ProcessName>
+        </ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <lazyTranslatable>true</lazyTranslatable>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="HUME42294CFA" id="ZD8QT400153E" label="VAT number" length="20" name="VATNumber__" originalProcessID="FPYU134561" precision="0" processid="BD8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AZD8QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/VATNumber__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:22</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>VAT number</Label>
+        <Alias>AZD8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="XOOIWM000M4H" id="AD8QT400153E" label="_WorkingDays_report" length="100" name="WorkingDays__" originalProcessID="FPYU134561" precision="0" processid="BD8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AAD8QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/WorkingDays__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:22</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_WorkingDays_report</Label>
+        <Alias>AAD8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>false</Editable>
+        <SortOrder>
+        </SortOrder>
+        <DisplayedColumns>ConfigName__|ConfigDescription__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>ConfigName__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ExposedColumns>
+        </ExposedColumns>
+        <ProcessName>WorkingDays__</ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <KeyAttribute>
+        </KeyAttribute>
+        <CustomFilter>
+        </CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <type id="KOLHG0000M4O" name="CT">
+  </type>
+</process>

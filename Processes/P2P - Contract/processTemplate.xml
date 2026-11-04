@@ -1,0 +1,3544 @@
+<process accountid="" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:06:27" deleted="0" eskerapplication="P2P" global="0" id="NoID" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="P2P - Contract" needvalidation="1" ootofilter="(|(&amp;(state=100)(ContractStatus__=Active)(|(!(InitiallyExpectedEndDate__=*))(InitiallyExpectedEndDate__=)))(&amp;(state=90)(|(ContractStatus__=ApprovedPendingEnvelopeDesign)(ContractStatus__=ApprovedPendingSignature))))" ootoversion="2" originalProcessID="ENST00000FSX" ownerid="" ownerpb="" public="1" pushnotification="1" reuseengine="0" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="" version="1" visibility="0">
+	<properties>
+		<dataConditions>
+			<listDataConditions> &lt;dataCondition&gt;
+					&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+					&lt;filter&gt;msnex=*&lt;/filter&gt;
+					&lt;labelKey&gt;_Contracts disabled&lt;/labelKey&gt;
+					&lt;conditions&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableContractGlobalSetting__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+					&lt;/conditions&gt;
+				&lt;/dataCondition&gt;</listDataConditions>
+		</dataConditions>
+		<dbIndex>
+			<AUTO_AAQ9QT400153EA>&lt;Index&gt;&lt;Ref Name="AAQ9QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AAQ9QT400153EA>
+			<AUTO_ACR9QT400153EA>&lt;Index&gt;&lt;Ref Name="ACR9QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_ACR9QT400153EA>
+			<AUTO_AGS9QT400153EA>&lt;Index&gt;&lt;Ref Name="AGS9QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AGS9QT400153EA>
+			<AUTO_AVQ9QT400153EA>&lt;Index&gt;&lt;Ref Name="AVQ9QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AVQ9QT400153EA>
+			<AUTO_AYP9QT400153EA>&lt;Index&gt;&lt;Ref Name="AYP9QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AYP9QT400153EA>
+			<AUTO_AZP9QT400153EA>&lt;Index&gt;&lt;Ref Name="AZP9QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AZP9QT400153EA>
+			<AUTO_AZQ9QT400153EA>&lt;Index&gt;&lt;Ref Name="AZQ9QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AZQ9QT400153EA>
+		</dbIndex>
+		<externalvariables>
+			<EnableSRO>1</EnableSRO>
+			<Configuration>Default</Configuration>
+			<ConfigurationTableName>AP - Application Settings__</ConfigurationTableName>
+		</externalvariables>
+		<gdr>
+			<AttachAsConverted>1</AttachAsConverted>
+			<FinalizationScriptAllowRetry />
+			<finalizationscriptIncludedScripts>Lib_V12.0.566.0</finalizationscriptIncludedScripts>
+			<finalizationscriptIncludedScripts>Sys/Sys_Helpers_Date</finalizationscriptIncludedScripts>
+			<FinalizationScript>
+				<!--finalizationscript.js--></FinalizationScript>
+			<ValidationScriptAllowRetry />
+			<validationscriptIncludedScripts>Lib_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Parameters_P2P_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>[Lib_Custom_Parameters]</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>[Lib_P2P_Custom_Parameters]</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_P2P_InboundChannel_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>[Lib_Contract_Customization_Server]</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>[Lib_Contract_Customization_Common]</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_P2P_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>LIB_P2P_COMPANYCODESVALUE_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>LIB_P2P_NOTIFICATION_SERVER_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Contract_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Contract_Server_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Contract_Workflow_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Contract_Workflow_Server_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Contract_Policies_Common_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Contract_Policies_Server_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Contract_Amendment_Server_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Contract_Docusign_Server_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Contract_Conversation_Server_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Contract_Publication_Server_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Spending_Contract_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Contract_Spending_Server_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Contract_Notification_Server_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Purchasing_Vendor_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Purchasing_Vendor_Contract_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Sys/Sys_PushNotification</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Sys/Sys_Helpers_String</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Sys/Sys_Helpers_Date</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Sys/Sys_EmailNotification</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_P2P_BillingSchedule_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_P2P_Docusign_Server_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Sys/Sys_Cognitive</validationscriptIncludedScripts>
+			<ValidationScript>
+				<!--validationscript.js--></ValidationScript>
+			<AllowTagCoverPages>true</AllowTagCoverPages>
+			<AllowTagNewDocuments>true</AllowTagNewDocuments>
+			<AllowTagAttachments>true</AllowTagAttachments>
+			<ExtractionScriptAllowRetry />
+			<extractionscriptIncludedScripts>Lib_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Sys/Sys_P2P_GPT</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_P2P_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_Parameters_P2P_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_P2P_UserProperties_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>[Lib_Custom_Parameters]</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>[Lib_P2P_Custom_Parameters]</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_P2P_InboundChannel_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_P2P_InboundChannel_Server_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_P2P_EmailNotification_Server_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_Contract_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_Contract_Server_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_Contract_Amendment_Server_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_Contract_Workflow_Server_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_Contract_Workflow_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_Contract_Policies_Common_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_Contract_Policies_Server_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_Contract_Publication_Server_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_Contract_Management_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_Purchasing_Vendor_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Sys/Sys_RecognitionEngine_Core</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_Contract_Recognition_Plugin_Parameters_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>[Lib_ContractDemoData_V12.0.566.0]</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>[Lib_Contract_Customization_Server]</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>[Lib_Contract_Customization_Common]</extractionscriptIncludedScripts>
+			<ExtractionScript>
+				<!--extractionscript.js--></ExtractionScript>
+			<ExtractionScriptRunOnOCRFailed />
+			<AllowRemovePages>true</AllowRemovePages>
+			<AllowSwapPages>true</AllowSwapPages>
+		</gdr>
+		<lg>
+			<!--*.xml-->
+		</lg>
+		<ocr>
+			<trade-off>accurate</trade-off>
+			<image-ocr-timeout />
+			<image-binarization>no</image-binarization>
+			<image-draft-fax>no</image-draft-fax>
+			<image-despeckle>no</image-despeckle>
+			<allowed-language>0</allowed-language>
+			<image-resolution-enhancement>auto</image-resolution-enhancement>
+			<pdf-processing>ocr-pdf</pdf-processing>
+			<ocr_engine>Nuance222</ocr_engine>
+			<ocrpagestoprocess />
+			<extractionAdditionalOptions />
+		</ocr>
+		<process>
+			<flowtype>processing</flowtype>
+			<ocrpreset>custom</ocrpreset>
+			<cacheableprocess>WFRULE</cacheableprocess>
+			<cacheableprocess>P2P - Global Application Settings__</cacheableprocess>
+			<cacheableprocess>AP - Application Settings__</cacheableprocess>
+			<cacheableprocess>P2P - User properties__</cacheableprocess>
+			<cacheableprocess>P2P - Exchange rate__</cacheableprocess>
+			<cacheableprocess>P2P - Contract Type__</cacheableprocess>
+			<cacheableprocess>P2P - Notification__</cacheableprocess>
+			<cacheableprocess>P2P - Billing Scheduled Items__</cacheableprocess>
+			<cacheableprocess>PurchasingCompanycodes__</cacheableprocess>
+			<cacheableprocess>AP - Vendors__</cacheableprocess>
+			<cacheableprocess>AP - Vendors links__</cacheableprocess>
+			<EnableCatchNetworkError />
+			<panelLabelWidth />
+			<homepagelabel>_Create a new contract</homepagelabel>
+			<enableflexibleauditing>true</enableflexibleauditing>
+			<enableflexibleediting>true</enableflexibleediting>
+			<enableflexibleteaching />
+			<enableflexiblewalkme />
+			<enableInternalConversation>true</enableInternalConversation>
+			<disableocr>no</disableocr>
+			<instanciable>1</instanciable>
+			<disableScriptModification>true</disableScriptModification>
+			<disableautolearning>true</disableautolearning>
+			<backgroundprocessingthreshold />
+			<EnablePreviewPrecomputation />
+			<defaultConversionParam>DOCX|AttachOutputFormat:PDF</defaultConversionParam>
+			<enableUpgradableDesign>true</enableUpgradableDesign>
+			<loadExtendedProperties>appInstances</loadExtendedProperties>
+			<keepUserDataWhenChangingDocument>true</keepUserDataWhenChangingDocument>
+			<enablerounddecimal>true</enablerounddecimal>
+			<pdfNormalizeFilter />
+			<archiveDuration>0</archiveDuration>
+			<OverrideAllowedDocumentExtensions>PDF,TIF,TXT,JPG,JPEG,EDI,DOCX</OverrideAllowedDocumentExtensions>
+			<ocrpagestoprocess>10</ocrpagestoprocess>
+			<ScriptEngineType>2</ScriptEngineType>
+			<UseActionNameWithScriptApproval>true</UseActionNameWithScriptApproval>
+			<displayWidth />
+			<AllowUploadAttachment>1</AllowUploadAttachment>
+			<AllowUploadReferenceDocument>1</AllowUploadReferenceDocument>
+			<UseCultureFormat>true</UseCultureFormat>
+			<AllowRetryExtractCD>true</AllowRetryExtractCD>
+			<TransportName>CustomData</TransportName>
+			<LayoutVersion>1.0</LayoutVersion>
+			<printToProcess />
+		</process>
+		<ui>
+			<CustomScriptDebug>false</CustomScriptDebug>
+			<customscriptIncludedScripts>Lib_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_P2P_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_P2P_Conversation_Client_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_P2P_Email_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Contract_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Contract_Client_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Contract_Viewer_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Contract_Policies_Common_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Contract_Policies_Client_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Contract_ContractDetails_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Contract_Sourcing_Client_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Contract_ItemsToCreate_Client_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Contract_Workflow_Client_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Contract_Amendment_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Contract_Compliancy_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Contract_Docusign_Client_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Contract_Notification_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Contract_Publication_Client_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Contract_ButtonsBar_Client_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Contract_SynergyAssistant_Client_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[Lib_Contract_Customization_Client]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[Lib_Contract_Customization_Common]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>LIB_P2P_Layout_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_P2P_Navigation_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_P2P_Browse_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_ERP_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_ERP_Manager_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>LIB_ERP_SAP_Manager_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_P2P_UserProperties_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_P2P_CompanyCodesValue_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_P2P_SIM_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Purchasing_Vendor_Client_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Purchasing_Vendor_Contract_Client_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Purchasing_Vendor_Contract_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Purchasing_Vendor_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Purchasing_Sourcing_Event_Creation_Popup_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_P2P_Notification_Client_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>LIB_CONTRACT_NOTIFICATION_CLIENT_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Contract_FormTemplate_Client_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Purchasing_CatalogHelper_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Spending_Contract_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Spending_Budget_Management_Mixin_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_AP_VendorInvoice_Generator_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_RecognitionEngine_Debugger</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers_Banner</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/SYS_WORKFLOWCONTROLLER</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/SYS_WORKFLOWENGINE</customscriptIncludedScripts>
+			<CustomScriptReadonly>true</CustomScriptReadonly>
+			<CustomScript>
+				<!--customscript.js--></CustomScript>
+			<restorationPanel>ContractDetails</restorationPanel>
+			<layout>
+				<!--layout.json--></layout>
+		</ui>
+		<zipDocuments>
+			<downloadAttachFunction>DownloadAttachInZipForContract</downloadAttachFunction>
+		</zipDocuments>
+	</properties>
+	<datatable deleted="0" guid="A1UT00000FSX" id="NoID" label="_Approvers list report" name="ApproversList__" originalProcessID="ENST00000FSX">
+		<properties>
+			<field>
+				<DisableAutolearn>1</DisableAutolearn>
+			</field>
+			<ui>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+		<field datatableid="" deleted="0" format="" guid="A2UT00000FSX" id="NoID" label="_WRKFIndex_report" length="50" name="Workflow_index__" originalProcessID="ENST00000FSX" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/Workflow_index__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_WRKFIndex_report</Label>
+					<Alias />
+					<behavior>Default, ReportPreselectedForProcess</behavior>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+					<reportpreselectedorder>10</reportpreselectedorder>
+				</extrainfo>
+				<field>
+					<required>false</required>
+				</field>
+				<gdr>
+					<VarType>Area</VarType>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="A3UT00000FSX" id="NoID" label="_WRKFAction_report" length="50" name="WRKFAction__" originalProcessID="ENST00000FSX" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/WRKFAction__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_WRKFAction_report</Label>
+					<Alias />
+					<behavior>Default, ReportPreselectedForProcess</behavior>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+					<reportpreselectedorder>13</reportpreselectedorder>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="F4A4FP000PA9" id="NoID" label="_WRKFActualApprover_report" length="80" name="WRKFActualApprover__" originalProcessID="ENST00000FSX" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/WRKFActualApprover__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Type>webaccess.Edd.ui.OwnerName</Type>
+					<Label>_WRKFActualApprover_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="A4UT00000FSX" id="NoID" label="_WRKFComment_report" length="65535" name="WRKFComment__" originalProcessID="ENST00000FSX" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_WRKFComment_report</Label>
+					<Alias />
+					<behavior>Default, ReportPreselectedForProcess</behavior>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+					<reportpreselectedorder>15</reportpreselectedorder>
+				</extrainfo>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="A5UT00000FSX" id="NoID" label="_WRKFDate_report" length="0" name="WRKFDate__" originalProcessID="ENST00000FSX" precision="0" submitable="1" type="DATETIME">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/WRKFDate__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_WRKFDate_report</Label>
+					<Alias />
+					<behavior>Default, ReportPreselectedForProcess</behavior>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+					<reportpreselectedorder>14</reportpreselectedorder>
+				</extrainfo>
+				<ui>
+					<_type>Date</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="A6UT00000FSX" id="NoID" label="_WRKFIsGroup_report" length="50" name="WRKFIsGroup__" originalProcessID="ENST00000FSX" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/WRKFIsGroup__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_WRKFIsGroup_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<required>false</required>
+				</field>
+				<gdr>
+					<VarType>Area</VarType>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="A7UT00000FSX" id="NoID" label="_" length="0" name="WRKFMarker__" originalProcessID="ENST00000FSX" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/WRKFMarker__</fullname>
+					<defaultvalue />
+					<visibility>None</visibility>
+				</db>
+				<extrainfo>
+					<Label>_</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+					<visibility>None</visibility>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+				</gdr>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="D4A4FP000PA9" id="NoID" label="_WRKFRequestDateTime_report" length="0" name="WRKFRequestDateTime__" originalProcessID="ENST00000FSX" precision="0" submitable="1" type="DATETIME">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/WRKFRequestDateTime__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_WRKFRequestDateTime_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Date</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="A9UT00000FSX" id="NoID" label="_WRKFRole_report" length="50" name="WRKFRole__" originalProcessID="ENST00000FSX" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/WRKFRole__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_WRKFRole_report</Label>
+					<Alias />
+					<behavior>Default, ReportPreselectedForProcess</behavior>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+					<reportpreselectedorder>12</reportpreselectedorder>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+				</gdr>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="L8T000001535" id="NoID" label="_WRKFRule_report" length="250" name="WRKFRule__" originalProcessID="ENST00000FSX" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/WRKFRule__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_WRKFRule_report</Label>
+					<Alias />
+					<Behavior>Default</Behavior>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="A2UT00000FSY" id="NoID" label="_WRKFStep_report" length="50" name="WRKFStep__" originalProcessID="ENST00000FSX" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/WRKFStep__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_WRKFStep_report</Label>
+					<Alias />
+					<behavior>Default, ReportPreselectedForProcess</behavior>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+					<reportpreselectedorder>11</reportpreselectedorder>
+				</extrainfo>
+				<field>
+					<required>false</required>
+				</field>
+				<gdr>
+					<VarType>Area</VarType>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="B1UT00000FSX" id="NoID" label="_WRKFUserName_report" length="50" name="WRKFUserName__" originalProcessID="ENST00000FSX" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/WRKFUserName__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_WRKFUserName_report</Label>
+					<Alias />
+					<behavior>Default, ReportPreselectedForProcess</behavior>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+					<reportpreselectedorder>11</reportpreselectedorder>
+				</extrainfo>
+				<field>
+					<required>false</required>
+				</field>
+				<gdr>
+					<VarType>Area</VarType>
+				</gdr>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+	</datatable>
+	<datatable deleted="0" guid="E4N400000YRL" id="NoID" label="_CompliancyTable_report" name="CompliancyTable__" originalProcessID="ENST00000FSX">
+		<properties>
+			<field>
+				<DisableAutolearn>1</DisableAutolearn>
+				<Extractable>0</Extractable>
+			</field>
+			<ui>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+		<field datatableid="" deleted="0" format="" guid="G4N400000YRL" id="NoID" label="_Commentary_report" length="32766" name="Commentary__" originalProcessID="ENST00000FSX" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/Commentary__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_Commentary_report</Label>
+					<Alias />
+					<Behavior>Default</Behavior>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="U171000011XD" id="NoID" label="_PolicyName_report" length="50" name="PolicyName__" originalProcessID="ENST00000FSX" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/PolicyName__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_PolicyName_report</Label>
+					<Alias />
+					<behavior>Default</behavior>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="H4N400000YRL" id="NoID" label="_RiskLevel_report" length="50" name="RiskLevel__" originalProcessID="ENST00000FSX" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/RiskLevel__</fullname>
+					<defaultvalue>informational</defaultvalue>
+				</db>
+				<extrainfo>
+					<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+					<Label>_RiskLevel_report</Label>
+					<Alias />
+					<Behavior>Default</Behavior>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<TableName />
+					<DisplayedColumns />
+					<DisplayedColumnsIds />
+					<DataSourceOrigin>Standalone</DataSourceOrigin>
+					<possibleKeys>informational
+warning
+critical</possibleKeys>
+					<SavedColumn />
+					<SavedColumnId />
+					<possibleValues>_RiskLevel_Informational
+_RiskLevel_Warning
+_RiskLevel_Critical</possibleValues>
+					<ProcessName />
+					<KeyColumnId />
+					<lazyTranslatable />
+				</field>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="F4N400000YRL" id="NoID" label="_SectionReference_report" length="32766" name="SectionReference__" originalProcessID="ENST00000FSX" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/SectionReference__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_SectionReference_report</Label>
+					<Alias />
+					<Behavior>Default</Behavior>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+	</datatable>
+	<datatable deleted="0" guid="HFE0000011XD" id="NoID" label="_ESignatureRecipientsArchived_report" name="ESignatureRecipientsArchived__" originalProcessID="ENST00000FSX">
+		<properties>
+			<field>
+				<DisableAutolearn>1</DisableAutolearn>
+				<Extractable>0</Extractable>
+			</field>
+			<ui>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+		<field datatableid="" deleted="0" format="" guid="PKQ3000014XD" id="NoID" label="_DeclinedDateTime_report" length="0" name="DeclinedDateTime__" originalProcessID="ENST00000FSX" precision="0" submitable="1" type="DATETIME">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/DeclinedDateTime__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_DeclinedDateTime_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Date</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="PFE0000011XD" id="NoID" label="_DeclinedReason_report" length="32766" name="DeclinedReason__" originalProcessID="ENST00000FSX" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/DeclinedReason__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_DeclinedReason_report</Label>
+					<Alias />
+					<Behavior>Default</Behavior>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+					<DoNotShowInDM>1</DoNotShowInDM>
+				</extrainfo>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="LFE0000011XD" id="NoID" label="_ParallelMarker" length="50" name="ParallelMarker__" originalProcessID="ENST00000FSX" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ParallelMarker__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ParallelMarker</Label>
+					<Alias />
+					<Behavior>Default</Behavior>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+					<DoNotShowInDM>1</DoNotShowInDM>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="NFE0000011XD" id="NoID" label="_RecipientDisplayName_report" length="50" name="RecipientDisplayName__" originalProcessID="ENST00000FSX" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/RecipientDisplayName__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_RecipientDisplayName_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<Editable>false</Editable>
+					<TableName />
+					<SortOrder />
+					<SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+					<DisplayedColumns />
+					<DisplayedColumnsIds />
+					<SavedColumn />
+					<SavedColumnId />
+					<ExposedColumns />
+					<ProcessName />
+					<KeyColumnId />
+					<KeyAttribute />
+					<CustomFilter />
+				</field>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="MFE0000011XD" id="NoID" label="_RecipientEmail_report" length="50" name="RecipientEmail__" originalProcessID="ENST00000FSX" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/RecipientEmail__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_RecipientEmail_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<Editable>false</Editable>
+					<TableName />
+					<SortOrder />
+					<SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+					<DisplayedColumns />
+					<DisplayedColumnsIds />
+					<SavedColumn />
+					<SavedColumnId />
+					<ExposedColumns />
+					<ProcessName />
+					<KeyColumnId />
+					<KeyAttribute />
+					<CustomFilter />
+				</field>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="OFE0000011XD" id="NoID" label="_RecipientStatus_report" length="50" name="RecipientStatus__" originalProcessID="ENST00000FSX" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/RecipientStatus__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+					<Label>_RecipientStatus_report</Label>
+					<Alias />
+					<Behavior>Default</Behavior>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<TableName />
+					<DisplayedColumns />
+					<DisplayedColumnsIds />
+					<DataSourceOrigin>Standalone</DataSourceOrigin>
+					<possibleKeys>
+					created
+sent
+delivered
+signed
+declined
+completed
+faxpending
+autoresponded</possibleKeys>
+					<SavedColumn />
+					<SavedColumnId />
+					<possibleValues>_recipient_docusign_created
+_recipient_docusign_sent
+_recipient_docusign_delivered
+_recipient_docusign_signed
+_recipient_docusign_declined
+_recipient_docusign_completed
+_recipient_docusign_faxpending
+_recipient_docusign_autoresponded</possibleValues>
+					<ProcessName />
+					<KeyColumnId />
+					<lazyTranslatable />
+				</field>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="PKQ3000012XD" id="NoID" label="_SentDateTime_report" length="0" name="SentDateTime__" originalProcessID="ENST00000FSX" precision="0" submitable="1" type="DATETIME">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/SentDateTime__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_SentDateTime_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Date</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="KFE0000011XD" id="NoID" label="_SignatureOrder_report" length="0" name="SignatureOrder__" originalProcessID="ENST00000FSX" precision="0" submitable="1" type="INT">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/SignatureOrder__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_SignatureOrder_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+					<SetNullOnEmptyValue>0</SetNullOnEmptyValue>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="PKQ3000013XD" id="NoID" label="_SignedDateTime_report" length="0" name="SignedDateTime__" originalProcessID="ENST00000FSX" precision="0" submitable="1" type="DATETIME">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/SignedDateTime__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_SignedDateTime_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Date</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+	</datatable>
+	<datatable deleted="0" guid="GOR000000YRL" id="NoID" label="_ItemsToCreate_report" name="ItemsToCreate__" originalProcessID="ENST00000FSX">
+		<properties>
+			<field>
+				<DisableAutolearn>1</DisableAutolearn>
+				<Extractable>0</Extractable>
+			</field>
+			<ui>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+		<field datatableid="" deleted="0" format="" guid="ESR000000YRL" id="NoID" label="_ItemCreationMode_report" length="50" name="ItemCreationMode__" originalProcessID="ENST00000FSX" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ItemCreationMode__</fullname>
+					<defaultvalue>NewItem</defaultvalue>
+				</db>
+				<extrainfo>
+					<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+					<Label>_ItemCreationMode_report</Label>
+					<Alias />
+					<Behavior>Default</Behavior>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<TableName />
+					<DisplayedColumns />
+					<DisplayedColumnsIds />
+					<DataSourceOrigin>Standalone</DataSourceOrigin>
+					<possibleKeys>NewItem
+ExistingItem</possibleKeys>
+					<SavedColumn />
+					<SavedColumnId />
+					<possibleValues>_NewItem
+_ExistingItem</possibleValues>
+					<ProcessName />
+					<KeyColumnId />
+					<lazyTranslatable />
+				</field>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="YRR000000YRL" id="NoID" label="_ItemCurrency_report" length="50" name="ItemCurrency__" originalProcessID="ENST00000FSX" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ItemCurrency__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ItemCurrency_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<Editable>false</Editable>
+					<TableName>CT#NOID</TableName>
+					<SortOrder />
+					<SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+					<DisplayedColumns>CurrencyFrom__</DisplayedColumns>
+					<DisplayedColumnsIds />
+					<SavedColumn>CurrencyFrom__</SavedColumn>
+					<SavedColumnId />
+					<ExposedColumns />
+					<ProcessName>P2P - Exchange rate__</ProcessName>
+					<KeyColumnId />
+					<KeyAttribute />
+				</field>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="X75100000YRL" id="NoID" label="_ItemDescription_report" length="50" name="ItemDescription__" originalProcessID="ENST00000FSX" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ItemDescription__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ItemDescription_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<Editable>true</Editable>
+					<SortOrder />
+					<SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+					<DisplayedColumns>Description__</DisplayedColumns>
+					<SavedColumn>Description__</SavedColumn>
+					<ExposedColumns />
+					<ProcessName>P2P - CatalogItems__</ProcessName>
+					<KeyColumnId />
+					<KeyAttribute />
+					<CustomFilter />
+				</field>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="XRR000000MRL" id="NoID" label="_ItemEnergyConsumptionKgCO2ePerUnit_report" length="17" name="ItemEnergyConsumptionKgCO2ePerUnit__" originalProcessID="ENST00000FSX" precision="6" submitable="1" type="DECIMAL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ItemEnergyConsumptionKgCO2ePerUnit__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ItemEnergyConsumptionKgCO2ePerUnit_report</Label>
+					<Alias />
+					<DecimalPrecision vartype="INT">6</DecimalPrecision>
+					<DecimalPrecisionMaxDisplay>6</DecimalPrecisionMaxDisplay>
+					<DecimalPrecisionMinDisplay>0</DecimalPrecisionMinDisplay>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+					<SetNullOnEmptyValue>1</SetNullOnEmptyValue>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="CSR000000YRL" id="NoID" label="_ItemLeadTime_report" length="0" name="ItemLeadTime__" originalProcessID="ENST00000FSX" precision="0" submitable="1" type="INT">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ItemLeadTime__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ItemLeadTime_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+					<SetNullOnEmptyValue>0</SetNullOnEmptyValue>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="BSR000000YRL" id="NoID" label="_ItemLongDescription" length="32766" name="ItemLongDescription__" originalProcessID="ENST00000FSX" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ItemLongDescription__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ItemLongDescription</Label>
+					<Alias />
+					<Behavior>Default</Behavior>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="Y35100000YRL" id="NoID" label="_ItemNumber_report" length="50" name="ItemNumber__" originalProcessID="ENST00000FSX" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ItemNumber__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ItemNumber_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<Editable>true</Editable>
+					<SortOrder />
+					<SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+					<DisplayedColumns>ItemNumber__</DisplayedColumns>
+					<SavedColumn>ItemNumber__</SavedColumn>
+					<ExposedColumns />
+					<ProcessName>P2P - CatalogItems__</ProcessName>
+					<KeyColumnId />
+					<KeyAttribute />
+					<CustomFilter />
+				</field>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="ASR000000TRL" id="NoID" label="_ItemSupplierPartAuxID_report" length="255" name="ItemSupplierPartAuxID__" originalProcessID="ENST00000FSX" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ItemSupplierPartAuxID__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ItemSupplierPartAuxID_report</Label>
+					<Alias />
+					<Behavior>Default</Behavior>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="ASR000000YRL" id="NoID" label="_ItemSupplierPartID_report" length="255" name="ItemSupplierPartID__" originalProcessID="ENST00000FSX" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ItemSupplierPartID__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ItemSupplierPartID_report</Label>
+					<Alias />
+					<Behavior>Default</Behavior>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="OK4100000YRL" id="NoID" label="_ItemSupplyTypeID_report" length="50" name="ItemSupplyTypeID__" originalProcessID="ENST00000FSX" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ItemSupplyTypeID__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ItemSupplyTypeID_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<Editable>false</Editable>
+					<SortOrder />
+					<SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+					<DisplayedColumns>SupplyID__</DisplayedColumns>
+					<DisplayedColumnsIds />
+					<SavedColumn>SupplyID__</SavedColumn>
+					<SavedColumnId />
+					<ExposedColumns />
+					<ProcessName>PurchasingSupply__</ProcessName>
+					<KeyColumnId />
+					<KeyAttribute />
+					<CustomFilter />
+				</field>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="WRR000000YRL" id="NoID" label="_ItemSupplyTypeName_report" length="100" name="ItemSupplyTypeName__" originalProcessID="ENST00000FSX" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ItemSupplyTypeName__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ItemSupplyTypeName_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<Editable>false</Editable>
+					<required>true</required>
+					<SortOrder>ASC</SortOrder>
+					<DisplayedColumns>Name__</DisplayedColumns>
+					<DisplayedColumnsIds />
+					<SavedColumn>Name__</SavedColumn>
+					<SavedColumnId />
+					<ProcessName>PurchasingSupply__</ProcessName>
+					<KeyColumnId>SupplyID__</KeyColumnId>
+					<KeyAttribute>ItemSupplyTypeID__</KeyAttribute>
+				</field>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="ZRR000000YRL" id="NoID" label="_ItemUnitOfMeasure_report" length="50" name="ItemUnitOfMeasure__" originalProcessID="ENST00000FSX" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ItemUnitOfMeasure__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ItemUnitOfMeasure_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<Editable>false</Editable>
+					<SortOrder>ASC</SortOrder>
+					<SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+					<DisplayedColumns>UnitOfMeasure__|Description__|IdentifierInERP__</DisplayedColumns>
+					<DisplayedColumnsIds />
+					<SavedColumn>UnitOfMeasure__</SavedColumn>
+					<SavedColumnId />
+					<ExposedColumns />
+					<ProcessName>P2P - UnitOfMeasure__</ProcessName>
+					<KeyColumnId />
+					<KeyAttribute />
+				</field>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="XRR000000YRL" id="NoID" label="_ItemUnitPrice_report" length="17" name="ItemUnitPrice__" originalProcessID="ENST00000FSX" precision="5" submitable="1" type="DECIMAL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ItemUnitPrice__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ItemUnitPrice_report</Label>
+					<Alias />
+					<DecimalPrecision vartype="INT">5</DecimalPrecision>
+					<DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+	</datatable>
+	<type id="NoID" name="CD" />
+	<field deleted="0" format="" guid="GBL000000YRL" id="NoID" label="_AiCompliancyPrompt_report" length="32766" name="AiCompliancyPrompt__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/AiCompliancyPrompt__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_AiCompliancyPrompt_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="YPFIG0000SG1" id="NoID" label="_AmendmentType_report" length="50" name="AmendmentType__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/AmendmentType__</fullname>
+				<defaultvalue>administrative</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_AmendmentType_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<TableName />
+				<DisplayedColumns />
+				<DataSourceOrigin>Standalone</DataSourceOrigin>
+				<possibleKeys>administrative</possibleKeys>
+				<SavedColumn />
+				<possibleValues>_administrative</possibleValues>
+				<ProcessName />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="RPV4FP000PA9" id="NoID" label="_ApprovedDate_report" length="0" name="ApprovedDate__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="DATETIME">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ApprovedDate__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ApprovedDate_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="NDPU00000IYP" id="NoID" label="_ArchiveDurationInMonths" length="50" name="ArchiveDurationInMonths__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ArchiveDurationInMonths__</fullname>
+				<defaultvalue>0</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_ArchiveDurationInMonths</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<TableName />
+				<DisplayedColumns />
+				<DataSourceOrigin>Standalone</DataSourceOrigin>
+				<possibleKeys>0
+12
+24
+36
+48
+60
+72
+84
+96
+108
+120
+132
+144
+156
+168
+180
+240
+300
+360
+600</possibleKeys>
+				<SavedColumn />
+				<possibleValues>_TwoMonths
+_OneYear
+_TwoYears
+_ThreeYears
+_FourYears
+_FiveYears
+_SixYears
+_SevenYears
+_EightYears
+_NineYears
+_TenYears
+_ElevenYears
+_TwelveYears
+_ThirteenYears
+_FourteenYears
+_FifteenYears
+_TwentyYears
+_TwentyFiveYears
+_ThirtyYears
+_FiftyYears</possibleValues>
+				<ProcessName />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="W7UT00000FSY" id="NoID" label="_CombinedVendor_report" length="500" name="CombinedVendor__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CombinedVendor__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_CombinedVendor_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>true</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder>ASC</SortOrder>
+				<DisplayedColumns>Name__|Number__|Sub__|Street__|PostOfficeBox__|City__|PostalCode__|Region__|Country__|Currency__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<SavedColumn>Name__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>AP - Vendors__</ProcessName>
+				<KeyColumnId />
+				<KeyAttribute />
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="ZLA3FP000M4H" id="NoID" label="_Comments" length="32766" name="Comments__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Comments__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Comments</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="S7UT00000FSX" id="NoID" label="_Company code_report" length="50" name="CompanyCode__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CompanyCode__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Company code_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<required>true</required>
+				<TableName>CT#NOID</TableName>
+				<SortOrder />
+				<DisplayedColumns>CompanyCode__|CompanyName__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>CompanyCode__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>PurchasingCompanycodes__</ProcessName>
+				<CustomFilter />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="GD6IG0000VLT" id="NoID" label="_ContractNumber_report" length="50" name="ContractNumber__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ContractNumber__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ContractNumber_report</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="J8UT00000FSX" id="NoID" label="_Contract status_report" length="50" name="ContractStatus__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ContractStatus__</fullname>
+				<defaultvalue>Draft</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_Contract status_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<TableName />
+				<DisplayedColumns />
+				<DataSourceOrigin>Standalone</DataSourceOrigin>
+				<possibleKeys>Draft
+ToValidate
+ApprovedPendingEnvelopeDesign
+ApprovedPendingSignature
+ApprovedPendingActivation
+Active
+Revoked
+Deleted
+Expired
+Deprecated
+Rejected
+SignatureRejected</possibleKeys>
+				<SavedColumn />
+				<possibleValues>_Contract_Draft
+_Contract_ToValidate
+_Contract_ApprovedPendingEnvelopeDesign
+_Contract_ApprovedPendingSignature
+_Contract_ApprovedPendingActivation
+_Contract_Active
+_Contract_Revoked
+_Contract_Deleted
+_Contract_Expired
+_Contract_Deprecated
+_Contract_Rejected
+_Contract_SignatureRejected</possibleValues>
+				<ProcessName />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="EUY5FP000PA9" id="NoID" label="_ContractSubmissionDateTime_report" length="0" name="ContractSubmissionDateTime__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="DATETIME">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ContractSubmissionDateTime__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ContractSubmissionDateTime_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="J3LIG0000VLT" id="NoID" label="_ContractType_report" length="100" name="ContractType__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ContractType__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ContractType_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<SortOrder>ASC</SortOrder>
+				<SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+				<DisplayedColumns>Name__|Description__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>Name__</SavedColumn>
+				<SavedColumnId />
+				<ExposedColumns />
+				<ProcessName>P2P - Contract type__</ProcessName>
+				<KeyColumnId>ID__</KeyColumnId>
+				<KeyAttribute>ContractTypeID__</KeyAttribute>
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="N37IG0000VLT" id="NoID" label="_ContractTypeID_report" length="50" name="ContractTypeID__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ContractTypeID__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ContractTypeID_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<SortOrder />
+				<SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+				<DisplayedColumns>ID__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>ID__</SavedColumn>
+				<SavedColumnId />
+				<ExposedColumns />
+				<ProcessName>P2P - Contract type__</ProcessName>
+				<KeyColumnId />
+				<KeyAttribute />
+				<CustomFilter />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="LR0IG0000VLT" id="NoID" label="_SpendingCurrency_report" length="50" name="Currency__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Currency__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_SpendingCurrency_report</Label>
+				<Alias />
+				<Group />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<required>false</required>
+				<TableName>CT#NOID</TableName>
+				<SortOrder>ASC</SortOrder>
+				<SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+				<DisplayedColumns>CurrencyFrom__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>CurrencyFrom__</SavedColumn>
+				<SavedColumnId />
+				<ExposedColumns />
+				<ProcessName>P2P - Exchange rate__</ProcessName>
+				<KeyColumnId />
+				<KeyAttribute>Currency__</KeyAttribute>
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="V7UT00000FSX" id="NoID" label="_Description_report" length="32766" name="Description__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Description__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Description_report</Label>
+				<Alias />
+				<behavior>Default, ReportPreselectedForProcess</behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<reportpreselectedorder>3</reportpreselectedorder>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="RH8JG0000VLT" id="NoID" label="_DoNotNotifyOnNotificationDateReached_report" length="0" name="DoNotNotifyOnNotificationDateReached__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/DoNotNotifyOnNotificationDateReached__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_DoNotNotifyOnNotificationDateReached_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="D8UT00000FSX" id="NoID" label="_Duration_report" length="0" name="Duration__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="INT">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Duration__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Duration_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="YDN000000VLT" id="NoID" label="_EffectiveDate_report" length="0" name="EffectiveDate__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="DATE">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/EffectiveDate__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_EffectiveDate_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="NXRMG00011XD" id="NoID" label="_EnableContractSignature_report" length="0" name="EnableContractSignature__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/EnableContractSignature__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_EnableContractSignature_report</Label>
+				<Alias />
+				<Group>ReportGroup_ESignature</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="F8UT00000FSX" id="NoID" label="_End date_report" length="0" name="EndDate__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="DATE">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/EndDate__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_End date_report</Label>
+				<Alias />
+				<behavior>Default, ReportPreselectedForProcess</behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<reportpreselectedorder>8</reportpreselectedorder>
+			</extrainfo>
+			<field>
+				<required>true</required>
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="MWK0000011XD" id="NoID" label="_EnvelopeCreationDateTime_report" length="0" name="EnvelopeCreationDateTime__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="DATETIME">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/EnvelopeCreationDateTime__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_EnvelopeCreationDateTime_report</Label>
+				<Alias />
+				<Group>ReportGroup_ESignature</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="SXC0000011XD" id="NoID" label="_EnvelopeSentDateTime_report" length="0" name="EnvelopeSentDateTime__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="DATETIME">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/EnvelopeSentDateTime__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_EnvelopeSentDateTime_report</Label>
+				<Alias />
+				<Group>ReportGroup_ESignature</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="IXJ0000011XD" id="NoID" label="_EnvelopeStatus_report" length="50" name="EnvelopeStatus__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/EnvelopeStatus__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_EnvelopeStatus_report</Label>
+				<Alias />
+				<Group>ReportGroup_ESignature</Group>
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<TableName />
+				<DisplayedColumns />
+				<DisplayedColumnsIds />
+				<DataSourceOrigin>Standalone</DataSourceOrigin>
+				<possibleKeys>created
+completed
+declined
+deleted
+delivered
+processing
+sent
+signed
+template
+voided
+timedout</possibleKeys>
+				<SavedColumn />
+				<SavedColumnId />
+				<possibleValues>_envelope_docusign_created
+_envelope_docusign_completed
+_envelope_docusign_declined
+_envelope_docusign_deleted
+_envelope_docusign_delivered
+_envelope_docusign_processing
+_envelope_docusign_sent
+_envelope_docusign_signed
+_envelope_docusign_template
+_envelope_docusign_voided
+_envelope_docusign_timedout</possibleValues>
+				<ProcessName />
+				<KeyColumnId />
+				<lazyTranslatable />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="FE7IG0000SG1" id="NoID" label="_FromContractManagement_report" length="0" name="FromContractManagement__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FromContractManagement__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_FromContractManagement_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<possibleKeys>0
+1</possibleKeys>
+				<possibleValues>_FromContractManagement_No
+_FromContractManagement_Yes</possibleValues>
+				<ProcessName />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="I304FP000M4H" id="NoID" label="_Initial end date_report" length="0" name="InitialEndDate__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="DATE">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/InitialEndDate__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Initial end date_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="DWS3FP000M4H" id="NoID" label="_Initially expected end date_report" length="0" name="InitiallyExpectedEndDate__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="DATE">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/InitiallyExpectedEndDate__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Initially expected end date_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="H304FP000M4H" id="NoID" label="_Initial start date_report" length="0" name="InitialStartDate__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="DATE">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/InitialStartDate__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Initial start date_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="H4R0000011XD" id="NoID" label="_IsElectronicallySigned_report" length="0" name="IsElectronicallySigned__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/IsElectronicallySigned__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_IsElectronicallySigned_report</Label>
+				<Alias />
+				<Group>ReportGroup_ESignature</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="IMSIG0000SG1" id="NoID" label="_MaxAmount_report" length="17" name="MaxAmount__" originalProcessID="ENST00000FSX" precision="2" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/MaxAmount__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_MaxAmount_report</Label>
+				<Alias />
+				<DecimalPrecision vartype="INT">2</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"_MaxAmountTooltip","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="JMSIG0000SG1" id="NoID" label="_MinAmount_report" length="17" name="MinAmount__" originalProcessID="ENST00000FSX" precision="2" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/MinAmount__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_MinAmount_report</Label>
+				<Alias />
+				<DecimalPrecision vartype="INT">2</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"_MinAmountTooltip","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="U7UT00000FSX" id="NoID" label="_Name_report" length="50" name="Name__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Name__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Name_report</Label>
+				<Alias />
+				<behavior>Default, ReportPreselectedForProcess</behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<reportpreselectedorder>2</reportpreselectedorder>
+			</extrainfo>
+			<field>
+				<required>true</required>
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="FLY3FP000M4H" id="NoID" label="_NotificationDate_report" length="0" name="NotificationDate__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="DATE">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/NotificationDate__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_NotificationDate_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"_NotificationDateTooltip","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="E6ZHG0000SG1" id="NoID" label="_OriginalContractRUIDEX_report" length="500" name="OriginalContractRUIDEX__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/OriginalContractRUIDEX__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_OriginalContractRUIDEX_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="LMSIG0000SG1" id="NoID" label="_OutOfAmountBehavior_report" length="50" name="OutOfAmountBehavior__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/OutOfAmountBehavior__</fullname>
+				<defaultvalue>Ignore</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_OutOfAmountBehavior_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<TableName />
+				<DisplayedColumns />
+				<DataSourceOrigin>Standalone</DataSourceOrigin>
+				<possibleKeys>Ignore
+Warn
+Block</possibleKeys>
+				<SavedColumn />
+				<possibleValues>_OutOfAmountBehavior_Ignore
+_OutOfAmountBehavior_Warn
+_OutOfAmountBehavior_Block</possibleValues>
+				<ProcessName />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="ZPA3FP000M4H" id="NoID" label="_OwnerLogin_report" length="50" name="OwnerLogin__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/OwnerLogin__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_OwnerLogin_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="IS85FP000PA9" id="NoID" label="_OwnerNiceName_report" length="50" name="OwnerNiceName__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/OwnerNiceName__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_OwnerNiceName_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<required>true</required>
+				<TableName>ODUSER</TableName>
+				<SortOrder>ASC</SortOrder>
+				<DisplayedColumns>DisplayName|Login|EmailAddress</DisplayedColumns>
+				<SavedColumn>DisplayName</SavedColumn>
+				<ExposedColumns />
+				<ProcessName />
+				<KeyColumnId>Login</KeyColumnId>
+				<KeyAttribute>OwnerLogin__</KeyAttribute>
+				<CustomFilter>(&amp;(|(ACCOUNTLOCKED=0)(!(ACCOUNTLOCKED=*)))(Customer=0)(Vendor=0)(|(PortalUser!=1)(PortalUser!=*)))</CustomFilter>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="F6ZHG0000SG1" id="NoID" label="_PreviousContractRUIDEX_report" length="500" name="PreviousContractRUIDEX__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/PreviousContractRUIDEX__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_PreviousContractRUIDEX_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="G8UT00000FSX" id="NoID" label="_Prior notice_report" length="0" name="PriorNotice__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="INT">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/PriorNotice__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Prior notice_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<SetNullOnEmptyValue>1</SetNullOnEmptyValue>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="YL4IG0000SG1" id="NoID" label="_Reasons_report" length="32766" name="Reasons__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Reasons__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Reasons_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="T7UT00000FSX" id="NoID" label="_Reference number_report" length="50" name="ReferenceNumber__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ReferenceNumber__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Reference number_report</Label>
+				<Alias />
+				<behavior>Default, ReportPreselectedForProcess</behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<reportpreselectedorder>1</reportpreselectedorder>
+			</extrainfo>
+			<field>
+				<required>true</required>
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PSR3FP000M4H" id="NoID" label="_RenewalReminderDays_report" length="0" name="RenewalReminderDays__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="INT">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/RenewalReminderDays__</fullname>
+				<defaultvalue>30</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_RenewalReminderDays_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="I8UT00000FSX" id="NoID" label="_Renewal terms_report" length="0" name="RenewalTerms__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="INT">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/RenewalTerms__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Renewal terms_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="UXT4FP000PA9" id="NoID" label="_RequesterLogin_report" length="50" name="RequesterLogin__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/RequesterLogin__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_RequesterLogin_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="VXT4FP000PA9" id="NoID" label="_RequesterNiceName_report" length="50" name="RequesterNiceName__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/RequesterNiceName__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_RequesterNiceName_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="CZS3FP000M4H" id="NoID" label="_ResiliationDate" length="0" name="ResiliationDate__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="DATE">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ResiliationDate__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ResiliationDate</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="ASP2000011XD" id="NoID" label="_SignatureDesignerLogin_report" length="50" name="SignatureDesignerLogin__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/SignatureDesignerLogin__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_SignatureDesignerLogin_report</Label>
+				<Alias />
+				<Group>ReportGroup_ESignature</Group>
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="ZRP2000011XD" id="NoID" label="_SignatureDesignerNiceName_report" length="50" name="SignatureDesignerNiceName__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/SignatureDesignerNiceName__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_SignatureDesignerNiceName_report</Label>
+				<Alias />
+				<Group>ReportGroup_ESignature</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<required>false</required>
+				<TableName>ODUSER</TableName>
+				<SortOrder>ASC</SortOrder>
+				<DisplayedColumns>DisplayName|Login|EmailAddress</DisplayedColumns>
+				<SavedColumn>DisplayName</SavedColumn>
+				<ExposedColumns />
+				<ProcessName />
+				<KeyColumnId>Login</KeyColumnId>
+				<KeyAttribute>SignatureDesignerLogin__</KeyAttribute>
+				<CustomFilter>(&amp;(|(ACCOUNTLOCKED=0)(!(ACCOUNTLOCKED=*)))(Customer=0)(Vendor=0)(|(PortalUser!=1)(PortalUser!=*)))</CustomFilter>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PKQ3000011XD" id="NoID" label="_SignatureExpirationDateTime_report" length="0" name="SignatureExpirationDateTime__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="DATETIME">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/SignatureExpirationDateTime__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_SignatureExpirationDateTime_report</Label>
+				<Alias />
+				<Group>ReportGroup_ESignature</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="RBR0000011XD" id="NoID" label="_SignatureId_report" length="50" name="SignatureId__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/SignatureId__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_SignatureId_report</Label>
+				<Alias />
+				<Group>ReportGroup_ESignature</Group>
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="NUILG00011XD" id="NoID" label="_EnvelopeLastStatusDateTime_report" length="0" name="SignedDateTime__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="DATETIME">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/SignedDateTime__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_EnvelopeLastStatusDateTime_report</Label>
+				<Alias />
+				<Group>ReportGroup_ESignature</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="GJUT0P000XXX" id="NoID" label="_SourcingData" length="32766" name="SourcingData__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/SourcingData__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_SourcingData</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<DoNotShowInDM>1</DoNotShowInDM>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="GJUT1P000XXX" id="NoID" label="_SourcingEventId_report" length="32766" name="SourcingEventId__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/SourcingEventId__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_SourcingEventId_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="E8UT00000FSX" id="NoID" label="_Start date_report" length="0" name="StartDate__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="DATE">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/StartDate__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Start date_report</Label>
+				<Alias />
+				<behavior>Default, ReportPreselectedForProcess</behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<reportpreselectedorder>7</reportpreselectedorder>
+			</extrainfo>
+			<field>
+				<required>true</required>
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="H8UT00000FSX" id="NoID" label="_Tacit renewal_report" length="0" name="TacitRenewal__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TacitRenewal__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_Tacit renewal_report</Label>
+				<Alias />
+				<behavior>Default, ReportPreselectedForProcess</behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<reportpreselectedorder>9</reportpreselectedorder>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="XCH3FP000M4H" id="NoID" label="_TechnicalData_report" length="5000" name="TechnicalData__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TechnicalData__</fullname>
+				<defaultvalue>{}</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_TechnicalData_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="ULW3FP000M4H" id="NoID" label="_TerminatedBylogin_report" length="50" name="TerminatedBylogin__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TerminatedBylogin__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TerminatedBylogin_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="TLW3FP000M4H" id="NoID" label="_TerminatedByName_report" length="50" name="TerminatedByName__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TerminatedByName__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TerminatedByName_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="EWS3FP000M4H" id="NoID" label="_Termination comment_report" length="32766" name="TerminationComment__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TerminationComment__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Termination comment_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="EGK3FP000M4H" id="NoID" label="_TerminationRequestedOn_report" length="0" name="TerminationRequestedOn__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="DATETIME">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TerminationRequestedOn__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TerminationRequestedOn_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="Y7UT00000FSX" id="NoID" label="_Vendor address_report" length="32766" name="VendorAddress__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/VendorAddress__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Vendor address_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="O7UT00000FSX" id="NoID" label="_Vendor countryCode_report" length="32766" name="VendorCountry__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/VendorCountry__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Vendor countryCode_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="L7UT00000FSX" id="NoID" label="_VendorCurrency_report" length="50" name="VendorCurrency__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/VendorCurrency__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_VendorCurrency_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="Z7UT00000FSX" id="NoID" label="_Vendor email_report" length="50" name="VendorEmail__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/VendorEmail__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Vendor email_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="W7UT00000FSX" id="NoID" label="_Vendor name_report" length="50" name="VendorName__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/VendorName__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Vendor name_report</Label>
+				<Alias />
+				<behavior>Default, ReportPreselectedForProcess</behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<reportpreselectedorder>6</reportpreselectedorder>
+			</extrainfo>
+			<field>
+				<Editable>true</Editable>
+				<required>true</required>
+				<TableName>CT#NOID</TableName>
+				<SortOrder>ASC</SortOrder>
+				<DisplayedColumns>Name__|Number__|Sub__|Street__|PostOfficeBox__|City__|PostalCode__|Region__|Country__|Currency__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>Name__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>AP - Vendors__</ProcessName>
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(!(CompanyCode__=*)))</CustomFilter>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="X7UT00000FSX" id="NoID" label="_Vendor number_report" length="50" name="VendorNumber__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/VendorNumber__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Vendor number_report</Label>
+				<Alias />
+				<behavior>Default, ReportPreselectedForProcess</behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<reportpreselectedorder>5</reportpreselectedorder>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="C8UT00000FSX" id="NoID" label="_Vendor opening hours_report" length="32766" name="VendorOpeningHours__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/VendorOpeningHours__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Vendor opening hours_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="A8UT00000FSX" id="NoID" label="_Vendor phone_report" length="50" name="VendorPhone__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/VendorPhone__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Vendor phone_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="W7UT00000FSZ" id="NoID" label="_VendorRegistration_report" length="60" name="VendorRegistration__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/VendorRegistration__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_VendorRegistration_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>true</Editable>
+				<SortOrder>ASC</SortOrder>
+				<SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+				<DisplayedColumns>Company__|VendorNumber__|VendorCategory__|Street__|City__|Zip_Code__|Country__|CompanyCode__|ProcessStatus__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<SavedColumn>Company__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>Vendor Registration</ProcessName>
+				<KeyColumnId />
+				<KeyAttribute />
+				<CustomFilter>(&amp;(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))(ProcessStatus__!=Approved)(ProcessStatus__!=Rejected)(Company__!=))</CustomFilter>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="W7UT00000FTX" id="NoID" label="_VendorRegistrationID_report" length="50" name="VendorRegistrationID__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/VendorRegistrationID__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_VendorRegistrationID_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="B8UT00000FSX" id="NoID" label="_Vendor website_report" length="50" name="VendorWebsite__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/VendorWebsite__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Vendor website_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="ZL4IG0000SG1" id="NoID" label="_Version_report" length="0" name="Version__" originalProcessID="ENST00000FSX" precision="0" processid="" submitable="1" type="INT">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Version__</fullname>
+				<defaultvalue>1</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_Version_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+</process>

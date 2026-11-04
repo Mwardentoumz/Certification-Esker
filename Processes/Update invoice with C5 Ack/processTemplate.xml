@@ -1,0 +1,229 @@
+<process accountid="" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:11:00" deleted="0" eskerapplication="P2P" global="0" id="NoID" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="Update invoice with C5 Ack" needvalidation="0" ootofilter="" ootoversion="0" originalProcessID="UMMI20025889" ownerid="" ownerpb="" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="" version="1" visibility="0">
+	<properties>
+		<dataConditions>
+			<listDataConditions>
+			&lt;dataCondition&gt;
+				&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+				&lt;filter&gt;msnex=*&lt;/filter&gt;
+				&lt;labelKey&gt;_AP disabled&lt;/labelKey&gt;
+				&lt;conditions&gt;
+					&lt;allowCondition&gt;
+						&lt;fieldName&gt;EnableAccountPayableGlobalSetting__&lt;/fieldName&gt;
+						&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+					&lt;/allowCondition&gt;
+				&lt;/conditions&gt;
+			&lt;/dataCondition&gt;
+		</listDataConditions>
+		</dataConditions>
+		<gdr>
+			<FinalizationScriptAllowRetry>true</FinalizationScriptAllowRetry>
+			<FinalizationScript>
+				<!--finalizationscript.js--></FinalizationScript>
+			<ValidationScriptAllowRetry>true</ValidationScriptAllowRetry>
+			<validationscriptIncludedScripts>Sys/Sys_Helpers_Date</validationscriptIncludedScripts>
+			<ValidationScript>
+				<!--validationscript.js--></ValidationScript>
+			<AllowTagCoverPages>true</AllowTagCoverPages>
+			<AllowTagNewDocuments>true</AllowTagNewDocuments>
+			<AllowTagAttachments>true</AllowTagAttachments>
+			<ExtractionScriptAllowRetry>true</ExtractionScriptAllowRetry>
+			<extractionscriptIncludedScripts>Sys/Sys_Helpers</extractionscriptIncludedScripts>
+			<ExtractionScript>
+				<!--extractionscript.js--></ExtractionScript>
+			<AllowRemovePages>true</AllowRemovePages>
+			<AllowSwapPages>true</AllowSwapPages>
+			<PostProcessingScriptAllowRetry />
+			<PostProcessingScript>
+				<!--postprocessingscript.js--></PostProcessingScript>
+		</gdr>
+		<lg>
+			<!--*.xml-->
+		</lg>
+		<ocr>
+			<trade-off>accurate</trade-off>
+			<image-binarization>no</image-binarization>
+			<image-draft-fax>no</image-draft-fax>
+			<image-despeckle>no</image-despeckle>
+			<allowed-language>0</allowed-language>
+			<image-resolution-enhancement>auto</image-resolution-enhancement>
+			<ocr_engine>Nuance222</ocr_engine>
+			<extractionAdditionalOptions />
+		</ocr>
+		<process>
+			<flowtype>processing</flowtype>
+			<ocrpreset>scan</ocrpreset>
+			<homepagelabel>Update invoice with C5 Ack</homepagelabel>
+			<enableflexibleauditing />
+			<enableflexibleediting />
+			<enableflexibleteaching />
+			<upgradable>yes</upgradable>
+			<disableocr />
+			<instanciable>1</instanciable>
+			<disableScriptModification>true</disableScriptModification>
+			<disableautolearning>true</disableautolearning>
+			<backgroundprocessingthreshold />
+			<EnablePreviewPrecomputation />
+			<enableUpgradableDesign>true</enableUpgradableDesign>
+			<pdfNormalizeFilter />
+			<archiveDuration>0</archiveDuration>
+			<ocrpagestoprocess />
+			<ScriptEngineType>2</ScriptEngineType>
+			<displayWidth />
+			<AllowUploadAttachment>1</AllowUploadAttachment>
+			<AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+			<UseCultureFormat>true</UseCultureFormat>
+			<AllowRetryExtractCD>true</AllowRetryExtractCD>
+			<TransportName>CustomData</TransportName>
+			<LayoutVersion>1.0</LayoutVersion>
+			<printToProcess />
+		</process>
+		<ui>
+			<restorationPanel>DataPanel</restorationPanel>
+			<layout>
+				<!--layout.json--></layout>
+		</ui>
+	</properties>
+	<type id="NoID" name="CD" />
+	<field deleted="0" format="" guid="RZDE8229" id="NoID" label="_C5Status_Code_report" length="50" name="C5Status_Code__" originalProcessID="UMMI20025889" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/C5Status_Code__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_C5Status_Code_report</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<teachable>false</teachable>
+				<lazyTranslatable />
+			</field>
+			<gdr>
+				<VarType />
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="RKRE8229" id="NoID" label="_C5Status_Date_report" length="0" name="C5Status_Date__" originalProcessID="UMMI20025889" precision="0" processid="" submitable="1" type="DATETIME">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/C5Status_Date__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_C5Status_Date_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<required>false</required>
+				<teachable>false</teachable>
+			</field>
+			<gdr>
+				<VarType />
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="YIPO8229" id="NoID" label="_C5Status_Message_report" length="50" name="C5Status_Message__" originalProcessID="UMMI20025889" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/C5Status_Message__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_C5Status_Message_report</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<teachable>false</teachable>
+				<lazyTranslatable />
+			</field>
+			<gdr>
+				<VarType />
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="RZAF8229" id="NoID" label="_C5Status_Type_report" length="50" name="C5Status_Type__" originalProcessID="UMMI20025889" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/C5Status_Type__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_C5Status_Type_report</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<teachable>false</teachable>
+				<lazyTranslatable />
+			</field>
+			<gdr>
+				<VarType />
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="RKRE4529" id="NoID" label="_EskerID_report" length="50" name="EskerID__" originalProcessID="UMMI20025889" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/EskerID__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_EskerID_report</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<teachable>false</teachable>
+				<lazyTranslatable />
+			</field>
+			<gdr>
+				<VarType />
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+</process>

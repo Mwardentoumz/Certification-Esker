@@ -1,0 +1,1281 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:06:01" deleted="0" eskerapplication="P2P" global="0" id="U79QT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="AP - GR Resolution Queue__" needvalidation="0" ootofilter="" ootoversion="2" originalProcessID="GRRQ10000001" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" purgebasefield="PurgeDateTime__" purgerecordsdelay="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomTable" upgradable="1" userid="0" version="1" visibility="0">
+  <properties>
+    <dataConditions>
+      <listDataConditions>
+				&lt;dataCondition&gt;
+					&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+					&lt;filter&gt;msnex=*&lt;/filter&gt;
+					&lt;labelKey&gt;_AP disabled&lt;/labelKey&gt;
+					&lt;conditions&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableAccountPayableGlobalSetting__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+					&lt;/conditions&gt;
+				&lt;/dataCondition&gt;
+			</listDataConditions>
+    </dataConditions>
+    <dbIndex>
+      <AUTO_AB89QT400153EA>&lt;Index&gt;&lt;Ref Name="AB89QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AB89QT400153EA>
+      <AUTO_AV79QT400153EA>&lt;Index&gt;&lt;Ref Name="AV79QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AV79QT400153EA>
+      <AUTO_AW79QT400153EA>&lt;Index&gt;&lt;Ref Name="AW79QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AW79QT400153EA>
+    </dbIndex>
+    <lg>
+      <process_da>{
+	"_ContactUserLogin": "Id for modtager af meddelelse",
+	"_ContactUserLogin_report": "Id for modtager af meddelelse",
+	"_ErrorMessage": "Fejlmeddelelse",
+	"_ErrorMessage_report": "Fejlmeddelelse",
+	"_GRResolutionQueue_Status_Failed": "Mislykkedes",
+	"_GRResolutionQueue_Status_Pending": "Under behandling",
+	"_GRResolutionQueue_Status_Resolved": "Behandlet (modtagelse oprettet)",
+	"_GRResolutionQueue_Status_Sent": "Sendt",
+	"_InvoiceMsnEx": "Faktura-id",
+	"_InvoiceMsnEx_report": "Faktura-id",
+	"_InvoiceNumber": "Fakturanummer",
+	"_InvoiceNumber_report": "Fakturanummer",
+	"_InvoiceRuid": "Udvidet id for faktura",
+	"_InvoiceRuid_report": "Udvidet id for faktura",
+	"_LastAttemptDateTime": "Seneste forsøg på afsendelse",
+	"_LastAttemptDateTime_report": "Seneste forsøg på afsendelse",
+	"_OrderNumber": "Ordrenummer",
+	"_OrderNumber_report": "Ordrenummer",
+	"_PurgeDateTime": "Slutdato for arkivering",
+	"_PurgeDateTime_report": "Slutdato for arkivering",
+	"_QueuedDateTime": "Oprettelsesdato",
+	"_QueuedDateTime_report": "Oprettelsesdato",
+	"_Status": "Meddelelsesstatus",
+	"_Status_report": "Meddelelsesstatus",
+	"AP - GR Resolution Queue": "S2P – Synergy Agent-meddelelse om fakturaer sat til side, der afventer modtagelse af varer og serviceydelser",
+	"AP - GR Resolution Queue__": "S2P – Synergy Agent-meddelelse om fakturaer sat til side, der afventer modtagelse af varer og serviceydelser"
+}</process_da>
+      <process_de>{
+	"_ContactUserLogin": "Empfänger der Benachrichtigung (ID)",
+	"_ContactUserLogin_report": "Empfänger der Benachrichtigung (ID)",
+	"_ErrorMessage": "Fehlermeldung",
+	"_ErrorMessage_report": "Fehlermeldung",
+	"_GRResolutionQueue_Status_Failed": "Fehlgeschlagen",
+	"_GRResolutionQueue_Status_Pending": "In Bearbeitung",
+	"_GRResolutionQueue_Status_Resolved": "Bearbeitet (Beleg erstellt)",
+	"_GRResolutionQueue_Status_Sent": "Gesendet",
+	"_InvoiceMsnEx": "Rechnungs-ID",
+	"_InvoiceMsnEx_report": "Rechnungs-ID",
+	"_InvoiceNumber": "Rechnungsnummer",
+	"_InvoiceNumber_report": "Rechnungsnummer",
+	"_InvoiceRuid": "Erweiterte Rechnungs-ID",
+	"_InvoiceRuid_report": "Erweiterte Rechnungs-ID",
+	"_LastAttemptDateTime": "Letzter Sendeversuch",
+	"_LastAttemptDateTime_report": "Letzter Sendeversuch",
+	"_OrderNumber": "Bestellnummer",
+	"_OrderNumber_report": "Bestellnummer",
+	"_PurgeDateTime": "Enddatum der Archivierung",
+	"_PurgeDateTime_report": "Enddatum der Archivierung",
+	"_QueuedDateTime": "Erstellungsdatum",
+	"_QueuedDateTime_report": "Erstellungsdatum",
+	"_Status": "Benachrichtigungsstatus",
+	"_Status_report": "Benachrichtigungsstatus",
+	"AP - GR Resolution Queue": "S2P – Benachrichtigung durch Synergy Agent bezüglich zurückgestellter Rechnungen mit ausstehendem Wareneingangs- und Serviceerbringungsbeleg",
+	"AP - GR Resolution Queue__": "S2P – Benachrichtigung durch Synergy Agent bezüglich zurückgestellter Rechnungen mit ausstehendem Wareneingangs- und Serviceerbringungsbeleg"
+}</process_de>
+      <process_ja>{
+	"_ContactUserLogin": "通知受信者ID",
+	"_ContactUserLogin_report": "通知受信者ID",
+	"_ErrorMessage": "エラーメッセージ",
+	"_ErrorMessage_report": "エラーメッセージ",
+	"_GRResolutionQueue_Status_Failed": "失敗",
+	"_GRResolutionQueue_Status_Pending": "処理中",
+	"_GRResolutionQueue_Status_Resolved": "処理済み（受領書作成済み）",
+	"_GRResolutionQueue_Status_Sent": "送信済み",
+	"_InvoiceMsnEx": "請求書ID",
+	"_InvoiceMsnEx_report": "請求書ID",
+	"_InvoiceNumber": "請求書番号",
+	"_InvoiceNumber_report": "請求書番号",
+	"_InvoiceRuid": "請求書拡張ID",
+	"_InvoiceRuid_report": "請求書拡張ID",
+	"_LastAttemptDateTime": "前回の送信試行",
+	"_LastAttemptDateTime_report": "前回の送信試行",
+	"_OrderNumber": "注文番号",
+	"_OrderNumber_report": "注文番号",
+	"_PurgeDateTime": "アーカイブ終了日",
+	"_PurgeDateTime_report": "アーカイブ終了日",
+	"_QueuedDateTime": "作成日",
+	"_QueuedDateTime_report": "作成日",
+	"_Status": "通知ステータス",
+	"_Status_report": "通知ステータス",
+	"AP - GR Resolution Queue": "S2P - 品物/サービスの受領保留により一時退避中の請求書に関するSynergy Agent通知",
+	"AP - GR Resolution Queue__": "S2P - 品物/サービスの受領保留により一時退避中の請求書に関するSynergy Agent通知"
+}</process_ja>
+      <process_en>{
+	"_ContactUserLogin": "Notification recipient ID",
+	"_ContactUserLogin_report": "Notification recipient ID",
+	"_ErrorMessage": "Error message",
+	"_ErrorMessage_report": "Error message",
+	"_GRResolutionQueue_Status_Failed": "Failed",
+	"_GRResolutionQueue_Status_Pending": "In progress",
+	"_GRResolutionQueue_Status_Resolved": "Handled (Receipt created)",
+	"_GRResolutionQueue_Status_Sent": "Sent",
+	"_InvoiceMsnEx": "Invoice ID",
+	"_InvoiceMsnEx_report": "Invoice ID",
+	"_InvoiceNumber": "Invoice number",
+	"_InvoiceNumber_report": "Invoice number",
+	"_InvoiceRuid": "Invoice extended ID",
+	"_InvoiceRuid_report": "Invoice extended ID",
+	"_LastAttemptDateTime": "Last send attempt",
+	"_LastAttemptDateTime_report": "Last send attempt",
+	"_OrderNumber": "Order number",
+	"_OrderNumber_report": "Order number",
+	"_PurgeDateTime": "Archiving end date",
+	"_PurgeDateTime_report": "Archiving end date",
+	"_QueuedDateTime": "Date created",
+	"_QueuedDateTime_report": "Date created",
+	"_Status": "Notification status",
+	"_Status_report": "Notification status",
+	"AP - GR Resolution Queue": "S2P - Synergy agent notification for invoices set aside pending goods and services receipt",
+	"AP - GR Resolution Queue__": "S2P - Synergy agent notification for invoices set aside pending goods and services receipt"
+}</process_en>
+      <process_es>{
+	"_ContactUserLogin": "ID del destinatario de la notificación",
+	"_ContactUserLogin_report": "ID del destinatario de la notificación",
+	"_ErrorMessage": "Mensaje de error",
+	"_ErrorMessage_report": "Mensaje de error",
+	"_GRResolutionQueue_Status_Failed": "Error",
+	"_GRResolutionQueue_Status_Pending": "En curso",
+	"_GRResolutionQueue_Status_Resolved": "Gestionada (entrada de bienes y servicios creada)",
+	"_GRResolutionQueue_Status_Sent": "Enviada",
+	"_InvoiceMsnEx": "ID de factura",
+	"_InvoiceMsnEx_report": "ID de factura",
+	"_InvoiceNumber": "Número de factura",
+	"_InvoiceNumber_report": "Número de factura",
+	"_InvoiceRuid": "Id. largo de la factura",
+	"_InvoiceRuid_report": "Id. largo de la factura",
+	"_LastAttemptDateTime": "Último intento de envío",
+	"_LastAttemptDateTime_report": "Último intento de envío",
+	"_OrderNumber": "Número de pedido",
+	"_OrderNumber_report": "Número de pedido",
+	"_PurgeDateTime": "Fecha de fin del archivo",
+	"_PurgeDateTime_report": "Fecha de fin del archivo",
+	"_QueuedDateTime": "Fecha de creación",
+	"_QueuedDateTime_report": "Fecha de creación",
+	"_Status": "Estado de la notificación",
+	"_Status_report": "Estado de la notificación",
+	"AP - GR Resolution Queue": "S2P - Notificación de Synergy Agent para las facturas apartadas a la espera de la entrada de bienes y servicios",
+	"AP - GR Resolution Queue__": "S2P - Notificación de Synergy Agent para las facturas apartadas a la espera de la entrada de bienes y servicios"
+}</process_es>
+      <process_fr>{
+	"_ContactUserLogin": "Identifiant du destinataire de la notification",
+	"_ContactUserLogin_report": "Identifiant du destinataire de la notification",
+	"_ErrorMessage": "Message d'erreur",
+	"_ErrorMessage_report": "Message d'erreur",
+	"_GRResolutionQueue_Status_Failed": "En échec",
+	"_GRResolutionQueue_Status_Pending": "En cours",
+	"_GRResolutionQueue_Status_Resolved": "Traitée (Entrée de biens et services créée)\n",
+	"_GRResolutionQueue_Status_Sent": "Envoyée",
+	"_InvoiceMsnEx": "Identifiant de facture",
+	"_InvoiceMsnEx_report": "Identifiant de facture",
+	"_InvoiceNumber": "Numéro de facture",
+	"_InvoiceNumber_report": "Numéro de facture",
+	"_InvoiceRuid": "Identifiant long de la facture",
+	"_InvoiceRuid_report": "Identifiant long de la facture",
+	"_LastAttemptDateTime": "Dernière tentative d'envoi",
+	"_LastAttemptDateTime_report": "Dernière tentative d'envoi",
+	"_OrderNumber": "Numéro de commande",
+	"_OrderNumber_report": "Numéro de commande",
+	"_PurgeDateTime": "Date de fin d'archivage",
+	"_PurgeDateTime_report": "Date de fin d'archivage",
+	"_QueuedDateTime": "Date de création",
+	"_QueuedDateTime_report": "Date de création",
+	"_Status": "État de la notification",
+	"_Status_report": "État de la notification",
+	"AP - GR Resolution Queue": "S2P - Notification de Synergy Agent pour les factures écartées en attente de l'entrée de biens et services ",
+	"AP - GR Resolution Queue__": "S2P - Notification de Synergy Agent pour les factures écartées en attente de l'entrée de biens et services "
+}</process_fr>
+      <process_nl-NL>{
+	"_ContactUserLogin": "Melding ontvanger-ID",
+	"_ContactUserLogin_report": "Melding ontvanger-ID",
+	"_ErrorMessage": "Foutbericht",
+	"_ErrorMessage_report": "Foutbericht",
+	"_GRResolutionQueue_Status_Failed": "Mislukt",
+	"_GRResolutionQueue_Status_Pending": "Lopend",
+	"_GRResolutionQueue_Status_Resolved": "Afgehandeld (Bewijs aangemaakt)",
+	"_GRResolutionQueue_Status_Sent": "Verzonden",
+	"_InvoiceMsnEx": "Factuur-ID",
+	"_InvoiceMsnEx_report": "Factuur-ID",
+	"_InvoiceNumber": "Factuurnummer",
+	"_InvoiceNumber_report": "Factuurnummer",
+	"_InvoiceRuid": "Uitgebreide factuur-ID",
+	"_InvoiceRuid_report": "Uitgebreide factuur-ID",
+	"_LastAttemptDateTime": "Laatste verzendingspoging",
+	"_LastAttemptDateTime_report": "Laatste verzendingspoging",
+	"_OrderNumber": "Bestelnummer",
+	"_OrderNumber_report": "Bestelnummer",
+	"_PurgeDateTime": "Einddatum archivering",
+	"_PurgeDateTime_report": "Einddatum archivering",
+	"_QueuedDateTime": "Datum aangemaakt",
+	"_QueuedDateTime_report": "Datum aangemaakt",
+	"_Status": "Status kennisgeving",
+	"_Status_report": "Status kennisgeving",
+	"AP - GR Resolution Queue": "S2P - Melding Synergy Agent voor facturen opzij gezet in afwachting van ontvangstbewijs goederen en services",
+	"AP - GR Resolution Queue__": "S2P - Melding Synergy Agent voor facturen opzij gezet in afwachting van ontvangstbewijs goederen en services"
+}</process_nl-NL>
+      <process_pl>{
+	"_ContactUserLogin": "Id. odbiorcy powiadomienia",
+	"_ContactUserLogin_report": "Id. odbiorcy powiadomienia",
+	"_ErrorMessage": "Komunikat o błędzie",
+	"_ErrorMessage_report": "Komunikat o błędzie",
+	"_GRResolutionQueue_Status_Failed": "Niepowodzenie",
+	"_GRResolutionQueue_Status_Pending": "W toku",
+	"_GRResolutionQueue_Status_Resolved": "Obsłużone (utworzono przyjęcie)",
+	"_GRResolutionQueue_Status_Sent": "Wysłane",
+	"_InvoiceMsnEx": "Id. faktury",
+	"_InvoiceMsnEx_report": "Id. faktury",
+	"_InvoiceNumber": "Numer faktury",
+	"_InvoiceNumber_report": "Numer faktury",
+	"_InvoiceRuid": "Rozszerzony id. faktury",
+	"_InvoiceRuid_report": "Rozszerzony id. faktury",
+	"_LastAttemptDateTime": "Ostatnia próba wysłania",
+	"_LastAttemptDateTime_report": "Ostatnia próba wysłania",
+	"_OrderNumber": "Numer zamówienia",
+	"_OrderNumber_report": "Numer zamówienia",
+	"_PurgeDateTime": "Data końcowa archiwizacji",
+	"_PurgeDateTime_report": "Data końcowa archiwizacji",
+	"_QueuedDateTime": "Data utworzenia",
+	"_QueuedDateTime_report": "Data utworzenia",
+	"_Status": "Status powiadomienia",
+	"_Status_report": "Status powiadomienia",
+	"AP - GR Resolution Queue": "S2P – powiadomienie agenta Synergy dotyczące faktur odłożonych w oczekiwaniu na przyjęcie materiałów i usług",
+	"AP - GR Resolution Queue__": "S2P – powiadomienie agenta Synergy dotyczące faktur odłożonych w oczekiwaniu na przyjęcie materiałów i usług"
+}</process_pl>
+      <process_it>{
+	"_ContactUserLogin": "ID del destinatario della notifica",
+	"_ContactUserLogin_report": "ID del destinatario della notifica",
+	"_ErrorMessage": "Messaggio di errore",
+	"_ErrorMessage_report": "Messaggio di errore",
+	"_GRResolutionQueue_Status_Failed": "Non riuscita",
+	"_GRResolutionQueue_Status_Pending": "In corso",
+	"_GRResolutionQueue_Status_Resolved": "Gestita (Entrata merci e servizi creata)",
+	"_GRResolutionQueue_Status_Sent": "Inviata",
+	"_InvoiceMsnEx": "ID fattura",
+	"_InvoiceMsnEx_report": "ID fattura",
+	"_InvoiceNumber": "Numero fattura",
+	"_InvoiceNumber_report": "Numero fattura",
+	"_InvoiceRuid": "ID esteso fattura",
+	"_InvoiceRuid_report": "ID esteso fattura",
+	"_LastAttemptDateTime": "Ultimo tentativo di invio",
+	"_LastAttemptDateTime_report": "Ultimo tentativo di invio",
+	"_OrderNumber": "Numero ordine",
+	"_OrderNumber_report": "Numero ordine",
+	"_PurgeDateTime": "Data fine archiviazione",
+	"_PurgeDateTime_report": "Data fine archiviazione",
+	"_QueuedDateTime": "Data creazione",
+	"_QueuedDateTime_report": "Data creazione",
+	"_Status": "Stato notifica",
+	"_Status_report": "Stato notifica",
+	"AP - GR Resolution Queue": "S2P - Notifica Synergy Agent per fatture parcheggiate in attesa dell'entrata merci e servizi",
+	"AP - GR Resolution Queue__": "S2P - Notifica Synergy Agent per fatture parcheggiate in attesa dell'entrata merci e servizi"
+}</process_it>
+      <process_sk>{
+	"_ContactUserLogin": "ID príjemcu oznámenia",
+	"_ContactUserLogin_report": "ID príjemcu oznámenia",
+	"_ErrorMessage": "Chybové hlásenie",
+	"_ErrorMessage_report": "Chybové hlásenie",
+	"_GRResolutionQueue_Status_Failed": "Neúspešné",
+	"_GRResolutionQueue_Status_Pending": "Prebieha",
+	"_GRResolutionQueue_Status_Resolved": "Vyriešené (vytvorený príjem tovaru a služieb)",
+	"_GRResolutionQueue_Status_Sent": "Zaslané",
+	"_InvoiceMsnEx": "ID faktúry",
+	"_InvoiceMsnEx_report": "ID faktúry",
+	"_InvoiceNumber": "Faktúra č.",
+	"_InvoiceNumber_report": "Faktúra č.",
+	"_InvoiceRuid": "Rozšírené ID faktúry",
+	"_InvoiceRuid_report": "Rozšírené ID faktúry",
+	"_LastAttemptDateTime": "Posledný pokus o odoslanie",
+	"_LastAttemptDateTime_report": "Posledný pokus o odoslanie",
+	"_OrderNumber": "Číslo objednávky",
+	"_OrderNumber_report": "Číslo objednávky",
+	"_PurgeDateTime": "Dátum ukončenia archivácie",
+	"_PurgeDateTime_report": "Dátum ukončenia archivácie",
+	"_QueuedDateTime": "Dátum vytvorenia",
+	"_QueuedDateTime_report": "Dátum vytvorenia",
+	"_Status": "Stav oznámenia",
+	"_Status_report": "Stav oznámenia",
+	"AP - GR Resolution Queue": "S2P – Oznámenie agenta Synergy pre faktúry odložené v očakávaní príjmu tovaru a služieb",
+	"AP - GR Resolution Queue__": "S2P – Oznámenie agenta Synergy pre faktúry odložené v očakávaní príjmu tovaru a služieb"
+}</process_sk>
+      <process_zh-CN>{
+	"_ContactUserLogin": "通知收件人 ID",
+	"_ContactUserLogin_report": "通知收件人 ID",
+	"_ErrorMessage": "错误消息",
+	"_ErrorMessage_report": "错误消息",
+	"_GRResolutionQueue_Status_Failed": "失败",
+	"_GRResolutionQueue_Status_Pending": "进行中",
+	"_GRResolutionQueue_Status_Resolved": "已处理（创建了接收单）",
+	"_GRResolutionQueue_Status_Sent": "已发送",
+	"_InvoiceMsnEx": "账单发票 ID",
+	"_InvoiceMsnEx_report": "账单发票 ID",
+	"_InvoiceNumber": "发票号",
+	"_InvoiceNumber_report": "发票号",
+	"_InvoiceRuid": "发票扩展ID",
+	"_InvoiceRuid_report": "发票扩展ID",
+	"_LastAttemptDateTime": "最后一次发送尝试",
+	"_LastAttemptDateTime_report": "最后一次发送尝试",
+	"_OrderNumber": "订单号",
+	"_OrderNumber_report": "订单号",
+	"_PurgeDateTime": "存档结束日",
+	"_PurgeDateTime_report": "存档结束日",
+	"_QueuedDateTime": "日期已创建",
+	"_QueuedDateTime_report": "日期已创建",
+	"_Status": "通知状态",
+	"_Status_report": "通知状态",
+	"AP - GR Resolution Queue": "寻源到付款 - 搁置的账单发票（待接收）的 Synergy Agent 通知",
+	"AP - GR Resolution Queue__": "寻源到付款 - 搁置的账单发票（待接收）的 Synergy Agent 通知"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"_ContactUserLogin": "ID do destinatário da notificação",
+	"_ContactUserLogin_report": "ID do destinatário da notificação",
+	"_ErrorMessage": "Mensagem de erro",
+	"_ErrorMessage_report": "Mensagem de erro",
+	"_GRResolutionQueue_Status_Failed": "Falhou",
+	"_GRResolutionQueue_Status_Pending": "Em progresso",
+	"_GRResolutionQueue_Status_Resolved": "Resolvida (recebimento criado)",
+	"_GRResolutionQueue_Status_Sent": "Enviada",
+	"_InvoiceMsnEx": "ID da fatura",
+	"_InvoiceMsnEx_report": "ID da fatura",
+	"_InvoiceNumber": "Número da fatura",
+	"_InvoiceNumber_report": "Número da fatura",
+	"_InvoiceRuid": "ID estendido da fatura",
+	"_InvoiceRuid_report": "ID estendido da fatura",
+	"_LastAttemptDateTime": "Última tentativa de envio",
+	"_LastAttemptDateTime_report": "Última tentativa de envio",
+	"_OrderNumber": "Número de pedido",
+	"_OrderNumber_report": "Número de pedido",
+	"_PurgeDateTime": "Data final do arquivo",
+	"_PurgeDateTime_report": "Data final do arquivo",
+	"_QueuedDateTime": "Data de criação",
+	"_QueuedDateTime_report": "Data de criação",
+	"_Status": "Status da notificação",
+	"_Status_report": "Status da notificação",
+	"AP - GR Resolution Queue": "S2P – Notificação do Synergy Agent sobre faturas reservadas aguardando o recebimento de bens e serviços",
+	"AP - GR Resolution Queue__": "S2P – Notificação do Synergy Agent sobre faturas reservadas aguardando o recebimento de bens e serviços"
+}</process_pt-BR>
+    </lg>
+    <process>
+      <flowtype>processing</flowtype>
+      <EnableNegativeNumbersBetweenBrackets>true</EnableNegativeNumbersBetweenBrackets>
+      <homepagelabel>AP - GR Resolution Queue</homepagelabel>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <enablerounddecimal>true</enablerounddecimal>
+      <OverrideAllowedAttachmentExtensions>*</OverrideAllowedAttachmentExtensions>
+      <UseActionNameWithScriptApproval>true</UseActionNameWithScriptApproval>
+      <AllowUploadAttachment>0</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+      <RemovePointWhenCastingIntToString>true</RemovePointWhenCastingIntToString>
+      <shouldRollbackManualRecordEdits>true</shouldRollbackManualRecordEdits>
+      <shouldShowManualEditsWarning>false</shouldShowManualEditsWarning>
+      <UseCultureFormat>true</UseCultureFormat>
+      <TransportName>CustomTable</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+    </process>
+    <ui>
+      <customscriptIncludedScripts>[LIB_P2P_CUSTOMIZATION_TABLES_CLIENT]</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Sys/Sys_Helpers</customscriptIncludedScripts>
+      <CustomScript>"use strict";
+var CustomScript;
+(function (CustomScript) {
+    function Start() {
+        Sys.Helpers.TryCallFunction("Lib.P2P.Customization.Tables.Client.Common.OnHTMLScriptEnd");
+    }
+    Start();
+})(CustomScript || (CustomScript = {}));
+//# sourceMappingURL=customscript.js.map</CustomScript>
+      <restorationPanel>DataPanel</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 33,
+	"*": {
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"splitterType": "simple-v",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 2,
+					"options": {
+						"hidePanelsMenu": false,
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 3,
+					"options": {
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 4,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-center": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 5,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"width": "100%"
+										},
+										"hidden": false
+									},
+									"*": {
+										"form-content-center-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 6,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"DataPanel": {
+													"type": "PanelData",
+													"data": [],
+													"stamp": 7,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"label": "_Document data",
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": true,
+														"hideTitleBar": true,
+														"backgroundcolor": "default",
+														"labelsAlignment": "right",
+														"hideTitle": true,
+														"leftImageURL": "",
+														"version": 0
+													},
+													"*": {
+														"FieldsManager": {
+															"type": "FieldsManager",
+															"data": [],
+															"stamp": 8,
+															"options": {
+																"version": 0,
+																"controlsAssociation": {
+																	"InvoiceMsnEx__": "LabelInvoiceMsnEx__",
+																	"LabelInvoiceMsnEx__": "InvoiceMsnEx__",
+																	"InvoiceRuid__": "LabelInvoiceRuid__",
+																	"LabelInvoiceRuid__": "InvoiceRuid__",
+																	"InvoiceNumber__": "LabelInvoiceNumber__",
+																	"LabelInvoiceNumber__": "InvoiceNumber__",
+																	"OrderNumber__": "LabelOrderNumber__",
+																	"LabelOrderNumber__": "OrderNumber__",
+																	"ContactUserLogin__": "LabelContactUserLogin__",
+																	"LabelContactUserLogin__": "ContactUserLogin__",
+																	"Status__": "LabelStatus__",
+																	"LabelStatus__": "Status__",
+																	"QueuedDateTime__": "LabelQueuedDateTime__",
+																	"LabelQueuedDateTime__": "QueuedDateTime__",
+																	"PurgeDateTime__": "LabelPurgeDateTime__",
+																	"LabelPurgeDateTime__": "PurgeDateTime__",
+																	"LastAttemptDateTime__": "LabelLastAttemptDateTime__",
+																	"LabelLastAttemptDateTime__": "LastAttemptDateTime__",
+																	"ErrorMessage__": "LabelErrorMessage__",
+																	"LabelErrorMessage__": "ErrorMessage__"
+																}
+															},
+															"*": {
+																"Grid": {
+																	"type": "GridLayout",
+																	"data": [
+																		"fields"
+																	],
+																	"stamp": 9,
+																	"options": {
+																		"version": 0,
+																		"lines": 10,
+																		"columns": 2,
+																		"ctrlsPos": {
+																			"LabelInvoiceMsnEx__": {
+																				"line": 1,
+																				"column": 1
+																			},
+																			"InvoiceMsnEx__": {
+																				"line": 1,
+																				"column": 2
+																			},
+																			"LabelInvoiceRuid__": {
+																				"line": 2,
+																				"column": 1
+																			},
+																			"InvoiceRuid__": {
+																				"line": 2,
+																				"column": 2
+																			},
+																			"LabelInvoiceNumber__": {
+																				"line": 3,
+																				"column": 1
+																			},
+																			"InvoiceNumber__": {
+																				"line": 3,
+																				"column": 2
+																			},
+																			"LabelOrderNumber__": {
+																				"line": 4,
+																				"column": 1
+																			},
+																			"OrderNumber__": {
+																				"line": 4,
+																				"column": 2
+																			},
+																			"LabelContactUserLogin__": {
+																				"line": 5,
+																				"column": 1
+																			},
+																			"ContactUserLogin__": {
+																				"line": 5,
+																				"column": 2
+																			},
+																			"LabelStatus__": {
+																				"line": 6,
+																				"column": 1
+																			},
+																			"Status__": {
+																				"line": 6,
+																				"column": 2
+																			},
+																			"LabelQueuedDateTime__": {
+																				"line": 7,
+																				"column": 1
+																			},
+																			"QueuedDateTime__": {
+																				"line": 7,
+																				"column": 2
+																			},
+																			"LabelPurgeDateTime__": {
+																				"line": 8,
+																				"column": 1
+																			},
+																			"PurgeDateTime__": {
+																				"line": 8,
+																				"column": 2
+																			},
+																			"LabelLastAttemptDateTime__": {
+																				"line": 9,
+																				"column": 1
+																			},
+																			"LastAttemptDateTime__": {
+																				"line": 9,
+																				"column": 2
+																			},
+																			"LabelErrorMessage__": {
+																				"line": 10,
+																				"column": 1
+																			},
+																			"ErrorMessage__": {
+																				"line": 10,
+																				"column": 2
+																			}
+																		},
+																		"colspans": [
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[]
+																		]
+																	},
+																	"*": {
+																		"LabelInvoiceMsnEx__": {
+																			"type": "Label",
+																			"data": [
+																				"InvoiceMsnEx__"
+																			],
+																			"stamp": 11,
+																			"options": {
+																				"label": "_InvoiceMsnEx",
+																				"version": 0
+																			}
+																		},
+																		"InvoiceMsnEx__": {
+																			"type": "ShortText",
+																			"data": [
+																				"InvoiceMsnEx__"
+																			],
+																			"stamp": 10,
+																			"options": {
+																				"label": "_InvoiceMsnEx",
+																				"activable": true,
+																				"width": "500",
+																				"length": 100,
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"browsable": true,
+																				"version": 0
+																			}
+																		},
+																		"LabelInvoiceRuid__": {
+																			"type": "Label",
+																			"data": [
+																				"InvoiceRuid__"
+																			],
+																			"stamp": 13,
+																			"options": {
+																				"label": "_InvoiceRuid",
+																				"version": 0
+																			}
+																		},
+																		"InvoiceRuid__": {
+																			"type": "ShortText",
+																			"data": [
+																				"InvoiceRuid__"
+																			],
+																			"stamp": 12,
+																			"options": {
+																				"label": "_InvoiceRuid",
+																				"activable": true,
+																				"width": "500",
+																				"length": 100,
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"browsable": true,
+																				"version": 0
+																			}
+																		},
+																		"LabelInvoiceNumber__": {
+																			"type": "Label",
+																			"data": [
+																				"InvoiceNumber__"
+																			],
+																			"stamp": 15,
+																			"options": {
+																				"label": "_InvoiceNumber",
+																				"version": 0
+																			}
+																		},
+																		"InvoiceNumber__": {
+																			"type": "ShortText",
+																			"data": [
+																				"InvoiceNumber__"
+																			],
+																			"stamp": 14,
+																			"options": {
+																				"label": "_InvoiceNumber",
+																				"activable": true,
+																				"width": "500",
+																				"length": 100,
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"browsable": true,
+																				"version": 0
+																			}
+																		},
+																		"LabelOrderNumber__": {
+																			"type": "Label",
+																			"data": [
+																				"OrderNumber__"
+																			],
+																			"stamp": 17,
+																			"options": {
+																				"label": "_OrderNumber",
+																				"version": 0
+																			}
+																		},
+																		"OrderNumber__": {
+																			"type": "ShortText",
+																			"data": [
+																				"OrderNumber__"
+																			],
+																			"stamp": 16,
+																			"options": {
+																				"label": "_OrderNumber",
+																				"activable": true,
+																				"width": "500",
+																				"length": 50,
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"browsable": true,
+																				"version": 0
+																			}
+																		},
+																		"LabelContactUserLogin__": {
+																			"type": "Label",
+																			"data": [
+																				"ContactUserLogin__"
+																			],
+																			"stamp": 19,
+																			"options": {
+																				"label": "_ContactUserLogin",
+																				"version": 0
+																			}
+																		},
+																		"ContactUserLogin__": {
+																			"type": "ShortText",
+																			"data": [
+																				"ContactUserLogin__"
+																			],
+																			"stamp": 18,
+																			"options": {
+																				"label": "_ContactUserLogin",
+																				"activable": true,
+																				"width": "500",
+																				"length": 250,
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"browsable": true,
+																				"version": 0
+																			}
+																		},
+																		"LabelStatus__": {
+																			"type": "Label",
+																			"data": [
+																				"Status__"
+																			],
+																			"stamp": 21,
+																			"options": {
+																				"label": "_Status",
+																				"version": 0
+																			}
+																		},
+																		"Status__": {
+																			"type": "ShortText",
+																			"data": [
+																				"Status__"
+																			],
+																			"stamp": 20,
+																			"options": {
+																				"label": "_Status",
+																				"activable": true,
+																				"width": "500",
+																				"length": 50,
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"browsable": true,
+																				"version": 0
+																			}
+																		},
+																		"LabelQueuedDateTime__": {
+																			"type": "Label",
+																			"data": [
+																				"QueuedDateTime__"
+																			],
+																			"stamp": 23,
+																			"options": {
+																				"label": "_QueuedDateTime",
+																				"version": 0
+																			}
+																		},
+																		"QueuedDateTime__": {
+																			"type": "DateTime",
+																			"data": [
+																				"QueuedDateTime__"
+																			],
+																			"stamp": 22,
+																			"options": {
+																				"label": "_QueuedDateTime",
+																				"activable": true,
+																				"width": "500",
+																				"browsable": true,
+																				"version": 0
+																			}
+																		},
+																		"LabelPurgeDateTime__": {
+																			"type": "Label",
+																			"data": [
+																				"PurgeDateTime__"
+																			],
+																			"stamp": 25,
+																			"options": {
+																				"label": "_PurgeDateTime",
+																				"version": 0
+																			}
+																		},
+																		"PurgeDateTime__": {
+																			"type": "DateTime",
+																			"data": [
+																				"PurgeDateTime__"
+																			],
+																			"stamp": 24,
+																			"options": {
+																				"label": "_PurgeDateTime",
+																				"activable": true,
+																				"width": "500",
+																				"browsable": true,
+																				"version": 0
+																			}
+																		},
+																		"LabelLastAttemptDateTime__": {
+																			"type": "Label",
+																			"data": [
+																				"LastAttemptDateTime__"
+																			],
+																			"stamp": 27,
+																			"options": {
+																				"label": "_LastAttemptDateTime",
+																				"version": 0
+																			}
+																		},
+																		"LastAttemptDateTime__": {
+																			"type": "DateTime",
+																			"data": [
+																				"LastAttemptDateTime__"
+																			],
+																			"stamp": 26,
+																			"options": {
+																				"label": "_LastAttemptDateTime",
+																				"activable": true,
+																				"width": "500",
+																				"browsable": true,
+																				"version": 0
+																			}
+																		},
+																		"LabelErrorMessage__": {
+																			"type": "Label",
+																			"data": [
+																				"ErrorMessage__"
+																			],
+																			"stamp": 29,
+																			"options": {
+																				"label": "_ErrorMessage",
+																				"version": 0
+																			}
+																		},
+																		"ErrorMessage__": {
+																			"type": "LongText",
+																			"data": [
+																				"ErrorMessage__"
+																			],
+																			"stamp": 28,
+																			"options": {
+																				"label": "_ErrorMessage",
+																				"activable": true,
+																				"width": "500",
+																				"length": 5000,
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"browsable": true,
+																				"version": 0
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 30,
+					"options": {
+						"splitterType": "simple-h",
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 31,
+							"options": {
+								"label": "_Save",
+								"action": "savequit",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 32,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Delete": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 33,
+							"options": {
+								"label": "_Delete",
+								"action": "delete",
+								"submit": true,
+								"disabled": true,
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <field deleted="0" format="" guid="GRRQ20000006" id="A89QT400153E" label="_ContactUserLogin_report" length="250" name="ContactUserLogin__" originalProcessID="GRRQ10000001" precision="0" processid="U79QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AA89QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ContactUserLogin__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:01</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ContactUserLogin_report</Label>
+        <Alias>AA89QT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="GRRQ20000018" id="E89QT400153E" label="_ErrorMessage_report" length="5000" name="ErrorMessage__" originalProcessID="GRRQ10000001" precision="0" processid="U79QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AE89QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ErrorMessage__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:01</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ErrorMessage_report</Label>
+        <Alias>AE89QT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="GRRQ20000001" id="W79QT400153E" label="_InvoiceMsnEx_report" length="100" name="InvoiceMsnEx__" originalProcessID="GRRQ10000001" precision="0" processid="U79QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AW79QT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/InvoiceMsnEx__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:01</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_InvoiceMsnEx_report</Label>
+        <Alias>AW79QT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>true</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="GRRQ20000022" id="Y79QT400153E" label="_InvoiceNumber_report" length="100" name="InvoiceNumber__" originalProcessID="GRRQ10000001" precision="0" processid="U79QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AY79QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/InvoiceNumber__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:01</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_InvoiceNumber_report</Label>
+        <Alias>AY79QT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="GRRQ20000002" id="X79QT400153E" label="_InvoiceRuid_report" length="100" name="InvoiceRuid__" originalProcessID="GRRQ10000001" precision="0" processid="U79QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AX79QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/InvoiceRuid__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:01</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_InvoiceRuid_report</Label>
+        <Alias>AX79QT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="GRRQ20000013" id="D89QT400153E" label="_LastAttemptDateTime_report" length="0" name="LastAttemptDateTime__" originalProcessID="GRRQ10000001" precision="0" processid="U79QT400153E" submitable="1" type="DATETIME">
+    <properties>
+      <db>
+        <alias>AD89QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/LastAttemptDateTime__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:01</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_LastAttemptDateTime_report</Label>
+        <Alias>AD89QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Date</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="GRRQ20000005" id="Z79QT400153E" label="_OrderNumber_report" length="50" name="OrderNumber__" originalProcessID="GRRQ10000001" precision="0" processid="U79QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AZ79QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/OrderNumber__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:01</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_OrderNumber_report</Label>
+        <Alias>AZ79QT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="GRRQ20000021" id="V79QT400153E" label="_PurgeDateTime_report" length="0" name="PurgeDateTime__" originalProcessID="GRRQ10000001" precision="0" processid="U79QT400153E" submitable="1" type="DATETIME">
+    <properties>
+      <db>
+        <alias>AV79QT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/PurgeDateTime__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:00</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_PurgeDateTime_report</Label>
+        <Alias>AV79QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Date</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="GRRQ20000012" id="C89QT400153E" label="_QueuedDateTime_report" length="0" name="QueuedDateTime__" originalProcessID="GRRQ10000001" precision="0" processid="U79QT400153E" submitable="1" type="DATETIME">
+    <properties>
+      <db>
+        <alias>AC89QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/QueuedDateTime__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:01</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_QueuedDateTime_report</Label>
+        <Alias>AC89QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Date</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="GRRQ20000010" id="B89QT400153E" label="_Status_report" length="50" name="Status__" originalProcessID="GRRQ10000001" precision="0" processid="U79QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AB89QT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Status__</fullname>
+        <defaultvalue>Pending</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:01</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Type>webaccess.Process.Columns.WithPossibleValues</Type>
+        <Label>_Status_report</Label>
+        <Alias>AB89QT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <TableName>
+        </TableName>
+        <DisplayedColumns>
+        </DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <DataSourceOrigin>Standalone</DataSourceOrigin>
+        <possibleKeys>Pending
+Sent
+InConversation
+Resolved
+Failed
+Expired</possibleKeys>
+        <SavedColumn>
+        </SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <possibleValues>_GRResolutionQueue_Status_Pending
+_GRResolutionQueue_Status_Sent
+_GRResolutionQueue_Status_InConversation
+_GRResolutionQueue_Status_Resolved
+_GRResolutionQueue_Status_Failed
+_GRResolutionQueue_Status_Expired</possibleValues>
+        <ProcessName>
+        </ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <lazyTranslatable>
+        </lazyTranslatable>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <type id="KOLHG0000M4O" name="CT">
+  </type>
+</process>

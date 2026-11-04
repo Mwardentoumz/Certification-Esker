@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<viewType xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<reportpreselectedonlydefined>true</reportpreselectedonlydefined>
+	<headers>
+		<header name="ContractStatus__" fromflexible="true">
+			<custom-styles>
+				<custom-style hasFlexibleAttributes="true" style-name="success border" ldapfilter="(ContractStatus__[=](Active))"/>
+				<custom-style hasFlexibleAttributes="true" style-name="info border" ldapfilter="(ContractStatus__[=](ApprovedPendingActivation,ApprovedPendingSignature,ApprovedPendingEnvelopeDesign))"/>
+				<custom-style hasFlexibleAttributes="true" style-name="warning border" ldapfilter="(ContractStatus__[=](Draft,ToValidate))"/>
+				<custom-style hasFlexibleAttributes="true" style-name="urgent border" ldapfilter="(ContractStatus__[=](Rejected,Revoked,Deleted,SignatureRejected))"/>
+				<custom-style hasFlexibleAttributes="true" style-name="grayed border" ldapfilter="(ContractStatus__[=](Deprecated,Expired))"/>
+			</custom-styles>
+		</header>
+	</headers>
+</viewType>

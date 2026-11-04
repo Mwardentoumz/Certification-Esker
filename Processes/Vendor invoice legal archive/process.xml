@@ -1,0 +1,981 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:07:31" deleted="0" eskerapplication="P2P" global="0" id="V4BQT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="Vendor invoice legal archive" needvalidation="0" ootofilter="" ootoversion="1" originalProcessID="PHQG5E7F7" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="0" version="1" visibility="0">
+  <properties>
+    <dataConditions>
+      <listDataConditions>
+				&lt;dataCondition&gt;
+					&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+					&lt;filter&gt;msnex=*&lt;/filter&gt;
+					&lt;labelKey&gt;_AP disabled&lt;/labelKey&gt;
+					&lt;conditions&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableAccountPayableGlobalSetting__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+					&lt;/conditions&gt;
+				&lt;/dataCondition&gt;
+			</listDataConditions>
+    </dataConditions>
+    <dbIndex>
+      <AUTO_AW4BQT400153EA>&lt;Index&gt;&lt;Ref Name="AW4BQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AW4BQT400153EA>
+      <AUTO_AY4BQT400153EA>&lt;Index&gt;&lt;Ref Name="AY4BQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AY4BQT400153EA>
+    </dbIndex>
+    <gdr>
+      <FinalizationScriptAllowRetry>
+      </FinalizationScriptAllowRetry>
+      <FinalizationScript>
+      </FinalizationScript>
+      <ValidationScriptAllowRetry>true</ValidationScriptAllowRetry>
+      <validationscriptIncludedScripts>Lib_Parameters_P2P_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>[Lib_Custom_Parameters]</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>[Lib_P2P_Custom_Parameters]</validationscriptIncludedScripts>
+      <ValidationScript>"use strict";
+function actionTryFiscalArchiving() {
+    Variable.SetValueAsString("ArchiveProvider", Data.GetValue("ArchiveProvider"));
+    if (Sys.Parameters.GetInstance("AP").GetParameter("isArkhineoConf")) {
+        //Do not execute old fiscal archiving action
+        Data.SetValue("ArchiveProvider", "");
+        Data.SetValue("ArchiveProviderSolution", "");
+        Variable.SetValueAsString("ArchiveProvider", "");
+        const vault = {
+            user: Sys.Parameters.GetInstance("AP").GetParameter("userArkhineo"),
+            password: Sys.Parameters.GetInstance("AP").GetParameter("passwordArkhineo"),
+            cfeId: Sys.Parameters.GetInstance("AP").GetParameter("cfeId"),
+            sectionId: Sys.Parameters.GetInstance("AP").GetParameter("sectionId")
+        };
+        const ArkhineoMetaData = {
+            applicative: Variable.GetValueAsString("ArkhineoMetaDataApplicative") ? JSON.parse(Variable.GetValueAsString("ArkhineoMetaDataApplicative")) : null,
+            descriptive: Variable.GetValueAsString("ArkhineoMetaDataDescriptive") ? JSON.parse(Variable.GetValueAsString("ArkhineoMetaDataDescriptive")) : null
+        };
+        const httpResult = Attach.ArchiveToArkhineo(0, vault, ArkhineoMetaData);
+        const lastStatus = httpResult.status;
+        const lastMessage = httpResult.lastMessage;
+        Data.SetValue("ArchivingStatus__", lastMessage);
+        if (lastStatus !== 201) {
+            Data.SetValue("ArchiveUniqueIdentifier__", "");
+            Data.SetValue("LinkToArchive__", "");
+            const errorMessage = `Arkhineo WS call status: ${lastStatus} and error: ${lastMessage}`;
+            //ValidationScriptAllowRetry = true
+            Data.SetValue("State", 200);
+            Data.SetValue("StatusCode", 200);
+            Data.SetValue("ShortStatusTranslated", lastMessage);
+            Data.SetValue("ShortStatus", lastMessage);
+            Data.SetValue("LongStatus", errorMessage);
+            Data.SetValue("CompletionDateTime", new Date());
+        }
+        else {
+            const xmlContent = httpResult.responseData;
+            const dom = Process.CreateXMLDOMElement(xmlContent);
+            const arkhineoIdentifier = dom.getAttribute("archive-id");
+            Data.SetValue("ArchiveUniqueIdentifier__", arkhineoIdentifier);
+            Data.SetValue("LinkToArchive__", "https://pwd.arkhineo.fr/cfes/archives/" + arkhineoIdentifier);
+        }
+    }
+    else {
+        Log.Info("No custom arkhineo vault: Old method.");
+    }
+}
+/** ******** **/
+/** RUN PART **/
+/** ******** **/
+function executeRequestedAction() {
+    if (!Data.GetValue("ArchiveUniqueIdentifier__")) {
+        const currentName = Process.AutoValidatingOnExpiration() ? "onexpiration" : Data.GetActionName();
+        const currentAction = Data.GetActionType();
+        Log.Info(`Action: ${currentAction ? currentAction : "&lt;empty&gt;"}, Name: ${currentName ? currentName : "&lt;empty&gt;"}, Device: ${Data.GetActionDevice()}`);
+        /* Action map to specify what to do according to the Action Name. The validation, if needed, will always be executed synchronously.
+            The action in itself can be executed asynchronously.
+        key: action name given by Data.GetActionName(). The empty string key means that no user action was ever performed on this form (submission)
+        value : object
+        - execute: function to call
+        - requireValidation: set to true if you want the action to validate data
+        - isAsync: set to true if the action should be executing asynchronously
+        - leaveForm (only if isAsync is false): set to true if the form should be closed at the end of the action
+        - keepScheduledActionParameters : set to true if you want to keep the values of the fields ScheduledActionDate and ScheduledAction after the validation action.
+        */
+        const approveActionMap = {};
+        approveActionMap[""] = { "execute": actionTryFiscalArchiving, "requireValidation": false, "leaveForm": false };
+        let action = approveActionMap[currentName.toLowerCase()];
+        if (!action) {
+            action = approveActionMap[""];
+        }
+        // Execute action now
+        action.execute();
+        Process.LeaveForm();
+    }
+}
+function run() {
+    Data.SetValue("IndexingBehavior", 0); //Do not index attachment for Full Text Search in archive
+    executeRequestedAction();
+}
+run();
+//# sourceMappingURL=validationscript.js.map</ValidationScript>
+      <AllowTagCoverPages>true</AllowTagCoverPages>
+      <AllowTagNewDocuments>true</AllowTagNewDocuments>
+      <AllowTagAttachments>true</AllowTagAttachments>
+      <ExtractionScriptAllowRetry>
+      </ExtractionScriptAllowRetry>
+      <ExtractionScript>
+      </ExtractionScript>
+      <AllowRemovePages>true</AllowRemovePages>
+      <AllowSwapPages>true</AllowSwapPages>
+      <PostProcessingScriptAllowRetry>
+      </PostProcessingScriptAllowRetry>
+      <PostProcessingScript>
+      </PostProcessingScript>
+    </gdr>
+    <lg>
+      <process_da>{
+	"_ArchiveUniqueIdentifier": "Arkiv-id",
+	"_ArchiveUniqueIdentifier_report": "Arkiv-id",
+	"_ArchivingStatus": "Arkiveringsstatus",
+	"_ArchivingStatus_report": "Arkiveringsstatus",
+	"_ArkhineoArchivingInfo": "Arkiveringsoplysninger i Arkhinéo",
+	"_LinkToArchive": "Link til arkiv",
+	"_LinkToArchive_report": "Link til arkiv",
+	"Vendor invoice legal archive": "Leverandørfakturaer – fakturaarkivering"
+}</process_da>
+      <process_DE>{
+	"_ArchiveUniqueIdentifier": "Archiv-ID",
+	"_ArchivingStatus": "Archivierungsstatus",
+	"_ArkhineoArchivingInfo": "Arkhinéo-Archivierungsinformationen",
+	"_LinkToArchive": "Link zum Archiv",
+	"Vendor invoice legal archive": "Lieferantenrechnung - Steuerkonformes Archiv",
+	"_ArchiveUniqueIdentifier_report": "Archiv-ID",
+	"_ArchivingStatus_report": "Archivierungsstatus",
+	"_LinkToArchive_report": "Link zum Archiv"
+}</process_DE>
+      <process_JA>{
+	"_ArchiveUniqueIdentifier": "アーカイブID",
+	"_ArchiveUniqueIdentifier_report": "アーカイブID",
+	"_ArchivingStatus": "アーカイブステータス",
+	"_ArchivingStatus_report": "アーカイブステータス",
+	"_ArkhineoArchivingInfo": "Arkhinéoアーカイブ情報",
+	"_LinkToArchive": "アーカイブへのリンク",
+	"_LinkToArchive_report": "アーカイブへのリンク",
+	"Vendor invoice legal archive": "仕入先請求書 - 財務アーカイブ"
+}</process_JA>
+      <process_en>{
+	"_ArchiveUniqueIdentifier": "Archive ID",
+	"_ArchiveUniqueIdentifier_report": "Archive ID",
+	"_ArchivingStatus": "Archiving status",
+	"_ArchivingStatus_report": "Archiving status",
+	"_ArkhineoArchivingInfo": "Arkhinéo Archiving Information",
+	"_LinkToArchive": "Link to archive",
+	"_LinkToArchive_report": "Link to archive",
+	"Vendor invoice legal archive": "Supplier Invoice - Fiscal Archive"
+}</process_en>
+      <process_ES>{
+	"_ArchiveUniqueIdentifier": "ID de archivo",
+	"_ArchiveUniqueIdentifier_report": "ID de archivo",
+	"_ArchivingStatus": "Estado de archivado",
+	"_ArchivingStatus_report": "Estado de archivado",
+	"_ArkhineoArchivingInfo": "Informaciones de archivado Arkhinéo",
+	"_LinkToArchive": "Enlace al archivo",
+	"_LinkToArchive_report": "Enlace al archivo",
+	"Vendor invoice legal archive": "Factura de proveedor - Archivo fiscal"
+}</process_ES>
+      <process_FR>{
+	"_ArchiveUniqueIdentifier": "ID de l'archive",
+	"_ArchivingStatus": "État d'archivage",
+	"_ArkhineoArchivingInfo": "Informations d'archivage Arkhinéo",
+	"_LinkToArchive": "Lien vers l'archive",
+	"Vendor invoice legal archive": "Facture fournisseur - Archive fiscale",
+	"_ArchiveUniqueIdentifier_report": "ID de l'archive",
+	"_ArchivingStatus_report": "État d'archivage",
+	"_LinkToArchive_report": "Lien vers l'archive"
+}</process_FR>
+      <process_nl-NL>{
+	"_ArchiveUniqueIdentifier": "Archief-ID",
+	"_ArchiveUniqueIdentifier_report": "Archief-ID",
+	"_ArchivingStatus": "Archiveringsstatus",
+	"_ArchivingStatus_report": "Archiveringsstatus",
+	"_ArkhineoArchivingInfo": "Informatie archivering Arkhinéo",
+	"_LinkToArchive": "Koppeling naar archief",
+	"_LinkToArchive_report": "Koppeling naar archief",
+	"Vendor invoice legal archive": "Leveranciersfactuur - Fiscaal archief"
+}</process_nl-NL>
+      <process_pl>{
+	"_ArchiveUniqueIdentifier": "Id. archiwum",
+	"_ArchiveUniqueIdentifier_report": "Id. archiwum",
+	"_ArchivingStatus": "Status archiwizacji",
+	"_ArchivingStatus_report": "Status archiwizacji",
+	"_ArkhineoArchivingInfo": "Informacje o archiwizacji Arkhinéo",
+	"_LinkToArchive": "Link do archiwum",
+	"_LinkToArchive_report": "Link do archiwum",
+	"Vendor invoice legal archive": "Faktura dostawcy – archiwum fiskalne"
+}</process_pl>
+      <process_IT>{
+	"_ArchiveUniqueIdentifier": "ID archivio",
+	"_ArchivingStatus": "Stato archiviazione",
+	"_ArkhineoArchivingInfo": "Informazioni archiviazione Arkhinéo",
+	"_LinkToArchive": "Collegamento archivio",
+	"Vendor invoice legal archive": "Fattura fornitore - Archivio fiscale",
+	"_ArchiveUniqueIdentifier_report": "ID archivio",
+	"_ArchivingStatus_report": "Stato archiviazione",
+	"_LinkToArchive_report": "Collegamento archivio"
+}</process_IT>
+      <process_sk>{
+	"_ArchiveUniqueIdentifier": "ID archívu",
+	"_ArchiveUniqueIdentifier_report": "ID archívu",
+	"_ArchivingStatus": "Status archivovania",
+	"_ArchivingStatus_report": "Status archivovania",
+	"_ArkhineoArchivingInfo": "Informácie o archivácii Arkhinéo",
+	"_LinkToArchive": "Odkaz na archív",
+	"_LinkToArchive_report": "Odkaz na archív",
+	"Vendor invoice legal archive": "Faktúra dodávateľa – daňový archív"
+}</process_sk>
+      <process_zh-CN>{
+	"_ArchiveUniqueIdentifier": "存档ID",
+	"_ArchiveUniqueIdentifier_report": "存档ID",
+	"_ArchivingStatus": "存档状态",
+	"_ArchivingStatus_report": "存档状态",
+	"_ArkhineoArchivingInfo": "Arkhinéo存档信息",
+	"_LinkToArchive": "档案链接",
+	"_LinkToArchive_report": "档案链接",
+	"Vendor invoice legal archive": "供应商账单发票 - 税务档案"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"_ArchiveUniqueIdentifier": "ID do arquivo",
+	"_ArchiveUniqueIdentifier_report": "ID do arquivo",
+	"_ArchivingStatus": "Status de arquivamento",
+	"_ArchivingStatus_report": "Status de arquivamento",
+	"_ArkhineoArchivingInfo": "Informação de arquivamento Arkhinéo",
+	"_LinkToArchive": "Link para o arquivo",
+	"_LinkToArchive_report": "Link para o arquivo",
+	"Vendor invoice legal archive": "Fatura de fornecedor - Arquivo fiscal"
+}</process_pt-BR>
+    </lg>
+    <process>
+      <flowtype>processing</flowtype>
+      <ocrpreset>scan</ocrpreset>
+      <homepagelabel>Vendor invoice legal archive</homepagelabel>
+      <enableflexibleauditing>
+      </enableflexibleauditing>
+      <enableflexibleediting>
+      </enableflexibleediting>
+      <enableflexibleteaching>
+      </enableflexibleteaching>
+      <disableocr>
+      </disableocr>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <disableautolearning>true</disableautolearning>
+      <backgroundprocessingthreshold>
+      </backgroundprocessingthreshold>
+      <EnablePreviewPrecomputation>
+      </EnablePreviewPrecomputation>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <enablerounddecimal>true</enablerounddecimal>
+      <pdfNormalizeFilter>
+      </pdfNormalizeFilter>
+      <archiveDuration>0</archiveDuration>
+      <ocrpagestoprocess>0</ocrpagestoprocess>
+      <ScriptEngineType>2</ScriptEngineType>
+      <UseActionNameWithScriptApproval>true</UseActionNameWithScriptApproval>
+      <displayWidth>
+      </displayWidth>
+      <AllowUploadAttachment>1</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>1</AllowUploadReferenceDocument>
+      <UseCultureFormat>true</UseCultureFormat>
+      <AllowRetryExtractCD>true</AllowRetryExtractCD>
+      <TransportName>CustomData</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+      <printToProcess>
+      </printToProcess>
+    </process>
+    <ui>
+      <CustomScriptReadonly>true</CustomScriptReadonly>
+      <CustomScript>"use strict";
+const g_debug = ProcessInstance.isDebugActive;
+const archiveProvider = Variable.GetValueAsString("ArchiveProvider");
+if (archiveProvider === "Arkhineo" || g_debug) {
+    Controls.ArkhineoArchivingInfo__.Hide(!g_debug);
+    Controls.LinkToArchive__.Hide(!g_debug);
+    Controls.SystemData.Hide(false);
+}
+else {
+    Controls.SystemData.Hide(true);
+    Controls.LinkToArchive__.Hide(!Data.GetValue("ArchiveUniqueIdentifier__"));
+    Controls.LinkToArchive__.DisplayAs({ type: "Link" });
+    Controls.LinkToArchive__.OnClick = function () {
+        Process.OpenLink(Data.GetValue("LinkToArchive__"));
+    };
+}
+//# sourceMappingURL=customscript.js.map</CustomScript>
+      <restorationPanel>DataPanel</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 40,
+	"*": {
+		"GDRData": {
+			"type": "GDRData",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"version": 0
+			}
+		},
+		"OCRParams": {
+			"type": "OCRParams",
+			"data": [],
+			"stamp": 2,
+			"options": {
+				"version": 0
+			}
+		},
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 3,
+			"options": {
+				"splitterType": "complex",
+				"maxwidth": "",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 4,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 5,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 6,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-top": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 7,
+									"options": {
+										"autosize": true,
+										"version": 1,
+										"box": {
+											"top": 0,
+											"left": 0,
+											"width": 100,
+											"height": 17
+										},
+										"hidden": false
+									},
+									"*": {
+										"form-content-top-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 8,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"DocumentsPanel": {
+													"type": "PanelDocument",
+													"data": [],
+													"stamp": 9,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": false,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"label": "_Documents",
+														"version": 0
+													},
+													"*": {
+														"Document": {
+															"type": "Documents",
+															"data": [
+																"documentscontroldata"
+															],
+															"stamp": 10,
+															"options": {
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								},
+								"form-content-bottom": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 11,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": 17,
+											"left": 0,
+											"width": 100,
+											"height": 83
+										},
+										"hidden": false
+									},
+									"*": {
+										"form-content-left": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 12,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": 0,
+													"left": 0,
+													"width": 45,
+													"height": 99
+												},
+												"hidden": false
+											},
+											"*": {
+												"form-content-left-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 13,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"DataPanel": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 14,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_Document data",
+																"hidden": true,
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 15,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 16,
+																			"options": {
+																				"version": 0,
+																				"lines": 0,
+																				"columns": 2,
+																				"ctrlsPos": {},
+																				"colspans": []
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-4": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 17,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"ArkhineoArchivingInfo__": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 18,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_ArkhineoArchivingInfo",
+																"leftImageURL": "",
+																"removeMargins": false,
+																"elementsAlignment": "left",
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 19,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {
+																			"ArchiveUniqueIdentifier__": "LabelArchiveUniqueIdentifier__",
+																			"LabelArchiveUniqueIdentifier__": "ArchiveUniqueIdentifier__",
+																			"LinkToArchive__": "LabelLinkToArchive__",
+																			"LabelLinkToArchive__": "LinkToArchive__",
+																			"ArchivingStatus__": "LabelArchivingStatus__",
+																			"LabelArchivingStatus__": "ArchivingStatus__"
+																		}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 20,
+																			"options": {
+																				"version": 0,
+																				"lines": 3,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"LabelArchiveUniqueIdentifier__": {
+																						"line": 1,
+																						"column": 1
+																					},
+																					"ArchiveUniqueIdentifier__": {
+																						"line": 1,
+																						"column": 2
+																					},
+																					"LabelLinkToArchive__": {
+																						"line": 2,
+																						"column": 1
+																					},
+																					"LinkToArchive__": {
+																						"line": 2,
+																						"column": 2
+																					},
+																					"LabelArchivingStatus__": {
+																						"line": 3,
+																						"column": 1
+																					},
+																					"ArchivingStatus__": {
+																						"line": 3,
+																						"column": 2
+																					}
+																				},
+																				"colspans": [
+																					[],
+																					[],
+																					[]
+																				]
+																			},
+																			"*": {
+																				"LabelArchiveUniqueIdentifier__": {
+																					"type": "Label",
+																					"data": [
+																						"ArchiveUniqueIdentifier__"
+																					],
+																					"stamp": 22,
+																					"options": {
+																						"label": "_ArchiveUniqueIdentifier",
+																						"version": 0
+																					}
+																				},
+																				"ArchiveUniqueIdentifier__": {
+																					"type": "ShortText",
+																					"data": [
+																						"ArchiveUniqueIdentifier__"
+																					],
+																					"stamp": 21,
+																					"options": {
+																						"label": "_ArchiveUniqueIdentifier",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"readonly": true,
+																						"browsable": false
+																					}
+																				},
+																				"LabelLinkToArchive__": {
+																					"type": "Label",
+																					"data": [
+																						"LinkToArchive__"
+																					],
+																					"stamp": 24,
+																					"options": {
+																						"label": "_LinkToArchive",
+																						"version": 0
+																					}
+																				},
+																				"LinkToArchive__": {
+																					"type": "ShortText",
+																					"data": [
+																						"LinkToArchive__"
+																					],
+																					"stamp": 23,
+																					"options": {
+																						"label": "_LinkToArchive",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": "500",
+																						"length": 115,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"readonly": true,
+																						"browsable": false
+																					}
+																				},
+																				"LabelArchivingStatus__": {
+																					"type": "Label",
+																					"data": [
+																						"ArchivingStatus__"
+																					],
+																					"stamp": 26,
+																					"options": {
+																						"label": "_ArchivingStatus",
+																						"version": 0
+																					}
+																				},
+																				"ArchivingStatus__": {
+																					"type": "ShortText",
+																					"data": [
+																						"ArchivingStatus__"
+																					],
+																					"stamp": 25,
+																					"options": {
+																						"label": "_ArchivingStatus",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"readonly": true,
+																						"browsable": false
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-2": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 27,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"SystemData": {
+															"type": "PanelSystemData",
+															"data": [],
+															"stamp": 28,
+															"options": {
+																"multicolumn": false,
+																"border": {
+																	"collapsed": false
+																},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"label": "_System data",
+																"version": 0
+															}
+														}
+													}
+												},
+												"form-content-left-3": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 29,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"NextProcess": {
+															"type": "PanelNextProcess",
+															"data": [],
+															"stamp": 30,
+															"options": {
+																"hidden": true,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"label": "_Next Process",
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-right": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 31,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": 0,
+													"left": 45,
+													"width": 55,
+													"height": 99
+												},
+												"hidden": false
+											},
+											"*": {
+												"form-content-right-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 32,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"PreviewPanel": {
+															"type": "PanelPreview",
+															"data": [],
+															"stamp": 33,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"label": "_Document Preview",
+																"version": 0
+															},
+															"*": {
+																"Preview": {
+																	"type": "Preview",
+																	"data": [
+																		"previewdata"
+																	],
+																	"stamp": 34,
+																	"options": {
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 35,
+					"options": {
+						"splitterType": "simple-h",
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 36,
+							"options": {
+								"label": "_Save",
+								"action": "save",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Approve": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 37,
+							"options": {
+								"label": "_Approve",
+								"action": "approve",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Reject": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 38,
+							"options": {
+								"label": "_Reject",
+								"action": "reject",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Reprocess": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 39,
+							"options": {
+								"label": "_Reprocess",
+								"action": "reprocess",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 40,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <field deleted="0" format="" guid="Q2MIG0000FSX" id="W4BQT400153E" label="_ArchiveUniqueIdentifier_report" length="50" name="ArchiveUniqueIdentifier__" originalProcessID="PHQG5E7F7" precision="0" processid="V4BQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AW4BQT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ArchiveUniqueIdentifier__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:30</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ArchiveUniqueIdentifier_report</Label>
+        <Alias>AW4BQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="R2MIG0000FSX" id="X4BQT400153E" label="_ArchivingStatus_report" length="50" name="ArchivingStatus__" originalProcessID="PHQG5E7F7" precision="0" processid="V4BQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AX4BQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ArchivingStatus__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:30</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ArchivingStatus_report</Label>
+        <Alias>AX4BQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="GUZT00000FSX" id="Y4BQT400153E" label="_LinkToArchive_report" length="115" name="LinkToArchive__" originalProcessID="PHQG5E7F7" precision="0" processid="V4BQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AY4BQT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/LinkToArchive__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:30</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_LinkToArchive_report</Label>
+        <Alias>AY4BQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <type id="GOLHG0000M4O" name="CD">
+  </type>
+</process>

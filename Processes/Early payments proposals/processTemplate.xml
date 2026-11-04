@@ -1,0 +1,654 @@
+<process accountid="" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:07:36" deleted="0" eskerapplication="P2P" global="0" id="NoID" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="Early payments proposals" needvalidation="1" ootofilter="" ootoversion="1" originalProcessID="CF0IG0000SG1" ownerid="" ownerpb="" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="" version="1" visibility="1">
+	<properties>
+		<externalvariables>
+			<Configuration>Default</Configuration>
+			<ConfigurationTableName>AP - Application Settings__</ConfigurationTableName>
+		</externalvariables>
+		<gdr>
+			<ValidationScriptAllowRetry>true</ValidationScriptAllowRetry>
+			<validationscriptIncludedScripts>Sys/Sys_Parameters</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Sys/Sys_EmailNotification</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_AP_VendorPortal_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_AP_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_P2P_V12.0.566.0</validationscriptIncludedScripts>
+			<ValidationScript>
+				<!--validationscript.js--></ValidationScript>
+			<AllowTagCoverPages>true</AllowTagCoverPages>
+			<AllowTagNewDocuments>true</AllowTagNewDocuments>
+			<AllowTagAttachments>true</AllowTagAttachments>
+			<ExtractionScriptAllowRetry>true</ExtractionScriptAllowRetry>
+			<extractionscriptIncludedScripts>Sys/Sys_Parameters</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_AP_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_AP_VendorPortal_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_P2P_V12.0.566.0</extractionscriptIncludedScripts>
+			<ExtractionScript>
+				<!--extractionscript.js--></ExtractionScript>
+			<ExtractionScriptRunOnOCRFailed />
+			<AllowRemovePages>true</AllowRemovePages>
+			<AllowSwapPages>true</AllowSwapPages>
+			<PostProcessingScriptAllowRetry />
+		</gdr>
+		<lg>
+			<!--*.xml-->
+		</lg>
+		<process>
+			<flowtype>processing</flowtype>
+			<ocrpreset>scan</ocrpreset>
+			<EnableNegativeNumbersBetweenBrackets />
+			<homepagelabel>_Early payments proposals</homepagelabel>
+			<enableflexibleauditing />
+			<enableflexibleediting />
+			<enableflexibleteaching />
+			<enableflexiblewalkme>true</enableflexiblewalkme>
+			<disableocr>yes</disableocr>
+			<instanciable>1</instanciable>
+			<disableScriptModification>true</disableScriptModification>
+			<disableautolearning>true</disableautolearning>
+			<backgroundprocessingthreshold />
+			<EnableMinusSignBehindNumber />
+			<EnablePreviewPrecomputation />
+			<enableUpgradableDesign>true</enableUpgradableDesign>
+			<enablerounddecimal>true</enablerounddecimal>
+			<pdfNormalizeFilter />
+			<archiveDuration>0</archiveDuration>
+			<FailoverOnConversionError />
+			<ocrpagestoprocess>0</ocrpagestoprocess>
+			<ScriptEngineType>2</ScriptEngineType>
+			<UseActionNameWithScriptApproval>true</UseActionNameWithScriptApproval>
+			<displayWidth />
+			<AllowUploadAttachment>1</AllowUploadAttachment>
+			<AllowUploadReferenceDocument>1</AllowUploadReferenceDocument>
+			<ByPassComputedForSmartColumn />
+			<RemovePointWhenCastingIntToString>true</RemovePointWhenCastingIntToString>
+			<UseCultureFormat>true</UseCultureFormat>
+			<AllowRetryExtractCD />
+			<TransportName>CustomData</TransportName>
+			<LayoutVersion>1.0</LayoutVersion>
+			<StatusOnExtractCDLastTry>-1</StatusOnExtractCDLastTry>
+			<printToProcess />
+		</process>
+		<ui>
+			<CustomScriptDebug>false</CustomScriptDebug>
+			<customscriptIncludedScripts>Lib_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_AP_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Parameters_P2P_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_P2P_Currency_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[Lib_Custom_Parameters]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[Lib_P2P_Custom_Parameters]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[Lib_AP_Customization_VendorPortal]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[Lib_AP_Customization_VendorPortal_HTMLScripts]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers_Banner</customscriptIncludedScripts>
+			<CustomScriptReadonly>true</CustomScriptReadonly>
+			<CustomScript>
+				<!--customscript.js--></CustomScript>
+			<restorationPanel>Header</restorationPanel>
+			<layout>
+				<!--layout.json--></layout>
+		</ui>
+	</properties>
+	<datatable deleted="0" guid="YE7JG0000SG1" id="NoID" label="_Invoices" name="Invoices__" originalProcessID="CF0IG0000SG1">
+		<properties>
+			<field>
+				<DisableAutolearn>1</DisableAutolearn>
+				<Extractable>0</Extractable>
+			</field>
+			<ui>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+		<field datatableid="" deleted="0" format="" guid="CF7JG0000SG1" id="NoID" label="_Due date" length="0" name="DueDate__" originalProcessID="CF0IG0000SG1" precision="0" submitable="1" type="DATE">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/DueDate__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_Due date</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Date</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="DF7JG0000SG1" id="NoID" label="_Invoice amount" length="17" name="InvoiceAmount__" originalProcessID="CF0IG0000SG1" precision="2" submitable="1" type="DECIMAL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/InvoiceAmount__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_Invoice amount</Label>
+					<Alias />
+					<DecimalPrecision vartype="INT">2</DecimalPrecision>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="EF7JG0000SG1" id="NoID" label="_Currency" length="50" name="InvoiceCurrency__" originalProcessID="CF0IG0000SG1" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/InvoiceCurrency__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_Currency</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="AF7JG0000SG1" id="NoID" label="_Invoice date" length="0" name="InvoiceDate__" originalProcessID="CF0IG0000SG1" precision="0" submitable="1" type="DATE">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/InvoiceDate__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_Invoice date</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Date</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="ZE7JG0000SG1" id="NoID" label="_Invoice number" length="50" name="InvoiceNumber__" originalProcessID="CF0IG0000SG1" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/InvoiceNumber__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_Invoice number</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="SDQIG0000SG1" id="NoID" label="_IsSelected" length="0" name="IsSelected__" originalProcessID="CF0IG0000SG1" precision="0" submitable="1" type="BOOL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/IsSelected__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_IsSelected</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Boolean</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="FF7JG0000SG1" id="NoID" label="_Order number" length="50" name="OrderNumber__" originalProcessID="CF0IG0000SG1" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/OrderNumber__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_Order number</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="HF7JG0000SG1" id="NoID" label="_Payment period" length="0" name="PaymentTermDayLimit__" originalProcessID="CF0IG0000SG1" precision="0" submitable="1" type="INT">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/PaymentTermDayLimit__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_Payment period</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="MX7IG0000SG1" id="NoID" label="_PortalRuidEx" length="50" name="PortalRuidEx__" originalProcessID="CF0IG0000SG1" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/PortalRuidEx__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_PortalRuidEx</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+					<DoNotShowInDM>1</DoNotShowInDM>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="BF7JG0000SG1" id="NoID" label="_Posting date" length="0" name="PostingDate__" originalProcessID="CF0IG0000SG1" precision="0" submitable="1" type="DATE">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/PostingDate__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_Posting date</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Date</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="KF7JG0000SG1" id="NoID" label="_ProposedInvoiceAmountWithDiscount" length="17" name="ProposedInvoiceAmountWithDiscount__" originalProcessID="CF0IG0000SG1" precision="2" submitable="1" type="DECIMAL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ProposedInvoiceAmountWithDiscount__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ProposedInvoiceAmountWithDiscount</Label>
+					<Alias />
+					<DecimalPrecision vartype="INT">2</DecimalPrecision>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="JF7JG0000SG1" id="NoID" label="_ProposedInvoiceDiscountAmount" length="17" name="ProposedInvoiceDiscountAmount__" originalProcessID="CF0IG0000SG1" precision="2" submitable="1" type="DECIMAL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ProposedInvoiceDiscountAmount__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ProposedInvoiceDiscountAmount</Label>
+					<Alias />
+					<DecimalPrecision vartype="INT">2</DecimalPrecision>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="IF7JG0000SG1" id="NoID" label="_ProposedInvoiceDiscountRate" length="17" name="ProposedInvoiceDiscountRate__" originalProcessID="CF0IG0000SG1" precision="2" submitable="1" type="DECIMAL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ProposedInvoiceDiscountRate__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ProposedInvoiceDiscountRate</Label>
+					<Alias />
+					<DecimalPrecision vartype="INT">2</DecimalPrecision>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="GF7JG0000SG1" id="NoID" label="_Remaining" length="0" name="Remaining__" originalProcessID="CF0IG0000SG1" precision="0" submitable="1" type="INT">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/Remaining__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_Remaining</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="NH7JG0000SG1" id="NoID" label="_RuidEx" length="50" name="RUIDEx__" originalProcessID="CF0IG0000SG1" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/RUIDEx__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_RuidEx</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+					<DoNotShowInDM>1</DoNotShowInDM>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+	</datatable>
+	<type id="NoID" name="CD" />
+	<field deleted="0" format="" guid="KW7JG0000SG1" id="NoID" label="_Company code_report" length="50" name="CompanyCode__" originalProcessID="CF0IG0000SG1" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CompanyCode__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Company code_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="NW7JG0000SG1" id="NoID" label="_CreationDateTime" length="50" name="CreationDateTime__" originalProcessID="CF0IG0000SG1" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CreationDateTime__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_CreationDateTime</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PH7JG0000SG1" id="NoID" label="_ProposedDiscountRate_report" length="17" name="ProposedDiscountRate__" originalProcessID="CF0IG0000SG1" precision="2" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ProposedDiscountRate__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ProposedDiscountRate_report</Label>
+				<Alias />
+				<DecimalPrecision vartype="INT">2</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="OH7JG0000SG1" id="NoID" label="_RequestedPaymentDate_report" length="0" name="RequestedPaymentDate__" originalProcessID="CF0IG0000SG1" precision="0" processid="" submitable="1" type="DATE">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/RequestedPaymentDate__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_RequestedPaymentDate_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="JW7JG0000SG1" id="NoID" label="_Vendor name" length="50" name="VendorName__" originalProcessID="CF0IG0000SG1" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/VendorName__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Vendor name</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="LW7JG0000SG1" id="NoID" label="_Vendor number" length="50" name="VendorNumber__" originalProcessID="CF0IG0000SG1" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/VendorNumber__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Vendor number</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+</process>

@@ -1,0 +1,2620 @@
+<process accountid="" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:09:25" deleted="0" eskerapplication="P2P" global="0" id="NoID" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="Expense" needvalidation="1" ootofilter="(&amp;(|(ExpenseStatus__=To approve)(ExpenseStatus__=To control))(|(state=90)(state=50)))" ootoversion="2" originalProcessID="PLP1FP000FSX" ownerid="" ownerpb="" public="1" pushnotification="1" reuseengine="0" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="" version="1" visibility="0">
+	<properties>
+		<approve>
+			<action>DeleteExpense:delete:ExpenseStatus__:Pending delete</action>
+			<action>DeleteExpense:delete:single:ExpenseStatus__:Pending delete</action>
+		</approve>
+		<dataConditions>
+			<listDataConditions>
+				&lt;dataCondition&gt;
+					&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+					&lt;filter&gt;msnex=*&lt;/filter&gt;
+					&lt;labelKey&gt;_Expense claims disabled&lt;/labelKey&gt;
+					&lt;conditions&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableExpenseClaimsGlobalSetting__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+					&lt;/conditions&gt;
+				&lt;/dataCondition&gt;
+			</listDataConditions>
+		</dataConditions>
+		<externalvariables>
+			<EnableSRO>1</EnableSRO>
+			<PreviewForm>previewJPG_GS9.23</PreviewForm>
+		</externalvariables>
+		<gdr>
+			<AttachAsConverted>1</AttachAsConverted>
+			<FinalizationScriptAllowRetry />
+			<ValidationScriptAllowRetry />
+			<validationscriptIncludedScripts>Lib_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Sys/Sys_Helpers</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Sys/Sys_TechnicalData</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_P2P_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Expense_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Expense_Transaction_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Expense_Server_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Expense_LayoutManager_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Sys/Sys_PushNotification</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>[Lib_Expense_Customization_Common]</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>[Lib_Expense_Customization_Server]</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Expense_Transaction_Server_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Expense_Itemization_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_P2P_EmailNotification_Server_V12.0.566.0</validationscriptIncludedScripts>
+			<ValidationScript>
+				<!--validationscript.js--></ValidationScript>
+			<AllowTagCoverPages>true</AllowTagCoverPages>
+			<AllowTagNewDocuments>true</AllowTagNewDocuments>
+			<AllowTagAttachments>true</AllowTagAttachments>
+			<ExtractionScriptAllowRetry>true</ExtractionScriptAllowRetry>
+			<extractionscriptIncludedScripts>Lib_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_Parameters_P2P_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_Expense_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_Expense_LayoutManager_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_Expense_Server_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Sys/Sys_Helpers</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Sys/Sys_Expense_Extraction</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Sys/Sys_Decimal</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_Expense_AIForExpenses_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_Expense_Transaction_Server_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>[Lib_Expense_Customization_Server]</extractionscriptIncludedScripts>
+			<ExtractionScript>
+				<!--extractionscript.js--></ExtractionScript>
+			<ExtractionScriptRunOnOCRFailed />
+			<AllowRemovePages>true</AllowRemovePages>
+			<AllowSwapPages>true</AllowSwapPages>
+			<PostProcessingScriptAllowRetry />
+		</gdr>
+		<lg>
+			<!--*.xml-->
+		</lg>
+		<ocr>
+			<trade-off>accurate</trade-off>
+			<image-ocr-timeout>60000</image-ocr-timeout>
+			<image-binarization>no</image-binarization>
+			<image-draft-fax>no</image-draft-fax>
+			<image-despeckle>no</image-despeckle>
+			<allowed-language>0</allowed-language>
+			<image-resolution-enhancement>auto</image-resolution-enhancement>
+			<pdf-processing>ocr-pdf-text-and-image</pdf-processing>
+			<ocr_engine>Nuance190</ocr_engine>
+			<ocrpagestoprocess>0</ocrpagestoprocess>
+			<extractionAdditionalOptions />
+		</ocr>
+		<openInProcess>
+			<processName>Expense Report</processName>
+		</openInProcess>
+		<process>
+			<flowtype>processing</flowtype>
+			<ocrpreset>custom</ocrpreset>
+			<cacheableprocess>AP - Cost centers__</cacheableprocess>
+			<cacheableprocess>P2P - Global Application Settings__</cacheableprocess>
+			<cacheableprocess>AP - Application Settings__</cacheableprocess>
+			<cacheableprocess>P2P - User properties__</cacheableprocess>
+			<cacheableprocess>P2P - Exchange rate__</cacheableprocess>
+			<cacheableprocess>P2P - Expense type__</cacheableprocess>
+			<cacheableprocess>P2P - Mileage__</cacheableprocess>
+			<cacheableprocess>PurchasingCompanycodes__</cacheableprocess>
+			<cacheableprocess>P2P - Project codes__</cacheableprocess>
+			<homepagelabel>_Create an expense</homepagelabel>
+			<enableflexibleauditing />
+			<enableflexibleediting />
+			<enableflexibleteaching />
+			<enableflexiblewalkme />
+			<enableInternalConversation>true</enableInternalConversation>
+			<disableocr>no</disableocr>
+			<instanciable>1</instanciable>
+			<disableScriptModification>true</disableScriptModification>
+			<disableautolearning>true</disableautolearning>
+			<backgroundprocessingthreshold />
+			<EnablePreviewPrecomputation />
+			<defaultConversionParam>JPG|AttachConverterToUse:_JPG2PDFExpense,AttachOutputFormat:PDF</defaultConversionParam>
+			<defaultConversionParam>JPEG|AttachConverterToUse:_JPG2PDFExpense,AttachOutputFormat:PDF</defaultConversionParam>
+			<defaultConversionParam>PNG|AttachOutputFormat:PDF</defaultConversionParam>
+			<defaultConversionParam>TIF|AttachOutputFormat:PDF</defaultConversionParam>
+			<defaultConversionParam>TIFF|AttachOutputFormat:PDF</defaultConversionParam>
+			<enableUpgradableDesign>true</enableUpgradableDesign>
+			<keepUserDataWhenChangingDocument>true</keepUserDataWhenChangingDocument>
+			<enablerounddecimal>true</enablerounddecimal>
+			<pdfNormalizeFilter>ApplyDefaultFilters</pdfNormalizeFilter>
+			<archiveDuration>0</archiveDuration>
+			<OverrideAllowedAttachmentExtensions>*</OverrideAllowedAttachmentExtensions>
+			<OverrideAllowedDocumentExtensions>PDF,JPG,JPEG,PNG</OverrideAllowedDocumentExtensions>
+			<ocrpagestoprocess>5</ocrpagestoprocess>
+			<ScriptEngineType>2</ScriptEngineType>
+			<UseActionNameWithScriptApproval>true</UseActionNameWithScriptApproval>
+			<displayWidth>1700</displayWidth>
+			<AllowUploadAttachment>1</AllowUploadAttachment>
+			<AllowUploadReferenceDocument>1</AllowUploadReferenceDocument>
+			<UseCultureFormat>true</UseCultureFormat>
+			<AllowRetryExtractCD>true</AllowRetryExtractCD>
+			<TransportName>CustomData</TransportName>
+			<LayoutVersion>1.0</LayoutVersion>
+			<printToProcess />
+		</process>
+		<ui>
+			<CustomScriptDebug>false</CustomScriptDebug>
+			<customscriptIncludedScripts>Lib_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers_Banner</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers_Synchronizer</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers_LdapUtil</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers_Controls</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers_Object</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/SYS_HELPERS_GEOCODING_CLIENT</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Decimal</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_TechnicalData</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Parameters</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_P2P_UserProperties_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_P2P_CompanyCodesValue_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_CommonDialog_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Expense_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Expense_Client_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Expense_Transaction_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Expense_LayoutManager_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Expense_Itemization_Client_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Expense_Itemization_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Expense_Report_TaxesComputations_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Expense_AIForExpenses_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[Lib_Expense_Customization_Client]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[Lib_Expense_Customization_Common]</customscriptIncludedScripts>
+			<CustomScriptReadonly>true</CustomScriptReadonly>
+			<CustomScript>
+				<!--customscript.js--></CustomScript>
+			<restorationPanel>ExpenseInformation</restorationPanel>
+			<layout>
+				<!--layout.json--></layout>
+		</ui>
+		<zipDocuments>
+			<downloadAttachFunction>DownloadAttachInZipForExpense</downloadAttachFunction>
+		</zipDocuments>
+	</properties>
+	<datatable deleted="0" guid="VJBIG0000SG1" id="NoID" label="_SubExpensesTable_report" name="SubExpenses__" originalProcessID="PLP1FP000FSX">
+		<properties>
+			<field>
+				<DisableAutolearn>1</DisableAutolearn>
+				<Extractable>0</Extractable>
+			</field>
+			<ui>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+		<field datatableid="" deleted="0" format="" guid="Z0D1000011XD" id="NoID" label="_CostCenter_report" length="50" name="CostCenterId__" originalProcessID="PLP1FP000FSX" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/CostCenterId__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_CostCenter_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<Editable>false</Editable>
+					<TableName />
+					<SortOrder />
+					<SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+					<DisplayedColumns />
+					<SavedColumn />
+					<ExposedColumns />
+					<ProcessName />
+					<KeyColumnId />
+					<KeyAttribute />
+					<CustomFilter />
+				</field>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="PXC1000011XD" id="NoID" label="_CostCenterDescription_report" length="50" name="CostCenterName__" originalProcessID="PLP1FP000FSX" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/CostCenterName__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_CostCenterDescription_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<Editable>false</Editable>
+					<TableName />
+					<SortOrder />
+					<SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+					<DisplayedColumns />
+					<SavedColumn />
+					<ExposedColumns />
+					<ProcessName />
+					<KeyColumnId />
+					<KeyAttribute />
+					<CustomFilter />
+				</field>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="YJBIG0000SG1" id="NoID" label="_ItemizationDate_report" length="0" name="Date__" originalProcessID="PLP1FP000FSX" precision="0" submitable="1" type="DATE">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/Date__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ItemizationDate_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Date</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="AKBIG0000SG1" id="NoID" label="_ExpenseDescription_report" length="32766" name="Description__" originalProcessID="PLP1FP000FSX" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/Description__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ExpenseDescription_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="WJBIG0000SG1" id="NoID" label="_ExpenseNumber_report" length="50" name="ExpenseNumber__" originalProcessID="PLP1FP000FSX" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ExpenseNumber__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ExpenseNumber_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="FXM7FP000SG1" id="NoID" label="_ExpenseStatus_report" length="50" name="ExpenseStatus__" originalProcessID="PLP1FP000FSX" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ExpenseStatus__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ExpenseStatus_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="XJBIG0000SG1" id="NoID" label="_ExpenseType_report" length="50" name="ExpenseType__" originalProcessID="PLP1FP000FSX" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ExpenseType__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ExpenseType_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<Editable>false</Editable>
+					<TableName />
+					<SortOrder />
+					<SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+					<DisplayedColumns />
+					<SavedColumn />
+					<ExposedColumns />
+					<ProcessName />
+					<KeyColumnId />
+					<KeyAttribute />
+					<CustomFilter />
+				</field>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="IBSHG0000SG1" id="NoID" label="_MsnEx_report" length="50" name="MsnEx__" originalProcessID="PLP1FP000FSX" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/MsnEx__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_MsnEx_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="CXM7FP000SG1" id="NoID" label="_Refundable_report" length="0" name="Refundable__" originalProcessID="PLP1FP000FSX" precision="0" submitable="1" type="BOOL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/Refundable__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_Refundable_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Boolean</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="ZJBIG0000SG1" id="NoID" label="_TotalItemizationAmount_report" length="17" name="TotalAmount__" originalProcessID="PLP1FP000FSX" precision="2" submitable="1" type="DECIMAL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/TotalAmount__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_TotalItemizationAmount_report</Label>
+					<Alias />
+					<DecimalPrecision vartype="INT">2</DecimalPrecision>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="PXM7FP000SG1" id="NoID" label="_ViewItem" length="50" name="ViewItem__" originalProcessID="PLP1FP000FSX" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ViewItem__</fullname>
+					<defaultvalue>_View</defaultvalue>
+				</db>
+				<extrainfo>
+					<Label>_ViewItem</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+					<DoNotShowInDM>1</DoNotShowInDM>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+	</datatable>
+	<type id="NoID" name="CD" />
+	<field deleted="0" format="" guid="VTLIWM000IYP" id="NoID" label="_Billable_report" length="0" name="Billable__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Billable__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_Billable_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="N6NIWM000IYP" id="NoID" label="_BillableFieldBehaviour_report" length="50" name="BillableFieldBehaviour__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/BillableFieldBehaviour__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_BillableFieldBehaviour_report</Label>
+				<Alias />
+				<Group>Advance</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="AKBIG0000SG5" id="NoID" label="_CalculatedDistance_report" length="17" name="CalculatedDistance__" originalProcessID="PLP1FP000FSX" precision="3" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CalculatedDistance__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_CalculatedDistance_report</Label>
+				<Alias />
+				<Group>Expense_Details</Group>
+				<DecimalPrecision vartype="INT">3</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<required>false</required>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="U9S1FP000FSX" id="NoID" label="_CompanyCode_report" length="50" name="CompanyCode__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CompanyCode__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_CompanyCode_report</Label>
+				<Alias />
+				<Group>Expense_Details</Group>
+				<behavior>Default, ReportPreselectedForProcess</behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<reportpreselectedorder>1</reportpreselectedorder>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder />
+				<DisplayedColumns>CompanyCode__|CompanyName__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>CompanyCode__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>PurchasingCompanycodes__</ProcessName>
+				<KeyColumnId />
+				<KeyAttribute />
+				<CustomFilter />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="CDUNIT0000EX" id="NoID" label="_CorporateDistanceUnit_report" length="50" name="CorporateDistanceUnit__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CorporateDistanceUnit__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_CorporateDistanceUnit_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<TableName />
+				<DisplayedColumns />
+				<DataSourceOrigin>Standalone</DataSourceOrigin>
+				<possibleKeys>EMPTY
+km
+mi</possibleKeys>
+				<SavedColumn />
+				<SavedColumnId />
+				<possibleValues>
+_km
+_mi</possibleValues>
+				<ProcessName />
+				<KeyColumnId />
+				<lazyTranslatable />
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="P1O0000019CD" id="NoID" label="_CorporateFuelVolume_report" length="17" name="CorporateFuelVolume__" originalProcessID="PLP1FP000FSX" precision="2" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<Alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CorporateFuelVolume__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_CorporateFuelVolume_report</Label>
+				<Alias />
+				<DecimalPrecision vartype="INT">2</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<required>false</required>
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="O1O0000011YD" id="NoID" label="_CorporateFuelVolumeUnit_report" length="50" name="CorporateFuelVolumeUnit__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<Alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CorporateFuelVolumeUnit__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_CorporateFuelVolumeUnit_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<TableName />
+				<DisplayedColumns />
+				<DisplayedColumnsIds />
+				<DataSourceOrigin>Standalone</DataSourceOrigin>
+				<possibleKeys>L
+Gal
+</possibleKeys>
+				<SavedColumn />
+				<SavedColumnId />
+				<possibleValues>_L
+_Gal
+</possibleValues>
+				<ProcessName />
+				<KeyColumnId />
+				<lazyTranslatable />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="NVG2FP000IYP" id="NoID" label="_CostCenterFieldBehaviour_report" length="50" name="CostCenterFieldBehaviour__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CostCenterFieldBehaviour__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_CostCenterFieldBehaviour_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="EDF2FP000IYP" id="NoID" label="_CostCenter_report" length="50" name="CostCenterId__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CostCenterId__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_CostCenter_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>true</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder>ASC</SortOrder>
+				<DisplayedColumns>CostCenter__|Description__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>CostCenter__</SavedColumn>
+				<SavedColumnId />
+				<ExposedColumns />
+				<ProcessName>AP - Cost centers__</ProcessName>
+				<KeyColumnId />
+				<KeyAttribute />
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="FQKIWM000IYP" id="NoID" label="_CostCenterDescription_report" length="50" name="CostCenterName__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CostCenterName__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_CostCenterDescription_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<required>false</required>
+				<TableName>CT#NOID</TableName>
+				<SortOrder />
+				<DisplayedColumns>Description__|CostCenter__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>Description__</SavedColumn>
+				<SavedColumnId />
+				<ExposedColumns />
+				<ProcessName>AP - Cost centers__</ProcessName>
+				<KeyColumnId>CostCenter__</KeyColumnId>
+				<KeyAttribute>CostCenterId__</KeyAttribute>
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="H0KIG0000SG1" id="NoID" label="_CreatedFromBankStatement_report" length="0" name="CreatedFromBankStatement__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CreatedFromBankStatement__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_CreatedFromBankStatement_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="K9S1FP000FSX" id="NoID" label="_Date_report" length="0" name="Date__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="DATE">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Date__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Date_report</Label>
+				<Alias />
+				<Group>Expense_Details</Group>
+				<behavior>Default, ReportPreselectedForProcess</behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<reportpreselectedorder>5</reportpreselectedorder>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="WJY1FP000FSX" id="NoID" label="_ExpenseDescription_report" length="32766" name="Description__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Description__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ExpenseDescription_report</Label>
+				<Alias />
+				<Group>Expense_Details</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<required>false</required>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="MTO2FP000FSX" id="NoID" label="_Distance_report" length="17" name="Distance__" originalProcessID="PLP1FP000FSX" precision="2" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Distance__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Distance_report</Label>
+				<Alias />
+				<Group>Expense_Details</Group>
+				<DecimalPrecision vartype="INT">2</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<required>false</required>
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="UEP2FP000IYP" id="NoID" label="_ExpenseExchangeRate_report" length="17" name="ExchangeRate__" originalProcessID="PLP1FP000FSX" precision="5" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ExchangeRate__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ExpenseExchangeRate_report</Label>
+				<Alias />
+				<DecimalPrecision vartype="INT">5</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="BKV1FP000FSX" id="NoID" label="_ExpenseNumber_report" length="50" name="ExpenseNumber__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ExpenseNumber__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ExpenseNumber_report</Label>
+				<Alias />
+				<Group>Expense_Details</Group>
+				<behavior>Default, ReportPreselectedForProcess</behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<reportpreselectedorder>2</reportpreselectedorder>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="TFX1FP000FSX" id="NoID" label="_ExpenseReportMsnEx_report" length="50" name="ExpenseReportMsnEx__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ExpenseReportMsnEx__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ExpenseReportMsnEx_report</Label>
+				<Alias />
+				<Group>Advance</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="HUT1FP000FSX" id="NoID" label="_ExpenseStatus_report" length="50" name="ExpenseStatus__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ExpenseStatus__</fullname>
+				<defaultvalue>Draft</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_ExpenseStatus_report</Label>
+				<Alias />
+				<Group>Expense_Details</Group>
+				<behavior>Default, ReportPreselectedForProcess</behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<reportpreselectedorder>8</reportpreselectedorder>
+			</extrainfo>
+			<field>
+				<DisplayedColumns />
+				<possibleKeys>Draft
+To submit
+To approve
+To control
+Validated
+Deleted
+Pending delete</possibleKeys>
+				<SavedColumn />
+				<possibleValues>_Draft
+_To submit
+_To approve
+_To control
+_Validated
+_Deleted
+_Pending delete</possibleValues>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="O432FP000FSX" id="NoID" label="_ExpenseType_report" length="50" name="ExpenseType__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ExpenseType__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ExpenseType_report</Label>
+				<Alias />
+				<Group>Expense_Details</Group>
+				<behavior>Default, ReportPreselectedForProcess</behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<reportpreselectedorder>3</reportpreselectedorder>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder>ASC</SortOrder>
+				<DisplayedColumns>Name__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>Name__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>P2P - Expense type__</ProcessName>
+				<KeyColumnId />
+				<KeyAttribute />
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=))</CustomFilter>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="CGV2FP000FSX" id="NoID" label="_From_report" length="50" name="From__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/From__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_From_report</Label>
+				<Alias />
+				<Group>Expense_Details</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="AKBIG0000SG3" id="NoID" label="_FromCoordinates_report" length="50" name="FromCoordinates__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FromCoordinates__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_FromCoordinates_report</Label>
+				<Alias />
+				<Group>Expense_Details</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="N1O0000011XD" id="NoID" label="_FuelType_report" length="50" name="FuelType__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<Alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FuelType__</fullname>
+				<defaultvalue>UnleadedGas</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_FuelType_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<TableName />
+				<DisplayedColumns />
+				<DisplayedColumnsIds />
+				<DataSourceOrigin>Standalone</DataSourceOrigin>
+				<possibleKeys>UnleadedGas
+Diesel
+Electric
+CustoFuel1
+CustoFuel2
+CustoFuel3
+CustoFuel4
+CusroFuel5
+CustoFuel6
+CustoFuel7
+CustoFuel8
+CustoFuel9
+CustoFuel10</possibleKeys>
+				<SavedColumn />
+				<SavedColumnId />
+				<possibleValues>_UnleadedGas
+_Diesel
+_Electric
+_CustoFuel1
+_CustoFuel2
+_CustoFuel3
+_CustoFuel4
+_CustoFuel5
+_CustoFuel6
+_CustoFuel7
+_CustoFuel8
+_CustoFuel9
+_CustoFuel10</possibleValues>
+				<ProcessName />
+				<KeyColumnId />
+				<lazyTranslatable />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="N1O0000012XD" id="NoID" label="_FuelTypeBehaviour_report" length="50" name="FuelTypeBehaviour__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FuelTypeBehaviour__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_FuelTypeBehaviour_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="P1O0000019XD" id="NoID" label="_FuelVolume_report" length="17" name="FuelVolume__" originalProcessID="PLP1FP000FSX" precision="2" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<Alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FuelVolume__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_FuelVolume_report</Label>
+				<Alias />
+				<DecimalPrecision vartype="INT">2</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="O1O0000011XD" id="NoID" label="_FuelVolumeUnit_report" length="50" name="FuelVolumeUnit__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<Alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FuelVolumeUnit__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_FuelVolumeUnit_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<TableName />
+				<DisplayedColumns />
+				<DisplayedColumnsIds />
+				<DataSourceOrigin>Standalone</DataSourceOrigin>
+				<possibleKeys>L
+Gal
+kWh
+CustoVolumeUnit1
+CustoVolumeUnit2
+CustoVolumeUnit3
+CustoVolumeUnit4
+CustoVolumeUnit5
+CustoVolumeUnit6
+CustoVolumeUnit7
+CustoVolumeUnit8
+CustoVolumeUnit9
+CustoVolumeUnit10</possibleKeys>
+				<SavedColumn />
+				<SavedColumnId />
+				<possibleValues>_L
+_Gal
+_kWh
+_CustoVolumeUnit1
+_CustoVolumeUnit2
+_CustoVolumeUnit3
+_CustoVolumeUnit4
+_CustoVolumeUnit5
+_CustoVolumeUnit6
+_CustoVolumeUnit7
+_CustoVolumeUnit8
+_CustoVolumeUnit9
+_CustoVolumeUnit10</possibleValues>
+				<ProcessName />
+				<KeyColumnId />
+				<lazyTranslatable />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="VN82FP000FSX" id="NoID" label="_GL Account_report" length="30" name="GLAccount__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/GLAccount__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_GL Account_report</Label>
+				<Alias />
+				<Group>Expense_Details</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="W132FP000FSX" id="NoID" label="_InputTaxRate_report" length="0" name="InputTaxRate__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/InputTaxRate__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_InputTaxRate_report</Label>
+				<Alias />
+				<Group>Expense_Details</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="YHMIG0000SG2" id="NoID" label="_Itemizable_report" length="0" name="Itemizable__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Itemizable__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Itemizable_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":""}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="YHMIG0000SG1" id="NoID" label="_Itemized_report" length="0" name="Itemized__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Itemized__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_Itemized_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="USQ2FP000IYP" id="NoID" label="_ExpenseLocalAmount_report" length="17" name="LocalAmount__" originalProcessID="PLP1FP000FSX" precision="2" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/LocalAmount__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ExpenseLocalAmount_report</Label>
+				<Alias />
+				<DecimalPrecision vartype="INT">2</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="BRQ2FP000IYP" id="NoID" label="_ExpenseLocalCurrency_report" length="50" name="LocalCurrency__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/LocalCurrency__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ExpenseLocalCurrency_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="VZNIWM000M4H" id="NoID" label="_Manager_report" length="80" name="Manager__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Manager__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Manager_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="L0OIWM000M4H" id="NoID" label="_ManagerDN_report" length="500" name="ManagerDN__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ManagerDN__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ManagerDN_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="VJW2FP000FSX" id="NoID" label="_MileageRate1_report" length="17" name="MileageRate1__" originalProcessID="PLP1FP000FSX" precision="3" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/MileageRate1__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_MileageRate1_report</Label>
+				<Alias />
+				<Group>Expense_Details</Group>
+				<DecimalPrecision vartype="INT">3</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<required>false</required>
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="BLB4FP000M4H" id="NoID" label="_NonReimbursableLocalAmount_report" length="17" name="NonReimbursableLocalAmount__" originalProcessID="PLP1FP000FSX" precision="2" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/NonReimbursableLocalAmount__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_NonReimbursableLocalAmount_report</Label>
+				<Alias />
+				<DecimalPrecision vartype="INT">2</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="W723FP000IYP" id="NoID" label="_OwnerName" length="50" name="OwnerName__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/OwnerName__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_OwnerName</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<TableName>ODUSER</TableName>
+				<SortOrder>ASC</SortOrder>
+				<DisplayedColumns>DisplayName|Login</DisplayedColumns>
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>DisplayName</SavedColumn>
+				<ProcessName />
+				<KeyColumnId />
+				<KeyAttribute />
+				<CustomFilter>(&amp;(|(ACCOUNTLOCKED=0)(!(ACCOUNTLOCKED=*)))(Customer=0)(Vendor=0)(|(PortalUser!=1)(PortalUser!=*))(|(IsGroup=0)(!(IsGroup=*)))(technical=0))</CustomFilter>
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="XHMIG0000SG1" id="NoID" label="_ParentMsnEx_report" length="50" name="ParentMsnEx__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ParentMsnEx__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ParentMsnEx_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="XAZHG0000PA9" id="NoID" label="_ProjectCode_report" length="50" name="ProjectCode__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ProjectCode__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ProjectCode_report</Label>
+				<Alias />
+				<dbIndex />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>true</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder>ASC</SortOrder>
+				<DisplayedColumns>ProjectCode__|Description__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>ProjectCode__</SavedColumn>
+				<SavedColumnId />
+				<ExposedColumns />
+				<ProcessName>P2P - Project codes__</ProcessName>
+				<KeyColumnId />
+				<KeyAttribute />
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="YAZHG0000PA9" id="NoID" label="_ProjectCodeDescription_report" length="50" name="ProjectCodeDescription__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ProjectCodeDescription__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ProjectCodeDescription_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder />
+				<DisplayedColumns>Description__|ProjectCode__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>Description__</SavedColumn>
+				<SavedColumnId />
+				<ExposedColumns />
+				<ProcessName>P2P - Project codes__</ProcessName>
+				<KeyColumnId>ProjectCode__</KeyColumnId>
+				<KeyAttribute>ProjectCode__</KeyAttribute>
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="W84IG0000PA9" id="NoID" label="_ProjectCodeFieldBehaviour_report" length="50" name="ProjectCodeFieldBehaviour__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ProjectCodeFieldBehaviour__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ProjectCodeFieldBehaviour_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="RYNIWM000M4H" id="NoID" label="_ReceiptBehaviour_report" length="50" name="ReceiptBehaviour__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ReceiptBehaviour__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ReceiptBehaviour_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="OW02FP000FSX" id="NoID" label="_Refundable_report" length="0" name="Refundable__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Refundable__</fullname>
+				<defaultvalue>true</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_Refundable_report</Label>
+				<Alias />
+				<Group>Expense_Details</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="ALB4FP000M4H" id="NoID" label="_ReimbursableLocalAmount_report" length="17" name="ReimbursableLocalAmount__" originalProcessID="PLP1FP000FSX" precision="2" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ReimbursableLocalAmount__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ReimbursableLocalAmount_report</Label>
+				<Alias />
+				<DecimalPrecision vartype="INT">2</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="VT12FP000FSX" id="NoID" label="_TaxAmount1_report" length="17" name="TaxAmount1__" originalProcessID="PLP1FP000FSX" precision="2" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TaxAmount1__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TaxAmount1_report</Label>
+				<Alias />
+				<Group>Expense_Taxes</Group>
+				<DecimalPrecision vartype="INT">2</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="YT12FP000FSX" id="NoID" label="_TaxAmount2_report" length="17" name="TaxAmount2__" originalProcessID="PLP1FP000FSX" precision="2" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TaxAmount2__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TaxAmount2_report</Label>
+				<Alias />
+				<Group>Expense_Taxes</Group>
+				<DecimalPrecision vartype="INT">2</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="BU12FP000FSX" id="NoID" label="_TaxAmount3_report" length="17" name="TaxAmount3__" originalProcessID="PLP1FP000FSX" precision="2" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TaxAmount3__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TaxAmount3_report</Label>
+				<Alias />
+				<Group>Expense_Taxes</Group>
+				<DecimalPrecision vartype="INT">2</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="EU12FP000FSX" id="NoID" label="_TaxAmount4_report" length="17" name="TaxAmount4__" originalProcessID="PLP1FP000FSX" precision="2" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TaxAmount4__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TaxAmount4_report</Label>
+				<Alias />
+				<Group>Expense_Taxes</Group>
+				<DecimalPrecision vartype="INT">2</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="HU12FP000FSX" id="NoID" label="_TaxAmount5_report" length="17" name="TaxAmount5__" originalProcessID="PLP1FP000FSX" precision="2" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TaxAmount5__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TaxAmount5_report</Label>
+				<Alias />
+				<Group>Expense_Taxes</Group>
+				<DecimalPrecision vartype="INT">2</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="TT12FP000FSX" id="NoID" label="_TaxCode1_report" length="50" name="TaxCode1__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TaxCode1__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TaxCode1_report</Label>
+				<Alias />
+				<Group>Expense_Taxes</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="WT12FP000FSX" id="NoID" label="_TaxCode2_report" length="50" name="TaxCode2__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TaxCode2__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TaxCode2_report</Label>
+				<Alias />
+				<Group>Expense_Taxes</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="ZT12FP000FSX" id="NoID" label="_TaxCode3_report" length="50" name="TaxCode3__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TaxCode3__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TaxCode3_report</Label>
+				<Alias />
+				<Group>Expense_Taxes</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="CU12FP000FSX" id="NoID" label="_TaxCode4_report" length="50" name="TaxCode4__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TaxCode4__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TaxCode4_report</Label>
+				<Alias />
+				<Group>Expense_Taxes</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="FU12FP000FSX" id="NoID" label="_TaxCode5_report" length="50" name="TaxCode5__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TaxCode5__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TaxCode5_report</Label>
+				<Alias />
+				<Group>Expense_Taxes</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="UT12FP000FSX" id="NoID" label="_TaxRate1_report" length="17" name="TaxRate1__" originalProcessID="PLP1FP000FSX" precision="2" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TaxRate1__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TaxRate1_report</Label>
+				<Alias />
+				<Group>Expense_Taxes</Group>
+				<DecimalPrecision vartype="INT">2</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="XT12FP000FSX" id="NoID" label="_TaxRate2_report" length="17" name="TaxRate2__" originalProcessID="PLP1FP000FSX" precision="2" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TaxRate2__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TaxRate2_report</Label>
+				<Alias />
+				<Group>Expense_Taxes</Group>
+				<DecimalPrecision vartype="INT">2</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="AU12FP000FSX" id="NoID" label="_TaxRate3_report" length="17" name="TaxRate3__" originalProcessID="PLP1FP000FSX" precision="2" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TaxRate3__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TaxRate3_report</Label>
+				<Alias />
+				<Group>Expense_Taxes</Group>
+				<DecimalPrecision vartype="INT">2</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="DU12FP000FSX" id="NoID" label="_TaxRate4_report" length="17" name="TaxRate4__" originalProcessID="PLP1FP000FSX" precision="2" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TaxRate4__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TaxRate4_report</Label>
+				<Alias />
+				<Group>Expense_Taxes</Group>
+				<DecimalPrecision vartype="INT">2</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="GU12FP000FSX" id="NoID" label="_TaxRate5_report" length="17" name="TaxRate5__" originalProcessID="PLP1FP000FSX" precision="2" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TaxRate5__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TaxRate5_report</Label>
+				<Alias />
+				<Group>Expense_Taxes</Group>
+				<DecimalPrecision vartype="INT">2</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="QW35FP000PA9" id="NoID" label="_TechnicalData_report" length="5000" name="TechnicalData__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TechnicalData__</fullname>
+				<defaultvalue>{}</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_TechnicalData_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="NTO2FP000FSX" id="NoID" label="_Template_report" length="50" name="Template__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Template__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Template_report</Label>
+				<Alias />
+				<Group>Expense_Details</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="DGV2FP000FSX" id="NoID" label="_To_report" length="50" name="To__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/To__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_To_report</Label>
+				<Alias />
+				<Group>Expense_Details</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="AKBIG0000SG4" id="NoID" label="_ToCoordinates_report" length="50" name="ToCoordinates__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ToCoordinates__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ToCoordinates_report</Label>
+				<Alias />
+				<Group>Expense_Details</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="N9S1FP000FSX" id="NoID" label="_TotalAmount_report" length="17" name="TotalAmount__" originalProcessID="PLP1FP000FSX" precision="2" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TotalAmount__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TotalAmount_report</Label>
+				<Alias />
+				<Group>Expense_Details</Group>
+				<behavior>Default, ReportPreselectedForProcess</behavior>
+				<DecimalPrecision vartype="INT">2</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<reportpreselectedorder>6</reportpreselectedorder>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="O9S1FP000FSX" id="NoID" label="_TotalAmountCurrency_report" length="50" name="TotalAmountCurrency__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TotalAmountCurrency__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TotalAmountCurrency_report</Label>
+				<Alias />
+				<Group>Expense_Details</Group>
+				<behavior>Default, ReportPreselectedForProcess</behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<reportpreselectedorder>7</reportpreselectedorder>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<required>false</required>
+				<TableName>CT#NOID</TableName>
+				<SortOrder>ASC</SortOrder>
+				<DisplayedColumns>CurrencyFrom__|RatioFrom__|RatioTo__|Rate__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>CurrencyFrom__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>P2P - Exchange rate__</ProcessName>
+				<KeyColumnId />
+				<KeyAttribute />
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="I1KIG0000SG1" id="NoID" label="_TransactionId_report" length="50" name="TransactionId__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TransactionId__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TransactionId_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="TJW2FP000FSX" id="NoID" label="_VehicleTypeID_report" length="50" name="VehicleTypeID__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/VehicleTypeID__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_VehicleTypeID_report</Label>
+				<Alias />
+				<Group>Expense_Details</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="SJW2FP000FSX" id="NoID" label="_VehicleTypeName_report" length="50" name="VehicleTypeName__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/VehicleTypeName__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_VehicleTypeName_report</Label>
+				<Alias />
+				<Group>Expense_Details</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<required>false</required>
+				<TableName>CT#NOID</TableName>
+				<SortOrder>ASC</SortOrder>
+				<DisplayedColumns>VehicleType__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>VehicleType__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>P2P - Mileage__</ProcessName>
+				<KeyColumnId />
+				<KeyAttribute />
+				<CustomFilter>(&amp;(CompanyCode__=%[CompanyCode__])(EffectiveDate__&lt;=%[Date__]))</CustomFilter>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="OOW1FP000FSX" id="NoID" label="_Vendor_report" length="50" name="Vendor__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Vendor__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Vendor_report</Label>
+				<Alias />
+				<Group>Expense_Details</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<required>false</required>
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="VM52FP000FSX" id="NoID" label="_VendorFieldBehaviour_report" length="50" name="VendorFieldBehaviour__" originalProcessID="PLP1FP000FSX" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/VendorFieldBehaviour__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_VendorFieldBehaviour_report</Label>
+				<Alias />
+				<Group>Advance</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+</process>

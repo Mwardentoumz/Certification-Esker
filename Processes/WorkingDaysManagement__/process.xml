@@ -1,0 +1,3311 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:10:23" deleted="0" eskerapplication="P2P" global="0" id="H4FQT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="WorkingDaysManagement__" needvalidation="0" ootofilter="" ootoversion="1" originalProcessID="EPOIWM000M4H" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="0" version="1" visibility="1">
+  <properties>
+    <dbIndex>
+      <AUTO_AJ4FQT400153EA>&lt;Index&gt;&lt;Ref Name="AJ4FQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AJ4FQT400153EA>
+    </dbIndex>
+    <gdr>
+      <FinalizationScriptAllowRetry>
+      </FinalizationScriptAllowRetry>
+      <FinalizationScript>
+      </FinalizationScript>
+      <ValidationScriptAllowRetry>
+      </ValidationScriptAllowRetry>
+      <validationscriptIncludedScripts>Sys/Sys_Helpers_Database</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Sys/Sys_Helpers_LdapUtil</validationscriptIncludedScripts>
+      <ValidationScript>"use strict";
+var Validation;
+(function (Validation) {
+    var currentName = Data.GetActionName();
+    var currentAction = Data.GetActionType();
+    Log.Info("-- Working Days Management Validation Script -- Name: '" + (currentName ? currentName : "&lt;empty&gt;") + "', Action: '" + (currentAction ? currentAction : "&lt;empty&gt;") + "' , Device: '" + Data.GetActionDevice());
+    function Save() {
+        Log.Info("Save working days: " + Data.GetValue("ConfigName__"));
+        const workingDaysMsn = Variable.GetValueAsString("WorkingDaysMsn");
+        const filter = workingDaysMsn ? Sys.Helpers.LdapUtil.FilterEqual("MSN", workingDaysMsn) : Sys.Helpers.LdapUtil.FilterEqual("ConfigName__", Data.GetValue("ConfigName__"));
+        let record = Sys.Helpers.Database.CD2CT("WorkingDays__", filter.toString());
+        if (record.GetLastError() !== 0) {
+            Log.Error("Error saving Working days table: " + record.GetLastErrorMessage());
+            // TODO: NextAlert
+        }
+    }
+    if (currentAction === "approve_asynchronous" || currentAction === "approve") {
+        switch (currentName) {
+            case "Save":
+                Save();
+                break;
+            default:
+                break;
+        }
+    }
+})(Validation || (Validation = {}));
+//# sourceMappingURL=validationscript.js.map</ValidationScript>
+      <AllowTagCoverPages>true</AllowTagCoverPages>
+      <AllowTagNewDocuments>true</AllowTagNewDocuments>
+      <AllowTagAttachments>true</AllowTagAttachments>
+      <ExtractionScriptAllowRetry>
+      </ExtractionScriptAllowRetry>
+      <ExtractionScript>
+      </ExtractionScript>
+      <ExtractionScriptRunOnOCRFailed>
+      </ExtractionScriptRunOnOCRFailed>
+      <AllowRemovePages>true</AllowRemovePages>
+      <AllowSwapPages>true</AllowSwapPages>
+      <PostProcessingScriptAllowRetry>
+      </PostProcessingScriptAllowRetry>
+      <PostProcessingScript>
+      </PostProcessingScript>
+    </gdr>
+    <lg>
+      <process_da>{
+	"_April": "April",
+	"_August": "August",
+	"_ConfigDescription": "Beskrivelse",
+	"_ConfigDescription_report": "Beskrivelse",
+	"_ConfigName": "Navn",
+	"_ConfigName_report": "Navn",
+	"_Daily": "Dagligt",
+	"_Day": "Dag",
+	"_day(s)": "dag(e)",
+	"_DayOffEnd": "Slut",
+	"_DayOffName": "Navn",
+	"_DayOffRecurrence": "Gentagelse",
+	"_DayOffStart": "Start",
+	"_DaysOffTitle": "Fridage",
+	"_December": "December",
+	"_Details": "Rediger",
+	"_EndAfter": "Slut efter",
+	"_EndBy": "Slut",
+	"_Every": "Hver",
+	"_EveryWeekday": "Alle hverdage",
+	"_February": "Februar",
+	"_First": "første",
+	"_Fourth": "fjerde",
+	"_Friday": "Fredag",
+	"_January": "Januar",
+	"_jsonDaysOff": "Fridag i JSON-format",
+	"_July": "Juli",
+	"_June": "Juni",
+	"_Last": "sidst",
+	"_March": "Marts",
+	"_May": "Maj",
+	"_Monday": "Mandag",
+	"_month(s)": "måned(er)",
+	"_Monthly": "Månedligt",
+	"_NoEndDate": "Ingen slutdato",
+	"_November": "November",
+	"_occurrence(s)": "forekomst(er)",
+	"_October": "Oktober",
+	"_of": "i",
+	"_ofEvery": "hver",
+	"_OnDate": "Den",
+	"_OnThe": "Den",
+	"_PanelDaysOff": "Fridage",
+	"_PanelGeneral": "Generelt",
+	"_PanelWorkingDays": "Arbejdsdage",
+	"_RecurEveryWeeks": "Gentag hver",
+	"_RecurEveryYears": "Gentag hver",
+	"_Recurrence": "Gentagelsesmønster",
+	"_RecurrenceRange": "Interval for gentagelser",
+	"_Saturday": "Lørdag",
+	"_Second": "anden",
+	"_September": "September",
+	"_Sunday": "Søndag",
+	"_Third": "tredje",
+	"_Thursday": "Torsdag",
+	"_Tuesday": "Tirsdag",
+	"_Wednesday": "Onsdag",
+	"_week(s)On": "uge(r) om",
+	"_Weekly": "Ugentligt",
+	"_year(s)": "år",
+	"_Yearly": "Årligt",
+	"WorkingDaysManagement__": "Definer arbejdsdage"
+}</process_da>
+      <process_de>{
+	"_April": "April",
+	"_August": "August",
+	"_ConfigDescription": "Beschreibung",
+	"_ConfigDescription_report": "Beschreibung",
+	"_ConfigName": "Name",
+	"_ConfigName_report": "Name",
+	"_Daily": "Täglich",
+	"_Day": "Am",
+	"_day(s)": "Tag(e)",
+	"_DayOffEnd": "Ende",
+	"_DayOffName": "Name",
+	"_DayOffRecurrence": "Serie",
+	"_DayOffStart": "Beginn",
+	"_DaysOffTitle": "Arbeitsfreie Tage",
+	"_December": "Dezember",
+	"_Details": "Bearbeiten",
+	"_EndAfter": "Endet nach",
+	"_EndBy": "Endet nach",
+	"_Every": "Jeden/Alle",
+	"_EveryWeekday": "Jeden Wochentag",
+	"_February": "Februar",
+	"_First": "ersten",
+	"_Fourth": "vierten",
+	"_Friday": "Freitag",
+	"_January": "Januar",
+	"_jsonDaysOff": "Arbeitsfreie Tage im JSON-Format",
+	"_July": "Juli",
+	"_June": "Juni",
+	"_Last": "letzten",
+	"_March": "März",
+	"_May": "Mai",
+	"_Monday": "Montag",
+	"_month(s)": "Monat(e)",
+	"_Monthly": "Monatlich",
+	"_NoEndDate": "Kein Enddatum",
+	"_November": "November",
+	"_occurrence(s)": "Terminen",
+	"_October": "Oktober",
+	"_of": "im",
+	"_ofEvery": "jeden/alle",
+	"_OnDate": "Am",
+	"_OnThe": "Am",
+	"_PanelDaysOff": "Arbeitsfreie Tage",
+	"_PanelGeneral": "Allgemein",
+	"_PanelWorkingDays": "Werktage",
+	"_RecurEveryWeeks": "Jede/Alle",
+	"_RecurEveryYears": "Jedes/Alle",
+	"_Recurrence": "Serienmuster",
+	"_RecurrenceRange": "Seriendauer",
+	"_Saturday": "Samstag",
+	"_Second": "zweiten",
+	"_September": "September",
+	"_Sunday": "Sonntag",
+	"_Third": "dritten",
+	"_Thursday": "Donnerstag",
+	"_Tuesday": "Dienstag",
+	"_Wednesday": "Mittwoch",
+	"_week(s)On": "Woche(n) am",
+	"_Weekly": "Wöchentlich",
+	"_year(s)": "Jahr(e)",
+	"_Yearly": "Jährlich",
+	"WorkingDaysManagement__": "Definition der Werktage"
+}</process_de>
+      <process_ja>{
+	"_April": "4月",
+	"_August": "8月",
+	"_ConfigDescription": "説明",
+	"_ConfigDescription_report": "説明",
+	"_ConfigName": "名前",
+	"_ConfigName_report": "名前",
+	"_Daily": "毎日",
+	"_Day": "指定日",
+	"_day(s)": "日ごと",
+	"_DayOffEnd": "終了",
+	"_DayOffName": "名前",
+	"_DayOffRecurrence": "繰り返し",
+	"_DayOffStart": "開始日",
+	"_DaysOffTitle": "休日",
+	"_December": "12月",
+	"_Details": "編集",
+	"_EndAfter": "期間",
+	"_EndBy": "終了日",
+	"_Every": " ",
+	"_EveryWeekday": "平日",
+	"_February": "2月",
+	"_First": "第1",
+	"_Fourth": "第4",
+	"_Friday": "金曜日",
+	"_January": "1月",
+	"_jsonDaysOff": "JSON形式の休日",
+	"_July": "7月",
+	"_June": "6月",
+	"_Last": "最終",
+	"_March": "3月",
+	"_May": "5月",
+	"_Monday": "月曜日",
+	"_month(s)": "か月ごと",
+	"_Monthly": "毎月",
+	"_NoEndDate": "終了日なし",
+	"_November": "11月",
+	"_occurrence(s)": "日間",
+	"_October": "10月",
+	"_of": " ",
+	"_ofEvery": " ",
+	"_OnDate": "日付",
+	"_OnThe": " ",
+	"_PanelDaysOff": "休日",
+	"_PanelGeneral": "全般",
+	"_PanelWorkingDays": "営業日",
+	"_RecurEveryWeeks": "繰り返し",
+	"_RecurEveryYears": "繰り返し",
+	"_Recurrence": "繰り返しパターン",
+	"_RecurrenceRange": "繰り返し期間",
+	"_Saturday": "土曜日",
+	"_Second": "第2",
+	"_September": "9月",
+	"_Sunday": "日曜日",
+	"_Third": "第3",
+	"_Thursday": "木曜日",
+	"_Tuesday": "火曜日",
+	"_Wednesday": "水曜日",
+	"_week(s)On": "週ごと",
+	"_Weekly": "毎週",
+	"_year(s)": "年ごと",
+	"_Yearly": "毎年",
+	"WorkingDaysManagement__": "営業日を定義する"
+}</process_ja>
+      <process_en>{
+	"_April": "April",
+	"_August": "August",
+	"_ConfigDescription": "Description",
+	"_ConfigDescription_report": "Description",
+	"_ConfigName": "Name",
+	"_ConfigName_report": "Name",
+	"_Daily": "Daily",
+	"_Day": "Day",
+	"_day(s)": "day(s)",
+	"_DayOffEnd": "End",
+	"_DayOffName": "Name",
+	"_DayOffRecurrence": "Recurrence",
+	"_DayOffStart": "Start",
+	"_DaysOffTitle": "Days Off",
+	"_December": "December",
+	"_Details": "Edit",
+	"_EndAfter": "End after",
+	"_EndBy": "End by",
+	"_Every": "Every",
+	"_EveryWeekday": "Every weekday",
+	"_February": "February",
+	"_First": "first",
+	"_Fourth": "fourth",
+	"_Friday": "Friday",
+	"_January": "January",
+	"_jsonDaysOff": "Days off in JSON format",
+	"_July": "July",
+	"_June": "June",
+	"_Last": "last",
+	"_March": "March",
+	"_May": "May",
+	"_Monday": "Monday",
+	"_month(s)": "month(s)",
+	"_Monthly": "Monthly",
+	"_NoEndDate": "No end date",
+	"_November": "November",
+	"_occurrence(s)": "occurrence(s)",
+	"_October": "October",
+	"_of": "of",
+	"_ofEvery": "of every",
+	"_OnDate": "On",
+	"_OnThe": "The",
+	"_PanelDaysOff": "Days Off",
+	"_PanelGeneral": "General",
+	"_PanelWorkingDays": "Working Days",
+	"_RecurEveryWeeks": "Recur every",
+	"_RecurEveryYears": "Recur every",
+	"_Recurrence": "Recurrence pattern",
+	"_RecurrenceRange": "Range of recurrence",
+	"_Saturday": "Saturday",
+	"_Second": "second",
+	"_September": "September",
+	"_Sunday": "Sunday",
+	"_Third": "third",
+	"_Thursday": "Thursday",
+	"_Tuesday": "Tuesday",
+	"_Wednesday": "Wednesday",
+	"_week(s)On": "week(s) on",
+	"_Weekly": "Weekly",
+	"_year(s)": "year(s)",
+	"_Yearly": "Yearly",
+	"WorkingDaysManagement__": "Define Working Days"
+}</process_en>
+      <process_es>{
+	"_April": "Abril",
+	"_August": "Agosto",
+	"_ConfigDescription": "Descripción",
+	"_ConfigDescription_report": "Descripción",
+	"_ConfigName": "Nombre",
+	"_ConfigName_report": "Nombre",
+	"_Daily": "Diaria",
+	"_Day": "El día",
+	"_day(s)": "día(s)",
+	"_DayOffEnd": "Fin",
+	"_DayOffName": "Nombre",
+	"_DayOffRecurrence": "Frecuencia",
+	"_DayOffStart": "Inicio",
+	"_DaysOffTitle": "Días no laborables",
+	"_December": "Diciembre",
+	"_Details": "Modificar",
+	"_EndAfter": "Finalizar después",
+	"_EndBy": "Finalizar después de",
+	"_Every": "Cada",
+	"_EveryWeekday": "Todos los días de la semana",
+	"_February": "Febrero",
+	"_First": "primer",
+	"_Fourth": "cuarto",
+	"_Friday": "Viernes",
+	"_January": "Enero",
+	"_jsonDaysOff": "Días no laborables en formato JSON",
+	"_July": "Julio",
+	"_June": "Junio",
+	"_Last": "último",
+	"_March": "Marzo",
+	"_May": "Mayo",
+	"_Monday": "Lunes",
+	"_month(s)": "mes(es)",
+	"_Monthly": "Mensual",
+	"_NoEndDate": "Sin fecha de finalización",
+	"_November": "Noviembre",
+	"_occurrence(s)": "repeticiones",
+	"_October": "Octubre",
+	"_of": "de",
+	"_ofEvery": "de cada",
+	"_OnDate": "El",
+	"_OnThe": "El",
+	"_PanelDaysOff": "Días no laborables",
+	"_PanelGeneral": "General",
+	"_PanelWorkingDays": "Días laborables",
+	"_RecurEveryWeeks": "Repetir cada",
+	"_RecurEveryYears": "Repetir cada",
+	"_Recurrence": "Frecuencia",
+	"_RecurrenceRange": "Intervalo de repetición",
+	"_Saturday": "Sábado",
+	"_Second": "segundo",
+	"_September": "Septiembre",
+	"_Sunday": "Domingo",
+	"_Third": "tercero",
+	"_Thursday": "Jueves",
+	"_Tuesday": "Martes",
+	"_Wednesday": "Miércoles",
+	"_week(s)On": "semana(s) el",
+	"_Weekly": "Semanal",
+	"_year(s)": "año(s)",
+	"_Yearly": "Anual",
+	"WorkingDaysManagement__": "Definición de los días laborables"
+}</process_es>
+      <process_fr>{
+	"_April": "Avril",
+	"_August": "Août",
+	"_ConfigDescription": "Description",
+	"_ConfigDescription_report": "Description",
+	"_ConfigName": "Nom",
+	"_ConfigName_report": "Nom",
+	"_Daily": "Quotidienne",
+	"_Day": "Le",
+	"_day(s)": "jour(s)",
+	"_DayOffEnd": "Fin",
+	"_DayOffName": "Nom",
+	"_DayOffRecurrence": "Périodicité",
+	"_DayOffStart": "Début",
+	"_DaysOffTitle": "Jours de congé",
+	"_December": "Décembre",
+	"_Details": "Modifier",
+	"_EndAfter": "Fin après",
+	"_EndBy": "Fin après",
+	"_Every": "Tous les",
+	"_EveryWeekday": "Chaque jour de la semaine",
+	"_February": "Février",
+	"_First": "premier",
+	"_Fourth": "quatrième",
+	"_Friday": "Vendredi",
+	"_January": "Janvier",
+	"_jsonDaysOff": "Jours de congé au format JSON",
+	"_July": "Juillet",
+	"_June": "Juin",
+	"_Last": "dernier",
+	"_March": "Mars",
+	"_May": "Mai",
+	"_Monday": "Lundi",
+	"_month(s)": "mois",
+	"_Monthly": "Mensuelle",
+	"_NoEndDate": "Pas de date de fin",
+	"_November": "Novembre",
+	"_occurrence(s)": "occurrence(s)",
+	"_October": "Octobre",
+	"_of": "de",
+	"_ofEvery": "tous les",
+	"_OnDate": "Le",
+	"_OnThe": "Le",
+	"_PanelDaysOff": "Jours de congé",
+	"_PanelGeneral": "Général",
+	"_PanelWorkingDays": "Jours ouvrés",
+	"_RecurEveryWeeks": "Toutes les",
+	"_RecurEveryYears": "Tous les",
+	"_Recurrence": "Critère de périodicité",
+	"_RecurrenceRange": "Plage de périodicité",
+	"_Saturday": "Samedi",
+	"_Second": "deuxième",
+	"_September": "Septembre",
+	"_Sunday": "Dimanche",
+	"_Third": "troisième",
+	"_Thursday": "Jeudi",
+	"_Tuesday": "Mardi",
+	"_Wednesday": "Mercredi",
+	"_week(s)On": "semaine(s) le",
+	"_Weekly": "Hebdomadaire",
+	"_year(s)": "an(s)",
+	"_Yearly": "Annuelle",
+	"WorkingDaysManagement__": "Définition des jours ouvrés"
+}</process_fr>
+      <process_pl>{
+	"_April": "kwiecień",
+	"_August": "sierpień",
+	"_ConfigDescription": "Opis",
+	"_ConfigDescription_report": "Opis",
+	"_ConfigName": "Nazwa",
+	"_ConfigName_report": "Nazwa",
+	"_Daily": "Codziennie",
+	"_Day": "Dzień",
+	"_day(s)": "dzień/dni",
+	"_DayOffEnd": "Koniec",
+	"_DayOffName": "Nazwa",
+	"_DayOffRecurrence": "Powtarzalność",
+	"_DayOffStart": "Początek",
+	"_DaysOffTitle": "Dni wolne",
+	"_December": "grudzień",
+	"_Details": "Edytuj",
+	"_EndAfter": "Zakończ po",
+	"_EndBy": "Zakończ do",
+	"_Every": "Co",
+	"_EveryWeekday": "Każdy dzień tygodnia",
+	"_February": "luty",
+	"_First": "1.",
+	"_Fourth": "4.",
+	"_Friday": "piątek",
+	"_January": "styczeń",
+	"_jsonDaysOff": "Dni wolne w formacie JSON",
+	"_July": "lipiec",
+	"_June": "czerwiec",
+	"_Last": "ost.",
+	"_March": "marzec",
+	"_May": "maj",
+	"_Monday": "poniedziałek",
+	"_month(s)": "mies.",
+	"_Monthly": "Co miesiąc",
+	"_NoEndDate": "Bez daty końcowej",
+	"_November": "listopad",
+	"_occurrence(s)": "wystąpienie/-a",
+	"_October": "październik",
+	"_of": "z",
+	"_ofEvery": "każdego/-ej",
+	"_OnDate": "W dniu",
+	"_OnThe": "W",
+	"_PanelDaysOff": "Dni wolne",
+	"_PanelGeneral": "Ogólne",
+	"_PanelWorkingDays": "Dni robocze",
+	"_RecurEveryWeeks": "Powtórz co",
+	"_RecurEveryYears": "Powtórz co",
+	"_Recurrence": "Schemat powtarzania",
+	"_RecurrenceRange": "Zakres powtarzania",
+	"_Saturday": "sobota",
+	"_Second": "2.",
+	"_September": "wrzesień",
+	"_Sunday": "niedziela",
+	"_Third": "3.",
+	"_Thursday": "czwartek",
+	"_Tuesday": "wtorek",
+	"_Wednesday": "środa",
+	"_week(s)On": "tydzień/tyg. w dniu",
+	"_Weekly": "Co tydzień",
+	"_year(s)": "rok/lat(a)",
+	"_Yearly": "Co rok",
+	"WorkingDaysManagement__": "Zdefiniuj dni robocze"
+}</process_pl>
+      <process_it>{
+	"_April": "Aprile",
+	"_August": "Agosto",
+	"_ConfigDescription": "Descrizione",
+	"_ConfigDescription_report": "Descrizione",
+	"_ConfigName": "Nome",
+	"_ConfigName_report": "Nome",
+	"_Daily": "Giornaliera",
+	"_Day": "Giorno",
+	"_day(s)": "giorno/i",
+	"_DayOffEnd": "Fine",
+	"_DayOffName": "Nome",
+	"_DayOffRecurrence": "Ricorrenza",
+	"_DayOffStart": "Data inizio",
+	"_DaysOffTitle": "Giorni liberi",
+	"_December": "Dicembre",
+	"_Details": "Modifica",
+	"_EndAfter": "Fine dopo",
+	"_EndBy": "Fine dopo",
+	"_Every": "Ogni",
+	"_EveryWeekday": "Ogni giorno feriale",
+	"_February": "Febbraio",
+	"_First": "primo/a",
+	"_Fourth": "quarto/a",
+	"_Friday": "Venerdì",
+	"_January": "Gennaio",
+	"_jsonDaysOff": "Giorni liberi in formato JSON",
+	"_July": "Luglio",
+	"_June": "Giugno",
+	"_Last": "ultimo",
+	"_March": "Marzo",
+	"_May": "Maggio",
+	"_Monday": "Lunedì",
+	"_month(s)": "mese/i",
+	"_Monthly": "Mensile",
+	"_NoEndDate": "Nessun Termine",
+	"_November": "Novembre",
+	"_occurrence(s)": "occorrenze",
+	"_October": "Ottobre",
+	"_of": "di",
+	"_ofEvery": "ogni",
+	"_OnDate": "Il",
+	"_OnThe": "Ogni",
+	"_PanelDaysOff": "Giorni liberi",
+	"_PanelGeneral": "Generale",
+	"_PanelWorkingDays": "Giorni lavorativi",
+	"_RecurEveryWeeks": "Ricorre ogni",
+	"_RecurEveryYears": "Ricorre ogni",
+	"_Recurrence": "Criterio di ricorrenza",
+	"_RecurrenceRange": "Intervallo di ricorrenza",
+	"_Saturday": "Sabato",
+	"_Second": "secondo/a",
+	"_September": "Settembre",
+	"_Sunday": "Domenica",
+	"_Third": "terzo/a",
+	"_Thursday": "Giovedì",
+	"_Tuesday": "Martedì",
+	"_Wednesday": "Mercoledì",
+	"_week(s)On": "settimana/e di",
+	"_Weekly": "Settimanale",
+	"_year(s)": "anno/i",
+	"_Yearly": "Annuale",
+	"WorkingDaysManagement__": "Definizione giorni lavorativi"
+}</process_it>
+      <process_sk>{
+	"_April": "Apríl",
+	"_August": "August",
+	"_ConfigDescription": "Popis",
+	"_ConfigDescription_report": "Popis",
+	"_ConfigName": "Názov",
+	"_ConfigName_report": "Názov",
+	"_Daily": "Denne",
+	"_Day": "Deň",
+	"_day(s)": "deň(dni)",
+	"_DayOffEnd": "Koniec",
+	"_DayOffName": "Názov",
+	"_DayOffRecurrence": "Opakovanie",
+	"_DayOffStart": "Začiatok",
+	"_DaysOffTitle": "Dni voľna",
+	"_December": "December",
+	"_Details": "Upraviť",
+	"_EndAfter": "Koniec po",
+	"_EndBy": "Koniec do",
+	"_Every": "Každý",
+	"_EveryWeekday": "Každý pracovný deň",
+	"_February": "Február",
+	"_First": "prvý",
+	"_Fourth": "štvrtý",
+	"_Friday": "Piatok",
+	"_January": "Január",
+	"_jsonDaysOff": "Dni voľna vo formáte JSON",
+	"_July": "Júl",
+	"_June": "Jún",
+	"_Last": "posledný",
+	"_March": "Marec",
+	"_May": "Máj",
+	"_Monday": "Pondelok",
+	"_month(s)": "mesiac(-e)",
+	"_Monthly": "Mesačne",
+	"_NoEndDate": "Bez dátumu ukončenia",
+	"_November": "November",
+	"_occurrence(s)": "výskyt(-y)",
+	"_October": "Október",
+	"_of": "z",
+	"_ofEvery": "z každého",
+	"_OnDate": "Zapnutý",
+	"_OnThe": "Tento/Tieto",
+	"_PanelDaysOff": "Dni voľna",
+	"_PanelGeneral": "Všeobecné",
+	"_PanelWorkingDays": "Pracovné dni",
+	"_RecurEveryWeeks": "Opakovať každé",
+	"_RecurEveryYears": "Opakovať každé",
+	"_Recurrence": "Vzor opakovania",
+	"_RecurrenceRange": "Rozsah opakovania",
+	"_Saturday": "Sobota",
+	"_Second": "druhý",
+	"_September": "September",
+	"_Sunday": "Nedeľa",
+	"_Third": "tretí",
+	"_Thursday": "Štvrtok",
+	"_Tuesday": "Utorok",
+	"_Wednesday": "Streda",
+	"_week(s)On": "týždeň(-e) na",
+	"_Weekly": "Týždenne",
+	"_year(s)": "rok(-y)",
+	"_Yearly": "Ročne",
+	"WorkingDaysManagement__": "Definovať pracovné dni"
+}</process_sk>
+      <process_zh-CN>{
+	"_April": "四月",
+	"_August": "八月",
+	"_ConfigDescription": "说明/描述",
+	"_ConfigDescription_report": "说明/描述",
+	"_ConfigName": "名称",
+	"_ConfigName_report": "名称",
+	"_Daily": "每天",
+	"_Day": "日",
+	"_day(s)": "天",
+	"_DayOffEnd": "结束",
+	"_DayOffName": "名称",
+	"_DayOffRecurrence": "循环",
+	"_DayOffStart": "启动",
+	"_DaysOffTitle": "休息日",
+	"_December": "十二月",
+	"_Details": "编辑",
+	"_EndAfter": "结束前的重复次数：",
+	"_EndBy": "结束日期",
+	"_Every": "每",
+	"_EveryWeekday": "每个工作日",
+	"_February": "二月",
+	"_First": "第一个",
+	"_Fourth": "第四个",
+	"_Friday": "星期五",
+	"_January": "一月",
+	"_jsonDaysOff": "JSON 格式休息日",
+	"_July": "七月",
+	"_June": "六月",
+	"_Last": "最后一个",
+	"_March": "三月",
+	"_May": "五月",
+	"_Monday": "星期一",
+	"_month(s)": "个月",
+	"_Monthly": "每月",
+	"_NoEndDate": "无结束日期",
+	"_November": "十一月",
+	"_occurrence(s)": "次",
+	"_October": "十月",
+	"_of": "月份：",
+	"_ofEvery": "频率：每",
+	"_OnDate": "月中日",
+	"_OnThe": "周中日",
+	"_PanelDaysOff": "休息日",
+	"_PanelGeneral": "通用",
+	"_PanelWorkingDays": "工作日",
+	"_RecurEveryWeeks": "重复间隔：每",
+	"_RecurEveryYears": "重复间隔：每",
+	"_Recurrence": "循环模式",
+	"_RecurrenceRange": "循环范围",
+	"_Saturday": "星期六",
+	"_Second": "第二个",
+	"_September": "九月",
+	"_Sunday": "星期日",
+	"_Third": "第三个",
+	"_Thursday": "星期四",
+	"_Tuesday": "星期二",
+	"_Wednesday": "星期三",
+	"_week(s)On": "周的",
+	"_Weekly": "每周",
+	"_year(s)": "年",
+	"_Yearly": "每年",
+	"WorkingDaysManagement__": "定义工作日"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"_April": "Abril",
+	"_August": "Agosto",
+	"_ConfigDescription": "Descrição",
+	"_ConfigDescription_report": "Descrição",
+	"_ConfigName": "Nome",
+	"_ConfigName_report": "Nome",
+	"_Daily": "Diariamente",
+	"_Day": "Dia",
+	"_day(s)": "dia(s)",
+	"_DayOffEnd": "Fim",
+	"_DayOffName": "Nome",
+	"_DayOffRecurrence": "Recorrência",
+	"_DayOffStart": "Início",
+	"_DaysOffTitle": "Dias de folga",
+	"_December": "Dezembro",
+	"_Details": "Editar",
+	"_EndAfter": "Terminar depois",
+	"_EndBy": "Terminar em",
+	"_Every": "Cada",
+	"_EveryWeekday": "Todos os dias da semana",
+	"_February": "Fevereiro",
+	"_First": "primeiro",
+	"_Fourth": "quarto",
+	"_Friday": "Sexta-feira",
+	"_January": "Janeiro",
+	"_jsonDaysOff": "Dias de folga em formato JSON",
+	"_July": "Julho",
+	"_June": "Junho",
+	"_Last": "último",
+	"_March": "Março",
+	"_May": "Maio",
+	"_Monday": "Segunda-feira",
+	"_month(s)": "mês(es)",
+	"_Monthly": "Mensalmente",
+	"_NoEndDate": "Sem data de fim",
+	"_November": "Novembro",
+	"_occurrence(s)": "ocorrência(s)",
+	"_October": "Outubro",
+	"_of": "de",
+	"_ofEvery": "de cada",
+	"_OnDate": "Em",
+	"_OnThe": "O",
+	"_PanelDaysOff": "Dias de folga",
+	"_PanelGeneral": "Geral",
+	"_PanelWorkingDays": "Dias úteis",
+	"_RecurEveryWeeks": "Se repetem a cada",
+	"_RecurEveryYears": "Se repetem a cada",
+	"_Recurrence": "Padrão de recorrência",
+	"_RecurrenceRange": "Intervalo de recorrência",
+	"_Saturday": "Sábado",
+	"_Second": "segundo",
+	"_September": "Setembro",
+	"_Sunday": "Domingo",
+	"_Third": "terceiro",
+	"_Thursday": "Quinta-feira",
+	"_Tuesday": "Terça-feira",
+	"_Wednesday": "Quarta-feira",
+	"_week(s)On": "semana(s) em",
+	"_Weekly": "Semanalmente",
+	"_year(s)": "ano(s)",
+	"_Yearly": "Anualmente",
+	"WorkingDaysManagement__": "Definir dias úteis"
+}</process_pt-BR>
+    </lg>
+    <openInProcess>
+      <startWithoutProcessing>true</startWithoutProcessing>
+    </openInProcess>
+    <process>
+      <flowtype>processing</flowtype>
+      <ocrpreset>scan</ocrpreset>
+      <homepagelabel>WorkingDaysManagement__</homepagelabel>
+      <enableflexibleauditing>
+      </enableflexibleauditing>
+      <enableflexibleediting>
+      </enableflexibleediting>
+      <enableflexibleteaching>
+      </enableflexibleteaching>
+      <enableflexiblewalkme>
+      </enableflexiblewalkme>
+      <disableocr>
+      </disableocr>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <disableautolearning>true</disableautolearning>
+      <backgroundprocessingthreshold>
+      </backgroundprocessingthreshold>
+      <EnablePreviewPrecomputation>
+      </EnablePreviewPrecomputation>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <enablerounddecimal>true</enablerounddecimal>
+      <pdfNormalizeFilter>
+      </pdfNormalizeFilter>
+      <archiveDuration>0</archiveDuration>
+      <ocrpagestoprocess>0</ocrpagestoprocess>
+      <ScriptEngineType>2</ScriptEngineType>
+      <UseActionNameWithScriptApproval>true</UseActionNameWithScriptApproval>
+      <displayWidth>1024</displayWidth>
+      <AllowUploadAttachment>0</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+      <UseCultureFormat>true</UseCultureFormat>
+      <AllowRetryExtractCD>true</AllowRetryExtractCD>
+      <TransportName>CustomData</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+      <printToProcess>
+      </printToProcess>
+    </process>
+    <ui>
+      <CustomScriptDebug>false</CustomScriptDebug>
+      <customscriptIncludedScripts>Lib_WorkingDays_Management_V12.0.566.0</customscriptIncludedScripts>
+      <CustomScriptReadonly>true</CustomScriptReadonly>
+      <CustomScript>"use strict";
+var CustomScript;
+(function (CustomScript) {
+    /** **************** **/
+    /** Global variables **/
+    /** **************** **/
+    const gRecurrenceTypes = {
+        "Daily": {
+            type: "RadioButton",
+            id: Lib.WorkingDays.Management.RecurrenceType.Daily,
+            text: "_Daily",
+            width: 100
+        },
+        "Weekly": {
+            type: "RadioButton",
+            id: Lib.WorkingDays.Management.RecurrenceType.Weekly,
+            text: "_Weekly",
+            width: 100
+        },
+        "Monthly": {
+            type: "RadioButton",
+            id: Lib.WorkingDays.Management.RecurrenceType.Monthly,
+            text: "_Monthly",
+            width: 100
+        },
+        "Yearly": {
+            type: "RadioButton",
+            id: Lib.WorkingDays.Management.RecurrenceType.Yearly,
+            text: "_Yearly",
+            width: 100
+        }
+    };
+    const gRecurrences = {
+        "Yearly": [
+            [
+                gRecurrenceTypes.Daily,
+                {
+                    type: "Integer",
+                    id: "recurYears",
+                    label: "_RecurEveryYears",
+                    width: 40
+                },
+                {
+                    type: "Description",
+                    id: "years",
+                    label: "_year(s)"
+                }
+            ],
+            [
+                gRecurrenceTypes.Weekly,
+                {
+                    type: "RadioButton",
+                    id: "onDate",
+                    text: "_OnDate",
+                    width: 60
+                },
+                {
+                    type: "Integer",
+                    id: "day",
+                    width: 40
+                },
+                {
+                    type: "ComboBox",
+                    id: "onDateMonth",
+                    label: "",
+                    text: "0=_January\n1=_February\n2=_March\n3=_April\n4=_May\n5=_June\n6=_July\n7=_August\n8=_September\n9=_October\n10=_November\n11=_December",
+                    width: 140
+                }
+            ],
+            [
+                gRecurrenceTypes.Monthly,
+                {
+                    type: "RadioButton",
+                    id: "onThe",
+                    text: "_OnThe",
+                    width: 60
+                },
+                {
+                    type: "ComboBox",
+                    id: "rank",
+                    text: "1=_First\n2=_Second\n3=_Third\n4=_Fourth\n0=_Last",
+                    width: 140
+                },
+                {
+                    type: "ComboBox",
+                    id: "week",
+                    text: "1=_Monday\n2=_Tuesday\n3=_Wednesday\n4=_Thursday\n5=_Friday\n6=_Saturday\n0=_Sunday",
+                    width: 140
+                },
+                {
+                    type: "ComboBox",
+                    id: "onTheMonth",
+                    label: "_of",
+                    text: "0=_January\n1=_February\n2=_March\n3=_April\n4=_May\n5=_June\n6=_July\n7=_August\n8=_September\n9=_October\n10=_November\n11=_December",
+                    width: 140
+                }
+            ],
+            [
+                gRecurrenceTypes.Yearly
+            ]
+        ],
+        "Monthly": [
+            [
+                gRecurrenceTypes.Daily,
+                {
+                    type: "RadioButton",
+                    id: "onDate",
+                    text: "_Day",
+                    width: 60
+                },
+                {
+                    type: "Integer",
+                    id: "day",
+                    width: 40
+                },
+                {
+                    type: "Integer",
+                    id: "onDateRecurMonths",
+                    label: "_ofEvery",
+                    width: 40
+                },
+                {
+                    type: "Description",
+                    id: "onDateMonths",
+                    label: "_month(s)"
+                }
+            ],
+            [
+                gRecurrenceTypes.Weekly,
+                {
+                    type: "RadioButton",
+                    id: "onThe",
+                    text: "_OnThe",
+                    width: 60
+                },
+                {
+                    type: "ComboBox",
+                    id: "rank",
+                    text: "1=_First\n2=_Second\n3=_Third\n4=_Fourth\n0=_Last",
+                    width: 140
+                },
+                {
+                    type: "ComboBox",
+                    id: "week",
+                    text: "1=_Monday\n2=_Tuesday\n3=_Wednesday\n4=_Thursday\n5=_Friday\n6=_Saturday\n0=_Sunday",
+                    width: 140
+                },
+                {
+                    type: "Integer",
+                    id: "onTheRecurMonths",
+                    label: "_ofEvery",
+                    width: 40
+                },
+                {
+                    type: "Description",
+                    id: "onTheMonths",
+                    label: "_month(s)"
+                }
+            ],
+            [
+                gRecurrenceTypes.Monthly
+            ],
+            [
+                gRecurrenceTypes.Yearly
+            ]
+        ],
+        "Weekly": [
+            [
+                gRecurrenceTypes.Daily,
+                {
+                    type: "Integer",
+                    id: "recurWeeks",
+                    label: "_RecurEveryWeeks",
+                    width: 40
+                },
+                {
+                    type: "Description",
+                    id: "weeks",
+                    label: "_week(s)On"
+                }
+            ],
+            [
+                gRecurrenceTypes.Weekly,
+                {
+                    type: "CheckBox",
+                    id: "weekday1",
+                    text: "_Monday",
+                    width: 100
+                },
+                {
+                    type: "CheckBox",
+                    id: "weekday2",
+                    text: "_Tuesday",
+                    width: 100
+                },
+                {
+                    type: "CheckBox",
+                    id: "weekday3",
+                    text: "_Wednesday",
+                    width: 100
+                },
+                {
+                    type: "CheckBox",
+                    id: "weekday4",
+                    text: "_Thursday",
+                    width: 100
+                }
+            ],
+            [
+                gRecurrenceTypes.Monthly,
+                {
+                    type: "CheckBox",
+                    id: "weekday5",
+                    text: "_Friday",
+                    width: 100
+                },
+                {
+                    type: "CheckBox",
+                    id: "weekday6",
+                    text: "_Saturday",
+                    width: 100
+                },
+                {
+                    type: "CheckBox",
+                    id: "weekday0",
+                    text: "_Sunday",
+                    width: 100
+                }
+            ],
+            [
+                gRecurrenceTypes.Yearly
+            ]
+        ],
+        "Daily": [
+            [
+                gRecurrenceTypes.Daily,
+                {
+                    type: "Integer",
+                    id: "recurDays",
+                    label: "_Every",
+                    width: 40
+                },
+                {
+                    type: "Description",
+                    id: "days",
+                    label: "_day(s)"
+                }
+            ],
+            [
+                gRecurrenceTypes.Weekly
+            ],
+            [
+                gRecurrenceTypes.Monthly
+            ],
+            [
+                gRecurrenceTypes.Yearly
+            ]
+        ]
+    };
+    const gRecurrenceRange = [
+        [
+            {
+                type: "Date",
+                id: "startDate",
+                label: "_DayOffStart",
+                width: 100
+            },
+            {
+                type: "RadioButton",
+                id: "noEndDate",
+                text: "_NoEndDate",
+                width: 60
+            }
+        ],
+        [
+            {},
+            {
+                type: "RadioButton",
+                id: "endAfter",
+                text: "_EndAfter",
+                width: 60
+            },
+            {
+                type: "Integer",
+                id: "endAfterOccurrence",
+                width: 40
+            },
+            {
+                type: "Description",
+                id: "occurrences",
+                label: "_occurrence(s)"
+            }
+        ],
+        [
+            {},
+            {
+                type: "RadioButton",
+                id: "endBy",
+                text: "_EndBy",
+                width: 60
+            },
+            {
+                type: "Date",
+                id: "endDate",
+                width: 100
+            }
+        ]
+    ];
+    function checkNumber(control, min, max) {
+        const value = control.GetValue();
+        if ((Sys.Helpers.IsDefined(min) &amp;&amp; value &lt; min) || (Sys.Helpers.IsDefined(max) &amp;&amp; value &gt;= max)) {
+            control.SetError("This value is not allowed");
+            return false;
+        }
+        return true;
+    }
+    const gRecurrencesFunc = {
+        "Yearly": {
+            selectDateType: function (dialog, type) {
+                switch (type) {
+                    case "day":
+                    case "onDateMonth":
+                        dialog.GetControl("onDate").Select(0);
+                    case "onDate":
+                    case Lib.WorkingDays.Management.DateType.OnDate:
+                        dialog.GetControl("onThe").Unselect();
+                        break;
+                    case "rank":
+                    case "week":
+                    case "onTheMonth":
+                        dialog.GetControl("onThe").Select(0);
+                    case "onThe":
+                    case Lib.WorkingDays.Management.DateType.OnThe:
+                        dialog.GetControl("onDate").Unselect();
+                        break;
+                }
+            },
+            fillDialog: function (dialog, dayOff) {
+                let date = gRow.DayOffStart__.GetValue();
+                dialog.GetControl("recurYears").SetValue(dayOff.recurEvery);
+                this.selectDateType(dialog, dayOff.dateType);
+                if (dayOff.dateType == Lib.WorkingDays.Management.DateType.OnDate) {
+                    let day = dayOff.day || !date ? dayOff.day : date.getDate();
+                    if (day) {
+                        dialog.GetControl("day").SetValue(day);
+                    }
+                }
+                let month = dayOff.month || !date ? dayOff.month : date.getMonth();
+                if (month) {
+                    dialog.GetControl("onDateMonth").SetValue(month);
+                    dialog.GetControl("onTheMonth").SetValue(month);
+                }
+                dialog.GetControl("rank").SetValue(dayOff.rank);
+                dialog.GetControl("week").SetValue(dayOff.week);
+            },
+            commitDialog: function (dialog, dayOff) {
+                const onDate = dialog.GetControl("onDate").IsSelected(0);
+                dayOff.recurEvery = dialog.GetControl("recurYears").GetValue();
+                dayOff.dateType = onDate ? Lib.WorkingDays.Management.DateType.OnDate : Lib.WorkingDays.Management.DateType.OnThe;
+                dayOff.day = dialog.GetControl("day").GetValue();
+                dayOff.rank = dialog.GetControl("rank").GetValue();
+                dayOff.week = dialog.GetControl("week").GetValue();
+                dayOff.month = dialog.GetControl(onDate ? "onDateMonth" : "onTheMonth").GetValue();
+            },
+            onChange: function (dialog, tabId, event, control) {
+                switch (control.GetName()) {
+                    case "recurYears":
+                        checkNumber(control, 1);
+                        return;
+                    case "day":
+                    case "onDateMonth":
+                        // const day = dialog.GetControl("day").GetValue();
+                        // const month = dialog.GetControl("onDateMonth").GetValue();
+                        // TODO: check day validity
+                        break;
+                }
+                this.selectDateType(dialog, control.GetName());
+            }
+        },
+        "Monthly": {
+            selectDateType: function (dialog, type) {
+                switch (type) {
+                    case "day":
+                    case "onDateRecurMonths":
+                        dialog.GetControl("onDate").Select(0);
+                    case "onDate":
+                    case Lib.WorkingDays.Management.DateType.OnDate:
+                        dialog.GetControl("onThe").Unselect();
+                        break;
+                    case "rank":
+                    case "week":
+                    case "onTheRecurMonths":
+                        dialog.GetControl("onThe").Select(0);
+                    case "onThe":
+                    case Lib.WorkingDays.Management.DateType.OnThe:
+                        dialog.GetControl("onDate").Unselect();
+                        break;
+                }
+            },
+            fillDialog: function (dialog, dayOff) {
+                this.selectDateType(dialog, dayOff.dateType);
+                if (dayOff.dateType == Lib.WorkingDays.Management.DateType.OnDate) {
+                    let date = gRow.DayOffStart__.GetValue();
+                    let day = dayOff.day || !date ? dayOff.day : date.getDate();
+                    if (day) {
+                        dialog.GetControl("day").SetValue(day);
+                    }
+                }
+                dialog.GetControl("onDateRecurMonths").SetValue(dayOff.recurEvery);
+                dialog.GetControl("onTheRecurMonths").SetValue(dayOff.recurEvery);
+                dialog.GetControl("rank").SetValue(dayOff.rank);
+                dialog.GetControl("week").SetValue(dayOff.week);
+            },
+            commitDialog: function (dialog, dayOff) {
+                const onDate = dialog.GetControl("onDate").IsSelected(0);
+                dayOff.recurEvery = dialog.GetControl(onDate ? "onDateRecurMonths" : "onTheRecurMonths").GetValue();
+                dayOff.dateType = onDate ? Lib.WorkingDays.Management.DateType.OnDate : Lib.WorkingDays.Management.DateType.OnThe;
+                dayOff.day = dialog.GetControl("day").GetValue();
+                dayOff.rank = dialog.GetControl("rank").GetValue();
+                dayOff.week = dialog.GetControl("week").GetValue();
+            },
+            onChange: function (dialog, tabId, event, control) {
+                switch (control.GetName()) {
+                    case "onDateRecurMonths":
+                    case "onTheRecurMonths":
+                        checkNumber(control, 1);
+                        break;
+                    case "day":
+                        // const day = control.GetValue();
+                        // TODO: check day validity
+                        break;
+                }
+                this.selectDateType(dialog, control.GetName());
+            }
+        },
+        "Weekly": {
+            fillDialog: function (dialog, dayOff) {
+                dialog.GetControl("recurWeeks").SetValue(dayOff.recurEvery);
+                if (dayOff.weeks) {
+                    dayOff.weeks.forEach((i) =&gt; {
+                        dialog.GetControl("weekday" + i).Check(true);
+                    });
+                }
+            },
+            commitDialog: function (dialog, dayOff) {
+                dayOff.weeks = [];
+                for (let i = 0; i &lt; 7; i++) {
+                    if (dialog.GetControl("weekday" + i).IsChecked()) {
+                        dayOff.weeks.push(i);
+                    }
+                }
+                dayOff.recurEvery = dialog.GetControl("recurWeeks").GetValue();
+            },
+            onChange: function (dialog, tabId, event, control) {
+                switch (control.GetName()) {
+                    case "recurWeeks":
+                        checkNumber(control, 1);
+                        break;
+                }
+            }
+        },
+        "Daily": {
+            fillDialog: function (dialog, dayOff) {
+                dialog.GetControl("recurDays").SetValue(dayOff.recurEvery);
+            },
+            commitDialog: function (dialog, dayOff) {
+                dayOff.recurEvery = dialog.GetControl("recurDays").GetValue();
+            },
+            onChange: function (dialog, tabId, event, control) {
+                switch (control.GetName()) {
+                    case "recurDays":
+                        checkNumber(control, 1);
+                        break;
+                }
+            }
+        }
+    };
+    const gRecurrenceRangeFunc = {
+        checkStartDate: function (dialog) {
+            if (dialog.GetControl("endBy").IsSelected(0)) {
+                const startDate = dialog.GetControl("startDate").GetValue();
+                const endDate = dialog.GetControl("endDate").GetValue();
+                if (endDate &amp;&amp; (!startDate || startDate &gt; endDate)) {
+                    dialog.GetControl("startDate").SetValue(endDate);
+                }
+            }
+        },
+        checkEndDate: function (dialog) {
+            if (dialog.GetControl("endBy").IsSelected(0)) {
+                const startDate = dialog.GetControl("startDate").GetValue();
+                const endDate = dialog.GetControl("endDate").GetValue();
+                if (startDate &amp;&amp; (!endDate || startDate &gt; endDate)) {
+                    dialog.GetControl("endDate").SetValue(startDate);
+                }
+            }
+        },
+        selectRangeType: function (dialog, type) {
+            switch (type) {
+                case "noEndDate":
+                case Lib.WorkingDays.Management.RangeType.NoEndDate:
+                    dialog.GetControl("endAfter").Unselect();
+                    dialog.GetControl("endBy").Unselect();
+                    break;
+                case "endAfterOccurrence":
+                    dialog.GetControl("endAfter").Select(0);
+                case "endAfter":
+                case Lib.WorkingDays.Management.RangeType.EndAfter:
+                    dialog.GetControl("noEndDate").Unselect();
+                    dialog.GetControl("endBy").Unselect();
+                    break;
+                case "endDate":
+                    dialog.GetControl("endBy").Select(0);
+                case "endBy":
+                case Lib.WorkingDays.Management.RangeType.EndBy:
+                    dialog.GetControl("noEndDate").Unselect();
+                    dialog.GetControl("endAfter").Unselect();
+                    break;
+            }
+        },
+        fillDialog: function (dialog, dayOff) {
+            this.selectRangeType(dialog, dayOff.rangeType);
+            dialog.GetControl("endAfterOccurrence").SetValue(dayOff.endAfterOccurrence);
+            dialog.GetControl("endDate").SetValue(dayOff.endDate);
+        },
+        commitDialog: function (dialog, dayOff) {
+            this.checkEndDate(dialog);
+            if (dialog.GetControl("endAfter").IsSelected(0)) {
+                dayOff.rangeType = Lib.WorkingDays.Management.RangeType.EndAfter;
+            }
+            else if (dialog.GetControl("endBy").IsSelected(0)) {
+                dayOff.rangeType = Lib.WorkingDays.Management.RangeType.EndBy;
+            }
+            else {
+                dayOff.rangeType = Lib.WorkingDays.Management.RangeType.NoEndDate;
+            }
+            dayOff.endAfterOccurrence = dialog.GetControl("endAfterOccurrence").GetValue();
+            dayOff.endDate = dialog.GetControl("endDate").GetValue();
+        },
+        onChange: function (dialog, tabId, event, control) {
+            this.selectRangeType(dialog, control.GetName());
+            switch (control.GetName()) {
+                case "endAfterOccurrence":
+                    checkNumber(control, 1);
+                    break;
+                case "startDate":
+                case "endBy":
+                    this.checkEndDate(dialog);
+                    break;
+                case "endDate":
+                    this.checkStartDate(dialog);
+                    break;
+            }
+        }
+    };
+    let gDaysOff;
+    let gDialogDayOff;
+    let gRow;
+    function FillDetailsDialog(dialog) {
+        dialog.AddText("name", "_DayOffName").SetValue(gDialogDayOff.name);
+        dialog.AddSeparator();
+        dialog.AddTitle("recurrence", "_Recurrence");
+        dialog.AddControlsInGrid(gRecurrences[gDialogDayOff.type]);
+        dialog.AddSeparator();
+        Sys.Helpers.Object.ForEach(gRecurrenceTypes, type =&gt; {
+            dialog.GetControl(type.id).Unselect();
+        });
+        dialog.GetControl(gDialogDayOff.type).Select(0);
+        dialog.AddTitle("recurrenceRange", "_RecurrenceRange");
+        dialog.AddControlsInGrid(gRecurrenceRange);
+        dialog.GetControl("startDate").SetValue(gDialogDayOff.startDate);
+        gRecurrencesFunc[gDialogDayOff.type].fillDialog(dialog, gDialogDayOff);
+        gRecurrenceRangeFunc.fillDialog(dialog, gDialogDayOff);
+        //		dialog.SetWidth("800px");
+    }
+    function saveDialog(dialog) {
+        gDialogDayOff.name = dialog.GetControl("name").GetValue();
+        gDialogDayOff.startDate = dialog.GetControl("startDate").GetValue();
+        gRecurrencesFunc[gDialogDayOff.type].commitDialog(dialog, gDialogDayOff);
+        gRecurrenceRangeFunc.commitDialog(dialog, gDialogDayOff);
+    }
+    function CommitDetailsDialog(dialog, tabId, event, control) {
+        saveDialog(dialog);
+        gRow.DayOffName__.SetValue(gDialogDayOff.name);
+        gDialogDayOff.startDate = Lib.WorkingDays.Management.ComputeFirstOccurrenceDate(gDialogDayOff) || gDialogDayOff.startDate;
+        gRow.DayOffStart__.SetValue(gDialogDayOff.startDate);
+        gRow.DayOffEnd__.SetValue(Lib.WorkingDays.Management.ComputeEndDate(gDialogDayOff));
+        gRow.DayOffRecurrence__.SetValue(gDialogDayOff.type);
+        gDaysOff[gRow.GetLineNumber(true) - 1] = gDialogDayOff;
+    }
+    function HandleDetailsDialog(dialog, tabId, event, control) {
+        if (event === "OnChange") {
+            const ctrlName = control.GetName();
+            switch (ctrlName) {
+                case Lib.WorkingDays.Management.RecurrenceType.Daily:
+                case Lib.WorkingDays.Management.RecurrenceType.Weekly:
+                case Lib.WorkingDays.Management.RecurrenceType.Monthly:
+                case Lib.WorkingDays.Management.RecurrenceType.Yearly:
+                    saveDialog(dialog);
+                    dialog.Cancel();
+                    gDialogDayOff.type = ctrlName;
+                    Popup.Dialog("_DaysOffTitle", null, FillDetailsDialog, CommitDetailsDialog, null, HandleDetailsDialog);
+                    break;
+                default:
+                    gRecurrencesFunc[gDialogDayOff.type].onChange(dialog, tabId, event, control);
+                    gRecurrenceRangeFunc.onChange(dialog, tabId, event, control);
+                    break;
+            }
+        }
+    }
+    function GetNewDayOff(type) {
+        return {
+            name: "",
+            startDate: null,
+            type: type,
+            recurEvery: 1,
+            dateType: Lib.WorkingDays.Management.DateType.OnDate,
+            day: 0,
+            rank: 1,
+            week: 1,
+            month: 0,
+            weeks: [],
+            rangeType: Lib.WorkingDays.Management.RangeType.EndAfter,
+            endAfterOccurrence: 1,
+            endDate: null
+        };
+    }
+    Controls.DaysOffList__.OnAddItem = function (item, index) {
+        gDaysOff.splice(index, 0, GetNewDayOff(Lib.WorkingDays.Management.RecurrenceType.Daily));
+    };
+    Controls.DaysOffList__.OnDeleteItem = function (item, index) {
+        gDaysOff.splice(index, 1);
+    };
+    Controls.DaysOffList__.DayOffName__.OnChange = function () {
+        let row = this.GetRow();
+        let dayOff = gDaysOff[row.GetLineNumber(true) - 1];
+        dayOff.name = row.DayOffName__.GetValue();
+    };
+    Controls.DaysOffList__.DayOffStart__.OnChange = function () {
+        let row = this.GetRow();
+        let dayOff = gDaysOff[row.GetLineNumber(true) - 1];
+        dayOff.startDate = row.DayOffStart__.GetValue();
+        if (dayOff.startDate &amp;&amp; dayOff.rangeType == Lib.WorkingDays.Management.RangeType.EndBy) {
+            if (!dayOff.endDate || dayOff.startDate &gt; dayOff.endDate) {
+                dayOff.endDate = dayOff.startDate;
+            }
+        }
+        row.DayOffEnd__.SetValue(Lib.WorkingDays.Management.ComputeEndDate(dayOff));
+    };
+    Controls.DaysOffList__.DayOffDetails__.OnClick = function () {
+        gRow = this.GetRow();
+        gDialogDayOff = gDaysOff[gRow.GetLineNumber(true) - 1];
+        Popup.Dialog("_DaysOffTitle", null, FillDetailsDialog, CommitDetailsDialog, null, HandleDetailsDialog);
+    };
+    function IsFormValid() {
+        let ok = true;
+        if (!Controls.ConfigName__.GetValue()) {
+            if (!Controls.ConfigName__.GetError()) {
+                Controls.ConfigName__.SetError("This field is required!");
+            }
+            ok = false;
+        }
+        Sys.Helpers.Data.ForEachTableItem("DaysOffList__", (line) =&gt; {
+            if (!line.GetValue("DayOffStart__")) {
+                if (!line.GetError("DayOffStart__")) {
+                    line.SetError("DayOffStart__", "This field is required!");
+                }
+                ok = false;
+            }
+        });
+        return ok;
+    }
+    function LoadWorkingDays(msn) {
+        ProcessInstance.SetSilentChange(true);
+        Lib.WorkingDays.Management.LoadWorkingDaysByMSN(msn)
+            .Then(workingDays =&gt; {
+            Controls.ConfigName__.SetValue(workingDays.name);
+            Controls.ConfigDescription__.SetValue(workingDays.description);
+            for (let i = 0; i &lt; 7; i++) {
+                Controls["Weekday" + i + "__"].SetValue(workingDays.weekDays[i]);
+            }
+            if (workingDays.daysOff) {
+                gDaysOff = workingDays.daysOff;
+                Controls.DaysOffList__.SetItemCount(gDaysOff.length);
+                for (let i = 0; i &lt; gDaysOff.length; i++) {
+                    let item = Controls.DaysOffList__.GetItem(i);
+                    let dayOff = gDaysOff[i];
+                    item.SetValue("DayOffName__", dayOff.name);
+                    item.SetValue("DayOffStart__", dayOff.startDate);
+                    item.SetValue("DayOffEnd__", Lib.WorkingDays.Management.ComputeEndDate(dayOff));
+                    item.SetValue("DayOffRecurrence__", dayOff.type);
+                }
+            }
+            ProcessInstance.SetSilentChange(false);
+        })
+            .Catch(e =&gt; {
+            ProcessInstance.SetSilentChange(false);
+            // TODO: Popup
+        });
+    }
+    let gWorkingDaysMsn = null;
+    Controls.Save.OnClick = function () {
+        if (IsFormValid()) {
+            Controls.jsonDaysOff__.SetValue(JSON.stringify(gDaysOff));
+            if (gWorkingDaysMsn) {
+                Variable.SetValueAsString("WorkingDaysMsn", gWorkingDaysMsn);
+            }
+            return true;
+        }
+        Process.ShowFirstError();
+        return false;
+    };
+    gDaysOff =
+        [
+            GetNewDayOff(Lib.WorkingDays.Management.RecurrenceType.Daily)
+        ];
+    let ancestorsids = ProcessInstance.selectedRuidFromView;
+    if (ancestorsids &amp;&amp; ancestorsids.length &gt; 0) {
+        // CT#FJOIWM000M4H.815433013620666122
+        gWorkingDaysMsn = ancestorsids[0].split(".")[1];
+        LoadWorkingDays(gWorkingDaysMsn);
+    }
+})(CustomScript || (CustomScript = {}));
+//# sourceMappingURL=customscript.js.map</CustomScript>
+      <restorationPanel>PanelGeneral</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 80,
+	"*": {
+		"GDRData": {
+			"type": "GDRData",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"version": 0
+			}
+		},
+		"OCRParams": {
+			"type": "OCRParams",
+			"data": [],
+			"stamp": 2,
+			"options": {
+				"version": 0
+			}
+		},
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 3,
+			"options": {
+				"splitterType": "complex",
+				"maxwidth": 1024,
+				"backColor": "text-backgroundcolor-default",
+				"style": "FlexibleFormLight",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 4,
+					"options": {
+						"maxwidth": 1024,
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 5,
+					"options": {
+						"maxwidth": 1024,
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 6,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-top": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 7,
+									"options": {
+										"autosize": true,
+										"version": 1,
+										"box": {
+											"top": 0,
+											"left": 0,
+											"width": 100,
+											"height": 18
+										},
+										"hidden": true
+									},
+									"*": {
+										"form-content-top-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 8,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"DocumentsPanel": {
+													"type": "PanelDocument",
+													"data": [],
+													"stamp": 9,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": false,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"sameHeightAsSiblings": false,
+														"label": "_Documents",
+														"version": 0
+													},
+													"*": {
+														"Document": {
+															"type": "Documents",
+															"data": [
+																"documentscontroldata"
+															],
+															"stamp": 10,
+															"options": {
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								},
+								"form-content-bottom": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 11,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": 0,
+											"left": 0,
+											"width": 100,
+											"height": 100
+										},
+										"hidden": false,
+										"hideSeparator": true
+									},
+									"*": {
+										"form-content-left": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 12,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "0%",
+													"width": "100%",
+													"height": null
+												},
+												"hidden": false
+											},
+											"*": {
+												"form-content-left-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 13,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"PanelGeneral": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 14,
+															"options": {
+																"border": {},
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": true,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_PanelGeneral",
+																"leftImageURL": "",
+																"removeMargins": false,
+																"elementsAlignment": "left",
+																"labelLength": 0,
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 15,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {
+																			"ConfigName__": "LabelConfigName__",
+																			"LabelConfigName__": "ConfigName__",
+																			"ConfigDescription__": "LabelConfigDescription__",
+																			"LabelConfigDescription__": "ConfigDescription__"
+																		}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 16,
+																			"options": {
+																				"version": 0,
+																				"lines": 2,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"LabelConfigName__": {
+																						"line": 1,
+																						"column": 1
+																					},
+																					"ConfigName__": {
+																						"line": 1,
+																						"column": 2
+																					},
+																					"LabelConfigDescription__": {
+																						"line": 2,
+																						"column": 1
+																					},
+																					"ConfigDescription__": {
+																						"line": 2,
+																						"column": 2
+																					}
+																				},
+																				"colspans": [
+																					[],
+																					[]
+																				]
+																			},
+																			"*": {
+																				"LabelConfigName__": {
+																					"type": "Label",
+																					"data": [
+																						"ConfigName__"
+																					],
+																					"stamp": 18,
+																					"options": {
+																						"label": "_ConfigName",
+																						"version": 0
+																					}
+																				},
+																				"ConfigName__": {
+																					"type": "ShortText",
+																					"data": [
+																						"ConfigName__"
+																					],
+																					"stamp": 17,
+																					"options": {
+																						"label": "_ConfigName",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": "350",
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"browsable": false,
+																						"length": 100
+																					}
+																				},
+																				"LabelConfigDescription__": {
+																					"type": "Label",
+																					"data": [
+																						"ConfigDescription__"
+																					],
+																					"stamp": 20,
+																					"options": {
+																						"label": "_ConfigDescription",
+																						"version": 0
+																					}
+																				},
+																				"ConfigDescription__": {
+																					"type": "LongText",
+																					"data": [
+																						"ConfigDescription__"
+																					],
+																					"stamp": 19,
+																					"options": {
+																						"label": "_ConfigDescription",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"minNbLines": 3,
+																						"activable": true,
+																						"width": "350",
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"browsable": false
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														},
+														"PanelWorkingDays": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 21,
+															"options": {
+																"border": {},
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": true,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_PanelWorkingDays",
+																"hidden": false,
+																"leftImageURL": "",
+																"removeMargins": false,
+																"elementsAlignment": "left",
+																"labelLength": "90px",
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 22,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {
+																			"Weekday1__": "LabelWeekday1__",
+																			"LabelWeekday1__": "Weekday1__",
+																			"Weekday2__": "LabelWeekday2__",
+																			"LabelWeekday2__": "Weekday2__",
+																			"Weekday3__": "LabelWeekday3__",
+																			"LabelWeekday3__": "Weekday3__",
+																			"Weekday4__": "LabelWeekday4__",
+																			"LabelWeekday4__": "Weekday4__",
+																			"Weekday5__": "LabelWeekday5__",
+																			"LabelWeekday5__": "Weekday5__",
+																			"Weekday6__": "LabelWeekday6__",
+																			"LabelWeekday6__": "Weekday6__",
+																			"Weekday0__": "LabelWeekday0__",
+																			"LabelWeekday0__": "Weekday0__"
+																		}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 23,
+																			"options": {
+																				"version": 0,
+																				"lines": 7,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"LabelWeekday1__": {
+																						"line": 1,
+																						"column": 1
+																					},
+																					"Weekday1__": {
+																						"line": 1,
+																						"column": 2
+																					},
+																					"LabelWeekday2__": {
+																						"line": 2,
+																						"column": 1
+																					},
+																					"Weekday2__": {
+																						"line": 2,
+																						"column": 2
+																					},
+																					"LabelWeekday3__": {
+																						"line": 3,
+																						"column": 1
+																					},
+																					"Weekday3__": {
+																						"line": 3,
+																						"column": 2
+																					},
+																					"LabelWeekday4__": {
+																						"line": 4,
+																						"column": 1
+																					},
+																					"Weekday4__": {
+																						"line": 4,
+																						"column": 2
+																					},
+																					"LabelWeekday5__": {
+																						"line": 5,
+																						"column": 1
+																					},
+																					"Weekday5__": {
+																						"line": 5,
+																						"column": 2
+																					},
+																					"LabelWeekday6__": {
+																						"line": 6,
+																						"column": 1
+																					},
+																					"Weekday6__": {
+																						"line": 6,
+																						"column": 2
+																					},
+																					"LabelWeekday0__": {
+																						"line": 7,
+																						"column": 1
+																					},
+																					"Weekday0__": {
+																						"line": 7,
+																						"column": 2
+																					}
+																				},
+																				"colspans": [
+																					[],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[]
+																				]
+																			},
+																			"*": {
+																				"LabelWeekday1__": {
+																					"type": "Label",
+																					"data": [
+																						"Weekday1__"
+																					],
+																					"stamp": 25,
+																					"options": {
+																						"label": "_Monday",
+																						"version": 0
+																					}
+																				},
+																				"Weekday1__": {
+																					"type": "CheckBox",
+																					"data": [
+																						"Weekday1__"
+																					],
+																					"stamp": 24,
+																					"options": {
+																						"label": "_Monday",
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"defaultValue": true,
+																						"version": 0
+																					}
+																				},
+																				"LabelWeekday2__": {
+																					"type": "Label",
+																					"data": [
+																						"Weekday2__"
+																					],
+																					"stamp": 27,
+																					"options": {
+																						"label": "_Tuesday",
+																						"version": 0
+																					}
+																				},
+																				"Weekday2__": {
+																					"type": "CheckBox",
+																					"data": [
+																						"Weekday2__"
+																					],
+																					"stamp": 26,
+																					"options": {
+																						"label": "_Tuesday",
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"defaultValue": true,
+																						"version": 0
+																					}
+																				},
+																				"LabelWeekday3__": {
+																					"type": "Label",
+																					"data": [
+																						"Weekday3__"
+																					],
+																					"stamp": 29,
+																					"options": {
+																						"label": "_Wednesday",
+																						"version": 0
+																					}
+																				},
+																				"Weekday3__": {
+																					"type": "CheckBox",
+																					"data": [
+																						"Weekday3__"
+																					],
+																					"stamp": 28,
+																					"options": {
+																						"label": "_Wednesday",
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"defaultValue": true,
+																						"version": 0
+																					}
+																				},
+																				"LabelWeekday4__": {
+																					"type": "Label",
+																					"data": [
+																						"Weekday4__"
+																					],
+																					"stamp": 31,
+																					"options": {
+																						"label": "_Thursday",
+																						"version": 0
+																					}
+																				},
+																				"Weekday4__": {
+																					"type": "CheckBox",
+																					"data": [
+																						"Weekday4__"
+																					],
+																					"stamp": 30,
+																					"options": {
+																						"label": "_Thursday",
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"defaultValue": true,
+																						"version": 0
+																					}
+																				},
+																				"LabelWeekday5__": {
+																					"type": "Label",
+																					"data": [
+																						"Weekday5__"
+																					],
+																					"stamp": 33,
+																					"options": {
+																						"label": "_Friday",
+																						"version": 0
+																					}
+																				},
+																				"Weekday5__": {
+																					"type": "CheckBox",
+																					"data": [
+																						"Weekday5__"
+																					],
+																					"stamp": 32,
+																					"options": {
+																						"label": "_Friday",
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"defaultValue": true,
+																						"version": 0
+																					}
+																				},
+																				"LabelWeekday6__": {
+																					"type": "Label",
+																					"data": [
+																						"Weekday6__"
+																					],
+																					"stamp": 35,
+																					"options": {
+																						"label": "_Saturday",
+																						"version": 0
+																					}
+																				},
+																				"Weekday6__": {
+																					"type": "CheckBox",
+																					"data": [
+																						"Weekday6__"
+																					],
+																					"stamp": 34,
+																					"options": {
+																						"label": "_Saturday",
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"version": 0
+																					}
+																				},
+																				"LabelWeekday0__": {
+																					"type": "Label",
+																					"data": [
+																						"Weekday0__"
+																					],
+																					"stamp": 37,
+																					"options": {
+																						"label": "_Sunday",
+																						"version": 0
+																					}
+																				},
+																				"Weekday0__": {
+																					"type": "CheckBox",
+																					"data": [
+																						"Weekday0__"
+																					],
+																					"stamp": 36,
+																					"options": {
+																						"label": "_Sunday",
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"version": 0
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-2": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 38,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"SystemData": {
+															"type": "PanelSystemData",
+															"data": [],
+															"stamp": 39,
+															"options": {
+																"multicolumn": false,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_System data",
+																"hidden": true,
+																"version": 0
+															}
+														}
+													}
+												},
+												"form-content-left-3": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 40,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"NextProcess": {
+															"type": "PanelNextProcess",
+															"data": [],
+															"stamp": 41,
+															"options": {
+																"hidden": true,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_Next Process",
+																"version": 0
+															}
+														}
+													}
+												},
+												"form-content-left-4": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 42,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"PanelDaysOff": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 43,
+															"options": {
+																"border": {},
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": true,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_PanelDaysOff",
+																"hidden": false,
+																"leftImageURL": "",
+																"removeMargins": false,
+																"elementsAlignment": "left",
+																"labelLength": 0,
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 44,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {
+																			"jsonDaysOff__": "LabeljsonDaysOff__",
+																			"LabeljsonDaysOff__": "jsonDaysOff__"
+																		}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 45,
+																			"options": {
+																				"version": 0,
+																				"lines": 2,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"DaysOffList__": {
+																						"line": 1,
+																						"column": 1
+																					},
+																					"LabeljsonDaysOff__": {
+																						"line": 2,
+																						"column": 1
+																					},
+																					"jsonDaysOff__": {
+																						"line": 2,
+																						"column": 2
+																					}
+																				},
+																				"colspans": [
+																					[
+																						{
+																							"index": 0,
+																							"length": 2
+																						}
+																					],
+																					[]
+																				]
+																			},
+																			"*": {
+																				"DaysOffList__": {
+																					"type": "Table",
+																					"data": [
+																						"DaysOffList__"
+																					],
+																					"stamp": 46,
+																					"options": {
+																						"columns": 5,
+																						"label": "_DaysOffList",
+																						"version": 5,
+																						"lines": 10,
+																						"displayEmptyLines": false,
+																						"alwaysOneLine": true,
+																						"menuOptions": {
+																							"disableInsertLine": false,
+																							"disableAddLine": true,
+																							"hideTopNavigation": false,
+																							"hideBottomNavigation": false,
+																							"hideTableRowMenu": false,
+																							"hideTableRowDelete": false,
+																							"hideTableRowAdd": false,
+																							"hideTableRowDuplicate": true,
+																							"hideTableRowButtonDuplicate": true,
+																							"addButtonShouldInsert": false
+																						},
+																						"item": {
+																							"display": null
+																						},
+																						"group": {
+																							"name": "GDR\nPage"
+																						},
+																						"subsection": null
+																					},
+																					"*": {
+																						"Actions": {
+																							"type": "$TableActions",
+																							"subtype": "Actions",
+																							"data": [],
+																							"stamp": 47,
+																							"options": {
+																								"version": 0
+																							},
+																							"*": {
+																								"Top": {
+																									"type": "$TableActions",
+																									"subtype": "Top",
+																									"data": [],
+																									"stamp": 48,
+																									"options": {
+																										"version": 0
+																									}
+																								},
+																								"Bottom": {
+																									"type": "$TableActions",
+																									"subtype": "Top",
+																									"data": [],
+																									"stamp": 49,
+																									"options": {
+																										"version": 0
+																									}
+																								}
+																							}
+																						},
+																						"Header": {
+																							"type": "$TableRow",
+																							"subtype": "Header",
+																							"data": [
+																								null
+																							],
+																							"stamp": 50,
+																							"options": {
+																								"version": 0
+																							},
+																							"*": {
+																								"Cell1": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 53,
+																									"options": {
+																										"minwidth": "350",
+																										"version": 0
+																									},
+																									"*": {
+																										"DayOffName__": {
+																											"type": "Label",
+																											"data": [
+																												"DayOffName__"
+																											],
+																											"stamp": 54,
+																											"options": {
+																												"label": "_DayOffName",
+																												"type": "ShortText",
+																												"minwidth": "350",
+																												"version": 0
+																											},
+																											"position": [
+																												"_DayOffName",
+																												false,
+																												false,
+																												"ShortText"
+																											]
+																										}
+																									}
+																								},
+																								"Cell2": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 57,
+																									"options": {
+																										"minwidth": "100",
+																										"version": 0
+																									},
+																									"*": {
+																										"DayOffStart__": {
+																											"type": "Label",
+																											"data": [
+																												"DayOffStart__"
+																											],
+																											"stamp": 58,
+																											"options": {
+																												"label": "_DayOffStart",
+																												"type": "DateTime",
+																												"minwidth": "100",
+																												"version": 0
+																											},
+																											"position": [
+																												"_DayOffStart",
+																												false,
+																												false,
+																												"DateTime"
+																											]
+																										}
+																									}
+																								},
+																								"Cell3": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 61,
+																									"options": {
+																										"minwidth": "100",
+																										"version": 0
+																									},
+																									"*": {
+																										"DayOffEnd__": {
+																											"type": "Label",
+																											"data": [
+																												"DayOffEnd__"
+																											],
+																											"stamp": 62,
+																											"options": {
+																												"label": "_DayOffEnd",
+																												"type": "DateTime",
+																												"minwidth": "100",
+																												"version": 0
+																											},
+																											"position": [
+																												"_DayOffEnd",
+																												false,
+																												false,
+																												"DateTime"
+																											]
+																										}
+																									}
+																								},
+																								"Cell4": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 65,
+																									"options": {
+																										"minwidth": 140,
+																										"version": 0
+																									},
+																									"*": {
+																										"DayOffRecurrence__": {
+																											"type": "Label",
+																											"data": [
+																												"DayOffRecurrence__"
+																											],
+																											"stamp": 66,
+																											"options": {
+																												"label": "_DayOffRecurrence",
+																												"type": "ComboBox",
+																												"minwidth": 140,
+																												"version": 0
+																											},
+																											"position": [
+																												"_DayOffRecurrence",
+																												false,
+																												false,
+																												"ComboBox"
+																											]
+																										}
+																									}
+																								},
+																								"Cell5": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 69,
+																									"options": {
+																										"minwidth": "80",
+																										"version": 0
+																									},
+																									"*": {
+																										"DayOffDetails__": {
+																											"type": "Label",
+																											"data": [],
+																											"stamp": 70,
+																											"options": {
+																												"label": "",
+																												"type": "FormButton",
+																												"minwidth": "80",
+																												"version": 0
+																											},
+																											"position": [
+																												"",
+																												false,
+																												false,
+																												"FormButton"
+																											]
+																										}
+																									}
+																								}
+																							}
+																						},
+																						"Clipboard": {
+																							"type": "$TableRow",
+																							"subtype": "Clipboard",
+																							"data": [
+																								null
+																							],
+																							"stamp": 51,
+																							"options": {
+																								"version": 0
+																							},
+																							"*": {
+																								"Cell1": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 55,
+																									"options": {
+																										"version": 0
+																									},
+																									"*": {
+																										"DayOffName__": {
+																											"type": "ShortText",
+																											"data": [
+																												"DayOffName__"
+																											],
+																											"stamp": 52,
+																											"options": {
+																												"label": "_DayOffName",
+																												"textSize": "S",
+																												"textAlignment": "left",
+																												"textStyle": "default",
+																												"textColor": "default",
+																												"version": 1,
+																												"activable": true,
+																												"width": "350",
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"helpIconPosition": "Right",
+																												"browsable": false
+																											},
+																											"position": [
+																												"_DayOffName"
+																											]
+																										}
+																									}
+																								},
+																								"Cell2": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 59,
+																									"options": {
+																										"version": 0
+																									},
+																									"*": {
+																										"DayOffStart__": {
+																											"type": "DateTime",
+																											"data": [
+																												"DayOffStart__"
+																											],
+																											"stamp": 56,
+																											"options": {
+																												"label": "_DayOffStart",
+																												"displayLongFormat": false,
+																												"activable": true,
+																												"width": "100",
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"helpIconPosition": "Right",
+																												"version": 0
+																											},
+																											"position": [
+																												"_DayOffStart"
+																											]
+																										}
+																									}
+																								},
+																								"Cell3": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 63,
+																									"options": {
+																										"version": 0
+																									},
+																									"*": {
+																										"DayOffEnd__": {
+																											"type": "DateTime",
+																											"data": [
+																												"DayOffEnd__"
+																											],
+																											"stamp": 60,
+																											"options": {
+																												"label": "_DayOffEnd",
+																												"displayLongFormat": false,
+																												"activable": true,
+																												"width": "100",
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"helpIconPosition": "Right",
+																												"readonly": true,
+																												"version": 0
+																											},
+																											"position": [
+																												"_DayOffEnd"
+																											]
+																										}
+																									}
+																								},
+																								"Cell4": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 67,
+																									"options": {
+																										"version": 0
+																									},
+																									"*": {
+																										"DayOffRecurrence__": {
+																											"type": "ComboBox",
+																											"data": [
+																												"DayOffRecurrence__"
+																											],
+																											"stamp": 64,
+																											"options": {
+																												"label": "_DayOffRecurrence",
+																												"possibleValues": {
+																													"0": "_Daily",
+																													"1": "_Weekly",
+																													"2": "_Monthly",
+																													"3": "_Yearly"
+																												},
+																												"maxNbLinesToDisplay": 10,
+																												"version": 1,
+																												"keyValueMode": true,
+																												"possibleKeys": {
+																													"0": "Daily",
+																													"1": "Weekly",
+																													"2": "Monthly",
+																													"3": "Yearly"
+																												},
+																												"activable": true,
+																												"width": 140,
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"helpIconPosition": "Right",
+																												"readonly": true,
+																												"DataSourceOrigin": "Standalone",
+																												"DisplayedColumns": ""
+																											},
+																											"position": [
+																												"_DayOffRecurrence"
+																											]
+																										}
+																									}
+																								},
+																								"Cell5": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 71,
+																									"options": {
+																										"version": 0
+																									},
+																									"*": {
+																										"DayOffDetails__": {
+																											"type": "FormButton",
+																											"data": [],
+																											"stamp": 68,
+																											"options": {
+																												"label": "",
+																												"buttonLabel": "_Details",
+																												"width": "80",
+																												"textPosition": "text-right",
+																												"textSize": "S",
+																												"textStyle": "default",
+																												"textColor": "default",
+																												"nextprocess": {
+																													"processName": "AP - Application Settings Wizard",
+																													"attachmentsMode": "all",
+																													"willBeChild": true,
+																													"returnToOriginalUrl": false
+																												},
+																												"urlImageOverlay": "",
+																												"action": "none",
+																												"url": "",
+																												"version": 0
+																											},
+																											"position": [
+																												""
+																											]
+																										}
+																									}
+																								}
+																							}
+																						}
+																					}
+																				},
+																				"LabeljsonDaysOff__": {
+																					"type": "Label",
+																					"data": [
+																						"jsonDaysOff__"
+																					],
+																					"stamp": 73,
+																					"options": {
+																						"label": "_jsonDaysOff",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				},
+																				"jsonDaysOff__": {
+																					"type": "LongText",
+																					"data": [
+																						"jsonDaysOff__"
+																					],
+																					"stamp": 72,
+																					"options": {
+																						"label": "_jsonDaysOff",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"minNbLines": 5,
+																						"activable": true,
+																						"width": "800",
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"numberOfLines": 20,
+																						"browsable": false,
+																						"hidden": true
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-right": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 74,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": 0,
+													"left": 45,
+													"width": 55,
+													"height": 100
+												},
+												"hidden": true,
+												"hideSeparator": true
+											},
+											"*": {
+												"form-content-right-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 75,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"PreviewPanel": {
+															"type": "PanelPreview",
+															"data": [],
+															"stamp": 76,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_Document Preview",
+																"version": 0
+															},
+															"*": {
+																"Preview": {
+																	"type": "Preview",
+																	"data": [
+																		"previewdata"
+																	],
+																	"stamp": 77,
+																	"options": {
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 78,
+					"options": {
+						"splitterType": "simple-h",
+						"maxwidth": 1024,
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 79,
+							"options": {
+								"label": "_Save",
+								"action": "approve",
+								"submit": true,
+								"textPosition": "text-right",
+								"textSize": "S",
+								"textStyle": "default",
+								"textColor": "default",
+								"nextprocess": {
+									"processName": "AP - Application Settings Wizard",
+									"attachmentsMode": "all",
+									"willBeChild": true,
+									"returnToOriginalUrl": false
+								},
+								"urlImageOverlay": "",
+								"url": "",
+								"position": null,
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 80,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <field deleted="0" format="" guid="GPOIWM000M4H" id="I4FQT400153E" label="_ConfigDescription" length="32766" name="ConfigDescription__" originalProcessID="EPOIWM000M4H" precision="0" processid="H4FQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AI4FQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ConfigDescription__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:22</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ConfigDescription</Label>
+        <Alias>AI4FQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="FPOIWM000M4H" id="J4FQT400153E" label="_ConfigName" length="100" name="ConfigName__" originalProcessID="EPOIWM000M4H" precision="0" processid="H4FQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AJ4FQT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ConfigName__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:22</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ConfigName</Label>
+        <Alias>AJ4FQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>true</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="L0PIWM000M4H" id="K4FQT400153E" label="_jsonDaysOff" length="32766" name="jsonDaysOff__" originalProcessID="EPOIWM000M4H" precision="0" processid="H4FQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AK4FQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/jsonDaysOff__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:22</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_jsonDaysOff</Label>
+        <Alias>AK4FQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="NPOIWM000M4H" id="L4FQT400153E" label="_Sunday" length="0" name="Weekday0__" originalProcessID="EPOIWM000M4H" precision="0" processid="H4FQT400153E" submitable="1" type="BOOL">
+    <properties>
+      <db>
+        <alias>AL4FQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Weekday0__</fullname>
+        <defaultvalue>false</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:22</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Sunday</Label>
+        <Alias>AL4FQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Boolean</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="HPOIWM000M4H" id="M4FQT400153E" label="_Monday" length="0" name="Weekday1__" originalProcessID="EPOIWM000M4H" precision="0" processid="H4FQT400153E" submitable="1" type="BOOL">
+    <properties>
+      <db>
+        <alias>AM4FQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Weekday1__</fullname>
+        <defaultvalue>true</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:22</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Monday</Label>
+        <Alias>AM4FQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Boolean</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="IPOIWM000M4H" id="N4FQT400153E" label="_Tuesday" length="0" name="Weekday2__" originalProcessID="EPOIWM000M4H" precision="0" processid="H4FQT400153E" submitable="1" type="BOOL">
+    <properties>
+      <db>
+        <alias>AN4FQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Weekday2__</fullname>
+        <defaultvalue>true</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:22</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Tuesday</Label>
+        <Alias>AN4FQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Boolean</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="JPOIWM000M4H" id="O4FQT400153E" label="_Wednesday" length="0" name="Weekday3__" originalProcessID="EPOIWM000M4H" precision="0" processid="H4FQT400153E" submitable="1" type="BOOL">
+    <properties>
+      <db>
+        <alias>AO4FQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Weekday3__</fullname>
+        <defaultvalue>true</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:22</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Wednesday</Label>
+        <Alias>AO4FQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Boolean</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="KPOIWM000M4H" id="P4FQT400153E" label="_Thursday" length="0" name="Weekday4__" originalProcessID="EPOIWM000M4H" precision="0" processid="H4FQT400153E" submitable="1" type="BOOL">
+    <properties>
+      <db>
+        <alias>AP4FQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Weekday4__</fullname>
+        <defaultvalue>true</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:22</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Thursday</Label>
+        <Alias>AP4FQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Boolean</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="LPOIWM000M4H" id="Q4FQT400153E" label="_Friday" length="0" name="Weekday5__" originalProcessID="EPOIWM000M4H" precision="0" processid="H4FQT400153E" submitable="1" type="BOOL">
+    <properties>
+      <db>
+        <alias>AQ4FQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Weekday5__</fullname>
+        <defaultvalue>true</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:22</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Friday</Label>
+        <Alias>AQ4FQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Boolean</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="MPOIWM000M4H" id="R4FQT400153E" label="_Saturday" length="0" name="Weekday6__" originalProcessID="EPOIWM000M4H" precision="0" processid="H4FQT400153E" submitable="1" type="BOOL">
+    <properties>
+      <db>
+        <alias>AR4FQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Weekday6__</fullname>
+        <defaultvalue>false</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:22</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Saturday</Label>
+        <Alias>AR4FQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Boolean</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <datatable deleted="0" guid="OPOIWM000M4H" id="S4FQT400153E" label="_DaysOffList" name="DaysOffList__" originalProcessID="EPOIWM000M4H">
+    <properties>
+      <field>
+        <DisableAutolearn>1</DisableAutolearn>
+        <Extractable>0</Extractable>
+      </field>
+      <ui>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+    <field datatableid="S4FQT400153E" deleted="0" format="" guid="RPOIWM000M4H" id="T4FQT400153E" label="_DayOffEnd" length="0" name="DayOffEnd__" originalProcessID="EPOIWM000M4H" precision="0" submitable="1" type="DATE">
+      <properties>
+        <db>
+          <alias>AT4FQT400153E</alias>
+          <noxml>1</noxml>
+          <fullname>/job/processfields/DayOffEnd__</fullname>
+          <defaultvalue>
+          </defaultvalue>
+          <RecordLastWrite>2026-11-04 11:10:22</RecordLastWrite>
+        </db>
+        <extrainfo>
+          <Label>_DayOffEnd</Label>
+          <Alias>AT4FQT400153E</Alias>
+          <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        </extrainfo>
+        <gdr>
+          <VarType>Area</VarType>
+          <DisableAutolearn>1</DisableAutolearn>
+        </gdr>
+        <help>
+          <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+        </help>
+        <ui>
+          <_type>Date</_type>
+          <automatic>true</automatic>
+        </ui>
+      </properties>
+    </field>
+    <field datatableid="S4FQT400153E" deleted="0" format="" guid="QPOIWM000M4H" id="U4FQT400153E" label="_DayOffName" length="50" name="DayOffName__" originalProcessID="EPOIWM000M4H" precision="0" submitable="1" type="STR">
+      <properties>
+        <db>
+          <alias>AU4FQT400153E</alias>
+          <noxml>1</noxml>
+          <fullname>/job/processfields/DayOffName__</fullname>
+          <defaultvalue>
+          </defaultvalue>
+          <RecordLastWrite>2026-11-04 11:10:22</RecordLastWrite>
+        </db>
+        <extrainfo>
+          <Label>_DayOffName</Label>
+          <Alias>AU4FQT400153E</Alias>
+          <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        </extrainfo>
+        <gdr>
+          <VarType>Area</VarType>
+          <DisableAutolearn>1</DisableAutolearn>
+        </gdr>
+        <help>
+          <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+        </help>
+        <ui>
+          <_type>String</_type>
+          <automatic>true</automatic>
+        </ui>
+      </properties>
+    </field>
+    <field datatableid="S4FQT400153E" deleted="0" format="" guid="SPOIWM000M4H" id="V4FQT400153E" label="_DayOffRecurrence" length="50" name="DayOffRecurrence__" originalProcessID="EPOIWM000M4H" precision="0" submitable="1" type="STR">
+      <properties>
+        <db>
+          <alias>AV4FQT400153E</alias>
+          <noxml>1</noxml>
+          <fullname>/job/processfields/DayOffRecurrence__</fullname>
+          <defaultvalue>Daily</defaultvalue>
+          <RecordLastWrite>2026-11-04 11:10:22</RecordLastWrite>
+        </db>
+        <extrainfo>
+          <Type>webaccess.Process.Columns.WithPossibleValues</Type>
+          <Label>_DayOffRecurrence</Label>
+          <Alias>AV4FQT400153E</Alias>
+          <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        </extrainfo>
+        <field>
+          <TableName>
+          </TableName>
+          <DisplayedColumns>
+          </DisplayedColumns>
+          <DataSourceOrigin>Standalone</DataSourceOrigin>
+          <possibleKeys>Daily
+Weekly
+Monthly
+Yearly</possibleKeys>
+          <SavedColumn>
+          </SavedColumn>
+          <possibleValues>_Daily
+_Weekly
+_Monthly
+_Yearly</possibleValues>
+          <ProcessName>
+          </ProcessName>
+        </field>
+        <gdr>
+          <DisableAutolearn>1</DisableAutolearn>
+        </gdr>
+        <help>
+          <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+        </help>
+        <ui>
+          <_type>String</_type>
+          <automatic>true</automatic>
+        </ui>
+      </properties>
+    </field>
+    <field datatableid="S4FQT400153E" deleted="0" format="" guid="PPOIWM000M4H" id="W4FQT400153E" label="_DayOffStart" length="0" name="DayOffStart__" originalProcessID="EPOIWM000M4H" precision="0" submitable="1" type="DATE">
+      <properties>
+        <db>
+          <alias>AW4FQT400153E</alias>
+          <noxml>1</noxml>
+          <fullname>/job/processfields/DayOffStart__</fullname>
+          <defaultvalue>
+          </defaultvalue>
+          <RecordLastWrite>2026-11-04 11:10:22</RecordLastWrite>
+        </db>
+        <extrainfo>
+          <Label>_DayOffStart</Label>
+          <Alias>AW4FQT400153E</Alias>
+          <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        </extrainfo>
+        <field>
+          <required>true</required>
+        </field>
+        <gdr>
+          <VarType>Area</VarType>
+          <DisableAutolearn>1</DisableAutolearn>
+        </gdr>
+        <help>
+          <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+        </help>
+        <ui>
+          <_type>Date</_type>
+          <automatic>true</automatic>
+        </ui>
+      </properties>
+    </field>
+  </datatable>
+  <type id="GOLHG0000M4O" name="CD">
+  </type>
+</process>

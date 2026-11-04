@@ -1,0 +1,2094 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:11:01" deleted="0" eskerapplication="P2P" global="0" id="GZFQT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="Vendor Invoice CDV" needvalidation="0" ootofilter="" ootoversion="2" originalProcessID="XGJJG0000VLT" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="1" reuseengine="0" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="0" version="1" visibility="0">
+  <properties>
+    <dbIndex>
+      <AUTO_AHZFQT400153EA>&lt;Index&gt;&lt;Ref Name="AHZFQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AHZFQT400153EA>
+      <AUTO_AIZFQT400153EA>&lt;Index&gt;&lt;Ref Name="AIZFQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AIZFQT400153EA>
+      <AUTO_AKZFQT400153EA>&lt;Index&gt;&lt;Ref Name="AKZFQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AKZFQT400153EA>
+      <AUTO_ALZFQT400153EA>&lt;Index&gt;&lt;Ref Name="ALZFQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_ALZFQT400153EA>
+      <AUTO_AMZFQT400153EA>&lt;Index&gt;&lt;Ref Name="AMZFQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AMZFQT400153EA>
+    </dbIndex>
+    <gdr>
+      <FinalizationScriptAllowRetry>true</FinalizationScriptAllowRetry>
+      <ValidationScriptAllowRetry>true</ValidationScriptAllowRetry>
+      <validationscriptIncludedScripts>[LIB_PARAMETERS_P2P_V12.0.566.0]</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>LIB_P2P_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Sys/Sys_AP_VendorInvoiceCDV_ValidationScript</validationscriptIncludedScripts>
+      <ValidationScript>"use strict";
+Lib.P2P.HandleScriptError(Sys.AP.VendorInvoiceCDV.ValidationScript.Main());
+//# sourceMappingURL=validationscript.js.map</ValidationScript>
+      <AllowTagCoverPages>true</AllowTagCoverPages>
+      <AllowTagNewDocuments>true</AllowTagNewDocuments>
+      <AllowTagAttachments>true</AllowTagAttachments>
+      <ExtractionScriptAllowRetry>true</ExtractionScriptAllowRetry>
+      <AllowRemovePages>true</AllowRemovePages>
+      <AllowSwapPages>true</AllowSwapPages>
+    </gdr>
+    <lg>
+      <process_da>{
+	"__VendorInvoiceRUIDEX": "Udvidet id for faktura",
+	"_CDV data": "Oplysninger",
+	"_CompanyCode": "Virksomhedskode",
+	"_CompanyCode_report": "Virksomhedskode",
+	"_EDIStatus": "Livscyklusstatus",
+	"_EDIStatus_report": "Livscyklusstatus",
+	"_ERPLifecycleSource": "ERP",
+	"_History": "Historik",
+	"_History_Date": "Dato",
+	"_History_Date_report": "Dato",
+	"_History_EDIStatus": "Livscyklusstatus",
+	"_History_EDIStatus_report": "Livscyklusstatus",
+	"_History_Source": "Ekstern kilde",
+	"_History_Source_report": "Ekstern kilde",
+	"_InvoiceNumber": "Fakturanummer",
+	"_InvoiceNumber_report": "Fakturanummer",
+	"_LastDisputeReason": "Seneste årsag til indsigelse",
+	"_LastDisputeReason_report": "Seneste årsag til indsigelse",
+	"_PDPLifecycleSource": "PA",
+	"_VendorInvoiceRUIDEX_report": "Udvidet id for faktura",
+	"_VendorNumber": "Leverandørnummer",
+	"_VendorNumber_report": "Leverandørnummer",
+	"Vendor Invoice CDV": "Livscyklus for e-faktura (Frankrig)",
+	"FRB2B_200_Deposited": "Sendt",
+	"FRB2B_201_IssuedByPlatform": "Udstedt af PA",
+	"FRB2B_202_PlatformReceived": "Modtaget af PA",
+	"FRB2B_203_Received": "Gjort tilgængelig",
+	"FRB2B_204_TakeOn": "Modtaget",
+	"FRB2B_205_Approved": "Godkendt",
+	"FRB2B_206_PartiallyApproved": "Delvist godkendt",
+	"FRB2B_207_OnHold": "Indsigelse fremsat",
+	"FRB2B_208_Suspended": "Afvist",
+	"FRB2B_209_Completed": "Afsluttet",
+	"FRB2B_210_Refused": "Afvist",
+	"FRB2B_211_PaymentSent": "Betaling sendt",
+	"FRB2B_212_Cashed": "Betaling modtaget",
+	"FRB2B_213_Rejected": "Afvist af PA",
+	"FRB2B_214_RefundSent": "Agent godkendt",
+	"FRB2B_220_Cancelled": "Annulleret",
+	"FRB2B_224_DirectPaymentRequest": "Anmodning om direkte betaling",
+	"FRB2B_225_Factored": "Overdraget til factoring",
+	"FRB2B_226_FactoredConfidential": "Overdraget til factoring (fortrolig)",
+	"FRB2B_227_PayableAccountChange": "Ændring af betalingskonto",
+	"FRB2B_228_NotFactored": "Ikke overdraget til factoring"
+}</process_da>
+      <process_de>{
+	"__VendorInvoiceRUIDEX": "Erweiterte Rechnungs-ID",
+	"_CDV data": "Details",
+	"_CompanyCode": "Buchungskreis",
+	"_CompanyCode_report": "Buchungskreis",
+	"_EDIStatus": "EDI-Rechnungsstatus",
+	"_EDIStatus_report": "EDI-Rechnungsstatus",
+	"_ERPLifecycleSource": "ERP",
+	"_History": "Verlauf",
+	"_History_Date": "Datum",
+	"_History_Date_report": "Datum",
+	"_History_EDIStatus": "EDI-Rechnungsstatus",
+	"_History_EDIStatus_report": "EDI-Rechnungsstatus",
+	"_History_Source": "Externe Quelle",
+	"_History_Source_report": "Externe Quelle",
+	"_InvoiceNumber": "Rechnungsnummer",
+	"_InvoiceNumber_report": "Rechnungsnummer",
+	"_LastDisputeReason": "Letzter Anfechtungsgrund",
+	"_LastDisputeReason_report": "Letzter Anfechtungsgrund",
+	"_PDPLifecycleSource": "PA",
+	"_VendorInvoiceRUIDEX_report": "Erweiterte Rechnungs-ID",
+	"_VendorNumber": "Lieferantennummer",
+	"_VendorNumber_report": "Lieferantennummer",
+	"Vendor Invoice CDV": "E-Rechnungen-Lebenszyklus (Frankreich)",
+	"FRB2B_200_Deposited": "Übermittelt",
+	"FRB2B_201_IssuedByPlatform": "Von PA ausgestellt",
+	"FRB2B_202_PlatformReceived": "Von PA empfangen",
+	"FRB2B_203_Received": "Zur Verfügung gestellt",
+	"FRB2B_204_TakeOn": "Vorliegend",
+	"FRB2B_205_Approved": "Genehmigt",
+	"FRB2B_206_PartiallyApproved": "Teilweise genehmigt",
+	"FRB2B_207_OnHold": "Bestritten",
+	"FRB2B_208_Suspended": "Ausgesetzt",
+	"FRB2B_209_Completed": "Abgeschlossen",
+	"FRB2B_210_Refused": "Abgelehnt",
+	"FRB2B_211_PaymentSent": "Zahlung gesendet",
+	"FRB2B_212_Cashed": "Zahlung erhalten",
+	"FRB2B_213_Rejected": "Von PA abgelehnt",
+	"FRB2B_214_RefundSent": "Durch Agent genehmigt",
+	"FRB2B_220_Cancelled": "Storniert",
+	"FRB2B_224_DirectPaymentRequest": "Direktzahlungsanforderung",
+	"FRB2B_225_Factored": "Factoring",
+	"FRB2B_226_FactoredConfidential": "Factoring (vertraulich)",
+	"FRB2B_227_PayableAccountChange": "Änderung des Zahlungskontos",
+	"FRB2B_228_NotFactored": "Kein Factoring"
+}</process_de>
+      <process_ja>{
+	"__VendorInvoiceRUIDEX": "請求書拡張ID",
+	"_CDV data": "詳細",
+	"_CompanyCode": "会社コード",
+	"_CompanyCode_report": "会社コード",
+	"_EDIStatus": "ライフサイクルステータス",
+	"_EDIStatus_report": "ライフサイクルステータス",
+	"_ERPLifecycleSource": "ERP",
+	"_History": "履歴",
+	"_History_Date": "日付",
+	"_History_Date_report": "日付",
+	"_History_EDIStatus": "ライフサイクルステータス",
+	"_History_EDIStatus_report": "ライフサイクルステータス",
+	"_History_Source": "外部ソース",
+	"_History_Source_report": "外部ソース",
+	"_InvoiceNumber": "請求書番号",
+	"_InvoiceNumber_report": "請求書番号",
+	"_LastDisputeReason": "前回の争議の理由",
+	"_LastDisputeReason_report": "前回の争議の理由",
+	"_PDPLifecycleSource": "PA",
+	"_VendorInvoiceRUIDEX_report": "請求書拡張ID",
+	"_VendorNumber": "仕入先番号",
+	"_VendorNumber_report": "仕入先番号",
+	"Vendor Invoice CDV": "電子請求書のライフサイクル (フランス)",
+	"FRB2B_200_Deposited": "送信済み",
+	"FRB2B_201_IssuedByPlatform": "PAによる発行",
+	"FRB2B_202_PlatformReceived": "PAで受領済み",
+	"FRB2B_203_Received": "利用可能",
+	"FRB2B_204_TakeOn": "進行中",
+	"FRB2B_205_Approved": "承認済み",
+	"FRB2B_206_PartiallyApproved": "部分的に承認済み",
+	"FRB2B_207_OnHold": "争議中",
+	"FRB2B_208_Suspended": "一時中断",
+	"FRB2B_209_Completed": "完了",
+	"FRB2B_210_Refused": "拒否",
+	"FRB2B_211_PaymentSent": "支払送金済み",
+	"FRB2B_212_Cashed": "支払い受領済み",
+	"FRB2B_213_Rejected": "PAにより却下",
+	"FRB2B_214_RefundSent": "エージェント承認済み",
+	"FRB2B_220_Cancelled": "キャンセル済み",
+	"FRB2B_224_DirectPaymentRequest": "ダイレクト支払いリクエスト",
+	"FRB2B_225_Factored": "ファクタリング済み",
+	"FRB2B_226_FactoredConfidential": "ファクタリング済み（機密）",
+	"FRB2B_227_PayableAccountChange": "支払い口座の変更",
+	"FRB2B_228_NotFactored": "未ファクタリング"
+}</process_ja>
+      <process_en>{
+	"__VendorInvoiceRUIDEX": "Invoice extended ID",
+	"_CDV data": "Details",
+	"_CompanyCode": "Company code",
+	"_CompanyCode_report": "Company code",
+	"_EDIStatus": "Life cycle status",
+	"_EDIStatus_report": "Life cycle status",
+	"_ERPLifecycleSource": "ERP",
+	"_History": "History",
+	"_History_Date": "Date",
+	"_History_Date_report": "Date",
+	"_History_EDIStatus": "Life cycle status",
+	"_History_EDIStatus_report": "Life cycle status",
+	"_History_Source": "External source",
+	"_History_Source_report": "External source",
+	"_InvoiceNumber": "Invoice number",
+	"_InvoiceNumber_report": "Invoice number",
+	"_LastDisputeReason": "Last dispute reason",
+	"_LastDisputeReason_report": "Last dispute reason",
+	"_PDPLifecycleSource": "PA",
+	"_VendorInvoiceRUIDEX_report": "Invoice extended ID",
+	"_VendorNumber": "Supplier number",
+	"_VendorNumber_report": "Supplier number",
+	"Vendor Invoice CDV": "E-invoice life cycle (France)",
+	"FRB2B_200_Deposited": "Submitted",
+	"FRB2B_201_IssuedByPlatform": "Issued by PA",
+	"FRB2B_202_PlatformReceived": "Received by PA",
+	"FRB2B_203_Received": "Made available",
+	"FRB2B_204_TakeOn": "In hand",
+	"FRB2B_205_Approved": "Approved",
+	"FRB2B_206_PartiallyApproved": "Partially approved",
+	"FRB2B_207_OnHold": "Disputed",
+	"FRB2B_208_Suspended": "Suspended",
+	"FRB2B_209_Completed": "Completed",
+	"FRB2B_210_Refused": "Refused",
+	"FRB2B_211_PaymentSent": "Payment sent",
+	"FRB2B_212_Cashed": "Payment received",
+	"FRB2B_213_Rejected": "Rejected by PA",
+	"FRB2B_214_RefundSent": "Agent approved",
+	"FRB2B_220_Cancelled": "Canceled",
+	"FRB2B_224_DirectPaymentRequest": "Direct payment request",
+	"FRB2B_225_Factored": "Factored",
+	"FRB2B_226_FactoredConfidential": "Factored (confidential)",
+	"FRB2B_227_PayableAccountChange": "Change of payment account",
+	"FRB2B_228_NotFactored": "Not factored"
+}</process_en>
+      <process_es>{
+	"__VendorInvoiceRUIDEX": "Id. largo de la factura",
+	"_CDV data": "Detalles",
+	"_CompanyCode": "Código de empresa",
+	"_CompanyCode_report": "Código de empresa",
+	"_EDIStatus": "Estado de las facturas EDI",
+	"_EDIStatus_report": "Estado de las facturas EDI",
+	"_ERPLifecycleSource": "Recuperado desde el ERP",
+	"_History": "Historial",
+	"_History_Date": "Fecha",
+	"_History_Date_report": "Fecha",
+	"_History_EDIStatus": "Estado de las facturas EDI",
+	"_History_EDIStatus_report": "Estado de las facturas EDI",
+	"_History_Source": "Fuente externa",
+	"_History_Source_report": "Fuente externa",
+	"_InvoiceNumber": "Número de factura",
+	"_InvoiceNumber_report": "Número de factura",
+	"_LastDisputeReason": "Último motivo de impugnación",
+	"_LastDisputeReason_report": "Último motivo de impugnación",
+	"_PDPLifecycleSource": "PA",
+	"_VendorInvoiceRUIDEX_report": "Id. largo de la factura",
+	"_VendorNumber": "Número del proveedor",
+	"_VendorNumber_report": "Número del proveedor",
+	"Vendor Invoice CDV": "Ciclo de vida de factura electrónica (Francia)",
+	"FRB2B_200_Deposited": "Enviada",
+	"FRB2B_201_IssuedByPlatform": "Emitida por la PA",
+	"FRB2B_202_PlatformReceived": "Recibida por la PA",
+	"FRB2B_203_Received": "Disponibles",
+	"FRB2B_204_TakeOn": "Tomada en cuenta",
+	"FRB2B_205_Approved": "Aprobada",
+	"FRB2B_206_PartiallyApproved": "Aprobada parcialmente",
+	"FRB2B_207_OnHold": "Impugnada",
+	"FRB2B_208_Suspended": "Suspendida",
+	"FRB2B_209_Completed": "Realizada",
+	"FRB2B_210_Refused": "Rechazada",
+	"FRB2B_211_PaymentSent": "Pago enviado",
+	"FRB2B_212_Cashed": "Pago recibido",
+	"FRB2B_213_Rejected": "Rechazada por la PA",
+	"FRB2B_214_RefundSent": "Aprobada por el agente",
+	"FRB2B_220_Cancelled": "Cancelada",
+	"FRB2B_224_DirectPaymentRequest": "Solicitud de pago directo",
+	"FRB2B_225_Factored": "Cedida",
+	"FRB2B_226_FactoredConfidential": "Cedida (confidencial)",
+	"FRB2B_227_PayableAccountChange": "Cambio de cuenta de pago\n",
+	"FRB2B_228_NotFactored": "No cedida"
+}</process_es>
+      <process_fr>{
+	"__VendorInvoiceRUIDEX": "Identifiant long de la facture",
+	"_CDV data": "Détails",
+	"_CompanyCode": "Code société",
+	"_CompanyCode_report": "Code société",
+	"_EDIStatus": "État du cycle de vie",
+	"_EDIStatus_report": "État du cycle de vie",
+	"_ERPLifecycleSource": "ERP",
+	"_History": "Historique",
+	"_History_Date": "Date",
+	"_History_Date_report": "Date",
+	"_History_EDIStatus": "État du cycle de vie",
+	"_History_EDIStatus_report": "État du cycle de vie",
+	"_History_Source": "Source externe",
+	"_History_Source_report": "Source externe",
+	"_InvoiceNumber": "Numéro de facture",
+	"_InvoiceNumber_report": "Numéro de facture",
+	"_LastDisputeReason": "Dernier motif de litige",
+	"_LastDisputeReason_report": "Dernier motif de litige",
+	"_PDPLifecycleSource": "PA",
+	"_VendorInvoiceRUIDEX_report": "Identifiant long de la facture",
+	"_VendorNumber": "Numéro du fournisseur",
+	"_VendorNumber_report": "Numéro du fournisseur",
+	"Vendor Invoice CDV": "Cycle de vie de facture électronique (France)",
+	"FRB2B_200_Deposited": "Déposée",
+	"FRB2B_201_IssuedByPlatform": "Émise par la PA",
+	"FRB2B_202_PlatformReceived": "Reçue par la PA",
+	"FRB2B_203_Received": "Mise à disposition",
+	"FRB2B_204_TakeOn": "Prise en charge",
+	"FRB2B_205_Approved": "Approuvée",
+	"FRB2B_206_PartiallyApproved": "Approuvée partiellement",
+	"FRB2B_207_OnHold": "En litige",
+	"FRB2B_208_Suspended": "Suspendue",
+	"FRB2B_209_Completed": "Complétée",
+	"FRB2B_210_Refused": "Refusée",
+	"FRB2B_211_PaymentSent": "Paiement transmis",
+	"FRB2B_212_Cashed": "Encaissée",
+	"FRB2B_213_Rejected": "Rejetée par la PA",
+	"FRB2B_214_RefundSent": "Visée",
+	"FRB2B_220_Cancelled": "Annulée\n",
+	"FRB2B_224_DirectPaymentRequest": "Demande de paiement direct",
+	"FRB2B_225_Factored": "Affacturée",
+	"FRB2B_226_FactoredConfidential": "Affacturée confidentiel\n",
+	"FRB2B_227_PayableAccountChange": "Changement de compte à payer\n",
+	"FRB2B_228_NotFactored": "Non affacturée\n"
+}</process_fr>
+      <process_nl-NL>{
+	"__VendorInvoiceRUIDEX": "Uitgebreide factuur-ID",
+	"_CDV data": "Details",
+	"_CompanyCode": "Bedrijfscode",
+	"_CompanyCode_report": "Bedrijfscode",
+	"_EDIStatus": "Status levenscyclus",
+	"_EDIStatus_report": "Status levenscyclus",
+	"_ERPLifecycleSource": "ERP",
+	"_History": "Geschiedenis",
+	"_History_Date": "Datum",
+	"_History_Date_report": "Datum",
+	"_History_EDIStatus": "Status levenscyclus",
+	"_History_EDIStatus_report": "Status levenscyclus",
+	"_History_Source": "Externe bron",
+	"_History_Source_report": "Externe bron",
+	"_InvoiceNumber": "Factuurnummer",
+	"_InvoiceNumber_report": "Factuurnummer",
+	"_LastDisputeReason": "Laatste reden voor betwisting",
+	"_LastDisputeReason_report": "Laatste reden voor betwisting",
+	"_PDPLifecycleSource": "PA",
+	"_VendorInvoiceRUIDEX_report": "Uitgebreide factuur-ID",
+	"_VendorNumber": "Nummer leverancier",
+	"_VendorNumber_report": "Nummer leverancier",
+	"Vendor Invoice CDV": "Levenscyclus e-factuur (Frankrijk)",
+	"FRB2B_200_Deposited": "Ingediend",
+	"FRB2B_201_IssuedByPlatform": "Uitgegeven door PA",
+	"FRB2B_202_PlatformReceived": "Ontvangen door PA",
+	"FRB2B_203_Received": "Beschikbaar gemaakt",
+	"FRB2B_204_TakeOn": "In handen",
+	"FRB2B_205_Approved": "Goedgekeurd",
+	"FRB2B_206_PartiallyApproved": "Deels goedgekeurd",
+	"FRB2B_207_OnHold": "Betwist",
+	"FRB2B_208_Suspended": "Opgeschort",
+	"FRB2B_209_Completed": "Voltooid",
+	"FRB2B_210_Refused": "Geweigerd",
+	"FRB2B_211_PaymentSent": "Betaling verzonden",
+	"FRB2B_212_Cashed": "Betaling ontvangen",
+	"FRB2B_213_Rejected": "Geweigerd door PA",
+	"FRB2B_214_RefundSent": "Vertegenwoordiger goedgekeurd",
+	"FRB2B_220_Cancelled": "Geannuleerd",
+	"FRB2B_224_DirectPaymentRequest": "Direct betalingsverzoek",
+	"FRB2B_225_Factored": "Gefactored",
+	"FRB2B_226_FactoredConfidential": "Gefactored (vertrouwelijk)",
+	"FRB2B_227_PayableAccountChange": "Wijziging betaalrekening",
+	"FRB2B_228_NotFactored": "Niet gefactored"
+}</process_nl-NL>
+      <process_pl>{
+	"__VendorInvoiceRUIDEX": "Rozszerzony id. faktury",
+	"_CDV data": "Szczegóły",
+	"_CompanyCode": "Kod firmy",
+	"_CompanyCode_report": "Kod firmy",
+	"_EDIStatus": "Status cyklu życia",
+	"_EDIStatus_report": "Status cyklu życia",
+	"_ERPLifecycleSource": "ERP",
+	"_History": "Historia",
+	"_History_Date": "Data",
+	"_History_Date_report": "Data",
+	"_History_EDIStatus": "Status cyklu życia",
+	"_History_EDIStatus_report": "Status cyklu życia",
+	"_History_Source": "Źródło zewnętrzne",
+	"_History_Source_report": "Źródło zewnętrzne",
+	"_InvoiceNumber": "Numer faktury",
+	"_InvoiceNumber_report": "Numer faktury",
+	"_LastDisputeReason": "Powód ostatniego sporu",
+	"_LastDisputeReason_report": "Powód ostatniego sporu",
+	"_PDPLifecycleSource": "PA",
+	"_VendorInvoiceRUIDEX_report": "Rozszerzony id. faktury",
+	"_VendorNumber": "Numer dostawcy",
+	"_VendorNumber_report": "Numer dostawcy",
+	"Vendor Invoice CDV": "Cykl życia e-faktury (Francja)",
+	"FRB2B_200_Deposited": "Przesłana",
+	"FRB2B_201_IssuedByPlatform": "Wystawiona przez PA",
+	"FRB2B_202_PlatformReceived": "Odebrana przez PA",
+	"FRB2B_203_Received": "Udostępnione",
+	"FRB2B_204_TakeOn": "W posiadaniu",
+	"FRB2B_205_Approved": "Zatwierdzone",
+	"FRB2B_206_PartiallyApproved": "Częściowo zatwierdzona",
+	"FRB2B_207_OnHold": "Zgłoszone jako sporne",
+	"FRB2B_208_Suspended": "Zawieszone",
+	"FRB2B_209_Completed": "Ukończona",
+	"FRB2B_210_Refused": "Z odmową",
+	"FRB2B_211_PaymentSent": "Płatność wysłana",
+	"FRB2B_212_Cashed": "Płatność otrzymana",
+	"FRB2B_213_Rejected": "Odrzucona przez PA",
+	"FRB2B_214_RefundSent": "Zatwierdzona przez agenta",
+	"FRB2B_220_Cancelled": "Anulowana",
+	"FRB2B_224_DirectPaymentRequest": "Wniosek o płatność bezpośrednią",
+	"FRB2B_225_Factored": "Objęta faktoringiem",
+	"FRB2B_226_FactoredConfidential": "Objęta faktoringiem (poufnym)",
+	"FRB2B_227_PayableAccountChange": "Zmiana konta płatności",
+	"FRB2B_228_NotFactored": "Nieobjęta faktoringiem"
+}</process_pl>
+      <process_it>{
+	"__VendorInvoiceRUIDEX": "ID esteso fattura",
+	"_CDV data": "Dettagli",
+	"_CompanyCode": "Codice società",
+	"_CompanyCode_report": "Codice società",
+	"_EDIStatus": "Stato ciclo di vita",
+	"_EDIStatus_report": "Stato ciclo di vita",
+	"_ERPLifecycleSource": "ERP",
+	"_History": "Cronologia",
+	"_History_Date": "Data",
+	"_History_Date_report": "Data",
+	"_History_EDIStatus": "Stato ciclo di vita",
+	"_History_EDIStatus_report": "Stato ciclo di vita",
+	"_History_Source": "Origine esterna",
+	"_History_Source_report": "Origine esterna",
+	"_InvoiceNumber": "Numero fattura",
+	"_InvoiceNumber_report": "Numero fattura",
+	"_LastDisputeReason": "Ultimo motivo di contestazione",
+	"_LastDisputeReason_report": "Ultimo motivo di contestazione",
+	"_PDPLifecycleSource": "PA",
+	"_VendorInvoiceRUIDEX_report": "ID esteso fattura",
+	"_VendorNumber": "Numero fornitore",
+	"_VendorNumber_report": "Numero fornitore",
+	"Vendor Invoice CDV": "Ciclo di vita fattura elettronica (Francia)",
+	"FRB2B_200_Deposited": "Trasmessa",
+	"FRB2B_201_IssuedByPlatform": "Emessa dalla PA",
+	"FRB2B_202_PlatformReceived": "Ricevuta dalla PA",
+	"FRB2B_203_Received": "Resa disponibile",
+	"FRB2B_204_TakeOn": "Presa in carico",
+	"FRB2B_205_Approved": "Approvata",
+	"FRB2B_206_PartiallyApproved": "Approvata parzialmente",
+	"FRB2B_207_OnHold": "Contestata",
+	"FRB2B_208_Suspended": "Sospesa",
+	"FRB2B_209_Completed": "Completata",
+	"FRB2B_210_Refused": "Rifiutata",
+	"FRB2B_211_PaymentSent": "Pagamento inviato",
+	"FRB2B_212_Cashed": "Pagamento ricevuto",
+	"FRB2B_213_Rejected": "Respinta dalla PA",
+	"FRB2B_214_RefundSent": "Approvata dall'agente",
+	"FRB2B_220_Cancelled": "Annullata",
+	"FRB2B_224_DirectPaymentRequest": "Richiesta di pagamento diretto",
+	"FRB2B_225_Factored": "Ceduta",
+	"FRB2B_226_FactoredConfidential": "Ceduta (confidenziale)",
+	"FRB2B_227_PayableAccountChange": "Modifica del conto di pagamento",
+	"FRB2B_228_NotFactored": "Non ceduta"
+}</process_it>
+      <process_sk>{
+	"__VendorInvoiceRUIDEX": "Rozšírené ID faktúry",
+	"_CDV data": "Podrobnosti",
+	"_CompanyCode": "Kód spoločnosti",
+	"_CompanyCode_report": "Kód spoločnosti",
+	"_EDIStatus": "Stav životného cyklu",
+	"_EDIStatus_report": "Stav životného cyklu",
+	"_ERPLifecycleSource": "ERP",
+	"_History": "História",
+	"_History_Date": "Dátum",
+	"_History_Date_report": "Dátum",
+	"_History_EDIStatus": "Stav životného cyklu",
+	"_History_EDIStatus_report": "Stav životného cyklu",
+	"_History_Source": "Externý zdroj",
+	"_History_Source_report": "Externý zdroj",
+	"_InvoiceNumber": "Faktúra č.",
+	"_InvoiceNumber_report": "Faktúra č.",
+	"_LastDisputeReason": "Dôvod posledného sporu",
+	"_LastDisputeReason_report": "Dôvod posledného sporu",
+	"_PDPLifecycleSource": "PA",
+	"_VendorInvoiceRUIDEX_report": "Rozšírené ID faktúry",
+	"_VendorNumber": "Číslo dodávateľa",
+	"_VendorNumber_report": "Číslo dodávateľa",
+	"Vendor Invoice CDV": "Životný cyklus elektronickej faktúry (Francúzsko)",
+	"FRB2B_200_Deposited": "Odoslaná",
+	"FRB2B_201_IssuedByPlatform": "Vydaná PA",
+	"FRB2B_202_PlatformReceived": "Prijatá PA",
+	"FRB2B_203_Received": "Sprístupnený",
+	"FRB2B_204_TakeOn": "K dispozícii",
+	"FRB2B_205_Approved": "Schválené",
+	"FRB2B_206_PartiallyApproved": "Čiastočne schválená",
+	"FRB2B_207_OnHold": "Sporný",
+	"FRB2B_208_Suspended": "Indragen",
+	"FRB2B_209_Completed": "Dokončená",
+	"FRB2B_210_Refused": "Zamietnutý",
+	"FRB2B_211_PaymentSent": "Odoslaná platba",
+	"FRB2B_212_Cashed": "Prijatá platba",
+	"FRB2B_213_Rejected": "Odmietnutá PA",
+	"FRB2B_214_RefundSent": "Schválená agentom",
+	"FRB2B_220_Cancelled": "Zrušená",
+	"FRB2B_224_DirectPaymentRequest": "Žiadosť o priamu platbu",
+	"FRB2B_225_Factored": "Faktoringová",
+	"FRB2B_226_FactoredConfidential": "Faktoringová (dôverná)",
+	"FRB2B_227_PayableAccountChange": "Zmena platobného účtu",
+	"FRB2B_228_NotFactored": "Bez faktoringu"
+}</process_sk>
+      <process_zh-CN>{
+	"__VendorInvoiceRUIDEX": "发票扩展ID",
+	"_CDV data": "详细信息",
+	"_CompanyCode": "公司代码",
+	"_CompanyCode_report": "公司代码",
+	"_EDIStatus": "生命周期状态",
+	"_EDIStatus_report": "生命周期状态",
+	"_ERPLifecycleSource": "ERP",
+	"_History": "历史记录",
+	"_History_Date": "日期",
+	"_History_Date_report": "日期",
+	"_History_EDIStatus": "生命周期状态",
+	"_History_EDIStatus_report": "生命周期状态",
+	"_History_Source": "外部来源",
+	"_History_Source_report": "外部来源",
+	"_InvoiceNumber": "发票号",
+	"_InvoiceNumber_report": "发票号",
+	"_LastDisputeReason": "最后争议原因",
+	"_LastDisputeReason_report": "最后争议原因",
+	"_PDPLifecycleSource": "PA",
+	"_VendorInvoiceRUIDEX_report": "发票扩展ID",
+	"_VendorNumber": "供应商编号",
+	"_VendorNumber_report": "供应商编号",
+	"Vendor Invoice CDV": "电子账单生命周期（法国）",
+	"FRB2B_200_Deposited": "已提交",
+	"FRB2B_201_IssuedByPlatform": "由 PA 发出",
+	"FRB2B_202_PlatformReceived": "PA 收到",
+	"FRB2B_203_Received": "已提供",
+	"FRB2B_204_TakeOn": "在手",
+	"FRB2B_205_Approved": "已批准",
+	"FRB2B_206_PartiallyApproved": "部分批准",
+	"FRB2B_207_OnHold": "有争议",
+	"FRB2B_208_Suspended": "暂停",
+	"FRB2B_209_Completed": "已完成",
+	"FRB2B_210_Refused": "已拒绝",
+	"FRB2B_211_PaymentSent": "发出付款",
+	"FRB2B_212_Cashed": "收到付款",
+	"FRB2B_213_Rejected": "PA 拒绝",
+	"FRB2B_214_RefundSent": "经代理人批准",
+	"FRB2B_220_Cancelled": "已取消",
+	"FRB2B_224_DirectPaymentRequest": "直接付款请求",
+	"FRB2B_225_Factored": "保理账单发票",
+	"FRB2B_226_FactoredConfidential": "保理账单发票（机密）",
+	"FRB2B_227_PayableAccountChange": "更改付款账户",
+	"FRB2B_228_NotFactored": "未保理"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"__VendorInvoiceRUIDEX": "ID estendido da fatura",
+	"_CDV data": "Detalhes",
+	"_CompanyCode": "Código da empresa",
+	"_CompanyCode_report": "Código da empresa",
+	"_EDIStatus": "Status do ciclo de vida",
+	"_EDIStatus_report": "Status do ciclo de vida",
+	"_ERPLifecycleSource": "ERP",
+	"_History": "Histórico",
+	"_History_Date": "Data",
+	"_History_Date_report": "Data",
+	"_History_EDIStatus": "Status do ciclo de vida",
+	"_History_EDIStatus_report": "Status do ciclo de vida",
+	"_History_Source": "Fonte externa",
+	"_History_Source_report": "Fonte externa",
+	"_InvoiceNumber": "Número da fatura",
+	"_InvoiceNumber_report": "Número da fatura",
+	"_LastDisputeReason": "Motivo anterior de contestação",
+	"_LastDisputeReason_report": "Motivo anterior de contestação",
+	"_PDPLifecycleSource": "PA",
+	"_VendorInvoiceRUIDEX_report": "ID estendido da fatura",
+	"_VendorNumber": "Número do fornecedor",
+	"_VendorNumber_report": "Número do fornecedor",
+	"Vendor Invoice CDV": "Ciclo de vida da fatura eletrônica (França)",
+	"FRB2B_200_Deposited": "Enviada",
+	"FRB2B_201_IssuedByPlatform": "Emitida pela PA",
+	"FRB2B_202_PlatformReceived": "Recebida pela PA",
+	"FRB2B_203_Received": "Disponibilizadas",
+	"FRB2B_204_TakeOn": "Em mão",
+	"FRB2B_205_Approved": "Aprovada",
+	"FRB2B_206_PartiallyApproved": "Parcialmente aprovada",
+	"FRB2B_207_OnHold": "Contestada",
+	"FRB2B_208_Suspended": "Suspendida",
+	"FRB2B_209_Completed": "Processada",
+	"FRB2B_210_Refused": "Recusada",
+	"FRB2B_211_PaymentSent": "Pagamento enviado",
+	"FRB2B_212_Cashed": "Pagamento recebido",
+	"FRB2B_213_Rejected": "Rejeitada pela PA",
+	"FRB2B_214_RefundSent": "Aprovada pelo agente",
+	"FRB2B_220_Cancelled": "Cancelada",
+	"FRB2B_224_DirectPaymentRequest": "Solicitação de pagamento direto",
+	"FRB2B_225_Factored": "Com factoring",
+	"FRB2B_226_FactoredConfidential": "Com factoring (confidencial)",
+	"FRB2B_227_PayableAccountChange": "Alteração da conta de pagamento",
+	"FRB2B_228_NotFactored": "Sem factoring"
+}</process_pt-BR>
+    </lg>
+    <process>
+      <flowtype>processing</flowtype>
+      <ocrpreset>scan</ocrpreset>
+      <EnableNegativeNumbersBetweenBrackets>true</EnableNegativeNumbersBetweenBrackets>
+      <homepagelabel>Vendor Invoice CDV</homepagelabel>
+      <enableflexibleauditing>
+      </enableflexibleauditing>
+      <enableflexibleediting>
+      </enableflexibleediting>
+      <enableflexibleteaching>
+      </enableflexibleteaching>
+      <enableInternalConversation>true</enableInternalConversation>
+      <upgradable>yes</upgradable>
+      <disableocr>
+      </disableocr>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <disableautolearning>true</disableautolearning>
+      <backgroundprocessingthreshold>
+      </backgroundprocessingthreshold>
+      <EnablePreviewPrecomputation>
+      </EnablePreviewPrecomputation>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <enablerounddecimal>true</enablerounddecimal>
+      <pdfNormalizeFilter>
+      </pdfNormalizeFilter>
+      <archiveDuration>0</archiveDuration>
+      <ownhomepage>
+      </ownhomepage>
+      <ocrpagestoprocess>0</ocrpagestoprocess>
+      <ScriptEngineType>2</ScriptEngineType>
+      <UseActionNameWithScriptApproval>true</UseActionNameWithScriptApproval>
+      <displayWidth>1024</displayWidth>
+      <AllowUploadAttachment>1</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>1</AllowUploadReferenceDocument>
+      <RemovePointWhenCastingIntToString>true</RemovePointWhenCastingIntToString>
+      <UseCultureFormat>true</UseCultureFormat>
+      <AllowRetryExtractCD>true</AllowRetryExtractCD>
+      <TransportName>CustomData</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+      <printToProcess>
+      </printToProcess>
+    </process>
+    <ui>
+      <CustomScriptDebug>false</CustomScriptDebug>
+      <customScriptIncludedScripts>Sys/Sys_AP_VendorInvoiceCDV_CustomScript</customScriptIncludedScripts>
+      <CustomScriptReadonly>true</CustomScriptReadonly>
+      <CustomScript>"use strict";
+Sys.AP.VendorInvoiceCDV.CustomScript.Main();
+//# sourceMappingURL=customscript.js.map</CustomScript>
+      <restorationPanel>DataPanel</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 64,
+	"*": {
+		"GDRData": {
+			"type": "GDRData",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"version": 0
+			}
+		},
+		"OCRParams": {
+			"type": "OCRParams",
+			"data": [],
+			"stamp": 2,
+			"options": {
+				"version": 0
+			}
+		},
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 3,
+			"options": {
+				"splitterType": "complex",
+				"style": "FlexibleFormLight",
+				"maxwidth": 1024,
+				"backColor": "text-backgroundcolor-default",
+				"footerStyle": "default",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 4,
+					"options": {
+						"maxwidth": 1024,
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 5,
+					"options": {
+						"maxwidth": 1024,
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 6,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-top": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 7,
+									"options": {
+										"autosize": true,
+										"version": 1,
+										"box": {
+											"top": 0,
+											"left": 0,
+											"width": 100,
+											"height": 0
+										},
+										"hidden": false,
+										"hideSeparator": true
+									}
+								},
+								"form-content-bottom": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 8,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": 0,
+											"left": 0,
+											"width": 100,
+											"height": 100
+										},
+										"hidden": false
+									},
+									"*": {
+										"form-content-left": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 9,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": 0,
+													"left": 0,
+													"width": 99,
+													"height": 100
+												},
+												"hidden": false,
+												"hideSeparator": true
+											},
+											"*": {
+												"form-content-left-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 10,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"DataPanel": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 11,
+															"options": {
+																"border": {},
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_CDV data",
+																"leftImageURL": "",
+																"removeMargins": false,
+																"elementsAlignment": "left",
+																"labelLength": 0,
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 12,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {
+																			"InvoiceNumber__": "LabelInvoiceNumber__",
+																			"LabelInvoiceNumber__": "InvoiceNumber__",
+																			"EDIStatus__": "LabelEDIStatus__",
+																			"LabelEDIStatus__": "EDIStatus__",
+																			"VendorInvoiceRUIDEX__": "LabelVendorInvoiceRUIDEX__",
+																			"LabelVendorInvoiceRUIDEX__": "VendorInvoiceRUIDEX__",
+																			"CompanyCode__": "LabelCompanyCode__",
+																			"LabelCompanyCode__": "CompanyCode__",
+																			"VendorNumber__": "LabelVendorNumber__",
+																			"LabelVendorNumber__": "VendorNumber__",
+																			"LastDisputeReason__": "LabelLastDisputeReason__",
+																			"LabelLastDisputeReason__": "LastDisputeReason__"
+																		}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 13,
+																			"options": {
+																				"version": 0,
+																				"lines": 6,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"LabelInvoiceNumber__": {
+																						"line": 1,
+																						"column": 1
+																					},
+																					"InvoiceNumber__": {
+																						"line": 1,
+																						"column": 2
+																					},
+																					"LabelEDIStatus__": {
+																						"line": 2,
+																						"column": 1
+																					},
+																					"EDIStatus__": {
+																						"line": 2,
+																						"column": 2
+																					},
+																					"LabelVendorInvoiceRUIDEX__": {
+																						"line": 3,
+																						"column": 1
+																					},
+																					"VendorInvoiceRUIDEX__": {
+																						"line": 3,
+																						"column": 2
+																					},
+																					"LabelCompanyCode__": {
+																						"line": 4,
+																						"column": 1
+																					},
+																					"CompanyCode__": {
+																						"line": 4,
+																						"column": 2
+																					},
+																					"LabelVendorNumber__": {
+																						"line": 5,
+																						"column": 1
+																					},
+																					"VendorNumber__": {
+																						"line": 5,
+																						"column": 2
+																					},
+																					"LabelLastDisputeReason__": {
+																						"line": 6,
+																						"column": 1
+																					},
+																					"LastDisputeReason__": {
+																						"line": 6,
+																						"column": 2
+																					}
+																				},
+																				"colspans": [
+																					[],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[]
+																				]
+																			},
+																			"*": {
+																				"LabelInvoiceNumber__": {
+																					"type": "Label",
+																					"data": [
+																						"InvoiceNumber__"
+																					],
+																					"stamp": 15,
+																					"options": {
+																						"label": "_InvoiceNumber",
+																						"version": 0
+																					}
+																				},
+																				"InvoiceNumber__": {
+																					"type": "ShortText",
+																					"data": [
+																						"InvoiceNumber__"
+																					],
+																					"stamp": 14,
+																					"options": {
+																						"label": "_InvoiceNumber",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"browsable": false
+																					}
+																				},
+																				"LabelEDIStatus__": {
+																					"type": "Label",
+																					"data": [
+																						"EDIStatus__"
+																					],
+																					"stamp": 17,
+																					"options": {
+																						"label": "_EDIStatus",
+																						"version": 0
+																					}
+																				},
+																				"EDIStatus__": {
+																					"type": "ComboBox",
+																					"data": [
+																						"EDIStatus__"
+																					],
+																					"stamp": 16,
+																					"options": {
+																						"label": "_EDIStatus",
+																						"possibleValues": {
+																							"0": "",
+																							"1": "FRB2B_203_Received",
+																							"2": "FRB2B_204_TakeOn",
+																							"3": "FRB2B_205_Approved",
+																							"4": "FRB2B_206_PartiallyApproved",
+																							"5": "FRB2B_207_OnHold",
+																							"6": "FRB2B_208_Suspended",
+																							"7": "FRB2B_210_Refused",
+																							"8": "FRB2B_211_PaymentSent",
+																							"9": "FRB2B_212_Cashed"
+																						},
+																						"keyValueMode": true,
+																						"possibleKeys": {
+																							"0": "-- none --",
+																							"1": "FRB2B_203_Received",
+																							"2": "FRB2B_204_TakeOn",
+																							"3": "FRB2B_205_Approved",
+																							"4": "FRB2B_206_PartiallyApproved",
+																							"5": "FRB2B_207_OnHold",
+																							"6": "FRB2B_208_Suspended",
+																							"7": "FRB2B_210_Refused",
+																							"8": "FRB2B_211_PaymentSent",
+																							"9": "FRB2B_212_Cashed"
+																						},
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"browsable": false
+																					}
+																				},
+																				"LabelVendorInvoiceRUIDEX__": {
+																					"type": "Label",
+																					"data": [
+																						"VendorInvoiceRUIDEX__"
+																					],
+																					"stamp": 19,
+																					"options": {
+																						"label": "__VendorInvoiceRUIDEX",
+																						"version": 0
+																					}
+																				},
+																				"VendorInvoiceRUIDEX__": {
+																					"type": "ShortText",
+																					"data": [
+																						"VendorInvoiceRUIDEX__"
+																					],
+																					"stamp": 18,
+																					"options": {
+																						"label": "__VendorInvoiceRUIDEX",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"hidden": true,
+																						"browsable": false
+																					}
+																				},
+																				"LabelCompanyCode__": {
+																					"type": "Label",
+																					"data": [
+																						"CompanyCode__"
+																					],
+																					"stamp": 21,
+																					"options": {
+																						"label": "_CompanyCode",
+																						"version": 0
+																					}
+																				},
+																				"CompanyCode__": {
+																					"type": "ShortText",
+																					"data": [
+																						"CompanyCode__"
+																					],
+																					"stamp": 20,
+																					"options": {
+																						"label": "_CompanyCode",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"browsable": false
+																					}
+																				},
+																				"LabelVendorNumber__": {
+																					"type": "Label",
+																					"data": [
+																						"VendorNumber__"
+																					],
+																					"stamp": 23,
+																					"options": {
+																						"label": "_VendorNumber",
+																						"version": 0
+																					}
+																				},
+																				"VendorNumber__": {
+																					"type": "ShortText",
+																					"data": [
+																						"VendorNumber__"
+																					],
+																					"stamp": 22,
+																					"options": {
+																						"label": "_VendorNumber",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"browsable": false
+																					}
+																				},
+																				"LabelLastDisputeReason__": {
+																					"type": "Label",
+																					"data": [
+																						"LastDisputeReason__"
+																					],
+																					"stamp": 25,
+																					"options": {
+																						"label": "_LastDisputeReason",
+																						"version": 0
+																					}
+																				},
+																				"LastDisputeReason__": {
+																					"type": "ShortText",
+																					"data": [
+																						"LastDisputeReason__"
+																					],
+																					"stamp": 24,
+																					"options": {
+																						"label": "_LastDisputeReason",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"hidden": true,
+																						"browsable": false
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-3": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 26,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"NextProcess": {
+															"type": "PanelNextProcess",
+															"data": [],
+															"stamp": 27,
+															"options": {
+																"hidden": true,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_Next Process",
+																"version": 0
+															}
+														}
+													}
+												},
+												"form-content-left-4": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 28,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"History": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 29,
+															"options": {
+																"border": {},
+																"labelLength": "120px",
+																"iconURL": "AP_Comment.png",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_History",
+																"hidden": false,
+																"isSvgIcon": false,
+																"leftImageURL": "",
+																"removeMargins": false,
+																"elementsAlignment": "left",
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 30,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 31,
+																			"options": {
+																				"version": 0,
+																				"lines": 1,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"CDVHistoryTable__": {
+																						"line": 1,
+																						"column": 1
+																					}
+																				},
+																				"colspans": [
+																					[
+																						{
+																							"index": 0,
+																							"length": 2
+																						}
+																					]
+																				]
+																			},
+																			"*": {
+																				"CDVHistoryTable__": {
+																					"type": "Table",
+																					"data": [
+																						"CDVHistoryTable__"
+																					],
+																					"stamp": 32,
+																					"options": {
+																						"columns": 3,
+																						"label": "_CDVHistoryTable",
+																						"version": 5,
+																						"lines": 10,
+																						"stickedColumns": 0,
+																						"displayEmptyLines": false,
+																						"alwaysOneLine": false,
+																						"menuOptions": {
+																							"disableInsertLine": false,
+																							"autoWidth": false,
+																							"disableAddLine": false,
+																							"hideTopNavigation": false,
+																							"hideBottomNavigation": false,
+																							"hideTableRowMenu": "showAll",
+																							"hideTableRowDelete": true,
+																							"hideTableRowAdd": true,
+																							"hideTableRowDuplicate": true,
+																							"hideTableRowButtonDuplicate": true,
+																							"allowSortTable": false,
+																							"allowFilter": false,
+																							"addButtonShouldInsert": false
+																						},
+																						"item": {
+																							"display": null
+																						},
+																						"group": {
+																							"name": "GDR\nPage"
+																						},
+																						"subsection": null
+																					},
+																					"*": {
+																						"Clipboard": {
+																							"type": "$TableRow",
+																							"subtype": "Clipboard",
+																							"data": [
+																								null
+																							],
+																							"stamp": 33,
+																							"options": {
+																								"version": 0
+																							},
+																							"*": {
+																								"Cell1": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 41,
+																									"options": {
+																										"version": 0
+																									},
+																									"*": {
+																										"History_Date__": {
+																											"type": "RealDateTime",
+																											"data": [
+																												"History_Date__"
+																											],
+																											"stamp": 38,
+																											"options": {
+																												"label": "_History_Date",
+																												"readonly": true,
+																												"displayLongFormat": false,
+																												"activable": true,
+																												"width": 140,
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"helpIconPosition": "Right",
+																												"version": 0
+																											},
+																											"position": [
+																												"_History_Date"
+																											]
+																										}
+																									}
+																								},
+																								"Cell2": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 45,
+																									"options": {
+																										"version": 0
+																									},
+																									"*": {
+																										"History_EDIStatus__": {
+																											"type": "ComboBox",
+																											"data": [
+																												"History_EDIStatus__"
+																											],
+																											"stamp": 42,
+																											"options": {
+																												"label": "_History_EDIStatus",
+																												"possibleValues": {
+																													"0": "",
+																													"1": "FRB2B_200_Deposited",
+																													"2": "FRB2B_201_IssuedByPlatform",
+																													"3": "FRB2B_202_PlatformReceived",
+																													"4": "FRB2B_203_Received",
+																													"5": "FRB2B_204_TakeOn",
+																													"6": "FRB2B_205_Approved",
+																													"7": "FRB2B_206_PartiallyApproved",
+																													"8": "FRB2B_207_OnHold",
+																													"9": "FRB2B_208_Suspended",
+																													"10": "FRB2B_209_Completed",
+																													"11": "FRB2B_210_Refused",
+																													"12": "FRB2B_211_PaymentSent",
+																													"13": "FRB2B_212_Cashed",
+																													"14": "FRB2B_213_Rejected",
+																													"15": "FRB2B_214_RefundSent",
+																													"16": "FRB2B_220_Cancelled",
+																													"17": "FRB2B_224_DirectPaymentRequest",
+																													"18": "FRB2B_225_Factored",
+																													"19": "FRB2B_226_FactoredConfidential",
+																													"20": "FRB2B_227_PayableAccountChange",
+																													"21": "FRB2B_228_NotFactored"
+																												},
+																												"keyValueMode": true,
+																												"possibleKeys": {
+																													"0": "-- none --",
+																													"1": "FRB2B_200_Deposited",
+																													"2": "FRB2B_201_IssuedByPlatform",
+																													"3": "FRB2B_202_PlatformReceived",
+																													"4": "FRB2B_203_Received",
+																													"5": "FRB2B_204_TakeOn",
+																													"6": "FRB2B_205_Approved",
+																													"7": "FRB2B_206_PartiallyApproved",
+																													"8": "FRB2B_207_OnHold",
+																													"9": "FRB2B_208_Suspended",
+																													"10": "FRB2B_209_Completed",
+																													"11": "FRB2B_210_Refused",
+																													"12": "FRB2B_211_PaymentSent",
+																													"13": "FRB2B_212_Cashed",
+																													"14": "FRB2B_213_Rejected",
+																													"15": "FRB2B_214_RefundSent",
+																													"16": "FRB2B_220_Cancelled",
+																													"17": "FRB2B_224_DirectPaymentRequest",
+																													"18": "FRB2B_225_Factored",
+																													"19": "FRB2B_226_FactoredConfidential",
+																													"20": "FRB2B_227_PayableAccountChange",
+																													"21": "FRB2B_228_NotFactored"
+																												},
+																												"textSize": "S",
+																												"textAlignment": "left",
+																												"textStyle": "default",
+																												"textColor": "default",
+																												"version": 1,
+																												"activable": true,
+																												"width": 180,
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"helpIconPosition": "Right",
+																												"browsable": false
+																											},
+																											"position": [
+																												"_History_EDIStatus"
+																											]
+																										}
+																									}
+																								},
+																								"Cell3": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 49,
+																									"options": {
+																										"version": 0
+																									},
+																									"*": {
+																										"History_Source__": {
+																											"type": "ShortText",
+																											"data": [
+																												"History_Source__"
+																											],
+																											"stamp": 46,
+																											"options": {
+																												"label": "_History_Source",
+																												"readonly": true,
+																												"activable": true,
+																												"width": 150,
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"helpIconPosition": "Right",
+																												"version": 0
+																											},
+																											"position": [
+																												"_History_Source"
+																											]
+																										}
+																									}
+																								}
+																							}
+																						},
+																						"Actions": {
+																							"type": "$TableActions",
+																							"subtype": "Actions",
+																							"data": [],
+																							"stamp": 34,
+																							"options": {
+																								"version": 0
+																							},
+																							"*": {
+																								"Top": {
+																									"type": "$TableActions",
+																									"subtype": "Top",
+																									"data": [],
+																									"stamp": 35,
+																									"options": {
+																										"version": 0
+																									}
+																								},
+																								"Bottom": {
+																									"type": "$TableActions",
+																									"subtype": "Top",
+																									"data": [],
+																									"stamp": 36,
+																									"options": {
+																										"version": 0
+																									}
+																								}
+																							}
+																						},
+																						"Header": {
+																							"type": "$TableRow",
+																							"subtype": "Header",
+																							"data": [
+																								null
+																							],
+																							"stamp": 37,
+																							"options": {
+																								"version": 0
+																							},
+																							"*": {
+																								"Cell1": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 39,
+																									"options": {
+																										"minwidth": 140,
+																										"version": 0
+																									},
+																									"*": {
+																										"History_Date__": {
+																											"type": "Label",
+																											"data": [
+																												"History_Date__"
+																											],
+																											"stamp": 40,
+																											"options": {
+																												"label": "_History_Date",
+																												"type": "RealDateTime",
+																												"minwidth": 140,
+																												"version": 0
+																											},
+																											"position": [
+																												"_History_Date",
+																												false,
+																												false,
+																												"RealDateTime"
+																											]
+																										}
+																									}
+																								},
+																								"Cell2": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 43,
+																									"options": {
+																										"minwidth": 180,
+																										"version": 0
+																									},
+																									"*": {
+																										"History_EDIStatus__": {
+																											"type": "Label",
+																											"data": [
+																												"History_EDIStatus__"
+																											],
+																											"stamp": 44,
+																											"options": {
+																												"label": "_History_EDIStatus",
+																												"type": "ComboBox",
+																												"minwidth": 180,
+																												"version": 0
+																											},
+																											"position": [
+																												"_History_EDIStatus",
+																												false,
+																												false,
+																												"ComboBox"
+																											]
+																										}
+																									}
+																								},
+																								"Cell3": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 47,
+																									"options": {
+																										"minwidth": 150,
+																										"version": 0
+																									},
+																									"*": {
+																										"History_Source__": {
+																											"type": "Label",
+																											"data": [
+																												"History_Source__"
+																											],
+																											"stamp": 48,
+																											"options": {
+																												"label": "_History_Source",
+																												"type": "ShortText",
+																												"minwidth": 150,
+																												"version": 0
+																											},
+																											"position": [
+																												"_History_Source",
+																												false,
+																												false,
+																												"ShortText"
+																											]
+																										}
+																									}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-6": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 50,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"DocumentsPanel": {
+															"type": "PanelDocument",
+															"data": [],
+															"stamp": 51,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_Documents",
+																"version": 0
+															},
+															"*": {
+																"Document": {
+																	"type": "Documents",
+																	"data": [
+																		"documentscontroldata"
+																	],
+																	"stamp": 52,
+																	"options": {
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-7": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 53,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"SystemData": {
+															"type": "PanelSystemData",
+															"data": [],
+															"stamp": 54,
+															"options": {
+																"multicolumn": false,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_System data",
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-right": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 55,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": 0,
+													"left": 99,
+													"width": 1,
+													"height": 100
+												},
+												"hidden": false
+											},
+											"*": {
+												"form-content-right-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 56,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"PreviewPanel": {
+															"type": "PanelPreview",
+															"data": [],
+															"stamp": 57,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_Document Preview",
+																"hidden": true,
+																"version": 0
+															},
+															"*": {
+																"Preview": {
+																	"type": "Preview",
+																	"data": [
+																		"previewdata"
+																	],
+																	"stamp": 58,
+																	"options": {
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 59,
+					"options": {
+						"splitterType": "simple-h",
+						"maxwidth": 1024,
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 60,
+							"options": {
+								"label": "_Save",
+								"action": "save",
+								"submit": true,
+								"textSize": "S",
+								"version": 0
+							}
+						},
+						"Approve": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 61,
+							"options": {
+								"label": "_Approve",
+								"action": "approve",
+								"submit": true,
+								"textSize": "S",
+								"version": 0
+							}
+						},
+						"Reject": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 62,
+							"options": {
+								"label": "_Reject",
+								"action": "reject",
+								"submit": true,
+								"textSize": "S",
+								"version": 0
+							}
+						},
+						"Reprocess": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 63,
+							"options": {
+								"label": "_Reprocess",
+								"action": "reprocess",
+								"submit": true,
+								"textSize": "S",
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 64,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"textSize": "S",
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <field deleted="0" format="" guid="CJPJG0000VLT" id="HZFQT400153E" label="_CompanyCode_report" length="50" name="CompanyCode__" originalProcessID="XGJJG0000VLT" precision="0" processid="GZFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AHZFQT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/CompanyCode__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:11:00</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_CompanyCode_report</Label>
+        <Alias>AHZFQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="AHJJG0000VLT" id="JZFQT400153E" label="_EDIStatus_report" length="50" name="EDIStatus__" originalProcessID="XGJJG0000VLT" precision="0" processid="GZFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AJZFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/EDIStatus__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:11:01</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Type>webaccess.Process.Columns.WithPossibleValues</Type>
+        <Label>_EDIStatus_report</Label>
+        <Alias>AJZFQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+        <teachable>false</teachable>
+        <possibleKeys>-- none --
+FRB2B_203_Received
+FRB2B_204_TakeOn
+FRB2B_205_Approved
+FRB2B_206_PartiallyApproved
+FRB2B_207_OnHold
+FRB2B_208_Suspended
+FRB2B_210_Refused
+FRB2B_211_PaymentSent
+FRB2B_212_Cashed</possibleKeys>
+        <possibleValues>
+FRB2B_203_Received
+FRB2B_204_TakeOn
+FRB2B_205_Approved
+FRB2B_206_PartiallyApproved
+FRB2B_207_OnHold
+FRB2B_208_Suspended
+FRB2B_210_Refused
+FRB2B_211_PaymentSent
+FRB2B_212_Cashed</possibleValues>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="ZGJJG0000VLT" id="KZFQT400153E" label="_InvoiceNumber_report" length="50" name="InvoiceNumber__" originalProcessID="XGJJG0000VLT" precision="0" processid="GZFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AKZFQT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/InvoiceNumber__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:11:01</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_InvoiceNumber_report</Label>
+        <Alias>AKZFQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="NIX1000011XD" id="IZFQT400153E" label="_LastDisputeReason_report" length="50" name="LastDisputeReason__" originalProcessID="XGJJG0000VLT" precision="0" processid="GZFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AIZFQT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/LastDisputeReason__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:11:00</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_LastDisputeReason_report</Label>
+        <Alias>AIZFQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="TPFJG0000VLT" id="LZFQT400153E" label="_VendorInvoiceRUIDEX_report" length="50" name="VendorInvoiceRUIDEX__" originalProcessID="XGJJG0000VLT" precision="0" processid="GZFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ALZFQT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/VendorInvoiceRUIDEX__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:11:01</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_VendorInvoiceRUIDEX_report</Label>
+        <Alias>ALZFQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="DJPJG0000VLT" id="MZFQT400153E" label="_VendorNumber_report" length="50" name="VendorNumber__" originalProcessID="XGJJG0000VLT" precision="0" processid="GZFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AMZFQT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/VendorNumber__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:11:01</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_VendorNumber_report</Label>
+        <Alias>AMZFQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <datatable deleted="0" guid="BHJJG0000VLT" id="NZFQT400153E" label="_CDVHistoryTable" name="CDVHistoryTable__" originalProcessID="XGJJG0000VLT">
+    <properties>
+      <field>
+        <DisableAutolearn>1</DisableAutolearn>
+        <Extractable>0</Extractable>
+      </field>
+      <ui>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+    <field datatableid="NZFQT400153E" deleted="0" format="" guid="CHJJG0000VLT" id="OZFQT400153E" label="_History_Date_report" length="0" name="History_Date__" originalProcessID="XGJJG0000VLT" precision="0" submitable="1" type="DATETIME">
+      <properties>
+        <db>
+          <alias>AOZFQT400153E</alias>
+          <noxml>1</noxml>
+          <fullname>/job/processfields/History_Date__</fullname>
+          <defaultvalue>
+          </defaultvalue>
+          <RecordLastWrite>2026-11-04 11:11:01</RecordLastWrite>
+        </db>
+        <extrainfo>
+          <Label>_History_Date_report</Label>
+          <Alias>AOZFQT400153E</Alias>
+          <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        </extrainfo>
+        <gdr>
+          <DisableAutolearn>1</DisableAutolearn>
+        </gdr>
+        <help>
+          <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+        </help>
+        <ui>
+          <_type>Date</_type>
+          <automatic>true</automatic>
+        </ui>
+      </properties>
+    </field>
+    <field datatableid="NZFQT400153E" deleted="0" format="" guid="DHJJG0000VLT" id="PZFQT400153E" label="_History_EDIStatus_report" length="50" name="History_EDIStatus__" originalProcessID="XGJJG0000VLT" precision="0" submitable="1" type="STR">
+      <properties>
+        <db>
+          <alias>APZFQT400153E</alias>
+          <noxml>1</noxml>
+          <fullname>/job/processfields/History_EDIStatus__</fullname>
+          <defaultvalue>
+          </defaultvalue>
+          <RecordLastWrite>2026-11-04 11:11:01</RecordLastWrite>
+        </db>
+        <extrainfo>
+          <Type>webaccess.Process.Columns.WithPossibleValues</Type>
+          <Label>_History_EDIStatus_report</Label>
+          <Alias>APZFQT400153E</Alias>
+          <Behavior>Default</Behavior>
+          <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        </extrainfo>
+        <field>
+          <required>false</required>
+          <teachable>false</teachable>
+          <possibleKeys>-- none --
+FRB2B_200_Deposited
+FRB2B_201_IssuedByPlatform
+FRB2B_202_PlatformReceived
+FRB2B_203_Received
+FRB2B_204_TakeOn
+FRB2B_205_Approved
+FRB2B_206_PartiallyApproved
+FRB2B_207_OnHold
+FRB2B_208_Suspended
+FRB2B_209_Completed
+FRB2B_210_Refused
+FRB2B_211_PaymentSent
+FRB2B_212_Cashed
+FRB2B_213_Rejected
+FRB2B_214_RefundSent
+FRB2B_220_Cancelled
+FRB2B_224_DirectPaymentRequest
+FRB2B_225_Factored
+FRB2B_226_FactoredConfidential
+FRB2B_227_PayableAccountChange
+FRB2B_228_NotFactored</possibleKeys>
+          <possibleValues>
+FRB2B_200_Deposited
+FRB2B_201_IssuedByPlatform
+FRB2B_202_PlatformReceived
+FRB2B_203_Received
+FRB2B_204_TakeOn
+FRB2B_205_Approved
+FRB2B_206_PartiallyApproved
+FRB2B_207_OnHold
+FRB2B_208_Suspended
+FRB2B_209_Completed
+FRB2B_210_Refused
+FRB2B_211_PaymentSent
+FRB2B_212_Cashed
+FRB2B_213_Rejected
+FRB2B_214_RefundSent
+FRB2B_220_Cancelled
+FRB2B_224_DirectPaymentRequest
+FRB2B_225_Factored
+FRB2B_226_FactoredConfidential
+FRB2B_227_PayableAccountChange
+FRB2B_228_NotFactored</possibleValues>
+        </field>
+        <gdr>
+          <VarType>Area</VarType>
+          <DisableAutolearn>1</DisableAutolearn>
+        </gdr>
+        <help>
+          <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+        </help>
+        <ui>
+          <_type>String</_type>
+          <automatic>true</automatic>
+        </ui>
+      </properties>
+    </field>
+    <field datatableid="NZFQT400153E" deleted="0" format="" guid="EHIST0SOURCE" id="QZFQT400153E" label="_History_Source_report" length="50" name="History_Source__" originalProcessID="XGJJG0000VLT" precision="0" submitable="1" type="STR">
+      <properties>
+        <db>
+          <alias>AQZFQT400153E</alias>
+          <noxml>1</noxml>
+          <fullname>/job/processfields/History_Source__</fullname>
+          <defaultvalue>
+          </defaultvalue>
+          <RecordLastWrite>2026-11-04 11:11:01</RecordLastWrite>
+        </db>
+        <extrainfo>
+          <Label>_History_Source_report</Label>
+          <Alias>AQZFQT400153E</Alias>
+          <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        </extrainfo>
+        <gdr>
+          <DisableAutolearn>1</DisableAutolearn>
+        </gdr>
+        <help>
+          <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+        </help>
+        <ui>
+          <_type>String</_type>
+          <automatic>true</automatic>
+        </ui>
+      </properties>
+    </field>
+  </datatable>
+  <type id="GOLHG0000M4O" name="CD">
+  </type>
+</process>

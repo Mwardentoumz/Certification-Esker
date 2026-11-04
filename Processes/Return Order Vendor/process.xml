@@ -1,0 +1,3869 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:09:07" deleted="0" eskerapplication="P2P" global="0" id="UBDQT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="Return Order Vendor" needvalidation="1" ootofilter="" ootoversion="1" originalProcessID="TW5IG0000SG1" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="0" version="1" visibility="1">
+  <properties>
+    <dataConditions>
+      <listDataConditions>
+				&lt;dataCondition&gt;
+					&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+					&lt;filter&gt;msnex=*&lt;/filter&gt;
+					&lt;conditions&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableReturnManagement__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+					&lt;/conditions&gt;
+				&lt;/dataCondition&gt;
+			</listDataConditions>
+    </dataConditions>
+    <gdr>
+      <validationscriptIncludedScripts>Lib_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_Purchasing_ReturnManagement_Common_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_Purchasing_ReturnManagement_Server_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_P2P_Conversation_Server_V12.0.566.0</validationscriptIncludedScripts>
+      <ValidationScript>"use strict";
+Log.Info("ValidationScript");
+//# sourceMappingURL=validationscript.js.map</ValidationScript>
+      <AllowTagCoverPages>true</AllowTagCoverPages>
+      <AllowTagNewDocuments>true</AllowTagNewDocuments>
+      <AllowTagAttachments>true</AllowTagAttachments>
+      <extractionscriptIncludedScripts>Lib_V12.0.566.0</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>LIB_P2P_V12.0.566.0</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>Lib_Purchasing_ReturnManagement_Common_V12.0.566.0</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>Lib_Purchasing_ReturnManagement_Server_V12.0.566.0</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>Lib_Purchasing_VendorNotifications_V12.0.566.0</extractionscriptIncludedScripts>
+      <ExtractionScript>"use strict";
+var extractionscript;
+(function (extractionscript) {
+    function FillFromTechnicalData() {
+        Log.Info("FillFromTechnicalData");
+        Lib.Purchasing.ReturnManagement.FillFromTechnicalData();
+    }
+    function Run() {
+        FillFromTechnicalData();
+        Log.Info("ExtractionScript");
+        Lib.Purchasing.ReturnManagement.SendNotifForROCreation();
+        Lib.P2P.InitValidityDateTime("PAC");
+        Lib.P2P.InitArchiveDuration("PAC", "ProcurementArchiveDurationPortalInMonths");
+        Data.SetValue("State", 100);
+    }
+    extractionscript.Run = Run;
+    Run();
+})(extractionscript || (extractionscript = {}));
+//# sourceMappingURL=extractionscript.js.map</ExtractionScript>
+      <AllowRemovePages>true</AllowRemovePages>
+      <AllowSwapPages>true</AllowSwapPages>
+    </gdr>
+    <lg>
+      <process_da>{
+	"_Comment": "Kommentar",
+	"_Comment_report": "Kommentar",
+	"_CompanyCode": "Virksomhedskode",
+	"_CompanyCode_report": "Virksomhedskode",
+	"_Currency": "Valuta",
+	"_Currency_report": "Valuta",
+	"_DamagedItemReason": "Beskadiget vare",
+	"_DeliveryNote": "Følgeseddelnummer",
+	"_DeliveryNote_report": "Følgeseddelnummer",
+	"_Events": "Samtale",
+	"_GeneralInformationPanel": "Generelle oplysninger",
+	"_GoodsReceiptNumber": "Kvitteringsnummer for varer og serviceydelser",
+	"_GoodsReceiptNumber_report": "Kvitteringsnummer for varer og serviceydelser",
+	"_ItemNumber": "Leverandørref.",
+	"_ItemNumber_report": "Leverandørref.",
+	"_ItemsPanel": "Varer",
+	"_NotNeededAnyMoreReason": "Ikke længere relevant",
+	"_OrderNumber": "Ordrenummer",
+	"_OrderNumber_report": "Ordrenummer",
+	"_OtherReason": "Anden",
+	"_POLineNumber": "Varelinjenummer",
+	"_POLineNumber_report": "Varelinjenummer",
+	"_QualityIssueReason": "Defekt vare",
+	"_RequesterName": "Returneret af",
+	"_RequesterName_report": "Returneret af",
+	"_Return Order Title": "Returvareordre",
+	"_ReturnDate": "Dato for returvareordre",
+	"_ReturnDate_report": "Dato for returvareordre",
+	"_ReturnedQuantity": "Returneret mængde",
+	"_ReturnedQuantity_report": "Returneret mængde",
+	"_ReturnInformationPanel": "Returoplysninger",
+	"_ReturnReason": "Årsag til returnering",
+	"_ReturnReason_report": "Årsag til returnering",
+	"_ROClientRUIDEX": "Udvidet id for kundens returvareordre",
+	"_ROClientRUIDEX_report": "Udvidet id for kundens returvareordre",
+	"_RONumber": "Ordrenummer på returvareordre",
+	"_RONumber_report": "Ordrenummer på returvareordre",
+	"_Status": "Status",
+	"_Status_report": "Status",
+	"_StatusSubmitted": "Sendt",
+	"_TechnicalData": "Data i JSON-format",
+	"_TechnicalData_report": "Data i JSON-format",
+	"_UnitPrice": "Stykpris",
+	"_UnitPrice_report": "Stykpris",
+	"_UnselectedReason": " ",
+	"_UOM": "Måleenheder",
+	"_UOM_report": "Måleenheder",
+	"_VendorEmail": "Mailadresse",
+	"_VendorEmail_report": "Mailadresse",
+	"_VendorName": "Leverandørnavn",
+	"_VendorName_report": "Leverandørnavn",
+	"_VendorNumber": "Leverandørnummer",
+	"_VendorNumber_report": "Leverandørnummer",
+	"_VendorReturnAddress": "Returadresse",
+	"_VendorReturnAddress_report": "Returadresse",
+	"_VendorReturnAddressID": "Returadresse-id",
+	"_VendorReturnAddressID_report": "Returadresse-id",
+	"_VendorRMA": "RMA-nummer",
+	"_VendorRMA_report": "RMA-nummer",
+	"_WrongItemReason": "Forkert vare",
+	"Return Order Vendor": "Returvareordre (leverandørportal)",
+	"Esker notification": "Esker on Demand"
+}</process_da>
+      <process_de>{
+	"_Comment": "Kommentar",
+	"_Comment_report": "Kommentar",
+	"_CompanyCode": "Buchungskreis",
+	"_CompanyCode_report": "Buchungskreis",
+	"_Currency": "Währung",
+	"_Currency_report": "Währung",
+	"_DamagedItemReason": "Beschädigte Ware",
+	"_DeliveryNote": "Lieferscheinnummer",
+	"_DeliveryNote_report": "Lieferscheinnummer",
+	"_Events": "Unterhaltung",
+	"_GeneralInformationPanel": "Allgemeine Informationen",
+	"_GoodsReceiptNumber": "Nr. des Wareneingangs- und Serviceerbringungsbelegs",
+	"_GoodsReceiptNumber_report": "Nr. des Wareneingangs- und Serviceerbringungsbelegs",
+	"_ItemNumber": "Lieferantenref.",
+	"_ItemNumber_report": "Lieferantenref.",
+	"_ItemsPanel": "Artikel",
+	"_NotNeededAnyMoreReason": "Nicht mehr benötigt",
+	"_OrderNumber": "Bestellnummer",
+	"_OrderNumber_report": "Bestellnummer",
+	"_OtherReason": "Andere",
+	"_POLineNumber": "Positionsnummer",
+	"_POLineNumber_report": "Positionsnummer",
+	"_QualityIssueReason": "Defekte Ware",
+	"_RequesterName": "Retourniert von",
+	"_RequesterName_report": "Retourniert von",
+	"_Return Order Title": "Retourenauftrag",
+	"_ReturnDate": "Retourenauftragsdatum",
+	"_ReturnDate_report": "Retourenauftragsdatum",
+	"_ReturnedQuantity": "Retournierte Menge",
+	"_ReturnedQuantity_report": "Retournierte Menge",
+	"_ReturnInformationPanel": "Retourenübersicht",
+	"_ReturnReason": "Retourengrund",
+	"_ReturnReason_report": "Retourengrund",
+	"_ROClientRUIDEX": "Erweiterte Kundenretourenauftrags-ID",
+	"_ROClientRUIDEX_report": "Erweiterte Kundenretourenauftrags-ID",
+	"_RONumber": "Retourenauftragsnummer",
+	"_RONumber_report": "Retourenauftragsnummer",
+	"_Status": "Status",
+	"_Status_report": "Status",
+	"_StatusSubmitted": "Übermittelt",
+	"_TechnicalData": "Daten im JSON-Format",
+	"_TechnicalData_report": "Daten im JSON-Format",
+	"_UnitPrice": "Einzelpreis",
+	"_UnitPrice_report": "Einzelpreis",
+	"_UnselectedReason": " ",
+	"_UOM": "ME",
+	"_UOM_report": "ME",
+	"_VendorEmail": "E-Mail-Adresse",
+	"_VendorEmail_report": "E-Mail-Adresse",
+	"_VendorName": "Lieferantenname",
+	"_VendorName_report": "Lieferantenname",
+	"_VendorNumber": "Lieferantennummer",
+	"_VendorNumber_report": "Lieferantennummer",
+	"_VendorReturnAddress": "Retourenadresse",
+	"_VendorReturnAddress_report": "Retourenadresse",
+	"_VendorReturnAddressID": "ID der Retourenadresse",
+	"_VendorReturnAddressID_report": "ID der Retourenadresse",
+	"_VendorRMA": "Retourengenehmigungsnummer",
+	"_VendorRMA_report": "Retourengenehmigungsnummer",
+	"_WrongItemReason": "Fehllieferung",
+	"Return Order Vendor": "Retourenauftrag (Lieferantenportal)",
+	"Esker notification": "Esker on Demand"
+}</process_de>
+      <process_ja>{
+	"_Comment": "コメント",
+	"_Comment_report": "コメント",
+	"_CompanyCode": "会社コード",
+	"_CompanyCode_report": "会社コード",
+	"_Currency": "通貨",
+	"_Currency_report": "通貨",
+	"_DamagedItemReason": "破損",
+	"_DeliveryNote": "納品書番号",
+	"_DeliveryNote_report": "納品書番号",
+	"_Events": "会話",
+	"_GeneralInformationPanel": "全般情報",
+	"_GoodsReceiptNumber": "品物とサービスの受領書番号",
+	"_GoodsReceiptNumber_report": "品物とサービスの受領書番号",
+	"_ItemNumber": "仕入先参照",
+	"_ItemNumber_report": "仕入先参照",
+	"_ItemsPanel": "項目",
+	"_NotNeededAnyMoreReason": "必要ない",
+	"_OrderNumber": "注文番号",
+	"_OrderNumber_report": "注文番号",
+	"_OtherReason": "その他",
+	"_POLineNumber": "明細品目番号",
+	"_POLineNumber_report": "明細品目番号",
+	"_QualityIssueReason": "不良品",
+	"_RequesterName": "申請者",
+	"_RequesterName_report": "申請者",
+	"_Return Order Title": "返品依頼",
+	"_ReturnDate": "返品依頼日",
+	"_ReturnDate_report": "返品依頼日",
+	"_ReturnedQuantity": "返品数量",
+	"_ReturnedQuantity_report": "返品数量",
+	"_ReturnInformationPanel": "返品情報",
+	"_ReturnReason": "返品理由",
+	"_ReturnReason_report": "返品理由",
+	"_ROClientRUIDEX": "顧客返品依頼拡張ID",
+	"_ROClientRUIDEX_report": "顧客返品依頼拡張ID",
+	"_RONumber": "返品依頼番号",
+	"_RONumber_report": "返品依頼番号",
+	"_Status": "ステータス",
+	"_Status_report": "ステータス",
+	"_StatusSubmitted": "送信済み",
+	"_TechnicalData": "JSON形式のデータ",
+	"_TechnicalData_report": "JSON形式のデータ",
+	"_UnitPrice": "単価",
+	"_UnitPrice_report": "単価",
+	"_UnselectedReason": " ",
+	"_UOM": "UoM",
+	"_UOM_report": "UoM",
+	"_VendorEmail": "Emailアドレス",
+	"_VendorEmail_report": "Emailアドレス",
+	"_VendorName": "仕入先名",
+	"_VendorName_report": "仕入先名",
+	"_VendorNumber": "仕入先番号",
+	"_VendorNumber_report": "仕入先番号",
+	"_VendorReturnAddress": "返送先住所",
+	"_VendorReturnAddress_report": "返送先住所",
+	"_VendorReturnAddressID": "返送先住所ID",
+	"_VendorReturnAddressID_report": "返送先住所ID",
+	"_VendorRMA": "RMA番号",
+	"_VendorRMA_report": "RMA番号",
+	"_WrongItemReason": "注文と異なる品目",
+	"Return Order Vendor": "返品注文 (電子受付ポータル)",
+	"Esker notification": "Esker on Demand"
+}</process_ja>
+      <process_en>{
+	"_Comment": "Comment",
+	"_Comment_report": "Comment",
+	"_CompanyCode": "Company Code",
+	"_CompanyCode_report": "Company Code",
+	"_Currency": "Currency",
+	"_Currency_report": "Currency",
+	"_DamagedItemReason": "Damaged item",
+	"_DeliveryNote": "Delivery note number",
+	"_DeliveryNote_report": "Delivery note number",
+	"_Events": "Conversation",
+	"_GeneralInformationPanel": "General Information",
+	"_GoodsReceiptNumber": "Goods and services receipt number",
+	"_GoodsReceiptNumber_report": "Goods and services receipt number",
+	"_ItemNumber": "Supplier ref.",
+	"_ItemNumber_report": "Supplier ref.",
+	"_ItemsPanel": "Items",
+	"_NotNeededAnyMoreReason": "No longer needed",
+	"_OrderNumber": "Order number",
+	"_OrderNumber_report": "Order number",
+	"_OtherReason": "Other",
+	"_POLineNumber": "Line item number",
+	"_POLineNumber_report": "Line item number",
+	"_QualityIssueReason": "Faulty item",
+	"_RequesterName": "Returned by",
+	"_RequesterName_report": "Returned by",
+	"_Return Order Title": "Return Order",
+	"_ReturnDate": "Return order date",
+	"_ReturnDate_report": "Return order date",
+	"_ReturnedQuantity": "Qty returned",
+	"_ReturnedQuantity_report": "Qty returned",
+	"_ReturnInformationPanel": "Return Information",
+	"_ReturnReason": "Return reason",
+	"_ReturnReason_report": "Return reason",
+	"_ROClientRUIDEX": "Customer return order extended ID",
+	"_ROClientRUIDEX_report": "Customer return order extended ID",
+	"_RONumber": "Return order number",
+	"_RONumber_report": "Return order number",
+	"_Status": "Status",
+	"_Status_report": "Status",
+	"_StatusSubmitted": "Submitted",
+	"_TechnicalData": "Data in JSON format",
+	"_TechnicalData_report": "Data in JSON format",
+	"_UnitPrice": "Unit price",
+	"_UnitPrice_report": "Unit price",
+	"_UnselectedReason": " ",
+	"_UOM": "UoM",
+	"_UOM_report": "UoM",
+	"_VendorEmail": "Email address",
+	"_VendorEmail_report": "Email address",
+	"_VendorName": "Supplier name",
+	"_VendorName_report": "Supplier name",
+	"_VendorNumber": "Supplier number",
+	"_VendorNumber_report": "Supplier number",
+	"_VendorReturnAddress": "Return address",
+	"_VendorReturnAddress_report": "Return address",
+	"_VendorReturnAddressID": "Return address ID",
+	"_VendorReturnAddressID_report": "Return address ID",
+	"_VendorRMA": "RMA number",
+	"_VendorRMA_report": "RMA number",
+	"_WrongItemReason": "Wrong item",
+	"Return Order Vendor": "Return order (supplier portal)",
+	"Esker notification": "Esker on Demand"
+}</process_en>
+      <process_es>{
+	"_Comment": "Comentario",
+	"_Comment_report": "Comentario",
+	"_CompanyCode": "Código de empresa",
+	"_CompanyCode_report": "Código de empresa",
+	"_Currency": "Divisa",
+	"_Currency_report": "Divisa",
+	"_DamagedItemReason": "Artículo dañado",
+	"_DeliveryNote": "Número de albarán de entrega",
+	"_DeliveryNote_report": "Número de albarán de entrega",
+	"_Events": "Conversación",
+	"_GeneralInformationPanel": "Información general",
+	"_GoodsReceiptNumber": "Número de la entrada de bienes y servicios",
+	"_GoodsReceiptNumber_report": "Número de la entrada de bienes y servicios",
+	"_ItemNumber": "Ref. del proveedor",
+	"_ItemNumber_report": "Ref. del proveedor",
+	"_ItemsPanel": "Artículos",
+	"_NotNeededAnyMoreReason": "Ya no es necesario",
+	"_OrderNumber": "Número de pedido",
+	"_OrderNumber_report": "Número de pedido",
+	"_OtherReason": "Otro",
+	"_POLineNumber": "Posición",
+	"_POLineNumber_report": "Posición",
+	"_QualityIssueReason": "Artículo defectuoso",
+	"_RequesterName": "Devuelto por",
+	"_RequesterName_report": "Devuelto por",
+	"_Return Order Title": "Pedido de devolución",
+	"_ReturnDate": "Fecha del pedido de devolución",
+	"_ReturnDate_report": "Fecha del pedido de devolución",
+	"_ReturnedQuantity": "Cant. devuelta",
+	"_ReturnedQuantity_report": "Cant. devuelta",
+	"_ReturnInformationPanel": "Información de devolución",
+	"_ReturnReason": "Motivo de la devolución",
+	"_ReturnReason_report": "Motivo de la devolución",
+	"_ROClientRUIDEX": "ID extendido de pedido de devolución del cliente",
+	"_ROClientRUIDEX_report": "ID extendido de pedido de devolución del cliente",
+	"_RONumber": "Número de pedido de devolución",
+	"_RONumber_report": "Número de pedido de devolución",
+	"_Status": "Estado",
+	"_Status_report": "Estado",
+	"_StatusSubmitted": "Transmitido",
+	"_TechnicalData": "Datos en formato JSON",
+	"_TechnicalData_report": "Datos en formato JSON",
+	"_UnitPrice": "Precio por unidad",
+	"_UnitPrice_report": "Precio por unidad",
+	"_UnselectedReason": " ",
+	"_UOM": "UdM",
+	"_UOM_report": "UdM",
+	"_VendorEmail": "Dirección de e-mail",
+	"_VendorEmail_report": "Dirección de e-mail",
+	"_VendorName": "Nombre del proveedor",
+	"_VendorName_report": "Nombre del proveedor",
+	"_VendorNumber": "Número de proveedor",
+	"_VendorNumber_report": "Número de proveedor",
+	"_VendorReturnAddress": "Dirección de devolución",
+	"_VendorReturnAddress_report": "Dirección de devolución",
+	"_VendorReturnAddressID": "ID de la dirección de devolución",
+	"_VendorReturnAddressID_report": "ID de la dirección de devolución",
+	"_VendorRMA": "N° autorización de devolución",
+	"_VendorRMA_report": "N° autorización de devolución",
+	"_WrongItemReason": "Artículo equivocado",
+	"Return Order Vendor": "Pedido de devolución (portal de proveedor)",
+	"Esker notification": "Esker on Demand"
+}</process_es>
+      <process_fr>{
+	"_Comment": "Commentaire",
+	"_Comment_report": "Commentaire",
+	"_CompanyCode": "Code société",
+	"_CompanyCode_report": "Code société",
+	"_Currency": "Devise",
+	"_Currency_report": "Devise",
+	"_DamagedItemReason": "Article endommagé",
+	"_DeliveryNote": "Numéro du bon de livraison",
+	"_DeliveryNote_report": "Numéro du bon de livraison",
+	"_Events": "Conversation",
+	"_GeneralInformationPanel": "Informations générales",
+	"_GoodsReceiptNumber": "Numéro de l'entrée de biens et services",
+	"_GoodsReceiptNumber_report": "Numéro de l'entrée de biens et services",
+	"_ItemNumber": "Réf. fournisseur",
+	"_ItemNumber_report": "Réf. fournisseur",
+	"_ItemsPanel": "Articles",
+	"_NotNeededAnyMoreReason": "N'est plus nécessaire",
+	"_OrderNumber": "Numéro de commande",
+	"_OrderNumber_report": "Numéro de commande",
+	"_OtherReason": "Autre",
+	"_POLineNumber": "Numéro de poste",
+	"_POLineNumber_report": "Numéro de poste",
+	"_QualityIssueReason": "Article défectueux",
+	"_RequesterName": "Retourné par",
+	"_RequesterName_report": "Retourné par",
+	"_Return Order Title": "Commande de retour",
+	"_ReturnDate": "Date de la commande de retour",
+	"_ReturnDate_report": "Date de la commande de retour",
+	"_ReturnedQuantity": "Qté retournée",
+	"_ReturnedQuantity_report": "Qté retournée",
+	"_ReturnInformationPanel": "Informations de retour",
+	"_ReturnReason": "Motif du retour",
+	"_ReturnReason_report": "Motif du retour",
+	"_ROClientRUIDEX": "Identifiant long de la commande de retour client",
+	"_ROClientRUIDEX_report": "Identifiant long de la commande de retour client",
+	"_RONumber": "Numéro de commande de retour",
+	"_RONumber_report": "Numéro de commande de retour",
+	"_Status": "État",
+	"_Status_report": "État",
+	"_StatusSubmitted": "Soumise",
+	"_TechnicalData": "Données au format JSON",
+	"_TechnicalData_report": "Données au format JSON",
+	"_UnitPrice": "Prix unitaire",
+	"_UnitPrice_report": "Prix unitaire",
+	"_UnselectedReason": " ",
+	"_UOM": "UdM",
+	"_UOM_report": "UdM",
+	"_VendorEmail": "Adresse e-mail",
+	"_VendorEmail_report": "Adresse e-mail",
+	"_VendorName": "Nom du fournisseur",
+	"_VendorName_report": "Nom du fournisseur",
+	"_VendorNumber": "Numéro fournisseur",
+	"_VendorNumber_report": "Numéro fournisseur",
+	"_VendorReturnAddress": "Adresse de retour",
+	"_VendorReturnAddress_report": "Adresse de retour",
+	"_VendorReturnAddressID": "ID adresse de retour",
+	"_VendorReturnAddressID_report": "ID adresse de retour",
+	"_VendorRMA": "N° autorisation de retour d'article",
+	"_VendorRMA_report": "N° autorisation de retour d'article",
+	"_WrongItemReason": "Mauvais article",
+	"Return Order Vendor": "Commande de retour (portail fournisseur)",
+	"Esker notification": "Esker on Demand"
+}</process_fr>
+      <process_nl-NL>{
+	"_Comment": "Opmerking",
+	"_Comment_report": "Opmerking",
+	"_CompanyCode": "Bedrijfscode",
+	"_CompanyCode_report": "Bedrijfscode",
+	"_Currency": "Valuta",
+	"_Currency_report": "Valuta",
+	"_DamagedItemReason": "Beschadigd item",
+	"_DeliveryNote": "Nummer afleveringsbewijs",
+	"_DeliveryNote_report": "Nummer afleveringsbewijs",
+	"_Events": "Gesprek",
+	"_GeneralInformationPanel": "Algemene informatie",
+	"_GoodsReceiptNumber": "Nummer ontvangstbewijs goederen en services",
+	"_GoodsReceiptNumber_report": "Nummer ontvangstbewijs goederen en services",
+	"_ItemNumber": "Ref. leverancier",
+	"_ItemNumber_report": "Ref. leverancier",
+	"_ItemsPanel": "Items",
+	"_NotNeededAnyMoreReason": "Niet meer vereist",
+	"_OrderNumber": "Bestelnummer",
+	"_OrderNumber_report": "Bestelnummer",
+	"_OtherReason": "Overige",
+	"_POLineNumber": "Nummer regelitem",
+	"_POLineNumber_report": "Nummer regelitem",
+	"_QualityIssueReason": "Defect item",
+	"_RequesterName": "Geretourneerd door",
+	"_RequesterName_report": "Geretourneerd door",
+	"_Return Order Title": "Retourbestelling",
+	"_ReturnDate": "Datum retourbestelling",
+	"_ReturnDate_report": "Datum retourbestelling",
+	"_ReturnedQuantity": "Geretourneerde hoev.",
+	"_ReturnedQuantity_report": "Geretourneerde hoev.",
+	"_ReturnInformationPanel": "Retourinformatie",
+	"_ReturnReason": "Reden voor retour",
+	"_ReturnReason_report": "Reden voor retour",
+	"_ROClientRUIDEX": "Uitgebreide ID retourbestelling klant",
+	"_ROClientRUIDEX_report": "Uitgebreide ID retourbestelling klant",
+	"_RONumber": "Nummer retourbestelling",
+	"_RONumber_report": "Nummer retourbestelling",
+	"_Status": "Status",
+	"_Status_report": "Status",
+	"_StatusSubmitted": "Ingediend",
+	"_TechnicalData": "Gegevens in JSON-formaat",
+	"_TechnicalData_report": "Gegevens in JSON-formaat",
+	"_UnitPrice": "Eenheidsprijs",
+	"_UnitPrice_report": "Eenheidsprijs",
+	"_UnselectedReason": " ",
+	"_UOM": "Maateenheid",
+	"_UOM_report": "Maateenheid",
+	"_VendorEmail": "E-mailadres",
+	"_VendorEmail_report": "E-mailadres",
+	"_VendorName": "Naam leverancier",
+	"_VendorName_report": "Naam leverancier",
+	"_VendorNumber": "Nummer leverancier",
+	"_VendorNumber_report": "Nummer leverancier",
+	"_VendorReturnAddress": "Retouradres",
+	"_VendorReturnAddress_report": "Retouradres",
+	"_VendorReturnAddressID": "ID retouradres",
+	"_VendorReturnAddressID_report": "ID retouradres",
+	"_VendorRMA": "RMA-nummer",
+	"_VendorRMA_report": "RMA-nummer",
+	"_WrongItemReason": "Verkeerd item",
+	"Return Order Vendor": "Retourbestelling (portal leveranciers)",
+	"Esker notification": "Esker on Demand"
+}</process_nl-NL>
+      <process_nl>{
+	"_StatusSubmitted": ""
+}</process_nl>
+      <process_pl>{
+	"_Comment": "Komentarz",
+	"_Comment_report": "Komentarz",
+	"_CompanyCode": "Kod firmy",
+	"_CompanyCode_report": "Kod firmy",
+	"_Currency": "Waluta",
+	"_Currency_report": "Waluta",
+	"_DamagedItemReason": "Uszkodzona pozycja",
+	"_DeliveryNote": "Numer dowodu dostawy",
+	"_DeliveryNote_report": "Numer dowodu dostawy",
+	"_Events": "Rozmowa",
+	"_GeneralInformationPanel": "Informacje ogólne",
+	"_GoodsReceiptNumber": "Numer przyjęcia materiałów i usług",
+	"_GoodsReceiptNumber_report": "Numer przyjęcia materiałów i usług",
+	"_ItemNumber": "Kod ref. dostawcy",
+	"_ItemNumber_report": "Kod ref. dostawcy",
+	"_ItemsPanel": "Pozycje",
+	"_NotNeededAnyMoreReason": "Już niepotrzebne",
+	"_OrderNumber": "Numer zamówienia",
+	"_OrderNumber_report": "Numer zamówienia",
+	"_OtherReason": "Inne",
+	"_POLineNumber": "Numer pozycji",
+	"_POLineNumber_report": "Numer pozycji",
+	"_QualityIssueReason": "Wadliwa pozycja",
+	"_RequesterName": "Zwrócone przez",
+	"_RequesterName_report": "Zwrócone przez",
+	"_Return Order Title": "Zlecenie zwrotu",
+	"_ReturnDate": "Data zlecenia zwrotu",
+	"_ReturnDate_report": "Data zlecenia zwrotu",
+	"_ReturnedQuantity": "Ilość zwrócona",
+	"_ReturnedQuantity_report": "Ilość zwrócona",
+	"_ReturnInformationPanel": "Informacje o zwrocie",
+	"_ReturnReason": "Powód zwrotu",
+	"_ReturnReason_report": "Powód zwrotu",
+	"_ROClientRUIDEX": "Rozszerzony id. zlecenia zwrotu klienta",
+	"_ROClientRUIDEX_report": "Rozszerzony id. zlecenia zwrotu klienta",
+	"_RONumber": "Numer zlecenia zwrotu",
+	"_RONumber_report": "Numer zlecenia zwrotu",
+	"_Status": "Status",
+	"_Status_report": "Status",
+	"_StatusSubmitted": "Przesłane",
+	"_TechnicalData": "Dane w formacie JSON",
+	"_TechnicalData_report": "Dane w formacie JSON",
+	"_UnitPrice": "Cena jednostkowa",
+	"_UnitPrice_report": "Cena jednostkowa",
+	"_UnselectedReason": "",
+	"_UOM": "Jednostka miary",
+	"_UOM_report": "Jednostka miary",
+	"_VendorEmail": "Adres e-mail",
+	"_VendorEmail_report": "Adres e-mail",
+	"_VendorName": "Nazwa dostawcy",
+	"_VendorName_report": "Nazwa dostawcy",
+	"_VendorNumber": "Numer dostawcy",
+	"_VendorNumber_report": "Numer dostawcy",
+	"_VendorReturnAddress": "Adres zwrotu",
+	"_VendorReturnAddress_report": "Adres zwrotu",
+	"_VendorReturnAddressID": "Id. adresu zwrotu",
+	"_VendorReturnAddressID_report": "Id. adresu zwrotu",
+	"_VendorRMA": "Numer RMA",
+	"_VendorRMA_report": "Numer RMA",
+	"_WrongItemReason": "Niewłaściwa pozycja",
+	"Return Order Vendor": "Zlecenie zwrotu (portal dostawców)",
+	"Esker notification": "Esker on Demand"
+}</process_pl>
+      <process_it>{
+	"_Comment": "Commento",
+	"_Comment_report": "Commento",
+	"_CompanyCode": "Codice società",
+	"_CompanyCode_report": "Codice società",
+	"_Currency": "Valuta",
+	"_Currency_report": "Valuta",
+	"_DamagedItemReason": "Articolo danneggiato",
+	"_DeliveryNote": "Numero bolla di consegna",
+	"_DeliveryNote_report": "Numero bolla di consegna",
+	"_Events": "Conversazione",
+	"_GeneralInformationPanel": "Informazioni generali",
+	"_GoodsReceiptNumber": "Numero entrata merci e servizi",
+	"_GoodsReceiptNumber_report": "Numero entrata merci e servizi",
+	"_ItemNumber": "Rif. fornitore",
+	"_ItemNumber_report": "Rif. fornitore",
+	"_ItemsPanel": "Articoli",
+	"_NotNeededAnyMoreReason": "Non più necessario",
+	"_OrderNumber": "Numero ordine",
+	"_OrderNumber_report": "Numero ordine",
+	"_OtherReason": "Altro",
+	"_POLineNumber": "Posizione",
+	"_POLineNumber_report": "Posizione",
+	"_QualityIssueReason": "Articolo difettoso",
+	"_RequesterName": "Restituito da",
+	"_RequesterName_report": "Restituito da",
+	"_Return Order Title": "Ordine di reso",
+	"_ReturnDate": "Data ordine di reso",
+	"_ReturnDate_report": "Data ordine di reso",
+	"_ReturnedQuantity": "Qtà restituita",
+	"_ReturnedQuantity_report": "Qtà restituita",
+	"_ReturnInformationPanel": "Informazioni reso",
+	"_ReturnReason": "Motivo del reso",
+	"_ReturnReason_report": "Motivo del reso",
+	"_ROClientRUIDEX": "ID esteso ordine di reso cliente",
+	"_ROClientRUIDEX_report": "ID esteso ordine di reso cliente",
+	"_RONumber": "Numero ordine di reso",
+	"_RONumber_report": "Numero ordine di reso",
+	"_Status": "Stato",
+	"_Status_report": "Stato",
+	"_StatusSubmitted": "Trasmesso",
+	"_TechnicalData": "Dati in formato JSON",
+	"_TechnicalData_report": "Dati in formato JSON",
+	"_UnitPrice": "Prezzo unitario",
+	"_UnitPrice_report": "Prezzo unitario",
+	"_UnselectedReason": " ",
+	"_UOM": "UDM",
+	"_UOM_report": "UDM",
+	"_VendorEmail": "Indirizzo e-mail",
+	"_VendorEmail_report": "Indirizzo e-mail",
+	"_VendorName": "Nome fornitore",
+	"_VendorName_report": "Nome fornitore",
+	"_VendorNumber": "Numero fornitore",
+	"_VendorNumber_report": "Numero fornitore",
+	"_VendorReturnAddress": "Indirizzo destinazione reso",
+	"_VendorReturnAddress_report": "Indirizzo destinazione reso",
+	"_VendorReturnAddressID": "ID indirizzo destinazione reso",
+	"_VendorReturnAddressID_report": "ID indirizzo destinazione reso",
+	"_VendorRMA": "N. autorizzazione al reso",
+	"_VendorRMA_report": "N. autorizzazione al reso",
+	"_WrongItemReason": "Articolo sbagliato",
+	"Return Order Vendor": "Ordine di reso (portale fornitori)",
+	"Esker notification": "Esker on Demand"
+}</process_it>
+      <process_sk>{
+	"_Comment": "Poznámka",
+	"_Comment_report": "Poznámka",
+	"_CompanyCode": "Kód spoločnosti",
+	"_CompanyCode_report": "Kód spoločnosti",
+	"_Currency": "Mena",
+	"_Currency_report": "Mena",
+	"_DamagedItemReason": "Poškodená položka",
+	"_DeliveryNote": "Číslo dodacieho listu",
+	"_DeliveryNote_report": "Číslo dodacieho listu",
+	"_Events": "Konverzácia",
+	"_GeneralInformationPanel": "Všeobecné informácie",
+	"_GoodsReceiptNumber": "Číslo príjemky tovaru a služieb",
+	"_GoodsReceiptNumber_report": "Číslo príjemky tovaru a služieb",
+	"_ItemNumber": "Referenčné číslo dodávateľa",
+	"_ItemNumber_report": "Referenčné číslo dodávateľa",
+	"_ItemsPanel": "Položky",
+	"_NotNeededAnyMoreReason": "Už nie je potrebné",
+	"_OrderNumber": "Číslo objednávky",
+	"_OrderNumber_report": "Číslo objednávky",
+	"_OtherReason": "Ostatné",
+	"_POLineNumber": "Číslo položky",
+	"_POLineNumber_report": "Číslo položky",
+	"_QualityIssueReason": "Chybná položka",
+	"_RequesterName": "Vrátené",
+	"_RequesterName_report": "Vrátené",
+	"_Return Order Title": "Vrátená objednávka",
+	"_ReturnDate": "Dátum vrátenia objednávky",
+	"_ReturnDate_report": "Dátum vrátenia objednávky",
+	"_ReturnedQuantity": "Vrátené množstvo",
+	"_ReturnedQuantity_report": "Vrátené množstvo",
+	"_ReturnInformationPanel": "Informácie o vrátení",
+	"_ReturnReason": "Dôvod vrátenia",
+	"_ReturnReason_report": "Dôvod vrátenia",
+	"_ROClientRUIDEX": "ID predĺženej objednávky vrátenia zákazníka",
+	"_ROClientRUIDEX_report": "ID predĺženej objednávky vrátenia zákazníka",
+	"_RONumber": "Číslo vrátenej objednávky",
+	"_RONumber_report": "Číslo vrátenej objednávky",
+	"_Status": "Stav",
+	"_Status_report": "Stav",
+	"_StatusSubmitted": "Odoslaný",
+	"_TechnicalData": "Dáta vo formáte JSON",
+	"_TechnicalData_report": "Dáta vo formáte JSON",
+	"_UnitPrice": "Jednotková cena",
+	"_UnitPrice_report": "Jednotková cena",
+	"_UnselectedReason": "",
+	"_UOM": "MJ",
+	"_UOM_report": "MJ",
+	"_VendorEmail": "Emailová adresa",
+	"_VendorEmail_report": "Emailová adresa",
+	"_VendorName": "Názov dodávateľa",
+	"_VendorName_report": "Názov dodávateľa",
+	"_VendorNumber": "Číslo dodávateľa",
+	"_VendorNumber_report": "Číslo dodávateľa",
+	"_VendorReturnAddress": "Adresa vrátenia",
+	"_VendorReturnAddress_report": "Adresa vrátenia",
+	"_VendorReturnAddressID": "ID adresy pre vrátenie",
+	"_VendorReturnAddressID_report": "ID adresy pre vrátenie",
+	"_VendorRMA": "Číslo RMA",
+	"_VendorRMA_report": "Číslo RMA",
+	"_WrongItemReason": "Nesprávna položka",
+	"Return Order Vendor": "Objednávka vrátenia (portál dodávateľa)",
+	"Esker notification": "Esker on Demand"
+}</process_sk>
+      <process_zh-CN>{
+	"_Comment": "说明/备注",
+	"_Comment_report": "说明/备注",
+	"_CompanyCode": "公司代码",
+	"_CompanyCode_report": "公司代码",
+	"_Currency": "货币",
+	"_Currency_report": "货币",
+	"_DamagedItemReason": "受损货品",
+	"_DeliveryNote": "交付单号",
+	"_DeliveryNote_report": "交付单号",
+	"_Events": "对话",
+	"_GeneralInformationPanel": "常规信息",
+	"_GoodsReceiptNumber": "货物与服务接收单编号",
+	"_GoodsReceiptNumber_report": "货物与服务接收单编号",
+	"_ItemNumber": "供应商参考编号",
+	"_ItemNumber_report": "供应商参考编号",
+	"_ItemsPanel": "项目",
+	"_NotNeededAnyMoreReason": "不再需要",
+	"_OrderNumber": "订单号",
+	"_OrderNumber_report": "订单号",
+	"_OtherReason": "其他",
+	"_POLineNumber": "行项目编号",
+	"_POLineNumber_report": "行项目编号",
+	"_QualityIssueReason": "有问题的货品",
+	"_RequesterName": "退货人",
+	"_RequesterName_report": "退货人",
+	"_Return Order Title": "退货订单",
+	"_ReturnDate": "退货订单日期",
+	"_ReturnDate_report": "退货订单日期",
+	"_ReturnedQuantity": "退货数量",
+	"_ReturnedQuantity_report": "退货数量",
+	"_ReturnInformationPanel": "退货信息",
+	"_ReturnReason": "退货原因",
+	"_ReturnReason_report": "退货原因",
+	"_ROClientRUIDEX": "客户退货订单扩展 ID",
+	"_ROClientRUIDEX_report": "客户退货订单扩展 ID",
+	"_RONumber": "退货订单编号",
+	"_RONumber_report": "退货订单编号",
+	"_Status": "状态",
+	"_Status_report": "状态",
+	"_StatusSubmitted": "已提交",
+	"_TechnicalData": "JSON 格式的数据",
+	"_TechnicalData_report": "JSON 格式的数据",
+	"_UnitPrice": "单价",
+	"_UnitPrice_report": "单价",
+	"_UnselectedReason": " ",
+	"_UOM": "度量单位",
+	"_UOM_report": "度量单位",
+	"_VendorEmail": "电子邮件",
+	"_VendorEmail_report": "电子邮件",
+	"_VendorName": "供应商名称",
+	"_VendorName_report": "供应商名称",
+	"_VendorNumber": "供应商编号",
+	"_VendorNumber_report": "供应商编号",
+	"_VendorReturnAddress": "退货地址",
+	"_VendorReturnAddress_report": "退货地址",
+	"_VendorReturnAddressID": "退货地址 ID",
+	"_VendorReturnAddressID_report": "退货地址 ID",
+	"_VendorRMA": "退货授权号",
+	"_VendorRMA_report": "退货授权号",
+	"_WrongItemReason": "错误货品",
+	"Return Order Vendor": "退货订单 (供应商门户)",
+	"Esker notification": "Esker on Demand"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"_Comment": "Comentários",
+	"_Comment_report": "Comentários",
+	"_CompanyCode": "Código da empresa",
+	"_CompanyCode_report": "Código da empresa",
+	"_Currency": "Moeda",
+	"_Currency_report": "Moeda",
+	"_DamagedItemReason": "Item danificado",
+	"_DeliveryNote": "Número da nota de entrega",
+	"_DeliveryNote_report": "Número da nota de entrega",
+	"_Events": "Conversa",
+	"_GeneralInformationPanel": "Informação geral",
+	"_GoodsReceiptNumber": "Recebimento de bens e serviços número",
+	"_GoodsReceiptNumber_report": "Recebimento de bens e serviços número",
+	"_ItemNumber": "Ref. do fornecedor",
+	"_ItemNumber_report": "Ref. do fornecedor",
+	"_ItemsPanel": "Itens",
+	"_NotNeededAnyMoreReason": "Não mais necessário",
+	"_OrderNumber": "Número de pedido",
+	"_OrderNumber_report": "Número de pedido",
+	"_OtherReason": "Outros",
+	"_POLineNumber": "Número de item de linha",
+	"_POLineNumber_report": "Número de item de linha",
+	"_QualityIssueReason": "Item com defeito",
+	"_RequesterName": "Devolvido por",
+	"_RequesterName_report": "Devolvido por",
+	"_Return Order Title": "Pedido de devolução",
+	"_ReturnDate": "Data do pedido de devolução",
+	"_ReturnDate_report": "Data do pedido de devolução",
+	"_ReturnedQuantity": "Quantidade devolvida",
+	"_ReturnedQuantity_report": "Quantidade devolvida",
+	"_ReturnInformationPanel": "Informações de devolução",
+	"_ReturnReason": "Motivo da devolução",
+	"_ReturnReason_report": "Motivo da devolução",
+	"_ROClientRUIDEX": "ID estendido do pedido de devolução do cliente",
+	"_ROClientRUIDEX_report": "ID estendido do pedido de devolução do cliente",
+	"_RONumber": "Número de pedido de devolução",
+	"_RONumber_report": "Número de pedido de devolução",
+	"_Status": "Status",
+	"_Status_report": "Status",
+	"_StatusSubmitted": "Submetido",
+	"_TechnicalData": "Dados no formato JSON",
+	"_TechnicalData_report": "Dados no formato JSON",
+	"_UnitPrice": "Preço unitário",
+	"_UnitPrice_report": "Preço unitário",
+	"_UnselectedReason": " ",
+	"_UOM": "UoM",
+	"_UOM_report": "UoM",
+	"_VendorEmail": "Endereço de e-mail",
+	"_VendorEmail_report": "Endereço de e-mail",
+	"_VendorName": "Nome do fornecedor",
+	"_VendorName_report": "Nome do fornecedor",
+	"_VendorNumber": "Número do fornecedor",
+	"_VendorNumber_report": "Número do fornecedor",
+	"_VendorReturnAddress": "Endereço para devolução",
+	"_VendorReturnAddress_report": "Endereço para devolução",
+	"_VendorReturnAddressID": "ID do endereço para devolução",
+	"_VendorReturnAddressID_report": "ID do endereço para devolução",
+	"_VendorRMA": "Número de RMA",
+	"_VendorRMA_report": "Número de RMA",
+	"_WrongItemReason": "Item errado",
+	"Return Order Vendor": "Pedido de devolução (portal de fornecedores)",
+	"Esker notification": "Esker on Demand"
+}</process_pt-BR>
+      <process_pt>{
+	"_StatusSubmitted": ""
+}</process_pt>
+    </lg>
+    <process>
+      <flowtype>processing</flowtype>
+      <ocrpreset>scan</ocrpreset>
+      <EnableNegativeNumbersBetweenBrackets>true</EnableNegativeNumbersBetweenBrackets>
+      <homepagelabel>Return Order Vendor</homepagelabel>
+      <enableflexibleauditing>
+      </enableflexibleauditing>
+      <enableflexibleediting>
+      </enableflexibleediting>
+      <enableflexibleteaching>
+      </enableflexibleteaching>
+      <disableocr>
+      </disableocr>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <disableautolearning>true</disableautolearning>
+      <backgroundprocessingthreshold>
+      </backgroundprocessingthreshold>
+      <EnablePreviewPrecomputation>
+      </EnablePreviewPrecomputation>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <enablerounddecimal>true</enablerounddecimal>
+      <pdfNormalizeFilter>
+      </pdfNormalizeFilter>
+      <archiveDuration>0</archiveDuration>
+      <ocrpagestoprocess>0</ocrpagestoprocess>
+      <ScriptEngineType>2</ScriptEngineType>
+      <UseActionNameWithScriptApproval>true</UseActionNameWithScriptApproval>
+      <displayWidth>
+      </displayWidth>
+      <AllowUploadAttachment>1</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>1</AllowUploadReferenceDocument>
+      <RemovePointWhenCastingIntToString>true</RemovePointWhenCastingIntToString>
+      <UseCultureFormat>true</UseCultureFormat>
+      <AllowRetryExtractCD>true</AllowRetryExtractCD>
+      <TransportName>CustomData</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+      <printToProcess>
+      </printToProcess>
+    </process>
+    <ui>
+      <CustomScriptDebug>false</CustomScriptDebug>
+      <customscriptIncludedScripts>Lib_V12.0.566.0</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Sys/Sys_Helpers</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Sys/Sys_Helpers_Data</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Sys/Sys_Helpers_Banner</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Lib_Purchasing_ReturnManagement_Common_V12.0.566.0</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Lib_Parameters_P2P_V12.0.566.0</customscriptIncludedScripts>
+      <customscriptIncludedScripts>[Lib_Custom_Parameters]</customscriptIncludedScripts>
+      <customscriptIncludedScripts>[Lib_P2P_Custom_Parameters]</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Lib_Purchasing_Items_V12.0.566.0</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Lib_Purchasing_POItems_V12.0.566.0</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Lib_P2P_V12.0.566.0</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Lib_P2P_EmailNotification_V12.0.566.0</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Lib_P2P_Conversation_Client_V12.0.566.0</customscriptIncludedScripts>
+      <CustomScriptReadonly>true</CustomScriptReadonly>
+      <CustomScript>"use strict";
+var CustomScript;
+(function (CustomScript) {
+    Log.Time("CustomScript");
+    function InitBanner() {
+        Sys.Helpers.Banner.SetMainTitle("_Return Order Title");
+        Sys.Helpers.Banner.SetSubTitleAligned(false);
+        Sys.Helpers.Banner.SetHTMLBanner(Controls.HTMLBanner__);
+        Sys.Helpers.Banner.SetSubTitle("");
+    }
+    function InitLayout() {
+        InitBanner();
+        Controls.form_header.SetProcessDisplayName("_Return Order Title");
+        Controls.LineItems__.SetWidth("100%");
+        Controls.LineItems__.SetExtendableColumn("Description__");
+        Sys.Parameters.GetInstance("PAC").OnLoad(() =&gt; {
+            const isUOMEnabled = Sys.Parameters.GetInstance("PAC").GetParameter("DisplayUnitOfMeasure");
+            Controls.LineItems__.UOM__.Hide(!isUOMEnabled);
+        });
+        //TODO: show or remove columns later
+        Controls.LineItems__.GoodsReceiptNumber__.Hide(true);
+        if (Data.GetValue("ROClientRUIDEX__")) {
+            Controls.Events.Hide(false);
+        }
+        InitConversation();
+    }
+    function InitConversation() {
+        Controls.ConversationUI__.SetOptions(Lib.P2P.Conversation.Options.GetDefault(Lib.Purchasing.SenderType.IsSupplier));
+    }
+    function run() {
+        InitLayout();
+    }
+    run();
+    Log.TimeEnd("CustomScript");
+})(CustomScript || (CustomScript = {}));
+//# sourceMappingURL=customscript.js.map</CustomScript>
+      <restorationPanel>GeneralInformationPanel</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 122,
+	"*": {
+		"GDRData": {
+			"type": "GDRData",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"version": 0
+			}
+		},
+		"OCRParams": {
+			"type": "OCRParams",
+			"data": [],
+			"stamp": 2,
+			"options": {
+				"version": 0
+			}
+		},
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 3,
+			"options": {
+				"splitterType": "complex",
+				"style": "FlexibleFormLight",
+				"maxwidth": "",
+				"backColor": "text-backgroundcolor-color7",
+				"footerStyle": "default",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 4,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 5,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 6,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-top": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 7,
+									"options": {
+										"autosize": true,
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"height": "25%"
+										},
+										"hidden": true,
+										"hideSeparator": true
+									},
+									"*": {
+										"form-content-top-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 8,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"DocumentsPanel": {
+													"type": "PanelDocument",
+													"data": [],
+													"stamp": 9,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": false,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"sameHeightAsSiblings": false,
+														"label": "_Documents",
+														"version": 0
+													},
+													"*": {
+														"Document": {
+															"type": "Documents",
+															"data": [
+																"documentscontroldata"
+															],
+															"stamp": 10,
+															"options": {
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								},
+								"form-content-bottom": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 11,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": "25%",
+											"left": "0%",
+											"height": "75%"
+										},
+										"hidden": false,
+										"hideSeparator": true
+									},
+									"*": {
+										"form-content-left": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 12,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "0%",
+													"width": "45%"
+												},
+												"hidden": false,
+												"hideSeparator": true
+											},
+											"*": {
+												"form-content-left-2": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 13,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"SystemData": {
+															"type": "PanelSystemData",
+															"data": [],
+															"stamp": 14,
+															"options": {
+																"multicolumn": false,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_System data",
+																"hidden": true,
+																"version": 0
+															}
+														}
+													}
+												},
+												"form-content-left-3": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 15,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"NextProcess": {
+															"type": "PanelNextProcess",
+															"data": [],
+															"stamp": 16,
+															"options": {
+																"hidden": true,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_Next Process",
+																"version": 0
+															}
+														}
+													}
+												},
+												"form-content-left-6": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 17,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"Title": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 18,
+															"options": {
+																"border": {},
+																"iconURL": "",
+																"TitleFontSize": "L",
+																"hideActionButtons": true,
+																"hideTitleBar": true,
+																"hideTitle": true,
+																"sameHeightAsSiblings": false,
+																"backgroundcolor": "color7",
+																"labelsAlignment": "center",
+																"label": "Title",
+																"hidden": false,
+																"leftImageURL": "",
+																"removeMargins": false,
+																"elementsAlignment": "left",
+																"labelLength": 0,
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 19,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 20,
+																			"options": {
+																				"version": 0,
+																				"lines": 1,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"HTMLBanner__": {
+																						"line": 1,
+																						"column": 1
+																					}
+																				},
+																				"colspans": [
+																					[
+																						{
+																							"index": 0,
+																							"length": 2
+																						}
+																					]
+																				]
+																			},
+																			"*": {
+																				"HTMLBanner__": {
+																					"type": "HTML",
+																					"data": false,
+																					"stamp": 21,
+																					"options": {
+																						"label": "HTMLBanner__",
+																						"htmlContent": "Return Order",
+																						"css": "@ span {line-height: 44px;}@ ",
+																						"width": "100%",
+																						"version": 0
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-4": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 22,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"GeneralInformationPanel": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 23,
+															"options": {
+																"border": {},
+																"iconURL": "",
+																"TitleFontSize": "L",
+																"hideActionButtons": true,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": true,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_GeneralInformationPanel",
+																"hidden": false,
+																"leftImageURL": "",
+																"removeMargins": false,
+																"elementsAlignment": "left",
+																"labelLength": 0,
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 24,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {
+																			"RONumber__": "LabelRONumber__",
+																			"LabelRONumber__": "RONumber__",
+																			"Status__": "LabelStatus__",
+																			"LabelStatus__": "Status__",
+																			"OrderNumber__": "LabelOrderNumber__",
+																			"LabelOrderNumber__": "OrderNumber__",
+																			"ROClientRUIDEX__": "LabelROClientRUIDEX__",
+																			"LabelROClientRUIDEX__": "ROClientRUIDEX__",
+																			"CompanyCode__": "LabelCompanyCode__",
+																			"LabelCompanyCode__": "CompanyCode__",
+																			"TechnicalData__": "LabelTechnicalData__",
+																			"LabelTechnicalData__": "TechnicalData__",
+																			"RequesterName__": "LabelRequesterName__",
+																			"LabelRequesterName__": "RequesterName__",
+																			"ReturnDate__": "LabelReturnDate__",
+																			"LabelReturnDate__": "ReturnDate__"
+																		}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 25,
+																			"options": {
+																				"version": 0,
+																				"lines": 9,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"LabelRONumber__": {
+																						"line": 1,
+																						"column": 1
+																					},
+																					"RONumber__": {
+																						"line": 1,
+																						"column": 2
+																					},
+																					"LabelStatus__": {
+																						"line": 2,
+																						"column": 1
+																					},
+																					"Status__": {
+																						"line": 2,
+																						"column": 2
+																					},
+																					"LabelOrderNumber__": {
+																						"line": 3,
+																						"column": 1
+																					},
+																					"OrderNumber__": {
+																						"line": 3,
+																						"column": 2
+																					},
+																					"LabelROClientRUIDEX__": {
+																						"line": 4,
+																						"column": 1
+																					},
+																					"ROClientRUIDEX__": {
+																						"line": 4,
+																						"column": 2
+																					},
+																					"LabelCompanyCode__": {
+																						"line": 5,
+																						"column": 1
+																					},
+																					"CompanyCode__": {
+																						"line": 5,
+																						"column": 2
+																					},
+																					"NavigationDrawer__": {
+																						"line": 6,
+																						"column": 1
+																					},
+																					"LabelTechnicalData__": {
+																						"line": 7,
+																						"column": 1
+																					},
+																					"TechnicalData__": {
+																						"line": 7,
+																						"column": 2
+																					},
+																					"LabelRequesterName__": {
+																						"line": 8,
+																						"column": 1
+																					},
+																					"RequesterName__": {
+																						"line": 8,
+																						"column": 2
+																					},
+																					"LabelReturnDate__": {
+																						"line": 9,
+																						"column": 1
+																					},
+																					"ReturnDate__": {
+																						"line": 9,
+																						"column": 2
+																					}
+																				},
+																				"colspans": [
+																					[],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[
+																						{
+																							"index": 0,
+																							"length": 2
+																						}
+																					],
+																					[],
+																					[],
+																					[]
+																				]
+																			},
+																			"*": {
+																				"LabelRONumber__": {
+																					"type": "Label",
+																					"data": [
+																						"RONumber__"
+																					],
+																					"stamp": 27,
+																					"options": {
+																						"label": "_RONumber",
+																						"version": 0
+																					}
+																				},
+																				"RONumber__": {
+																					"type": "ShortText",
+																					"data": [
+																						"RONumber__"
+																					],
+																					"stamp": 26,
+																					"options": {
+																						"label": "_RONumber",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230
+																					}
+																				},
+																				"LabelStatus__": {
+																					"type": "Label",
+																					"data": [
+																						"Status__"
+																					],
+																					"stamp": 29,
+																					"options": {
+																						"label": "_Status",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				},
+																				"Status__": {
+																					"type": "ShortText",
+																					"data": [
+																						"Status__"
+																					],
+																					"stamp": 28,
+																					"options": {
+																						"label": "_Status",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"readonly": true,
+																						"browsable": false,
+																						"autocompletable": false,
+																						"hidden": true
+																					}
+																				},
+																				"LabelOrderNumber__": {
+																					"type": "Label",
+																					"data": [
+																						"OrderNumber__"
+																					],
+																					"stamp": 31,
+																					"options": {
+																						"label": "_OrderNumber",
+																						"version": 0
+																					}
+																				},
+																				"OrderNumber__": {
+																					"type": "ShortText",
+																					"data": [
+																						"OrderNumber__"
+																					],
+																					"stamp": 30,
+																					"options": {
+																						"label": "_OrderNumber",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"readonly": true,
+																						"browsable": false,
+																						"autocompletable": false
+																					}
+																				},
+																				"LabelROClientRUIDEX__": {
+																					"type": "Label",
+																					"data": [
+																						"ROClientRUIDEX__"
+																					],
+																					"stamp": 33,
+																					"options": {
+																						"label": "_ROClientRUIDEX",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				},
+																				"ROClientRUIDEX__": {
+																					"type": "ShortText",
+																					"data": [
+																						"ROClientRUIDEX__"
+																					],
+																					"stamp": 32,
+																					"options": {
+																						"label": "_ROClientRUIDEX",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"hidden": true,
+																						"readonly": true,
+																						"browsable": false
+																					}
+																				},
+																				"LabelCompanyCode__": {
+																					"type": "Label",
+																					"data": [
+																						"CompanyCode__"
+																					],
+																					"stamp": 35,
+																					"options": {
+																						"label": "_CompanyCode",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				},
+																				"CompanyCode__": {
+																					"type": "ShortText",
+																					"data": [
+																						"CompanyCode__"
+																					],
+																					"stamp": 34,
+																					"options": {
+																						"label": "_CompanyCode",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"hidden": true,
+																						"readonly": true,
+																						"browsable": false
+																					}
+																				},
+																				"NavigationDrawer__": {
+																					"type": "NavigationDrawer",
+																					"data": false,
+																					"stamp": 36,
+																					"options": {
+																						"label": "_NavigationDrawer",
+																						"items": [],
+																						"version": 0
+																					}
+																				},
+																				"LabelTechnicalData__": {
+																					"type": "Label",
+																					"data": [
+																						"TechnicalData__"
+																					],
+																					"stamp": 38,
+																					"options": {
+																						"label": "_TechnicalData",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				},
+																				"TechnicalData__": {
+																					"type": "ShortText",
+																					"data": [
+																						"TechnicalData__"
+																					],
+																					"stamp": 37,
+																					"options": {
+																						"label": "_TechnicalData",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"browsable": false,
+																						"hidden": true,
+																						"readonly": true,
+																						"autocompletable": false
+																					}
+																				},
+																				"LabelRequesterName__": {
+																					"type": "Label",
+																					"data": [
+																						"RequesterName__"
+																					],
+																					"stamp": 40,
+																					"options": {
+																						"label": "_RequesterName",
+																						"version": 0
+																					}
+																				},
+																				"RequesterName__": {
+																					"type": "ShortText",
+																					"data": [
+																						"RequesterName__"
+																					],
+																					"stamp": 39,
+																					"options": {
+																						"label": "_RequesterName",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"browsable": false
+																					}
+																				},
+																				"LabelReturnDate__": {
+																					"type": "Label",
+																					"data": [
+																						"ReturnDate__"
+																					],
+																					"stamp": 42,
+																					"options": {
+																						"label": "_ReturnDate",
+																						"version": 0
+																					}
+																				},
+																				"ReturnDate__": {
+																					"type": "DateTime",
+																					"data": [
+																						"ReturnDate__"
+																					],
+																					"stamp": 41,
+																					"options": {
+																						"label": "_ReturnDate",
+																						"displayLongFormat": false,
+																						"showWeek": false,
+																						"hideButtonPanel": false,
+																						"showOtherMonths": false,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"readonly": true,
+																						"autocompletable": false,
+																						"version": 0
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														},
+														"ReturnInformationPanel": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 43,
+															"options": {
+																"border": {},
+																"iconURL": "",
+																"TitleFontSize": "L",
+																"hideActionButtons": true,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": true,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_ReturnInformationPanel",
+																"hidden": false,
+																"leftImageURL": "",
+																"removeMargins": false,
+																"elementsAlignment": "left",
+																"labelLength": 0,
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 44,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {
+																			"VendorNumber__": "LabelVendorNumber__",
+																			"LabelVendorNumber__": "VendorNumber__",
+																			"VendorName__": "LabelVendorName__",
+																			"LabelVendorName__": "VendorName__",
+																			"VendorEmail__": "LabelVendorEmail__",
+																			"LabelVendorEmail__": "VendorEmail__",
+																			"VendorRMA__": "LabelVendorRMA__",
+																			"LabelVendorRMA__": "VendorRMA__",
+																			"VendorReturnAddressID__": "LabelVendorReturnAddressID__",
+																			"LabelVendorReturnAddressID__": "VendorReturnAddressID__",
+																			"VendorReturnAddress__": "LabelVendorReturnAddress__",
+																			"LabelVendorReturnAddress__": "VendorReturnAddress__"
+																		}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 45,
+																			"options": {
+																				"version": 0,
+																				"lines": 6,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"LabelVendorNumber__": {
+																						"line": 1,
+																						"column": 1
+																					},
+																					"VendorNumber__": {
+																						"line": 1,
+																						"column": 2
+																					},
+																					"LabelVendorName__": {
+																						"line": 2,
+																						"column": 1
+																					},
+																					"VendorName__": {
+																						"line": 2,
+																						"column": 2
+																					},
+																					"LabelVendorEmail__": {
+																						"line": 3,
+																						"column": 1
+																					},
+																					"VendorEmail__": {
+																						"line": 3,
+																						"column": 2
+																					},
+																					"LabelVendorRMA__": {
+																						"line": 4,
+																						"column": 1
+																					},
+																					"VendorRMA__": {
+																						"line": 4,
+																						"column": 2
+																					},
+																					"LabelVendorReturnAddressID__": {
+																						"line": 5,
+																						"column": 1
+																					},
+																					"VendorReturnAddressID__": {
+																						"line": 5,
+																						"column": 2
+																					},
+																					"LabelVendorReturnAddress__": {
+																						"line": 6,
+																						"column": 1
+																					},
+																					"VendorReturnAddress__": {
+																						"line": 6,
+																						"column": 2
+																					}
+																				},
+																				"colspans": [
+																					[],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[]
+																				]
+																			},
+																			"*": {
+																				"LabelVendorNumber__": {
+																					"type": "Label",
+																					"data": [
+																						"VendorNumber__"
+																					],
+																					"stamp": 47,
+																					"options": {
+																						"label": "_VendorNumber",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				},
+																				"VendorNumber__": {
+																					"type": "ShortText",
+																					"data": [
+																						"VendorNumber__"
+																					],
+																					"stamp": 46,
+																					"options": {
+																						"label": "_VendorNumber",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"hidden": true,
+																						"browsable": false,
+																						"autocompletable": false,
+																						"readonly": true
+																					}
+																				},
+																				"LabelVendorName__": {
+																					"type": "Label",
+																					"data": [
+																						"VendorName__"
+																					],
+																					"stamp": 49,
+																					"options": {
+																						"label": "_VendorName",
+																						"version": 0
+																					}
+																				},
+																				"VendorName__": {
+																					"type": "ShortText",
+																					"data": [
+																						"VendorName__"
+																					],
+																					"stamp": 48,
+																					"options": {
+																						"label": "_VendorName",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"readonly": true,
+																						"browsable": false
+																					}
+																				},
+																				"LabelVendorEmail__": {
+																					"type": "Label",
+																					"data": [
+																						"VendorEmail__"
+																					],
+																					"stamp": 51,
+																					"options": {
+																						"label": "_VendorEmail",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				},
+																				"VendorEmail__": {
+																					"type": "ShortText",
+																					"data": [
+																						"VendorEmail__"
+																					],
+																					"stamp": 50,
+																					"options": {
+																						"label": "_VendorEmail",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"browsable": false,
+																						"readonly": true,
+																						"hidden": true
+																					}
+																				},
+																				"LabelVendorRMA__": {
+																					"type": "Label",
+																					"data": [
+																						"VendorRMA__"
+																					],
+																					"stamp": 53,
+																					"options": {
+																						"label": "_VendorRMA",
+																						"version": 0
+																					}
+																				},
+																				"VendorRMA__": {
+																					"type": "ShortText",
+																					"data": [
+																						"VendorRMA__"
+																					],
+																					"stamp": 52,
+																					"options": {
+																						"label": "_VendorRMA",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"browsable": false,
+																						"autocompletable": false
+																					}
+																				},
+																				"LabelVendorReturnAddressID__": {
+																					"type": "Label",
+																					"data": [
+																						"VendorReturnAddressID__"
+																					],
+																					"stamp": 55,
+																					"options": {
+																						"label": "_VendorReturnAddressID",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				},
+																				"VendorReturnAddressID__": {
+																					"type": "ShortText",
+																					"data": [
+																						"VendorReturnAddressID__"
+																					],
+																					"stamp": 54,
+																					"options": {
+																						"label": "_VendorReturnAddressID",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"hidden": true,
+																						"readonly": true,
+																						"browsable": false,
+																						"autocompletable": false
+																					}
+																				},
+																				"LabelVendorReturnAddress__": {
+																					"type": "Label",
+																					"data": [
+																						"VendorReturnAddress__"
+																					],
+																					"stamp": 57,
+																					"options": {
+																						"label": "_VendorReturnAddress",
+																						"version": 0
+																					}
+																				},
+																				"VendorReturnAddress__": {
+																					"type": "LongText",
+																					"data": [
+																						"VendorReturnAddress__"
+																					],
+																					"stamp": 56,
+																					"options": {
+																						"label": "_VendorReturnAddress",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"minNbLines": 3,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"browsable": false,
+																						"readonly": true
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-7": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 58,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"ItemsPanel": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 59,
+															"options": {
+																"border": {
+																	"collapsed": false
+																},
+																"iconURL": "",
+																"TitleFontSize": "L",
+																"hideActionButtons": true,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_ItemsPanel",
+																"hidden": false,
+																"leftImageURL": "",
+																"removeMargins": false,
+																"elementsAlignment": "left",
+																"labelLength": 0,
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 60,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 61,
+																			"options": {
+																				"version": 0,
+																				"lines": 1,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"LineItems__": {
+																						"line": 1,
+																						"column": 1
+																					}
+																				},
+																				"colspans": [
+																					[
+																						{
+																							"index": 0,
+																							"length": 2
+																						}
+																					]
+																				]
+																			},
+																			"*": {
+																				"LineItems__": {
+																					"type": "Table",
+																					"data": [
+																						"LineItems__"
+																					],
+																					"stamp": 62,
+																					"options": {
+																						"columns": 11,
+																						"label": "_LineItems",
+																						"version": 5,
+																						"lines": 100,
+																						"displayEmptyLines": false,
+																						"alwaysOneLine": true,
+																						"menuOptions": {
+																							"disableInsertLine": true,
+																							"disableAddLine": true,
+																							"hideTopNavigation": true,
+																							"hideBottomNavigation": true,
+																							"hideTableRowMenu": true,
+																							"hideTableRowDelete": true,
+																							"hideTableRowAdd": true,
+																							"hideTableRowDuplicate": true,
+																							"hideTableRowButtonDuplicate": true,
+																							"allowSortTable": false,
+																							"allowFilter": false,
+																							"addButtonShouldInsert": false
+																						},
+																						"item": {
+																							"display": null
+																						},
+																						"group": {
+																							"name": "GDR\nPage"
+																						},
+																						"height": "",
+																						"subsection": null
+																					},
+																					"*": {
+																						"Actions": {
+																							"type": "$TableActions",
+																							"subtype": "Actions",
+																							"data": [],
+																							"stamp": 63,
+																							"options": {
+																								"version": 0
+																							},
+																							"*": {
+																								"Top": {
+																									"type": "$TableActions",
+																									"subtype": "Top",
+																									"data": [],
+																									"stamp": 64,
+																									"options": {
+																										"version": 0
+																									}
+																								},
+																								"Bottom": {
+																									"type": "$TableActions",
+																									"subtype": "Top",
+																									"data": [],
+																									"stamp": 65,
+																									"options": {
+																										"version": 0
+																									}
+																								}
+																							}
+																						},
+																						"Header": {
+																							"type": "$TableRow",
+																							"subtype": "Header",
+																							"data": [
+																								null
+																							],
+																							"stamp": 66,
+																							"options": {
+																								"version": 0
+																							},
+																							"*": {
+																								"Cell1": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 69,
+																									"options": {
+																										"minwidth": "0",
+																										"hidden": true,
+																										"version": 0
+																									},
+																									"*": {
+																										"POLineNumber__": {
+																											"type": "Label",
+																											"data": [
+																												"POLineNumber__"
+																											],
+																											"stamp": 70,
+																											"options": {
+																												"label": "_POLineNumber",
+																												"type": "ShortText",
+																												"minwidth": "40",
+																												"hidden": true,
+																												"version": 0
+																											},
+																											"position": [
+																												"_POLineNumber",
+																												false,
+																												false,
+																												"ShortText"
+																											]
+																										}
+																									}
+																								},
+																								"Cell2": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 73,
+																									"options": {
+																										"minwidth": 140,
+																										"version": 0
+																									},
+																									"*": {
+																										"ItemNumber__": {
+																											"type": "Label",
+																											"data": [
+																												"ItemNumber__"
+																											],
+																											"stamp": 74,
+																											"options": {
+																												"label": "_ItemNumber",
+																												"type": "ShortText",
+																												"minwidth": 140,
+																												"version": 0
+																											},
+																											"position": [
+																												"_ItemNumber",
+																												false,
+																												false,
+																												"ShortText"
+																											]
+																										}
+																									}
+																								},
+																								"Cell3": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 77,
+																									"options": {
+																										"minwidth": "200",
+																										"version": 0
+																									},
+																									"*": {
+																										"Description__": {
+																											"type": "Label",
+																											"data": [
+																												"Description__"
+																											],
+																											"stamp": 78,
+																											"options": {
+																												"label": "_Description",
+																												"type": "LongText",
+																												"minwidth": "200",
+																												"version": 0
+																											},
+																											"position": [
+																												"_Description",
+																												false,
+																												false,
+																												"LongText"
+																											]
+																										}
+																									}
+																								},
+																								"Cell4": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 81,
+																									"options": {
+																										"minwidth": 140,
+																										"hidden": true,
+																										"version": 0
+																									},
+																									"*": {
+																										"GoodsReceiptNumber__": {
+																											"type": "Label",
+																											"data": [
+																												"GoodsReceiptNumber__"
+																											],
+																											"stamp": 82,
+																											"options": {
+																												"label": "_GoodsReceiptNumber",
+																												"type": "ShortText",
+																												"minwidth": "140",
+																												"hidden": true,
+																												"version": 0
+																											},
+																											"position": [
+																												"_GoodsReceiptNumber",
+																												false,
+																												false,
+																												"ShortText"
+																											]
+																										}
+																									}
+																								},
+																								"Cell5": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 85,
+																									"options": {
+																										"minwidth": "180",
+																										"version": 0
+																									},
+																									"*": {
+																										"DeliveryNote__": {
+																											"type": "Label",
+																											"data": [
+																												"DeliveryNote__"
+																											],
+																											"stamp": 86,
+																											"options": {
+																												"label": "_DeliveryNote",
+																												"type": "ShortText",
+																												"minwidth": "180",
+																												"version": 0
+																											},
+																											"position": [
+																												"_DeliveryNote",
+																												false,
+																												false,
+																												"ShortText"
+																											]
+																										}
+																									}
+																								},
+																								"Cell6": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 89,
+																									"options": {
+																										"minwidth": "70",
+																										"version": 0
+																									},
+																									"*": {
+																										"UnitPrice__": {
+																											"type": "Label",
+																											"data": [
+																												"UnitPrice__"
+																											],
+																											"stamp": 90,
+																											"options": {
+																												"label": "_UnitPrice",
+																												"type": "Decimal",
+																												"minwidth": "70",
+																												"version": 0
+																											},
+																											"position": [
+																												"_UnitPrice",
+																												false,
+																												false,
+																												"Decimal"
+																											]
+																										}
+																									}
+																								},
+																								"Cell7": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 93,
+																									"options": {
+																										"minwidth": "40",
+																										"version": 0
+																									},
+																									"*": {
+																										"Currency__": {
+																											"type": "Label",
+																											"data": [
+																												"Currency__"
+																											],
+																											"stamp": 94,
+																											"options": {
+																												"label": "_Currency",
+																												"type": "ShortText",
+																												"minwidth": "40",
+																												"version": 0
+																											},
+																											"position": [
+																												"_Currency",
+																												false,
+																												false,
+																												"ShortText"
+																											]
+																										}
+																									}
+																								},
+																								"Cell8": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 97,
+																									"options": {
+																										"minwidth": "0",
+																										"hidden": true,
+																										"version": 0
+																									},
+																									"*": {
+																										"UOM__": {
+																											"type": "Label",
+																											"data": [
+																												"UOM__"
+																											],
+																											"stamp": 98,
+																											"options": {
+																												"label": "_UOM",
+																												"type": "ShortText",
+																												"minwidth": "40",
+																												"hidden": true,
+																												"version": 0
+																											},
+																											"position": [
+																												"_UOM",
+																												false,
+																												false,
+																												"ShortText"
+																											]
+																										}
+																									}
+																								},
+																								"Cell9": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 101,
+																									"options": {
+																										"minwidth": "70",
+																										"version": 0
+																									},
+																									"*": {
+																										"ReturnedQuantity__": {
+																											"type": "Label",
+																											"data": [
+																												"ReturnedQuantity__"
+																											],
+																											"stamp": 102,
+																											"options": {
+																												"label": "_ReturnedQuantity",
+																												"type": "Decimal",
+																												"minwidth": "70",
+																												"version": 0
+																											},
+																											"position": [
+																												"_ReturnedQuantity",
+																												false,
+																												false,
+																												"Decimal"
+																											]
+																										}
+																									}
+																								},
+																								"Cell10": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 105,
+																									"options": {
+																										"minwidth": 140,
+																										"version": 0
+																									},
+																									"*": {
+																										"ReturnReason__": {
+																											"type": "Label",
+																											"data": [
+																												"ReturnReason__"
+																											],
+																											"stamp": 106,
+																											"options": {
+																												"label": "_ReturnReason",
+																												"type": "ComboBox",
+																												"minwidth": 140,
+																												"version": 0
+																											},
+																											"position": [
+																												"_ReturnReason",
+																												false,
+																												false,
+																												"ComboBox"
+																											]
+																										}
+																									}
+																								},
+																								"Cell11": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 109,
+																									"options": {
+																										"minwidth": "260",
+																										"version": 0
+																									},
+																									"*": {
+																										"Comment__": {
+																											"type": "Label",
+																											"data": [
+																												"Comment__"
+																											],
+																											"stamp": 110,
+																											"options": {
+																												"label": "_Comment",
+																												"type": "LongText",
+																												"minwidth": "260",
+																												"version": 0
+																											},
+																											"position": [
+																												"_Comment",
+																												false,
+																												false,
+																												"LongText"
+																											]
+																										}
+																									}
+																								}
+																							}
+																						},
+																						"Clipboard": {
+																							"type": "$TableRow",
+																							"subtype": "Clipboard",
+																							"data": [
+																								null
+																							],
+																							"stamp": 67,
+																							"options": {
+																								"version": 0
+																							},
+																							"*": {
+																								"Cell1": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 71,
+																									"options": {
+																										"hidden": true,
+																										"version": 0
+																									},
+																									"*": {
+																										"POLineNumber__": {
+																											"type": "ShortText",
+																											"data": [
+																												"POLineNumber__"
+																											],
+																											"stamp": 68,
+																											"options": {
+																												"label": "_POLineNumber",
+																												"textSize": "S",
+																												"textAlignment": "left",
+																												"textStyle": "default",
+																												"textColor": "default",
+																												"version": 1,
+																												"activable": true,
+																												"width": "40",
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"helpIconPosition": "Right",
+																												"browsable": false,
+																												"readonly": true,
+																												"autocompletable": false,
+																												"hidden": true
+																											},
+																											"position": [
+																												"_POLineNumber"
+																											]
+																										}
+																									}
+																								},
+																								"Cell2": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 75,
+																									"options": {
+																										"version": 0
+																									},
+																									"*": {
+																										"ItemNumber__": {
+																											"type": "ShortText",
+																											"data": [
+																												"ItemNumber__"
+																											],
+																											"stamp": 72,
+																											"options": {
+																												"label": "_ItemNumber",
+																												"textSize": "S",
+																												"textAlignment": "left",
+																												"textStyle": "default",
+																												"textColor": "default",
+																												"version": 1,
+																												"activable": true,
+																												"width": 140,
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"helpIconPosition": "Right",
+																												"browsable": false,
+																												"readonly": true
+																											},
+																											"position": [
+																												"_ItemNumber"
+																											]
+																										}
+																									}
+																								},
+																								"Cell3": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 79,
+																									"options": {
+																										"version": 0
+																									},
+																									"*": {
+																										"Description__": {
+																											"type": "LongText",
+																											"data": [
+																												"Description__"
+																											],
+																											"stamp": 76,
+																											"options": {
+																												"label": "_Description",
+																												"textSize": "S",
+																												"textAlignment": "left",
+																												"textStyle": "default",
+																												"textColor": "default",
+																												"version": 1,
+																												"minNbLines": 1,
+																												"activable": true,
+																												"width": "200",
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"helpIconPosition": "Right",
+																												"numberOfLines": 999,
+																												"readonly": true,
+																												"browsable": false
+																											},
+																											"position": [
+																												"_Description"
+																											]
+																										}
+																									}
+																								},
+																								"Cell4": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 83,
+																									"options": {
+																										"hidden": true,
+																										"version": 0
+																									},
+																									"*": {
+																										"GoodsReceiptNumber__": {
+																											"type": "ShortText",
+																											"data": [
+																												"GoodsReceiptNumber__"
+																											],
+																											"stamp": 80,
+																											"options": {
+																												"label": "_GoodsReceiptNumber",
+																												"textSize": "S",
+																												"textAlignment": "left",
+																												"textStyle": "default",
+																												"textColor": "default",
+																												"version": 1,
+																												"activable": true,
+																												"width": "140",
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"helpIconPosition": "Right",
+																												"readonly": true,
+																												"browsable": false,
+																												"autocompletable": false,
+																												"hidden": true
+																											},
+																											"position": [
+																												"_GoodsReceiptNumber"
+																											]
+																										}
+																									}
+																								},
+																								"Cell5": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 87,
+																									"options": {
+																										"version": 0
+																									},
+																									"*": {
+																										"DeliveryNote__": {
+																											"type": "ShortText",
+																											"data": [
+																												"DeliveryNote__"
+																											],
+																											"stamp": 84,
+																											"options": {
+																												"label": "_DeliveryNote",
+																												"textSize": "S",
+																												"textAlignment": "left",
+																												"textStyle": "default",
+																												"textColor": "default",
+																												"version": 1,
+																												"activable": true,
+																												"width": "180",
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"helpIconPosition": "Right",
+																												"readonly": true,
+																												"browsable": false
+																											},
+																											"position": [
+																												"_DeliveryNote"
+																											]
+																										}
+																									}
+																								},
+																								"Cell6": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 91,
+																									"options": {
+																										"version": 0
+																									},
+																									"*": {
+																										"UnitPrice__": {
+																											"type": "Decimal",
+																											"data": [
+																												"UnitPrice__"
+																											],
+																											"stamp": 88,
+																											"options": {
+																												"label": "_UnitPrice",
+																												"version": 2,
+																												"textSize": "S",
+																												"textAlignment": "right",
+																												"textStyle": "default",
+																												"textColor": "default",
+																												"integer": false,
+																												"precision_internal": 5,
+																												"precision_current": 5,
+																												"activable": true,
+																												"width": "70",
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"helpIconPosition": "Right",
+																												"enableRoundedStyle": false,
+																												"forceRoundCurrencyPrecision": false,
+																												"enablePlusMinus": false,
+																												"readonly": true,
+																												"autocompletable": false,
+																												"precision_min": 2
+																											},
+																											"position": [
+																												"_UnitPrice"
+																											]
+																										}
+																									}
+																								},
+																								"Cell7": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 95,
+																									"options": {
+																										"version": 0
+																									},
+																									"*": {
+																										"Currency__": {
+																											"type": "ShortText",
+																											"data": [
+																												"Currency__"
+																											],
+																											"stamp": 92,
+																											"options": {
+																												"label": "_Currency",
+																												"textSize": "S",
+																												"textAlignment": "left",
+																												"textStyle": "default",
+																												"textColor": "default",
+																												"version": 1,
+																												"activable": true,
+																												"width": "40",
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"helpIconPosition": "Right",
+																												"readonly": true,
+																												"browsable": false
+																											},
+																											"position": [
+																												"_Currency"
+																											]
+																										}
+																									}
+																								},
+																								"Cell8": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 99,
+																									"options": {
+																										"hidden": true,
+																										"version": 0
+																									},
+																									"*": {
+																										"UOM__": {
+																											"type": "ShortText",
+																											"data": [
+																												"UOM__"
+																											],
+																											"stamp": 96,
+																											"options": {
+																												"label": "_UOM",
+																												"textSize": "S",
+																												"textAlignment": "left",
+																												"textStyle": "default",
+																												"textColor": "default",
+																												"version": 1,
+																												"activable": true,
+																												"width": "40",
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"helpIconPosition": "Right",
+																												"readonly": true,
+																												"browsable": false,
+																												"autocompletable": false,
+																												"hidden": true
+																											},
+																											"position": [
+																												"_UOM"
+																											]
+																										}
+																									}
+																								},
+																								"Cell9": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 103,
+																									"options": {
+																										"version": 0
+																									},
+																									"*": {
+																										"ReturnedQuantity__": {
+																											"type": "Decimal",
+																											"data": [
+																												"ReturnedQuantity__"
+																											],
+																											"stamp": 100,
+																											"options": {
+																												"label": "_ReturnedQuantity",
+																												"version": 2,
+																												"textSize": "S",
+																												"textAlignment": "right",
+																												"textStyle": "default",
+																												"textColor": "default",
+																												"integer": false,
+																												"precision_internal": 5,
+																												"precision_current": 5,
+																												"activable": true,
+																												"width": "70",
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"helpIconPosition": "Right",
+																												"enableRoundedStyle": false,
+																												"forceRoundCurrencyPrecision": false,
+																												"enablePlusMinus": false,
+																												"autocompletable": false,
+																												"precision_min": 2
+																											},
+																											"position": [
+																												"_ReturnedQuantity"
+																											]
+																										}
+																									}
+																								},
+																								"Cell10": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 107,
+																									"options": {
+																										"version": 0
+																									},
+																									"*": {
+																										"ReturnReason__": {
+																											"type": "ComboBox",
+																											"data": [
+																												"ReturnReason__"
+																											],
+																											"stamp": 104,
+																											"options": {
+																												"label": "_ReturnReason",
+																												"possibleValues": {
+																													"0": "",
+																													"1": "_DamagedItemReason",
+																													"2": "_WrongItemReason",
+																													"3": "_NotNeededAnyMoreReason",
+																													"4": "_OtherReason"
+																												},
+																												"maxNbLinesToDisplay": 10,
+																												"version": 1,
+																												"keyValueMode": true,
+																												"possibleKeys": {
+																													"0": "Unselected",
+																													"1": "DamagedItem",
+																													"2": "WrongItem",
+																													"3": "NotNeededAnyMore",
+																													"4": "Other"
+																												},
+																												"activable": true,
+																												"width": 140,
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"helpIconPosition": "Right",
+																												"DataSourceOrigin": "Standalone",
+																												"DisplayedColumns": ""
+																											},
+																											"position": [
+																												"_ReturnReason"
+																											]
+																										}
+																									}
+																								},
+																								"Cell11": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 111,
+																									"options": {
+																										"version": 0
+																									},
+																									"*": {
+																										"Comment__": {
+																											"type": "LongText",
+																											"data": [
+																												"Comment__"
+																											],
+																											"stamp": 108,
+																											"options": {
+																												"label": "_Comment",
+																												"textSize": "S",
+																												"textAlignment": "left",
+																												"textStyle": "default",
+																												"textColor": "default",
+																												"version": 1,
+																												"minNbLines": 3,
+																												"activable": true,
+																												"width": "260",
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"helpIconPosition": "Right",
+																												"browsable": false
+																											},
+																											"position": [
+																												"_Comment"
+																											]
+																										}
+																									}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 112,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"Events": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 113,
+															"options": {
+																"border": {},
+																"iconURL": "PR_comments.png",
+																"TitleFontSize": "L",
+																"hideActionButtons": true,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_Events",
+																"hidden": true,
+																"isSvgIcon": false,
+																"leftImageURL": "",
+																"removeMargins": false,
+																"elementsAlignment": "left",
+																"labelLength": 0,
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 114,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 115,
+																			"options": {
+																				"version": 0,
+																				"lines": 1,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"ConversationUI__": {
+																						"line": 1,
+																						"column": 1
+																					}
+																				},
+																				"colspans": [
+																					[
+																						{
+																							"index": 0,
+																							"length": 2
+																						}
+																					]
+																				]
+																			},
+																			"*": {
+																				"ConversationUI__": {
+																					"type": "ConversationUI",
+																					"data": false,
+																					"stamp": 116,
+																					"options": {
+																						"label": "_ConversationUI",
+																						"activable": true,
+																						"width": "100%",
+																						"tableName": "Conversation__",
+																						"version": 0
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-right": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 117,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "45%",
+													"width": "55%"
+												},
+												"hidden": true
+											},
+											"*": {
+												"form-content-right-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 118,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"PreviewPanel": {
+															"type": "PanelPreview",
+															"data": [],
+															"stamp": 119,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_Document Preview",
+																"version": 0
+															},
+															"*": {
+																"Preview": {
+																	"type": "Preview",
+																	"data": [
+																		"previewdata"
+																	],
+																	"stamp": 120,
+																	"options": {
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 121,
+					"options": {
+						"splitterType": "simple-h",
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 122,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"textSize": "S",
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <field deleted="0" format="" guid="YCJ6FP000SG1" id="VBDQT400153E" label="_CompanyCode_report" length="50" name="CompanyCode__" originalProcessID="TW5IG0000SG1" precision="0" processid="UBDQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AVBDQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/CompanyCode__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:05</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_CompanyCode_report</Label>
+        <Alias>AVBDQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="KCJ6FP000SG1" id="WBDQT400153E" label="_OrderNumber_report" length="50" name="OrderNumber__" originalProcessID="TW5IG0000SG1" precision="0" processid="UBDQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AWBDQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/OrderNumber__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:05</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_OrderNumber_report</Label>
+        <Alias>AWBDQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="KB4IG0000SG1" id="XBDQT400153E" label="_RequesterName_report" length="50" name="RequesterName__" originalProcessID="TW5IG0000SG1" precision="0" processid="UBDQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AXBDQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/RequesterName__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:05</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_RequesterName_report</Label>
+        <Alias>AXBDQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="AHN6FP000SG1" id="YBDQT400153E" label="_ReturnDate_report" length="0" name="ReturnDate__" originalProcessID="TW5IG0000SG1" precision="0" processid="UBDQT400153E" submitable="1" type="DATE">
+    <properties>
+      <db>
+        <alias>AYBDQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ReturnDate__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:05</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ReturnDate_report</Label>
+        <Alias>AYBDQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Date</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="LB4IG0000SG1" id="ZBDQT400153E" label="_ROClientRUIDEX_report" length="50" name="ROClientRUIDEX__" originalProcessID="TW5IG0000SG1" precision="0" processid="UBDQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AZBDQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ROClientRUIDEX__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:05</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ROClientRUIDEX_report</Label>
+        <Alias>AZBDQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="QRJ5FP000SG1" id="ACDQT400153E" label="_RONumber" length="50" name="RONumber__" originalProcessID="TW5IG0000SG1" precision="0" processid="UBDQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AACDQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/RONumber__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:06</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_RONumber</Label>
+        <Alias>AACDQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="ECJ6FP000SG1" id="BCDQT400153E" label="_Status_report" length="50" name="Status__" originalProcessID="TW5IG0000SG1" precision="0" processid="UBDQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ABCDQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Status__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:06</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Status_report</Label>
+        <Alias>ABCDQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="JCJ6FP000SG1" id="CCDQT400153E" label="_TechnicalData_report" length="50" name="TechnicalData__" originalProcessID="TW5IG0000SG1" precision="0" processid="UBDQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ACCDQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/TechnicalData__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:06</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_TechnicalData_report</Label>
+        <Alias>ACCDQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="MB4IG0000SG1" id="DCDQT400153E" label="_VendorEmail_report" length="50" name="VendorEmail__" originalProcessID="TW5IG0000SG1" precision="0" processid="UBDQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ADCDQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/VendorEmail__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:06</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_VendorEmail_report</Label>
+        <Alias>ADCDQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="LCJ6FP000SG1" id="ECDQT400153E" label="_VendorName_report" length="50" name="VendorName__" originalProcessID="TW5IG0000SG1" precision="0" processid="UBDQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AECDQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/VendorName__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:06</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_VendorName_report</Label>
+        <Alias>AECDQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="MOJ6FP000SG1" id="FCDQT400153E" label="_VendorNumber_report" length="50" name="VendorNumber__" originalProcessID="TW5IG0000SG1" precision="0" processid="UBDQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AFCDQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/VendorNumber__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:06</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_VendorNumber_report</Label>
+        <Alias>AFCDQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="HCJ6FP000SG1" id="HCDQT400153E" label="_VendorReturnAddressID_report" length="50" name="VendorReturnAddressID__" originalProcessID="TW5IG0000SG1" precision="0" processid="UBDQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AHCDQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/VendorReturnAddressID__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:06</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_VendorReturnAddressID_report</Label>
+        <Alias>AHCDQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="ICJ6FP000SG1" id="GCDQT400153E" label="_VendorReturnAddress_report" length="32766" name="VendorReturnAddress__" originalProcessID="TW5IG0000SG1" precision="0" processid="UBDQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AGCDQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/VendorReturnAddress__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:06</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_VendorReturnAddress_report</Label>
+        <Alias>AGCDQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="MCJ6FP000SG1" id="ICDQT400153E" label="_VendorRMA_report" length="50" name="VendorRMA__" originalProcessID="TW5IG0000SG1" precision="0" processid="UBDQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AICDQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/VendorRMA__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:06</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_VendorRMA_report</Label>
+        <Alias>AICDQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <datatable deleted="0" guid="NCJ6FP000SG1" id="JCDQT400153E" label="_LineItems_report" name="LineItems__" originalProcessID="TW5IG0000SG1">
+    <properties>
+      <field>
+        <DisableAutolearn>1</DisableAutolearn>
+        <Extractable>0</Extractable>
+      </field>
+      <ui>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+    <field datatableid="JCDQT400153E" deleted="0" format="" guid="QCJ6FP000SG1" id="KCDQT400153E" label="_Comment_report" length="32766" name="Comment__" originalProcessID="TW5IG0000SG1" precision="0" submitable="1" type="STR">
+      <properties>
+        <db>
+          <alias>AKCDQT400153E</alias>
+          <noxml>1</noxml>
+          <fullname>/job/processfields/Comment__</fullname>
+          <defaultvalue>
+          </defaultvalue>
+          <RecordLastWrite>2026-11-04 11:09:06</RecordLastWrite>
+        </db>
+        <extrainfo>
+          <Label>_Comment_report</Label>
+          <Alias>AKCDQT400153E</Alias>
+          <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        </extrainfo>
+        <gdr>
+          <DisableAutolearn>1</DisableAutolearn>
+        </gdr>
+        <help>
+          <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+        </help>
+        <ui>
+          <_type>String</_type>
+          <automatic>true</automatic>
+        </ui>
+      </properties>
+    </field>
+    <field datatableid="JCDQT400153E" deleted="0" format="" guid="UX4IG0000SG1" id="LCDQT400153E" label="_Currency_report" length="50" name="Currency__" originalProcessID="TW5IG0000SG1" precision="0" submitable="1" type="STR">
+      <properties>
+        <db>
+          <alias>ALCDQT400153E</alias>
+          <noxml>1</noxml>
+          <fullname>/job/processfields/Currency__</fullname>
+          <defaultvalue>
+          </defaultvalue>
+          <RecordLastWrite>2026-11-04 11:09:06</RecordLastWrite>
+        </db>
+        <extrainfo>
+          <Label>_Currency_report</Label>
+          <Alias>ALCDQT400153E</Alias>
+          <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        </extrainfo>
+        <gdr>
+          <VarType>Area</VarType>
+          <DisableAutolearn>1</DisableAutolearn>
+        </gdr>
+        <help>
+          <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+        </help>
+        <ui>
+          <_type>String</_type>
+          <automatic>true</automatic>
+        </ui>
+      </properties>
+    </field>
+    <field datatableid="JCDQT400153E" deleted="0" format="" guid="PRJ5FP000SG1" id="MCDQT400153E" label="_DeliveryNote" length="50" name="DeliveryNote__" originalProcessID="TW5IG0000SG1" precision="0" submitable="1" type="STR">
+      <properties>
+        <db>
+          <alias>AMCDQT400153E</alias>
+          <noxml>1</noxml>
+          <fullname>/job/processfields/DeliveryNote__</fullname>
+          <defaultvalue>
+          </defaultvalue>
+          <RecordLastWrite>2026-11-04 11:09:06</RecordLastWrite>
+        </db>
+        <extrainfo>
+          <Label>_DeliveryNote</Label>
+          <Alias>AMCDQT400153E</Alias>
+          <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        </extrainfo>
+        <gdr>
+          <VarType>Area</VarType>
+          <DisableAutolearn>1</DisableAutolearn>
+        </gdr>
+        <help>
+          <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+        </help>
+        <ui>
+          <_type>String</_type>
+          <automatic>true</automatic>
+        </ui>
+      </properties>
+    </field>
+    <field datatableid="JCDQT400153E" deleted="0" format="" guid="SCJ6FP000SG1" id="NCDQT400153E" label="_Description_report" length="32766" name="Description__" originalProcessID="TW5IG0000SG1" precision="0" submitable="1" type="STR">
+      <properties>
+        <db>
+          <alias>ANCDQT400153E</alias>
+          <noxml>1</noxml>
+          <fullname>/job/processfields/Description__</fullname>
+          <defaultvalue>
+          </defaultvalue>
+          <RecordLastWrite>2026-11-04 11:09:06</RecordLastWrite>
+        </db>
+        <extrainfo>
+          <Label>_Description_report</Label>
+          <Alias>ANCDQT400153E</Alias>
+          <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        </extrainfo>
+        <gdr>
+          <DisableAutolearn>1</DisableAutolearn>
+        </gdr>
+        <help>
+          <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+        </help>
+        <ui>
+          <_type>String</_type>
+          <automatic>true</automatic>
+        </ui>
+      </properties>
+    </field>
+    <field datatableid="JCDQT400153E" deleted="0" format="" guid="WCJ6FP000SG1" id="OCDQT400153E" label="_GoodsReceiptNumber_report" length="50" name="GoodsReceiptNumber__" originalProcessID="TW5IG0000SG1" precision="0" submitable="1" type="STR">
+      <properties>
+        <db>
+          <alias>AOCDQT400153E</alias>
+          <noxml>1</noxml>
+          <fullname>/job/processfields/GoodsReceiptNumber__</fullname>
+          <defaultvalue>
+          </defaultvalue>
+          <RecordLastWrite>2026-11-04 11:09:06</RecordLastWrite>
+        </db>
+        <extrainfo>
+          <Label>_GoodsReceiptNumber_report</Label>
+          <Alias>AOCDQT400153E</Alias>
+          <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        </extrainfo>
+        <gdr>
+          <VarType>Area</VarType>
+          <DisableAutolearn>1</DisableAutolearn>
+        </gdr>
+        <help>
+          <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+        </help>
+        <ui>
+          <_type>String</_type>
+          <automatic>true</automatic>
+        </ui>
+      </properties>
+    </field>
+    <field datatableid="JCDQT400153E" deleted="0" format="" guid="M63IG0000SG1" id="PCDQT400153E" label="_ItemNumber_report" length="50" name="ItemNumber__" originalProcessID="TW5IG0000SG1" precision="0" submitable="1" type="STR">
+      <properties>
+        <db>
+          <alias>APCDQT400153E</alias>
+          <noxml>1</noxml>
+          <fullname>/job/processfields/ItemNumber__</fullname>
+          <defaultvalue>
+          </defaultvalue>
+          <RecordLastWrite>2026-11-04 11:09:06</RecordLastWrite>
+        </db>
+        <extrainfo>
+          <Label>_ItemNumber_report</Label>
+          <Alias>APCDQT400153E</Alias>
+          <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        </extrainfo>
+        <gdr>
+          <VarType>Area</VarType>
+          <DisableAutolearn>1</DisableAutolearn>
+        </gdr>
+        <help>
+          <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+        </help>
+        <ui>
+          <_type>String</_type>
+          <automatic>true</automatic>
+        </ui>
+      </properties>
+    </field>
+    <field datatableid="JCDQT400153E" deleted="0" format="" guid="PCJ6FP000SG1" id="QCDQT400153E" label="_POLineNumber_report" length="50" name="POLineNumber__" originalProcessID="TW5IG0000SG1" precision="0" submitable="1" type="STR">
+      <properties>
+        <db>
+          <alias>AQCDQT400153E</alias>
+          <noxml>1</noxml>
+          <fullname>/job/processfields/POLineNumber__</fullname>
+          <defaultvalue>
+          </defaultvalue>
+          <RecordLastWrite>2026-11-04 11:09:06</RecordLastWrite>
+        </db>
+        <extrainfo>
+          <Label>_POLineNumber_report</Label>
+          <Alias>AQCDQT400153E</Alias>
+          <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        </extrainfo>
+        <gdr>
+          <VarType>Area</VarType>
+          <DisableAutolearn>1</DisableAutolearn>
+        </gdr>
+        <help>
+          <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+        </help>
+        <ui>
+          <_type>String</_type>
+          <automatic>true</automatic>
+        </ui>
+      </properties>
+    </field>
+    <field datatableid="JCDQT400153E" deleted="0" format="" guid="RCJ6FP000SG1" id="RCDQT400153E" label="_ReturnedQuantity_report" length="17" name="ReturnedQuantity__" originalProcessID="TW5IG0000SG1" precision="5" submitable="1" type="DECIMAL">
+      <properties>
+        <db>
+          <alias>ARCDQT400153E</alias>
+          <noxml>1</noxml>
+          <fullname>/job/processfields/ReturnedQuantity__</fullname>
+          <defaultvalue>
+          </defaultvalue>
+          <RecordLastWrite>2026-11-04 11:09:06</RecordLastWrite>
+        </db>
+        <extrainfo>
+          <Label>_ReturnedQuantity_report</Label>
+          <Alias>ARCDQT400153E</Alias>
+          <DecimalPrecision vartype="INT">5</DecimalPrecision>
+          <DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+          <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        </extrainfo>
+        <gdr>
+          <VarType>Area</VarType>
+          <DisableAutolearn>1</DisableAutolearn>
+        </gdr>
+        <help>
+          <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+        </help>
+        <ui>
+          <_type>Number</_type>
+          <automatic>true</automatic>
+        </ui>
+      </properties>
+    </field>
+    <field datatableid="JCDQT400153E" deleted="0" format="" guid="TCJ6FP000SG1" id="SCDQT400153E" label="_ReturnReason_report" length="50" name="ReturnReason__" originalProcessID="TW5IG0000SG1" precision="0" submitable="1" type="STR">
+      <properties>
+        <db>
+          <alias>ASCDQT400153E</alias>
+          <noxml>1</noxml>
+          <fullname>/job/processfields/ReturnReason__</fullname>
+          <defaultvalue>Unselected</defaultvalue>
+          <RecordLastWrite>2026-11-04 11:09:06</RecordLastWrite>
+        </db>
+        <extrainfo>
+          <Type>webaccess.Process.Columns.WithPossibleValues</Type>
+          <Label>_ReturnReason_report</Label>
+          <Alias>ASCDQT400153E</Alias>
+          <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        </extrainfo>
+        <field>
+          <required>true</required>
+          <TableName>
+          </TableName>
+          <DisplayedColumns>
+          </DisplayedColumns>
+          <DataSourceOrigin>Standalone</DataSourceOrigin>
+          <possibleKeys>Unselected
+DamagedItem
+WrongItem
+NotNeededAnyMore
+Other</possibleKeys>
+          <SavedColumn>
+          </SavedColumn>
+          <possibleValues>
+_DamagedItemReason
+_WrongItemReason
+_NotNeededAnyMoreReason
+_OtherReason</possibleValues>
+          <ProcessName>
+          </ProcessName>
+        </field>
+        <gdr>
+          <DisableAutolearn>1</DisableAutolearn>
+        </gdr>
+        <help>
+          <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+        </help>
+        <ui>
+          <_type>String</_type>
+          <automatic>true</automatic>
+        </ui>
+      </properties>
+    </field>
+    <field datatableid="JCDQT400153E" deleted="0" format="" guid="XCJ6FP000SG1" id="TCDQT400153E" label="_UnitPrice_report" length="17" name="UnitPrice__" originalProcessID="TW5IG0000SG1" precision="5" submitable="1" type="DECIMAL">
+      <properties>
+        <db>
+          <alias>ATCDQT400153E</alias>
+          <noxml>1</noxml>
+          <fullname>/job/processfields/UnitPrice__</fullname>
+          <defaultvalue>
+          </defaultvalue>
+          <RecordLastWrite>2026-11-04 11:09:06</RecordLastWrite>
+        </db>
+        <extrainfo>
+          <Label>_UnitPrice_report</Label>
+          <Alias>ATCDQT400153E</Alias>
+          <DecimalPrecision vartype="INT">5</DecimalPrecision>
+          <DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+          <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        </extrainfo>
+        <gdr>
+          <VarType>Area</VarType>
+          <DisableAutolearn>1</DisableAutolearn>
+        </gdr>
+        <help>
+          <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+        </help>
+        <ui>
+          <_type>Number</_type>
+          <automatic>true</automatic>
+        </ui>
+      </properties>
+    </field>
+    <field datatableid="JCDQT400153E" deleted="0" format="" guid="UCJ6FP000SG1" id="UCDQT400153E" label="_UOM_report" length="50" name="UOM__" originalProcessID="TW5IG0000SG1" precision="0" submitable="1" type="STR">
+      <properties>
+        <db>
+          <alias>AUCDQT400153E</alias>
+          <noxml>1</noxml>
+          <fullname>/job/processfields/UOM__</fullname>
+          <defaultvalue>
+          </defaultvalue>
+          <RecordLastWrite>2026-11-04 11:09:06</RecordLastWrite>
+        </db>
+        <extrainfo>
+          <Label>_UOM_report</Label>
+          <Alias>AUCDQT400153E</Alias>
+          <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        </extrainfo>
+        <gdr>
+          <VarType>Area</VarType>
+          <DisableAutolearn>1</DisableAutolearn>
+        </gdr>
+        <help>
+          <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+        </help>
+        <ui>
+          <_type>String</_type>
+          <automatic>true</automatic>
+        </ui>
+      </properties>
+    </field>
+  </datatable>
+  <type id="GOLHG0000M4O" name="CD">
+  </type>
+</process>

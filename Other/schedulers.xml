@@ -1,0 +1,2768 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root name="'SCHEDULER' schedulers" xmlns="urn:esker-serialization">
+	<references>
+		<reference name="accountId" searchAttribute="msn">
+			<searchFilter type="ODUSER">(login=%[reference:creator])</searchFilter>
+			<otherMappings>
+				<mapping name="creatormsn" searchAttribute="msn" />
+				<mapping name="creatordisplayname" searchAttribute="displayname" />
+				<mapping name="creatoremail" searchAttribute="emailaddress" />
+				<mapping name="creatortimezone" searchAttribute="timezoneindex" />
+			</otherMappings>
+		</reference>
+		<reference name="rpt_99C0A1C8_1D547815" searchAttribute="msn">
+			<searchFilter type="REPORT">(&amp;(name=_ReportName_P2P - AutomaticNotifications)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|P2P - Notification__|processid]))</searchFilter>
+		</reference>
+		<reference name="rpt_A1C97377_A931ECB0" searchAttribute="msn">
+			<searchFilter type="REPORT">(&amp;(name=_ReportName_Purchasing - RemindersBudget)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|PurchasingBudget__|processid]))</searchFilter>
+		</reference>
+		<reference name="rpt_AD0A294D_BFFBECB0" searchAttribute="msn">
+			<searchFilter type="REPORT">(&amp;(name=_ReportName_Purchasing - RemindersOCReviews)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|S2P - Order Confirmation|processid]))</searchFilter>
+		</reference>
+		<reference name="rpt_A2636DD8_8BB14D2A" searchAttribute="msn">
+			<searchFilter type="REPORT">(&amp;(name=_ReportName_Purchasing - Stock alert recipients)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|P2P - VendorItems__|processid]))</searchFilter>
+		</reference>
+		<reference name="rpt_9C055ABE_49396143" searchAttribute="msn">
+			<searchFilter type="REPORT">(&amp;(name=_ReportName_VIP_AP_SAP_Invoices unpaid to update)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Vendor invoice|processid]))</searchFilter>
+		</reference>
+		<reference name="rpt_5A5480AC_553D5DE" searchAttribute="msn">
+			<searchFilter type="REPORT">(&amp;(name=_ReportName_VIP_AP_SAP_Invoices aside to update)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Vendor invoice|processid]))</searchFilter>
+		</reference>
+		<reference name="rpt_747DB358_D49E6143" searchAttribute="msn">
+			<searchFilter type="REPORT">(&amp;(name=_ReportName_VIP_AP_GenerateRemittanceAdviceFromPaidInvoices)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Vendor invoice|processid]))</searchFilter>
+		</reference>
+		<reference name="rpt_C59D2DB_1C1DD5DE" searchAttribute="msn">
+			<searchFilter type="REPORT">(&amp;(name=_ReportName_AP_Generic_Invoices waiting payment)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Vendor invoice|processid]))</searchFilter>
+		</reference>
+		<reference name="rpt_76BF72C1_4C5AD5DE" searchAttribute="msn">
+			<searchFilter type="REPORT">(&amp;(name=_ReportName_VIP_AP_Invoices_On_Hold_For_Too_Long)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Vendor invoice|processid]))</searchFilter>
+		</reference>
+		<reference name="rpt_EFD2CCFE_C004ECA8" searchAttribute="msn">
+			<searchFilter type="REPORT">(&amp;(name=_ReportName_VIP_AP_Invoices_Escalation_ToManager)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Vendor invoice|processid]))</searchFilter>
+		</reference>
+		<reference name="rpt_61A4F7C5_79EED5DE" searchAttribute="msn">
+			<searchFilter type="REPORT">(&amp;(name=_ReportName_VIP_AP_InvoicesWaitingGRForAgent)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Vendor invoice|processid]))</searchFilter>
+		</reference>
+		<reference name="rpt_183E5FE_E912D887" searchAttribute="msn">
+			<searchFilter type="REPORT">(&amp;(name=_ReportName_Contract - ContractPendingSignature)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|P2P - Contract|processid]))</searchFilter>
+		</reference>
+		<reference name="rpt_78B61F51_3496ECB0" searchAttribute="msn">
+			<searchFilter type="REPORT">(&amp;(name=_ReportName_Purchasing - RemindersOCApprovals)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|S2P - Order Confirmation|processid]))</searchFilter>
+		</reference>
+		<reference name="rpt_6D81F1B4_194FD887" searchAttribute="msn">
+			<searchFilter type="REPORT">(&amp;(name=_ReportName_Contract - UpdateContract)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|P2P - Contract|processid]))</searchFilter>
+		</reference>
+		<reference name="rpt_D02DA4F8_4B60ECB0" searchAttribute="msn">
+			<searchFilter type="REPORT">(&amp;(name=_ReportName_Purchasing - RemindersPRApprovals)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Purchase requisition V2|processid]))</searchFilter>
+		</reference>
+		<reference name="rpt_27E86C9B_70BECA8" searchAttribute="msn">
+			<searchFilter type="REPORT">(&amp;(name=_ReportName_Expense - RemindersERControl)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Expense Report|processid]))</searchFilter>
+		</reference>
+		<reference name="rpt_FFCA922E_9267ECB0" searchAttribute="msn">
+			<searchFilter type="REPORT">(&amp;(name=_ReportName_Purchasing - RemindersItemsToOrder)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|PAC - PR - Items__|processid]))</searchFilter>
+		</reference>
+		<reference name="rpt_C0DCB05B_31F6ECA8" searchAttribute="msn">
+			<searchFilter type="REPORT">(&amp;(name=_ReportName_Expense - RemindersERApprove)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Expense Report|processid]))</searchFilter>
+		</reference>
+		<reference name="rpt_D0CB0546_702ECB0" searchAttribute="msn">
+			<searchFilter type="REPORT">(&amp;(name=_ReportName_Purchasing - RemindersItemDeliveries)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|PAC - PO - Items__|processid]))</searchFilter>
+		</reference>
+		<reference name="rpt_AD3BC100_A688ECB0" searchAttribute="msn">
+			<searchFilter type="REPORT">(&amp;(name=_ReportName_Purchasing - ItemsWithoutGR)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|PAC - PO - Items__|processid]))</searchFilter>
+		</reference>
+		<reference name="rpt_77CE9AE1_7929A854" searchAttribute="msn">
+			<searchFilter type="REPORT">(&amp;(name=_ReportName_Demo vendor scoring last 24h)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|S2P - Demo - Vendor scoring__|processid]))</searchFilter>
+		</reference>
+		<reference name="rpt_D9320037_EFC07815" searchAttribute="msn">
+			<searchFilter type="REPORT">(&amp;(name=_ReportName_Purchasing - BudgetIntegrityCheck)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Purchase requisition V2|processid]))</searchFilter>
+		</reference>
+		<reference name="rpt_CD11AE8F_A8B97815" searchAttribute="msn">
+			<searchFilter type="REPORT">(&amp;(name=_ReportName_VIP_AP_Budget integrity check)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Vendor invoice|processid]))</searchFilter>
+		</reference>
+		<reference name="rpt_CDD4D4D3_68A7815" searchAttribute="msn">
+			<searchFilter type="REPORT">(&amp;(name=_ReportName_P2P - Budgets to snapshot)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|PurchasingBudget__|processid]))</searchFilter>
+		</reference>
+		<reference name="rpt_D046CA7_7B257815" searchAttribute="msn">
+			<searchFilter type="REPORT">(&amp;(name=_ReportName_P2P - Contracts to snapshot)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|P2P - Contract|processid]))</searchFilter>
+		</reference>
+	</references>
+	<types>
+		<type name="Scheduler" type="SCHEDULER">
+			<objects>
+				<object name="DD End of Validity Notifier">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=DD End of Validity Notifier)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|DD - End Of Validity Notifier|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=DD End of Validity Notifier)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|DD - End Of Validity Notifier|processid]))</applyOnFilter>
+						<resultReference name="sch_977690E0_953E98CF" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">1</attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">0</attribute>
+						<attribute name="dow">monday</attribute>
+						<attribute name="eventtype">ReportTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="interval">week</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">DD End of Validity Notifier</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="name">DD End of Validity Notifier</attribute>
+						<attribute name="noreportscheduler">1</attribute>
+						<attribute name="NotificationEmail">%[reference:creatoremail]</attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">csv</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|DD - End Of Validity Notifier|processid]</attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="DD Email Grouping">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=DD Email Grouping)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|DD Email Grouping|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=DD Email Grouping)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|DD Email Grouping|processid]))</applyOnFilter>
+						<resultReference name="sch_492FDFD7_E14F9BB3" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">1</attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">0</attribute>
+						<attribute name="dow">monday</attribute>
+						<attribute name="eventtype">ReportTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="interval">hour</attribute>
+						<attribute name="intervalcount">24</attribute>
+						<attribute name="keyprefix2">DD Email Grouping</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="name">DD Email Grouping</attribute>
+						<attribute name="noreportscheduler">1</attribute>
+						<attribute name="notificationemail">%[reference:creatoremail]</attribute>
+						<attribute name="notificationfilter">(|(State=70)(State=200))</attribute>
+						<attribute name="notificationtemplatefile">DD_ErrorNotification.htm</attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">csv</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|DD Email Grouping|processid]</attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="Knowledge Base Indexer">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=Knowledge Base Indexer)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Sys_KnowledgeBaseCollectionsIndexer|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=Knowledge Base Indexer)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Sys_KnowledgeBaseCollectionsIndexer|processid]))</applyOnFilter>
+						<resultReference name="sch_8D578E1B_934C1750" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">1</attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">1</attribute>
+						<attribute name="dow">monday</attribute>
+						<attribute name="eventtype">ReportTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="interval">day</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">Knowledge Base Indexer</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="name">Knowledge Base Indexer</attribute>
+						<attribute name="noreportscheduler">1</attribute>
+						<attribute name="notificationemail">%[reference:creatoremail]</attribute>
+						<attribute name="notificationfilter">(!(State=*))</attribute>
+						<attribute name="notificationtemplatefile"></attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">0</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|Sys_KnowledgeBaseCollectionsIndexer|processid]</attribute>
+						<attribute name="processparameter">{"waitForTables":true,"clearCollectionsBeforeFirstIndexing":true}</attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="Batch P2P - Notifications">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=Batch P2P - Notifications)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Notifications Sender__|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=Batch P2P - Notifications)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Notifications Sender__|processid]))</applyOnFilter>
+						<resultReference name="sch_A7476B2C_5E380454" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">1</attribute>
+						<attribute name="allowminutesinterval">0</attribute>
+						<attribute name="backupid"></attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">1</attribute>
+						<attribute name="dow">saturday</attribute>
+						<attribute name="eventtype">ReportTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="executeonstart">0</attribute>
+						<attribute name="interval">day</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">Batch P2P - Notifications</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="message"></attribute>
+						<attribute name="name">Batch P2P - Notifications</attribute>
+						<attribute name="nbtimetoexecute">1</attribute>
+						<attribute name="noreportscheduler">0</attribute>
+						<attribute name="notificationemail">%[reference:creatoremail]</attribute>
+						<attribute name="notificationfilter">(!(State=*))</attribute>
+						<attribute name="notificationtemplatefile"></attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">csv</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|Notifications Sender__|processid]</attribute>
+						<attribute name="processparameter"></attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="recipientstypes">USER</attribute>
+						<attribute name="reportdesc">_ReportDescription_P2P - AutomaticNotifications</attribute>
+						<attribute name="reportid">%[reference:rpt_99C0A1C8_1D547815]</attribute>
+						<attribute name="reportname">_ReportName_P2P - AutomaticNotifications</attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="subject">Generated report : '[_ReportName_P2P - AutomaticNotifications]'</attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="Batch notification for budget">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=Batch notification for budget)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Send notifs from report lines|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=Batch notification for budget)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Send notifs from report lines|processid]))</applyOnFilter>
+						<resultReference name="sch_CBB6532F_153D38C0" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">1</attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="datacondition">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+							&lt;dataCondition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" &gt;
+								&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt; &lt;filter&gt;msnex=*&lt;/filter&gt;
+								&lt;labelKey&gt;_Purchasing disabled&lt;/labelKey&gt;
+								&lt;conditions&gt;
+									&lt;allowCondition&gt;
+										&lt;fieldName&gt;EnablePurchasingGlobalSetting__&lt;/fieldName&gt;
+										&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+									&lt;/allowCondition&gt;
+									&lt;allowCondition&gt;
+										&lt;fieldName&gt;EnableStandardPurchasingGlobalSetting__&lt;/fieldName&gt;
+										&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+									&lt;/allowCondition&gt;
+								&lt;/conditions&gt;
+							&lt;/dataCondition&gt;</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">1</attribute>
+						<attribute name="dow">sunday</attribute>
+						<attribute name="eventtype">ReportTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="executeonstart">0</attribute>
+						<attribute name="interval">week</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">Batch notification for budget</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="name">Batch notification for budget</attribute>
+						<attribute name="nbtimetoexecute">1</attribute>
+						<attribute name="noreportscheduler">0</attribute>
+						<attribute name="NotificationEmail">%[reference:creatoremail]</attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">csv</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|Send notifs from report lines|processid]</attribute>
+						<attribute name="processparameter">{"template": "Purchasing_Email_ReminderBudgets.htm", "fromName": "_FromName_Reminders", "ValidationUrl": "/report.aspx?id=21471975"}</attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="reportdesc">_ReportDesc_Purchasing - RemindersBudget</attribute>
+						<attribute name="reportid">%[reference:rpt_A1C97377_A931ECB0]</attribute>
+						<attribute name="reportname">_ReportName_Purchasing - RemindersBudget</attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="Batch notification for order confirmation reviews">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=Batch notification for order confirmation reviews)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Send notifs from report lines|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=Batch notification for order confirmation reviews)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Send notifs from report lines|processid]))</applyOnFilter>
+						<resultReference name="sch_812A211C_D10FF9C2" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">1</attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="datacondition">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+							&lt;dataCondition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" &gt;
+								&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt; &lt;filter&gt;msnex=*&lt;/filter&gt;
+								&lt;labelKey&gt;_OrderConfirmation disabled&lt;/labelKey&gt;
+								&lt;conditions&gt;
+									&lt;allowCondition&gt;
+										&lt;fieldName&gt;EnableOrderConfirmation__&lt;/fieldName&gt;
+										&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+									&lt;/allowCondition&gt;
+								&lt;/conditions&gt;
+							&lt;/dataCondition&gt;
+						</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">1</attribute>
+						<attribute name="dow">monday</attribute>
+						<attribute name="eventtype">ReportTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="interval">day</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">Batch notification for order confirmation reviews</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="name">Batch notification for order confirmation reviews</attribute>
+						<attribute name="nbtimetoexecute">1</attribute>
+						<attribute name="NotificationEmail">%[reference:creatoremail]</attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">csv</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|Send notifs from report lines|processid]</attribute>
+						<attribute name="processparameter">{"template": "Purchasing_Email_ReminderForOCReview.htm", "fromName": "_FromName_Reminders", "ValidationUrl": "/View.link?tabName=_S2P%20-%20Order%20Confirmation&amp;viewName=_Order%20confirmations%20to%20review"}</attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="reportdesc">_ReportDesc_Purchasing - Reminders for order confirmation reviews</attribute>
+						<attribute name="reportid">%[reference:rpt_AD0A294D_BFFBECB0]</attribute>
+						<attribute name="reportname">_ReportName_Purchasing - RemindersOCReviews</attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="Batch notification for stock">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=Batch notification for stock)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Send notifs from report lines|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=Batch notification for stock)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Send notifs from report lines|processid]))</applyOnFilter>
+						<resultReference name="sch_424DD8E_8F8AAE66" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">1</attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="datacondition">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+							&lt;dataCondition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" &gt;
+								&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt; &lt;filter&gt;msnex=*&lt;/filter&gt;
+								&lt;labelKey&gt;_Purchasing disabled&lt;/labelKey&gt;
+								&lt;conditions&gt;
+									&lt;allowCondition&gt;
+										&lt;fieldName&gt;EnablePurchasingGlobalSetting__&lt;/fieldName&gt;
+										&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+									&lt;/allowCondition&gt;
+									&lt;allowCondition&gt;
+										&lt;fieldName&gt;EnableStandardPurchasingGlobalSetting__&lt;/fieldName&gt;
+										&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+									&lt;/allowCondition&gt;
+								&lt;/conditions&gt;
+							&lt;/dataCondition&gt;</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">1</attribute>
+						<attribute name="dow">sunday</attribute>
+						<attribute name="eventtype">ReportTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="executeonstart">0</attribute>
+						<attribute name="interval">week</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">Batch notification for stock</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="name">Batch notification for stock</attribute>
+						<attribute name="nbtimetoexecute">1</attribute>
+						<attribute name="noreportscheduler">0</attribute>
+						<attribute name="NotificationEmail">%[reference:creatoremail]</attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">csv</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|Send notifs from report lines|processid]</attribute>
+						<attribute name="processparameter">{"template": "Purchasing_Email_ReminderStockRunningLow.htm", "fromName": "_FromName_Reminders", "ValidationUrl": "/FlexibleForm/FlexibleForm.aspx?action=run&amp;layout=_flexibleform&amp;readonly=1&amp;id=CT#RO8QT400153E.", "columnsUrlDesc": "2"}</attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="reportdesc">_ReportDesc_Purchasing - StockAlertRecipients</attribute>
+						<attribute name="reportid">%[reference:rpt_A2636DD8_8BB14D2A]</attribute>
+						<attribute name="reportname">_ReportName_Purchasing - Stock alert recipients</attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="SAP Batch notification for approvers">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=SAP Batch notification for approvers)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Reminders for payment approval|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=SAP Batch notification for approvers)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Reminders for payment approval|processid]))</applyOnFilter>
+						<resultReference name="sch_C83CB48B_57CF184D" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">1</attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="datacondition">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;dataCondition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" &gt;
+&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt; &lt;filter&gt;msnex=*&lt;/filter&gt;
+		&lt;labelKey&gt;_AP disabled&lt;/labelKey&gt;
+		&lt;conditions&gt;
+			&lt;allowCondition&gt;
+				&lt;fieldName&gt;EnableAccountPayableGlobalSetting__&lt;/fieldName&gt;
+				&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+			&lt;/allowCondition&gt;
+		&lt;/conditions&gt;
+	&lt;/dataCondition&gt;</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">1</attribute>
+						<attribute name="dow">monday</attribute>
+						<attribute name="eventtype">ProcessTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="interval">day</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">SAP Batch notification for approvers</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="name">SAP Batch notification for approvers</attribute>
+						<attribute name="NotificationEmail">%[reference:creatoremail]</attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">csv</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|Reminders for payment approval|processid]</attribute>
+						<attribute name="processparameter">{"scheduleName": "paymentApproval"}</attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="reportdesc"></attribute>
+						<attribute name="reportname"></attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="Reminders for pending vendor registrations approvers">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=Reminders for pending vendor registrations approvers)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Reminders for payment approval|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=Reminders for pending vendor registrations approvers)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Reminders for payment approval|processid]))</applyOnFilter>
+						<resultReference name="sch_37592BB_5F84BCBE" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">1</attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="datacondition">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;dataCondition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" &gt;
+&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt; &lt;filter&gt;msnex=*&lt;/filter&gt;
+		&lt;labelKey&gt;_AP disabled&lt;/labelKey&gt;
+		&lt;conditions&gt;
+			&lt;allowCondition&gt;
+				&lt;fieldName&gt;EnableVendorManagementGlobalSetting__&lt;/fieldName&gt;
+				&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+			&lt;/allowCondition&gt;
+		&lt;/conditions&gt;
+	&lt;/dataCondition&gt;</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">1</attribute>
+						<attribute name="dow">monday</attribute>
+						<attribute name="eventtype">ProcessTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="interval">day</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">Reminders for pending vendor registrations approvers</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="name">Reminders for pending vendor registrations approvers</attribute>
+						<attribute name="NotificationEmail">%[reference:creatoremail]</attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">csv</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|Reminders for payment approval|processid]</attribute>
+						<attribute name="processparameter">{"scheduleName": "vendorRegistrationApproval"}</attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="reportdesc"></attribute>
+						<attribute name="reportname"></attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="Reminders for pending billing schedules approvers">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=Reminders for pending billing schedules approvers)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Reminders for payment approval|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=Reminders for pending billing schedules approvers)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Reminders for payment approval|processid]))</applyOnFilter>
+						<resultReference name="sch_391139BF_84CBE0BF" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">1</attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="datacondition">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;dataCondition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" &gt;
+&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt; &lt;filter&gt;msnex=*&lt;/filter&gt;
+		&lt;labelKey&gt;_AP disabled&lt;/labelKey&gt;
+		&lt;conditions&gt;
+			&lt;allowCondition&gt;
+				&lt;fieldName&gt;EnableContractGlobalSetting__&lt;/fieldName&gt;
+				&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+			&lt;/allowCondition&gt;
+		&lt;/conditions&gt;
+	&lt;/dataCondition&gt;</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">1</attribute>
+						<attribute name="dow">monday</attribute>
+						<attribute name="eventtype">ProcessTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="interval">day</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">Reminders for pending billing schedules approvers</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="name">Reminders for pending billing schedules approvers</attribute>
+						<attribute name="NotificationEmail">%[reference:creatoremail]</attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">csv</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|Reminders for payment approval|processid]</attribute>
+						<attribute name="processparameter">{"scheduleName": "billingScheduleApproval"}</attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="reportdesc"></attribute>
+						<attribute name="reportname"></attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="Automatic self-billing for invoicing schedule">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=Automatic self-billing for invoicing schedule)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Auto Generate Billing Schedule Invoices|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=Automatic self-billing for invoicing schedule)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Auto Generate Billing Schedule Invoices|processid]))</applyOnFilter>
+						<resultReference name="sch_D669AE49_8FFD25F9" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">1</attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="datacondition">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;dataCondition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" &gt;
+&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt; &lt;filter&gt;msnex=*&lt;/filter&gt;
+		&lt;labelKey&gt;_AP disabled&lt;/labelKey&gt;
+		&lt;conditions&gt;
+			&lt;allowCondition&gt;
+				&lt;fieldName&gt;EnableContractGlobalSetting__&lt;/fieldName&gt;
+				&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+			&lt;/allowCondition&gt;
+		&lt;/conditions&gt;
+	&lt;/dataCondition&gt;</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">1</attribute>
+						<attribute name="dow">monday</attribute>
+						<attribute name="eventtype">ProcessTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="interval">day</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">Automatic self-billing for invoicing schedule</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="name">Automatic self-billing for invoicing schedule</attribute>
+						<attribute name="NotificationEmail">%[reference:creatoremail]</attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">csv</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|Auto Generate Billing Schedule Invoices|processid]</attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="reportdesc"></attribute>
+						<attribute name="reportname"></attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="SAP Unpaid Invoices automatic update">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=SAP Unpaid Invoices automatic update)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Vendor invoice payment split|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=SAP Unpaid Invoices automatic update)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Vendor invoice payment split|processid]))</applyOnFilter>
+						<resultReference name="sch_2EBE9D84_12CE8520" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">1</attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="datacondition">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;dataCondition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" &gt;
+&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt; &lt;filter&gt;msnex=*&lt;/filter&gt;
+		&lt;labelKey&gt;_AP disabled&lt;/labelKey&gt;
+		&lt;conditions&gt;
+			&lt;allowCondition&gt;
+				&lt;fieldName&gt;EnableAccountPayableGlobalSetting__&lt;/fieldName&gt;
+				&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+			&lt;/allowCondition&gt;
+		&lt;/conditions&gt;
+	&lt;/dataCondition&gt;</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">1</attribute>
+						<attribute name="dow">monday</attribute>
+						<attribute name="eventtype">ReportTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="interval">day</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">SAP Unpaid Invoices automatic update</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="name">SAP Unpaid Invoices automatic update</attribute>
+						<attribute name="NotificationEmail">%[reference:creatoremail]</attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">csv</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|Vendor invoice payment split|processid]</attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="reportdesc">_ReportDesc_VIP_AP_SAP_Invoices unpaid to update</attribute>
+						<attribute name="reportid">%[reference:rpt_9C055ABE_49396143]</attribute>
+						<attribute name="reportname">_ReportName_VIP_AP_SAP_Invoices unpaid to update</attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="SAP Invoices waiting for goods receipt">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=SAP Invoices waiting for goods receipt)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Vendor invoice waiting GR|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=SAP Invoices waiting for goods receipt)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Vendor invoice waiting GR|processid]))</applyOnFilter>
+						<resultReference name="sch_FBB69251_87933114" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">1</attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="datacondition">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;dataCondition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" &gt;
+&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt; &lt;filter&gt;msnex=*&lt;/filter&gt;
+		&lt;labelKey&gt;_AP disabled&lt;/labelKey&gt;
+		&lt;conditions&gt;
+			&lt;allowCondition&gt;
+				&lt;fieldName&gt;EnableAccountPayableGlobalSetting__&lt;/fieldName&gt;
+				&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+			&lt;/allowCondition&gt;
+		&lt;/conditions&gt;
+	&lt;/dataCondition&gt;</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">1</attribute>
+						<attribute name="dow">monday</attribute>
+						<attribute name="eventtype">ReportTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="interval">day</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">SAP Invoices waiting for goods receipt</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="name">SAP Invoices waiting for goods receipt</attribute>
+						<attribute name="NotificationEmail">%[reference:creatoremail]</attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">csv</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|Vendor invoice waiting GR|processid]</attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="reportdesc">_ReportDesc_VIP_AP_SAP_Invoices aside to update</attribute>
+						<attribute name="reportid">%[reference:rpt_5A5480AC_553D5DE]</attribute>
+						<attribute name="reportname">_ReportName_VIP_AP_SAP_Invoices aside to update</attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="Generate remittance advice from paid invoices">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=Generate remittance advice from paid invoices)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Remittance Advice Batch|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=Generate remittance advice from paid invoices)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Remittance Advice Batch|processid]))</applyOnFilter>
+						<resultReference name="sch_9D78EC81_A878A35A" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">0</attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="datacondition">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;dataCondition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" &gt;
+&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt; &lt;filter&gt;msnex=*&lt;/filter&gt;
+		&lt;labelKey&gt;_AP disabled&lt;/labelKey&gt;
+		&lt;conditions&gt;
+			&lt;allowCondition&gt;
+				&lt;fieldName&gt;EnableAccountPayableGlobalSetting__&lt;/fieldName&gt;
+				&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+			&lt;/allowCondition&gt;
+		&lt;/conditions&gt;
+	&lt;/dataCondition&gt;</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">1</attribute>
+						<attribute name="dow">monday</attribute>
+						<attribute name="eventtype">ReportTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="interval">day</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">Generate remittance advice from paid invoices</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="name">Generate remittance advice from paid invoices</attribute>
+						<attribute name="NotificationEmail">%[reference:creatoremail]</attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">csv</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|Remittance Advice Batch|processid]</attribute>
+						<attribute name="processparameter">{"scheduleName": "generateRemittanceAdviceFromPaidInvoices"}</attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="reportdesc">_ReportDesc_VIP_AP_GenerateRemittanceAdviceFromPaidInvoices</attribute>
+						<attribute name="reportid">%[reference:rpt_747DB358_D49E6143]</attribute>
+						<attribute name="reportname">_ReportName_VIP_AP_GenerateRemittanceAdviceFromPaidInvoices</attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="S2P - PA - E-reporting PPF transmission">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=S2P - PA - E-reporting PPF transmission)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Sys_FRB2B_PDP_SG5_Flows_Polling|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=S2P - PA - E-reporting PPF transmission)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Sys_FRB2B_PDP_SG5_Flows_Polling|processid]))</applyOnFilter>
+						<resultReference name="sch_DF0BD58E_CAD4080" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">0</attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="datacondition">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;dataCondition defaultBehaviour="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+	&lt;tableName&gt;AP - Application Settings__&lt;/tableName&gt;
+	&lt;filter&gt;(&amp;amp;(msnex=*)(EnableInternationalEReporting__=1))&lt;/filter&gt;
+	&lt;labelKey&gt;_EnableInternationalEReporting_report&lt;/labelKey&gt;
+&lt;/dataCondition&gt;</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">0</attribute>
+						<attribute name="dow">monday</attribute>
+						<attribute name="eventtype">ReportTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="interval">week</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">S2P - PA - E-reporting PPF transmission</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="name">S2P - PA - E-reporting PPF transmission</attribute>
+						<attribute name="noreportscheduler">1</attribute>
+						<attribute name="notificationemail">%[reference:creatoremail]</attribute>
+						<attribute name="notificationfilter">(!(State=*))</attribute>
+						<attribute name="notificationtemplatefile"></attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">csv</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|Sys_FRB2B_PDP_SG5_Flows_Polling|processid]</attribute>
+						<attribute name="processparameter">{"domain":"AP","taskName":"S2P - PA e-reporting PPF transmission polling","executionMode":"PULL","direction":"IN","orderedProcessingStrategy":{"phases":[{"order":1,"flowType":"StateTransactionReportLC"},{"order":2,"flowType":"StateTransactionReport"}]}}</attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="Export unpaid invoices">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=Export unpaid invoices)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Export unpaid invoices|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=Export unpaid invoices)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Export unpaid invoices|processid]))</applyOnFilter>
+						<resultReference name="sch_97F5596_C4AF15F7" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">0</attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="datacondition">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;dataCondition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" &gt;
+&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt; &lt;filter&gt;msnex=*&lt;/filter&gt;
+		&lt;labelKey&gt;_AP disabled&lt;/labelKey&gt;
+		&lt;conditions&gt;
+			&lt;allowCondition&gt;
+				&lt;fieldName&gt;EnableAccountPayableGlobalSetting__&lt;/fieldName&gt;
+				&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+			&lt;/allowCondition&gt;
+		&lt;/conditions&gt;
+	&lt;/dataCondition&gt;</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">1</attribute>
+						<attribute name="dow">monday</attribute>
+						<attribute name="eventtype">ReportTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="interval">day</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">Export unpaid invoices</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="name">Export unpaid invoices</attribute>
+						<attribute name="NotificationEmail">%[reference:creatoremail]</attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">csv</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|Export unpaid invoices|processid]</attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="reportdesc">_ReportDesc_AP_Generic_Invoices waiting for payment</attribute>
+						<attribute name="reportid">%[reference:rpt_C59D2DB_1C1DD5DE]</attribute>
+						<attribute name="reportname">_ReportName_AP_Generic_Invoices waiting payment</attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="AP Invoices on hold for too long">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=AP Invoices on hold for too long)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Call Scheduled Action|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=AP Invoices on hold for too long)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Call Scheduled Action|processid]))</applyOnFilter>
+						<resultReference name="sch_E03C9D90_8C97F913" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">1</attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="datacondition">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;dataCondition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" &gt;
+&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt; &lt;filter&gt;msnex=*&lt;/filter&gt;
+		&lt;labelKey&gt;_AP disabled&lt;/labelKey&gt;
+		&lt;conditions&gt;
+			&lt;allowCondition&gt;
+				&lt;fieldName&gt;EnableAccountPayableGlobalSetting__&lt;/fieldName&gt;
+				&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+			&lt;/allowCondition&gt;
+		&lt;/conditions&gt;
+	&lt;/dataCondition&gt;</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">1</attribute>
+						<attribute name="dow">monday</attribute>
+						<attribute name="eventtype">ReportTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="interval">day</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">AP Invoices on hold for too long</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="name">AP Invoices on hold for too long</attribute>
+						<attribute name="NotificationEmail">%[reference:creatoremail]</attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">csv</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|Call Scheduled Action|processid]</attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="reportdesc">_ReportDesc_VIP_AP_Invoices_On_Hold_For_Too_Long</attribute>
+						<attribute name="reportid">%[reference:rpt_76BF72C1_4C5AD5DE]</attribute>
+						<attribute name="reportname">_ReportName_VIP_AP_Invoices_On_Hold_For_Too_Long</attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="S2P - PA - Supplier invoices">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=S2P - PA - Supplier invoices)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Sys_QueryPDPInvoices|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=S2P - PA - Supplier invoices)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Sys_QueryPDPInvoices|processid]))</applyOnFilter>
+						<resultReference name="sch_7A3FE99F_2F218738" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">0</attribute>
+						<attribute name="allowminutesinterval">0</attribute>
+						<attribute name="backupid"></attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="datacondition">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+							&lt;dataCondition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" &gt;
+								&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+								&lt;filter&gt;msnex=*&lt;/filter&gt;
+								&lt;labelKey&gt;_Account payable disabled&lt;/labelKey&gt;
+								&lt;conditions&gt;
+									&lt;allowCondition&gt;
+										&lt;fieldName&gt;EnableAccountPayableGlobalSetting__&lt;/fieldName&gt;
+										&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+									&lt;/allowCondition&gt;
+								&lt;/conditions&gt;
+							&lt;/dataCondition&gt;</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">1</attribute>
+						<attribute name="dow">monday</attribute>
+						<attribute name="eventtype">ReportTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="executeonstart">0</attribute>
+						<attribute name="interval">hour</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">S2P - PA - Supplier invoices</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="name">S2P - PA - Supplier invoices</attribute>
+						<attribute name="noreportscheduler">1</attribute>
+						<attribute name="notificationemail">%[reference:creatoremail]</attribute>
+						<attribute name="notificationfilter">(!(State=*))</attribute>
+						<attribute name="notificationtemplatefile"></attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">0</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|Sys_QueryPDPInvoices|processid]</attribute>
+						<attribute name="processparameter"></attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="recipientstypes">USER</attribute>
+						<attribute name="reportdesc"></attribute>
+						<attribute name="reportname"></attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="subject"></attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="S2P - PA - Supplier invoice statuses">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=S2P - PA - Supplier invoice statuses)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Sys_AP Query PDP B2B CDV|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=S2P - PA - Supplier invoice statuses)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Sys_AP Query PDP B2B CDV|processid]))</applyOnFilter>
+						<resultReference name="sch_535E9AF2_8B76730" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">0</attribute>
+						<attribute name="allowminutesinterval">0</attribute>
+						<attribute name="backupid"></attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="datacondition">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+							&lt;dataCondition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" &gt;
+								&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+								&lt;filter&gt;msnex=*&lt;/filter&gt;
+								&lt;labelKey&gt;_Account payable disabled&lt;/labelKey&gt;
+								&lt;conditions&gt;
+									&lt;allowCondition&gt;
+										&lt;fieldName&gt;EnableAccountPayableGlobalSetting__&lt;/fieldName&gt;
+										&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+									&lt;/allowCondition&gt;
+								&lt;/conditions&gt;
+							&lt;/dataCondition&gt;</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">1</attribute>
+						<attribute name="dow">monday</attribute>
+						<attribute name="eventtype">ReportTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="executeonstart">0</attribute>
+						<attribute name="interval">day</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">S2P - PA - Supplier invoice statuses</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="name">S2P - PA - Supplier invoice statuses</attribute>
+						<attribute name="noreportscheduler">1</attribute>
+						<attribute name="notificationemail">%[reference:creatoremail]</attribute>
+						<attribute name="notificationfilter">(!(State=*))</attribute>
+						<attribute name="notificationtemplatefile"></attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">0</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|Sys_AP Query PDP B2B CDV|processid]</attribute>
+						<attribute name="processparameter"></attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="recipientstypes">USER</attribute>
+						<attribute name="reportdesc"></attribute>
+						<attribute name="reportname"></attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="subject"></attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="S2P - PA - E-reporting transmission">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=S2P - PA - E-reporting transmission)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Sys_AP Query PDP B2B E-Reporting|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=S2P - PA - E-reporting transmission)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Sys_AP Query PDP B2B E-Reporting|processid]))</applyOnFilter>
+						<resultReference name="sch_6028CA62_4D1DF83C" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">0</attribute>
+						<attribute name="allowminutesinterval">0</attribute>
+						<attribute name="backupid"></attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="datacondition">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;dataCondition defaultBehaviour="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+	&lt;tableName&gt;AP - Application Settings__&lt;/tableName&gt;
+	&lt;filter&gt;(&amp;amp;(msnex=*)(EnableInternationalEReporting__=1))&lt;/filter&gt;
+	&lt;labelKey&gt;_EnableInternationalEReporting_report&lt;/labelKey&gt;
+&lt;/dataCondition&gt;</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">1</attribute>
+						<attribute name="dow">monday</attribute>
+						<attribute name="eventtype">ReportTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="executeonstart">0</attribute>
+						<attribute name="interval">day</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">S2P - PA - E-reporting transmission</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="name">S2P - PA - E-reporting transmission</attribute>
+						<attribute name="noreportscheduler">1</attribute>
+						<attribute name="notificationemail">%[reference:creatoremail]</attribute>
+						<attribute name="notificationfilter">(!(State=*))</attribute>
+						<attribute name="notificationtemplatefile"></attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">0</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|Sys_AP Query PDP B2B E-Reporting|processid]</attribute>
+						<attribute name="processparameter"></attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="recipientstypes">USER</attribute>
+						<attribute name="reportdesc"></attribute>
+						<attribute name="reportname"></attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="subject"></attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="VM - Score Polling - Ecovadis">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=VM - Score Polling - Ecovadis)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|VM System Score Polling|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=VM - Score Polling - Ecovadis)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|VM System Score Polling|processid]))</applyOnFilter>
+						<resultReference name="sch_6C3C794E_F9772332" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">0</attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="datacondition">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;dataCondition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" &gt;
+&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt; &lt;filter&gt;msnex=*&lt;/filter&gt;
+		&lt;labelKey&gt;_Vendor Management disabled&lt;/labelKey&gt;
+		&lt;conditions&gt;
+			&lt;allowCondition&gt;
+				&lt;fieldName&gt;EnableVendorManagementGlobalSetting__&lt;/fieldName&gt;
+				&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+			&lt;/allowCondition&gt;
+		&lt;/conditions&gt;
+	&lt;/dataCondition&gt;</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">0</attribute>
+						<attribute name="dow">monday</attribute>
+						<attribute name="eventtype">ReportTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="interval">month</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">VM - Score Polling - Ecovadis</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="name">VM - Score Polling - Ecovadis</attribute>
+						<attribute name="noreportscheduler">1</attribute>
+						<attribute name="notificationemail">%[reference:creatoremail]</attribute>
+						<attribute name="notificationfilter">(|(State=70)(State=200))</attribute>
+						<attribute name="notificationtemplatefile">VM_ErrorNotification.htm</attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">csv</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|VM System Score Polling|processid]</attribute>
+						<attribute name="processparameter">{"provider": "ecovadis"}</attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="Update data for predictive analytics">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=Update data for predictive analytics)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Update Processing Time Statistics|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=Update data for predictive analytics)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Update Processing Time Statistics|processid]))</applyOnFilter>
+						<resultReference name="sch_13579171_CAC602D0" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">1</attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="datacondition">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;dataCondition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" &gt;
+&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt; &lt;filter&gt;msnex=*&lt;/filter&gt;
+		&lt;labelKey&gt;_AP disabled&lt;/labelKey&gt;
+		&lt;conditions&gt;
+			&lt;allowCondition&gt;
+				&lt;fieldName&gt;EnableAccountPayableGlobalSetting__&lt;/fieldName&gt;
+				&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+			&lt;/allowCondition&gt;
+		&lt;/conditions&gt;
+	&lt;/dataCondition&gt;</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">1</attribute>
+						<attribute name="dow">monday</attribute>
+						<attribute name="eventtype">ProcessTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="interval">day</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">Update data for predictive analytics</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="name">Update data for predictive analytics</attribute>
+						<attribute name="NotificationEmail">%[reference:creatoremail]</attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">csv</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|Update Processing Time Statistics|processid]</attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="reportdesc"></attribute>
+						<attribute name="reportname"></attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="Escalation to manager for AP Invoices">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=Escalation to manager for AP Invoices)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Call Scheduled Action|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=Escalation to manager for AP Invoices)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Call Scheduled Action|processid]))</applyOnFilter>
+						<resultReference name="sch_DBF9C9E0_9449717" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">1</attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="datacondition">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;dataCondition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" &gt;
+&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt; &lt;filter&gt;msnex=*&lt;/filter&gt;
+		&lt;labelKey&gt;_AP disabled&lt;/labelKey&gt;
+		&lt;conditions&gt;
+			&lt;allowCondition&gt;
+				&lt;fieldName&gt;EnableAccountPayableGlobalSetting__&lt;/fieldName&gt;
+				&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+			&lt;/allowCondition&gt;
+		&lt;/conditions&gt;
+	&lt;/dataCondition&gt;</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">1</attribute>
+						<attribute name="dow">monday</attribute>
+						<attribute name="eventtype">ReportTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="interval">day</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">Escalation to manager for AP Invoices</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="name">Escalation to manager for AP Invoices</attribute>
+						<attribute name="NotificationEmail">%[reference:creatoremail]</attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">csv</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|Call Scheduled Action|processid]</attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="reportdesc">_ReportDesc_VIP_AP_Invoices_Escalation_ToManager</attribute>
+						<attribute name="reportid">%[reference:rpt_EFD2CCFE_C004ECA8]</attribute>
+						<attribute name="reportname">_ReportName_VIP_AP_Invoices_Escalation_ToManager</attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="S2P - PA - Supplier invoice export for e-reporting transmission">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=S2P - PA - Supplier invoice export for e-reporting transmission)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|EReporting Batch Export|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=S2P - PA - Supplier invoice export for e-reporting transmission)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|EReporting Batch Export|processid]))</applyOnFilter>
+						<resultReference name="sch_E6663C03_62374381" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">0</attribute>
+						<attribute name="allowminutesinterval">0</attribute>
+						<attribute name="backupid"></attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="datacondition">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;dataCondition defaultBehaviour="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+	&lt;tableName&gt;AP - Application Settings__&lt;/tableName&gt;
+	&lt;filter&gt;(&amp;amp;(msnex=*)(EnableInternationalEReporting__=1))&lt;/filter&gt;
+	&lt;labelKey&gt;_EnableInternationalEReporting_report&lt;/labelKey&gt;
+&lt;/dataCondition&gt;</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">1</attribute>
+						<attribute name="dow">monday</attribute>
+						<attribute name="eventtype">ReportTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="executeonstart">0</attribute>
+						<attribute name="interval">week</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">S2P - PA - Supplier invoice export for e-reporting transmission</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="name">S2P - PA - Supplier invoice export for e-reporting transmission</attribute>
+						<attribute name="noreportscheduler">1</attribute>
+						<attribute name="notificationemail">%[reference:creatoremail]</attribute>
+						<attribute name="notificationfilter">(!(State=*))</attribute>
+						<attribute name="notificationtemplatefile"></attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">0</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|EReporting Batch Export|processid]</attribute>
+						<attribute name="processparameter"></attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="recipientstypes">USER</attribute>
+						<attribute name="reportdesc"></attribute>
+						<attribute name="reportname"></attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="subject"></attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="Daily paid invoices notification">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=Daily paid invoices notification)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Daily Paid Invoices Notification|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=Daily paid invoices notification)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Daily Paid Invoices Notification|processid]))</applyOnFilter>
+						<resultReference name="sch_D2446D74_E979FC5F" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">1</attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="datacondition">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;dataCondition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" &gt;
+&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt; &lt;filter&gt;msnex=*&lt;/filter&gt;
+		&lt;labelKey&gt;_AP disabled&lt;/labelKey&gt;
+		&lt;conditions&gt;
+			&lt;allowCondition&gt;
+				&lt;fieldName&gt;EnableAccountPayableGlobalSetting__&lt;/fieldName&gt;
+				&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+			&lt;/allowCondition&gt;
+		&lt;/conditions&gt;
+	&lt;/dataCondition&gt;</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="donotsendemptyreports">1</attribute>
+						<attribute name="eventtype">ProcessTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="interval">day</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">Daily paid invoices notification</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="name">Daily paid invoices notification</attribute>
+						<attribute name="NotificationEmail">%[reference:creatoremail]</attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">csv</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|Daily Paid Invoices Notification|processid]</attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="reportdesc"></attribute>
+						<attribute name="reportname"></attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+					</attributes>
+				</object>
+				<object name="Detect invoices waiting for GR">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=Detect invoices waiting for GR)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|AP - GR Resolution Detection|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=Detect invoices waiting for GR)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|AP - GR Resolution Detection|processid]))</applyOnFilter>
+						<resultReference name="sch_C7CF790D_CD0A540B" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">0</attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="datacondition">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;dataCondition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" &gt;
+&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt; &lt;filter&gt;msnex=*&lt;/filter&gt;
+		&lt;labelKey&gt;_AP disabled&lt;/labelKey&gt;
+		&lt;conditions&gt;
+			&lt;allowCondition&gt;
+				&lt;fieldName&gt;EnableAccountPayableGlobalSetting__&lt;/fieldName&gt;
+				&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+			&lt;/allowCondition&gt;
+		&lt;/conditions&gt;
+	&lt;/dataCondition&gt;</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">0</attribute>
+						<attribute name="dow">monday</attribute>
+						<attribute name="eventtype">ReportTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="interval">hour</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">Detect invoices waiting for GR</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="name">Detect invoices waiting for GR</attribute>
+						<attribute name="NotificationEmail">%[reference:creatoremail]</attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">csv</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|AP - GR Resolution Detection|processid]</attribute>
+						<attribute name="processparameter">{"batchSize":50,"minWaitingDays":1,"reminderHours":24}</attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="reportdesc">_ReportDesc_VIP_AP_InvoicesWaitingGRForAgent</attribute>
+						<attribute name="reportid">%[reference:rpt_61A4F7C5_79EED5DE]</attribute>
+						<attribute name="reportname">_ReportName_VIP_AP_InvoicesWaitingGRForAgent</attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="Contract ESignature Polling">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=Contract ESignature Polling)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Contract ESignature Polling|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=Contract ESignature Polling)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Contract ESignature Polling|processid]))</applyOnFilter>
+						<resultReference name="sch_BEB7F7BE_DD735B7" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">1</attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="datacondition">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+							&lt;dataCondition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+								&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+								&lt;filter&gt;msnex=*&lt;/filter&gt;
+								&lt;labelKey&gt;_Contracts disabled&lt;/labelKey&gt;
+								&lt;conditions&gt;
+									&lt;allowCondition&gt;
+										&lt;fieldName&gt;EnableContractGlobalSetting__&lt;/fieldName&gt;
+										&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+									&lt;/allowCondition&gt;
+									&lt;allowCondition&gt;
+										&lt;fieldName&gt;EnableDocusignIntegration__&lt;/fieldName&gt;
+										&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+									&lt;/allowCondition&gt;
+								&lt;/conditions&gt;
+							&lt;/dataCondition&gt;</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">1</attribute>
+						<attribute name="dow">monday</attribute>
+						<attribute name="eventtype">ReportTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="executeonstart">0</attribute>
+						<attribute name="interval">day</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">Contract ESignature Polling</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="message">Report generated by Esker on Demand.</attribute>
+						<attribute name="name">Contract ESignature Polling</attribute>
+						<attribute name="nbtimetoexecute">1</attribute>
+						<attribute name="noreportscheduler">0</attribute>
+						<attribute name="notificationemail">%[reference:creatoremail]</attribute>
+						<attribute name="notificationfilter">(!(State=*))</attribute>
+						<attribute name="notificationtemplatefile"></attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">csv</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|Contract ESignature Polling|processid]</attribute>
+						<attribute name="processparameter"></attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="recipientstypes">USER</attribute>
+						<attribute name="reportdesc"></attribute>
+						<attribute name="reportid">%[reference:rpt_183E5FE_E912D887]</attribute>
+						<attribute name="reportname">[_ReportName_Contract - ContractPendingSignature]</attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="subject">Generated report : '[_ReportName_Contract - ContractPendingSignature]'</attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="VM - Score Polling">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=VM - Score Polling)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|VM System Score Polling|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=VM - Score Polling)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|VM System Score Polling|processid]))</applyOnFilter>
+						<resultReference name="sch_8B6140B4_E3E09503" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">0</attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="datacondition">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;dataCondition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" &gt;
+&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt; &lt;filter&gt;msnex=*&lt;/filter&gt;
+		&lt;labelKey&gt;_Vendor Management disabled&lt;/labelKey&gt;
+		&lt;conditions&gt;
+			&lt;allowCondition&gt;
+				&lt;fieldName&gt;EnableVendorManagementGlobalSetting__&lt;/fieldName&gt;
+				&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+			&lt;/allowCondition&gt;
+		&lt;/conditions&gt;
+	&lt;/dataCondition&gt;</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">0</attribute>
+						<attribute name="dow">monday</attribute>
+						<attribute name="eventtype">ReportTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="interval">month</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">VM - Score Polling</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="name">VM - Score Polling</attribute>
+						<attribute name="noreportscheduler">1</attribute>
+						<attribute name="notificationemail">%[reference:creatoremail]</attribute>
+						<attribute name="notificationfilter">(|(State=70)(State=200))</attribute>
+						<attribute name="notificationtemplatefile">VM_ErrorNotification.htm</attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">csv</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|VM System Score Polling|processid]</attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="VM - Score Polling - IndueD">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=VM - Score Polling - IndueD)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|VM System Score Polling|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=VM - Score Polling - IndueD)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|VM System Score Polling|processid]))</applyOnFilter>
+						<resultReference name="sch_2AD4FAED_EDE61D34" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">0</attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="datacondition">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;dataCondition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" &gt;
+&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt; &lt;filter&gt;msnex=*&lt;/filter&gt;
+		&lt;labelKey&gt;_Vendor Management disabled&lt;/labelKey&gt;
+		&lt;conditions&gt;
+			&lt;allowCondition&gt;
+				&lt;fieldName&gt;EnableVendorManagementGlobalSetting__&lt;/fieldName&gt;
+				&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+			&lt;/allowCondition&gt;
+		&lt;/conditions&gt;
+	&lt;/dataCondition&gt;</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">0</attribute>
+						<attribute name="dow">monday</attribute>
+						<attribute name="eventtype">ReportTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="interval">month</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">VM - Score Polling - IndueD</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="name">VM - Score Polling - IndueD</attribute>
+						<attribute name="noreportscheduler">1</attribute>
+						<attribute name="notificationemail">%[reference:creatoremail]</attribute>
+						<attribute name="notificationfilter">(|(State=70)(State=200))</attribute>
+						<attribute name="notificationtemplatefile">VM_ErrorNotification.htm</attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">csv</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|VM System Score Polling|processid]</attribute>
+						<attribute name="processparameter">{"provider": "indueD"}</attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="VM - Compliance Polling">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=VM - Compliance Polling)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|VM System Compliance Polling|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=VM - Compliance Polling)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|VM System Compliance Polling|processid]))</applyOnFilter>
+						<resultReference name="sch_4C455FE2_D8621E6D" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">0</attribute>
+						<attribute name="allowminutesinterval">0</attribute>
+						<attribute name="backupid"></attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">1</attribute>
+						<attribute name="dow">monday</attribute>
+						<attribute name="eventtype">ReportTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="executeonstart">0</attribute>
+						<attribute name="interval">day</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">VM - Compliance Polling</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="name">VM - Compliance Polling</attribute>
+						<attribute name="noreportscheduler">1</attribute>
+						<attribute name="notificationemail">%[reference:creatoremail]</attribute>
+						<attribute name="notificationfilter">(|(State=70)(State=200))</attribute>
+						<attribute name="notificationtemplatefile">VM_ErrorNotification.htm</attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">0</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|VM System Compliance Polling|processid]</attribute>
+						<attribute name="processparameter"></attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="recipientstypes">USER</attribute>
+						<attribute name="reportdesc"></attribute>
+						<attribute name="reportname"></attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="subject"></attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="VM - Supplier deactivation after inactivity">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=VM - Supplier deactivation after inactivity)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Inactive Supplier Deactivation|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=VM - Supplier deactivation after inactivity)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Inactive Supplier Deactivation|processid]))</applyOnFilter>
+						<resultReference name="sch_4085B1ED_7D8E105B" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">0</attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="datacondition">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;dataCondition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" &gt;
+&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt; &lt;filter&gt;msnex=*&lt;/filter&gt;
+		&lt;labelKey&gt;_Vendor Management disabled&lt;/labelKey&gt;
+		&lt;conditions&gt;
+			&lt;allowCondition&gt;
+				&lt;fieldName&gt;EnableVendorManagementGlobalSetting__&lt;/fieldName&gt;
+				&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+			&lt;/allowCondition&gt;
+		&lt;/conditions&gt;
+	&lt;/dataCondition&gt;</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">0</attribute>
+						<attribute name="dow">monday</attribute>
+						<attribute name="eventtype">ReportTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="interval">month</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">VM - Supplier deactivation after inactivity</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="name">VM - Supplier deactivation after inactivity</attribute>
+						<attribute name="noreportscheduler">1</attribute>
+						<attribute name="notificationemail">%[reference:creatoremail]</attribute>
+						<attribute name="notificationfilter">(|(State=70)(State=200))</attribute>
+						<attribute name="notificationtemplatefile">VM_ErrorNotification.htm</attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">csv</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|Inactive Supplier Deactivation|processid]</attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="S2P Auto update">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=S2P Auto update)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Sys_Update_Packages|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=S2P Auto update)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Sys_Update_Packages|processid]))</applyOnFilter>
+						<resultReference name="sch_8380D9CE_BD96A11F" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">0</attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="datacondition">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;dataCondition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" &gt;
+&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt; &lt;filter&gt;msnex=*&lt;/filter&gt;
+		&lt;labelKey&gt;_AP disabled&lt;/labelKey&gt;
+		&lt;conditions&gt;
+			&lt;allowCondition&gt;
+				&lt;fieldName&gt;EnableAccountPayableGlobalSetting__&lt;/fieldName&gt;
+				&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+			&lt;/allowCondition&gt;
+		&lt;/conditions&gt;
+	&lt;/dataCondition&gt;</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">1</attribute>
+						<attribute name="dow">monday</attribute>
+						<attribute name="eventtype">ProcessTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="interval">day</attribute>
+						<attribute name="intervalcount">14</attribute>
+						<attribute name="keyprefix2">S2P Auto update</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="name">S2P Auto update</attribute>
+						<attribute name="notificationemail">%[reference:creatoremail]</attribute>
+						<attribute name="notificationfilter">(|(State=70)(State=200))</attribute>
+						<attribute name="notificationtemplatefile">S2P-AutoUpdate_failed_process.html</attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">csv</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|Sys_Update_Packages|processid]</attribute>
+						<attribute name="processparameter">{"appsToUpgrade": ["DD","P2P","VENDOR_INQ"],"bypassCheckOnDevQaProd": false}</attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="reportdesc"></attribute>
+						<attribute name="reportname"></attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="Batch notification for order confirmation approvals">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=Batch notification for order confirmation approvals)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Send notifs from report lines|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=Batch notification for order confirmation approvals)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Send notifs from report lines|processid]))</applyOnFilter>
+						<resultReference name="sch_B352EA86_D25765C2" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">1</attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="datacondition">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+							&lt;dataCondition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" &gt;
+								&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt; &lt;filter&gt;msnex=*&lt;/filter&gt;
+								&lt;labelKey&gt;_OrderConfirmation disabled&lt;/labelKey&gt;
+								&lt;conditions&gt;
+									&lt;allowCondition&gt;
+										&lt;fieldName&gt;EnableOrderConfirmation__&lt;/fieldName&gt;
+										&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+									&lt;/allowCondition&gt;
+								&lt;/conditions&gt;
+							&lt;/dataCondition&gt;
+						</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">1</attribute>
+						<attribute name="dow">monday</attribute>
+						<attribute name="eventtype">ReportTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="interval">day</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">Batch notification for order confirmation approvals</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="name">Batch notification for order confirmation approvals</attribute>
+						<attribute name="nbtimetoexecute">1</attribute>
+						<attribute name="NotificationEmail">%[reference:creatoremail]</attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">csv</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|Send notifs from report lines|processid]</attribute>
+						<attribute name="processparameter">{"template": "Purchasing_Email_ReminderForOCApproval.htm", "fromName": "_FromName_Reminders", "ValidationUrl": "/View.link?tabName=_S2P%20-%20Order%20Confirmation&amp;viewName=_Order%20confirmations%20to%20approve"}</attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="reportdesc">_ReportDesc_Purchasing - Reminders for order confirmation approvals</attribute>
+						<attribute name="reportid">%[reference:rpt_78B61F51_3496ECB0]</attribute>
+						<attribute name="reportname">_ReportName_Purchasing - RemindersOCApprovals</attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="Update Contract">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=Update Contract)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|CTR - Update Contract|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=Update Contract)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|CTR - Update Contract|processid]))</applyOnFilter>
+						<resultReference name="sch_2273344B_A01C5AFF" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">1</attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="datacondition">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+							&lt;dataCondition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+								&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+								&lt;filter&gt;msnex=*&lt;/filter&gt;
+								&lt;labelKey&gt;_Contracts disabled&lt;/labelKey&gt;
+								&lt;conditions&gt;
+									&lt;allowCondition&gt;
+										&lt;fieldName&gt;EnableContractGlobalSetting__&lt;/fieldName&gt;
+										&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+									&lt;/allowCondition&gt;
+								&lt;/conditions&gt;
+							&lt;/dataCondition&gt;</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">1</attribute>
+						<attribute name="dow">monday</attribute>
+						<attribute name="eventtype">ReportTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="executeonstart">0</attribute>
+						<attribute name="interval">day</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">Update Contract</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="message">Report generated by Esker on Demand.</attribute>
+						<attribute name="name">Update Contract</attribute>
+						<attribute name="nbtimetoexecute">1</attribute>
+						<attribute name="noreportscheduler">0</attribute>
+						<attribute name="notificationemail">%[reference:creatoremail]</attribute>
+						<attribute name="notificationfilter">(!(State=*))</attribute>
+						<attribute name="notificationtemplatefile"></attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">csv</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|CTR - Update Contract|processid]</attribute>
+						<attribute name="processparameter"></attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="recipientstypes">USER</attribute>
+						<attribute name="reportdesc"></attribute>
+						<attribute name="reportid">%[reference:rpt_6D81F1B4_194FD887]</attribute>
+						<attribute name="reportname">[_ReportName_Contract - UpdateContract]</attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="subject">Generated report : '[_ReportName_Contract - UpdateContract]'</attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="Batch notification for requisition approvals">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=Batch notification for requisition approvals)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Send notifs from report lines|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=Batch notification for requisition approvals)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Send notifs from report lines|processid]))</applyOnFilter>
+						<resultReference name="sch_660B5963_1024FD74" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">1</attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="datacondition">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+							&lt;dataCondition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" &gt;
+								&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt; &lt;filter&gt;msnex=*&lt;/filter&gt;
+								&lt;labelKey&gt;_Purchasing disabled&lt;/labelKey&gt;
+								&lt;conditions&gt;
+									&lt;allowCondition&gt;
+										&lt;fieldName&gt;EnablePurchasingGlobalSetting__&lt;/fieldName&gt;
+										&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+									&lt;/allowCondition&gt;
+									&lt;allowCondition&gt;
+										&lt;fieldName&gt;EnableStandardPurchasingGlobalSetting__&lt;/fieldName&gt;
+										&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+									&lt;/allowCondition&gt;
+								&lt;/conditions&gt;
+							&lt;/dataCondition&gt;</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">1</attribute>
+						<attribute name="dow">monday</attribute>
+						<attribute name="eventtype">ReportTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="interval">day</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">Batch notification for requisition approvals</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="name">Batch notification for requisition approvals</attribute>
+						<attribute name="nbtimetoexecute">1</attribute>
+						<attribute name="NotificationEmail">%[reference:creatoremail]</attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">csv</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|Send notifs from report lines|processid]</attribute>
+						<attribute name="processparameter">{"template": "Purchasing_Email_ReminderForPRApproval.htm", "fromName": "_FromName_Reminders", "ValidationUrlV1": "/View.link?tabName=_Purchase%20requisitions&amp;viewName=_Waiting%20for%20my%20approval", "ValidationUrlV2": "/View.link?tabName=_Purchase%20requisitions&amp;viewName=_Purchase%20requisitions%20waiting%20for%20my%20approval"}</attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="reportdesc">_ReportDesc_Purchasing - Reminders for requisition approvals</attribute>
+						<attribute name="reportid">%[reference:rpt_D02DA4F8_4B60ECB0]</attribute>
+						<attribute name="reportname">_ReportName_Purchasing - RemindersPRApprovals</attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="Reminders for expense reports to control">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=Reminders for expense reports to control)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Reminder expense reports control|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=Reminders for expense reports to control)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Reminder expense reports control|processid]))</applyOnFilter>
+						<resultReference name="sch_8ABD44E6_3E2C7BBC" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">1</attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="datacondition">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;dataCondition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" &gt;
+&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+&lt;filter&gt;msnex=*&lt;/filter&gt;
+&lt;labelKey&gt;_Expense claims disabled&lt;/labelKey&gt;
+&lt;conditions&gt;
+&lt;allowCondition&gt;
+&lt;fieldName&gt;EnableExpenseClaimsGlobalSetting__&lt;/fieldName&gt;
+&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+&lt;/allowCondition&gt;
+&lt;/conditions&gt;
+&lt;/dataCondition&gt;</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">1</attribute>
+						<attribute name="dow">monday</attribute>
+						<attribute name="eventtype">ReportTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="executeonstart">0</attribute>
+						<attribute name="interval">day</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">Reminders for expense reports to control</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="name">Reminders for expense reports to control</attribute>
+						<attribute name="nbtimetoexecute">1</attribute>
+						<attribute name="noreportscheduler">0</attribute>
+						<attribute name="NotificationEmail">%[reference:creatoremail]</attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">csv</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|Reminder expense reports control|processid]</attribute>
+						<attribute name="processparameter"></attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="reportdesc">_ReportDesc_Expense - RemindersERControl</attribute>
+						<attribute name="reportid">%[reference:rpt_27E86C9B_70BECA8]</attribute>
+						<attribute name="reportname">_ReportName_Expense - RemindersERControl</attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="Batch notification for item to order">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=Batch notification for item to order)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Send notifs from report lines|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=Batch notification for item to order)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Send notifs from report lines|processid]))</applyOnFilter>
+						<resultReference name="sch_E55EDC5B_44269B7D" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">1</attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="datacondition">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+							&lt;dataCondition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" &gt;
+								&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt; &lt;filter&gt;msnex=*&lt;/filter&gt;
+								&lt;labelKey&gt;_Purchasing disabled&lt;/labelKey&gt;
+								&lt;conditions&gt;
+									&lt;allowCondition&gt;
+										&lt;fieldName&gt;EnablePurchasingGlobalSetting__&lt;/fieldName&gt;
+										&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+									&lt;/allowCondition&gt;
+									&lt;allowCondition&gt;
+										&lt;fieldName&gt;EnableStandardPurchasingGlobalSetting__&lt;/fieldName&gt;
+										&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+									&lt;/allowCondition&gt;
+								&lt;/conditions&gt;
+							&lt;/dataCondition&gt;</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">1</attribute>
+						<attribute name="dow">sunday</attribute>
+						<attribute name="eventtype">ReportTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="interval">week</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">Batch notification for item to order</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="name">Batch notification for item to order</attribute>
+						<attribute name="nbtimetoexecute">1</attribute>
+						<attribute name="NotificationEmail">%[reference:creatoremail]</attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">csv</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|Send notifs from report lines|processid]</attribute>
+						<attribute name="processparameter">{"template": "Purchasing_Email_ReminderForItemsToOrder.htm", "fromName": "_FromName_Reminders", "ValidationUrl": "/View.link?tabName=_Purchasing%20Items&amp;viewName=_PAC%20-%20Items%20pending%20my%20action%20-%20To%20order"}</attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="reportdesc">_ReportDesc_Purchasing - Reminders for item to order</attribute>
+						<attribute name="reportid">%[reference:rpt_FFCA922E_9267ECB0]</attribute>
+						<attribute name="reportname">_ReportName_Purchasing - RemindersItemsToOrder</attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="Reminders for expense reports to approve">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=Reminders for expense reports to approve)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Reminder expense reports approve|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=Reminders for expense reports to approve)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Reminder expense reports approve|processid]))</applyOnFilter>
+						<resultReference name="sch_3DFBE24A_2CFF8296" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">1</attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="datacondition">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;dataCondition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" &gt;
+&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+&lt;filter&gt;msnex=*&lt;/filter&gt;
+&lt;labelKey&gt;_Expense claims disabled&lt;/labelKey&gt;
+&lt;conditions&gt;
+&lt;allowCondition&gt;
+&lt;fieldName&gt;EnableExpenseClaimsGlobalSetting__&lt;/fieldName&gt;
+&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+&lt;/allowCondition&gt;
+&lt;/conditions&gt;
+&lt;/dataCondition&gt;</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">1</attribute>
+						<attribute name="dow">monday</attribute>
+						<attribute name="eventtype">ReportTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="executeonstart">0</attribute>
+						<attribute name="interval">day</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">Reminders for expense reports to approve</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="name">Reminders for expense reports to approve</attribute>
+						<attribute name="nbtimetoexecute">1</attribute>
+						<attribute name="noreportscheduler">0</attribute>
+						<attribute name="NotificationEmail">%[reference:creatoremail]</attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">csv</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|Reminder expense reports approve|processid]</attribute>
+						<attribute name="processparameter"></attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="reportdesc">_ReportDesc_Expense - RemindersERApprove</attribute>
+						<attribute name="reportid">%[reference:rpt_C0DCB05B_31F6ECA8]</attribute>
+						<attribute name="reportname">_ReportName_Expense - RemindersERApprove</attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="Batch notification for item deliveries">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=Batch notification for item deliveries)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Send notifs from report lines|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=Batch notification for item deliveries)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Send notifs from report lines|processid]))</applyOnFilter>
+						<resultReference name="sch_A43DCE6D_65ABC0BC" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">1</attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="datacondition">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+							&lt;dataCondition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" &gt;
+								&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt; &lt;filter&gt;msnex=*&lt;/filter&gt;
+								&lt;labelKey&gt;_Purchasing disabled&lt;/labelKey&gt;
+								&lt;conditions&gt;
+									&lt;allowCondition&gt;
+										&lt;fieldName&gt;EnablePurchasingGlobalSetting__&lt;/fieldName&gt;
+										&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+									&lt;/allowCondition&gt;
+									&lt;allowCondition&gt;
+										&lt;fieldName&gt;EnableStandardPurchasingGlobalSetting__&lt;/fieldName&gt;
+										&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+									&lt;/allowCondition&gt;
+								&lt;/conditions&gt;
+							&lt;/dataCondition&gt;</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">1</attribute>
+						<attribute name="dow">sunday</attribute>
+						<attribute name="eventtype">ReportTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="interval">week</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">Batch notification for item deliveries</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="name">Batch notification for item deliveries</attribute>
+						<attribute name="nbtimetoexecute">1</attribute>
+						<attribute name="NotificationEmail">%[reference:creatoremail]</attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">csv</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|Send notifs from report lines|processid]</attribute>
+						<attribute name="processparameter">{"template": "Purchasing_Email_ReminderForItemsDelivery.htm", "fromName": "_FromName_Reminders", "ValidationUrl": "/View.link?tabName=_Purchasing%20Items&amp;viewName=_PAC%20-%20Items%20pending%20my%20action%20-%20Overdue"}</attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="reportdesc">_ReportDesc_Purchasing - Reminders for item deliveries</attribute>
+						<attribute name="reportid">%[reference:rpt_D0CB0546_702ECB0]</attribute>
+						<attribute name="reportname">_ReportName_Purchasing - RemindersItemDeliveries</attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="Terminate items without goods receipt">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=Terminate items without goods receipt)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|PA - Terminate items without goods receipt|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=Terminate items without goods receipt)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|PA - Terminate items without goods receipt|processid]))</applyOnFilter>
+						<resultReference name="sch_6255B41B_97B11EDB" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">1</attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">1</attribute>
+						<attribute name="dow">sunday</attribute>
+						<attribute name="eventtype">ReportTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="executeonstart">0</attribute>
+						<attribute name="interval">day</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">Terminate items without goods receipt</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="message">Report generated by Esker on Demand.</attribute>
+						<attribute name="name">Terminate items without goods receipt</attribute>
+						<attribute name="nbtimetoexecute">1</attribute>
+						<attribute name="noreportscheduler">0</attribute>
+						<attribute name="notificationemail">%[reference:creatoremail]</attribute>
+						<attribute name="notificationfilter">(!(State=*))</attribute>
+						<attribute name="notificationtemplatefile"></attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">csv</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|PA - Terminate items without goods receipt|processid]</attribute>
+						<attribute name="processparameter"></attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="reportdesc">_ReportName_Purchasing - ItemsWithoutGR</attribute>
+						<attribute name="reportid">%[reference:rpt_AD3BC100_A688ECB0]</attribute>
+						<attribute name="reportname">_ReportName_Purchasing - ItemsWithoutGR</attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="VM - Demo vendor scoring update">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=VM - Demo vendor scoring update)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Vendor Scoring Details|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=VM - Demo vendor scoring update)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Vendor Scoring Details|processid]))</applyOnFilter>
+						<resultReference name="sch_E19D1AB1_3DE94A09" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">1</attribute>
+						<attribute name="allowminutesinterval">0</attribute>
+						<attribute name="backupid"></attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="datacondition">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+							&lt;dataCondition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" &gt;
+								&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt; &lt;filter&gt;msnex=*&lt;/filter&gt;
+								&lt;labelKey&gt;_Purchasing disabled&lt;/labelKey&gt;
+								&lt;conditions&gt;
+									&lt;allowCondition&gt;
+										&lt;fieldName&gt;EnablePurchasingGlobalSetting__&lt;/fieldName&gt;
+										&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+									&lt;/allowCondition&gt;
+									&lt;allowCondition&gt;
+										&lt;fieldName&gt;EnableStandardPurchasingGlobalSetting__&lt;/fieldName&gt;
+										&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+									&lt;/allowCondition&gt;
+								&lt;/conditions&gt;
+							&lt;/dataCondition&gt;
+						</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">1</attribute>
+						<attribute name="dow">monday</attribute>
+						<attribute name="eventtype">ReportTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="executeonstart">0</attribute>
+						<attribute name="interval">day</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">VM - Demo vendor scoring update</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="message">Report generated by Esker on Demand.</attribute>
+						<attribute name="name">VM - Demo vendor scoring update</attribute>
+						<attribute name="nbtimetoexecute">1</attribute>
+						<attribute name="noreportscheduler">0</attribute>
+						<attribute name="notificationemail">%[reference:creatoremail]</attribute>
+						<attribute name="notificationfilter">(!(State=*))</attribute>
+						<attribute name="notificationtemplatefile"></attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">csv</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|Vendor Scoring Details|processid]</attribute>
+						<attribute name="processparameter"></attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="recipientstypes">USER</attribute>
+						<attribute name="reportdesc">VM - Demo vendor scoring last 24h</attribute>
+						<attribute name="reportid">%[reference:rpt_77CE9AE1_7929A854]</attribute>
+						<attribute name="reportname">_ReportName_Demo vendor scoring last 24h</attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="subject">Generated report : '_ReportName_Demo vendor scoring last 24h'</attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="Budget consistency check">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=Budget consistency check)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|BudgetIntegrityValidation__|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=Budget consistency check)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|BudgetIntegrityValidation__|processid]))</applyOnFilter>
+						<resultReference name="sch_2B499F5D_EAA47F10" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">1</attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="datacondition">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+							&lt;dataCondition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" &gt;
+								&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt; &lt;filter&gt;msnex=*&lt;/filter&gt;
+								&lt;labelKey&gt;_Purchasing disabled&lt;/labelKey&gt;
+								&lt;conditions&gt;
+									&lt;allowCondition&gt;
+										&lt;fieldName&gt;EnablePurchasingGlobalSetting__&lt;/fieldName&gt;
+										&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+									&lt;/allowCondition&gt;
+									&lt;allowCondition&gt;
+										&lt;fieldName&gt;EnableStandardPurchasingGlobalSetting__&lt;/fieldName&gt;
+										&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+									&lt;/allowCondition&gt;
+								&lt;/conditions&gt;
+							&lt;/dataCondition&gt;</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">1</attribute>
+						<attribute name="dow">monday</attribute>
+						<attribute name="eventtype">ReportTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="interval">day</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">Budget consistency check</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="name">Budget consistency check</attribute>
+						<attribute name="nbtimetoexecute">1</attribute>
+						<attribute name="NotificationEmail">%[reference:creatoremail]</attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">csv</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|BudgetIntegrityValidation__|processid]</attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="reportdesc">_ReportDesc_Purchasing - Technical report for automatic budget recovery</attribute>
+						<attribute name="reportid">%[reference:rpt_D9320037_EFC07815]</attribute>
+						<attribute name="reportname">_ReportName_Purchasing - BudgetIntegrityCheck</attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="Budget integrity check">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=Budget integrity check)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|BudgetIntegrityValidation__|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=Budget integrity check)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|BudgetIntegrityValidation__|processid]))</applyOnFilter>
+						<resultReference name="sch_38EA2A95_6D6F21B8" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">1</attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="datacondition">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;dataCondition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" &gt;
+&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt; &lt;filter&gt;msnex=*&lt;/filter&gt;
+	&lt;labelKey&gt;_AP disabled&lt;/labelKey&gt;
+	&lt;conditions&gt;
+		&lt;allowCondition&gt;
+			&lt;fieldName&gt;EnableAccountPayableGlobalSetting__&lt;/fieldName&gt;
+			&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+		&lt;/allowCondition&gt;
+		&lt;allowCondition&gt;
+			&lt;fieldName&gt;EnablePurchasingGlobalSetting__&lt;/fieldName&gt;
+			&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+		&lt;/allowCondition&gt;
+		&lt;allowCondition&gt;
+			&lt;fieldName&gt;EnableStandardPurchasingGlobalSetting__&lt;/fieldName&gt;
+			&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+		&lt;/allowCondition&gt;
+	&lt;/conditions&gt;
+&lt;/dataCondition&gt;</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">1</attribute>
+						<attribute name="dow">monday</attribute>
+						<attribute name="eventtype">ReportTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="interval">day</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">Budget integrity check</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="name">Budget integrity check</attribute>
+						<attribute name="nbtimetoexecute">1</attribute>
+						<attribute name="NotificationEmail">%[reference:creatoremail]</attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">csv</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|BudgetIntegrityValidation__|processid]</attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="reportdesc">_ReportDesc_VIP_AP_Budget integrity check</attribute>
+						<attribute name="reportid">%[reference:rpt_CD11AE8F_A8B97815]</attribute>
+						<attribute name="reportname">_ReportName_VIP_AP_Budget integrity check</attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="BudgetSnapshot">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=BudgetSnapshot)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Sys_TableSnapshot|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=BudgetSnapshot)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Sys_TableSnapshot|processid]))</applyOnFilter>
+						<resultReference name="sch_B6759CCA_45C04047" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">1</attribute>
+						<attribute name="allowminutesinterval">0</attribute>
+						<attribute name="backupid"></attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="datacondition">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;dataCondition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+&lt;filter&gt;msnex=*&lt;/filter&gt;
+	&lt;labelKey&gt;_Purchasing disabled&lt;/labelKey&gt;
+	&lt;conditions&gt;
+		&lt;allowCondition&gt;
+			&lt;fieldName&gt;EnablePurchasingGlobalSetting__&lt;/fieldName&gt;
+			&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+		&lt;/allowCondition&gt;
+	&lt;/conditions&gt;
+&lt;/dataCondition&gt;</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">1</attribute>
+						<attribute name="dow">monday</attribute>
+						<attribute name="eventtype">ReportTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="executeonstart">0</attribute>
+						<attribute name="interval">month</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">BudgetSnapshot</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="message"></attribute>
+						<attribute name="name">BudgetSnapshot</attribute>
+						<attribute name="noreportscheduler">1</attribute>
+						<attribute name="notificationemail">%[reference:creatoremail]</attribute>
+						<attribute name="notificationfilter">(!(State=*))</attribute>
+						<attribute name="notificationtemplatefile"></attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">csv</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|Sys_TableSnapshot|processid]</attribute>
+						<attribute name="processparameter">S2P - Budget Snapshots</attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="recipientstypes">USER</attribute>
+						<attribute name="reportdesc">_ReportDescription_P2P - Budgets to snapshot</attribute>
+						<attribute name="reportid">%[reference:rpt_CDD4D4D3_68A7815]</attribute>
+						<attribute name="reportname">_ReportName_P2P - Budgets to snapshot</attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="subject"></attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappreadonly">0</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+				<object name="Contracts to snapshot">
+					<action command="add">
+						<denyIfFilters>
+							<filter>(&amp;(name=Contracts to snapshot)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Sys_TableSnapshot|processid]))</filter>
+						</denyIfFilters>
+						<applyOnFilter type="SCHEDULER">(&amp;(name=Contracts to snapshot)(ownerid=%[reference:ownerid])(ownerpb=%[reference:ownerpb])(processid=%[reference:processRef|Sys_TableSnapshot|processid]))</applyOnFilter>
+						<resultReference name="sch_88DBCBDA_64A49748" searchAttribute="msn" />
+					</action>
+					<attributes>
+						<attribute name="active">1</attribute>
+						<attribute name="allowminutesinterval">0</attribute>
+						<attribute name="backupid"></attribute>
+						<attribute name="configuration"></attribute>
+						<attribute name="creator">%[reference:creator]</attribute>
+						<attribute name="datacondition">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;dataCondition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+&lt;filter&gt;msnex=*&lt;/filter&gt;
+	&lt;labelKey&gt;_Contracts disabled&lt;/labelKey&gt;
+	&lt;conditions&gt;
+		&lt;allowCondition&gt;
+			&lt;fieldName&gt;EnableContractGlobalSetting__&lt;/fieldName&gt;
+			&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+		&lt;/allowCondition&gt;
+	&lt;/conditions&gt;
+&lt;/dataCondition&gt;</attribute>
+						<attribute name="disableonerror">0</attribute>
+						<attribute name="dom">1</attribute>
+						<attribute name="donotsendemptyreports">1</attribute>
+						<attribute name="dow">monday</attribute>
+						<attribute name="eventtype">ReportTask</attribute>
+						<attribute name="executenow">0</attribute>
+						<attribute name="executeonstart">0</attribute>
+						<attribute name="interval">month</attribute>
+						<attribute name="intervalcount">1</attribute>
+						<attribute name="keyprefix2">Contracts to snapshot</attribute>
+						<attribute name="lbserver">%[reference:server]</attribute>
+						<attribute name="mainaccountid">%[reference:mainaccountid_short]</attribute>
+						<attribute name="mainaccountid2">%[reference:mainaccountid_long]</attribute>
+						<attribute name="message"></attribute>
+						<attribute name="name">Contracts to snapshot</attribute>
+						<attribute name="nbtimetoexecute">1</attribute>
+						<attribute name="noreportscheduler">1</attribute>
+						<attribute name="notificationemail">%[reference:creatoremail]</attribute>
+						<attribute name="notificationfilter">(!(State=*))</attribute>
+						<attribute name="notificationtemplatefile"></attribute>
+						<attribute name="ntries">0</attribute>
+						<attribute name="outputformat">csv</attribute>
+						<attribute name="ownerid">%[reference:ownerid]</attribute>
+						<attribute name="ownerpb">%[reference:ownerpb]</attribute>
+						<attribute name="processid">%[reference:processRef|Sys_TableSnapshot|processid]</attribute>
+						<attribute name="processparameter">S2P - Contract Snapshots</attribute>
+						<attribute name="recipientsdn">%[reference:creatormsn]</attribute>
+						<attribute name="recipientsemails">%[reference:creatoremail]</attribute>
+						<attribute name="recipientsnames">%[reference:creatordisplayname]</attribute>
+						<attribute name="recipientstypes">USER</attribute>
+						<attribute name="reportdesc">_ReportDescription_P2P - Contracts to snapshot</attribute>
+						<attribute name="reportid">%[reference:rpt_D046CA7_7B257815]</attribute>
+						<attribute name="reportname">_ReportName_P2P - Contracts to snapshot</attribute>
+						<attribute name="routingadvanced">0</attribute>
+						<attribute name="subject"></attribute>
+						<attribute name="type">RECURRENT</attribute>
+						<attribute name="webappmethod">Simple</attribute>
+						<attribute name="webapppwd">********</attribute>
+						<attribute name="webappreadonly">0</attribute>
+						<attribute name="webappuser">%[reference:creator:urlencode]</attribute>
+						<attribute name="webappusertimezone">%[reference:creatortimezone]</attribute>
+						<attribute name="wom">0</attribute>
+					</attributes>
+				</object>
+			</objects>
+		</type>
+	</types>
+</root>

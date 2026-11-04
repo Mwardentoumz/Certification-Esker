@@ -1,0 +1,2198 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:00:37" deleted="0" eskerapplication="DD" global="0" id="ULZKT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="0" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="DD Email Grouping" needvalidation="0" ootofilter="" ootoversion="0" originalProcessID="PHQG86550489" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="0" version="1" visibility="1">
+  <properties>
+    <gdr>
+      <FinalizationScriptAllowRetry>true</FinalizationScriptAllowRetry>
+      <finalizationscriptIncludedScripts>Lib_V12.0.566.0</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Lib_DD_V12.0.566.0</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>[Lib_DD_Customization_Deliveries]</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Lib_DD_Emails_V12.0.566.0</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Lib_DD_Records_V12.0.566.0</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Sys/Sys_Helpers</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Sys/Sys_Helpers_Attach</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Sys/Sys_Helpers_BounceBack</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Sys/Sys_Helpers_CSVReader</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Sys/Sys_Helpers_Date</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Sys/Sys_Helpers_TimeoutHelper</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Sys/Sys_DD</finalizationscriptIncludedScripts>
+      <FinalizationScript>"use strict";
+var DD;
+(function (DD) {
+    var EmailGrouping;
+    (function (EmailGrouping) {
+        var Finalization;
+        (function (Finalization) {
+            // Two cache global variables
+            let _doesSMNeedToLoadRecipientLinks = null;
+            let _doesPORTALNeedToLoadRecipientLinks = null;
+            function Main() {
+                let result;
+                let allUpdateInSuccess = true;
+                let index = 0;
+                let emailSentCount = 0;
+                const timeoutHelper = new Sys.Helpers.TimeoutHelper(400, 20 /* case RD00005764 was used to compute this value */);
+                // To read the input file line by line, we use the CSVReader because it's fully
+                // scalable. We consider that it's a single column CSV line without header.
+                const csvHelper = Sys.Helpers.CSVReader.CreateInstance(0);
+                csvHelper.SplitSeparator = "\x00";
+                csvHelper.ReturnSeparator = "\n";
+                csvHelper.RemoveDoubleQuotes = false;
+                let lineContent = null;
+                let documentStack = null;
+                do {
+                    lineContent = csvHelper.GetNextLine();
+                    if (lineContent !== null) {
+                        try {
+                            documentStack = JSON.parse(lineContent);
+                        }
+                        catch (e) {
+                            documentStack = null;
+                        }
+                        if (documentStack !== null) {
+                            result = SendGroupedEmailAndUpdateDocuments(index, documentStack);
+                            allUpdateInSuccess = allUpdateInSuccess &amp;&amp; result;
+                            if (allUpdateInSuccess) {
+                                emailSentCount++;
+                            }
+                        }
+                    }
+                    index++;
+                    timeoutHelper.NotifyIteration();
+                } while (lineContent !== null &amp;&amp; lineContent !== "" &amp;&amp; documentStack !== null);
+                Log.Info(emailSentCount + " email(s) were sent to recipient(s)");
+                Data.SetValue("CounterSentEmail__", emailSentCount);
+                if (!allUpdateInSuccess) {
+                    Log.Error("Some documents couldn't be updated, this process has to be in error");
+                    Data.SetValue("State", "200");
+                }
+            }
+            Finalization.Main = Main;
+            function SendGroupedEmailAndUpdateDocuments(index, documentStack) {
+                const recipientID = documentStack[0].recipientID;
+                const transactionKey = `${index}-${recipientID}`;
+                const transactionValue = Transaction.Read(transactionKey);
+                // In case of retry, we need to have the previously sent email's MSNEX so
+                // that we can update documents. The emails transports are real childs so we
+                // want to enter in the transport.process() again but the transaction is
+                // here so that we can remember the correct MSNEX.
+                // sentEmailMsnEx is empty when the email has been sent in a previous retry
+                let sentEmailMsnEx = "";
+                if (transactionValue === "") {
+                    sentEmailMsnEx = SendGroupedEmail(documentStack);
+                    Transaction.Write(transactionKey, sentEmailMsnEx);
+                }
+                else {
+                    //If the updates has already been done, or that if we already have stored the EmailMsnEx, we create fake emails in order to bypass the first one in case of retry.
+                    CreateFakeEmail();
+                    if (transactionValue === "UPDATES_DONE") {
+                        return true;
+                    }
+                    sentEmailMsnEx = transactionValue;
+                    Log.Warn(`A transaction for recipient with key "${transactionKey}" was read with MSNEX=${sentEmailMsnEx}, we may be currently in a retry`);
+                }
+                // Should not happen except if redis do not give us back the msnex during a retry
+                if (!sentEmailMsnEx) {
+                    Log.Warn(`We do not have the msnex of the grouped email with transaction key "${transactionKey}"`);
+                    return false;
+                }
+                // If the email was sent, we update the documents with the sent email MSNEX and grouping data
+                if (UpdateDocuments(sentEmailMsnEx, documentStack)) {
+                    Transaction.Write(transactionKey, "UPDATES_DONE");
+                    return true;
+                }
+                return false;
+            }
+            function AttachDocumentsFilesToTransport(documents, transport) {
+                for (const document of documents) {
+                    for (let f = 0; f &lt; document.files.length; f++) {
+                        const file = document.files[f];
+                        const outputName = file.outputName;
+                        // Temporary fix FW00324026 some filename of attachments are truncated
+                        // rebuild a full path by using the path of the json document attached to the email grouping process
+                        if (file.fileName.startsWith("attach\\")) {
+                            Log.Info("[AttachDocumentsFilesToTransport] Email attachment " + file.fileName + " is a relative path. Reatach it to local storage hosting the email grouping process");
+                            let pathJson = (Attach.GetAttachConvertedPath(0) || Attach.GetAttach(0).GetAttachFile()).toLowerCase();
+                            let localTmp = pathJson.substring(0, pathJson.indexOf("attach\\"));
+                            file.fileName = localTmp + file.fileName;
+                            Log.Info("[AttachDocumentsFilesToTransport] New path on local storage is " + file.fileName);
+                        }
+                        Sys.Helpers.Attach.AttachFileRef(transport, file.fileName, file.outputFormat, outputName);
+                    }
+                }
+            }
+            function AddDocumentUpdateNotifs(documents, email) {
+                const senderFormRUIDEXList = [];
+                for (const document of documents) {
+                    senderFormRUIDEXList.push(document.senderFormRUIDEX);
+                }
+                const groupingEmailFailedNotifForCUSI = {
+                    transport: email,
+                    ruidExToUpdate: senderFormRUIDEXList,
+                    notifyFilter: "(state&gt;100)",
+                    notifySubject: "Email Grouping notification",
+                    notifyEachTime: true,
+                    varsToUpdate: {
+                        "State": { type: "long", value: 200 },
+                        "CompletionDateTime": { type: "string", value: "NOW()" },
+                        "RecomputeParentsState": { type: "string", value: "1" }
+                    }
+                };
+                Lib.DD.Records.AddUpdateNotification(groupingEmailFailedNotifForCUSI);
+                const groupingEmailSuccessNotifForCUSI = {
+                    transport: email,
+                    ruidExToUpdate: senderFormRUIDEXList,
+                    notifyFilter: "(state=100)",
+                    notifySubject: "Email Grouping notification",
+                    notifyEachTime: true,
+                    varsToUpdate: {
+                        "State": { type: "long", value: 100 },
+                        "CompletionDateTime": { type: "string", value: "NOW()" },
+                        "RecomputeParentsState": { type: "string", value: "1" }
+                    }
+                };
+                Lib.DD.Records.AddUpdateNotification(groupingEmailSuccessNotifForCUSI);
+            }
+            function CreateFakeEmail() {
+                const email = Process.CreateTransport("mail", true);
+                email.Process();
+            }
+            function SendGroupedEmail(documentStack) {
+                const senderObj = GetCachedSenderObject();
+                const sender = {
+                    company: senderObj.GetValue("Company"),
+                    logoPath: senderObj.GetLogoPath(),
+                    accountID: senderObj.GetValue("AccountID"),
+                    ownerID: documentStack[0].senderOwnerID
+                };
+                const recipientLogin = `${sender.accountID}$${documentStack[0].recipientID}`;
+                const recipientObj = GetCachedRecipientObject(recipientLogin);
+                if (!recipientObj) {
+                    // We can enter here if the recipient has been deleted between submission and grouping
+                    Log.Error(`Unable to find recipient with login "${recipientLogin}"`);
+                    return null;
+                }
+                const recipient = {
+                    identifier: documentStack[0].recipientID,
+                    emailAddress: Sys.DD.ComputeRedirectEmailAddress("Redirect_recipient_notifications", documentStack[0].recipientEmailAddress),
+                    culture: recipientObj.GetValue("Culture"),
+                    language: recipientObj.GetValue("Language"),
+                    portalUrl: recipientObj.GetPortalURL(true),
+                    internalUser: recipientObj,
+                    company: recipientObj.GetValue("Company")
+                };
+                let allRecipientsLinks = null;
+                if (ShouldLoadEveryDocumentLinks(documentStack[0].recipientDeliveryMethod)) {
+                    allRecipientsLinks = LoadEveryDocumentLinks(sender, recipient, documentStack);
+                }
+                const settings = documentStack[0].settings;
+                const subjectKey = `_New document${(documentStack.length &gt; 1 ? "s" : "")} from sender {0}`;
+                const subjectTranslated = Language.TranslateInto(subjectKey, recipient.language, true, sender.company);
+                const senderLogo = `&lt;img src="${sender.logoPath}" &gt;`;
+                const documentLinesHTML = GetDocumentLinesHtml(recipient, allRecipientsLinks, documentStack);
+                Log.Info(`Creating email groupment of ${documentStack.length} document(s) for recipient ${recipient.identifier} to address: ${recipient.emailAddress}`);
+                const email = Process.CreateTransport("mail", true);
+                const emailVars = email.GetUninheritedVars();
+                emailVars.AddValue_String("OwnerID", sender.ownerID, true);
+                emailVars.AddValue_String("EmailAddress", recipient.emailAddress, true);
+                emailVars.AddValue_String("Subject", subjectTranslated, true);
+                emailVars.AddValue_String("ToName", recipient.identifier, true);
+                if (settings.forceEmailValidation) {
+                    emailVars.AddValue_String("NeedValidation", "1", true);
+                }
+                const archiveDuration = documentStack[0].senderFormArchiveDuration;
+                if (archiveDuration !== "0") {
+                    emailVars.AddValue_String("ArchiveDuration", archiveDuration, true);
+                    emailVars.AddValue_String("ArchiveBehavior", "0", true); //Do not archive attach for end messages
+                    if (settings.archiveCondition) {
+                        emailVars.AddValue_String("ArchiveCondition", settings.archiveCondition, true);
+                    }
+                }
+                if (settings.bounceBackEnabled) {
+                    Sys.Helpers.BounceBack.SetBounceBack(email, "ALWAYS", true, false);
+                }
+                const recipientDeliveryMethod = documentStack[0].recipientDeliveryMethod;
+                const introSentenceKey = recipientDeliveryMethod === "SM" ? "_Grouped email intro with attach" : "_Grouped email intro portal";
+                const introSentence = Language.TranslateInto(introSentenceKey, recipient.language, false);
+                const template = recipient.internalUser.GetTemplateContent({
+                    templateName: "DD_Grouped_Notification.htm",
+                    replaceTags: true,
+                    customTags: {
+                        logo: senderLogo,
+                        portalUrl: recipient.portalUrl,
+                        welcomeInformations: ShouldOneDocumentSendWelcomeEMail(documentStack) ? GetWelcomeEmailLoginInfo(recipient) : "",
+                        introSentence: introSentence,
+                        documentLines: documentLinesHTML,
+                        recipientName: recipient.company
+                    }
+                });
+                Sys.Helpers.Attach.AttachHTML(email, "NewDocuments.htm", template.content);
+                if (recipientDeliveryMethod === "SM") {
+                    AttachDocumentsFilesToTransport(documentStack, email);
+                    AddDocumentUpdateNotifs(documentStack, email);
+                }
+                const emailsProperties = Lib.DD.Emails.GetEmailsProperties("EmailGrouping");
+                const toUser1 = {
+                    "AR-transportType": "SM-GROUPED",
+                    "AR-transportIsOriginal": recipientDeliveryMethod === "SM"
+                };
+                emailVars.AddValue_String("ToUser1", JSON.stringify(toUser1), true);
+                Lib.DD.Emails.SetSender(email, emailsProperties);
+                if (recipientDeliveryMethod === "SM") {
+                    Sys.Helpers.TryCallFunction("Lib.DD.Customization.Deliveries.FinalizeGroupedEmailsTransport", email, GetUserExitContextParam(recipientObj), documentStack);
+                }
+                else {
+                    Sys.Helpers.TryCallFunction("Lib.DD.Customization.Deliveries.FinalizeGroupedNotificationsTransport", email, GetUserExitContextParam(recipientObj), documentStack);
+                }
+                email.Process();
+                // Let's return the MSNEX of created process so that we can make the checkpoint
+                return email.GetUninheritedVars().GetValue_String("MSNEX", 0);
+            }
+            function ShouldOneDocumentSendWelcomeEMail(documentStack) {
+                for (const document of documentStack) {
+                    if (document.sendWelcomeEMail === "CONCAT" &amp;&amp; document.passwordUrl) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            function GetDocumentLinesHtml(recipient, allRecipients, documentStack) {
+                let res = "";
+                const viewLinkStr = Language.TranslateInto("_View", recipient.language);
+                for (let i = 0; i &lt; documentStack.length; i++) {
+                    const document = documentStack[i];
+                    let documentURL = "";
+                    if (allRecipients !== null) {
+                        // We already loaded every links of the table
+                        documentURL = allRecipients[document.senderFormRUIDEX];
+                    }
+                    if (!allRecipients) {
+                        documentURL = recipient.internalUser.GetProcessURL(document.senderFormRUIDEX);
+                    }
+                    res += `&lt;tr class="${(i % 2 === 0 ? "odd" : "even")}"&gt;\r\n`;
+                    res += `	&lt;td&gt;${document.type}&lt;/td&gt;\r\n`;
+                    res += `	&lt;td&gt;${document.number}&lt;/td&gt;\r\n`;
+                    res += `	&lt;td&gt;&lt;a href="${documentURL}"&gt;${viewLinkStr}&lt;/a&gt;&lt;/td&gt;\r\n`;
+                    res += `&lt;/tr&gt;\r\n`;
+                }
+                return res;
+            }
+            function GetWelcomeEmailLoginInfo(recipient) {
+                const parametersObject = {
+                    templateName: "DD_Welcome_PasswordUrl.txt",
+                    replaceTags: true,
+                    customTags: {
+                        recipientID: recipient.identifier,
+                        passwordUrl: recipient.internalUser.GeneratePasswordURL()
+                    }
+                };
+                return recipient.internalUser.GetTemplateContent(parametersObject).content;
+            }
+            function UpdateDocuments(emailMsnEx, documentStack) {
+                for (const document of documentStack) {
+                    const updateProcess = Process.GetUpdatableTransport(document.senderFormRUIDEX);
+                    const eddRecordVars = updateProcess.GetUninheritedVars();
+                    eddRecordVars.AddValue_String("Email_grouping_state__", "GROUPABLE_GROUPED", true);
+                    eddRecordVars.AddValue_Date("Email_grouping_datetime__", new Date(), true);
+                    eddRecordVars.AddValue_String("Email_groupment_identifier__", emailMsnEx, true);
+                    updateProcess.Process();
+                }
+                return true;
+            }
+            // Cache to query sender only once
+            let _senderObj = null;
+            function GetCachedSenderObject() {
+                if (!_senderObj) {
+                    _senderObj = Users.GetUserAsProcessAdmin(Data.GetValue("OwnerID"));
+                }
+                return _senderObj;
+            }
+            // Cache to query recipient only once
+            let _recipientHash = {};
+            function GetCachedRecipientObject(recipientLogin) {
+                if (!(recipientLogin in _recipientHash)) {
+                    _recipientHash[recipientLogin] = Users.GetUserAsProcessAdmin(recipientLogin);
+                }
+                return _recipientHash[recipientLogin];
+            }
+            // Object made to be given to the user exit to customize generated email
+            function GetUserExitContextParam(recipient) {
+                return {
+                    GetSenderUser: function () {
+                        return GetCachedSenderObject();
+                    },
+                    GetRecipientUser: function () {
+                        return recipient;
+                    }
+                };
+            }
+            function ShouldLoadEveryDocumentLinks(deliveryMethod) {
+                // Read values from cache if already computed
+                if (deliveryMethod === "SM" &amp;&amp; _doesSMNeedToLoadRecipientLinks !== null) {
+                    return _doesSMNeedToLoadRecipientLinks;
+                }
+                else if (deliveryMethod === "PORTAL" &amp;&amp; _doesPORTALNeedToLoadRecipientLinks !== null) {
+                    return _doesPORTALNeedToLoadRecipientLinks;
+                }
+                let groupingKey = null;
+                const groupingKeyStr = Variable.GetValueAsString(`GroupingKey_${deliveryMethod}`);
+                try {
+                    groupingKey = JSON.parse(groupingKeyStr);
+                }
+                catch (e) {
+                    Log.Error(`Unable to parse grouping key "${groupingKeyStr}", exception was: ${e}`);
+                    return false;
+                }
+                if (!groupingKey || !Sys.Helpers.IsArray(groupingKey)) {
+                    Log.Error(`The parsed grouping key "${groupingKeyStr}" isn't a valid array`);
+                    return false;
+                }
+                // We need to load every recipients only if the Recipient_ID__ isn't in the grouping list
+                let recipientIDFieldFound = false;
+                for (let i = 0; i &lt; groupingKey.length &amp;&amp; !recipientIDFieldFound; i++) {
+                    if (groupingKey[i].toLowerCase() === "recipient_id__") {
+                        recipientIDFieldFound = true;
+                    }
+                }
+                // Put result in cache
+                if (deliveryMethod === "SM") {
+                    _doesSMNeedToLoadRecipientLinks = !recipientIDFieldFound;
+                }
+                else {
+                    _doesPORTALNeedToLoadRecipientLinks = !recipientIDFieldFound;
+                }
+                if (!recipientIDFieldFound) {
+                    Log.Info(`The grouping key for ${deliveryMethod} doesn't contain the "Recipient_ID__" field, so we need to load every recipients in DB`);
+                    Log.Info(`As an information, the grouping key is: ${groupingKeyStr}`);
+                }
+                return !recipientIDFieldFound;
+            }
+            function LoadEveryDocumentLinks(sender, recipient, documentStack) {
+                const allRecipientObjects = {};
+                const allDocumentLinks = {};
+                // We passed the first recipient as a parameter because it's already fully loaded
+                allRecipientObjects[recipient.identifier] = recipient.internalUser;
+                allDocumentLinks[documentStack[0].senderFormRUIDEX] = recipient.internalUser.GetProcessURL(documentStack[0].senderFormRUIDEX);
+                for (let i = 1; i &lt; documentStack.length; i++) {
+                    const recipientID = documentStack[i].recipientID;
+                    const senderFormRUIDEX = documentStack[i].senderFormRUIDEX;
+                    let recipientObj = null;
+                    if (!allRecipientObjects[recipientID]) {
+                        // The user isn't in cache yet: let's query it
+                        const recipientLogin = `${sender.accountID}$${documentStack[i].recipientID}`;
+                        recipientObj = GetCachedRecipientObject(recipientLogin);
+                        if (!recipientObj) {
+                            // We can enter here if the recipient has been deleted between submission and grouping
+                            Log.Error(`Unable to find recipient with login "${recipientLogin}"`);
+                            // We pass the first link as we can't do better, but it shouldn't happen as it's
+                            // a limit case because recipient deletion is rare
+                            allDocumentLinks[senderFormRUIDEX] = allDocumentLinks[documentStack[0].senderFormRUIDEX];
+                            continue;
+                        }
+                        // Put the queried recipient in cache an continue
+                        allRecipientObjects[recipientID] = recipientObj;
+                    }
+                    else {
+                        // Get the recipient from the cache
+                        recipientObj = allRecipientObjects[recipientID];
+                    }
+                    // We have the recipient object, we can finally get the link
+                    allDocumentLinks[senderFormRUIDEX] = recipientObj.GetProcessURL(senderFormRUIDEX);
+                }
+                return allDocumentLinks;
+            }
+            Main();
+        })(Finalization = EmailGrouping.Finalization || (EmailGrouping.Finalization = {}));
+    })(EmailGrouping = DD.EmailGrouping || (DD.EmailGrouping = {}));
+})(DD || (DD = {}));
+//# sourceMappingURL=finalizationscript.js.map</FinalizationScript>
+      <ValidationScriptAllowRetry>
+      </ValidationScriptAllowRetry>
+      <validationscriptIncludedScripts>Sys/Sys_Helpers_CSVReader</validationscriptIncludedScripts>
+      <ValidationScript>
+      </ValidationScript>
+      <AllowTagCoverPages>true</AllowTagCoverPages>
+      <AllowTagNewDocuments>true</AllowTagNewDocuments>
+      <AllowTagAttachments>true</AllowTagAttachments>
+      <ExtractionScriptAllowRetry>true</ExtractionScriptAllowRetry>
+      <extractionscriptIncludedScripts>[Lib_DD_Customization_Deliveries]</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>Sys/Sys_Helpers</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>Sys/Sys_Helpers_TimeoutHelper</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>Sys/Sys_DD</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>Sys/Sys_Outbound_Documents</extractionscriptIncludedScripts>
+      <ExtractionScript>"use strict";
+var DD;
+(function (DD) {
+    var EmailGrouping;
+    (function (EmailGrouping) {
+        var Extraction;
+        (function (Extraction) {
+            function Main() {
+                // This file will contain an document stack per line, each stored in a JSON.
+                // It will NOT be a big array of JSON.
+                const tempFile = TemporaryFile.CreateFile("txt");
+                const timeoutHelper = new Sys.Helpers.TimeoutHelper(400, 100);
+                AppendRecordsToBeGrouped(tempFile, timeoutHelper, "PORTAL");
+                AppendRecordsToBeGrouped(tempFile, timeoutHelper, "SM");
+                Attach.AttachTemporaryFile(tempFile, "DocumentStacks");
+            }
+            Extraction.Main = Main;
+            function AppendRecordsToBeGrouped(tempFile, timeoutHelper, deliveryMethod) {
+                const groupingKey = GetGroupingKey(deliveryMethod);
+                Variable.SetValueAsString(`GroupingKey_${deliveryMethod}`, JSON.stringify(groupingKey));
+                const query = GetGroupableRecords(deliveryMethod, groupingKey);
+                let documentRecord = null;
+                let lastReadDocument = null;
+                let documentStack = [];
+                let attachSize = 0;
+                do {
+                    documentRecord = query.MoveNext();
+                    if (documentRecord) {
+                        const documentVars = documentRecord.GetUninheritedVars();
+                        const documentExtVars = documentRecord.GetExternalVars();
+                        // The following line load the current CUSI record configuration, it allow
+                        // us to use Sys.Outbound.GetParameter properly for this loop
+                        Sys.DD.InitConfigurationFromRecordCache(documentRecord, true);
+                        // RD00032943 - Rebuild the path of attachments from shared - lots of code could be removed in DD sender form
+                        const attachList = documentRecord.GetAttachs(true);
+                        const files = GetAttachmentFilesForGrouping(documentVars.GetValue_String("Document_Type__", 0), attachList);
+                        const settings = {
+                            archiveCondition: Sys.DD.GetParameter("ArchiveCondition__"),
+                            forceEmailValidation: Sys.DD.GetParameter("ForceMessageValidation_NOTIF_EMAIL"),
+                            bounceBackEnabled: Sys.DD.GetParameter("BounceBacks_Enable")
+                        };
+                        const groupedFields = [];
+                        for (const groupingField of groupingKey) {
+                            groupedFields.push(documentVars.GetValue_String(groupingField, 0));
+                        }
+                        const currentDocument = {
+                            senderFormRUIDEX: documentVars.GetValue_String("RUIDEx", 0),
+                            senderFormArchiveDuration: Sys.DD.ComputeArchiveDuration("", Data.GetValue("Delivery_method__")),
+                            recipientID: documentVars.GetValue_String("Recipient_ID__", 0),
+                            type: documentVars.GetValue_String("Document_Type__", 0),
+                            number: documentVars.GetValue_String("Document_ID__", 0),
+                            priority: documentVars.GetValue_String("Document_Priority__", 0),
+                            recipientDeliveryMethod: documentVars.GetValue_String("Delivery_method__", 0),
+                            sendWelcomeEMail: documentExtVars.GetValue_String("SendWelcomeEmail__", 0),
+                            passwordUrl: documentExtVars.GetValue_String("Password_url__", 0),
+                            recipientEmailAddress: documentVars.GetValue_String("Recipient_email__", 0),
+                            senderEmailAddress: documentVars.GetValue_String("Sender_email__", 0),
+                            senderOwnerID: documentExtVars.GetValue_String("Sender_ownerID__", 0),
+                            groupedFields: groupedFields,
+                            files: files ? files : [],
+                            settings: settings
+                        };
+                        const currentDocumentAttachmentsSize = parseInt(documentExtVars.GetValue_String("AttachmentsSize__", 0), 10);
+                        attachSize += isNaN(currentDocumentAttachmentsSize) ? 0 : currentDocumentAttachmentsSize;
+                        if (lastReadDocument === null) {
+                            lastReadDocument = currentDocument;
+                        }
+                        else if (ShouldSendNewEmail(currentDocument, lastReadDocument, attachSize, deliveryMethod)) {
+                            lastReadDocument = currentDocument;
+                            TemporaryFile.Append(tempFile, JSON.stringify(documentStack) + "\n");
+                            documentStack = [];
+                            attachSize = currentDocumentAttachmentsSize;
+                        }
+                        documentStack.push(currentDocument);
+                    }
+                    timeoutHelper.NotifyIteration();
+                } while (documentRecord);
+                // The last stack has to be sent too
+                if (documentStack.length &gt; 0) {
+                    TemporaryFile.Append(tempFile, JSON.stringify(documentStack) + "\n");
+                }
+            }
+            function GetGroupingKey(deliveryMethod) {
+                const groupKeyFromUserExit = Sys.Helpers.TryCallFunction("Lib.DD.Customization.Deliveries.CustomizeEmailGroupingKey", deliveryMethod);
+                if (groupKeyFromUserExit === null || groupKeyFromUserExit === undefined) {
+                    Log.Info(`Using default ${deliveryMethod} grouping key because the user exit Lib.DD.Customization.Deliveries.CustomizeEmailGroupingKey returned null or isn't defined`);
+                }
+                else if (!Sys.Helpers.IsArray(groupKeyFromUserExit)) {
+                    Log.Error(`Using default ${deliveryMethod} grouping key because object returned wasn't an array in Lib.DD.Customization.Deliveries.CustomizeEmailGroupingKey`);
+                }
+                else if (groupKeyFromUserExit.length === 0) {
+                    Log.Error(`Using default ${deliveryMethod} grouping key because was returned an empty array in Lib.DD.Customization.Deliveries.CustomizeEmailGroupingKey`);
+                }
+                else {
+                    Log.Info(`Custom ${deliveryMethod} grouping key: ${JSON.stringify(groupKeyFromUserExit)}`);
+                    return groupKeyFromUserExit;
+                }
+                return ["Recipient_ID__", "Recipient_email__"];
+            }
+            function ShouldSendNewEmail(currentDocument, lastReadDocument, attachSize, deliveryMethod) {
+                // WARNING: here we're supposing than the query order determinates a correct
+                // set of documents with THE SAME configuration. Multi-configurations sending
+                // to a same customer IS NOT SUPPORTED.
+                let maxAttachSize = parseInt(Sys.DD.GetParameter("GroupEmailMaxAttachSize"), 10); // Max attachment size in a single email
+                if (isNaN(maxAttachSize)) {
+                    Log.Error("Error: wizard parameter 'GroupEmailMaxAttachSize' is not a number, value is: " + maxAttachSize);
+                    Log.Warn("Setting default value to: 6");
+                    maxAttachSize = 6;
+                }
+                const sameGroupingKey = lastReadDocument.groupedFields.every((v, i) =&gt; v === currentDocument.groupedFields[i]);
+                if (deliveryMethod === "SM") {
+                    const attachMaxSizeReached = (attachSize &gt;= maxAttachSize * 1024 * 1024);
+                    return (!sameGroupingKey || attachMaxSizeReached);
+                }
+                else {
+                    return !sameGroupingKey;
+                }
+            }
+            function GetGroupableRecords(deliveryMethod, groupingKey) {
+                // It's important not to create "AsProcessAdmin" because subaccounts don't have to group for brothers subaccounts
+                const processQuery = Process.CreateQuery();
+                const processID = "CD#" + Process.GetProcessID("DD - SenderForm");
+                const filterForDMPortal = "(&amp;(Delivery_method__=PORTAL)(State=100))";
+                const filterForDMEmail = "(&amp;(Delivery_method__=SM)(State=90))";
+                const filterToUse = (deliveryMethod === "SM") ? filterForDMEmail : filterForDMPortal;
+                const filter = `(&amp;(Email_grouping_state__=GROUPABLE_WAITING)(Deleted=0)${filterToUse})`;
+                let order = "";
+                for (const groupField of groupingKey) {
+                    order += `${groupField} ASC, `;
+                }
+                Log.Info(`Query for delivery method ${deliveryMethod} is:`);
+                Log.Info(`   &gt; filter: ${filter}`);
+                Log.Info(`   &gt; order:  ${order}`);
+                processQuery.SetSpecificTable(processID);
+                processQuery.SetFilter(filter);
+                processQuery.SetSearchInArchive(false);
+                processQuery.SetAttributesList("*");
+                processQuery.SetSortOrder(order);
+                processQuery.SetOptionEx("Limit=-1");
+                processQuery.SetOptionEx("DONOTGETLOCALDBFILES=1");
+                const eddRecords = processQuery.MoveFirst();
+                if (!eddRecords) {
+                    throw new Error("Unable to query groupables records, error: " + processQuery.GetLastErrorMessage());
+                }
+                return processQuery;
+            }
+            function GetAttachmentFilesForGrouping(documentType, attachList) {
+                let attachmentForGrouping = [];
+                let attachmentFiles = [];
+                const nbAttach = attachList.GetNbAttachs();
+                const documentAttachIndex = GetDocumentAttachIndex(attachList, nbAttach, documentType);
+                for (let i = 0; i &lt; nbAttach; i++) {
+                    if (documentAttachIndex === i || Sys.DD.GetParameter("AddAttachmentsWithEmail", false)) {
+                        attachmentForGrouping.push(attachList.GetAttach(i));
+                    }
+                }
+                const invoiceRelatedDocumentsInfo = Sys.Outbound.Document.GetRelatedDocumentsGroupingInfoFromAttachments(attachmentForGrouping);
+                attachmentFiles = attachmentFiles.concat(invoiceRelatedDocumentsInfo);
+                return attachmentFiles;
+            }
+            function GetDocumentAttachIndex(attachList, nbAttach, documentType) {
+                let index;
+                for (index = 0; index &lt; nbAttach; index++) {
+                    let attach = attachList.GetAttach(index);
+                    let attachVars = attach.GetVars();
+                    let attachDocumentType = attachVars.GetValue_String("DocumentType", 0) || "";
+                    if (attachDocumentType.toLowerCase() === documentType.toLowerCase()) {
+                        return index;
+                    }
+                }
+                return 0;
+            }
+            Main();
+        })(Extraction = EmailGrouping.Extraction || (EmailGrouping.Extraction = {}));
+    })(EmailGrouping = DD.EmailGrouping || (DD.EmailGrouping = {}));
+})(DD || (DD = {}));
+//# sourceMappingURL=extractionscript.js.map</ExtractionScript>
+      <AllowRemovePages>true</AllowRemovePages>
+      <AllowSwapPages>true</AllowSwapPages>
+      <PostProcessingScriptAllowRetry>
+      </PostProcessingScriptAllowRetry>
+      <PostProcessingScript>
+      </PostProcessingScript>
+    </gdr>
+    <lg>
+      <process_da>{
+	"_Button pane": "Knap",
+	"_Click here to retrieve your password": "Hent din adgangskode",
+	"_Completion date time": "Sluttidspunkt",
+	"_Counter changed": "Antal statusopdateringer",
+	"_Counter error": "Antal fejl",
+	"_Counter not changed": "Antal ikke-ændrede statusser",
+	"_Document {0}": "Dokument {0}",
+	"_Email grouping process": "Mailgruppering",
+	"_Error log pane": "Fejllog",
+	"_Error pane": "Fejlmeddelelse",
+	"_error_attachment_is_not_a_csv": "Filen skal være i CSV-format.",
+	"_error_bad_csv_headers": "Overskriften i CSV-filen er ikke gyldig.",
+	"_error_no_csv_attached": "Vælg en CSV-importfil.",
+	"_error_too_many_attachments": "Du kan kun vælge én CSV-fil.",
+	"_Filename": "Navn på importfil",
+	"_Grouped email intro portal": "Dine dokumenter er tilgængelige nu.",
+	"_Grouped email intro with attach": "Dit dokument er tilgængeligt nu. Åben den vedhæftede fil for at se dit dokument i PDF-format.",
+	"_Identifier": "Identifikator:",
+	"_Import in progress": "Igangværende import...",
+	"_Import pane": "CSV-importfil",
+	"_Line count": "Samlet antal linjer",
+	"_LoginSentence": "Dine loginoplysninger er følgende:",
+	"_New document from sender {0}": "{0} – nyt dokument",
+	"_New documents from sender {0}": "{0} – nye dokumenter",
+	"_Password": "Adgangskode:",
+	"_Perform import": "Udfør import",
+	"_Process description pane": "Procesbeskrivelse",
+	"_Sent email": "Sendte mails",
+	"_Spacer pane": "Afstandsstykke",
+	"_Submit date time": "Starttidspunkt",
+	"_Summary pane": "Oversigt",
+	"_This process is usually automatically called from the grouping email scheduled report.": "Denne proces kaldes normalt automatisk fra den planlagte rapport om mailgruppering. Her kan du teste afsendelsen manuelt.",
+	"_View": "Vis",
+	"DD Email Grouping": "Mailgruppering"
+}</process_da>
+      <process_de>{
+	"_Button pane": "Schaltfläche",
+	"_Click here to retrieve your password": "Kennwort abrufen",
+	"_Completion date time": "Endzeit",
+	"_Counter changed": "Anzahl der Statusaktualisierungen",
+	"_Counter error": "Fehleranzahl",
+	"_Counter not changed": "Anzahl unveränderter Status",
+	"_Document {0}": "Dokument {0}",
+	"_Email grouping process": "E-Mail-Gruppierung",
+	"_Error log pane": "Fehlerprotokoll",
+	"_Error pane": "Fehlermeldung",
+	"_error_attachment_is_not_a_csv": "Die Datei muss im CSV-Format vorliegen.",
+	"_error_bad_csv_headers": "Die Kopfzeile der CSV-Datei ist ungültig.",
+	"_error_no_csv_attached": "Bitte wählen Sie eine CSV-Importdatei aus.",
+	"_error_too_many_attachments": "Sie können nur eine CSV-Datei auswählen.",
+	"_Filename": "Importdateiname",
+	"_Grouped email intro portal": "Ihre Rechnungen sind jetzt verfügbar.",
+	"_Grouped email intro with attach": "Ihre Rechnung ist jetzt verfügbar. Um die Rechnung im PDF-Format anzuzeigen, öffnen Sie einfach den Anhang.",
+	"_Identifier": "ID:",
+	"_Import in progress": "Import wird durchgeführt...",
+	"_Import pane": "CSV-Importdatei",
+	"_Line count": "Gesamtanzahl der Zeilen",
+	"_LoginSentence": "Ihre Anmeldeinformationen lauten wie folgt:",
+	"_New document from sender {0}": "{0} - Neues Dokument",
+	"_New documents from sender {0}": "{0} - Neue Dokumente",
+	"_Password": "Kennwort:",
+	"_Perform import": "Importvorgang ausführen",
+	"_Process description pane": "Prozessbeschreibung",
+	"_Sent email": "Gesendete E-Mails",
+	"_Spacer pane": "Abstandshalter",
+	"_Submit date time": "Startzeit",
+	"_Summary pane": "Zusammenfassung",
+	"_This process is usually automatically called from the grouping email scheduled report.": "Dieser Prozess wird üblicherweise automatisch vom geplanten Bericht zur E-Mail-Gruppierung aufgerufen. Hier können Sie die Einreichung manuell testen.",
+	"_View": "Anzeigen",
+	"DD Email Grouping": "E-Mail-Gruppierung"
+}</process_de>
+      <process_JA>{
+	"_Button pane": "ボタン",
+	"_Click here to retrieve your password": "パスワードを回復",
+	"_Completion date time": "終了時刻",
+	"_Counter changed": "ステータス更新数",
+	"_Counter error": "エラー数",
+	"_Counter not changed": "変更のないステータス数",
+	"_Document {0}": "ドキュメント {0}",
+	"_Email grouping process": "Emailのグループ化",
+	"_Error log pane": "エラーログ",
+	"_Error pane": "エラーメッセージ",
+	"_error_attachment_is_not_a_csv": "ファイルは必ずCSV形式にしてください。",
+	"_error_bad_csv_headers": "CSVファイルヘッダーが無効です。",
+	"_error_no_csv_attached": "CSVインポートファイルを選択してください。",
+	"_error_too_many_attachments": "選択できるCSVファイルは1つです。",
+	"_Filename": "インポートするファイル名",
+	"_Grouped email intro portal": "ドキュメントを利用できます。",
+	"_Grouped email intro with attach": "ドキュメントを利用できます。Emailの添付ファイルを開いてドキュメントをPDFでご覧ください。",
+	"_Identifier": "ID：",
+	"_Import in progress": "インポート中...",
+	"_Import pane": "CSVインポートファイル",
+	"_Line count": "行の総数",
+	"_LoginSentence": "お客様のログイン情報は以下の通りです。",
+	"_New document from sender {0}": "{0} - 新しいドキュメント",
+	"_New documents from sender {0}": "{0} - 新しいドキュメント",
+	"_Password": "パスワード：",
+	"_Perform import": "インポートを実行",
+	"_Process description pane": "処理説明",
+	"_Sent email": "送信済みメール",
+	"_Spacer pane": "スペーサー",
+	"_Submit date time": "開始時刻",
+	"_Summary pane": "概要",
+	"_This process is usually automatically called from the grouping email scheduled report.": "この処理は通常は、電子メールのグループ化のスケジュール済みのレポートから自動で呼び出されます。こちらで送信を手動でテストできます。",
+	"_View": "表示",
+	"DD Email Grouping": "Emailのグループ化"
+}</process_JA>
+      <process_en>{
+	"_Button pane": "Button",
+	"_Click here to retrieve your password": "Retrieve your password",
+	"_Completion date time": "End time",
+	"_Counter changed": "Number of status updates",
+	"_Counter error": "Error count",
+	"_Counter not changed": "Number of unchanged statuses",
+	"_Document {0}": "Document {0}",
+	"_Email grouping process": "Email grouping",
+	"_Error log pane": "Error Log",
+	"_Error pane": "Error Message",
+	"_error_attachment_is_not_a_csv": "The file must be in CSV format.",
+	"_error_bad_csv_headers": "The CSV file header is not valid.",
+	"_error_no_csv_attached": "Please select a CSV import file.",
+	"_error_too_many_attachments": "You can only select one CSV file.",
+	"_Filename": "Import file name",
+	"_Grouped email intro portal": "Your documents are now available.",
+	"_Grouped email intro with attach": "Your document is now available. Open the email attachment to view your document in PDF.",
+	"_Identifier": "Identifier:",
+	"_Import in progress": "Import in progress...",
+	"_Import pane": "CSV import file",
+	"_Line count": "Total line count",
+	"_LoginSentence": "Your login information reads as follows:",
+	"_New document from sender {0}": "{0} - New document",
+	"_New documents from sender {0}": "{0} - New documents",
+	"_Password": "Password:",
+	"_Perform import": "Perform import",
+	"_Process description pane": "Process description",
+	"_Sent email": "Sent Emails",
+	"_Spacer pane": "Spacer",
+	"_Submit date time": "Start time",
+	"_Summary pane": "Summary",
+	"_This process is usually automatically called from the grouping email scheduled report.": "This process is usually automatically called from the scheduled report on email grouping. Here, you can test the submission manually.",
+	"_View": "View",
+	"DD Email Grouping": "Email grouping"
+}</process_en>
+      <process_es>{
+	"_Button pane": "Botón",
+	"_Click here to retrieve your password": "Recuperar su contraseña",
+	"_Completion date time": "Hora de finalización",
+	"_Counter changed": "Número de actualizaciones de estado",
+	"_Counter error": "Número de errores",
+	"_Counter not changed": "Número de estados sin cambios",
+	"_Document {0}": "Documento {0}",
+	"_Email grouping process": "Agrupación de e-mails",
+	"_Error log pane": "Registro de errores",
+	"_Error pane": "Mensaje de error",
+	"_error_attachment_is_not_a_csv": "El archivo debe tener el formato CSV.",
+	"_error_bad_csv_headers": "El encabezado del archivo CSV no es válido.",
+	"_error_no_csv_attached": "Seleccione un archivo de importación CSV.",
+	"_error_too_many_attachments": "Solo puede seleccionar un archivo CSV.",
+	"_Filename": "Nombre del archivo de importación",
+	"_Grouped email intro portal": "Sus documentos ya están disponibles.",
+	"_Grouped email intro with attach": "Su documento está disponible. Para ver el documento en formato PDF, solo tiene que abrir el documento adjunto.",
+	"_Identifier": "Identificador:",
+	"_Import in progress": "Importación en curso...",
+	"_Import pane": "Archivo de importación CSV",
+	"_Line count": "Número total de líneas",
+	"_LoginSentence": "Sus datos de inicio de sesión son los siguientes:",
+	"_New document from sender {0}": "{0} - Nuevo documento",
+	"_New documents from sender {0}": "{0} - Nuevos documentos",
+	"_Password": "Contraseña:",
+	"_Perform import": "Realizar la importación",
+	"_Process description pane": "Descripción del proceso",
+	"_Sent email": "E-mails enviados",
+	"_Spacer pane": "Espaciador",
+	"_Submit date time": "Hora de inicio",
+	"_Summary pane": "Resumen",
+	"_This process is usually automatically called from the grouping email scheduled report.": "Normalmente, este proceso se llama automáticamente desde el informe programado sobre la agrupación de e-mails. Aquí puede realizar pruebas manuales de envío.",
+	"_View": "Ver",
+	"DD Email Grouping": "Agrupación de e-mails"
+}</process_es>
+      <process_fr>{
+	"_Button pane": "Bouton",
+	"_Click here to retrieve your password": "Récupérer votre mot de passe",
+	"_Completion date time": "Heure de fin",
+	"_Counter changed": "Nombre de mises à jour d'état",
+	"_Counter error": "Nombre d'erreurs",
+	"_Counter not changed": "Nombre d'états inchangés",
+	"_Document {0}": "Document {0}",
+	"_Email grouping process": "Regroupement d'e-mails",
+	"_Error log pane": "Journal des erreurs",
+	"_Error pane": "Message d'erreur",
+	"_error_attachment_is_not_a_csv": "Le fichier doit être au format CSV.",
+	"_error_bad_csv_headers": "L'en-tête du fichier CSV n'est pas valide.",
+	"_error_no_csv_attached": "Veuillez sélectionner un fichier d'import CSV.",
+	"_error_too_many_attachments": "Vous ne pouvez sélectionner qu'un seul fichier CSV.",
+	"_Filename": "Nom du fichier importé",
+	"_Grouped email intro portal": "Vos documents sont à présent disponibles.",
+	"_Grouped email intro with attach": "Votre document est à présent disponible. Pour le consulter au format PDF, veuillez ouvrir la pièce jointe.",
+	"_Identifier": "Identifiant :",
+	"_Import in progress": "Import en cours...",
+	"_Import pane": "Fichier d'import CSV",
+	"_Line count": "Nombre total de lignes",
+	"_LoginSentence": "Vos options de connexion sont les suivantes :",
+	"_New document from sender {0}": "{0} - Nouveau document",
+	"_New documents from sender {0}": "{0} - Nouveaux documents",
+	"_Password": "Mot de passe :",
+	"_Perform import": "Exécuter l'importation",
+	"_Process description pane": "Description du processus",
+	"_Sent email": "E-Mails envoyés",
+	"_Spacer pane": "Espacement",
+	"_Submit date time": "Heure de début",
+	"_Summary pane": "Résumé",
+	"_This process is usually automatically called from the grouping email scheduled report.": "Habituellement, ce processus est appelé automatiquement depuis le rapport planifié sur le regroupement des e-mails. Ici, vous pouvez tester la soumission manuellement.",
+	"_View": "Afficher",
+	"DD Email Grouping": "Regroupement d'e-mails"
+}</process_fr>
+      <process_nl-NL>{
+	"_Button pane": "Knop",
+	"_Click here to retrieve your password": "Uw wachtwoord ophalen",
+	"_Completion date time": "Eindtijd",
+	"_Counter changed": "Aantal statusupdates",
+	"_Counter error": "Aantal fouten",
+	"_Counter not changed": "Aantal ongewijzigde statussen",
+	"_Document {0}": "Document {0}",
+	"_Email grouping process": "E-mail groepering",
+	"_Error log pane": "Foutenlog",
+	"_Error pane": "Foutbericht",
+	"_error_attachment_is_not_a_csv": "Het bestand moet in CSV-formaat zijn.",
+	"_error_bad_csv_headers": "De koptekst van het CSV-bestand is niet geldig.",
+	"_error_no_csv_attached": "Selecteer een CSV-importbestand.",
+	"_error_too_many_attachments": "U kunt slechts één CSV-bestand selecteren.",
+	"_Filename": "Naam importbestand",
+	"_Grouped email intro portal": "Uw documenten zijn nu beschikbaar.",
+	"_Grouped email intro with attach": "Uw document is nu beschikbaar. Open de bijlage bij de e-mail om uw document in PDF te bekijken.",
+	"_Identifier": "ID:",
+	"_Import in progress": "Importeren in uitvoering...",
+	"_Import pane": "CSV-importbestand",
+	"_Line count": "Totaal aantal regels",
+	"_LoginSentence": "Uw login informatie is als volgt:",
+	"_New document from sender {0}": "{0} - Nieuw document",
+	"_New documents from sender {0}": "{0} - Nieuwe documenten",
+	"_Password": "Wachtwoord:",
+	"_Perform import": "Importeren uitvoeren",
+	"_Process description pane": "Procesbeschrijving",
+	"_Sent email": "Verzonden e-mail",
+	"_Spacer pane": "Spatie",
+	"_Submit date time": "Starttijd",
+	"_Summary pane": "Samenvatting",
+	"_This process is usually automatically called from the grouping email scheduled report.": "Dit proces wordt doorgaans automatisch opgeroepen via het geplande rapport voor groepering van e-mails. Hier kunt u het indienen handmatig testen.",
+	"_View": "Weergeven",
+	"DD Email Grouping": "Groepering e-mail"
+}</process_nl-NL>
+      <process_pl>{
+	"_Button pane": "Przycisk",
+	"_Click here to retrieve your password": "Odzyskaj hasło",
+	"_Completion date time": "Czas zakończenia",
+	"_Counter changed": "Liczba aktualizacji statusu",
+	"_Counter error": "Liczba błędów",
+	"_Counter not changed": "Liczba niezmienionych statusów",
+	"_Document {0}": "Dokument {0}",
+	"_Email grouping process": "Grupowanie e-maili",
+	"_Error log pane": "Dziennik błędów",
+	"_Error pane": "Komunikat o błędzie",
+	"_error_attachment_is_not_a_csv": "Plik musi mieć format CSV.",
+	"_error_bad_csv_headers": "Nagłówek pliku CSV jest nieprawidłowy.",
+	"_error_no_csv_attached": "Wybierz plik importu CSV.",
+	"_error_too_many_attachments": "Można wybrać tylko jeden plik CSV.",
+	"_Filename": "Nazwa pliku importu",
+	"_Grouped email intro portal": "Dokumenty są już dostępne.",
+	"_Grouped email intro with attach": "Dokument jest już dostępny. Otwórz załącznik e-maila, aby wyświetlić dokument w formacie PDF.",
+	"_Identifier": "Identyfikator:",
+	"_Import in progress": "Importowanie w toku...",
+	"_Import pane": "Plik importu CSV",
+	"_Line count": "Łączna liczba wierszy",
+	"_LoginSentence": "Twoje dane logowania są następujące:",
+	"_New document from sender {0}": "{0} – nowy dokument",
+	"_New documents from sender {0}": "{0} – nowe dokumenty",
+	"_Password": "Hasło:",
+	"_Perform import": "Wykonaj import",
+	"_Process description pane": "Opis procesu",
+	"_Sent email": "Wysłane e-maile",
+	"_Spacer pane": "Separator",
+	"_Submit date time": "Czas rozpoczęcia",
+	"_Summary pane": "Podsumowanie",
+	"_This process is usually automatically called from the grouping email scheduled report.": "Zazwyczaj ten proces jest wywoływany automatycznie z poziomu zaplanowanego raportu dotyczącego grupowania e-maili. Tutaj można przetestować przesyłanie ręcznie.",
+	"_View": "Wyświetl",
+	"DD Email Grouping": "Grupowanie e-maili"
+}</process_pl>
+      <process_it>{
+	"_Button pane": "Pulsante",
+	"_Click here to retrieve your password": "Recupera la tua password",
+	"_Completion date time": "Ora di fine",
+	"_Counter changed": "Numero di aggiornamenti stato",
+	"_Counter error": "Numero di errori",
+	"_Counter not changed": "Numero di stati non modificati",
+	"_Document {0}": "Documento {0}",
+	"_Email grouping process": "Raggruppamento e-mail",
+	"_Error log pane": "Registro errori",
+	"_Error pane": "Messaggio di errore",
+	"_error_attachment_is_not_a_csv": "Il file deve essere in formato CSV.",
+	"_error_bad_csv_headers": "Intestazione del file CSV non valida.",
+	"_error_no_csv_attached": "Selezionare un file di importazione CSV.",
+	"_error_too_many_attachments": "È possibile selezionare un solo file CSV.",
+	"_Filename": "Nome file di importazione",
+	"_Grouped email intro portal": "Le tue fatture sono disponibili.",
+	"_Grouped email intro with attach": "La tua fattura è disponibile. Per visualizzarla in formato PDF, è sufficiente aprire l'allegato.",
+	"_Identifier": "Identificatore:",
+	"_Import in progress": "Importazione in corso...",
+	"_Import pane": "File di importazione CSV",
+	"_Line count": "Numero totale di righe",
+	"_LoginSentence": "I tuoi dati di accesso sono i seguenti:",
+	"_New document from sender {0}": "{0} - Nuovo documento",
+	"_New documents from sender {0}": "{0} - Nuovi documenti",
+	"_Password": "Password:",
+	"_Perform import": "Esegui importazione",
+	"_Process description pane": "Descrizione trattamento",
+	"_Sent email": "E-mail inviate",
+	"_Spacer pane": "Spaziatore",
+	"_Submit date time": "Ora inizio",
+	"_Summary pane": "Riepilogo",
+	"_This process is usually automatically called from the grouping email scheduled report.": "Solitamente, questo trattamento viene chiamato automaticamente dal report pianificato sul raggruppamento delle e-mail. Da qui è possibile eseguire test manuali di inoltro.",
+	"_View": "Visualizza",
+	"DD Email Grouping": "Raggruppamento e-mail"
+}</process_it>
+      <process_sk>{
+	"_Button pane": "Tlačidlo",
+	"_Click here to retrieve your password": "Obnoviť heslo",
+	"_Completion date time": "Čas ukončenia",
+	"_Counter changed": "Počet aktualizácií stavu",
+	"_Counter error": "Počet chýb",
+	"_Counter not changed": "Počet nezmenených stavov",
+	"_Document {0}": "Dokument {0}",
+	"_Email grouping process": "Zoskupovanie e-mailov",
+	"_Error log pane": "Protokol chýb",
+	"_Error pane": "Chybové hlásenie",
+	"_error_attachment_is_not_a_csv": "Súbor musí byť vo formáte CSV.",
+	"_error_bad_csv_headers": "Záhlavie súboru CSV nie je platné.",
+	"_error_no_csv_attached": "Vyberte súbor CSV na import.",
+	"_error_too_many_attachments": "Môžete vybrať len jeden súbor CSV.",
+	"_Filename": "Názov importovaného súboru",
+	"_Grouped email intro portal": "Vaše dokumenty sú teraz k dispozícii.",
+	"_Grouped email intro with attach": "Váš dokument je teraz k dispozícii. Otvorte prílohu e-mailu a dokument si zobrazte vo formáte PDF.",
+	"_Identifier": "Identifikátor:",
+	"_Import in progress": "Import prebieha...",
+	"_Import pane": "Importovaný súbor CSV",
+	"_Line count": "Celkový počet riadkov",
+	"_LoginSentence": "Vaše prihlasovacie údaje sú:",
+	"_New document from sender {0}": "{0} – Nový dokument",
+	"_New documents from sender {0}": "{0} – Nové dokumenty",
+	"_Password": "Heslo:",
+	"_Perform import": "Vykonať import",
+	"_Process description pane": "Popis procesu",
+	"_Sent email": "Odoslané e-maily",
+	"_Spacer pane": "Medzerník",
+	"_Submit date time": "Čas začiatku",
+	"_Summary pane": "Súhrn",
+	"_This process is usually automatically called from the grouping email scheduled report.": "Tento proces sa zvyčajne spúšťa automaticky z naplánovanej správy o zoskupovaní e-mailov. Tu môžete odoslanie otestovať ručne.",
+	"_View": "Zobraziť",
+	"DD Email Grouping": "Zoskupovanie e-mailov"
+}</process_sk>
+      <process_ZH-CN>{
+	"_Button pane": "按钮",
+	"_Click here to retrieve your password": "点此找回密码",
+	"_Completion date time": "结束时间",
+	"_Counter changed": "状态更新次数",
+	"_Counter error": "错误计数",
+	"_Counter not changed": "未更改状态的数量",
+	"_Document {0}": "文档 {0}",
+	"_Email grouping process": "电子邮件分组",
+	"_Error log pane": "错误日志",
+	"_Error pane": "错误消息",
+	"_error_attachment_is_not_a_csv": "文件必须为 CSV 格式。",
+	"_error_bad_csv_headers": "CSV 文件头无效。",
+	"_error_no_csv_attached": "请选择 CSV 导入文件。",
+	"_error_too_many_attachments": "只能选择一个 CSV 文件。",
+	"_Filename": "导入文件名",
+	"_Grouped email intro portal": "您的文档现在可用。",
+	"_Grouped email intro with attach": "您的文档现在可用。请打开电子邮件附件以查看 PDF 格式的文档。",
+	"_Identifier": "ID：",
+	"_Import in progress": "正在导入...",
+	"_Import pane": "CSV 导入文件",
+	"_Line count": "总行数",
+	"_LoginSentence": "您的登录信息如下：",
+	"_New document from sender {0}": "{0} - 新文档",
+	"_New documents from sender {0}": "{0} - 新文档",
+	"_Password": "密码：",
+	"_Perform import": "执行导入",
+	"_Process description pane": "进程说明",
+	"_Sent email": "已发送电子邮件",
+	"_Spacer pane": "间隔",
+	"_Submit date time": "开始时间",
+	"_Summary pane": "摘要",
+	"_This process is usually automatically called from the grouping email scheduled report.": "此进程通常会自动从计划的电子邮件分组报告中调用。您可以在此手动测试提交。",
+	"_View": "查看",
+	"DD Email Grouping": "电子邮件分组"
+}</process_ZH-CN>
+      <process_PT-BR>{
+	"_Button pane": "Botão",
+	"_Click here to retrieve your password": "Recuperar sua senha",
+	"_Completion date time": "Finalização",
+	"_Counter changed": "Número de atualizações de status",
+	"_Counter error": "Contagem de erros",
+	"_Counter not changed": "Número de status inalterados",
+	"_Document {0}": "Documento {0}",
+	"_Email grouping process": "Agrupamento de e-mail",
+	"_Error log pane": "Registro de erros",
+	"_Error pane": "Mensagem de erro",
+	"_error_attachment_is_not_a_csv": "O documento deve ter formato CSV.",
+	"_error_bad_csv_headers": "O cabeçalho do arquivo CSV não é válido.",
+	"_error_no_csv_attached": "Por favor, selecione um arquivo de importação CSV.",
+	"_error_too_many_attachments": "Você só pode selecionar um arquivo CSV.",
+	"_Filename": "Nome do arquivo de importação",
+	"_Grouped email intro portal": "Seus documentos já estão disponíveis.",
+	"_Grouped email intro with attach": "Seu documento já está disponível. Abra o anexo de e-mail para visualizar seu documento em PDF.",
+	"_Identifier": "Identificador:",
+	"_Import in progress": "Importação em andamento...",
+	"_Import pane": "Arquivo de importação CSV",
+	"_Line count": "Contagem total de linhas",
+	"_LoginSentence": "Suas informações de login são as seguintes:",
+	"_New document from sender {0}": "{0} - Novo documento",
+	"_New documents from sender {0}": "{0} - Novos documentos",
+	"_Password": "Senha:",
+	"_Perform import": "Executar importação",
+	"_Process description pane": "Descrição do processo",
+	"_Sent email": "E-mails enviados",
+	"_Spacer pane": "Espaçador",
+	"_Submit date time": "Hora de início",
+	"_Summary pane": "Resumo",
+	"_This process is usually automatically called from the grouping email scheduled report.": "Esse processo geralmente é chamado automaticamente a partir do relatório programado sobre agrupamento de e-mails. Aqui, você pode testar o envio manualmente.",
+	"_View": "Visualizar",
+	"DD Email Grouping": "Agrupamento de e-mail"
+}</process_PT-BR>
+      <process_pt>{
+	"_Button pane": "Tecla",
+	"_Click here to retrieve your password": "Recuperar a sua palavra-passe",
+	"_Completion date time": "Hora de término",
+	"_Counter changed": "Número de atualizações de estado",
+	"_Counter error": "Contagem de erros",
+	"_Counter not changed": "Número de estados inalterados",
+	"_Document {0}": "Documento {0}",
+	"_Email grouping process": "Agrupamento de e-mail",
+	"_Error log pane": "Registo de erro",
+	"_Error pane": "Mensagem de erro",
+	"_error_attachment_is_not_a_csv": "O documento deve ter formato CSV.",
+	"_error_bad_csv_headers": "O cabeçalho do ficheiro CSV não é válido.",
+	"_error_no_csv_attached": "Selecione um ficheiro de importação CSV.",
+	"_error_too_many_attachments": "Apenas pode selecionar um ficheiro CSV.",
+	"_Filename": "Importar nome do ficheiro",
+	"_Grouped email intro portal": "A sua fatura está agora disponível.",
+	"_Grouped email intro with attach": "A sua fatura está agora disponível. Para visualizar a sua fatura em PDF, simplesmente abra o anexo.",
+	"_Identifier": "Identificador:",
+	"_Import in progress": "Importação em andamento...",
+	"_Import pane": "Ficheiro de importação CSV",
+	"_Line count": "Contagem total de linhas",
+	"_LoginSentence": "A sua informação de entrada é a seguinte:",
+	"_New document from sender {0}": "{0} - Novo documento",
+	"_New documents from sender {0}": "{0} - Novos documentos",
+	"_Password": "Palavra-chave:",
+	"_Perform import": "Executar importação",
+	"_Process description pane": "Descrição do processo",
+	"_Sent email": "E-mails enviados",
+	"_Spacer pane": "Espaçador",
+	"_Submit date time": "Hora de início",
+	"_Summary pane": "Resumo",
+	"_This process is usually automatically called from the grouping email scheduled report.": "Este processo geralmente é chamado automaticamente a partir do relatório agendado no agrupamento de e-mails. Aqui, pode testar o envio manualmente.",
+	"_View": "Ver",
+	"DD Email Grouping": "Agrupamento de e-mail"
+}</process_pt>
+      <process_sv>{
+	"_Button pane": "Knapp",
+	"_Click here to retrieve your password": "Hämta ditt lösenord",
+	"_Completion date time": "Sluttid",
+	"_Counter changed": "Antal statusuppdateringar",
+	"_Counter error": "Felantal",
+	"_Counter not changed": "Antal oförändrade statusar",
+	"_Document {0}": "Dokument {0}",
+	"_Email grouping process": "E-postgruppering",
+	"_Error log pane": "Fellogg",
+	"_Error pane": "Felmeddelande",
+	"_error_attachment_is_not_a_csv": "Filen måste vara i CSV-format.",
+	"_error_bad_csv_headers": "CSV-filrubriken är inte giltig.",
+	"_error_no_csv_attached": "Välj en CSV-importfil.",
+	"_error_too_many_attachments": "Du kan bara välja en CSV-fil.",
+	"_Filename": "Namn på importfil",
+	"_Grouped email intro portal": "Dina dokument är nu tillgängliga.",
+	"_Grouped email intro with attach": "Ditt dokument är nu tillgängligt. Öppna e-postbilagan för att visa ditt dokument i PDF.",
+	"_Identifier": "Identifierare:",
+	"_Import in progress": "Import pågår...",
+	"_Import pane": "CSV-importfil",
+	"_Line count": "Totalt radantal",
+	"_LoginSentence": "Din inloggningsinformation är följande:",
+	"_New document from sender {0}": "{0} - Nytt dokument",
+	"_New documents from sender {0}": "{0} - Nya dokument",
+	"_Password": "Lösenord:",
+	"_Perform import": "Utför import",
+	"_Process description pane": "Processbeskrivning",
+	"_Sent email": "Skickade e-postmeddelanden",
+	"_Spacer pane": "Avstånd",
+	"_Submit date time": "Starttid",
+	"_Summary pane": "Sammanfattning",
+	"_This process is usually automatically called from the grouping email scheduled report.": "Den här processen anropas oftast automatiskt från den schemalagda rapporten vid e-postgruppering. Här kan du testa att skicka manuellt.",
+	"_View": "Visa",
+	"DD Email Grouping": "E-postgruppering"
+}</process_sv>
+    </lg>
+    <ocr>
+      <trade-off>accurate</trade-off>
+      <image-binarization>no</image-binarization>
+      <image-draft-fax>no</image-draft-fax>
+      <image-despeckle>no</image-despeckle>
+      <allowed-language>0</allowed-language>
+      <image-resolution-enhancement>auto</image-resolution-enhancement>
+      <ocrpagestoprocess>
+      </ocrpagestoprocess>
+      <extractionAdditionalOptions>
+      </extractionAdditionalOptions>
+    </ocr>
+    <process>
+      <flowtype>processing</flowtype>
+      <ocrpreset>scan</ocrpreset>
+      <homepagelabel>Email Grouping</homepagelabel>
+      <enableflexibleauditing>
+      </enableflexibleauditing>
+      <enableflexibleediting>
+      </enableflexibleediting>
+      <enableflexibleteaching>
+      </enableflexibleteaching>
+      <upgradable>yes</upgradable>
+      <disableocr>
+      </disableocr>
+      <instanciable>1</instanciable>
+      <disableautolearning>true</disableautolearning>
+      <backgroundprocessingthreshold>
+      </backgroundprocessingthreshold>
+      <EnablePreviewPrecomputation>
+      </EnablePreviewPrecomputation>
+      <pdfNormalizeFilter>
+      </pdfNormalizeFilter>
+      <archiveDuration>0</archiveDuration>
+      <OverrideAllowedDocumentExtensions>CSV</OverrideAllowedDocumentExtensions>
+      <ocrpagestoprocess>
+      </ocrpagestoprocess>
+      <ScriptEngineType>2</ScriptEngineType>
+      <displayWidth>1024</displayWidth>
+      <AllowUploadAttachment>0</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+      <UseCultureFormat>true</UseCultureFormat>
+      <AllowRetryExtractCD>true</AllowRetryExtractCD>
+      <TransportName>CustomData</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+      <printToProcess>
+      </printToProcess>
+    </process>
+    <ui>
+      <CustomScriptDebug>false</CustomScriptDebug>
+      <CustomScriptReadonly>true</CustomScriptReadonly>
+      <CustomScript>function Main()
+{
+	InitFormControls();
+
+	ManageErrorDisplaying();
+	ManageSummaryPane();
+
+	if (ProcessInstance.isDesignActive)
+	{
+		DisplayAllControlsAndPane(true);
+	}
+}
+
+function InitFormControls()
+{
+	Controls.Error_pane.Hide(true);
+	Controls.Summary_pane.Hide(true);
+
+	DisplayCounters(true);
+}
+
+function ManageErrorDisplaying()
+{
+	var errorKeyOnValidation = Variable.GetValueAsString("ErrorKeyOnValidation__");
+	if (errorKeyOnValidation)
+	{
+		var errorTranslated = Language.Translate(errorKeyOnValidation);
+		Controls.Error_field__.SetLabel(errorTranslated);
+		Controls.Error_pane.Hide(false);
+	}
+	else
+	{
+		Controls.Error_pane.Hide(true);
+	}
+}
+
+function ManageSummaryPane()
+{
+	var isProcessProcessing = ProcessInstance.state === 50 || ProcessInstance.state === 90;
+	var isProcessFinished = ProcessInstance.state &gt;= 100;
+
+	var showSummaryPane = isProcessProcessing || isProcessFinished;
+	Controls.Summary_pane.Hide(!showSummaryPane);
+
+	if (showSummaryPane)
+	{
+		// Fill datetimes components
+		var submitDateTime = Data.GetValue("SubmitDateTime");
+		var completionDateTime = Data.GetValue("CompletionDateTime");
+		Controls.SubmitDateTime__.SetText(submitDateTime);
+		Controls.CompletedDateTime__.SetText(completionDateTime);
+
+		// Fill translated state
+		var translatedState = Data.GetValue("StateTranslated");
+		if (translatedState !== null &amp;&amp; translatedState !== "")
+		{
+			// Dirty CSS computing to have a nice HTML content working on every skins
+			// TODO: To be remove one day when the HTML content will be ok in every skins
+			var cssColorName = ProcessInstance.state === 200 ? "color2" : "default";
+			var computedCSSClass = "input text-size-S text-color-" + cssColorName + " readonly";
+
+			Controls.State__.SetHTML("&lt;span class=\"" + computedCSSClass + "\"&gt;" + translatedState + "&lt;/span&gt;");
+		}
+		else
+		{
+			Controls.State__.SetHTML("");
+		}
+
+		// Hide counters if processing because they are wrong
+		DisplayCounters(!isProcessProcessing);
+	}
+}
+
+function DisplayCounters(display)
+{
+	Controls.CounterSentEmail__.Hide(!display);
+}
+
+function DisplayAllControlsAndPane(display)
+{
+	Controls.Error_pane.Hide(!display);
+	Controls.Summary_pane.Hide(!display);
+
+	DisplayCounters(display);
+}
+
+Main();
+</CustomScript>
+      <layout>{
+	"data": [],
+	"stamps": 57,
+	"*": {
+		"GDRData": {
+			"type": "GDRData",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"version": 0
+			}
+		},
+		"OCRParams": {
+			"type": "OCRParams",
+			"data": [],
+			"stamp": 2,
+			"options": {
+				"version": 0
+			}
+		},
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 3,
+			"options": {
+				"splitterType": "complex",
+				"maxwidth": 1024,
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 4,
+					"options": {
+						"maxwidth": 1024,
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 5,
+					"options": {
+						"maxwidth": 1024,
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 6,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-top": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 7,
+									"options": {
+										"autosize": true,
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"width": null,
+											"height": "16%"
+										},
+										"hidden": true
+									}
+								},
+								"form-content-bottom": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 8,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": 0,
+											"left": 0,
+											"width": 100,
+											"height": 100
+										},
+										"hidden": false,
+										"hideSeparator": true
+									},
+									"*": {
+										"form-content-left": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 9,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "0%",
+													"width": "100%",
+													"height": null
+												},
+												"hidden": false
+											},
+											"*": {
+												"form-content-left-7": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 10,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"Error_pane": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 11,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": true,
+																"hideTitleBar": true,
+																"backgroundcolor": "color7",
+																"labelsAlignment": "left",
+																"label": "_Error pane",
+																"leftImageURL": "public\\error.png",
+																"hidden": true,
+																"hideTitle": false,
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 12,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 13,
+																			"options": {
+																				"version": 0,
+																				"lines": 2,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"Spacer_line2__": {
+																						"line": 1,
+																						"column": 1
+																					},
+																					"Error_field__": {
+																						"line": 2,
+																						"column": 1
+																					}
+																				},
+																				"colspans": [
+																					[
+																						{
+																							"index": 0,
+																							"length": 2
+																						}
+																					],
+																					[
+																						{
+																							"index": 0,
+																							"length": 2
+																						}
+																					]
+																				]
+																			},
+																			"*": {
+																				"Spacer_line2__": {
+																					"type": "Spacer",
+																					"data": false,
+																					"stamp": 14,
+																					"options": {
+																						"label": "Spacer line2",
+																						"height": "20",
+																						"width": "",
+																						"color": "default",
+																						"version": 0
+																					}
+																				},
+																				"Error_field__": {
+																					"type": "Text",
+																					"data": false,
+																					"stamp": 15,
+																					"options": {
+																						"label": "Error field",
+																						"marge": 0,
+																						"textSize": "M",
+																						"textAlignment": "center",
+																						"textStyle": "bold",
+																						"textColor": "color2",
+																						"backgroundcolor": "default",
+																						"image_url": "",
+																						"version": 0
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-5": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 16,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"Process_description_pane": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 17,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": true,
+																"hideTitleBar": true,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_Process description pane",
+																"leftImageURL": "",
+																"hideTitle": false,
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 18,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 19,
+																			"options": {
+																				"version": 0,
+																				"lines": 2,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"Notification_from_CSV__": {
+																						"line": 1,
+																						"column": 1
+																					},
+																					"Spacer_line5__": {
+																						"line": 2,
+																						"column": 1
+																					}
+																				},
+																				"colspans": [
+																					[
+																						{
+																							"index": 0,
+																							"length": 2
+																						}
+																					],
+																					[
+																						{
+																							"index": 0,
+																							"length": 2
+																						}
+																					]
+																				]
+																			},
+																			"*": {
+																				"Notification_from_CSV__": {
+																					"type": "Title",
+																					"data": false,
+																					"stamp": 20,
+																					"options": {
+																						"label": "_Email grouping process",
+																						"marge": 0,
+																						"textSize": "XXL",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"backgroundcolor": "default",
+																						"image_url": "",
+																						"version": 0
+																					}
+																				},
+																				"Spacer_line5__": {
+																					"type": "Spacer",
+																					"data": false,
+																					"stamp": 21,
+																					"options": {
+																						"label": "Spacer line5",
+																						"height": "",
+																						"width": "",
+																						"color": "default",
+																						"version": 0
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-4": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 22,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"Import_pane__": {
+															"type": "PanelDocument",
+															"data": [],
+															"stamp": 23,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": true,
+																"hideTitleBar": true,
+																"label": "_Import pane",
+																"hideTitle": false,
+																"hidden": true,
+																"version": 0
+															},
+															"*": {
+																"Document": {
+																	"type": "Documents",
+																	"data": [
+																		"documentscontroldata"
+																	],
+																	"stamp": 24,
+																	"options": {
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-2": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 25,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"SystemData": {
+															"type": "PanelSystemData",
+															"data": [],
+															"stamp": 26,
+															"options": {
+																"multicolumn": false,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"label": "_System data",
+																"hidden": true,
+																"hideTitle": false,
+																"version": 0
+															}
+														}
+													}
+												},
+												"form-content-left-3": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 27,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"NextProcess": {
+															"type": "PanelNextProcess",
+															"data": [],
+															"stamp": 28,
+															"options": {
+																"hidden": true,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"label": "_Next Process",
+																"hideTitle": false,
+																"version": 0
+															}
+														}
+													}
+												},
+												"form-content-left-11": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 29,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"Spacer_pane": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 30,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": true,
+																"hideTitleBar": true,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_Spacer pane",
+																"leftImageURL": "",
+																"hideTitle": false,
+																"hidden": true,
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 31,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 32,
+																			"options": {
+																				"version": 0,
+																				"lines": 1,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"Spacer_line3__": {
+																						"line": 1,
+																						"column": 1
+																					}
+																				},
+																				"colspans": [
+																					[
+																						{
+																							"index": 0,
+																							"length": 2
+																						}
+																					]
+																				]
+																			},
+																			"*": {
+																				"Spacer_line3__": {
+																					"type": "Spacer",
+																					"data": false,
+																					"stamp": 33,
+																					"options": {
+																						"label": "Spacer line3",
+																						"height": "10",
+																						"width": "",
+																						"color": "default",
+																						"version": 0
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-10": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 34,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"Summary_pane": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 35,
+															"options": {
+																"border": {},
+																"labelLength": "300",
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": true,
+																"hideTitleBar": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_Summary pane",
+																"leftImageURL": "",
+																"hidden": true,
+																"hideTitle": false,
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 36,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {
+																			"State__": "LabelState__",
+																			"LabelState__": "State__",
+																			"SubmitDateTime__": "LabelSubmitDateTime__",
+																			"LabelSubmitDateTime__": "SubmitDateTime__",
+																			"CompletedDateTime__": "LabelCompletedDateTime__",
+																			"LabelCompletedDateTime__": "CompletedDateTime__",
+																			"CounterSentEmail__": "LabelCounterSentEmail__",
+																			"LabelCounterSentEmail__": "CounterSentEmail__"
+																		}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 37,
+																			"options": {
+																				"version": 0,
+																				"lines": 5,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"Spacer_line4__": {
+																						"line": 1,
+																						"column": 1
+																					},
+																					"LabelState__": {
+																						"line": 2,
+																						"column": 1
+																					},
+																					"State__": {
+																						"line": 2,
+																						"column": 2
+																					},
+																					"LabelSubmitDateTime__": {
+																						"line": 3,
+																						"column": 1
+																					},
+																					"SubmitDateTime__": {
+																						"line": 3,
+																						"column": 2
+																					},
+																					"LabelCompletedDateTime__": {
+																						"line": 4,
+																						"column": 1
+																					},
+																					"CompletedDateTime__": {
+																						"line": 4,
+																						"column": 2
+																					},
+																					"LabelCounterSentEmail__": {
+																						"line": 5,
+																						"column": 1
+																					},
+																					"CounterSentEmail__": {
+																						"line": 5,
+																						"column": 2
+																					}
+																				},
+																				"colspans": [
+																					[
+																						{
+																							"index": 0,
+																							"length": 2
+																						}
+																					],
+																					[],
+																					[],
+																					[],
+																					[]
+																				]
+																			},
+																			"*": {
+																				"Spacer_line4__": {
+																					"type": "Spacer",
+																					"data": false,
+																					"stamp": 38,
+																					"options": {
+																						"label": "Spacer line4",
+																						"height": "10",
+																						"width": "",
+																						"color": "default",
+																						"version": 0
+																					}
+																				},
+																				"LabelState__": {
+																					"type": "Label",
+																					"data": false,
+																					"stamp": 40,
+																					"options": {
+																						"label": "_State",
+																						"version": 0
+																					}
+																				},
+																				"State__": {
+																					"type": "HTML",
+																					"data": false,
+																					"stamp": 39,
+																					"options": {
+																						"label": "_State",
+																						"version": 0
+																					}
+																				},
+																				"LabelSubmitDateTime__": {
+																					"type": "Label",
+																					"data": false,
+																					"stamp": 42,
+																					"options": {
+																						"label": "_Submit date time",
+																						"version": 0
+																					}
+																				},
+																				"SubmitDateTime__": {
+																					"type": "Link",
+																					"data": false,
+																					"stamp": 41,
+																					"options": {
+																						"label": "_Submit date time",
+																						"version": 1,
+																						"link": "",
+																						"width": "300"
+																					}
+																				},
+																				"LabelCompletedDateTime__": {
+																					"type": "Label",
+																					"data": false,
+																					"stamp": 44,
+																					"options": {
+																						"label": "_Completion date time",
+																						"version": 0
+																					}
+																				},
+																				"CompletedDateTime__": {
+																					"type": "Link",
+																					"data": false,
+																					"stamp": 43,
+																					"options": {
+																						"label": "_Completion date time",
+																						"version": 1,
+																						"link": "",
+																						"width": "300"
+																					}
+																				},
+																				"LabelCounterSentEmail__": {
+																					"type": "Label",
+																					"data": [
+																						"CounterSentEmail__"
+																					],
+																					"stamp": 46,
+																					"options": {
+																						"label": "_Sent email",
+																						"version": 0
+																					}
+																				},
+																				"CounterSentEmail__": {
+																					"type": "Integer",
+																					"data": [
+																						"CounterSentEmail__"
+																					],
+																					"stamp": 45,
+																					"options": {
+																						"label": "_Sent email",
+																						"version": 1,
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"integer": true,
+																						"precision_internal": 0,
+																						"activable": true,
+																						"width": "80",
+																						"browsable": false,
+																						"autocompletable": false,
+																						"readonly": true,
+																						"precision_current": 0
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-6": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 47,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"Error_log_pane": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 48,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": true,
+																"hideTitleBar": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_Error log pane",
+																"leftImageURL": "",
+																"hideTitle": false,
+																"hidden": true,
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 49,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 50,
+																			"options": {
+																				"version": 0,
+																				"lines": 1,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"Error_log__": {
+																						"line": 1,
+																						"column": 1
+																					}
+																				},
+																				"colspans": [
+																					[
+																						{
+																							"index": 0,
+																							"length": 2
+																						}
+																					]
+																				]
+																			},
+																			"*": {
+																				"Error_log__": {
+																					"type": "LongText",
+																					"data": [
+																						"Error_log__"
+																					],
+																					"stamp": 51,
+																					"options": {
+																						"label": "Error log",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"activable": true,
+																						"width": "100%",
+																						"browsable": false,
+																						"numberOfLines": 10,
+																						"minNbLines": 10,
+																						"version": 0
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-right": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 52,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": 0,
+													"left": 45,
+													"width": 55,
+													"height": 100
+												},
+												"hidden": true,
+												"hideSeparator": true
+											},
+											"*": {
+												"form-content-right-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 53,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"PreviewPanel": {
+															"type": "PanelPreview",
+															"data": [],
+															"stamp": 54,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"label": "_Document Preview",
+																"hideTitle": false,
+																"version": 0
+															},
+															"*": {
+																"Preview": {
+																	"type": "Preview",
+																	"data": [
+																		"previewdata"
+																	],
+																	"stamp": 55,
+																	"options": {
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 56,
+					"options": {
+						"splitterType": "simple-h",
+						"maxwidth": 1024,
+						"version": 0
+					},
+					"*": {
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 57,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <field deleted="0" format="" guid="VWSR86550531" id="VLZKT400153E" label="_Sent email" length="0" name="CounterSentEmail__" originalProcessID="PHQG86550489" precision="0" processid="ULZKT400153E" submitable="1" type="INT">
+    <properties>
+      <db>
+        <alias>AVLZKT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/CounterSentEmail__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2014-11-04 18:08:18</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Sent email</Label>
+        <Alias>AVLZKT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="AYLN2952" id="WLZKT400153E" label="Error log" length="65535" name="Error_log__" originalProcessID="PHQG86550489" precision="0" processid="ULZKT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <fullname>/job/processfields/WLZKT400153E</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2015-05-07 14:14:31</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <isLongText>true</isLongText>
+      </field>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <type id="GOLHG0000M4O" name="CD">
+  </type>
+</process>

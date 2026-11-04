@@ -1,0 +1,2592 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:09:35" deleted="0" eskerapplication="P2P" global="0" id="J0EQT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="Remittance Advice" needvalidation="0" ootofilter="" ootoversion="2" originalProcessID="CTU2FP000IYP" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="0" version="1" visibility="1">
+  <properties>
+    <gdr>
+      <validationscriptIncludedScripts>Lib_CommonDialog_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_P2P_V12.0.566.0</validationscriptIncludedScripts>
+      <ValidationScript>"use strict";
+function updatePaymentReferenceInVendorInvoice() {
+    var _a;
+    try {
+        const extractedDataString = Variable.GetValueAsString("ExtractedData");
+        const paymentData = Sys.Helpers.IsEmpty(extractedDataString) ? {} : JSON.parse(extractedDataString);
+        const invoices = ((_a = paymentData.ExtractedData) === null || _a === void 0 ? void 0 : _a.Invoices) || [];
+        for (const invoice of invoices) {
+            let updatableInvoice = Process.GetUpdatableTransportAsProcessAdmin(invoice.InvRUIDEX);
+            let updatableInvoiceVars = updatableInvoice.GetUninheritedVars();
+            updatableInvoiceVars.AddValue_String("RemittanceAdviceReference__", Data.GetValue("ruidex"), true);
+            updatableInvoice.Process();
+        }
+    }
+    catch (error) {
+        Log.Error(`Error updating payment reference in vendor invoice: ${error.message}`);
+    }
+}
+function Run() {
+    const currentName = Data.GetActionName();
+    const currentAction = Data.GetActionType();
+    Log.Info(`-- Validation Script -- Name: '${currentName ? currentName : "&lt;empty&gt;"}', Action: '${currentAction ? currentAction : "&lt;empty&gt;"}'`);
+    if (!currentName &amp;&amp; !currentAction) {
+        const vendorContactLogin = Variable.GetValueAsString("VendorContactLogin");
+        if (vendorContactLogin &amp;&amp; vendorContactLogin.length &gt; 0) {
+            const vendorContact = vendorContactLogin.split(",");
+            for (let i = 0; i &lt; vendorContact.length; i++) {
+                Process.AddRight(vendorContact[i], "read");
+            }
+        }
+        let message;
+        if (!Data.GetValue("PayerAddress__")) {
+            message = Language.Translate("_No Payer address");
+        }
+        if (message) {
+            Lib.CommonDialog.NextAlert.Define("_Error", message);
+            Data.SetValue("State", 200);
+            Data.SetValue("StatusCode", 1);
+            Data.SetValue("ShortStatusTranslated", message);
+            Data.SetValue("ShortStatus", message);
+            Data.SetValue("LongStatus", message);
+            Data.SetValue("CompletionDateTime", new Date());
+        }
+        updatePaymentReferenceInVendorInvoice();
+    }
+}
+Run();
+//# sourceMappingURL=validationscript.js.map</ValidationScript>
+      <AllowTagCoverPages>true</AllowTagCoverPages>
+      <AllowTagNewDocuments>true</AllowTagNewDocuments>
+      <AllowTagAttachments>true</AllowTagAttachments>
+      <extractionscriptIncludedScripts>Lib_Purchasing_RA_V12.0.566.0</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>LIB_AP_VendorPortal_V12.0.566.0</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>Lib_Purchasing_RA_Server_V12.0.566.0</extractionscriptIncludedScripts>
+      <ExtractionScript>"use strict";
+const PaymentData = JSON.parse(Variable.GetValueAsString("ExtractedData"));
+function AttachRA() {
+    const isAttached = Lib.Purchasing.RA.Server.AttachRA();
+    if (!isAttached) {
+        Lib.CommonDialog.NextAlert.Define("_Remittance advice attaching error", "_Error attaching remittance advice", { isError: true });
+    }
+    return isAttached;
+}
+function SendEmailNotification(subject, template) {
+    const customTags = {
+        PaymentReference__: PaymentData.ExtractedData.PaymentId,
+        Currency__: PaymentData.ExtractedData.Currency,
+        VendorNumber__: PaymentData.ExtractedData.VendorId,
+        CompanyCode__: PaymentData.ExtractedData.VendorCompanyCode
+    };
+    const vendorUser = Lib.AP.VendorPortal.GetVendorUser(customTags);
+    if (vendorUser) {
+        Lib.AP.VendorPortal.AddFormattedValues(customTags, vendorUser);
+        customTags.CompanyName__ = Data.GetValue("PayerCompany__ ");
+        customTags.PortalUrl = Data.GetValue("ValidationUrl");
+        customTags.TotalInvoiceAmount__ = vendorUser.GetFormattedNumber(PaymentData.ExtractedData.TotalInvoiceAmount);
+        customTags.PaymentDate__ = Sys.Helpers.Date.ToLocaleDateEx(new Date(PaymentData.ExtractedData.PaymentDate), vendorUser.GetValue("culture"));
+        const vendorEmail = Lib.P2P.computeVendorEmailRedirection(vendorUser.GetValue("EmailAddress"));
+        if (vendorEmail) {
+            const emailOptions = {
+                "subject": Language.Translate(subject),
+                "template": template,
+                "customTags": customTags
+            };
+            const doSendNotif = Sys.Helpers.TryCallFunction("Lib.AP.Customization.VendorPortal.OnSendVendorNotification", emailOptions);
+            if (doSendNotif !== false) {
+                const email = Sys.EmailNotification.CreateEmailWithUser(vendorUser, vendorEmail, emailOptions.subject, emailOptions.template, emailOptions.customTags, true);
+                if (email) {
+                    Sys.EmailNotification.SendEmail(email);
+                }
+            }
+        }
+    }
+}
+Data.SetValue("PaymentDate__", PaymentData.ExtractedData.PaymentDate);
+Lib.Purchasing.RA.ComputeInvoicesTable();
+AttachRA();
+SendEmailNotification("_RemittanceAdviceAvailable", "AP-Vendor_RemittanceAdvicePublished.htm");
+//# sourceMappingURL=extractionscript.js.map</ExtractionScript>
+      <AllowRemovePages>true</AllowRemovePages>
+      <AllowSwapPages>true</AllowSwapPages>
+    </gdr>
+    <lg>
+      <process_da>{
+	"_Currency": "Valuta",
+	"_DocumentNumber": "Leverandørfakturanummer",
+	"_Error attaching remittance advice": "Der opstod en fejl under generering af PDF-filen med betalingsadviseringen. Prøv igen. Kontakt administratoren, hvis problemet fortsætter.",
+	"_Information": "Betalingsoplysninger",
+	"_InvoiceDate": "Fakturadato",
+	"_InvoiceNumber": "Kundefakturanummer",
+	"_Invoices": "Fakturaer",
+	"_Line items": "Fakturaer",
+	"_NetAmount": "Nettobeløb",
+	"_No Payer address": "Betalingsadviseringen kunne ikke udgives på portalen, idet der ikke er nogen adresser, der matcher den virksomhedskode, der er angivet i importfilen med betalingsadviseringen. Opdater dine oplysninger om indbetaler, og send betalingsadviseringen igen.",
+	"_Payee": "Oplysninger om betalingsmodtager",
+	"_Payer": "Oplysninger om indbetaler",
+	"_PayerAddress": "Indbetalers adresse",
+	"_PayerCompany": "Virksomhed",
+	"_PayerCompanyCode": "Virksomhedskode",
+	"_PaymentDate": "Betalingsdato",
+	"_PaymentMethodCode": "Betalingsmetodekode",
+	"_PaymentMethodDescription": "Betalingsmetode",
+	"_PaymentReference": "Betalingsreference",
+	"_Remittance advice attaching error": "Fejl i PDF-fil",
+	"_RemittanceAdviceAvailable": "Ny betalingsadvisering tilgængelig",
+	"_TotalInvoiceAmount": "Samlet beløb",
+	"_VendorAddress": "Leverandøradresse",
+	"_VendorName": "Leverandørnavn",
+	"_VendorNumber": "Leverandørnummer",
+	"DownloadCrystalReportsDataFile": "Hent Crystal Reports-datafil",
+	"Remittance Advice": "Betalingsadvisering"
+}</process_da>
+      <process_DE>{
+	"_Currency": "Währung",
+	"_DocumentNumber": "Lieferanten-Rechnungsnr.",
+	"_Error attaching remittance advice": "Beim Erstellen des Zahlungsavis im PDF-Format ist ein Fehler aufgetreten. Bitte wiederholen Sie den Vorgang.\n\nWenn das Problem weiterhin auftritt, wenden Sie sich an Ihren Administrator.",
+	"_Information": "Angaben zur Zahlung",
+	"_InvoiceDate": "Rechnungsdatum",
+	"_InvoiceNumber": "Kunden-Rechnungsnr.",
+	"_Invoices": "Rechnungen",
+	"_Line items": "Rechnungen",
+	"_NetAmount": "Nettobetrag",
+	"_No Payer address": "Das Dokument konnte nicht auf dem Portal veröffentlicht werden, da keine Adresse mit dem in der Zahlungsavis-Importdatei angegebenen Buchungskreis übereinstimmt. Bitte aktualisieren Sie Ihre Zahlerinformationen und reichen Sie den Zahlungsavis erneut ein.",
+	"_Payee": "Angaben zum Zahlungsempfänger",
+	"_Payer": "Angaben zum Zahler",
+	"_PayerAddress": "Zahleradresse",
+	"_PayerCompany": "Firma",
+	"_PayerCompanyCode": "Buchungskreis",
+	"_PaymentDate": "Zahlungsdatum",
+	"_PaymentMethodCode": "Zahlungsmethodencode",
+	"_PaymentMethodDescription": "Zahlungsmethode",
+	"_PaymentReference": "Zahlungsreferenz",
+	"_Remittance advice attaching error": "PDF-Fehler",
+	"_RemittanceAdviceAvailable": "Neuer Zahlungsavis verfügbar",
+	"_TotalInvoiceAmount": "Gesamtbetrag",
+	"_VendorAddress": "Lieferantenadresse",
+	"_VendorName": "Lieferantenname",
+	"_VendorNumber": "Lieferantennummer",
+	"DownloadCrystalReportsDataFile": "Crystal Reports Datendatei herunterladen",
+	"Remittance Advice": "Zahlungsavis"
+}</process_DE>
+      <process_JA>{
+	"_Currency": "通貨",
+	"_DocumentNumber": "仕入先請求書番号",
+	"_Error attaching remittance advice": "送金通知のPDFの生成中にエラーが発生しました。もう一度行ってください。問題が解決しない場合は、管理者に連絡してください。",
+	"_Information": "支払情報",
+	"_InvoiceDate": "請求日付",
+	"_InvoiceNumber": "顧客請求書番号",
+	"_Invoices": "請求書",
+	"_Line items": "請求書",
+	"_NetAmount": "税抜き合計金額",
+	"_No Payer address": "送金通知のインポートファイルに指定された会社コードに一致する住所がないため、送金通知をポータルに公開できませんでした。支払人の情報を更新して、送金通知を再送信してください。",
+	"_Payee": "受取人の情報",
+	"_Payer": "支払人の情報",
+	"_PayerAddress": "支払人の住所",
+	"_PayerCompany": "会社",
+	"_PayerCompanyCode": "会社コード",
+	"_PaymentDate": "支払日",
+	"_PaymentMethodCode": "支払方法コード",
+	"_PaymentMethodDescription": "支払方法",
+	"_PaymentReference": "支払参照番号",
+	"_Remittance advice attaching error": "PDFエラー",
+	"_RemittanceAdviceAvailable": "新しい送金通知を利用可能",
+	"_TotalInvoiceAmount": "合計金額",
+	"_VendorAddress": "仕入先住所",
+	"_VendorName": "仕入先名",
+	"_VendorNumber": "仕入先番号",
+	"DownloadCrystalReportsDataFile": "Crystal Reportsデータファイルをダウンロード",
+	"Remittance Advice": "送金通知"
+}</process_JA>
+      <process_en>{
+	"_Currency": "Currency",
+	"_DocumentNumber": "Supplier invoice #",
+	"_Error attaching remittance advice": "An error occurred while generating the remittance advice PDF. Please try again. \n\nIf the problem persists, please contact your administrator.",
+	"_Information": "Payment Information",
+	"_InvoiceDate": "Invoice date",
+	"_InvoiceNumber": "Customer invoice #",
+	"_Invoices": "Invoices",
+	"_Line items": "Invoices",
+	"_NetAmount": "Net amount",
+	"_No Payer address": "The remittance advice could not be published on the portal because no address matches the company code specified in your remittance advice import file. Please update your payer information and resubmit the remittance advice.",
+	"_Payee": "Payee Information",
+	"_Payer": "Payer Information",
+	"_PayerAddress": "Payer address",
+	"_PayerCompany": "Company",
+	"_PayerCompanyCode": "Company code",
+	"_PaymentDate": "Payment date",
+	"_PaymentMethodCode": "Payment method code",
+	"_PaymentMethodDescription": "Payment method",
+	"_PaymentReference": "Payment reference",
+	"_Remittance advice attaching error": "PDF error",
+	"_RemittanceAdviceAvailable": "New remittance advice available",
+	"_TotalInvoiceAmount": "Total amount",
+	"_VendorAddress": "Supplier address",
+	"_VendorName": "Supplier name",
+	"_VendorNumber": "Supplier number",
+	"DownloadCrystalReportsDataFile": "Download Crystal Reports data file",
+	"Remittance Advice": "Remittance Advice"
+}</process_en>
+      <process_ES>{
+	"_Currency": "Divisa",
+	"_DocumentNumber": "Número de factura proveedor",
+	"_Error attaching remittance advice": "Se ha producido un error al generar el aviso de pago en formato PDF. Por favor, inténtelo de nuevo. \n\nSi el problema persiste, póngase en contacto con el administrador.",
+	"_Information": "Información de pago",
+	"_InvoiceDate": "Fecha de factura",
+	"_InvoiceNumber": "Número de factura cliente",
+	"_Invoices": "Facturas",
+	"_Line items": "Facturas",
+	"_NetAmount": "Importe neto",
+	"_No Payer address": "No se pudo publicar el aviso de pago en el portal porque ninguna dirección coincide con el código de empresa especificado en el archivo de importación de los avisos de pago. Actualice su información de pagador y vuelva a enviar el aviso de pago.",
+	"_Payee": "Información del beneficiario",
+	"_Payer": "Información del pagador",
+	"_PayerAddress": "Dirección del pagador",
+	"_PayerCompany": "Empresa",
+	"_PayerCompanyCode": "Código de empresa",
+	"_PaymentDate": "Fecha de pago",
+	"_PaymentMethodCode": "Código de forma de pago",
+	"_PaymentMethodDescription": "Forma de pago",
+	"_PaymentReference": "Referencia de pago",
+	"_Remittance advice attaching error": "Error de PDF",
+	"_RemittanceAdviceAvailable": "Nuevo aviso de pago disponible",
+	"_TotalInvoiceAmount": "Importe total",
+	"_VendorAddress": "Dirección del proveedor",
+	"_VendorName": "Nombre proveedor",
+	"_VendorNumber": "Número de proveedor",
+	"DownloadCrystalReportsDataFile": "Descargar el archivo de datos Crystal Reports",
+	"Remittance Advice": "Aviso de pago"
+}</process_ES>
+      <process_FR>{
+	"_Currency": "Devise",
+	"_DocumentNumber": "N° de facture fournisseur",
+	"_Error attaching remittance advice": "Une erreur s'est produite lors de la génération de l'avis de paiement au format PDF. Veuillez réessayer. \n\nSi le problème persiste, contactez votre administrateur.",
+	"_Information": "Informations de paiement",
+	"_InvoiceDate": "Date de facture",
+	"_InvoiceNumber": "N° de facture client",
+	"_Invoices": "Factures",
+	"_Line items": "Factures",
+	"_NetAmount": "Montant HT",
+	"_No Payer address": "L'avis de paiement n'a pas pu être publié sur le portail car aucune adresse ne correspond au code société spécifié dans votre fichier d'import des avis de paiement. Veuillez mettre à jour vos informations de payeur et resoumettre l'avis de paiement.",
+	"_Payee": "Informations sur le bénéficiaire",
+	"_Payer": "Informations sur le payeur",
+	"_PayerAddress": "Adresse du payeur",
+	"_PayerCompany": "Société",
+	"_PayerCompanyCode": "Code société",
+	"_PaymentDate": "Date de paiement",
+	"_PaymentMethodCode": "Code du moyen de paiement",
+	"_PaymentMethodDescription": "Moyen de paiement",
+	"_PaymentReference": "Référence de paiement",
+	"_Remittance advice attaching error": "Erreur PDF",
+	"_RemittanceAdviceAvailable": "Nouvel avis de paiement disponible",
+	"_TotalInvoiceAmount": "Montant total",
+	"_VendorAddress": "Adresse du fournisseur",
+	"_VendorName": "Nom du fournisseur",
+	"_VendorNumber": "Numéro fournisseur",
+	"DownloadCrystalReportsDataFile": "Télécharger le fichier de données Crystal Reports",
+	"Remittance Advice": "Avis de paiement"
+}</process_FR>
+      <process_nl-NL>{
+	"_Currency": "Valuta",
+	"_DocumentNumber": "Leveranciersfactuur nr.",
+	"_Error attaching remittance advice": "Er is een fout opgetreden bij het genereren van de PDF met betaalbevestiging. Probeer het opnieuw. Neem contact op met uw beheerder als het probleem aanhoudt.",
+	"_Information": "Betaalgegevens",
+	"_InvoiceDate": "Factuurdatum",
+	"_InvoiceNumber": "Klantfactuur nr.",
+	"_Invoices": "Facturen",
+	"_Line items": "Facturen",
+	"_NetAmount": "Nettobedrag",
+	"_No Payer address": "De betaalbevestiging kon niet op de portal worden gepubliceerd omdat er geen adres is dat overeenkomt met de bedrijfscode die is opgegeven in uw importbestand met betaalbevestiging. Werk uw informatie betaler bij en verzend de betaalbevestiging opnieuw.",
+	"_Payee": "Informatie betaalde",
+	"_Payer": "Informatie betaler",
+	"_PayerAddress": "Adres betaler",
+	"_PayerCompany": "Bedrijf",
+	"_PayerCompanyCode": "Bedrijfscode",
+	"_PaymentDate": "Betaaldatum",
+	"_PaymentMethodCode": "Code betaalwijze",
+	"_PaymentMethodDescription": "Betaalwijze",
+	"_PaymentReference": "Betaalreferentie",
+	"_Remittance advice attaching error": "Fout PDF",
+	"_RemittanceAdviceAvailable": "Nieuwe betaalbevestiging beschikbaar",
+	"_TotalInvoiceAmount": "Totaalbedrag",
+	"_VendorAddress": "Adres leverancier",
+	"_VendorName": "Naam leverancier",
+	"_VendorNumber": "Nummer leverancier",
+	"DownloadCrystalReportsDataFile": "Gegevensbestand Crystal Reports downloaden",
+	"Remittance Advice": "Betaalbevestiging"
+}</process_nl-NL>
+      <process_pl>{
+	"_Currency": "Waluta",
+	"_DocumentNumber": "Nr faktury dostawcy",
+	"_Error attaching remittance advice": "Podczas generowania pliku PDF awiza przelewu wystąpił błąd. Spróbuj ponownie.\n\nJeśli problem nie ustąpi, skontaktuj się z administratorem.",
+	"_Information": "Informacje o płatności",
+	"_InvoiceDate": "Data faktury",
+	"_InvoiceNumber": "Nr faktury dla klienta",
+	"_Invoices": "Faktury",
+	"_Line items": "Faktury",
+	"_NetAmount": "Kwota netto",
+	"_No Payer address": "Nie udało się opublikować awiza przelewu w portalu, ponieważ żaden adres nie odpowiada kodowi firmy określonemu w pliku importu awiza przelewu. Zaktualizuj informacje o płatniku i ponownie prześlij awizo przelewu.",
+	"_Payee": "Informacje o odbiorcy płatności",
+	"_Payer": "Informacje o płatniku",
+	"_PayerAddress": "Adres płatnika",
+	"_PayerCompany": "Firma",
+	"_PayerCompanyCode": "Kod firmy",
+	"_PaymentDate": "Data płatności",
+	"_PaymentMethodCode": "Kod metody płatności",
+	"_PaymentMethodDescription": "Metoda płatności",
+	"_PaymentReference": "Kod referencyjny płatności",
+	"_Remittance advice attaching error": "Błąd pliku PDF",
+	"_RemittanceAdviceAvailable": "Dostępne nowe awizo przelewu",
+	"_TotalInvoiceAmount": "Kwota łączna",
+	"_VendorAddress": "Adres dostawcy",
+	"_VendorName": "Nazwa dostawcy",
+	"_VendorNumber": "Numer dostawcy",
+	"DownloadCrystalReportsDataFile": "Pobierz plik danych Crystal Reports",
+	"Remittance Advice": "Awizo przelewu"
+}</process_pl>
+      <process_IT>{
+	"_Currency": "Valuta",
+	"_DocumentNumber": "Numero fattura fornitore",
+	"_Error attaching remittance advice": "Errore durante la generazione dell'avviso di pagamento in formato PDF. Riprovare in seguito.\n\nSe il problema persiste, contattare l'amministratore.",
+	"_Information": "Informazioni pagamento",
+	"_InvoiceDate": "Data fattura",
+	"_InvoiceNumber": "Numero fattura cliente",
+	"_Invoices": "Fatture",
+	"_Line items": "Fatture",
+	"_NetAmount": "Importo netto",
+	"_No Payer address": "Non è stato possibile pubblicare l'avviso di pagamento sul portale perché nessun indirizzo corrisponde al codice società specificato nel file di importazione degli avvisi di pagamento. Aggiornare le informazioni di pagatore e inviare nuovamente l'avviso di pagamento.",
+	"_Payee": "Informazioni beneficiario",
+	"_Payer": "Informazioni pagatore",
+	"_PayerAddress": "Indirizzo pagatore",
+	"_PayerCompany": "Società",
+	"_PayerCompanyCode": "Codice società",
+	"_PaymentDate": "Data pagamento",
+	"_PaymentMethodCode": "Codice metodo di pagamento",
+	"_PaymentMethodDescription": "Metodo di pagamento",
+	"_PaymentReference": "Riferimento pagamento",
+	"_Remittance advice attaching error": "Errore PDF",
+	"_RemittanceAdviceAvailable": "Nuovo avviso di pagamento disponibile",
+	"_TotalInvoiceAmount": "Importo totale",
+	"_VendorAddress": "Indirizzo fornitore",
+	"_VendorName": "Nome fornitore",
+	"_VendorNumber": "Numero fornitore",
+	"DownloadCrystalReportsDataFile": "Scarica il file dati Crystal Reports",
+	"Remittance Advice": "Avviso di pagamento"
+}</process_IT>
+      <process_sk>{
+	"_Currency": "Mena",
+	"_DocumentNumber": "Faktúra dodávateľa č.",
+	"_Error attaching remittance advice": "Pri generovaní avíza o úhrade v PDF nastala chyba. Skúste to znova. \n\nAk problém pretrváva, obráťte sa na svojho administrátora.",
+	"_Information": "Informácie o platbe",
+	"_InvoiceDate": "Dátum faktúry",
+	"_InvoiceNumber": "Faktúra zákazníka č.",
+	"_Invoices": "Faktúry",
+	"_Line items": "Faktúry",
+	"_NetAmount": "Suma netto",
+	"_No Payer address": "Oznámenie o platbe nebolo možné zverejniť na portáli, pretože žiadna adresa nezodpovedá kódu spoločnosti uvedenému v súbore na import oznámení o platbách. Aktualizujte informácie o platiteľovi a znovu odošlite oznámenie o platbe.",
+	"_Payee": "Informácie o príjemcovi platby",
+	"_Payer": "Informácie o platiteľovi",
+	"_PayerAddress": "Adresa platiteľa",
+	"_PayerCompany": "Spoločnosť",
+	"_PayerCompanyCode": "Kód spoločnosti",
+	"_PaymentDate": "Dátum platby",
+	"_PaymentMethodCode": "Kód spôsobu platby",
+	"_PaymentMethodDescription": "Spôsoby platby",
+	"_PaymentReference": "Platobná referencia",
+	"_Remittance advice attaching error": "Chyba PDF",
+	"_RemittanceAdviceAvailable": "K dispozícii je nové oznámenie o platbe.",
+	"_TotalInvoiceAmount": "Celková suma",
+	"_VendorAddress": "Adresa dodávateľa",
+	"_VendorName": "Názov dodávateľa",
+	"_VendorNumber": "Číslo dodávateľa",
+	"DownloadCrystalReportsDataFile": "Stiahnuť súbor údajov Crystal Reports",
+	"Remittance Advice": "Avízo o úhrade"
+}</process_sk>
+      <process_ZH-CN>{
+	"_Currency": "货币",
+	"_DocumentNumber": "供应商账单发票 #",
+	"_Error attaching remittance advice": "生成汇款通知 PDF 时发生错误，请重试。\n\n如果持续出错，请联系管理员。",
+	"_Information": "付款信息",
+	"_InvoiceDate": "账单发票日期",
+	"_InvoiceNumber": "客户账单发票 #",
+	"_Invoices": "账单发票",
+	"_Line items": "账单发票",
+	"_NetAmount": "净额",
+	"_No Payer address": "没有与汇款通知导入文件中指定的公司代码相匹配的地址，无法在门户上发布汇款通知。请更新付款人信息并重新提交汇款通知。",
+	"_Payee": "收款人信息",
+	"_Payer": "付款人信息",
+	"_PayerAddress": "付款人地址",
+	"_PayerCompany": "公司",
+	"_PayerCompanyCode": "公司代码",
+	"_PaymentDate": "付款日期",
+	"_PaymentMethodCode": "付款方式代码",
+	"_PaymentMethodDescription": "付款方式",
+	"_PaymentReference": "付款参考",
+	"_Remittance advice attaching error": "PDF 错误",
+	"_RemittanceAdviceAvailable": "新汇款通知就绪",
+	"_TotalInvoiceAmount": "总额",
+	"_VendorAddress": "供应商地址",
+	"_VendorName": "供应商名称",
+	"_VendorNumber": "供应商编号",
+	"DownloadCrystalReportsDataFile": "下载 Crystal Reports 数据文件",
+	"Remittance Advice": "汇款通知"
+}</process_ZH-CN>
+      <process_PT-BR>{
+	"_Currency": "Moeda",
+	"_DocumentNumber": "N.º de fatura de fornecedor",
+	"_Error attaching remittance advice": "Ocorreu um erro ao gerar o PDF do aviso de remessa. Por favor, tente novamente. Se o problema persistir, entre em contato com seu administrador.",
+	"_Information": "Informação de pagamento",
+	"_InvoiceDate": "Data da fatura",
+	"_InvoiceNumber": "N.º de fatura do cliente",
+	"_Invoices": "Faturas",
+	"_Line items": "Faturas",
+	"_NetAmount": "Valor líquido",
+	"_No Payer address": "Não foi possível publicar o aviso de remessa no portal porque nenhum endereço corresponde à empresa especificada no arquivo de importação do aviso de remessa. Atualize as informações do pagador e reenvie o aviso de remessa.",
+	"_Payee": "Informações do beneficiário",
+	"_Payer": "Informações do pagador",
+	"_PayerAddress": "Endereço do pagador",
+	"_PayerCompany": "Empresa",
+	"_PayerCompanyCode": "Código da empresa",
+	"_PaymentDate": "Data de pagamento",
+	"_PaymentMethodCode": "Codificação do método de pagamento",
+	"_PaymentMethodDescription": "Método de pagamento",
+	"_PaymentReference": "Referência de pagamento",
+	"_Remittance advice attaching error": "Erro no PDF",
+	"_RemittanceAdviceAvailable": "Novos avisos de remessa disponíveis",
+	"_TotalInvoiceAmount": "Valor total",
+	"_VendorAddress": "Endereço do fornecedor",
+	"_VendorName": "Nome do fornecedor",
+	"_VendorNumber": "Número do fornecedor",
+	"DownloadCrystalReportsDataFile": "Baixar o arquivo de dados do Crystal Reports",
+	"Remittance Advice": "Aviso de remessa"
+}</process_PT-BR>
+    </lg>
+    <ocr>
+      <trade-off>accurate</trade-off>
+      <image-binarization>no</image-binarization>
+      <image-draft-fax>no</image-draft-fax>
+      <image-despeckle>no</image-despeckle>
+      <allowed-language>0</allowed-language>
+      <image-resolution-enhancement>auto</image-resolution-enhancement>
+      <pdf-processing>no-ocr</pdf-processing>
+      <ocr_engine>Nuance222</ocr_engine>
+      <ocrpagestoprocess>0</ocrpagestoprocess>
+      <extractionAdditionalOptions>
+      </extractionAdditionalOptions>
+    </ocr>
+    <process>
+      <flowtype>processing</flowtype>
+      <ocrpreset>scan</ocrpreset>
+      <homepagelabel>Remittance Advice</homepagelabel>
+      <enableflexibleauditing>
+      </enableflexibleauditing>
+      <enableflexibleediting>
+      </enableflexibleediting>
+      <enableflexibleteaching>
+      </enableflexibleteaching>
+      <disableocr>
+      </disableocr>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <disableautolearning>true</disableautolearning>
+      <backgroundprocessingthreshold>
+      </backgroundprocessingthreshold>
+      <EnablePreviewPrecomputation>true</EnablePreviewPrecomputation>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <enablerounddecimal>true</enablerounddecimal>
+      <pdfNormalizeFilter>
+      </pdfNormalizeFilter>
+      <archiveDuration>0</archiveDuration>
+      <ownhomepage>
+      </ownhomepage>
+      <ocrpagestoprocess>0</ocrpagestoprocess>
+      <ScriptEngineType>2</ScriptEngineType>
+      <UseActionNameWithScriptApproval>true</UseActionNameWithScriptApproval>
+      <displayWidth>
+      </displayWidth>
+      <AllowUploadAttachment>1</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>1</AllowUploadReferenceDocument>
+      <UseCultureFormat>true</UseCultureFormat>
+      <AllowRetryExtractCD>true</AllowRetryExtractCD>
+      <TransportName>CustomData</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+      <printToProcess>
+      </printToProcess>
+    </process>
+    <ui>
+      <CustomScriptDebug>false</CustomScriptDebug>
+      <customscriptIncludedScripts>Lib_V12.0.566.0</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Lib_Purchasing_V12.0.566.0</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Lib_Purchasing_RA_Export_V12.0.566.0</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Lib_CommonDialog_V12.0.566.0</customscriptIncludedScripts>
+      <CustomScriptReadonly>true</CustomScriptReadonly>
+      <CustomScript>"use strict";
+/* Remittance Advise page script */
+function run() {
+    Controls.DownloadCrystalReportsDataFile.OnClick = function () {
+        const templateInfos = Lib.Purchasing.RA.Export.GetTemplateInfos();
+        if (templateInfos.fileFormat === "RPT") {
+            Process.OpenPreview({
+                "conversionType": "crystal",
+                "templateName": templateInfos.template,
+                "language": templateInfos.escapedCompanyCode,
+                "outputFormat": "mdb",
+                "data": function (fnDataBuildDone) {
+                    Lib.Purchasing.RA.Export.CreateJsonString(templateInfos, function (jsonString) {
+                        fnDataBuildDone(jsonString);
+                    });
+                }
+            });
+        }
+        return false;
+    };
+    Lib.CommonDialog.NextAlert.Show({});
+    Controls.Line_items.Hide(true);
+    Controls.form_content_top.Hide(true);
+}
+run();
+//# sourceMappingURL=customscript.js.map</CustomScript>
+      <restorationPanel>Payer</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 89,
+	"*": {
+		"GDRData": {
+			"type": "GDRData",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"version": 0
+			}
+		},
+		"OCRParams": {
+			"type": "OCRParams",
+			"data": [],
+			"stamp": 2,
+			"options": {
+				"version": 0
+			}
+		},
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 3,
+			"options": {
+				"splitterType": "complex",
+				"maxwidth": "",
+				"backColor": "text-backgroundcolor-color7",
+				"style": "FlexibleFormLight",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 4,
+					"options": {
+						"hidePanelsMenu": true,
+						"hideDesignButton": true,
+						"maxwidth": "",
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 5,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 6,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-top": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 7,
+									"options": {
+										"autosize": true,
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"width": null,
+											"height": "22%"
+										},
+										"hidden": false
+									},
+									"*": {
+										"form-content-top-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 8,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"DocumentsPanel": {
+													"type": "PanelDocument",
+													"data": [],
+													"stamp": 9,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": false,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"label": "_Documents",
+														"version": 0
+													},
+													"*": {
+														"Document": {
+															"type": "Documents",
+															"data": [
+																"documentscontroldata"
+															],
+															"stamp": 10,
+															"options": {
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								},
+								"form-content-bottom": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 11,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": 0,
+											"left": 0,
+											"width": 100,
+											"height": 100
+										},
+										"hidden": false,
+										"hideSeparator": true
+									},
+									"*": {
+										"form-content-left": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 12,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "0%",
+													"width": "45%",
+													"height": null
+												},
+												"hidden": false
+											},
+											"*": {
+												"form-content-left-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 13,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"PreviewPanel": {
+															"type": "PanelPreview",
+															"data": [],
+															"stamp": 14,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"label": "_Document Preview",
+																"hidden": false,
+																"version": 0
+															},
+															"*": {
+																"Preview": {
+																	"type": "Preview",
+																	"data": [
+																		"previewdata"
+																	],
+																	"stamp": 15,
+																	"options": {
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-right": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 16,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": 0,
+													"left": 45,
+													"width": 55,
+													"height": 100
+												},
+												"hidden": false
+											},
+											"*": {
+												"form-content-right-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 17,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"Payer": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 18,
+															"options": {
+																"border": {
+																	"collapsed": false
+																},
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": true,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_Payer",
+																"leftImageURL": "",
+																"removeMargins": false,
+																"elementsAlignment": "left",
+																"hidden": false,
+																"labelLength": "30%",
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 19,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {
+																			"PayerCompanyCode__": "LabelPayerCompanyCode__",
+																			"LabelPayerCompanyCode__": "PayerCompanyCode__",
+																			"PayerCompany__": "LabelPayerCompany__",
+																			"LabelPayerCompany__": "PayerCompany__",
+																			"PayerAddress__": "LabelPayerAddress__",
+																			"LabelPayerAddress__": "PayerAddress__"
+																		}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 20,
+																			"options": {
+																				"version": 0,
+																				"lines": 3,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"LabelPayerCompanyCode__": {
+																						"line": 1,
+																						"column": 1
+																					},
+																					"PayerCompanyCode__": {
+																						"line": 1,
+																						"column": 2
+																					},
+																					"LabelPayerCompany__": {
+																						"line": 2,
+																						"column": 1
+																					},
+																					"PayerCompany__": {
+																						"line": 2,
+																						"column": 2
+																					},
+																					"LabelPayerAddress__": {
+																						"line": 3,
+																						"column": 1
+																					},
+																					"PayerAddress__": {
+																						"line": 3,
+																						"column": 2
+																					}
+																				},
+																				"colspans": [
+																					[],
+																					[],
+																					[]
+																				]
+																			},
+																			"*": {
+																				"LabelPayerCompanyCode__": {
+																					"type": "Label",
+																					"data": [
+																						"PayerCompanyCode__"
+																					],
+																					"stamp": 22,
+																					"options": {
+																						"label": "_PayerCompanyCode",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				},
+																				"PayerCompanyCode__": {
+																					"type": "ShortText",
+																					"data": [
+																						"PayerCompanyCode__"
+																					],
+																					"stamp": 21,
+																					"options": {
+																						"label": "_PayerCompanyCode",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"hidden": true,
+																						"browsable": false
+																					}
+																				},
+																				"LabelPayerCompany__": {
+																					"type": "Label",
+																					"data": [
+																						"PayerCompany__"
+																					],
+																					"stamp": 24,
+																					"options": {
+																						"label": "_PayerCompany",
+																						"version": 0
+																					}
+																				},
+																				"PayerCompany__": {
+																					"type": "DatabaseComboBox",
+																					"data": [
+																						"PayerCompany__"
+																					],
+																					"stamp": 23,
+																					"options": {
+																						"label": "_PayerCompany",
+																						"version": 1,
+																						"autoCompleteSearchMode": "startswith",
+																						"searchMode": "contains",
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"minNbLines": 1,
+																						"maxNbLines": 1,
+																						"fTSmaxRecords": "20",
+																						"browsable": true
+																					}
+																				},
+																				"LabelPayerAddress__": {
+																					"type": "Label",
+																					"data": [
+																						"PayerAddress__"
+																					],
+																					"stamp": 26,
+																					"options": {
+																						"label": "_PayerAddress",
+																						"version": 0
+																					}
+																				},
+																				"PayerAddress__": {
+																					"type": "LongText",
+																					"data": [
+																						"PayerAddress__"
+																					],
+																					"stamp": 25,
+																					"options": {
+																						"label": "_PayerAddress",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"minNbLines": 4,
+																						"activable": true,
+																						"width": "275",
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"numberOfLines": 4,
+																						"readonly": true,
+																						"browsable": false
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-right-3": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 27,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"Payee": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 28,
+															"options": {
+																"border": {},
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": true,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_Payee",
+																"hidden": false,
+																"leftImageURL": "",
+																"removeMargins": false,
+																"elementsAlignment": "left",
+																"labelLength": "30%",
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 29,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {
+																			"VendorNumber__": "LabelVendorNumber__",
+																			"LabelVendorNumber__": "VendorNumber__",
+																			"VendorName__": "LabelVendorName__",
+																			"LabelVendorName__": "VendorName__",
+																			"VendorAddress__": "LabelVendorAddress__",
+																			"LabelVendorAddress__": "VendorAddress__"
+																		}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 30,
+																			"options": {
+																				"version": 0,
+																				"lines": 3,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"LabelVendorNumber__": {
+																						"line": 1,
+																						"column": 1
+																					},
+																					"VendorNumber__": {
+																						"line": 1,
+																						"column": 2
+																					},
+																					"LabelVendorName__": {
+																						"line": 2,
+																						"column": 1
+																					},
+																					"VendorName__": {
+																						"line": 2,
+																						"column": 2
+																					},
+																					"LabelVendorAddress__": {
+																						"line": 3,
+																						"column": 1
+																					},
+																					"VendorAddress__": {
+																						"line": 3,
+																						"column": 2
+																					}
+																				},
+																				"colspans": [
+																					[],
+																					[],
+																					[]
+																				]
+																			},
+																			"*": {
+																				"LabelVendorNumber__": {
+																					"type": "Label",
+																					"data": [
+																						"VendorNumber__"
+																					],
+																					"stamp": 32,
+																					"options": {
+																						"label": "_VendorNumber",
+																						"version": 0
+																					}
+																				},
+																				"VendorNumber__": {
+																					"type": "DatabaseComboBox",
+																					"data": [
+																						"VendorNumber__"
+																					],
+																					"stamp": 31,
+																					"options": {
+																						"label": "_VendorNumber",
+																						"version": 1,
+																						"autoCompleteSearchMode": "startswith",
+																						"searchMode": "contains",
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"minNbLines": 1,
+																						"maxNbLines": 1,
+																						"fTSmaxRecords": "20",
+																						"browsable": true
+																					}
+																				},
+																				"LabelVendorName__": {
+																					"type": "Label",
+																					"data": [
+																						"VendorName__"
+																					],
+																					"stamp": 34,
+																					"options": {
+																						"label": "_VendorName",
+																						"version": 0
+																					}
+																				},
+																				"VendorName__": {
+																					"type": "DatabaseComboBox",
+																					"data": [
+																						"VendorName__"
+																					],
+																					"stamp": 33,
+																					"options": {
+																						"label": "_VendorName",
+																						"version": 1,
+																						"autoCompleteSearchMode": "startswith",
+																						"searchMode": "contains",
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"minNbLines": 1,
+																						"maxNbLines": 1,
+																						"fTSmaxRecords": "20",
+																						"browsable": true
+																					}
+																				},
+																				"LabelVendorAddress__": {
+																					"type": "Label",
+																					"data": [
+																						"VendorAddress__"
+																					],
+																					"stamp": 36,
+																					"options": {
+																						"label": "_VendorAddress",
+																						"version": 0
+																					}
+																				},
+																				"VendorAddress__": {
+																					"type": "LongText",
+																					"data": [
+																						"VendorAddress__"
+																					],
+																					"stamp": 35,
+																					"options": {
+																						"label": "_VendorAddress",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"minNbLines": 3,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"browsable": false
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-right-5": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 37,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"Information": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 38,
+															"options": {
+																"border": {},
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": true,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_Information",
+																"hidden": false,
+																"leftImageURL": "",
+																"removeMargins": false,
+																"elementsAlignment": "left",
+																"labelLength": "30%",
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 39,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {
+																			"PaymentReference__": "LabelPaymentReference__",
+																			"LabelPaymentReference__": "PaymentReference__",
+																			"PaymentMethodCode__": "LabelPaymentMethodCode__",
+																			"LabelPaymentMethodCode__": "PaymentMethodCode__",
+																			"PaymentMethodDescription__": "LabelPaymentMethodDescription__",
+																			"LabelPaymentMethodDescription__": "PaymentMethodDescription__",
+																			"PaymentDate__": "LabelPaymentDate__",
+																			"LabelPaymentDate__": "PaymentDate__",
+																			"TotalInvoiceAmount__": "LabelTotalInvoiceAmount__",
+																			"LabelTotalInvoiceAmount__": "TotalInvoiceAmount__",
+																			"Currency__": "LabelCurrency__",
+																			"LabelCurrency__": "Currency__"
+																		}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 40,
+																			"options": {
+																				"version": 0,
+																				"lines": 6,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"LabelPaymentReference__": {
+																						"line": 1,
+																						"column": 1
+																					},
+																					"PaymentReference__": {
+																						"line": 1,
+																						"column": 2
+																					},
+																					"LabelPaymentMethodCode__": {
+																						"line": 2,
+																						"column": 1
+																					},
+																					"PaymentMethodCode__": {
+																						"line": 2,
+																						"column": 2
+																					},
+																					"LabelPaymentMethodDescription__": {
+																						"line": 3,
+																						"column": 1
+																					},
+																					"PaymentMethodDescription__": {
+																						"line": 3,
+																						"column": 2
+																					},
+																					"LabelPaymentDate__": {
+																						"line": 4,
+																						"column": 1
+																					},
+																					"PaymentDate__": {
+																						"line": 4,
+																						"column": 2
+																					},
+																					"LabelTotalInvoiceAmount__": {
+																						"line": 5,
+																						"column": 1
+																					},
+																					"TotalInvoiceAmount__": {
+																						"line": 5,
+																						"column": 2
+																					},
+																					"LabelCurrency__": {
+																						"line": 6,
+																						"column": 1
+																					},
+																					"Currency__": {
+																						"line": 6,
+																						"column": 2
+																					}
+																				},
+																				"colspans": [
+																					[],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[]
+																				]
+																			},
+																			"*": {
+																				"LabelPaymentReference__": {
+																					"type": "Label",
+																					"data": [
+																						"PaymentReference__"
+																					],
+																					"stamp": 42,
+																					"options": {
+																						"label": "_PaymentReference",
+																						"version": 0
+																					}
+																				},
+																				"PaymentReference__": {
+																					"type": "ShortText",
+																					"data": [
+																						"PaymentReference__"
+																					],
+																					"stamp": 41,
+																					"options": {
+																						"label": "_PaymentReference",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"browsable": false
+																					}
+																				},
+																				"LabelPaymentMethodCode__": {
+																					"type": "Label",
+																					"data": [
+																						"PaymentMethodCode__"
+																					],
+																					"stamp": 44,
+																					"options": {
+																						"label": "_PaymentMethodCode",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				},
+																				"PaymentMethodCode__": {
+																					"type": "ShortText",
+																					"data": [
+																						"PaymentMethodCode__"
+																					],
+																					"stamp": 43,
+																					"options": {
+																						"label": "_PaymentMethodCode",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"hidden": true,
+																						"browsable": false
+																					}
+																				},
+																				"LabelPaymentMethodDescription__": {
+																					"type": "Label",
+																					"data": [
+																						"PaymentMethodDescription__"
+																					],
+																					"stamp": 46,
+																					"options": {
+																						"label": "_PaymentMethodDescription",
+																						"version": 0
+																					}
+																				},
+																				"PaymentMethodDescription__": {
+																					"type": "ShortText",
+																					"data": [
+																						"PaymentMethodDescription__"
+																					],
+																					"stamp": 45,
+																					"options": {
+																						"label": "_PaymentMethodDescription",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230
+																					}
+																				},
+																				"LabelPaymentDate__": {
+																					"type": "Label",
+																					"data": [
+																						"PaymentDate__"
+																					],
+																					"stamp": 48,
+																					"options": {
+																						"label": "_PaymentDate",
+																						"version": 0
+																					}
+																				},
+																				"PaymentDate__": {
+																					"type": "DateTime",
+																					"data": [
+																						"PaymentDate__"
+																					],
+																					"stamp": 47,
+																					"options": {
+																						"label": "_PaymentDate",
+																						"displayLongFormat": false,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"version": 0
+																					}
+																				},
+																				"LabelTotalInvoiceAmount__": {
+																					"type": "Label",
+																					"data": [
+																						"TotalInvoiceAmount__"
+																					],
+																					"stamp": 50,
+																					"options": {
+																						"label": "_TotalInvoiceAmount",
+																						"version": 0
+																					}
+																				},
+																				"TotalInvoiceAmount__": {
+																					"type": "Decimal",
+																					"data": [
+																						"TotalInvoiceAmount__"
+																					],
+																					"stamp": 49,
+																					"options": {
+																						"label": "_TotalInvoiceAmount",
+																						"version": 2,
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"integer": false,
+																						"precision_internal": 2,
+																						"precision_current": 2,
+																						"activable": true,
+																						"width": 230
+																					}
+																				},
+																				"LabelCurrency__": {
+																					"type": "Label",
+																					"data": [
+																						"Currency__"
+																					],
+																					"stamp": 52,
+																					"options": {
+																						"label": "_Currency",
+																						"version": 0
+																					}
+																				},
+																				"Currency__": {
+																					"type": "ShortText",
+																					"data": [
+																						"Currency__"
+																					],
+																					"stamp": 51,
+																					"options": {
+																						"label": "_Currency",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-right-7": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 53,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"Line_items": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 54,
+															"options": {
+																"border": {},
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_Line items",
+																"hidden": false,
+																"leftImageURL": "",
+																"removeMargins": false,
+																"elementsAlignment": "left",
+																"labelLength": "30%",
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 55,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 56,
+																			"options": {
+																				"version": 0,
+																				"lines": 1,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"Table__": {
+																						"line": 1,
+																						"column": 1
+																					}
+																				},
+																				"colspans": [
+																					[
+																						{
+																							"index": 0,
+																							"length": 2
+																						}
+																					]
+																				]
+																			},
+																			"*": {
+																				"Table__": {
+																					"type": "Table",
+																					"data": [
+																						"Table__"
+																					],
+																					"stamp": 57,
+																					"options": {
+																						"columns": 4,
+																						"label": "_Invoices",
+																						"version": 5,
+																						"lines": 10,
+																						"displayEmptyLines": false,
+																						"alwaysOneLine": true,
+																						"menuOptions": {
+																							"disableInsertLine": false,
+																							"disableAddLine": false,
+																							"hideTopNavigation": false,
+																							"hideBottomNavigation": false,
+																							"hideTableRowMenu": false,
+																							"hideTableRowDelete": true,
+																							"hideTableRowAdd": true,
+																							"hideTableRowDuplicate": true,
+																							"addButtonShouldInsert": false,
+																							"hideTableRowButtonDuplicate": true
+																						},
+																						"item": {
+																							"display": null
+																						},
+																						"group": {
+																							"name": "GDR\nPage"
+																						}
+																					},
+																					"*": {
+																						"Actions": {
+																							"type": "$TableActions",
+																							"subtype": "Actions",
+																							"data": [],
+																							"stamp": 58,
+																							"options": {
+																								"version": 0
+																							},
+																							"*": {
+																								"Top": {
+																									"type": "$TableActions",
+																									"subtype": "Top",
+																									"data": [],
+																									"stamp": 59,
+																									"options": {
+																										"version": 0
+																									}
+																								},
+																								"Bottom": {
+																									"type": "$TableActions",
+																									"subtype": "Top",
+																									"data": [],
+																									"stamp": 60,
+																									"options": {
+																										"version": 0
+																									}
+																								}
+																							}
+																						},
+																						"Header": {
+																							"type": "$TableRow",
+																							"subtype": "Header",
+																							"data": [
+																								null
+																							],
+																							"stamp": 61,
+																							"options": {
+																								"version": 0
+																							},
+																							"*": {
+																								"Cell1": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 64,
+																									"options": {
+																										"version": 0
+																									},
+																									"*": {
+																										"DocumentNumber__": {
+																											"type": "Label",
+																											"data": [
+																												"DocumentNumber__"
+																											],
+																											"stamp": 65,
+																											"options": {
+																												"label": "_DocumentNumber",
+																												"type": "ShortText",
+																												"version": 0
+																											},
+																											"position": [
+																												"_DocumentNumber",
+																												false,
+																												false,
+																												"ShortText"
+																											]
+																										}
+																									}
+																								},
+																								"Cell2": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 68,
+																									"options": {
+																										"version": 0
+																									},
+																									"*": {
+																										"InvoiceNumber__": {
+																											"type": "Label",
+																											"data": [
+																												"InvoiceNumber__"
+																											],
+																											"stamp": 69,
+																											"options": {
+																												"label": "_InvoiceNumber",
+																												"type": "ShortText",
+																												"version": 0
+																											},
+																											"position": [
+																												"_InvoiceNumber",
+																												false,
+																												false,
+																												"ShortText"
+																											]
+																										}
+																									}
+																								},
+																								"Cell3": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 72,
+																									"options": {
+																										"version": 0
+																									},
+																									"*": {
+																										"InvoiceDate__": {
+																											"type": "Label",
+																											"data": [
+																												"InvoiceDate__"
+																											],
+																											"stamp": 73,
+																											"options": {
+																												"label": "_InvoiceDate",
+																												"type": "DateTime",
+																												"version": 0
+																											},
+																											"position": [
+																												"_InvoiceDate",
+																												false,
+																												false,
+																												"DateTime"
+																											]
+																										}
+																									}
+																								},
+																								"Cell4": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 76,
+																									"options": {
+																										"version": 0
+																									},
+																									"*": {
+																										"NetAmount__": {
+																											"type": "Label",
+																											"data": [
+																												"NetAmount__"
+																											],
+																											"stamp": 77,
+																											"options": {
+																												"label": "_NetAmount",
+																												"type": "Decimal",
+																												"version": 0
+																											},
+																											"position": [
+																												"_NetAmount",
+																												false,
+																												false,
+																												"Decimal"
+																											]
+																										}
+																									}
+																								}
+																							}
+																						},
+																						"Clipboard": {
+																							"type": "$TableRow",
+																							"subtype": "Clipboard",
+																							"data": [
+																								null
+																							],
+																							"stamp": 62,
+																							"options": {
+																								"version": 0
+																							},
+																							"*": {
+																								"Cell1": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 66,
+																									"options": {
+																										"version": 0
+																									},
+																									"*": {
+																										"DocumentNumber__": {
+																											"type": "ShortText",
+																											"data": [
+																												"DocumentNumber__"
+																											],
+																											"stamp": 63,
+																											"options": {
+																												"label": "_DocumentNumber",
+																												"textSize": "S",
+																												"textAlignment": "left",
+																												"textStyle": "default",
+																												"textColor": "default",
+																												"version": 1,
+																												"activable": true,
+																												"width": 140,
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"readonly": true,
+																												"browsable": false
+																											},
+																											"position": [
+																												"_DocumentNumber"
+																											]
+																										}
+																									}
+																								},
+																								"Cell2": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 70,
+																									"options": {
+																										"version": 0
+																									},
+																									"*": {
+																										"InvoiceNumber__": {
+																											"type": "ShortText",
+																											"data": [
+																												"InvoiceNumber__"
+																											],
+																											"stamp": 67,
+																											"options": {
+																												"label": "_InvoiceNumber",
+																												"textSize": "S",
+																												"textAlignment": "left",
+																												"textStyle": "default",
+																												"textColor": "default",
+																												"version": 1,
+																												"activable": true,
+																												"width": 140,
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"readonly": true,
+																												"browsable": false
+																											},
+																											"position": [
+																												"_InvoiceNumber"
+																											]
+																										}
+																									}
+																								},
+																								"Cell3": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 74,
+																									"options": {
+																										"version": 0
+																									},
+																									"*": {
+																										"InvoiceDate__": {
+																											"type": "DateTime",
+																											"data": [
+																												"InvoiceDate__"
+																											],
+																											"stamp": 71,
+																											"options": {
+																												"label": "_InvoiceDate",
+																												"displayLongFormat": false,
+																												"activable": true,
+																												"width": 140,
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"readonly": true,
+																												"version": 0
+																											},
+																											"position": [
+																												"_InvoiceDate"
+																											]
+																										}
+																									}
+																								},
+																								"Cell4": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 78,
+																									"options": {
+																										"version": 0
+																									},
+																									"*": {
+																										"NetAmount__": {
+																											"type": "Decimal",
+																											"data": [
+																												"NetAmount__"
+																											],
+																											"stamp": 75,
+																											"options": {
+																												"label": "_NetAmount",
+																												"version": 2,
+																												"textSize": "S",
+																												"textAlignment": "right",
+																												"textStyle": "default",
+																												"textColor": "default",
+																												"integer": false,
+																												"precision_internal": 2,
+																												"precision_current": 2,
+																												"activable": true,
+																												"width": 140,
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"enablePlusMinus": false,
+																												"readonly": true
+																											},
+																											"position": [
+																												"_NetAmount"
+																											]
+																										}
+																									}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-right-9": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 79,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"NextProcess": {
+															"type": "PanelNextProcess",
+															"data": [],
+															"stamp": 80,
+															"options": {
+																"hidden": true,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"label": "_Next Process",
+																"version": 0
+															}
+														}
+													}
+												},
+												"form-content-right-11": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 81,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"SystemData": {
+															"type": "PanelSystemData",
+															"data": [],
+															"stamp": 82,
+															"options": {
+																"multicolumn": false,
+																"border": {
+																	"maximized": false
+																},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"label": "_System data",
+																"hidden": true,
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 83,
+					"options": {
+						"splitterType": "simple-h",
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 84,
+							"options": {
+								"label": "_Save",
+								"action": "save",
+								"submit": true,
+								"textPosition": "text-right",
+								"textSize": "S",
+								"textStyle": "default",
+								"textColor": "color1",
+								"nextprocess": {
+									"processName": "AP - Application Settings Wizard",
+									"attachmentsMode": "all",
+									"willBeChild": true,
+									"returnToOriginalUrl": false
+								},
+								"urlImageOverlay": "",
+								"url": "",
+								"position": null,
+								"hidden": true,
+								"version": 0
+							}
+						},
+						"Approve": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 85,
+							"options": {
+								"label": "_Approve",
+								"action": "approve",
+								"submit": true,
+								"textPosition": "text-right",
+								"textSize": "S",
+								"textStyle": "default",
+								"textColor": "color1",
+								"nextprocess": {
+									"processName": "AP - Application Settings Wizard",
+									"attachmentsMode": "all",
+									"willBeChild": true,
+									"returnToOriginalUrl": false
+								},
+								"urlImageOverlay": "",
+								"url": "",
+								"position": null,
+								"hidden": true,
+								"version": 0
+							}
+						},
+						"Reject": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 86,
+							"options": {
+								"label": "_Reject",
+								"action": "reject",
+								"submit": true,
+								"textPosition": "text-right",
+								"textSize": "S",
+								"textStyle": "default",
+								"textColor": "color1",
+								"nextprocess": {
+									"processName": "AP - Application Settings Wizard",
+									"attachmentsMode": "all",
+									"willBeChild": true,
+									"returnToOriginalUrl": false
+								},
+								"urlImageOverlay": "",
+								"url": "",
+								"position": null,
+								"hidden": true,
+								"version": 0
+							}
+						},
+						"Reprocess": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 87,
+							"options": {
+								"label": "_Reprocess",
+								"action": "reprocess",
+								"submit": true,
+								"textPosition": "text-right",
+								"textSize": "S",
+								"textStyle": "default",
+								"textColor": "color1",
+								"nextprocess": {
+									"processName": "AP - Application Settings Wizard",
+									"attachmentsMode": "all",
+									"willBeChild": true,
+									"returnToOriginalUrl": false
+								},
+								"urlImageOverlay": "",
+								"url": "",
+								"position": null,
+								"hidden": true,
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 88,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"DownloadCrystalReportsDataFile": {
+							"type": "SubmitButton",
+							"data": false,
+							"stamp": 89,
+							"options": {
+								"label": "DownloadCrystalReportsDataFile",
+								"textPosition": "text-right",
+								"textSize": "S",
+								"textStyle": "default",
+								"textColor": "color1",
+								"nextprocess": {
+									"processName": "AP - Application Settings Wizard",
+									"attachmentsMode": "all",
+									"willBeChild": true,
+									"returnToOriginalUrl": false
+								},
+								"urlImageOverlay": "",
+								"url": "",
+								"position": null,
+								"hidden": true,
+								"action": "none",
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <field deleted="0" format="" guid="JTU2FP000IYP" id="K0EQT400153E" label="_Currency" length="50" name="Currency__" originalProcessID="CTU2FP000IYP" precision="0" processid="J0EQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AK0EQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Currency__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:34</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Currency</Label>
+        <Alias>AK0EQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="FTU2FP000IYP" id="L0EQT400153E" label="_PayerAddress" length="32766" name="PayerAddress__" originalProcessID="CTU2FP000IYP" precision="0" processid="J0EQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AL0EQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/PayerAddress__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:34</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_PayerAddress</Label>
+        <Alias>AL0EQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="ETU2FP000IYP" id="N0EQT400153E" label="_PayerCompanyCode" length="50" name="PayerCompanyCode__" originalProcessID="CTU2FP000IYP" precision="0" processid="J0EQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AN0EQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/PayerCompanyCode__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:34</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_PayerCompanyCode</Label>
+        <Alias>AN0EQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="DTU2FP000IYP" id="M0EQT400153E" label="_PayerCompany" length="50" name="PayerCompany__" originalProcessID="CTU2FP000IYP" precision="0" processid="J0EQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AM0EQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/PayerCompany__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:34</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_PayerCompany</Label>
+        <Alias>AM0EQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>true</Editable>
+        <TableName>CT#BD8QT400153E</TableName>
+        <SortOrder>
+        </SortOrder>
+        <DisplayedColumns>CompanyName__|CompanyCode__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>CompanyName__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ProcessName>PurchasingCompanycodes__</ProcessName>
+        <KeyColumnId>CompanyCode__</KeyColumnId>
+        <KeyAttribute>PayerCompanyCode__</KeyAttribute>
+        <CustomFilter>
+        </CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="BGF4FP000IYP" id="O0EQT400153E" label="_PaymentDate" length="0" name="PaymentDate__" originalProcessID="CTU2FP000IYP" precision="0" processid="J0EQT400153E" submitable="1" type="DATE">
+    <properties>
+      <db>
+        <alias>AO0EQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/PaymentDate__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:34</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_PaymentDate</Label>
+        <Alias>AO0EQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>Date</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="STU2FP000IYP" id="P0EQT400153E" label="_PaymentMethodCode" length="50" name="PaymentMethodCode__" originalProcessID="CTU2FP000IYP" precision="0" processid="J0EQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AP0EQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/PaymentMethodCode__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:34</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_PaymentMethodCode</Label>
+        <Alias>AP0EQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="RTU2FP000IYP" id="Q0EQT400153E" label="_PaymentMethodDescription" length="50" name="PaymentMethodDescription__" originalProcessID="CTU2FP000IYP" precision="0" processid="J0EQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AQ0EQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/PaymentMethodDescription__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:34</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_PaymentMethodDescription</Label>
+        <Alias>AQ0EQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="ZIN3FP000IYP" id="R0EQT400153E" label="_PaymentReference" length="50" name="PaymentReference__" originalProcessID="CTU2FP000IYP" precision="0" processid="J0EQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AR0EQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/PaymentReference__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:34</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_PaymentReference</Label>
+        <Alias>AR0EQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="ITU2FP000IYP" id="S0EQT400153E" label="_TotalInvoiceAmount" length="17" name="TotalInvoiceAmount__" originalProcessID="CTU2FP000IYP" precision="2" processid="J0EQT400153E" submitable="1" type="DECIMAL">
+    <properties>
+      <db>
+        <alias>AS0EQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/TotalInvoiceAmount__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:34</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_TotalInvoiceAmount</Label>
+        <Alias>AS0EQT400153E</Alias>
+        <DecimalPrecision vartype="INT">2</DecimalPrecision>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="AGF4FP000IYP" id="T0EQT400153E" label="_VendorAddress" length="32766" name="VendorAddress__" originalProcessID="CTU2FP000IYP" precision="0" processid="J0EQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AT0EQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/VendorAddress__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:35</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_VendorAddress</Label>
+        <Alias>AT0EQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="AH13FP000IYP" id="U0EQT400153E" label="_VendorName" length="50" name="VendorName__" originalProcessID="CTU2FP000IYP" precision="0" processid="J0EQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AU0EQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/VendorName__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:35</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_VendorName</Label>
+        <Alias>AU0EQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>true</Editable>
+        <TableName>CT#SX8QT400153E</TableName>
+        <SortOrder>ASC</SortOrder>
+        <DisplayedColumns>Name__|Number__|Sub__|Street__|PostOfficeBox__|City__|PostalCode__|Country__|Region__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>Name__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ProcessName>AP - Vendors__</ProcessName>
+        <KeyColumnId>Number__</KeyColumnId>
+        <KeyAttribute>VendorNumber__</KeyAttribute>
+        <CustomFilter>(|(CompanyCode__=%[PayerCompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="BH13FP000IYP" id="V0EQT400153E" label="_VendorNumber" length="50" name="VendorNumber__" originalProcessID="CTU2FP000IYP" precision="0" processid="J0EQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AV0EQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/VendorNumber__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:35</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_VendorNumber</Label>
+        <Alias>AV0EQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>true</Editable>
+        <TableName>CT#SX8QT400153E</TableName>
+        <SortOrder>
+        </SortOrder>
+        <DisplayedColumns>Number__|City__|Name__|PostalCode__|PostOfficeBox__|Region__|Street__|Sub__|Region__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>Number__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ProcessName>AP - Vendors__</ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <KeyAttribute>
+        </KeyAttribute>
+        <CustomFilter>(|(CompanyCode__=%[PayerCompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <datatable deleted="0" guid="KTU2FP000IYP" id="W0EQT400153E" label="_Invoices" name="Table__" originalProcessID="CTU2FP000IYP">
+    <properties>
+      <field>
+        <DisableAutolearn>1</DisableAutolearn>
+        <Extractable>0</Extractable>
+      </field>
+      <ui>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+    <field datatableid="W0EQT400153E" deleted="0" format="" guid="LTU2FP000IYP" id="X0EQT400153E" label="_DocumentNumber" length="50" name="DocumentNumber__" originalProcessID="CTU2FP000IYP" precision="0" submitable="1" type="STR">
+      <properties>
+        <db>
+          <alias>AX0EQT400153E</alias>
+          <noxml>1</noxml>
+          <fullname>/job/processfields/DocumentNumber__</fullname>
+          <defaultvalue>
+          </defaultvalue>
+          <RecordLastWrite>2026-11-04 11:09:35</RecordLastWrite>
+        </db>
+        <extrainfo>
+          <Label>_DocumentNumber</Label>
+          <Alias>AX0EQT400153E</Alias>
+          <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        </extrainfo>
+        <gdr>
+          <VarType>Area</VarType>
+          <DisableAutolearn>1</DisableAutolearn>
+        </gdr>
+        <help>
+          <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+        </help>
+        <ui>
+          <_type>String</_type>
+          <automatic>true</automatic>
+        </ui>
+      </properties>
+    </field>
+    <field datatableid="W0EQT400153E" deleted="0" format="" guid="NTU2FP000IYP" id="Y0EQT400153E" label="_InvoiceDate" length="0" name="InvoiceDate__" originalProcessID="CTU2FP000IYP" precision="0" submitable="1" type="DATE">
+      <properties>
+        <db>
+          <alias>AY0EQT400153E</alias>
+          <noxml>1</noxml>
+          <fullname>/job/processfields/InvoiceDate__</fullname>
+          <defaultvalue>
+          </defaultvalue>
+          <RecordLastWrite>2026-11-04 11:09:35</RecordLastWrite>
+        </db>
+        <extrainfo>
+          <Label>_InvoiceDate</Label>
+          <Alias>AY0EQT400153E</Alias>
+          <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        </extrainfo>
+        <gdr>
+          <VarType>Area</VarType>
+          <DisableAutolearn>1</DisableAutolearn>
+        </gdr>
+        <help>
+          <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+        </help>
+        <ui>
+          <_type>Date</_type>
+          <automatic>true</automatic>
+        </ui>
+      </properties>
+    </field>
+    <field datatableid="W0EQT400153E" deleted="0" format="" guid="MTU2FP000IYP" id="Z0EQT400153E" label="_InvoiceNumber" length="50" name="InvoiceNumber__" originalProcessID="CTU2FP000IYP" precision="0" submitable="1" type="STR">
+      <properties>
+        <db>
+          <alias>AZ0EQT400153E</alias>
+          <noxml>1</noxml>
+          <fullname>/job/processfields/InvoiceNumber__</fullname>
+          <defaultvalue>
+          </defaultvalue>
+          <RecordLastWrite>2026-11-04 11:09:35</RecordLastWrite>
+        </db>
+        <extrainfo>
+          <Label>_InvoiceNumber</Label>
+          <Alias>AZ0EQT400153E</Alias>
+          <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        </extrainfo>
+        <gdr>
+          <VarType>Area</VarType>
+          <DisableAutolearn>1</DisableAutolearn>
+        </gdr>
+        <help>
+          <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+        </help>
+        <ui>
+          <_type>String</_type>
+          <automatic>true</automatic>
+        </ui>
+      </properties>
+    </field>
+    <field datatableid="W0EQT400153E" deleted="0" format="" guid="OTU2FP000IYP" id="A1EQT400153E" label="_NetAmount" length="17" name="NetAmount__" originalProcessID="CTU2FP000IYP" precision="2" submitable="1" type="DECIMAL">
+      <properties>
+        <db>
+          <alias>AA1EQT400153E</alias>
+          <noxml>1</noxml>
+          <fullname>/job/processfields/NetAmount__</fullname>
+          <defaultvalue>
+          </defaultvalue>
+          <RecordLastWrite>2026-11-04 11:09:35</RecordLastWrite>
+        </db>
+        <extrainfo>
+          <Label>_NetAmount</Label>
+          <Alias>AA1EQT400153E</Alias>
+          <DecimalPrecision vartype="INT">2</DecimalPrecision>
+          <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        </extrainfo>
+        <gdr>
+          <VarType>Area</VarType>
+          <DisableAutolearn>1</DisableAutolearn>
+        </gdr>
+        <help>
+          <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+        </help>
+        <ui>
+          <_type>Number</_type>
+          <automatic>true</automatic>
+        </ui>
+      </properties>
+    </field>
+  </datatable>
+  <type id="GOLHG0000M4O" name="CD">
+  </type>
+</process>

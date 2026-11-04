@@ -1,0 +1,555 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:06:04" deleted="0" eskerapplication="P2P" global="0" id="PA9QT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="AP - Trading partner__" needvalidation="0" ootofilter="" ootoversion="0" originalProcessID="HUME3B9D81AD" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomTable" upgradable="1" userid="0" version="1" visibility="0">
+  <properties>
+    <lg>
+      <process_da>{
+	"_Company": "Virksomheds-id",
+	"_Company name": "Virksomhedsnavn",
+	"_Country": "Virksomhedsland",
+	"_Currency": "Lokal valuta",
+	"AP - Trading partner": "S2P – samhandelspartnere"
+}</process_da>
+      <process_de>{
+	"_Company": "Firmen-ID",
+	"_Company name": "Firmenname",
+	"_Country": "Land der Firma",
+	"_Currency": "Lokale Währung",
+	"AP - Trading partner": "S2P - Partnergesellschaften"
+}</process_de>
+      <process_JA>{
+	"_Company": "会社ID",
+	"_Company name": "会社名",
+	"_Country": "会社所在国",
+	"_Currency": "ローカル通貨",
+	"AP - Trading partner": "S2P - 取引先"
+}</process_JA>
+      <process_en>{
+	"_Company": "Company ID",
+	"_Company name": "Company name",
+	"_Country": "Company country",
+	"_Currency": "Local currency",
+	"AP - Trading partner": "S2P - Trading partners"
+}</process_en>
+      <process_es>{
+	"_Company": "ID de la empresa",
+	"_Company name": "Nombre de la empresa",
+	"_Country": "País de la empresa",
+	"_Currency": "Divisa local",
+	"AP - Trading partner": "S2P - Sociedades asociadas"
+}</process_es>
+      <process_fr>{
+	"_Company": "ID de la société",
+	"_Company name": "Nom de la société",
+	"_Country": "Pays de la société",
+	"_Currency": "Devise locale",
+	"AP - Trading partner": "S2P - Sociétés partenaires"
+}</process_fr>
+      <process_nl-NL>{
+	"_Company": "Bedrijfs-ID",
+	"_Company name": "Bedrijfsnaam",
+	"_Country": "Land bedrijf",
+	"_Currency": "Lokale valuta",
+	"AP - Trading partner": "S2P - Handelspartners"
+}</process_nl-NL>
+      <process_pl>{
+	"_Company": "Identyfikator firmy",
+	"_Company name": "Nazwa firmy",
+	"_Country": "Kraj firmy",
+	"_Currency": "Waluta lokalna",
+	"AP - Trading partner": "S2P – partnerzy handlowi"
+}</process_pl>
+      <process_it>{
+	"_Company": "ID società",
+	"_Company name": "Nome società",
+	"_Country": "Paese società",
+	"_Currency": "Valuta locale",
+	"AP - Trading partner": "S2P - Società partner"
+}</process_it>
+      <process_sk>{
+	"_Company": "IČO",
+	"_Company name": "Meno spoločnosti",
+	"_Country": "Krajina spoločnosti",
+	"_Currency": "Miestna mena",
+	"AP - Trading partner": "S2P – Obchodní partneri"
+}</process_sk>
+      <process_zh-CN>{
+	"_Company": "公司标识",
+	"_Company name": "公司名称",
+	"_Country": "公司国家/地区",
+	"_Currency": "本地货币",
+	"AP - Trading partner": "寻源到付款 - 业务伙伴"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"_Company": "ID da empresa",
+	"_Company name": "Nome da empresa",
+	"_Country": "País da empresa",
+	"_Currency": "Moeda local",
+	"AP - Trading partner": "S2P - Parceiros comerciais"
+}</process_pt-BR>
+    </lg>
+    <process>
+      <flowtype>processing</flowtype>
+      <homepagelabel>AP - Trading partner</homepagelabel>
+      <upgradable>yes</upgradable>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <enablerounddecimal>true</enablerounddecimal>
+      <OverrideAllowedAttachmentExtensions>*</OverrideAllowedAttachmentExtensions>
+      <UseActionNameWithScriptApproval>true</UseActionNameWithScriptApproval>
+      <AllowUploadAttachment>0</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+      <shouldRollbackManualRecordEdits>true</shouldRollbackManualRecordEdits>
+      <UseCultureFormat>true</UseCultureFormat>
+      <TransportName>CustomTable</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+    </process>
+    <ui>
+      <customscriptIncludedScripts>[LIB_P2P_CUSTOMIZATION_TABLES_CLIENT]</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Sys/Sys_Helpers</customscriptIncludedScripts>
+      <CustomScript>"use strict";
+var CustomScript;
+(function (CustomScript) {
+    function Start() {
+        Sys.Helpers.TryCallFunction("Lib.P2P.Customization.Tables.Client.Common.OnHTMLScriptEnd");
+    }
+    Start();
+})(CustomScript || (CustomScript = {}));
+//# sourceMappingURL=customscript.js.map</CustomScript>
+      <restorationPanel>DataPanel</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 21,
+	"*": {
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"splitterType": "simple-v",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 2,
+					"options": {
+						"hidePanelsMenu": false,
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 3,
+					"options": {
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 4,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-center": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 5,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"width": "100%"
+										},
+										"hidden": false
+									},
+									"*": {
+										"form-content-center-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 6,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"DataPanel": {
+													"type": "PanelData",
+													"data": [],
+													"stamp": 7,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": false,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"backgroundcolor": "default",
+														"labelsAlignment": "right",
+														"label": "_Document data",
+														"version": 0
+													},
+													"*": {
+														"FieldsManager": {
+															"type": "FieldsManager",
+															"data": [],
+															"stamp": 8,
+															"options": {
+																"version": 0,
+																"controlsAssociation": {
+																	"Company__": "LabelCompany__",
+																	"LabelCompany__": "Company__",
+																	"CompanyName__": "LabelCompanyName__",
+																	"LabelCompanyName__": "CompanyName__",
+																	"Country__": "LabelCountry__",
+																	"LabelCountry__": "Country__",
+																	"Currency__": "LabelCurrency__",
+																	"LabelCurrency__": "Currency__"
+																}
+															},
+															"*": {
+																"Grid": {
+																	"type": "GridLayout",
+																	"data": [
+																		"fields"
+																	],
+																	"stamp": 9,
+																	"options": {
+																		"version": 0,
+																		"lines": 4,
+																		"columns": 2,
+																		"ctrlsPos": {
+																			"LabelCompany__": {
+																				"line": 1,
+																				"column": 1
+																			},
+																			"Company__": {
+																				"line": 1,
+																				"column": 2
+																			},
+																			"LabelCompanyName__": {
+																				"line": 2,
+																				"column": 1
+																			},
+																			"CompanyName__": {
+																				"line": 2,
+																				"column": 2
+																			},
+																			"LabelCountry__": {
+																				"line": 3,
+																				"column": 1
+																			},
+																			"Country__": {
+																				"line": 3,
+																				"column": 2
+																			},
+																			"LabelCurrency__": {
+																				"line": 4,
+																				"column": 1
+																			},
+																			"Currency__": {
+																				"line": 4,
+																				"column": 2
+																			}
+																		},
+																		"colspans": [
+																			[],
+																			[],
+																			[],
+																			[]
+																		]
+																	},
+																	"*": {
+																		"LabelCompany__": {
+																			"type": "Label",
+																			"data": [
+																				"Company__"
+																			],
+																			"stamp": 11,
+																			"options": {
+																				"label": "_Company",
+																				"version": 0
+																			}
+																		},
+																		"Company__": {
+																			"type": "ShortText",
+																			"data": [
+																				"Company__"
+																			],
+																			"stamp": 10,
+																			"options": {
+																				"label": "_Company",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"browsable": false,
+																				"version": 0
+																			}
+																		},
+																		"LabelCompanyName__": {
+																			"type": "Label",
+																			"data": [
+																				"CompanyName__"
+																			],
+																			"stamp": 13,
+																			"options": {
+																				"label": "_Company name",
+																				"version": 0
+																			}
+																		},
+																		"CompanyName__": {
+																			"type": "ShortText",
+																			"data": [
+																				"CompanyName__"
+																			],
+																			"stamp": 12,
+																			"options": {
+																				"label": "_Company name",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"browsable": false,
+																				"version": 0
+																			}
+																		},
+																		"LabelCountry__": {
+																			"type": "Label",
+																			"data": [
+																				"Country__"
+																			],
+																			"stamp": 15,
+																			"options": {
+																				"label": "_Country",
+																				"version": 0
+																			}
+																		},
+																		"Country__": {
+																			"type": "ShortText",
+																			"data": [
+																				"Country__"
+																			],
+																			"stamp": 14,
+																			"options": {
+																				"label": "_Country",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"browsable": false,
+																				"version": 0
+																			}
+																		},
+																		"LabelCurrency__": {
+																			"type": "Label",
+																			"data": [
+																				"Currency__"
+																			],
+																			"stamp": 17,
+																			"options": {
+																				"label": "_Currency",
+																				"version": 0
+																			}
+																		},
+																		"Currency__": {
+																			"type": "ShortText",
+																			"data": [
+																				"Currency__"
+																			],
+																			"stamp": 16,
+																			"options": {
+																				"label": "_Currency",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"browsable": false,
+																				"version": 0
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 18,
+					"options": {
+						"splitterType": "simple-h",
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 19,
+							"options": {
+								"label": "_Save",
+								"action": "savequit",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 20,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Delete": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 21,
+							"options": {
+								"label": "_Delete",
+								"action": "delete",
+								"submit": true,
+								"disabled": true,
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <field deleted="0" format="" guid="HUME3B9D81AF" id="RA9QT400153E" label="_Company name" length="50" name="CompanyName__" originalProcessID="HUME3B9D81AD" precision="0" processid="PA9QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ARA9QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/CompanyName__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:04</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Company name</Label>
+        <Alias>ARA9QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="PHQG3B9D81AE" id="QA9QT400153E" label="_Company" length="50" name="Company__" originalProcessID="HUME3B9D81AD" precision="0" processid="PA9QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AQA9QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Company__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:04</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Company</Label>
+        <Alias>AQA9QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="AYLN3B9D81B0" id="SA9QT400153E" label="_Country" length="50" name="Country__" originalProcessID="HUME3B9D81AD" precision="0" processid="PA9QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ASA9QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Country__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:04</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Country</Label>
+        <Alias>ASA9QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="LFDX3B9D81B1" id="TA9QT400153E" label="_Currency" length="50" name="Currency__" originalProcessID="HUME3B9D81AD" precision="0" processid="PA9QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ATA9QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Currency__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:04</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Currency</Label>
+        <Alias>ATA9QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <type id="KOLHG0000M4O" name="CT">
+  </type>
+</process>

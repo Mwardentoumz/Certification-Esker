@@ -1,0 +1,276 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:00:45" deleted="0" eskerapplication="" global="0" id="TSZKT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="0" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="DD - Unlink Documents" needvalidation="0" ootofilter="" ootoversion="2" originalProcessID="TSA200001535" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomData" upgradable="0" userid="0" version="1" visibility="1">
+  <properties>
+    <gdr>
+      <ValidationScriptAllowRetry>true</ValidationScriptAllowRetry>
+      <validationscriptIncludedScripts>Script_DD_UnlinkDocuments_Validation_V12.0.566.0</validationscriptIncludedScripts>
+      <ValidationScript>Script.DD.UnlinkDocuments.Validation.Run();</ValidationScript>
+      <AllowTagCoverPages>true</AllowTagCoverPages>
+      <AllowTagNewDocuments>true</AllowTagNewDocuments>
+      <AllowTagAttachments>true</AllowTagAttachments>
+      <AllowRemovePages>true</AllowRemovePages>
+      <AllowSwapPages>true</AllowSwapPages>
+    </gdr>
+    <ocr>
+      <trade-off>accurate</trade-off>
+      <image-ocr-timeout>
+      </image-ocr-timeout>
+      <image-binarization>no</image-binarization>
+      <image-draft-fax>no</image-draft-fax>
+      <image-despeckle>no</image-despeckle>
+      <allowed-language>0</allowed-language>
+      <image-resolution-enhancement>auto</image-resolution-enhancement>
+      <pdf-processing>no-ocr</pdf-processing>
+      <ocr_engine>Nuance210</ocr_engine>
+      <extractionAdditionalOptions>
+      </extractionAdditionalOptions>
+    </ocr>
+    <process>
+      <flowtype>processing</flowtype>
+      <ocrpreset>scan</ocrpreset>
+      <EnableCatchNetworkError>
+      </EnableCatchNetworkError>
+      <EnableNegativeNumbersBetweenBrackets>true</EnableNegativeNumbersBetweenBrackets>
+      <panelLabelWidth>
+      </panelLabelWidth>
+      <homepagelabel>DD - Unlink Documents</homepagelabel>
+      <enableflexibleauditing>
+      </enableflexibleauditing>
+      <enableflexibleediting>
+      </enableflexibleediting>
+      <enableflexibleteaching>
+      </enableflexibleteaching>
+      <enableInternalConversation>
+      </enableInternalConversation>
+      <disableocr>
+      </disableocr>
+      <instanciable>1</instanciable>
+      <disableautolearning>true</disableautolearning>
+      <backgroundprocessingthreshold>
+      </backgroundprocessingthreshold>
+      <EnablePreviewPrecomputation>
+      </EnablePreviewPrecomputation>
+      <enablerounddecimal>true</enablerounddecimal>
+      <pdfNormalizeFilter>
+      </pdfNormalizeFilter>
+      <archiveDuration>0</archiveDuration>
+      <ocrpagestoprocess>0</ocrpagestoprocess>
+      <ScriptEngineType>2</ScriptEngineType>
+      <UseActionNameWithScriptApproval>true</UseActionNameWithScriptApproval>
+      <displayWidth>
+      </displayWidth>
+      <AllowUploadAttachment>1</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>1</AllowUploadReferenceDocument>
+      <RemovePointWhenCastingIntToString>true</RemovePointWhenCastingIntToString>
+      <UseCultureFormat>true</UseCultureFormat>
+      <AllowRetryExtractCD>true</AllowRetryExtractCD>
+      <TransportName>CustomData</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+      <printToProcess>
+      </printToProcess>
+    </process>
+    <ui>
+      <layout>{
+	"*": {
+		"GDRData": {
+			"type": "GDRData"
+		},
+		"OCRParams": {
+			"type": "OCRParams"
+		},
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"options": {
+				"splitterType": "complex"
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"options": {}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"options": {},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"options": {},
+							"*": {
+								"form-content-top": {
+									"type": "FlexibleFormSplitter",
+									"options": {
+										"autosize": true
+									},
+									"*": {
+										"form-content-top-1": {
+											"type": "FlexibleFormLine",
+											"options": {},
+											"*": {
+												"DocumentsPanel": {
+													"type": "PanelDocument",
+													"options": {},
+													"*": {
+														"Document": {
+															"data": "documentscontroldata",
+															"type": "Documents",
+															"options": {}
+														}
+													}
+												}
+											}
+										}
+									}
+								},
+								"form-content-bottom": {
+									"type": "FlexibleFormSplitter",
+									"options": {},
+									"*": {
+										"form-content-left": {
+											"type": "FlexibleFormSplitter",
+											"options": {},
+											"*": {
+												"form-content-left-1": {
+													"type": "FlexibleFormLine",
+													"options": {},
+													"*": {
+														"DataPanel": {
+															"type": "PanelData",
+															"options": {
+																"border": {}
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"options": {
+																		"controlsAssociation": {}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"options": {
+																				"lines": 0,
+																				"columns": 2
+																			},
+																			"data": "fields",
+																			"*": {}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-2": {
+													"type": "FlexibleFormLine",
+													"options": {},
+													"*": {
+														"SystemData": {
+															"type": "PanelSystemData",
+															"options": {
+																"multicolumn": false
+															}
+														}
+													}
+												},
+												"form-content-left-3": {
+													"type": "FlexibleFormLine",
+													"options": {},
+													"*": {
+														"NextProcess": {
+															"type": "PanelNextProcess",
+															"options": {
+																"hidden": true
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-right": {
+											"type": "FlexibleFormSplitter",
+											"options": {},
+											"*": {
+												"form-content-right-1": {
+													"type": "FlexibleFormLine",
+													"options": {},
+													"*": {
+														"PreviewPanel": {
+															"type": "PanelPreview",
+															"options": {
+																"border": {}
+															},
+															"*": {
+																"Preview": {
+																	"data": "previewdata",
+																	"type": "Preview",
+																	"options": {}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"options": {
+						"splitterType": "simple-h"
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"options": {
+								"label": "_Save",
+								"action": "save",
+								"submit": true
+							}
+						},
+						"Approve": {
+							"type": "SubmitButton",
+							"options": {
+								"label": "_Approve",
+								"action": "approve",
+								"submit": true
+							}
+						},
+						"Reject": {
+							"type": "SubmitButton",
+							"options": {
+								"label": "_Reject",
+								"action": "reject",
+								"submit": true
+							}
+						},
+						"Reprocess": {
+							"type": "SubmitButton",
+							"options": {
+								"label": "_Reprocess",
+								"action": "reprocess",
+								"submit": true
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <type id="GOLHG0000M4O" name="CD">
+  </type>
+</process>

@@ -1,0 +1,1835 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:05:42" deleted="0" eskerapplication="P2P" global="0" id="QR8QT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="AP - Payment terms__" needvalidation="1" ootofilter="" ootoversion="0" originalProcessID="PHQG667577" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomTable" upgradable="1" userid="0" version="1" visibility="0">
+  <properties>
+    <dataConditions>
+      <listDataConditions>
+				&lt;dataCondition&gt;
+					&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+					&lt;filter&gt;msnex=*&lt;/filter&gt;
+					&lt;labelKey&gt;_Purchasing or _AP disabled&lt;/labelKey&gt;
+					&lt;multipleConditionsLink&gt;or&lt;/multipleConditionsLink&gt;
+					&lt;conditions&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableAccountPayableGlobalSetting__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableStandardPurchasingGlobalSetting__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+					&lt;/conditions&gt;
+				&lt;/dataCondition&gt;</listDataConditions>
+    </dataConditions>
+    <dbIndex>
+      <Join>&lt;Index Join="1"&gt;
+				&lt;Ref Name="CompanyCode__" Option="ASC"/&gt;
+				&lt;Ref Name="PaymentTermCode__" Option="ASC"/&gt;
+				&lt;/Index&gt;</Join>
+      <AUTO_ABS8QT400153EA>&lt;Index&gt;&lt;Ref Name="ABS8QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_ABS8QT400153EA>
+      <AUTO_ARR8QT400153EA>&lt;Index&gt;&lt;Ref Name="ARR8QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_ARR8QT400153EA>
+    </dbIndex>
+    <lg>
+      <process_da>{
+	"_Company code": "Virksomhedskode",
+	"_Description": "Beskrivelse",
+	"_Discount period": "Rabatperiode (dage)",
+	"_Discount Rate 30 Days": "Rabat baseret på betaling 30 dage før tid (%)",
+	"_Discount Rate 30 Days_report": "Rabat baseret på betaling 30 dage før tid (%)",
+	"_DiscountRate": "Rabat (%)",
+	"_Document data": "Betalingsoplysninger",
+	"_Early payment discounting": "Rabat for tidlig betaling",
+	"_End of month": "Ultimo måned",
+	"_Invoice date": "Fakturadato",
+	"_Late payment fee rate": "Potentielt rykkergebyr (%)",
+	"_Payment day": "Dag i måned",
+	"_Payment period": "Betalingsperiode (dage)",
+	"_Payment period_report": "Betalingsperiode (dage)",
+	"_PaymentDay_report": "Dag i måned",
+	"_Posting date": "Bogføringsdato",
+	"_Reference date": "Referencedato",
+	"_Tooltip enable dynamic discounting": "Denne indstilling er tilgængelig som standard for generelle ERP-integrationer.&lt;br&gt; Til andre typer ERP-systemer skal du aktivere betalingsfunktionen i de globale konfigurationsindstillinger og vælge en betalingsudbyder i programkonfigurationen.",
+	"_TooltipDiscountRate": "Indtast den rabat, der gælder i den rabatperiode for tidlig betaling, der er angivet ovenfor.",
+	"_TooltipDiscountRate30Days": "Indtast den rabat, der anvendes som referenceværdi til at beregne den fratrukne rabat baseret på, hvor mange dage i forvejen betalingen blev foretaget.&lt;br&gt; Hvis rabatten for eksempel er sat til 1 % baseret på betaling 30 dage før tid, og fakturaen betales 20 dage før forfaldsdato, er den fratrukne rabat den angivne rabat ganget med antallet af dage, der er betalt før tid (20), divideret med 30 (=0,67 %).\n",
+	"AP - Payment terms": "S2P – betalingsbetingelser",
+	"_Currency": "Valuta",
+	"_Days": "Dage indtil betaling",
+	"_Discount amount": "Rabatbeløb",
+	"_Discount amount_report": "Rabatbeløb",
+	"_Discount limit date": "Udløbsdato for rabat",
+	"_Discount limit date_report": "Udløbsdato for rabat",
+	"_Discount rate": "Rabat (%)",
+	"_Discount rate_report": "Rabat (%)",
+	"_Due date": "Forfaldsdato",
+	"_EarlyPaymentSettingsPane": "Tidlig betaling",
+	"_Enable dynamic discounting": "Aktivér dynamisk rabat",
+	"_Enable dynamic discounting_report": "Aktivér dynamisk rabat",
+	"_Invoice amount": "Fakturabeløb",
+	"_Invoice number": "Fakturanummer",
+	"_Order number": "Ordrenummer",
+	"_Payment amount": "Forfaldent beløb",
+	"_Payment terms": "Betalingsbetingelser",
+	"_Payment terms_report": "Betalingsbetingelser",
+	"_Remaining": "Dage til betaling",
+	"_RequestedPaymentDate": "Ønsket betalingsdato",
+	"_RequestedPaymentDate_report": "Ønsket betalingsdato",
+	"_Summary": "Oversigt",
+	"_Summary selected discount amount": "Samlet rabatbeløb",
+	"_Summary selected invoices": "Valgte fakturaer",
+	"_Summary selected invoices amount": "Samlet fakturabeløb",
+	"_Summary selected payment amount": "Betaling i alt",
+	"_VendorCanProposeDiscountRate": "Tillad rabatforslag",
+	"_VendorCanProposeDiscountRate_report": "Tillad rabatforslag",
+	"_VendorCanProposeEarlyPayment": "Tillad anmodninger om tidlig betaling",
+	"_VendorCanProposeEarlyPayment_report": "Tillad anmodninger om tidlig betaling",
+	"_VendorCanProposeEarlyPaymentTooltip": "Vælg denne indstilling for at give leverandører tilladelse til at anmode om tidlig betaling fra leverandørportalen.",
+	"_View PDF": "Vis PDF"
+}</process_da>
+      <process_de>{
+	"_Company code": "Buchungskreis",
+	"_Description": "Beschreibung",
+	"_Discount period": "Skontofrist (Tage)",
+	"_Discount Rate 30 Days": "Skonto bei vorzeitiger Zahlung während der ersten 30 Tage (%)",
+	"_Discount Rate 30 Days_report": "Skonto bei vorzeitiger Zahlung während der ersten 30 Tage (%)",
+	"_DiscountRate": "Skonto (%)",
+	"_Document data": "Angaben zur Zahlung",
+	"_Early payment discounting": "Skonto",
+	"_End of month": "Monatsende",
+	"_Invoice date": "Rechnungsdatum",
+	"_Late payment fee rate": "Geschätzter Säumniszuschlag (%)",
+	"_Payment day": "Kalendertag",
+	"_Payment period": "Zahlungsfrist (Tage)",
+	"_Payment period_report": "Zahlungsfrist (Tage)",
+	"_PaymentDay_report": "Kalendertag",
+	"_Posting date": "Buchungsdatum",
+	"_Reference date": "Bezugsdatum",
+	"_Tooltip enable dynamic discounting": "Diese Option ist standardmäßig für generische ERP-Integrationen verfügbar.&lt;br&gt; Für andere Arten von ERPs müssen Sie die Zahlungsfunktion in den globalen Konfigurationseinstellungen aktivieren und einen Zahlungsdienstleister in der Anwendungskonfiguration auswählen.",
+	"_TooltipDiscountRate": "Geben Sie den Skontosatz für die oben angegebene Skontofrist ein.",
+	"_TooltipDiscountRate30Days": "Geben Sie den Skontosatz als Referenzwert für die Berechnung des angewandten Skontos basierend auf der Anzahl der Tage der vorzeitigen Zahlung ein.&lt;br&gt; Wenn zum Beispiel der Skontosatz auf der Grundlage einer vorzeitigen Zahlung innerhalb 30 Tagen auf 1% festgelegt wird und die Rechnung 20 Tage vor Fälligkeit bezahlt wird, ist das Skonto definiert als der angegebene Skontosatz multipliziert mit der Anzahl der Tage der vorzeitigen Zahlung (20) geteilt durch 30 (= 0,67 %).",
+	"AP - Payment terms": "S2P - Zahlungsbedingungen",
+	"_Currency": "Währung",
+	"_Days": "Tage bis zur Zahlung",
+	"_Discount amount": "Skontobetrag",
+	"_Discount amount_report": "Skontobetrag",
+	"_Discount limit date": "Skontoablauf",
+	"_Discount limit date_report": "Skontoablauf",
+	"_Discount rate": "Skontosatz (%)",
+	"_Discount rate_report": "Skontosatz (%)",
+	"_Due date": "Fälligkeitsdatum",
+	"_EarlyPaymentSettingsPane": "Vorzeitige Zahlung",
+	"_Enable dynamic discounting": "Dynamisches Skontomanagement aktivieren",
+	"_Enable dynamic discounting_report": "Dynamische Skontomanagement aktiviert",
+	"_Invoice amount": "Gesamtbetrag",
+	"_Invoice number": "Rechnungsnummer",
+	"_Order number": "Bestellnummer",
+	"_Payment amount": "Fälliger Betrag",
+	"_Payment terms": "Zahlungsbedingungen",
+	"_Payment terms_report": "Zahlungsbedingungen",
+	"_Remaining": "Tage bis zur Fälligkeit",
+	"_RequestedPaymentDate": "Gewünschtes Zahlungsdatum",
+	"_RequestedPaymentDate_report": "Gewünschtes Zahlungsdatum",
+	"_Summary": "Übersicht",
+	"_Summary selected discount amount": "Skontobetrag",
+	"_Summary selected invoices": "Ausgewählte Rechnungen",
+	"_Summary selected invoices amount": "Gesamtrechnungsbetrag",
+	"_Summary selected payment amount": "Zahlungssumme",
+	"_VendorCanProposeDiscountRate": "Skontovorschläge zulassen",
+	"_VendorCanProposeDiscountRate_report": "Skontovorschläge zulassen",
+	"_VendorCanProposeEarlyPayment": "Anforderungen vorzeitiger Zahlung zulassen",
+	"_VendorCanProposeEarlyPayment_report": "Anforderungen vorzeitiger Zahlung zulassen",
+	"_VendorCanProposeEarlyPaymentTooltip": "Wählen Sie diese Option aus, damit Lieferanten im Lieferantenportal frühzeitige Zahlungen anfordern können.",
+	"_View PDF": "PDF anzeigen"
+}</process_de>
+      <process_JA>{
+	"_Company code": "会社コード",
+	"_Description": "説明",
+	"_Discount period": "割引期間 (日数)",
+	"_Discount Rate 30 Days": "30日前払いに基づく割引 (%)",
+	"_Discount Rate 30 Days_report": "30日前払いに基づく割引 (%)",
+	"_DiscountRate": "割引 (%)",
+	"_Document data": "支払情報",
+	"_Early payment discounting": "早期支払割引 (%)",
+	"_End of month": "月末",
+	"_Invoice date": "請求日付",
+	"_Late payment fee rate": "遅延損害金 (%)",
+	"_Payment day": "毎月の指定日",
+	"_Payment period": "支払期間（日数）",
+	"_Payment period_report": "支払期間（日数）",
+	"_PaymentDay_report": "毎月の指定日",
+	"_Posting date": "登録日",
+	"_Reference date": "基準日",
+	"_Tooltip enable dynamic discounting": "このオプションは、デフォルトで一般的なERP統合に使用できます。&lt;br&gt;\n他のタイプのERPの場合、グローバル設定で支払い機能を有効にし、アプリケーション設定で決済サービスプロバイダーを選択してください。",
+	"_TooltipDiscountRate": "上記に指定された早期支払割引期間に適用可能な割引率を入力してください。",
+	"_TooltipDiscountRate30Days": "早期支払の日数に基づいて適用される割引を計算する基準値としての割引率を入力してください。&lt;br&gt;\nたとえば、30日前払いに基づいて割引率が1%に設定されており、請求書期日の20日前に支払う場合、適用される割引は「指定の割引率 (1%) x 期日から前払いまでの日数 (20日) を30で割ったもの」(この場合、0.67%) になります。",
+	"AP - Payment terms": "S2P - 支払条件",
+	"_Currency": "通貨",
+	"_Days": "支払までの日数",
+	"_Discount amount": "割引額",
+	"_Discount amount_report": "割引額",
+	"_Discount limit date": "割引期限",
+	"_Discount limit date_report": "割引期限",
+	"_Discount rate": "割引率 (%)",
+	"_Discount rate_report": "割引率 (%)",
+	"_Due date": "支払期日",
+	"_EarlyPaymentSettingsPane": "早期支払",
+	"_Enable dynamic discounting": "動的割引を有効にする",
+	"_Enable dynamic discounting_report": "動的割引を有効にする",
+	"_Invoice amount": "請求金額",
+	"_Invoice number": "請求書番号",
+	"_Order number": "注文番号",
+	"_Payment amount": "支払額",
+	"_Payment terms": "支払条件",
+	"_Payment terms_report": "支払条件",
+	"_Remaining": "期日までの日数",
+	"_RequestedPaymentDate": "支払依頼日",
+	"_RequestedPaymentDate_report": "支払依頼日",
+	"_Summary": "概要",
+	"_Summary selected discount amount": "割引額",
+	"_Summary selected invoices": "選択された請求書",
+	"_Summary selected invoices amount": "合計請求額",
+	"_Summary selected payment amount": "お支払い合計",
+	"_VendorCanProposeDiscountRate": "割引提案を許可する",
+	"_VendorCanProposeDiscountRate_report": "割引提案を許可する",
+	"_VendorCanProposeEarlyPayment": "早期支払いリクエストを許可する",
+	"_VendorCanProposeEarlyPayment_report": "早期支払いリクエストを許可する",
+	"_VendorCanProposeEarlyPaymentTooltip": "このオプションを選択すると、仕入先は仕入先ポータルから早期支払いをリクエストすることができます。",
+	"_View PDF": "PDF を表示"
+}</process_JA>
+      <process_en>{
+	"_Company code": "Company code",
+	"_Description": "Description",
+	"_Discount period": "Discount period (days)",
+	"_Discount Rate 30 Days": "Discount on a 30-day early payment basis (%)",
+	"_Discount Rate 30 Days_report": "Discount on a 30-day early payment basis (%)",
+	"_DiscountRate": "Discount (%)",
+	"_Document data": "Payment Information",
+	"_Early payment discounting": "Early Payment Discount",
+	"_End of month": "End of month",
+	"_Invoice date": "Invoice date",
+	"_Late payment fee rate": "Potential late fee (%)",
+	"_Payment day": "Day of month",
+	"_Payment period": "Payment period (days)",
+	"_Payment period_report": "Payment period (days)",
+	"_PaymentDay_report": "Day of month",
+	"_Posting date": "Posting date",
+	"_Reference date": "Reference date",
+	"_Tooltip enable dynamic discounting": "This option is available by default for generic ERP integrations.&lt;br&gt;\nFor other types of ERPs, you need to enable the payment feature in the global configuration settings and select a payment provider in the application configuration.",
+	"_TooltipDiscountRate": "Enter the discount rate applicable to the early payment discount period specified above.",
+	"_TooltipDiscountRate30Days": "Enter the discount rate used as the reference value to calculate the discount applied, based on the number of days of early payment.&lt;br&gt;\nFor example, if the discount rate is set to 1% on a basis of a 30-day early payment and the invoice is paid 20 days before the due date, the discount applied is the specified discount rate multiplied by the number of early payment days (20) and divided by 30 (=0.67%).\n",
+	"AP - Payment terms": "S2P - Payment terms",
+	"_Currency": "Currency",
+	"_Days": "Days until payment",
+	"_Discount amount": "Discount amount",
+	"_Discount amount_report": "Discount amount",
+	"_Discount limit date": "Discount expiration",
+	"_Discount limit date_report": "Discount expiration",
+	"_Discount rate": "Discount rate (%)",
+	"_Discount rate_report": "Discount rate (%)",
+	"_Due date": "Due date",
+	"_EarlyPaymentSettingsPane": "Early Payment",
+	"_Enable dynamic discounting": "Enable dynamic discounting",
+	"_Enable dynamic discounting_report": "Enable dynamic discounting",
+	"_Invoice amount": "Invoice amount",
+	"_Invoice number": "Invoice number",
+	"_Order number": "Order number",
+	"_Payment amount": "Amount due",
+	"_Payment terms": "Payment terms",
+	"_Payment terms_report": "Payment terms",
+	"_Remaining": "Days until due",
+	"_RequestedPaymentDate": "Requested payment date",
+	"_RequestedPaymentDate_report": "Requested payment date",
+	"_Summary": "Summary",
+	"_Summary selected discount amount": "Total discount amount",
+	"_Summary selected invoices": "Selected invoices",
+	"_Summary selected invoices amount": "Total invoice amount",
+	"_Summary selected payment amount": "Payment total",
+	"_VendorCanProposeDiscountRate": "Allow discount proposals",
+	"_VendorCanProposeDiscountRate_report": "Allow discount proposals",
+	"_VendorCanProposeEarlyPayment": "Allow early payment requests",
+	"_VendorCanProposeEarlyPayment_report": "Allow early payment requests",
+	"_VendorCanProposeEarlyPaymentTooltip": "Select this option to allow suppliers to request early payments from the supplier portal.",
+	"_View PDF": "View PDF"
+}</process_en>
+      <process_es>{
+	"_Company code": "Código de empresa",
+	"_Description": "Descripción",
+	"_Discount period": "Período de descuento (días)",
+	"_Discount Rate 30 Days": "Descuento por pronto pago a 30 días (%)",
+	"_Discount Rate 30 Days_report": "Descuento por pronto pago a 30 días (%)",
+	"_DiscountRate": "Descuento (%)",
+	"_Document data": "Información de pago",
+	"_Early payment discounting": "Descuento por pronto pago",
+	"_End of month": "Fin de mes",
+	"_Invoice date": "Fecha de factura",
+	"_Late payment fee rate": "Estimación de cargos por mora (%)",
+	"_Payment day": "Día del mes",
+	"_Payment period": "Plazo de pago (días)",
+	"_Payment period_report": "Plazo de pago (días)",
+	"_PaymentDay_report": "Día del mes",
+	"_Posting date": "Fecha de contabilización",
+	"_Reference date": "Fecha de referencia",
+	"_Tooltip enable dynamic discounting": "Esta opción está disponible de forma predeterminada para las integraciones genéricas de ERP.&lt;br&gt;\nPara otros tipos de ERP, es necesario activar la función de pago en los ajustes de configuración global y seleccionar un proveedor de pagos en la configuración de la aplicación.",
+	"_TooltipDiscountRate": "Introduzca la tasa de descuento aplicable al periodo de descuento por pronto pago especificado anteriormente.",
+	"_TooltipDiscountRate30Days": "Introduzca la tasa de descuento utilizada como valor de referencia para calcular el descuento aplicado, en función del número de días de pronto pago.&lt;br&gt;\nPor ejemplo, si la tasa de descuento es de 1% sobre la base de un pronto pago de 30 días y la factura se paga 20 días antes de la fecha de vencimiento, el descuento aplicado es la tasa de descuento especificada multiplicado por el número de días de pronto pago (20) y dividido por 30 (=0,67%).",
+	"AP - Payment terms": "S2P - Condiciones de pago",
+	"_Currency": "Divisa",
+	"_Days": "Días hasta el pago",
+	"_Discount amount": "Importe del descuento",
+	"_Discount amount_report": "Importe del descuento",
+	"_Discount limit date": "Caducidad del descuento",
+	"_Discount limit date_report": "Caducidad del descuento",
+	"_Discount rate": "Tasa del descuento  (%)",
+	"_Discount rate_report": "Tasa del descuento  (%)",
+	"_Due date": "Fecha de vencimiento",
+	"_EarlyPaymentSettingsPane": "Pronto pago",
+	"_Enable dynamic discounting": "Habilitar los descuentos dinámicos",
+	"_Enable dynamic discounting_report": "Descuentos dinámicos habilitados",
+	"_Invoice amount": "Importe total",
+	"_Invoice number": "Número de factura",
+	"_Order number": "Número de pedido",
+	"_Payment amount": "Importe a pagar",
+	"_Payment terms": "Condiciones de pago",
+	"_Payment terms_report": "Condiciones de pago",
+	"_Remaining": "Días hasta vencimiento",
+	"_RequestedPaymentDate": "Fecha de pago solicitada",
+	"_RequestedPaymentDate_report": "Fecha de pago solicitada",
+	"_Summary": "Resumen",
+	"_Summary selected discount amount": "Importe del descuento",
+	"_Summary selected invoices": "Facturas seleccionadas",
+	"_Summary selected invoices amount": "Importe de facturas",
+	"_Summary selected payment amount": "Total a pagar",
+	"_VendorCanProposeDiscountRate": "Permitir las propuestas de descuento",
+	"_VendorCanProposeDiscountRate_report": "Permitir las propuestas de descuento",
+	"_VendorCanProposeEarlyPayment": "Permitir las solicitudes de pronto pago",
+	"_VendorCanProposeEarlyPayment_report": "Permitir las solicitudes de pronto pago",
+	"_VendorCanProposeEarlyPaymentTooltip": "Seleccione esta opción para permitir a los proveedores solicitar pronto pago desde el portal de proveedores.",
+	"_View PDF": "Ver PDF"
+}</process_es>
+      <process_fr>{
+	"_Company code": "Code société",
+	"_Description": "Description",
+	"_Discount period": "Délai d'escompte (jours)",
+	"_Discount Rate 30 Days": "Escompte sur une base de paiement anticipé à 30 jours (%)",
+	"_Discount Rate 30 Days_report": "Escompte sur une base de paiement anticipé à 30 jours (%)",
+	"_DiscountRate": "Escompte (%)",
+	"_Document data": "Informations de paiement",
+	"_Early payment discounting": "Escompte pour paiement anticipé",
+	"_End of month": "Fin de mois",
+	"_Invoice date": "Date de facture",
+	"_Late payment fee rate": "Pénalités encourues (%)",
+	"_Payment day": "Jour du mois",
+	"_Payment period": "Délai de paiement (jours)",
+	"_Payment period_report": "Délai de paiement (jours)",
+	"_PaymentDay_report": "Jour du mois",
+	"_Posting date": "Date de comptabilisation",
+	"_Reference date": "Date de référence",
+	"_Tooltip enable dynamic discounting": "Cette option est disponible par défaut pour les intégrations d'ERP génériques.&lt;br&gt;\nPour les autres types d'ERP, vous devez activer la fonctionnalité de paiement dans les paramètres de configuration globaux et sélectionner un fournisseur de paiement dans la configuration de l'application.",
+	"_TooltipDiscountRate": "Saisissez le taux d'escompte applicable au délai d'escompte spécifié ci-dessus.",
+	"_TooltipDiscountRate30Days": "Saisissez le taux d'escompte de référence utilisé pour calculer l'escompte appliqué, en fonction du nombre de jours de paiement anticipé.&lt;br&gt;\nPar exemple, si le taux d'escompte est de 1 % sur une base de paiement anticipé à 30 jours et que la facture est payée 20 jours avant la date d'échéance, on applique le taux d'escompte spécifié (1 %) multiplié par le nombre de jours de paiement anticipé (20) et divisé par 30 (= 0,67 %).",
+	"AP - Payment terms": "S2P - Conditions de paiement",
+	"_Currency": "Devise",
+	"_Days": "Jours avant paiement",
+	"_Discount amount": "Montant de l'escompte",
+	"_Discount amount_report": "Montant de l'escompte",
+	"_Discount limit date": "Expiration de l'escompte",
+	"_Discount limit date_report": "Expiration de l'escompte",
+	"_Discount rate": "Taux de l'escompte (%)",
+	"_Discount rate_report": "Taux de l'escompte (%)",
+	"_Due date": "Date d'échéance",
+	"_EarlyPaymentSettingsPane": "Paiement anticipé",
+	"_Enable dynamic discounting": "Activer les escomptes dynamiques",
+	"_Enable dynamic discounting_report": "Escomptes dynamiques activés",
+	"_Invoice amount": "Montant TTC",
+	"_Invoice number": "Numéro de facture",
+	"_Order number": "Numéro de commande",
+	"_Payment amount": "Montant dû",
+	"_Payment terms": "Conditions de paiement",
+	"_Payment terms_report": "Conditions de paiement",
+	"_Remaining": "Jours avant échéance",
+	"_RequestedPaymentDate": "Date de paiement demandée",
+	"_RequestedPaymentDate_report": "Date de paiement demandée",
+	"_Summary": "Résumé",
+	"_Summary selected discount amount": "Montant de l'escompte",
+	"_Summary selected invoices": "Factures sélectionnées",
+	"_Summary selected invoices amount": "Montant des factures",
+	"_Summary selected payment amount": "Total du paiement",
+	"_VendorCanProposeDiscountRate": "Autoriser les propositions d'escompte",
+	"_VendorCanProposeDiscountRate_report": "Autoriser les propositions d'escompte",
+	"_VendorCanProposeEarlyPayment": "Autoriser les demandes de paiement anticipé",
+	"_VendorCanProposeEarlyPayment_report": "Autoriser les demandes de paiement anticipé",
+	"_VendorCanProposeEarlyPaymentTooltip": "Sélectionnez cette option pour permettre aux fournisseurs de demander des paiements anticipés depuis le portail fournisseur.",
+	"_View PDF": "Voir le PDF"
+}</process_fr>
+      <process_nl-NL>{
+	"_Company code": "Bedrijfscode",
+	"_Description": "Beschrijving",
+	"_Discount period": "Kortingsperiode (dagen)",
+	"_Discount Rate 30 Days": "Korting op basis van 30 dagen vroegtijdige betaling (%)",
+	"_Discount Rate 30 Days_report": "Korting op basis van 30 dagen vroegtijdige betaling (%)",
+	"_DiscountRate": "Korting (%)",
+	"_Document data": "Betaalgegevens",
+	"_Early payment discounting": "Korting vroegtijdige betaling",
+	"_End of month": "Einde maand",
+	"_Invoice date": "Factuurdatum",
+	"_Late payment fee rate": "Potentiële kosten laattijdige betaling (%)",
+	"_Payment day": "Dag van de maand",
+	"_Payment period": "Betaalperiode (dagen)",
+	"_Payment period_report": "Betaalperiode (dagen)",
+	"_PaymentDay_report": "Dag van de maand",
+	"_Posting date": "Boekingsdatum",
+	"_Reference date": "Referentiedatum",
+	"_Tooltip enable dynamic discounting": "Deze optie is standaard beschikbaar voor algemene ERP-integraties.&lt;br&gt; Voor andere soorten ERP’s moet u de betaalfunctie inschakelen in de algemene configuratie-instellingen en een betalingsprovider selecteren in de configuratie van de toepassing.",
+	"_TooltipDiscountRate": "Voer het toepasselijke kortingspercentage voor de hierboven vermelde kortingsperiode voor vroegtijdige betaling in.",
+	"_TooltipDiscountRate30Days": "Voer het kortingspercentage in dat wordt gebruikt als referentiewaarde om de toegepaste korting te berekenen, op basis van het aantal dagen van vroegtijdige betaling.&lt;br&gt; Als het kortingspercentage bijvoorbeeld is ingesteld op 1% op basis van vroegtijdige betaling binnen 30 dagen en de factuur wordt 20 dagen voor de vervaldatum betaald, dan is de toegepaste korting het opgegeven kortingspercentage vermenigvuldigd met het aantal dagen vroegtijdige betaling (20) en gedeeld door 30 (=0,67%).",
+	"AP - Payment terms": "S2P - Betalingstermijnen",
+	"_Currency": "Valuta",
+	"_Days": "Dagen tot betaling",
+	"_Discount amount": "Bedrag korting",
+	"_Discount amount_report": "Bedrag korting",
+	"_Discount limit date": "Vervaldatum korting",
+	"_Discount limit date_report": "Vervaldatum korting",
+	"_Discount rate": "Kortingspercentage",
+	"_Discount rate_report": "Kortingspercentage",
+	"_Due date": "Vervaldatum",
+	"_EarlyPaymentSettingsPane": "Vroegtijdige betaling",
+	"_Enable dynamic discounting": "Dynamische korting inschakelen",
+	"_Enable dynamic discounting_report": "Dynamische korting inschakelen",
+	"_Invoice amount": "Factuurbedrag",
+	"_Invoice number": "Factuurnummer",
+	"_Order number": "Bestelnummer",
+	"_Payment amount": "Verschuldigd bedrag",
+	"_Payment terms": "Betalingstermijnen",
+	"_Payment terms_report": "Betalingstermijnen",
+	"_Remaining": "Dagen tot vervaldatum",
+	"_RequestedPaymentDate": "Gevraagde betaaldatum",
+	"_RequestedPaymentDate_report": "Vervaldatum korting",
+	"_Summary": "Samenvatting",
+	"_Summary selected discount amount": "Bedrag korting",
+	"_Summary selected invoices": "Geselecteerde facturen",
+	"_Summary selected invoices amount": "Totaal factuurbedrag",
+	"_Summary selected payment amount": "Totaal betaling",
+	"_VendorCanProposeDiscountRate": "Kortingsvoorstellen toestaan",
+	"_VendorCanProposeDiscountRate_report": "Kortingsvoorstellen toestaan",
+	"_VendorCanProposeEarlyPayment": "Verzoeken om snelle betaling toestaan",
+	"_VendorCanProposeEarlyPayment_report": "Verzoeken om snelle betaling toestaan",
+	"_VendorCanProposeEarlyPaymentTooltip": "Selecteer deze optie om leveranciers toe te staan snelle betalingen te vragen via de portal voor leveranciers.",
+	"_View PDF": "Bekijk PDF"
+}</process_nl-NL>
+      <process_pl>{
+	"_Company code": "Kod firmy",
+	"_Description": "Opis",
+	"_Discount period": "Okres zniżki (dni)",
+	"_Discount Rate 30 Days": "Zniżka przy założeniu płatności z 30-dniowym wyprzedzeniem (%)",
+	"_Discount Rate 30 Days_report": "Zniżka przy założeniu płatności z 30-dniowym wyprzedzeniem (%)",
+	"_DiscountRate": "Zniżka (%)",
+	"_Document data": "Informacje o płatnościach",
+	"_Early payment discounting": "Zniżka za wcześniejszą płatność",
+	"_End of month": "Koniec miesiąca",
+	"_Invoice date": "Data faktury",
+	"_Late payment fee rate": "Potencjalna opłata za zwłokę (%)",
+	"_Payment day": "Dzień miesiąca",
+	"_Payment period": "Okres płatności (dni)",
+	"_Payment period_report": "Okres płatności (dni)",
+	"_PaymentDay_report": "Dzień miesiąca",
+	"_Posting date": "Data księgowania",
+	"_Reference date": "Data odniesienia",
+	"_Tooltip enable dynamic discounting": "Ta opcja jest domyślnie dostępna w przypadku ogólnych integracji ERP.&lt;br&gt;\nW przypadku innych typów systemów ERP należy włączyć funkcję płatności w globalnych ustawieniach konfiguracji i wybrać dostawcę usług płatniczych w konfiguracji aplikacji.",
+	"_TooltipDiscountRate": "Wprowadź stawkę zniżki mającą zastosowanie do podanego powyżej okresu zniżki za wcześniejszą płatność.",
+	"_TooltipDiscountRate30Days": "Wprowadź stawkę zniżki służącą jako wartość odniesienia przy obliczaniu właściwej zniżki na podstawie liczby dni wcześniejszej płatności.&lt;br&gt;\nJeśli przykładowo stawka zniżki wynosi 1% przy założeniu płatności z 30-dniowym wyprzedzeniem, a faktura zostanie zapłacona 20 dni przed terminem, właściwa zniżka zostanie obliczona przez pomnożenie określonej stawki zniżki i liczby dni wcześniejszej płatności (20), a następnie podzielenie wyniku tego mnożenia przez 30 (=0,67%).",
+	"AP - Payment terms": "S2P – warunki płatności",
+	"_Currency": "Waluta",
+	"_Days": "Dni do płatności",
+	"_Discount amount": "Kwota zniżki",
+	"_Discount amount_report": "Kwota zniżki",
+	"_Discount limit date": "Data ważności zniżki",
+	"_Discount limit date_report": "Data ważności zniżki",
+	"_Discount rate": "Stawka zniżki (%)",
+	"_Discount rate_report": "Stawka zniżki (%)",
+	"_Due date": "Termin",
+	"_EarlyPaymentSettingsPane": "Wcześniejsza płatność",
+	"_Enable dynamic discounting": "Włącz dynamiczne ustalanie zniżki",
+	"_Enable dynamic discounting_report": "Włącz dynamiczne ustalanie zniżki",
+	"_Invoice amount": "Kwota faktury",
+	"_Invoice number": "Numer faktury",
+	"_Order number": "Numer zamówienia",
+	"_Payment amount": "Należna kwota",
+	"_Payment terms": "Warunki płatności",
+	"_Payment terms_report": "Warunki płatności",
+	"_Remaining": "Dni do terminu",
+	"_RequestedPaymentDate": "Wnioskowana data płatności",
+	"_RequestedPaymentDate_report": "Wnioskowana data płatności",
+	"_Summary": "Podsumowanie",
+	"_Summary selected discount amount": "Łączna kwota zniżki",
+	"_Summary selected invoices": "Wybrane faktury",
+	"_Summary selected invoices amount": "Łączna kwota faktur",
+	"_Summary selected payment amount": "Płatność ogółem",
+	"_VendorCanProposeDiscountRate": "Zezwól na propozycje zniżek",
+	"_VendorCanProposeDiscountRate_report": "Zezwól na propozycje zniżek",
+	"_VendorCanProposeEarlyPayment": "Zezwól na wnioski o wcześniejszą płatność",
+	"_VendorCanProposeEarlyPayment_report": "Zezwól na wnioski o wcześniejszą płatność",
+	"_VendorCanProposeEarlyPaymentTooltip": "Wybierz tę opcję, aby dostawcy mogli wnioskować o wcześniejszą płatność z poziomu portalu dostawców.",
+	"_View PDF": "Wyświetl plik PDF"
+}</process_pl>
+      <process_it>{
+	"_Company code": "Codice società",
+	"_Description": "Descrizione",
+	"_Discount period": "Periodo sconto (giorni)",
+	"_Discount Rate 30 Days": "Sconto base su un pagamento anticipato di 30 giorni (%)",
+	"_Discount Rate 30 Days_report": "Sconto base su un pagamento anticipato di 30 giorni (%)",
+	"_DiscountRate": "Sconto (%)",
+	"_Document data": "Informazioni pagamento",
+	"_Early payment discounting": "Sconto per pagamento anticipato",
+	"_End of month": "Fine del mese",
+	"_Invoice date": "Data fattura",
+	"_Late payment fee rate": "Interessi di mora previsionali (%)",
+	"_Payment day": "Giorno del mese",
+	"_Payment period": "Termine di pagamento (giorni)",
+	"_Payment period_report": "Termine di pagamento (giorni)",
+	"_PaymentDay_report": "Giorno del mese",
+	"_Posting date": "Data registrazione",
+	"_Reference date": "Data riferimento",
+	"_Tooltip enable dynamic discounting": "Questa opzione è disponibile per impostazione predefinita per le integrazioni di ERP generici.&lt;br&gt;\nPer gli altri tipi di ERP, è necessario attivare la funzionalità di pagamento nelle impostazioni di configurazione globali e selezionare un provider del servizio di pagamento nella configurazione dell'applicazione.",
+	"_TooltipDiscountRate": "Immettere il tasso di sconto applicabile al periodo di sconto per pagamento anticipato sopra indicato.",
+	"_TooltipDiscountRate30Days": "Immettere il tasso di sconto di riferimento usato per calcolare lo sconto applicato in base al numero di giorni di pagamento anticipato.&lt;br&gt;\nAd esempio, se il tasso di sconto è dell'1% su una base di un pagamento anticipato a 30 giorni e la fattura è pagata 20 giorni prima della data di scadenza, si applica il tasso di sconto specificato (1%) moltiplicato per il numero di giorni di pagamento anticipato (20) e diviso per 30 (=0,67%).",
+	"AP - Payment terms": "S2P - Termini di pagamento",
+	"_Currency": "Valuta",
+	"_Days": "Giorni fino al pagamento",
+	"_Discount amount": "Importo dello sconto",
+	"_Discount amount_report": "Importo dello sconto",
+	"_Discount limit date": "Scadenza sconto",
+	"_Discount limit date_report": "Scadenza sconto",
+	"_Discount rate": "Tasso di sconto (%)",
+	"_Discount rate_report": "Tasso di sconto (%)",
+	"_Due date": "Data scadenza",
+	"_EarlyPaymentSettingsPane": "Pagamento anticipato",
+	"_Enable dynamic discounting": "Attiva gli sconti dinamici",
+	"_Enable dynamic discounting_report": "Attiva gli sconti dinamici",
+	"_Invoice amount": "Importo totale",
+	"_Invoice number": "Numero fattura",
+	"_Order number": "Numero ordine",
+	"_Payment amount": "Importo dovuto",
+	"_Payment terms": "Termini di pagamento",
+	"_Payment terms_report": "Termini di pagamento",
+	"_Remaining": "Giorni alla scadenza",
+	"_RequestedPaymentDate": "Data di pagamento richiesta",
+	"_RequestedPaymentDate_report": "Data di pagamento richiesta",
+	"_Summary": "Riepilogo",
+	"_Summary selected discount amount": "Importo dello sconto",
+	"_Summary selected invoices": "Fatture selezionate",
+	"_Summary selected invoices amount": "Totale fatture",
+	"_Summary selected payment amount": "Totale dovuto",
+	"_VendorCanProposeDiscountRate": "Consenti le proposte di sconto",
+	"_VendorCanProposeDiscountRate_report": "Consenti le proposte di sconto",
+	"_VendorCanProposeEarlyPayment": "Consenti le richieste di pagamento anticipato",
+	"_VendorCanProposeEarlyPayment_report": "Consenti le richieste di pagamento anticipato",
+	"_VendorCanProposeEarlyPaymentTooltip": "Selezionare questa opzione per consentire ai fornitori di richiedere pagamenti anticipati dal portale fornitori.",
+	"_View PDF": "Visualizza PDF"
+}</process_it>
+      <process_sk>{
+	"_Company code": "Kód spoločnosti",
+	"_Description": "Popis",
+	"_Discount period": "Doba zľavy (dni)",
+	"_Discount Rate 30 Days": "Zľava pri platbe do 30 dní (%)",
+	"_Discount Rate 30 Days_report": "Zľava pri platbe do 30 dní (%)",
+	"_DiscountRate": "Zľava (%)",
+	"_Document data": "Informácie o platbe",
+	"_Early payment discounting": "Zľava za predčasnú platbu",
+	"_End of month": "Koniec mesiaca",
+	"_Invoice date": "Dátum faktúry",
+	"_Late payment fee rate": "Možný poplatok za omeškanie",
+	"_Payment day": "Deň v mesiaci",
+	"_Payment period": "Platobná lehota (dni)",
+	"_Payment period_report": "Platobná lehota (dni)",
+	"_PaymentDay_report": "Deň v mesiaci",
+	"_Posting date": "Dátum účtovania",
+	"_Reference date": "Referenčný dátum",
+	"_Tooltip enable dynamic discounting": "Táto možnosť je štandardne k dispozícii pre generické integrácie ERP.&lt;br&gt; Pre iné typy ERP je potrebné povoliť funkciu platby v globálnych nastaveniach konfigurácie a vybrať poskytovateľa platby v konfigurácii aplikácie.",
+	"_TooltipDiscountRate": "Zadajte diskontnú sadzbu platnú pre obdobie zľavy za včasnú platbu uvedené vyššie.",
+	"_TooltipDiscountRate30Days": "Zadajte diskontnú sadzbu použitú ako referenčnú hodnotu na výpočet uplatnenej zľavy na základe počtu dní predčasnej platby.&lt;br&gt;\nNapríklad, ak je diskontná sadzba nastavená na 1 % na základe 30-dňovej predčasnej platby a faktúra je zaplatená 20 dní pred dátumom splatnosti, uplatnená zľava je stanovená diskontná sadzba vynásobená počtom dní predčasnej platby (20) a vydelená 30 (= 0,67 %).",
+	"AP - Payment terms": "S2P – Platobné podmienky",
+	"_Currency": "Mena",
+	"_Days": "Dni do platby",
+	"_Discount amount": "Výška zľavy",
+	"_Discount amount_report": "Výška zľavy",
+	"_Discount limit date": "Uplynutie platnosti zľavy",
+	"_Discount limit date_report": "Uplynutie platnosti zľavy",
+	"_Discount rate": "Sadzba zľavy (%)",
+	"_Discount rate_report": "Sadzba zľavy (%)",
+	"_Due date": "Dátum splatnosti",
+	"_EarlyPaymentSettingsPane": "Predčasná platba",
+	"_Enable dynamic discounting": "Povolenie dynamického diskontovania",
+	"_Enable dynamic discounting_report": "Povolenie dynamického diskontovania",
+	"_Invoice amount": "Fakturovaná suma",
+	"_Invoice number": "Faktúra č.",
+	"_Order number": "Číslo objednávky",
+	"_Payment amount": "Splatná suma",
+	"_Payment terms": "Platobné podmienky",
+	"_Payment terms_report": "Platobné podmienky",
+	"_Remaining": "Dni do splatnosti",
+	"_RequestedPaymentDate": "Požadovaný dátum platby",
+	"_RequestedPaymentDate_report": "Požadovaný dátum platby",
+	"_Summary": "Súhrn",
+	"_Summary selected discount amount": "Celková výška zľavy",
+	"_Summary selected invoices": "Vybrané faktúry",
+	"_Summary selected invoices amount": "Celková suma faktúry",
+	"_Summary selected payment amount": "Celková suma platieb",
+	"_VendorCanProposeDiscountRate": "Povoliť návrhy na zľavu",
+	"_VendorCanProposeDiscountRate_report": "Povoliť návrhy na zľavu",
+	"_VendorCanProposeEarlyPayment": "Povoliť žiadosti o predčasnú platbu",
+	"_VendorCanProposeEarlyPayment_report": "Povoliť žiadosti o predčasnú platbu",
+	"_VendorCanProposeEarlyPaymentTooltip": "Túto možnosť vyberte, ak chcete umožniť dodávateľom požiadať o predčasné platby z portálu dodávateľov.",
+	"_View PDF": "Zobraziť PDF"
+}</process_sk>
+      <process_zh-CN>{
+	"_Company code": "公司代码",
+	"_Description": "说明",
+	"_Discount period": "折扣期限（天）",
+	"_Discount Rate 30 Days": "提前 30 天付款的折扣基准（%）",
+	"_Discount Rate 30 Days_report": "提前 30 天付款的折扣基准（%）",
+	"_DiscountRate": "折扣（%）",
+	"_Document data": "付款信息",
+	"_Early payment discounting": "提前付款折扣",
+	"_End of month": "月末",
+	"_Invoice date": "发票日期",
+	"_Late payment fee rate": "滞纳金预估",
+	"_Payment day": "每月的某一天",
+	"_Payment period": "付款期限（天）",
+	"_Payment period_report": "付款期限（天）",
+	"_PaymentDay_report": "每月的某一天",
+	"_Posting date": "过账日期",
+	"_Reference date": "参考日期",
+	"_Tooltip enable dynamic discounting": "此选项默认为常规 ERP 集成可用。&lt;br&gt;\n对于其他 ERP 类型，需要在通用设置中启用付款功能并在应用程序配置中选择付款供应商。",
+	"_TooltipDiscountRate": "请输入适用于上面所指定的提前付款折扣期限的折扣率。",
+	"_TooltipDiscountRate30Days": "请根据提前付款天数，输入折扣率；该折扣率将作为参考值，用于计算适用折扣。&lt;br&gt;\n例如，如果将以 30 天提前付款为基准的折扣率设置为 1%，且于到期日前 20 天支付了账单发票，则适用折扣为：指定的折扣率乘以提前付款天数（20）再除以 30（=0.67%）。\n",
+	"AP - Payment terms": "寻源到付款 - 付款条款",
+	"_Currency": "货币",
+	"_Days": "付款前天数",
+	"_Discount amount": "折扣金额",
+	"_Discount amount_report": "折扣金额",
+	"_Discount limit date": "折扣过期日",
+	"_Discount limit date_report": "折扣过期日",
+	"_Discount rate": "折扣率（%）",
+	"_Discount rate_report": "折扣率（%）",
+	"_Due date": "截止日期",
+	"_EarlyPaymentSettingsPane": "提前付款",
+	"_Enable dynamic discounting": "启用动态贴现",
+	"_Enable dynamic discounting_report": "启用动态贴现",
+	"_Invoice amount": "发票金额",
+	"_Invoice number": "发票编号",
+	"_Order number": "订单号",
+	"_Payment amount": "到期金额",
+	"_Payment terms": "付款周期",
+	"_Payment terms_report": "付款周期",
+	"_Remaining": "到期前天数",
+	"_RequestedPaymentDate": "要求付款日期",
+	"_RequestedPaymentDate_report": "要求付款日期",
+	"_Summary": "摘要",
+	"_Summary selected discount amount": "折扣金额",
+	"_Summary selected invoices": "选定账单发票",
+	"_Summary selected invoices amount": "账单发票总额",
+	"_Summary selected payment amount": "付款总额",
+	"_VendorCanProposeDiscountRate": "允许折扣提议",
+	"_VendorCanProposeDiscountRate_report": "允许折扣提议",
+	"_VendorCanProposeEarlyPayment": "允许提前付款请求",
+	"_VendorCanProposeEarlyPayment_report": "允许提前付款请求",
+	"_VendorCanProposeEarlyPaymentTooltip": "选择此选项以允许供应商通过供应商门户申请提前付款。",
+	"_View PDF": "查看 PDF"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"_Company code": "Código da empresa",
+	"_Description": "Descrição",
+	"_Discount period": "Período de desconto (dias)",
+	"_Discount Rate 30 Days": "Desconto para pagamento antecipado de 30 dias (%)",
+	"_Discount Rate 30 Days_report": "Desconto para pagamento antecipado de 30 dias (%)",
+	"_DiscountRate": "Desconto (%)",
+	"_Document data": "Informação de pagamento",
+	"_Early payment discounting": "Desconto por pagamento antecipado",
+	"_End of month": "Fim do mês",
+	"_Invoice date": "Data da fatura",
+	"_Late payment fee rate": "Taxa de atraso em potencial (%)",
+	"_Payment day": "Dia do mês",
+	"_Payment period": "Período de pagamento (dias)",
+	"_Payment period_report": "Período de pagamento (dias)",
+	"_PaymentDay_report": "Dia do mês",
+	"_Posting date": "Data de lançamento",
+	"_Reference date": "Data de referência",
+	"_Tooltip enable dynamic discounting": "Esta opção está disponível por padrão para integrações ERP genéricas.&lt;br&gt; Para outros tipos de ERP, você precisa habilitar o recurso de pagamento nas configurações globais e selecionar um provedor de pagamento na configuração do aplicativo.",
+	"_TooltipDiscountRate": "Insira a taxa de desconto aplicável ao período de desconto de pagamento antecipado especificado acima.",
+	"_TooltipDiscountRate30Days": "Insira a taxa de desconto utilizada como valor de referência para calcular o desconto aplicado, com base no número de dias de pagamento antecipado.&lt;br&gt; Por exemplo, se a taxa de desconto for definida como 1% com base em um pagamento antecipado de 30 dias e a fatura for paga 20 dias antes da data de vencimento, o desconto aplicado será a taxa de desconto especificada multiplicada pelo número de dias de pagamento antecipado (20) e dividida por 30 (=0,67%).",
+	"AP - Payment terms": "S2P - Termos de pagamento",
+	"_Currency": "Moeda",
+	"_Days": "Dias até o pagamento",
+	"_Discount amount": "Valor do desconto",
+	"_Discount amount_report": "Valor do desconto",
+	"_Discount limit date": "Validade de desconto",
+	"_Discount limit date_report": "Validade de desconto",
+	"_Discount rate": "Taxa de desconto (%)",
+	"_Discount rate_report": "Taxa de desconto (%)",
+	"_Due date": "Data de vencimento",
+	"_EarlyPaymentSettingsPane": "Pagamento antecipado",
+	"_Enable dynamic discounting": "Habilitar desconto dinâmico",
+	"_Enable dynamic discounting_report": "Habilitar desconto dinâmico",
+	"_Invoice amount": "Valor da fatura",
+	"_Invoice number": "Número da fatura",
+	"_Order number": "Número de pedido",
+	"_Payment amount": "Valor a pagar",
+	"_Payment terms": "Termos de pagamento",
+	"_Payment terms_report": "Termos de pagamento",
+	"_Remaining": "Dias até vencimento",
+	"_RequestedPaymentDate": "Data de pagamento solicitada",
+	"_RequestedPaymentDate_report": "Data de pagamento solicitada",
+	"_Summary": "Resumo",
+	"_Summary selected discount amount": "Valor do desconto",
+	"_Summary selected invoices": "Faturas selecionadas",
+	"_Summary selected invoices amount": "Valor das faturas",
+	"_Summary selected payment amount": "Total do pagamento",
+	"_VendorCanProposeDiscountRate": "Permitir propostas de desconto",
+	"_VendorCanProposeDiscountRate_report": "Permitir propostas de desconto",
+	"_VendorCanProposeEarlyPayment": "Permitir pedidos de pagamento antecipado",
+	"_VendorCanProposeEarlyPayment_report": "Permitir pedidos de pagamento antecipado",
+	"_VendorCanProposeEarlyPaymentTooltip": "Selecione esta opção para permitir que os fornecedores solicitem pagamentos antecipados no portal do fornecedor.",
+	"_View PDF": "Visualizar PDF"
+}</process_pt-BR>
+    </lg>
+    <process>
+      <BUColumn>CompanyCode__</BUColumn>
+      <flowtype>processing</flowtype>
+      <homepagelabel>AP - Payment terms</homepagelabel>
+      <upgradable>yes</upgradable>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <OverrideAllowedAttachmentExtensions>*</OverrideAllowedAttachmentExtensions>
+      <AllowUploadAttachment>0</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+      <shouldRollbackManualRecordEdits>true</shouldRollbackManualRecordEdits>
+      <UseCultureFormat>true</UseCultureFormat>
+      <TransportName>CustomTable</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+    </process>
+    <ui>
+      <customscriptIncludedScripts>[LIB_P2P_CUSTOMIZATION_TABLES_CLIENT]</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Sys/Sys_Helpers</customscriptIncludedScripts>
+      <CustomScript>"use strict";
+var CustomScript;
+(function (CustomScript) {
+    function setupDiscountLayout(dynamicDiscount) {
+        // Static discount
+        Controls.DiscountRate__.Hide(dynamicDiscount);
+        Controls.DiscountPeriod__.Hide(dynamicDiscount);
+        // Dynamic discount
+        Controls.DiscountRate30Days__.Hide(!dynamicDiscount);
+        Controls.DiscountRate30Days__.SetRequired(dynamicDiscount);
+    }
+    Controls.EnableDynamicDiscounting__.OnChange = function () {
+        Data.SetValue("DiscountPeriod__", "");
+        Data.SetValue("DiscountRate__", "");
+        Data.SetValue("DiscountRate30Days__", "");
+        setupDiscountLayout(this.GetValue());
+    };
+    function run() {
+        const dynamicDiscount = Controls.EnableDynamicDiscounting__.GetValue();
+        setupDiscountLayout(dynamicDiscount);
+        Sys.Helpers.TryCallFunction("Lib.P2P.Customization.Tables.Client.Common.OnHTMLScriptEnd");
+    }
+    CustomScript.run = run;
+    run();
+})(CustomScript || (CustomScript = {}));
+//# sourceMappingURL=customscript.js.map</CustomScript>
+      <restorationPanel>DataPanel</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 42,
+	"*": {
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"splitterType": "simple-v",
+				"backColor": "text-backgroundcolor-default",
+				"style": null,
+				"processHelpId": "5096",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 2,
+					"options": {
+						"hidePanelsMenu": false,
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 3,
+					"options": {
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 4,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-center": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 5,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"width": "100%"
+										},
+										"hidden": false
+									},
+									"*": {
+										"form-content-center-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 6,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"DataPanel": {
+													"type": "PanelData",
+													"data": [],
+													"stamp": 7,
+													"options": {
+														"border": {},
+														"labelLength": 300,
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": true,
+														"hideTitleBar": false,
+														"label": "_Document data",
+														"backgroundcolor": "default",
+														"labelsAlignment": "right",
+														"hideTitle": false,
+														"version": 0
+													},
+													"*": {
+														"FieldsManager": {
+															"type": "FieldsManager",
+															"data": [],
+															"stamp": 8,
+															"options": {
+																"version": 0,
+																"controlsAssociation": {
+																	"CompanyCode__": "LabelCompanyCode__",
+																	"LabelCompanyCode__": "CompanyCode__",
+																	"PaymentTermCode__": "LabelPaymentTermCode__",
+																	"LabelPaymentTermCode__": "PaymentTermCode__",
+																	"Description__": "LabelDescription__",
+																	"LabelDescription__": "Description__",
+																	"DayLimit__": "LabelDayLimit__",
+																	"LabelDayLimit__": "DayLimit__",
+																	"LatePaymentFeeRate__": "LabelLatePaymentFeeRate__",
+																	"LabelLatePaymentFeeRate__": "LatePaymentFeeRate__",
+																	"ReferenceDate__": "LabelReferenceDate__",
+																	"LabelReferenceDate__": "ReferenceDate__",
+																	"PaymentDay__": "LabelPaymentDay__",
+																	"LabelPaymentDay__": "PaymentDay__",
+																	"EndOfMonth__": "LabelEndOfMonth__",
+																	"LabelEndOfMonth__": "EndOfMonth__"
+																}
+															},
+															"*": {
+																"Grid": {
+																	"type": "GridLayout",
+																	"data": [
+																		"fields"
+																	],
+																	"stamp": 9,
+																	"options": {
+																		"version": 0,
+																		"lines": 9,
+																		"columns": 2,
+																		"ctrlsPos": {
+																			"LabelCompanyCode__": {
+																				"line": 1,
+																				"column": 1
+																			},
+																			"CompanyCode__": {
+																				"line": 1,
+																				"column": 2
+																			},
+																			"LabelPaymentTermCode__": {
+																				"line": 2,
+																				"column": 1
+																			},
+																			"PaymentTermCode__": {
+																				"line": 2,
+																				"column": 2
+																			},
+																			"LabelDescription__": {
+																				"line": 3,
+																				"column": 1
+																			},
+																			"Description__": {
+																				"line": 3,
+																				"column": 2
+																			},
+																			"LabelDayLimit__": {
+																				"line": 4,
+																				"column": 1
+																			},
+																			"DayLimit__": {
+																				"line": 4,
+																				"column": 2
+																			},
+																			"LabelLatePaymentFeeRate__": {
+																				"line": 5,
+																				"column": 1
+																			},
+																			"LatePaymentFeeRate__": {
+																				"line": 5,
+																				"column": 2
+																			},
+																			"LabelReferenceDate__": {
+																				"line": 6,
+																				"column": 1
+																			},
+																			"ReferenceDate__": {
+																				"line": 6,
+																				"column": 2
+																			},
+																			"LabelPaymentDay__": {
+																				"line": 7,
+																				"column": 1
+																			},
+																			"PaymentDay__": {
+																				"line": 7,
+																				"column": 2
+																			},
+																			"LabelEndOfMonth__": {
+																				"line": 8,
+																				"column": 1
+																			},
+																			"EndOfMonth__": {
+																				"line": 8,
+																				"column": 2
+																			},
+																			"Spacer__": {
+																				"line": 9,
+																				"column": 1
+																			}
+																		},
+																		"colspans": [
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[
+																				{
+																					"index": 0,
+																					"length": 2
+																				}
+																			]
+																		]
+																	},
+																	"*": {
+																		"LabelCompanyCode__": {
+																			"type": "Label",
+																			"data": [
+																				"CompanyCode__"
+																			],
+																			"stamp": 11,
+																			"options": {
+																				"label": "_Company code",
+																				"version": 0
+																			}
+																		},
+																		"CompanyCode__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"CompanyCode__"
+																			],
+																			"stamp": 10,
+																			"options": {
+																				"label": "_Company code",
+																				"browsable": true,
+																				"activable": true,
+																				"width": "400",
+																				"PreFillFTS": true,
+																				"fTSmaxRecords": "20",
+																				"helpURL": "5096",
+																				"helpText": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"version": 0
+																			}
+																		},
+																		"LabelPaymentTermCode__": {
+																			"type": "Label",
+																			"data": [
+																				"PaymentTermCode__"
+																			],
+																			"stamp": 13,
+																			"options": {
+																				"label": "_Payment terms",
+																				"version": 0
+																			}
+																		},
+																		"PaymentTermCode__": {
+																			"type": "ShortText",
+																			"data": [
+																				"PaymentTermCode__"
+																			],
+																			"stamp": 12,
+																			"options": {
+																				"label": "_Payment terms",
+																				"activable": true,
+																				"width": "400",
+																				"browsable": false,
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 0
+																			}
+																		},
+																		"LabelDescription__": {
+																			"type": "Label",
+																			"data": [
+																				"Description__"
+																			],
+																			"stamp": 15,
+																			"options": {
+																				"label": "_Description",
+																				"version": 0
+																			}
+																		},
+																		"Description__": {
+																			"type": "ShortText",
+																			"data": [
+																				"Description__"
+																			],
+																			"stamp": 14,
+																			"options": {
+																				"label": "_Description",
+																				"activable": true,
+																				"width": "400",
+																				"length": 400,
+																				"browsable": false,
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 0
+																			}
+																		},
+																		"LabelDayLimit__": {
+																			"type": "Label",
+																			"data": [
+																				"DayLimit__"
+																			],
+																			"stamp": 17,
+																			"options": {
+																				"label": "_Payment period",
+																				"version": 0
+																			}
+																		},
+																		"DayLimit__": {
+																			"type": "ShortText",
+																			"data": [
+																				"DayLimit__"
+																			],
+																			"stamp": 16,
+																			"options": {
+																				"label": "_Payment period",
+																				"version": 1,
+																				"activable": true,
+																				"width": "200",
+																				"browsable": false,
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default"
+																			}
+																		},
+																		"LabelLatePaymentFeeRate__": {
+																			"type": "Label",
+																			"data": [
+																				"LatePaymentFeeRate__"
+																			],
+																			"stamp": 19,
+																			"options": {
+																				"label": "_Late payment fee rate",
+																				"version": 0
+																			}
+																		},
+																		"LatePaymentFeeRate__": {
+																			"type": "ShortText",
+																			"data": [
+																				"LatePaymentFeeRate__"
+																			],
+																			"stamp": 18,
+																			"options": {
+																				"label": "_Late payment fee rate",
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"activable": true,
+																				"width": "200",
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"browsable": false,
+																				"version": 0
+																			}
+																		},
+																		"LabelReferenceDate__": {
+																			"type": "Label",
+																			"data": [
+																				"ReferenceDate__"
+																			],
+																			"stamp": 21,
+																			"options": {
+																				"label": "_Reference date",
+																				"version": 0
+																			}
+																		},
+																		"ReferenceDate__": {
+																			"type": "ComboBox",
+																			"data": [
+																				"ReferenceDate__"
+																			],
+																			"stamp": 20,
+																			"options": {
+																				"label": "_Reference date",
+																				"possibleValues": {
+																					"0": "_Invoice date",
+																					"1": "_Posting date"
+																				},
+																				"keyValueMode": true,
+																				"possibleKeys": {
+																					"0": "Invoice date",
+																					"1": "Posting date"
+																				},
+																				"activable": true,
+																				"width": "200",
+																				"version": 1
+																			}
+																		},
+																		"LabelPaymentDay__": {
+																			"type": "Label",
+																			"data": [
+																				"PaymentDay__"
+																			],
+																			"stamp": 23,
+																			"options": {
+																				"label": "_Payment day",
+																				"version": 0
+																			}
+																		},
+																		"PaymentDay__": {
+																			"type": "Integer",
+																			"data": [
+																				"PaymentDay__"
+																			],
+																			"stamp": 22,
+																			"options": {
+																				"label": "_Payment day",
+																				"version": 2,
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"integer": true,
+																				"precision_internal": 0,
+																				"precision_current": 0,
+																				"activable": true,
+																				"width": "200",
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"enablePlusMinus": false,
+																				"browsable": false
+																			}
+																		},
+																		"LabelEndOfMonth__": {
+																			"type": "Label",
+																			"data": [
+																				"EndOfMonth__"
+																			],
+																			"stamp": 25,
+																			"options": {
+																				"label": "_End of month",
+																				"version": 0
+																			}
+																		},
+																		"EndOfMonth__": {
+																			"type": "CheckBox",
+																			"data": [
+																				"EndOfMonth__"
+																			],
+																			"stamp": 24,
+																			"options": {
+																				"label": "_End of month",
+																				"activable": true,
+																				"version": 0
+																			}
+																		},
+																		"Spacer__": {
+																			"type": "Spacer",
+																			"data": false,
+																			"stamp": 26,
+																			"options": {
+																				"label": "_Spacer",
+																				"height": "",
+																				"width": "",
+																				"color": "default",
+																				"version": 0
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-center-2": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 27,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"Early_payment_discounting": {
+													"type": "PanelData",
+													"data": [],
+													"stamp": 28,
+													"options": {
+														"border": {},
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": true,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"sameHeightAsSiblings": false,
+														"backgroundcolor": "default",
+														"labelsAlignment": "right",
+														"label": "_Early payment discounting",
+														"hidden": false,
+														"leftImageURL": "",
+														"removeMargins": false,
+														"elementsAlignment": "left",
+														"labelLength": 300,
+														"version": 0
+													},
+													"*": {
+														"FieldsManager": {
+															"type": "FieldsManager",
+															"data": [],
+															"stamp": 29,
+															"options": {
+																"version": 0,
+																"controlsAssociation": {
+																	"EnableDynamicDiscounting__": "LabelEnableDynamicDiscounting__",
+																	"LabelEnableDynamicDiscounting__": "EnableDynamicDiscounting__",
+																	"DiscountPeriod__": "LabelDiscountPeriod__",
+																	"LabelDiscountPeriod__": "DiscountPeriod__",
+																	"DiscountRate__": "LabelDiscountRate__",
+																	"LabelDiscountRate__": "DiscountRate__",
+																	"DiscountRate30Days__": "LabelDiscountRate30Days__",
+																	"LabelDiscountRate30Days__": "DiscountRate30Days__"
+																}
+															},
+															"*": {
+																"Grid": {
+																	"type": "GridLayout",
+																	"data": [
+																		"fields"
+																	],
+																	"stamp": 30,
+																	"options": {
+																		"version": 0,
+																		"lines": 4,
+																		"columns": 2,
+																		"ctrlsPos": {
+																			"LabelEnableDynamicDiscounting__": {
+																				"line": 1,
+																				"column": 1
+																			},
+																			"EnableDynamicDiscounting__": {
+																				"line": 1,
+																				"column": 2
+																			},
+																			"LabelDiscountPeriod__": {
+																				"line": 2,
+																				"column": 1
+																			},
+																			"DiscountPeriod__": {
+																				"line": 2,
+																				"column": 2
+																			},
+																			"LabelDiscountRate__": {
+																				"line": 3,
+																				"column": 1
+																			},
+																			"DiscountRate__": {
+																				"line": 3,
+																				"column": 2
+																			},
+																			"LabelDiscountRate30Days__": {
+																				"line": 4,
+																				"column": 1
+																			},
+																			"DiscountRate30Days__": {
+																				"line": 4,
+																				"column": 2
+																			}
+																		},
+																		"colspans": [
+																			[],
+																			[],
+																			[],
+																			[]
+																		]
+																	},
+																	"*": {
+																		"LabelEnableDynamicDiscounting__": {
+																			"type": "Label",
+																			"data": [
+																				"EnableDynamicDiscounting__"
+																			],
+																			"stamp": 32,
+																			"options": {
+																				"label": "_Enable dynamic discounting",
+																				"version": 0
+																			}
+																		},
+																		"EnableDynamicDiscounting__": {
+																			"type": "CheckBox",
+																			"data": [
+																				"EnableDynamicDiscounting__"
+																			],
+																			"stamp": 31,
+																			"options": {
+																				"label": "_Enable dynamic discounting",
+																				"activable": true,
+																				"width": "30",
+																				"helpText": "_Tooltip enable dynamic discounting",
+																				"helpURL": "5111",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"possibleValues": {},
+																				"possibleKeys": {},
+																				"version": 0
+																			}
+																		},
+																		"LabelDiscountPeriod__": {
+																			"type": "Label",
+																			"data": [
+																				"DiscountPeriod__"
+																			],
+																			"stamp": 34,
+																			"options": {
+																				"label": "_Discount period",
+																				"version": 0
+																			}
+																		},
+																		"DiscountPeriod__": {
+																			"type": "ShortText",
+																			"data": [
+																				"DiscountPeriod__"
+																			],
+																			"stamp": 33,
+																			"options": {
+																				"label": "_Discount period",
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"activable": true,
+																				"width": "200",
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"browsable": false,
+																				"version": 0
+																			}
+																		},
+																		"LabelDiscountRate__": {
+																			"type": "Label",
+																			"data": [
+																				"DiscountRate__"
+																			],
+																			"stamp": 36,
+																			"options": {
+																				"label": "_DiscountRate",
+																				"version": 0
+																			}
+																		},
+																		"DiscountRate__": {
+																			"type": "ShortText",
+																			"data": [
+																				"DiscountRate__"
+																			],
+																			"stamp": 35,
+																			"options": {
+																				"label": "_DiscountRate",
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"activable": true,
+																				"width": "200",
+																				"helpText": "_TooltipDiscountRate",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"browsable": false,
+																				"version": 0
+																			}
+																		},
+																		"LabelDiscountRate30Days__": {
+																			"type": "Label",
+																			"data": [
+																				"DiscountRate30Days__"
+																			],
+																			"stamp": 38,
+																			"options": {
+																				"label": "_Discount Rate 30 Days",
+																				"version": 0
+																			}
+																		},
+																		"DiscountRate30Days__": {
+																			"type": "ShortText",
+																			"data": [
+																				"DiscountRate30Days__"
+																			],
+																			"stamp": 37,
+																			"options": {
+																				"label": "_Discount Rate 30 Days",
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 1,
+																				"activable": true,
+																				"width": "200",
+																				"helpText": "_TooltipDiscountRate30Days",
+																				"helpURL": "5110",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"browsable": false
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 39,
+					"options": {
+						"splitterType": "simple-h",
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 40,
+							"options": {
+								"label": "_Save",
+								"action": "savequit",
+								"submit": true,
+								"shortCut": "S",
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 41,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"shortCut": "Q",
+								"version": 0
+							}
+						},
+						"Delete": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 42,
+							"options": {
+								"label": "_Delete",
+								"action": "delete",
+								"submit": true,
+								"disabled": true,
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <field deleted="0" format="" guid="HUME667578" id="RR8QT400153E" label="_Company code" length="150" name="CompanyCode__" originalProcessID="PHQG667577" precision="0" processid="QR8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ARR8QT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/CompanyCode__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:41</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Company code</Label>
+        <Alias>ARR8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>true</Editable>
+        <required>false</required>
+        <TableName>CT#BD8QT400153E</TableName>
+        <SortOrder>
+        </SortOrder>
+        <DisplayedColumns>CompanyCode__|CompanyName__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <SavedColumn>CompanyCode__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ProcessName>PurchasingCompanycodes__</ProcessName>
+        <CustomFilter>
+        </CustomFilter>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"5096","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="GGBW667583" id="SR8QT400153E" label="_Payment period" length="20" name="DayLimit__" originalProcessID="PHQG667577" precision="0" processid="QR8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ASR8QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/DayLimit__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:41</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Payment period</Label>
+        <Alias>ASR8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="FIRC667581" id="TR8QT400153E" label="_Description" length="400" name="Description__" originalProcessID="PHQG667577" precision="0" processid="QR8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ATR8QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Description__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:41</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Description</Label>
+        <Alias>ATR8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="PHQGF8D3D" id="UR8QT400153E" label="_Discount period" length="50" name="DiscountPeriod__" originalProcessID="PHQG667577" precision="0" processid="QR8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AUR8QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/DiscountPeriod__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:41</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Discount period</Label>
+        <alias>AUR8QT400153E</alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="O7YIG0000SG1" id="WR8QT400153E" label="_Discount Rate 30 Days_report" length="50" name="DiscountRate30Days__" originalProcessID="PHQG667577" precision="0" processid="QR8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AWR8QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/DiscountRate30Days__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:41</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Discount Rate 30 Days_report</Label>
+        <Alias>AWR8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"_TooltipDiscountRate30Days","helpURL":"5110","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="NAVCF8CBC" id="VR8QT400153E" label="_DiscountRate" length="50" name="DiscountRate__" originalProcessID="PHQG667577" precision="0" processid="QR8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AVR8QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/DiscountRate__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:41</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_DiscountRate</Label>
+        <alias>AVR8QT400153E</alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"_TooltipDiscountRate","helpURL":"5096","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="QSOKG0000SG1" id="XR8QT400153E" label="_Enable dynamic discounting_report" length="0" name="EnableDynamicDiscounting__" originalProcessID="PHQG667577" precision="0" processid="QR8QT400153E" submitable="1" type="BOOL">
+    <properties>
+      <db>
+        <alias>AXR8QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/EnableDynamicDiscounting__</fullname>
+        <defaultvalue>false</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:41</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Enable dynamic discounting_report</Label>
+        <Alias>AXR8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"_Tooltip enable dynamic discounting","helpURL":"5111","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Boolean</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="UYHN217757" id="YR8QT400153E" label="_End of month" length="0" name="EndOfMonth__" originalProcessID="PHQG667577" precision="0" processid="QR8QT400153E" submitable="1" type="BOOL">
+    <properties>
+      <db>
+        <alias>AYR8QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/EndOfMonth__</fullname>
+        <defaultvalue>false</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:41</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_End of month</Label>
+        <Alias>AYR8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <ui>
+        <_type>Boolean</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="JDECF8CBC" id="ZR8QT400153E" label="_Late payment fee rate" length="50" name="LatePaymentFeeRate__" originalProcessID="PHQG667577" precision="0" processid="QR8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AZR8QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/LatePaymentFeeRate__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:41</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Late payment fee rate</Label>
+        <alias>AZR8QT400153E</alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="PHQG37677F3" id="AS8QT400153E" label="_PaymentDay_report" length="0" name="PaymentDay__" originalProcessID="PHQG667577" precision="0" processid="QR8QT400153E" submitable="1" type="INT">
+    <properties>
+      <db>
+        <alias>AAS8QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/PaymentDay__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:41</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_PaymentDay_report</Label>
+        <Alias>AAS8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="LFDX667580" id="BS8QT400153E" label="_Payment terms" length="50" name="PaymentTermCode__" originalProcessID="PHQG667577" precision="0" processid="QR8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ABS8QT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/PaymentTermCode__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:41</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Payment terms</Label>
+        <Alias>ABS8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="VSCX667582" id="CS8QT400153E" label="_Reference date" length="50" name="ReferenceDate__" originalProcessID="PHQG667577" precision="0" processid="QR8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ACS8QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ReferenceDate__</fullname>
+        <defaultvalue>Invoice date</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:41</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Type>webaccess.Process.Columns.WithPossibleValues</Type>
+        <Label>_Reference date</Label>
+        <Alias>ACS8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+        <possibleKeys>Invoice date
+Posting date</possibleKeys>
+        <possibleValues>_Invoice date
+_Posting date</possibleValues>
+      </field>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <type id="KOLHG0000M4O" name="CT">
+  </type>
+</process>

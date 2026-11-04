@@ -1,0 +1,1168 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:11:00" deleted="0" eskerapplication="P2P" global="0" id="LYFQT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="Update invoice with C5 Ack" needvalidation="0" ootofilter="" ootoversion="0" originalProcessID="UMMI20025889" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="0" version="1" visibility="0">
+  <properties>
+    <dataConditions>
+      <listDataConditions>
+			&lt;dataCondition&gt;
+				&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+				&lt;filter&gt;msnex=*&lt;/filter&gt;
+				&lt;labelKey&gt;_AP disabled&lt;/labelKey&gt;
+				&lt;conditions&gt;
+					&lt;allowCondition&gt;
+						&lt;fieldName&gt;EnableAccountPayableGlobalSetting__&lt;/fieldName&gt;
+						&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+					&lt;/allowCondition&gt;
+				&lt;/conditions&gt;
+			&lt;/dataCondition&gt;
+		</listDataConditions>
+    </dataConditions>
+    <gdr>
+      <FinalizationScriptAllowRetry>true</FinalizationScriptAllowRetry>
+      <FinalizationScript>
+      </FinalizationScript>
+      <ValidationScriptAllowRetry>true</ValidationScriptAllowRetry>
+      <validationscriptIncludedScripts>Sys/Sys_Helpers_Date</validationscriptIncludedScripts>
+      <ValidationScript>"use strict";
+let xmlDoc = null;
+const C5IntegrationProcess = "C5 Integration";
+const fieldsmapping = [
+    { nameInForm: "C5Status_Date__", xmlPath: "/Acknowledgement/Status/Date", type: "date" },
+    { nameInForm: "C5Status_Code__", xmlPath: "/Acknowledgement/Status/Code", type: "string" },
+    { nameInForm: "C5Status_Type__", xmlPath: "/Acknowledgement/Status/Type", type: "string" },
+    { nameInForm: "C5Status_Message__", xmlPath: "/Acknowledgement/Status/Message", type: "string" },
+    { nameInForm: "TransmissionUUID__", xmlPath: "/Acknowledgement/AdditionalInformation/TransmissionUUID", type: "string" },
+    { nameInForm: "DocumentUUID__", xmlPath: "/Acknowledgement/AdditionalInformation/DocumentUUID", type: "string" },
+    { nameInForm: "PeppolID__", xmlPath: "/Acknowledgement/AdditionalInformation/PeppolID", type: "string" },
+    { nameInForm: "InvoiceSubmissionDatetime__", xmlPath: "/Acknowledgement/AdditionalInformation/InvoiceSubmissionDateTime", type: "date" },
+    { nameInForm: "InvoiceSubmissionStatus__", xmlPath: "/Acknowledgement/AdditionalInformation/InvoiceSubmissionStatus", type: "string" },
+    { nameInForm: "IRASAcknowledgmentID__", xmlPath: "/Acknowledgement/AdditionalInformation/IRASAcknowledgmentID", type: "string" },
+];
+/*******************************
+Find the process to update
+********************************/
+function findAndUpdateProcess() {
+    var _a;
+    var _b;
+    try {
+        const eskerID = Data.GetValue("EskerID__");
+        // EskerID is the RuidEx of the C5 Integration process to update
+        const updatableC5Integration = Process.GetUpdatableTransport(eskerID);
+        if (updatableC5Integration) {
+            Log.Info(`Update the C5 Integration process ${eskerID}`);
+            const updatableC5IntegrationVars = updatableC5Integration.GetUninheritedVars();
+            // Update of default transport variables.
+            for (const field of fieldsmapping) {
+                const value = (_b = (_a = xmlDoc.selectSingleNode(field.xmlPath)) === null || _a === void 0 ? void 0 : _a.text) !== null &amp;&amp; _b !== void 0 ? _b : "";
+                if (value &amp;&amp; value.length &gt; 0) {
+                    Log.Info(`Update field: ${JSON.stringify(field)} with value: ${value}`);
+                    if (field.type === "date") {
+                        updatableC5IntegrationVars.AddValue_Date(field.nameInForm, new Date(value), true);
+                    }
+                    else {
+                        updatableC5IntegrationVars.AddValue_String(field.nameInForm, value, true);
+                    }
+                }
+            }
+            // Effectively applies the above updates.
+            const actionSuccessful = updatableC5Integration.ResumeWithAction("continueafterc5ack");
+            if (!actionSuccessful) {
+                Log.Info("Try update asynchronously");
+                updatableC5Integration.ResumeWithActionAsync("continueafterc5ack");
+            }
+        }
+        else {
+            Log.Warn(`No C5 integration process to update for '${eskerID}'`);
+        }
+    }
+    catch (e) {
+        Log.Error(e);
+    }
+}
+function validationGetC5AckXML() {
+    const xmlFile = Attach.GetInputFile(0);
+    if (xmlFile) {
+        return Process.CreateXMLDOMElement(xmlFile);
+    }
+    return null;
+}
+function main() {
+    if (Data.GetValue("State") &lt; 50) {
+        // Validation script executed after extraction script, don't do anything
+        // Validation script will be re-executed as the process don't expect a manual approval
+        return;
+    }
+    if (!Data.GetValue("EskerID__")) {
+        Data.SetValue("State", 200);
+        return;
+    }
+    xmlDoc = validationGetC5AckXML();
+    if (xmlDoc) {
+        const C5StatusCode = Data.GetValue("C5Status_Code__");
+        const C5StatusType = Data.GetValue("C5Status_Type__");
+        if (C5StatusCode === "1" || C5StatusType === "SENT_TO_C5_SUCCESS") {
+            findAndUpdateProcess();
+        }
+        else {
+            Log.Info(`Ignore acknowledgement with status=${C5StatusCode} and type=${C5StatusType}`);
+        }
+    }
+    else {
+        Log.Error("C5 xml not valid");
+    }
+}
+main();
+//# sourceMappingURL=validationscript.js.map</ValidationScript>
+      <AllowTagCoverPages>true</AllowTagCoverPages>
+      <AllowTagNewDocuments>true</AllowTagNewDocuments>
+      <AllowTagAttachments>true</AllowTagAttachments>
+      <ExtractionScriptAllowRetry>true</ExtractionScriptAllowRetry>
+      <extractionscriptIncludedScripts>Sys/Sys_Helpers</extractionscriptIncludedScripts>
+      <ExtractionScript>"use strict";
+// Vendor invoice nodes
+const xpathC5RuidEx = "//ID[@schemeID=\"C5IntegrationRuidEx\"]";
+const xpathAckStatusDate = "/Acknowledgement/Status/Date";
+const xpathAckStatusCode = "/Acknowledgement/Status/Code";
+const xpathAckStatusType = "/Acknowledgement/Status/Type";
+const xpathAckStatusMessage = "/Acknowledgement/Status/Message";
+function extractionMain() {
+    /*******************************
+    Read the C5 Acknowledgment File
+    ********************************/
+    const xmlDoc = getC5AckXML();
+    if (xmlDoc === null) {
+        Log.Info("No attached XML file to read");
+        return;
+    }
+    parseInvoiceAckValues(xmlDoc);
+    getAttachments(xmlDoc);
+}
+function getC5AckXML() {
+    const xmlFile = Attach.GetInputFile(0);
+    if (xmlFile) {
+        return Process.CreateXMLDOMElement(xmlFile);
+    }
+    return null;
+}
+/**
+ * Helper to safely get the text content of a single XML node
+ */
+function getXmlNodeText(xmlDoc, xpath) {
+    var _a;
+    const node = xmlDoc.selectSingleNode(xpath);
+    return (_a = node === null || node === void 0 ? void 0 : node.text) !== null &amp;&amp; _a !== void 0 ? _a : "";
+}
+/**
+ * Parse values of an Invoice C5 Ack XML
+ * @param xmlDoc
+ */
+function parseInvoiceAckValues(xmlDoc) {
+    const data = getXmlNodeText(xmlDoc, xpathC5RuidEx);
+    Data.SetValue("EskerID__", data);
+    const date = getXmlNodeText(xmlDoc, xpathAckStatusDate);
+    Data.SetValue("C5Status_Date__", new Date(date));
+    Data.SetValue("C5Status_Code__", getXmlNodeText(xmlDoc, xpathAckStatusCode));
+    Data.SetValue("C5Status_Type__", getXmlNodeText(xmlDoc, xpathAckStatusType));
+    Data.SetValue("C5Status_Message__", getXmlNodeText(xmlDoc, xpathAckStatusMessage));
+}
+function getAttachments(xmlDoc) {
+    const attachCount = xmlDoc.selectNodes("Attachments/Attachment").length;
+    for (let iAttachIndex = 0; iAttachIndex &lt; attachCount; iAttachIndex++) {
+        const nodePathRoot = "//Attachments/Attachment[" + (iAttachIndex + 1) + "]";
+        try {
+            const attachment = {
+                filename: xmlDoc.selectSingleNode(nodePathRoot + "/Filename").text,
+                base64Content: xmlDoc.selectSingleNode(nodePathRoot + "/Content").text,
+                type: getXmlNodeText(xmlDoc, nodePathRoot + "/Type")
+            };
+            DecodeB64FileAndAttach(attachment);
+        }
+        catch (e) {
+            Log.Error("Error attaching file index " + iAttachIndex + ", exception is: " + e);
+        }
+    }
+}
+function DecodeB64FileAndAttach(attachment) {
+    const extensionIndex = attachment.filename.lastIndexOf(".");
+    const extension = extensionIndex &gt; 0 ? attachment.filename.substring(extensionIndex) : "";
+    // If extension is empty, will generate a .bin file
+    const tempFile = TemporaryFile.CreateFile(extension, "b64");
+    if (tempFile) {
+        TemporaryFile.Append(tempFile, attachment.base64Content);
+        Attach.AttachTemporaryFile(tempFile, attachment.filename);
+    }
+    else {
+        throw "Unable to create temporary file for attachment: " + attachment.filename;
+    }
+}
+extractionMain();
+//# sourceMappingURL=extractionscript.js.map</ExtractionScript>
+      <AllowRemovePages>true</AllowRemovePages>
+      <AllowSwapPages>true</AllowSwapPages>
+      <PostProcessingScriptAllowRetry>
+      </PostProcessingScriptAllowRetry>
+      <PostProcessingScript>
+      </PostProcessingScript>
+    </gdr>
+    <lg>
+      <process_da>{
+	"_C5Status_Code": "Statuskode",
+	"_C5Status_Code_report": "Statuskode",
+	"_C5Status_Date": "Statusdato",
+	"_C5Status_Date_report": "Statusdato",
+	"_C5Status_Message": "Meddelelse",
+	"_C5Status_Message_report": "Meddelelse",
+	"_C5Status_Type": "Statustype",
+	"_C5Status_Type_report": "Statustype",
+	"_EskerID": "Identifikator for proces, der skal opdateres",
+	"_EskerID_report": "Identifikator for proces, der skal opdateres",
+	"Update invoice with C5 Ack": "Opdater transmissionsstatus for Peppol CTC"
+}</process_da>
+      <process_de>{
+	"_C5Status_Code": "Statuscode",
+	"_C5Status_Code_report": "Statuscode",
+	"_C5Status_Date": "Statusdatum",
+	"_C5Status_Date_report": "Statusdatum",
+	"_C5Status_Message": "Nachricht",
+	"_C5Status_Message_report": "Nachricht",
+	"_C5Status_Type": "Statustyp",
+	"_C5Status_Type_report": "Statustyp",
+	"_EskerID": "ID des zu aktualisierenden Prozess",
+	"_EskerID_report": "ID des zu aktualisierenden Prozess",
+	"Update invoice with C5 Ack": "Peppol-CTC-Übertragungsstatus aktualisieren"
+}</process_de>
+      <process_ja>{
+	"_C5Status_Code": "ステータスコード",
+	"_C5Status_Code_report": "ステータスコード",
+	"_C5Status_Date": "ステータス日時",
+	"_C5Status_Date_report": "ステータス日時",
+	"_C5Status_Message": "メッセージ",
+	"_C5Status_Message_report": "メッセージ",
+	"_C5Status_Type": "ステータスタイプ",
+	"_C5Status_Type_report": "ステータスタイプ",
+	"_EskerID": "更新する処理のID",
+	"_EskerID_report": "更新する処理のID",
+	"Update invoice with C5 Ack": "Peppol CTC送信ステータスを更新する"
+}</process_ja>
+      <process_en>{
+	"_C5Status_Code": "Status code",
+	"_C5Status_Code_report": "Status code",
+	"_C5Status_Date": "Status date",
+	"_C5Status_Date_report": "Status date",
+	"_C5Status_Message": "Message",
+	"_C5Status_Message_report": "Message",
+	"_C5Status_Type": "Status type",
+	"_C5Status_Type_report": "Status type",
+	"_EskerID": "Identifier of process to update",
+	"_EskerID_report": "Identifier of process to update",
+	"Update invoice with C5 Ack": "Update Peppol CTC transmission status"
+}</process_en>
+      <process_es>{
+	"_C5Status_Code": "Código de estado",
+	"_C5Status_Code_report": "Código de estado",
+	"_C5Status_Date": "Fecha de estado",
+	"_C5Status_Date_report": "Fecha de estado",
+	"_C5Status_Message": "Mensaje",
+	"_C5Status_Message_report": "Mensaje",
+	"_C5Status_Type": "Tipo de estado",
+	"_C5Status_Type_report": "Tipo de estado",
+	"_EskerID": "Identificador del proceso para actualizar",
+	"_EskerID_report": "Identificador del proceso para actualizar",
+	"Update invoice with C5 Ack": "Actualización del estado de transmisión Peppol CTC"
+}</process_es>
+      <process_fr>{
+	"_C5Status_Code": "Code de l'état",
+	"_C5Status_Code_report": "Code de l'état",
+	"_C5Status_Date": "Date de l'état",
+	"_C5Status_Date_report": "Date de l'état",
+	"_C5Status_Message": "Message",
+	"_C5Status_Message_report": "Message",
+	"_C5Status_Type": "Type d'état",
+	"_C5Status_Type_report": "Type d'état",
+	"_EskerID": "Identifiant du processus à mettre à jour",
+	"_EskerID_report": "Identifiant du processus à mettre à jour",
+	"Update invoice with C5 Ack": "Mise à jour d'état de la transmission Peppol CTC"
+}</process_fr>
+      <process_nl-NL>{
+	"_C5Status_Code": "Statuscode",
+	"_C5Status_Code_report": "Statuscode",
+	"_C5Status_Date": "Statusdatum",
+	"_C5Status_Date_report": "Statusdatum",
+	"_C5Status_Message": "Bericht",
+	"_C5Status_Message_report": "Bericht",
+	"_C5Status_Type": "Statustype",
+	"_C5Status_Type_report": "Statustype",
+	"_EskerID": "Identificatie van bij te werken proces",
+	"_EskerID_report": "Identificatie van bij te werken proces",
+	"Update invoice with C5 Ack": "Peppol CTC transmissiestatus bijwerken"
+}</process_nl-NL>
+      <process_pl>{
+	"_C5Status_Code": "Kod statusu",
+	"_C5Status_Code_report": "Kod statusu",
+	"_C5Status_Date": "Data statusu",
+	"_C5Status_Date_report": "Data statusu",
+	"_C5Status_Message": "Wiadomość",
+	"_C5Status_Message_report": "Wiadomość",
+	"_C5Status_Type": "Typ statusu",
+	"_C5Status_Type_report": "Typ statusu",
+	"_EskerID": "Identyfikator procesu do aktualizacji",
+	"_EskerID_report": "Identyfikator procesu do aktualizacji",
+	"Update invoice with C5 Ack": "Zaktualizuj status transmisji Peppol CTC"
+}</process_pl>
+      <process_it>{
+	"_C5Status_Code": "Codice stato",
+	"_C5Status_Code_report": "Codice stato",
+	"_C5Status_Date": "Data dello stato",
+	"_C5Status_Date_report": "Data dello stato",
+	"_C5Status_Message": "Messaggio",
+	"_C5Status_Message_report": "Messaggio",
+	"_C5Status_Type": "Tipo di stato",
+	"_C5Status_Type_report": "Tipo di stato",
+	"_EskerID": "Identificatore del trattamento da aggiornare",
+	"_EskerID_report": "Identificatore del trattamento da aggiornare",
+	"Update invoice with C5 Ack": "Aggiornamento stato trasmissione Peppol CTC"
+}</process_it>
+      <process_sk>{
+	"_C5Status_Code": "Stavový kód",
+	"_C5Status_Code_report": "Stavový kód",
+	"_C5Status_Date": "Dátum stavu",
+	"_C5Status_Date_report": "Dátum stavu",
+	"_C5Status_Message": "Správa",
+	"_C5Status_Message_report": "Správa",
+	"_C5Status_Type": "Typ stavu",
+	"_C5Status_Type_report": "Typ stavu",
+	"_EskerID": "Identifikátor procesu na aktualizáciu",
+	"_EskerID_report": "Identifikátor procesu na aktualizáciu",
+	"Update invoice with C5 Ack": "Aktualizovať stav prenosu Peppol CTC"
+}</process_sk>
+      <process_zh-CN>{
+	"_C5Status_Code": "状态代码",
+	"_C5Status_Code_report": "状态代码",
+	"_C5Status_Date": "状态日期",
+	"_C5Status_Date_report": "状态日期",
+	"_C5Status_Message": "消息",
+	"_C5Status_Message_report": "消息",
+	"_C5Status_Type": "状态类型",
+	"_C5Status_Type_report": "状态类型",
+	"_EskerID": "要更新进程的标识符",
+	"_EskerID_report": "要更新进程的标识符",
+	"Update invoice with C5 Ack": "更新 Peppol CTC 传输状态"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"_C5Status_Code": "Código do status",
+	"_C5Status_Code_report": "Código do status",
+	"_C5Status_Date": "Data do status",
+	"_C5Status_Date_report": "Data do status",
+	"_C5Status_Message": "Mensagem",
+	"_C5Status_Message_report": "Mensagem",
+	"_C5Status_Type": "Tipo de status",
+	"_C5Status_Type_report": "Tipo de status",
+	"_EskerID": "Identificador do processo a ser atualizado",
+	"_EskerID_report": "Identificador do processo a ser atualizado",
+	"Update invoice with C5 Ack": "Atualização do status da transmissão do Peppol CTC"
+}</process_pt-BR>
+    </lg>
+    <ocr>
+      <trade-off>accurate</trade-off>
+      <image-binarization>no</image-binarization>
+      <image-draft-fax>no</image-draft-fax>
+      <image-despeckle>no</image-despeckle>
+      <allowed-language>0</allowed-language>
+      <image-resolution-enhancement>auto</image-resolution-enhancement>
+      <ocr_engine>Nuance222</ocr_engine>
+      <extractionAdditionalOptions>
+      </extractionAdditionalOptions>
+    </ocr>
+    <process>
+      <flowtype>processing</flowtype>
+      <ocrpreset>scan</ocrpreset>
+      <homepagelabel>Update invoice with C5 Ack</homepagelabel>
+      <enableflexibleauditing>
+      </enableflexibleauditing>
+      <enableflexibleediting>
+      </enableflexibleediting>
+      <enableflexibleteaching>
+      </enableflexibleteaching>
+      <upgradable>yes</upgradable>
+      <disableocr>
+      </disableocr>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <disableautolearning>true</disableautolearning>
+      <backgroundprocessingthreshold>
+      </backgroundprocessingthreshold>
+      <EnablePreviewPrecomputation>
+      </EnablePreviewPrecomputation>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <pdfNormalizeFilter>
+      </pdfNormalizeFilter>
+      <archiveDuration>0</archiveDuration>
+      <ocrpagestoprocess>
+      </ocrpagestoprocess>
+      <ScriptEngineType>2</ScriptEngineType>
+      <displayWidth>
+      </displayWidth>
+      <AllowUploadAttachment>1</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+      <UseCultureFormat>true</UseCultureFormat>
+      <AllowRetryExtractCD>true</AllowRetryExtractCD>
+      <TransportName>CustomData</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+      <printToProcess>
+      </printToProcess>
+    </process>
+    <ui>
+      <restorationPanel>DataPanel</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 40,
+	"*": {
+		"GDRData": {
+			"type": "GDRData",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"version": 0
+			}
+		},
+		"OCRParams": {
+			"type": "OCRParams",
+			"data": [],
+			"stamp": 2,
+			"options": {
+				"version": 0
+			}
+		},
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 3,
+			"options": {
+				"splitterType": "complex",
+				"maxwidth": "",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 4,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 5,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 6,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-top": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 7,
+									"options": {
+										"autosize": true,
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"width": null,
+											"height": "21%"
+										},
+										"hidden": true
+									}
+								},
+								"form-content-bottom": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 8,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"width": null,
+											"height": "100%"
+										},
+										"hidden": false,
+										"hideSeparator": true
+									},
+									"*": {
+										"form-content-left": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 9,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "0%",
+													"width": "100%",
+													"height": null
+												},
+												"hidden": false
+											},
+											"*": {
+												"form-content-left-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 10,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"DocumentsPanel": {
+															"type": "PanelDocument",
+															"data": [],
+															"stamp": 11,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"label": "_Documents",
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"version": 0
+															},
+															"*": {
+																"Document": {
+																	"type": "Documents",
+																	"data": [
+																		"documentscontroldata"
+																	],
+																	"stamp": 12,
+																	"options": {
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-5": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 13,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"DataPanel": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 14,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"label": "_Document data",
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 15,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {
+																			"EskerID__": "LabelEskerID__",
+																			"LabelEskerID__": "EskerID__",
+																			"C5Status_Date__": "LabelC5Status_Date__",
+																			"LabelC5Status_Date__": "C5Status_Date__",
+																			"C5Status_Code__": "LabelC5Status_Code__",
+																			"LabelC5Status_Code__": "C5Status_Code__",
+																			"C5Status_Type__": "LabelC5Status_Type__",
+																			"LabelC5Status_Type__": "C5Status_Type__",
+																			"C5Status_Message__": "LabelC5Status_Message__",
+																			"LabelC5Status_Message__": "C5Status_Message__"
+																		}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 16,
+																			"options": {
+																				"version": 0,
+																				"lines": 5,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"LabelEskerID__": {
+																						"line": 1,
+																						"column": 1
+																					},
+																					"EskerID__": {
+																						"line": 1,
+																						"column": 2
+																					},
+																					"LabelC5Status_Date__": {
+																						"line": 2,
+																						"column": 1
+																					},
+																					"C5Status_Date__": {
+																						"line": 2,
+																						"column": 2
+																					},
+																					"LabelC5Status_Code__": {
+																						"line": 3,
+																						"column": 1
+																					},
+																					"C5Status_Code__": {
+																						"line": 3,
+																						"column": 2
+																					},
+																					"LabelC5Status_Type__": {
+																						"line": 4,
+																						"column": 1
+																					},
+																					"C5Status_Type__": {
+																						"line": 4,
+																						"column": 2
+																					},
+																					"LabelC5Status_Message__": {
+																						"line": 5,
+																						"column": 1
+																					},
+																					"C5Status_Message__": {
+																						"line": 5,
+																						"column": 2
+																					}
+																				},
+																				"colspans": [
+																					[],
+																					[],
+																					[],
+																					[],
+																					[]
+																				]
+																			},
+																			"*": {
+																				"LabelEskerID__": {
+																					"type": "Label",
+																					"data": [
+																						"EskerID__"
+																					],
+																					"stamp": 18,
+																					"options": {
+																						"label": "_EskerID",
+																						"hidden": false,
+																						"version": 0
+																					}
+																				},
+																				"EskerID__": {
+																					"type": "ShortText",
+																					"data": [
+																						"EskerID__"
+																					],
+																					"stamp": 17,
+																					"options": {
+																						"label": "_EskerID",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": "250",
+																						"hidden": false,
+																						"readonly": false
+																					}
+																				},
+																				"LabelC5Status_Date__": {
+																					"type": "Label",
+																					"data": [
+																						"C5Status_Date__"
+																					],
+																					"stamp": 20,
+																					"options": {
+																						"label": "_C5Status_Date",
+																						"version": 0
+																					}
+																				},
+																				"C5Status_Date__": {
+																					"type": "RealDateTime",
+																					"data": [
+																						"C5Status_Date__"
+																					],
+																					"stamp": 19,
+																					"options": {
+																						"label": "_C5Status_Date",
+																						"readonly": false,
+																						"displayLongFormat": true,
+																						"activable": true,
+																						"width": 250,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"version": 0
+																					}
+																				},
+																				"LabelC5Status_Code__": {
+																					"type": "Label",
+																					"data": [
+																						"C5Status_Code__"
+																					],
+																					"stamp": 22,
+																					"options": {
+																						"label": "_C5Status_Code",
+																						"version": 0
+																					}
+																				},
+																				"C5Status_Code__": {
+																					"type": "ShortText",
+																					"data": [
+																						"C5Status_Code__"
+																					],
+																					"stamp": 21,
+																					"options": {
+																						"label": "_C5Status_Code",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": "250"
+																					}
+																				},
+																				"LabelC5Status_Type__": {
+																					"type": "Label",
+																					"data": [
+																						"C5Status_Type__"
+																					],
+																					"stamp": 24,
+																					"options": {
+																						"label": "_C5Status_Type",
+																						"version": 0
+																					}
+																				},
+																				"C5Status_Type__": {
+																					"type": "ShortText",
+																					"data": [
+																						"C5Status_Type__"
+																					],
+																					"stamp": 23,
+																					"options": {
+																						"label": "_C5Status_Type",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": "250"
+																					}
+																				},
+																				"LabelC5Status_Message__": {
+																					"type": "Label",
+																					"data": [
+																						"C5Status_Message__"
+																					],
+																					"stamp": 26,
+																					"options": {
+																						"label": "_C5Status_Message",
+																						"version": 0
+																					}
+																				},
+																				"C5Status_Message__": {
+																					"type": "ShortText",
+																					"data": [
+																						"C5Status_Message__"
+																					],
+																					"stamp": 25,
+																					"options": {
+																						"label": "_C5Status_Message",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": "250"
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-2": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 27,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"SystemData": {
+															"type": "PanelSystemData",
+															"data": [],
+															"stamp": 28,
+															"options": {
+																"multicolumn": false,
+																"border": {
+																	"collapsed": false
+																},
+																"labelLength": 0,
+																"label": "_System data",
+																"hidden": true,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"version": 0
+															}
+														}
+													}
+												},
+												"form-content-left-3": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 29,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"NextProcess": {
+															"type": "PanelNextProcess",
+															"data": [],
+															"stamp": 30,
+															"options": {
+																"hidden": true,
+																"border": {},
+																"labelLength": 0,
+																"label": "_Next Process",
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-right": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 31,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "45%",
+													"width": "55%",
+													"height": null
+												},
+												"hidden": true,
+												"hideSeparator": true
+											},
+											"*": {
+												"form-content-right-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 32,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"PreviewPanel": {
+															"type": "PanelPreview",
+															"data": [],
+															"stamp": 33,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"label": "_Document Preview",
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"version": 0
+															},
+															"*": {
+																"Preview": {
+																	"type": "Preview",
+																	"data": [
+																		"previewdata"
+																	],
+																	"stamp": 34,
+																	"options": {
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 35,
+					"options": {
+						"splitterType": "simple-h",
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 36,
+							"options": {
+								"label": "_Save",
+								"action": "save",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Approve": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 37,
+							"options": {
+								"label": "_Approve",
+								"action": "approve",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Reject": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 38,
+							"options": {
+								"label": "_Reject",
+								"action": "reject",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Reprocess": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 39,
+							"options": {
+								"label": "_Reprocess",
+								"action": "reprocess",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 40,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <field deleted="0" format="" guid="RZDE8229" id="MYFQT400153E" label="_C5Status_Code_report" length="50" name="C5Status_Code__" originalProcessID="UMMI20025889" precision="0" processid="LYFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AMYFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/C5Status_Code__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:11:00</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_C5Status_Code_report</Label>
+        <Alias>AMYFQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <teachable>false</teachable>
+        <lazyTranslatable>
+        </lazyTranslatable>
+      </field>
+      <gdr>
+        <VarType>
+        </VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="RKRE8229" id="NYFQT400153E" label="_C5Status_Date_report" length="0" name="C5Status_Date__" originalProcessID="UMMI20025889" precision="0" processid="LYFQT400153E" submitable="1" type="DATETIME">
+    <properties>
+      <db>
+        <alias>ANYFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/C5Status_Date__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:11:00</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_C5Status_Date_report</Label>
+        <Alias>ANYFQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+        <teachable>false</teachable>
+      </field>
+      <gdr>
+        <VarType>
+        </VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Date</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="YIPO8229" id="OYFQT400153E" label="_C5Status_Message_report" length="50" name="C5Status_Message__" originalProcessID="UMMI20025889" precision="0" processid="LYFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AOYFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/C5Status_Message__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:11:00</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_C5Status_Message_report</Label>
+        <Alias>AOYFQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <teachable>false</teachable>
+        <lazyTranslatable>
+        </lazyTranslatable>
+      </field>
+      <gdr>
+        <VarType>
+        </VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="RZAF8229" id="PYFQT400153E" label="_C5Status_Type_report" length="50" name="C5Status_Type__" originalProcessID="UMMI20025889" precision="0" processid="LYFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>APYFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/C5Status_Type__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:11:00</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_C5Status_Type_report</Label>
+        <Alias>APYFQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <teachable>false</teachable>
+        <lazyTranslatable>
+        </lazyTranslatable>
+      </field>
+      <gdr>
+        <VarType>
+        </VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="RKRE4529" id="QYFQT400153E" label="_EskerID_report" length="50" name="EskerID__" originalProcessID="UMMI20025889" precision="0" processid="LYFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AQYFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/EskerID__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:11:00</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_EskerID_report</Label>
+        <Alias>AQYFQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <teachable>false</teachable>
+        <lazyTranslatable>
+        </lazyTranslatable>
+      </field>
+      <gdr>
+        <VarType>
+        </VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <type id="GOLHG0000M4O" name="CD">
+  </type>
+</process>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mappingDef xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<options>
+		<separator>,</separator>
+		<escape />
+		<hasHeader>true</hasHeader>
+		<textQualifier>"</textQualifier>
+		<hasLastDelimiter>false</hasLastDelimiter>
+	</options>
+	<script>
+		<code>
+			<![CDATA[
+				var Tools = window.external;
+				var eddContext = null;
+				var mainaccountid, ownerid,ownerpb, recordlastmodifiedby;
+
+				function Init()
+				{
+					eddContext = Tools.GetEddContext();
+					var securityContext = eddContext.GetSecurityContext();
+
+					mainaccountid = securityContext.User_MaidAccountId_Short;
+					ownerid = recordlastmodifiedby = securityContext.User_OwnerId;
+					ownerpb = securityContext.User_OwnerPb;
+				}
+
+				function Insert()
+				{
+				
+					var companyCode  = Tools.GetCsvColumnValue("CompanyCode__");
+					var vendorNumber = Tools.GetCsvColumnValue("VendorNumber__");
+					//We don't include the first UNSPSC column in the list as it is already mapped to the table
+					var codes = [
+						Tools.GetCsvColumnValue("UNSPSC1__"),
+						Tools.GetCsvColumnValue("UNSPSC2__"),
+						Tools.GetCsvColumnValue("UNSPSC3__"),
+						Tools.GetCsvColumnValue("UNSPSC4__"),
+						Tools.GetCsvColumnValue("UNSPSC5__")
+					];
+
+					for (var i = 0; i < codes.length; i++)
+					{
+						var code = codes[i].replace(/^\s+|\s+$/g, "");
+						if (!code) continue;
+						var rec = eddContext.CreateTableRecord("P2P - Vendor UNSPSC__");
+						rec.GetVars().AddValue_String("mainaccountid",  mainaccountid,  true);
+						rec.GetVars().AddValue_String("ownerid",  ownerid,  true);
+						rec.GetVars().AddValue_String("ownerpb",  ownerpb,  true);
+						rec.GetVars().AddValue_String("recordlastmodifiedby",  recordlastmodifiedby,  true);
+						rec.GetVars().AddValue_String("CompanyCode__",  companyCode,  true);
+						rec.GetVars().AddValue_String("VendorNumber__", vendorNumber, true);
+						rec.GetVars().AddValue_String("UNSPSC__",       code,         true);
+						rec.Commit();
+						if (rec.GetLastError() != 0)
+							Tools.NotifyError("Failed to insert UNSPSC " + code + ": " + rec.GetLastErrorMessage());
+					}
+				}
+
+
+				function Update()
+				{
+					//In between the delete and the insert, the record is not present.
+					Delete();
+					Insert();
+				}
+
+
+				function Delete()
+				{
+					var companyCode  = Tools.GetCsvColumnValue("CompanyCode__");
+					var vendorNumber = Tools.GetCsvColumnValue("VendorNumber__");
+
+					var filter = "(&(CompanyCode__=" + companyCode + ")(VendorNumber__=" + vendorNumber + "))";
+					var eddQuery = eddContext.CreateQuery();
+					eddQuery.SetSpecificTable("P2P - Vendor UNSPSC__");
+					eddQuery.SetFilter(filter);
+					eddQuery.DeleteRecords();
+				}
+			]]>
+		</code>
+		<eval onEachCsvLine="false">Init</eval>
+		<eval onEachCsvLine="true" onDelete="true" onInsert="false" onUpdate="false">Delete</eval>
+		<eval onEachCsvLine="true" onDelete="false" onInsert="true" onUpdate="false">Insert</eval>
+		<eval onEachCsvLine="true" onDelete="false" onInsert="false" onUpdate="true">Update</eval>
+	</script>
+	<tableName>P2P - Vendor UNSPSC__</tableName>
+	<mappings>
+		<mapping key="true">
+			<fieldInTable>CompanyCode__</fieldInTable>
+			<fieldInFile defaultValue="">
+				<fieldNameInFile>CompanyCode__</fieldNameInFile>
+			</fieldInFile>
+		</mapping>
+		<mapping key="true">
+			<fieldInTable>VendorNumber__</fieldInTable>
+			<fieldInFile defaultValue="">
+				<fieldNameInFile>VendorNumber__</fieldNameInFile>
+			</fieldInFile>
+		</mapping>
+		<mapping key="true">
+			<fieldInTable>UNSPSC__</fieldInTable>
+			<fieldInFile defaultValue="">
+				<fieldNameInFile>UNSPSC1__</fieldNameInFile>
+			</fieldInFile>
+		</mapping>
+	</mappings>
+</mappingDef>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<viewType xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<reportpreselectedonlydefined>true</reportpreselectedonlydefined>
+	<headers>
+		<!-- Change group of common fields (processTemplate define other fields group)-->
+		<header name="OperationID__" column="OperationID__" visibility="Default, ApplicationOnDemand" translatefromflexible="true"  type="webaccess.Edd.ui.TranslateField" type-param="module:message;prefix:emptyValue;all:false;optional:true;ignoreViewFilter:true">
+			<navigateField>OperationRuidex__</navigateField>
+			<navigateFormatString>~/FlexibleForm/FlexibleForm.aspx?action=run&amp;layout=_flexibleform&amp;Id={0}</navigateFormatString>
+			<custom-styles>
+				<custom-style hasFlexibleAttributes="true" style-name="link" ldapfilter=""/>
+			</custom-styles>
+		</header>
+	</headers>
+
+	<!-- Defines groups order (position in list below) -->
+	<groups>
+	</groups>
+</viewType>

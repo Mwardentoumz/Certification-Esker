@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<viewType xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<reportpreselectedonlydefined>true</reportpreselectedonlydefined>
+	<headers>
+		<header name="ArchiveDuration_In_Year" group="Archive"/>
+		<header name="ArchiveDuration_Expiration" group="Archive"/>
+		<header name="CompletionDateTime" group="Advance" behavior="Default, ReportPreselectedForProcess" reportpreselectedorder="8"/>
+		<header name="MSNEX" group="Advance"/>
+		<header name="_OwnerID" group="Advance" behavior="Default"/>
+		<header name="_ShortStatus" group="Advance"/>
+		<header name="_State" group="Advance" behavior="Default, ReportPreselectedForProcess" reportpreselectedorder="6"/>
+		<header name="SubmitDateTime" group="Advance" reportpreselectedorder="7"/>
+
+		<header name="_TIMEACTIVATION" visibility="None"/>
+		<header name="_TIMEEXISTENCE" visibility="None"/>
+		<header name="_TIMEIDLE" visibility="None"/>
+		<header name="_TIMESPENT" visibility="None"/>
+		<header name="_TIMESUPPORTLEFT" visibility="None"/>
+
+		<header name="AutoLearningDistance" visibility="None"/>
+		<header name="AutoLearningProcessingDateTime" visibility="None"/>
+		<header name="AutoLearningTemplateInstance" visibility="None"/>
+		<header name="ContractID" visibility="None"/>
+		<header name="CostCenter" visibility="None"/>
+		<header name="Deferred" visibility="None"/>
+		<header name="Department" visibility="None"/>
+		<header name="_ForwardedByOwnerID" visibility="None"/>
+		<header name="_ForwardedToOwnerID" visibility="None"/>
+		<header name="_FromAccount" visibility="None"/>
+		<header name="FromAccount" visibility="None"/>
+		<header name="FromAddress" visibility="None"/>
+		<header name="FromCompany" visibility="None"/>
+		<header name="FromName" visibility="None"/>
+		<header name="_FromOwnerID" visibility="None"/>
+		<header name="FULLTEXTSEARCH" visibility="None"/>
+		<header name="ID" visibility="None"/>
+		<header name="Identifier" visibility="None"/>
+		<header name="IMAGE" visibility="None"/>
+		<header name="JobID" visibility="None"/>
+		<header name="KeyPrefix" visibility="None"/>
+		<header name="LastSavedDateTime" visibility="None"/>
+		<header name="_LastSavedOwnerID" visibility="None"/>
+		<header name="NeedValidation" visibility="None"/>
+		<header name="NPages" visibility="None"/>
+		<header name="OriginalJobID" visibility="None"/>
+		<header name="_OwnerIDName" visibility="None"/>
+		<header name="_ParentProcessName" visibility="None"/>
+		<header name="_ParentRecipientType" visibility="None"/>
+		<header name="PartiallyGenerated" visibility="None"/>
+		<header name="Priority" visibility="None"/>
+		<header name="PreferredValidationOwnerId" visibility="None"/>
+		<header name="ProcessingDurationToHoldState" visibility="None"/>
+		<header name="_ProcessName" visibility="None"/>
+		<header name="ReceivedDateTime" visibility="None"/>
+		<header name="_RecipientAddress" visibility="None"/>
+		<header name="_RecipientType" visibility="None"/>
+		<header name="ResultJobID" visibility="None"/>
+		<header name="RetrievedByClient" visibility="None"/>
+		<header name="SplitDocumentCount" visibility="None"/>
+		<header name="SplitDone" visibility="None"/>
+		<header name="STAT_BEINGPROCESSED" visibility="None"/>
+		<header name="STAT_CANCEL" visibility="None"/>
+		<header name="STAT_COMPLETE" visibility="None"/>
+		<header name="STAT_DELIVERYERROR" visibility="None"/>
+		<header name="STAT_ERROR" visibility="None"/>
+		<header name="STAT_REJECTED" visibility="None"/>
+		<header name="STAT_TOTAL" visibility="None"/>
+		<header name="STAT_VALIDATIONREADY" visibility="None"/>
+		<header name="STAT_WAITING" visibility="None"/>
+		<header name="Subject" visibility="None"/>
+		<header name="SupplementaryRule" visibility="None"/>
+		<header name="ToCompany" visibility="None"/>
+		<header name="ToName" visibility="None"/>
+		<header name="ValidationDateTime" visibility="None"/>
+		<header name="_ValidationOwnerID" visibility="None"/>
+		<header name="ValidatorDateTime" visibility="None"/>
+		<header name="_ValidatorOwnerID" visibility="None"/>
+		<header name="_ValidationState" visibility="None"/>
+		<header name="ValidityDateTime" visibility="None"/>
+		<header name="Viewed" visibility="None"/>
+		<header name="WorkflowID" visibility="None"/>
+		<header name="NewConversationMessage" visibility="None"/>
+		<header name="_CreatorOwnerId" visibility="None"/>
+		<header name="_OriginalOwnerId" visibility="None"/>
+		<header name="_CreatedOnBehalf" visibility="None"/>
+		<header name="_CreatorOwnerIdName" visibility="None"/>
+		<header name="_OriginalOwnerIdName" visibility="None"/>
+		<header name="FirstOpenedDateTime" visibility="None"/>
+
+		<header name="DiscountState__" group="Customer_invoice_details" fromflexible="true">
+			<custom-styles>
+				<custom-style hasFlexibleAttributes="true" style-name="important info" ldapfilter="(|(DiscountState__=Static)(DiscountState__=Not requested))"/>
+				<custom-style hasFlexibleAttributes="true" style-name="important warning" ldapfilter="(DiscountState__=Pending review)"/>
+				<custom-style hasFlexibleAttributes="true" style-name="important success" ldapfilter="(DiscountState__=Accepted)"/>
+				<custom-style hasFlexibleAttributes="true" style-name="important urgent" ldapfilter="(DiscountState__=Refused)"/>
+			</custom-styles>
+		</header>
+	</headers>
+	<!-- Define groups position and order -->
+	<groups>
+		<group name="Customer_invoice_details"/>
+		<group name="Workflow"/>
+		<group name="Advance"/>
+		<group name="Archive"/>
+	</groups>
+</viewType>

@@ -1,0 +1,605 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:06:41" deleted="0" eskerapplication="P2P" global="0" id="W4AQT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="New invoice submission" needvalidation="0" ootofilter="" ootoversion="0" originalProcessID="CZMZ86550048" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="0" version="1" visibility="0">
+  <properties>
+    <gdr>
+      <FinalizationScriptAllowRetry>true</FinalizationScriptAllowRetry>
+      <finalizationscriptIncludedScripts>Sys/Sys_Helpers</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Lib_AP_V12.0.566.0</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>[LIB_AP_CUSTOMIZATION_FINALIZATION]</finalizationscriptIncludedScripts>
+      <FinalizationScript>"use strict";
+function SubmitInvoices() {
+    const curUserLogin = Users.GetUser(Data.GetValue("OwnerId")).GetValue("Login");
+    const nbAttach = Attach.GetNbAttach();
+    for (let i = 0; i &lt; nbAttach; i++) {
+        const attach = Attach.GetAttach(i);
+        const VIPTransport = Process.CreateProcessInstanceForUser("Vendor invoice", curUserLogin, 0, true);
+        if (VIPTransport) {
+            const newAttach = VIPTransport.AddAttachEx(attach);
+            const attachVars = newAttach.GetVars();
+            attachVars.AddValue_String("AttachToProcess", "1", true);
+            VIPTransport.GetUninheritedVars().AddValue_String("SourceRUID", Data.GetValue("RUIDEx"), true); //Write the sourceRUID to avoid the forward to apclerk
+            Sys.Helpers.TryCallFunction("Lib.AP.Customization.Finalization.PreProcessTransport", VIPTransport, curUserLogin);
+            VIPTransport.Process();
+            const error = VIPTransport.GetLastError();
+            if (error) {
+                Log.Error(`[${(i + 1)}/${nbAttach}] Cannot generate 'Vendor invoice' record: Error ${error}: ${VIPTransport.GetLastErrorMessage()}`);
+            }
+        }
+    }
+}
+SubmitInvoices();
+//# sourceMappingURL=finalizationscript.js.map</FinalizationScript>
+      <ValidationScriptAllowRetry>
+      </ValidationScriptAllowRetry>
+      <ValidationScript>
+      </ValidationScript>
+      <AllowTagCoverPages>true</AllowTagCoverPages>
+      <AllowTagNewDocuments>true</AllowTagNewDocuments>
+      <AllowTagAttachments>true</AllowTagAttachments>
+      <ExtractionScriptAllowRetry>
+      </ExtractionScriptAllowRetry>
+      <ExtractionScript>
+      </ExtractionScript>
+      <AllowRemovePages>true</AllowRemovePages>
+      <AllowSwapPages>true</AllowSwapPages>
+      <PostProcessingScriptAllowRetry>
+      </PostProcessingScriptAllowRetry>
+      <PostProcessingScript>
+      </PostProcessingScript>
+    </gdr>
+    <lg>
+      <process_da>{
+	"_Approve": "Overfør fakturaer",
+	"_ImportInvoicesPane": "Fakturaer",
+	"_InvoicesSubmission": "Overførsel af faktura",
+	"_New Invoice Submission": "Overfør leverandørfaktura",
+	"_NewInvoiceSubmissionProcessDescription": "Overfør én eller flere leverandørfakturaer til behandling. Denne handling kan tage et par minutter og vil foregå i baggrunden. De overførte fakturaer vil være tilgængelige under visningen 'Fakturaer tildelt til kreditorspecialist' under fanen 'Leverandørfakturaer'.",
+	"_No invoice found": "Vælg en faktura",
+	"_ProcessDescriptionPane": "Overfør leverandørfaktura",
+	"_SimpleUploadAttachment": "Vælg eller slip en faktura...",
+	"_Upload an invoice": "Du skal overføre mindst én faktura for at fortsætte.",
+	"New invoice submission": "Overfør leverandørfaktura"
+}</process_da>
+      <process_de>{
+	"_Approve": "Rechnungen hochladen",
+	"_ImportInvoicesPane": "Rechnungen",
+	"_InvoicesSubmission": "Rechnungs-Upload",
+	"_New Invoice Submission": "Upload von Lieferantenrechnungen",
+	"_NewInvoiceSubmissionProcessDescription": "Laden Sie eine oder mehrere Lieferantenrechnungen zur Verarbeitung hoch. \nDieser Vorgang kann einige Minuten dauern und wird im Hintergrund verarbeitet.\nDie hochgeladenen Rechnungen werden in der Ansicht 'Dem Buchhalter zugewiesene Rechnungen' unter der Registerkarte 'Lieferantenrechnungen' angezeigt.",
+	"_No invoice found": "Rechnung auswählen",
+	"_ProcessDescriptionPane": "Rechnungs-Upload",
+	"_SimpleUploadAttachment": "Rechnung hinzufügen oder ablegen...",
+	"_Upload an invoice": "Um fortzufahren, müssen Sie mindestens eine Rechnung hochladen.",
+	"New invoice submission": "Upload von Lieferantenrechnungen"
+}</process_de>
+      <process_ja>{
+	"_Approve": "請求書をアップロード",
+	"_ImportInvoicesPane": "請求書",
+	"_InvoicesSubmission": "請求書のアップロード",
+	"_New Invoice Submission": "仕入先請求書のアップロード",
+	"_NewInvoiceSubmissionProcessDescription": "仕入先請求書を1件以上アップロードして処理します。このアクションはバックグラウンドで処理され、数分かかることがあります。アップロードした請求書は、「仕入先請求書」タブの「買掛金スペシャリストに割り当てられた請求書」に表示されます。",
+	"_No invoice found": "請求書を選択",
+	"_ProcessDescriptionPane": "仕入先請求書のアップロード",
+	"_SimpleUploadAttachment": "請求書を選択またはドロップ...",
+	"_Upload an invoice": "続行するには、1件以上の請求書をアップロードします。",
+	"New invoice submission": "仕入先請求書のアップロード"
+}</process_ja>
+      <process_en>{
+	"_Approve": "Upload invoices",
+	"_ImportInvoicesPane": "Invoices",
+	"_InvoicesSubmission": "Invoice Upload",
+	"_New Invoice Submission": "Supplier invoice upload",
+	"_NewInvoiceSubmissionProcessDescription": "Upload one or more supplier invoices for processing.\nThis action may take a few minutes and will be processed in the background.\nThe uploaded invoices will be available in the view 'Invoices assigned to AP specialist' under the tab 'Supplier Invoices'.",
+	"_No invoice found": "Select an Invoice",
+	"_ProcessDescriptionPane": "Supplier Invoice Upload",
+	"_SimpleUploadAttachment": "Select or drop an invoice...",
+	"_Upload an invoice": "To continue, you need to upload at least one invoice.",
+	"New invoice submission": "Supplier invoice upload"
+}</process_en>
+      <process_es>{
+	"_Approve": "Cargar facturas",
+	"_ImportInvoicesPane": "Facturas",
+	"_InvoicesSubmission": "Carga de facturas",
+	"_New Invoice Submission": "Carga de facturas de proveedor",
+	"_NewInvoiceSubmissionProcessDescription": "Cargue una o más facturas para su procesamiento.\nEsta acción puede tardar unos minutos y se procesará en segundo plano. \nUna vez cargadas, podrá encontrarlas en la vista 'Facturas asignadas al contable', bajo la pestaña 'Facturas de proveedor'.",
+	"_No invoice found": "Seleccione una factura",
+	"_ProcessDescriptionPane": "Carga de facturas de proveedor",
+	"_SimpleUploadAttachment": "Seleccione o arrastre y suelte una factura...",
+	"_Upload an invoice": "Para continuar, necesita cargar por lo menos una factura.",
+	"New invoice submission": "Carga de facturas de proveedor"
+}</process_es>
+      <process_fr>{
+	"_Approve": "Télécharger factures",
+	"_ImportInvoicesPane": "Factures",
+	"_InvoicesSubmission": "Téléchargement de factures",
+	"_New Invoice Submission": "Téléchargement de factures fournisseurs",
+	"_NewInvoiceSubmissionProcessDescription": "Téléchargez une ou plusieurs factures fournisseurs pour traitement.\nCette action peut durer quelques minutes et sera traitée en arrière-plan. \nLes factures téléchargées seront disponibles dans la vue 'Factures assignées au comptable' sous l'onglet 'Factures fournisseurs'.",
+	"_No invoice found": "Sélectionnez une facture",
+	"_ProcessDescriptionPane": "Téléchargement  de factures fournisseurs",
+	"_SimpleUploadAttachment": "Sélectionner ou déposer une facture...",
+	"_Upload an invoice": "Pour continuer, vous devez télécharger au moins une facture.",
+	"New invoice submission": "Téléchargement de factures fournisseurs"
+}</process_fr>
+      <process_nl-NL>{
+	"_Approve": "Facturen uploaden",
+	"_ImportInvoicesPane": "Facturen",
+	"_InvoicesSubmission": "Factuur uploaden",
+	"_New Invoice Submission": "Leveranciersfactuur uploaden",
+	"_NewInvoiceSubmissionProcessDescription": "Upload één of meer leveranciersfacturen voor verwerking. Deze actie kan enkele minuten in beslag nemen en wordt op de achtergrond verwerkt. De geüploade facturen zijn beschikbaar in de weergave ‘Facturen toegewezen aan AP specialist’ onder het tabblad ‘Leveranciersfacturen’.",
+	"_No invoice found": "Selecteer een factuur",
+	"_ProcessDescriptionPane": "Leveranciersfactuur uploaden",
+	"_SimpleUploadAttachment": "Selecteer of versleep een factuur...",
+	"_Upload an invoice": "Om door te gaan moet u minstens één factuur uploaden.",
+	"New invoice submission": "Leveranciersfactuur uploaden"
+}</process_nl-NL>
+      <process_pl>{
+	"_Approve": "Przesłane faktury",
+	"_ImportInvoicesPane": "Faktury",
+	"_InvoicesSubmission": "Przesyłanie faktur",
+	"_New Invoice Submission": "Przesyłanie faktury dostawcy",
+	"_NewInvoiceSubmissionProcessDescription": "Prześlij co najmniej jedną fakturę dostawcy do przetworzenia. To działanie może potrwać kilka minut i zostanie wykonane w tle.\nPrzesłane faktury będą dostępne w widoku „Faktury przypisane do księgowego” na karcie „Faktury dostawców”.",
+	"_No invoice found": "Wybierz fakturę",
+	"_ProcessDescriptionPane": "Przesyłanie faktury dostawcy",
+	"_SimpleUploadAttachment": "Wybierz lub upuść fakturę...",
+	"_Upload an invoice": "Aby kontynuować, musisz przesłać co najmniej jedną fakturę.",
+	"New invoice submission": "Przesyłanie faktury dostawcy"
+}</process_pl>
+      <process_it>{
+	"_Approve": "Carica fatture",
+	"_ImportInvoicesPane": "Fatture",
+	"_InvoicesSubmission": "Caricamento fatture",
+	"_New Invoice Submission": "Caricamento fatture fornitore",
+	"_NewInvoiceSubmissionProcessDescription": "Carica una o più fatture fornitore per l'elaborazione. \nQuesta operazione può richiedere alcuni minuti e sarà elaborata in background.\nLe fatture caricate saranno disponibili nella vista 'Fatture assegnate al contabile' sotto la scheda 'Fatture fornitore'.",
+	"_No invoice found": "Selezione fattura",
+	"_ProcessDescriptionPane": "Caricamento fatture",
+	"_SimpleUploadAttachment": "Aggiungi o rilascia una fattura...",
+	"_Upload an invoice": "Per continuare, è necessario caricare almeno una fattura.",
+	"New invoice submission": "Caricamento fatture fornitore"
+}</process_it>
+      <process_sk>{
+	"_Approve": "Nahrať faktúry",
+	"_ImportInvoicesPane": "Faktúry",
+	"_InvoicesSubmission": "Nahrať faktúry",
+	"_New Invoice Submission": "Nahrať faktúry dodávateľa",
+	"_NewInvoiceSubmissionProcessDescription": "Nahrajte jednu alebo viac faktúr dodávateľa na spracovanie. Táto činnosť môže trvať niekoľko minút a bude spracovaná na pozadí.\nNahraté faktúry budú k dispozícii v zobrazení 'Faktúry pridelené účtovníkovi' na karte 'Faktúry dodávateľov'.",
+	"_No invoice found": "Vybrať faktúru",
+	"_ProcessDescriptionPane": "Nahrať faktúry dodávateľa",
+	"_SimpleUploadAttachment": "Vybrať alebo odstrániť faktúru...",
+	"_Upload an invoice": "Ak chcete pokračovať, musíte nahrať aspoň jednu faktúru.",
+	"New invoice submission": "Nahrať faktúry dodávateľa"
+}</process_sk>
+      <process_zh-CN>{
+	"_Approve": "上传账单发票",
+	"_ImportInvoicesPane": "账单发票",
+	"_InvoicesSubmission": "账单发票已上传",
+	"_New Invoice Submission": "供应商账单发票已上传",
+	"_NewInvoiceSubmissionProcessDescription": "上传一张或多张供应商账单发票进行处理。\n此操作可能需要几分钟，将在后台处理。\n上传的账单发票将在“供应商发票”选项卡下的“指派给 AP 专家的账单发票”视图中提供。",
+	"_No invoice found": "选择一张账单发票",
+	"_ProcessDescriptionPane": "供应商账单发票已上传",
+	"_SimpleUploadAttachment": "选择或拖拽账单发票...",
+	"_Upload an invoice": "请上传至少一张账单发票以继续。",
+	"New invoice submission": "供应商账单发票已上传"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"_Approve": "Fazer upload de faturas",
+	"_ImportInvoicesPane": "Faturas",
+	"_InvoicesSubmission": "Upload de fatura",
+	"_New Invoice Submission": "Upload de fatura de fornecedor",
+	"_NewInvoiceSubmissionProcessDescription": "Faça upload de uma ou mais faturas de fornecedores para processamento. Esta ação pode demorar alguns minutos e será processada em segundo plano. As faturas carregadas estarão disponíveis na visualização \"Faturas atribuídas ao contador\" na guia \"Faturas do fornecedor\".",
+	"_No invoice found": "Selecione uma fatura",
+	"_ProcessDescriptionPane": "Upload de fatura de fornecedor",
+	"_SimpleUploadAttachment": "Selecionar ou soltar um fatura...",
+	"_Upload an invoice": "Para continuar, você precisa fazer o upload de, pelo menos, uma fatura.",
+	"New invoice submission": "Upload de fatura de fornecedor"
+}</process_pt-BR>
+    </lg>
+    <ocr>
+      <trade-off>accurate</trade-off>
+      <image-binarization>no</image-binarization>
+      <image-draft-fax>no</image-draft-fax>
+      <image-despeckle>no</image-despeckle>
+      <allowed-language>0</allowed-language>
+      <image-resolution-enhancement>auto</image-resolution-enhancement>
+      <ocr_engine>Nuance222</ocr_engine>
+      <extractionAdditionalOptions>
+      </extractionAdditionalOptions>
+    </ocr>
+    <process>
+      <flowtype>processing</flowtype>
+      <ocrpreset>scan</ocrpreset>
+      <homepagelabel>_New Invoice Submission</homepagelabel>
+      <enableflexibleauditing>
+      </enableflexibleauditing>
+      <enableflexibleediting>
+      </enableflexibleediting>
+      <enableflexibleteaching>
+      </enableflexibleteaching>
+      <upgradable>yes</upgradable>
+      <disableocr>
+      </disableocr>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <disableautolearning>true</disableautolearning>
+      <backgroundprocessingthreshold>
+      </backgroundprocessingthreshold>
+      <EnablePreviewPrecomputation>
+      </EnablePreviewPrecomputation>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <archiveDuration>0</archiveDuration>
+      <OverrideAllowedAttachmentExtensions>PDF,TIF,TXT,JPG,JPEG,XML,EDI</OverrideAllowedAttachmentExtensions>
+      <ocrpagestoprocess>
+      </ocrpagestoprocess>
+      <ScriptEngineType>2</ScriptEngineType>
+      <displayWidth>640</displayWidth>
+      <AllowUploadAttachment>1</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+      <AllowRetryExtractCD>true</AllowRetryExtractCD>
+      <TransportName>CustomData</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+      <printToProcess>
+      </printToProcess>
+    </process>
+    <ui>
+      <CustomScriptDebug>false</CustomScriptDebug>
+      <CustomScriptReadonly>true</CustomScriptReadonly>
+      <CustomScript>"use strict";
+function Approve() {
+    // Allow approve if a document was added
+    if (Attach.GetNbAttach() &gt; 0) {
+        ProcessInstance.Approve("approve");
+    }
+    else {
+        Popup.Alert(["_Upload an invoice"], true, null, "_No invoice found");
+    }
+    return false;
+}
+function run() {
+    Controls.Approve.OnClick = Approve;
+    Sys.Helpers.TryCallFunction("Lib.AP.Customization.HTMLScripts.NewInvoiceSubmission.OnHTMLScriptEnd");
+}
+run();
+//# sourceMappingURL=customscript.js.map</CustomScript>
+      <restorationPanel>ProcessDescriptionPane</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 23,
+	"*": {
+		"GDRData": {
+			"type": "GDRData",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"version": 0
+			}
+		},
+		"OCRParams": {
+			"type": "OCRParams",
+			"data": [],
+			"stamp": 2,
+			"options": {
+				"version": 0
+			}
+		},
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 3,
+			"options": {
+				"splitterType": "complex",
+				"style": "FlexibleFormLight",
+				"maxwidth": 640,
+				"backColor": "text-backgroundcolor-color7",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 4,
+					"options": {
+						"maxwidth": 640,
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 5,
+					"options": {
+						"maxwidth": 640,
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 6,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-top": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 7,
+									"options": {
+										"autosize": true,
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"height": "25%"
+										},
+										"hidden": false
+									},
+									"*": {
+										"form-content-top-3": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 8,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"ProcessDescriptionPane": {
+													"type": "PanelData",
+													"data": [],
+													"stamp": 9,
+													"options": {
+														"border": {
+															"collapsed": false
+														},
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": true,
+														"hideTitleBar": true,
+														"hideTitle": false,
+														"backgroundcolor": "default",
+														"labelsAlignment": "right",
+														"label": "_ProcessDescriptionPane",
+														"hidden": false,
+														"leftImageURL": "",
+														"removeMargins": false,
+														"elementsAlignment": "left",
+														"labelLength": 0,
+														"version": 0
+													},
+													"*": {
+														"FieldsManager": {
+															"type": "FieldsManager",
+															"data": [],
+															"stamp": 10,
+															"options": {
+																"version": 0,
+																"controlsAssociation": {}
+															},
+															"*": {
+																"Grid": {
+																	"type": "GridLayout",
+																	"data": [
+																		"fields"
+																	],
+																	"stamp": 11,
+																	"options": {
+																		"version": 0,
+																		"lines": 2,
+																		"columns": 2,
+																		"ctrlsPos": {
+																			"InvoicesSubmission__": {
+																				"line": 1,
+																				"column": 1
+																			},
+																			"ProcessDescription__": {
+																				"line": 2,
+																				"column": 1
+																			}
+																		},
+																		"colspans": [
+																			[
+																				{
+																					"index": 0,
+																					"length": 2
+																				}
+																			],
+																			[
+																				{
+																					"index": 0,
+																					"length": 2
+																				}
+																			]
+																		]
+																	},
+																	"*": {
+																		"InvoicesSubmission__": {
+																			"type": "Title",
+																			"data": false,
+																			"stamp": 12,
+																			"options": {
+																				"label": "_InvoicesSubmission",
+																				"marge": 0,
+																				"textSize": "XXL",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"backgroundcolor": "default",
+																				"iconClass": "",
+																				"version": 0
+																			}
+																		},
+																		"ProcessDescription__": {
+																			"type": "Text",
+																			"data": false,
+																			"stamp": 13,
+																			"options": {
+																				"label": "_NewInvoiceSubmissionProcessDescription",
+																				"marge": 0,
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"backgroundcolor": "default",
+																				"iconClass": "",
+																				"version": 0
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-top-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 14,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"ImportInvoicesPane": {
+													"type": "PanelDocument",
+													"data": [],
+													"stamp": 15,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"label": "_ImportInvoicesPane",
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": true,
+														"hideTitleBar": true,
+														"hideTitle": false,
+														"version": 0
+													},
+													"*": {
+														"Document": {
+															"type": "Documents",
+															"data": [
+																"documentscontroldata"
+															],
+															"stamp": 16,
+															"options": {
+																"previewButton": false,
+																"culture": "A4",
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								},
+								"form-content-bottom": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 17,
+									"options": {
+										"autosize": true,
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"width": null,
+											"height": "100%"
+										},
+										"hidden": true,
+										"hideSeparator": true
+									},
+									"*": {
+										"form-content-bottom-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 18,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"PreviewPanel": {
+													"type": "PanelPreview",
+													"data": [],
+													"stamp": 19,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": false,
+														"hideTitleBar": false,
+														"label": "_Document Preview",
+														"version": 0
+													},
+													"*": {
+														"Preview": {
+															"type": "Preview",
+															"data": [
+																"previewdata"
+															],
+															"stamp": 20,
+															"options": {
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 21,
+					"options": {
+						"splitterType": "simple-h",
+						"maxwidth": 640,
+						"version": 0
+					},
+					"*": {
+						"Approve": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 22,
+							"options": {
+								"label": "_Approve",
+								"action": "approve",
+								"submit": true,
+								"style": 1,
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": false,
+							"stamp": 23,
+							"options": {
+								"label": "_Close",
+								"textPosition": "text-right",
+								"textSize": "S",
+								"textStyle": "default",
+								"textColor": "default",
+								"iconColor": "default",
+								"urlImageOverlay": "",
+								"url": "",
+								"position": null,
+								"action": "cancel",
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <type id="GOLHG0000M4O" name="CD">
+  </type>
+</process>

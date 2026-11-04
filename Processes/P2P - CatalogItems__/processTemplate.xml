@@ -1,0 +1,766 @@
+<process accountid="" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:07:54" deleted="0" eskerapplication="P2P" global="0" id="NoID" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="P2P - CatalogItems__" needvalidation="1" ootofilter="" ootoversion="0" originalProcessID="HUME134103" ownerid="" ownerpb="" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomTable" upgradable="1" userid="" version="2" visibility="0">
+	<properties>
+		<dataConditions>
+			<listDataConditions>
+				&lt;dataCondition&gt;
+					&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+					&lt;filter&gt;msnex=*&lt;/filter&gt;
+					&lt;labelKey&gt;_Purchasing disabled&lt;/labelKey&gt;
+					&lt;multipleConditionsLink&gt;and&lt;/multipleConditionsLink&gt;
+					&lt;conditions&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnablePurchasingGlobalSetting__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableStandardPurchasingGlobalSetting__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableMultiSupplierItem__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+					&lt;/conditions&gt;
+				&lt;/dataCondition&gt;</listDataConditions>
+		</dataConditions>
+		<dbIndex>
+			<Join>&lt;Index Join="1"&gt;
+				&lt;Ref Name="CompanyCode__" Option="ASC"/&gt;
+				&lt;Ref Name="ItemNumber__" Option="ASC"/&gt;
+				&lt;/Index&gt;</Join>
+			<AUTO_ADNBQT400153EA>&lt;Index&gt;&lt;Ref Name="ADNBQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_ADNBQT400153EA>
+			<AUTO_APMBQT400153EA>&lt;Index&gt;&lt;Ref Name="APMBQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_APMBQT400153EA>
+			<AUTO_AYMBQT400153EA>&lt;Index Option="Unique"&gt;&lt;Ref Name="AYMBQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AYMBQT400153EA>
+		</dbIndex>
+		<externalvariables>
+			<EnableSRO>1</EnableSRO>
+		</externalvariables>
+		<lg>
+			<!--*.xml-->
+		</lg>
+		<openInProcess>
+			<process>{name: "P2P - CatalogItemEdit__", withMessage: true, multiple: false, label: "_action_openInProcess:P2P - CatalogItemEdit__"}</process>
+			<process>{name: "P2P - CatalogItemEdit__", withMessage: false, multiple: true, label: "_action_createflexible:P2P - CatalogItemEdit__"}</process>
+			<process>{name: "Catalog Exporter", withMessage: false, multiple: true, label: "_action_createflexible:Catalog Exporter"}</process>
+		</openInProcess>
+		<process>
+			<BUColumn>CompanyCode__</BUColumn>
+			<flowtype>processing</flowtype>
+			<cacheableprocess>PurchasingCompanycodes__</cacheableprocess>
+			<cacheableprocess>PurchasingSupply__</cacheableprocess>
+			<cacheableprocess>P2P - CatalogItems__</cacheableprocess>
+			<cacheableprocess>P2P - Mapping UNSPSC to SupplyType__</cacheableprocess>
+			<cacheableprocess>P2P - UnitOfMeasure__</cacheableprocess>
+			<cacheableprocess>P2P - User properties__</cacheableprocess>
+			<cacheableprocess>P2P - VendorItems__</cacheableprocess>
+			<cacheableprocess>AP - Tax codes__</cacheableprocess>
+			<cacheableprocess>AP - G/L accounts__</cacheableprocess>
+			<panelLabelWidth />
+			<homepagelabel>_P2PCatalogItems</homepagelabel>
+			<upgradable>yes</upgradable>
+			<instanciable>1</instanciable>
+			<disableScriptModification>true</disableScriptModification>
+			<enableUpgradableDesign>true</enableUpgradableDesign>
+			<OverrideAllowedAttachmentExtensions>*</OverrideAllowedAttachmentExtensions>
+			<displayWidth />
+			<vectorized>true</vectorized>
+			<AllowUploadAttachment>0</AllowUploadAttachment>
+			<AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+			<shouldRollbackManualRecordEdits>true</shouldRollbackManualRecordEdits>
+			<allowUnauthorizedUserTableInteraction>true</allowUnauthorizedUserTableInteraction>
+			<shouldShowManualEditsWarning>false</shouldShowManualEditsWarning>
+			<UseCultureFormat>true</UseCultureFormat>
+			<TransportName>CustomTable</TransportName>
+			<LayoutVersion>1.0</LayoutVersion>
+		</process>
+		<ui>
+			<CustomScriptDebug>false</CustomScriptDebug>
+			<customscriptIncludedScripts>Lib_Purchasing_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Purchasing_CatalogHelper_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Purchasing_CatalogHelper_Sticker_Client_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Purchasing_ConditionedPricing_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Purchasing_Items_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Purchasing_Vendor_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Purchasing_Vendor_Client_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_P2P_Layout_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_P2P_Currency_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_P2P_UserProperties_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_P2P_Inventory_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[Lib_P2P_Customization_Common]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_GenericAPI_Client</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers_Controls</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[LIB_P2P_CUSTOMIZATION_TABLES_CLIENT]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers</customscriptIncludedScripts>
+			<CustomScriptReadonly>true</CustomScriptReadonly>
+			<CustomScript>
+				<!--customscript.js--></CustomScript>
+			<restorationPanel>DataPanel</restorationPanel>
+			<layout>
+				<!--layout.json--></layout>
+		</ui>
+	</properties>
+	<type id="NoID" name="CT" />
+	<field deleted="0" format="" guid="XJHG135022" id="NoID" label="_CompanyCode_report" length="50" name="CompanyCode__" originalProcessID="HUME134103" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CompanyCode__</fullname>
+				<jointable>PurchasingCompanycodes__</jointable>
+				<jointableid>CT#BD8QT400153E</jointableid>
+				<defaultvalue />
+				<joincondition>(source.CompanyCode__=dest.CompanyCode__)</joincondition>
+			</db>
+			<extrainfo>
+				<Label>_CompanyCode_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>true</Editable>
+				<required>false</required>
+				<TableName>CT#NOID</TableName>
+				<SortOrder />
+				<DisplayedColumns>CompanyCode__|CompanyName__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>CompanyCode__</SavedColumn>
+				<SavedColumnId />
+				<ExposedColumns />
+				<ProcessName>PurchasingCompanycodes__</ProcessName>
+				<KeyColumnId />
+				<KeyAttribute />
+				<CustomFilter />
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="ZBF3FP000M4H" id="NoID" label="_CostType_report" length="50" name="CostType__" originalProcessID="HUME134103" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CostType__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_CostType_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<TableName />
+				<DisplayedColumns />
+				<DataSourceOrigin>Standalone</DataSourceOrigin>
+				<possibleKeys>
+OpEx
+CapEx</possibleKeys>
+				<SavedColumn />
+				<possibleValues>
+_OpEx
+_CapEx</possibleValues>
+				<ProcessName />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="VE4IG0000VLT" id="NoID" label="_DefaultCurrency" length="50" name="DefaultCurrency__" originalProcessID="HUME134103" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/DefaultCurrency__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_DefaultCurrency</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder />
+				<SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+				<DisplayedColumns>CurrencyFrom__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>CurrencyFrom__</SavedColumn>
+				<SavedColumnId />
+				<ExposedColumns />
+				<ProcessName>P2P - Exchange rate__</ProcessName>
+				<KeyColumnId />
+				<KeyAttribute />
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="WE4IG0000VLT" id="NoID" label="_DefaultPublicPrice" length="17" name="DefaultPublicPrice__" originalProcessID="HUME134103" precision="6" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/DefaultPublicPrice__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_DefaultPublicPrice</Label>
+				<Alias />
+				<DecimalPrecision vartype="INT">6</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<SetNullOnEmptyValue>1</SetNullOnEmptyValue>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="HUME134105" id="NoID" label="_Description_report" length="32766" name="Description__" originalProcessID="HUME134103" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Description__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Description_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<required>true</required>
+				<lazyTranslatable />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PHQG136728" id="NoID" label="_GLAccount_report" length="50" name="GLAccount__" originalProcessID="HUME134103" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/GLAccount__</fullname>
+				<jointable>AP - G/L accounts__</jointable>
+				<jointableid>CT#RQ8QT400153E</jointableid>
+				<defaultvalue />
+				<joincondition>(&amp;(source.GLAccount__=dest.Account__)(source.CompanyCode__=dest.CompanyCode__))</joincondition>
+			</db>
+			<extrainfo>
+				<Label>_GLAccount_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder />
+				<DisplayedColumns>Account__|Description__|CompanyCode__|Group__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>Account__</SavedColumn>
+				<SavedColumnId />
+				<ExposedColumns />
+				<ProcessName>AP - G/L accounts__</ProcessName>
+				<KeyColumnId />
+				<KeyAttribute />
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+			</field>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="DQV4FP000PA9" id="NoID" label="_Grade_report" length="17" name="Grade__" originalProcessID="HUME134103" precision="2" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Grade__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Grade_report</Label>
+				<Alias />
+				<DecimalPrecision vartype="INT">2</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="ZTO4FP000PA9" id="NoID" label="_GradeNumber_report" length="0" name="GradeNumber__" originalProcessID="HUME134103" precision="0" processid="" submitable="1" type="INT">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/GradeNumber__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_GradeNumber_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="YE72FP000IYP" id="NoID" label="_Image_report" length="5000" name="Image__" originalProcessID="HUME134103" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Image__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Image_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"_HelpItemImage","helpURL":"5015","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PHQG134104" id="NoID" label="_ItemNumber_report" length="50" name="ItemNumber__" originalProcessID="HUME134103" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ItemNumber__</fullname>
+				<jointable>P2P - VendorItems__</jointable>
+				<jointableid>CT#WKBQT400153E</jointableid>
+				<defaultvalue />
+				<joincondition>(source.ItemNumber__=dest.ItemNumber__)</joincondition>
+				<uniqueindex>1</uniqueindex>
+			</db>
+			<extrainfo>
+				<Label>_ItemNumber_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<required>false</required>
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="HSL3FP000M4H" id="NoID" label="_ItemType_report" length="50" name="ItemType__" originalProcessID="HUME134103" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ItemType__</fullname>
+				<defaultvalue>QuantityBased</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_ItemType_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<TableName />
+				<DataConditions>
+			&lt;dataCondition&gt;
+				&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+				&lt;filter&gt;msnex=*&lt;/filter&gt;
+				&lt;labelKey&gt;_Service based item enabled&lt;/labelKey&gt;
+				&lt;conditions&gt;
+					&lt;allowCondition&gt;
+						&lt;fieldName&gt;EnableServiceBasedItem__&lt;/fieldName&gt;
+						&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+					&lt;/allowCondition&gt;
+				&lt;/conditions&gt;
+				&lt;data&gt;
+					&lt;possibleKeys&gt;QuantityBased
+AmountBased
+ServiceBased&lt;/possibleKeys&gt;
+					&lt;possibleValues&gt;_QuantityBased
+_AmountBased
+_ServiceBased&lt;/possibleValues&gt;
+				&lt;/data&gt;
+			&lt;/dataCondition&gt;
+		</DataConditions>
+				<DisplayedColumns />
+				<DataSourceOrigin>Standalone</DataSourceOrigin>
+				<possibleKeys>QuantityBased
+AmountBased</possibleKeys>
+				<SavedColumn />
+				<possibleValues>_QuantityBased
+_AmountBased</possibleValues>
+				<ProcessName />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="ZZW2FP000IYP" id="NoID" label="_LongDescription_report" length="32766" name="LongDescription__" originalProcessID="HUME134103" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/LongDescription__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_LongDescription_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="B0X2FP000IYP" id="NoID" label="_ManufacturerName" length="255" name="ManufacturerName__" originalProcessID="HUME134103" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ManufacturerName__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ManufacturerName</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="C0X2FP000IYP" id="NoID" label="_ManufacturerPartID" length="255" name="ManufacturerPartID__" originalProcessID="HUME134103" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ManufacturerPartID__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ManufacturerPartID</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="ALAKG0000YRL" id="NoID" label="_ItemSticker_ID_report" length="50" name="StickerID__" originalProcessID="HUME134103" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/StickerID__</fullname>
+				<jointable>P2P - ItemSticker__</jointable>
+				<jointableid>CT#CKBQT400153E</jointableid>
+				<defaultvalue />
+				<joincondition>(&amp;(source.CompanyCode__=dest.CompanyCode__)(source.StickerID__=dest.ID__))</joincondition>
+			</db>
+			<extrainfo>
+				<Label>_ItemSticker_ID_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<DoNotShowInDM>1</DoNotShowInDM>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder>ASC</SortOrder>
+				<SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+				<DisplayedColumns>Name__|CompanyCode__|Color__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>ID__</SavedColumn>
+				<SavedColumnId />
+				<ExposedColumns />
+				<ProcessName>P2P - ItemSticker__</ProcessName>
+				<KeyColumnId />
+				<KeyAttribute />
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PHQG137697" id="NoID" label="_SupplyTypeID_report" length="50" name="SupplyTypeID__" originalProcessID="HUME134103" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/SupplyTypeID__</fullname>
+				<jointable>PurchasingSupply__</jointable>
+				<jointableid>CT#CEBQT400153E</jointableid>
+				<defaultvalue />
+				<joincondition>(&amp;(source.SupplyTypeID__=dest.SupplyID__)(source.CompanyCode__=dest.CompanyCode__))</joincondition>
+			</db>
+			<extrainfo>
+				<Label>_SupplyTypeID_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder>DESC</SortOrder>
+				<DisplayedColumns>SupplyID__|Name__|FullName__|Description__|BuyerLogin__|RecipientLogin__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>SupplyID__</SavedColumn>
+				<SavedColumnId />
+				<ExposedColumns>SupplyTypeName__=Name__</ExposedColumns>
+				<ProcessName>PurchasingSupply__</ProcessName>
+				<KeyColumnId />
+				<KeyAttribute />
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+			</field>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PHQG136729" id="NoID" label="_TaxCode_report" length="600" name="TaxCode__" originalProcessID="HUME134103" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TaxCode__</fullname>
+				<jointable>AP - Tax codes__</jointable>
+				<jointableid>CT#TU8QT400153E</jointableid>
+				<defaultvalue />
+				<joincondition>(&amp;(source.TaxCode__=dest.TaxCode__)(|(source.CompanyCode__=dest.CompanyCode__)(dest.CompanyCode__=)(dest.CompanyCode__!=*)))</joincondition>
+			</db>
+			<extrainfo>
+				<Label>_TaxCode_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder />
+				<DisplayedColumns>TaxCode__|Description__|TaxRate__|CompanyCode__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>TaxCode__</SavedColumn>
+				<SavedColumnId />
+				<ExposedColumns />
+				<ProcessName>AP - Tax codes__</ProcessName>
+				<KeyColumnId />
+				<KeyAttribute />
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+			</field>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="GB82FP000FSX" id="NoID" label="_UnitOfMeasure_report" length="50" name="UnitOfMeasure__" originalProcessID="HUME134103" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/UnitOfMeasure__</fullname>
+				<jointable>P2P - UnitOfMeasure__</jointable>
+				<jointableid>CT#DGBQT400153E</jointableid>
+				<defaultvalue />
+				<joincondition>(&amp;(source.UnitOfMeasure__=dest.UnitOfMeasure__)(|(source.CompanyCode__=dest.CompanyCode__)(dest.CompanyCode__=)(dest.CompanyCode__!=*)))</joincondition>
+			</db>
+			<extrainfo>
+				<Label>_UnitOfMeasure_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder />
+				<DisplayedColumns>UnitOfMeasure__|Description__|IdentifierInERP__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>UnitOfMeasure__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>P2P - UnitOfMeasure__</ProcessName>
+				<KeyColumnId />
+				<KeyAttribute />
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="XFQ2FP000IYP" id="NoID" label="_UNSPSC_report" length="50" name="UNSPSC__" originalProcessID="HUME134103" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/UNSPSC__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_UNSPSC_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+</process>

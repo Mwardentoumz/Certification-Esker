@@ -1,0 +1,770 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:08:02" deleted="0" eskerapplication="P2P" global="0" id="ZTBQT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="P2P - G/L account to Cost type__" needvalidation="1" ootofilter="" ootoversion="0" originalProcessID="TKK3FP000M4H" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomTable" upgradable="1" userid="0" version="1" visibility="0">
+  <properties>
+    <dataConditions>
+      <listDataConditions>
+				&lt;dataCondition&gt;
+					&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+					&lt;filter&gt;msnex=*&lt;/filter&gt;
+					&lt;labelKey&gt;_Purchasing or _AP disabled&lt;/labelKey&gt;
+					&lt;multipleConditionsLink&gt;or&lt;/multipleConditionsLink&gt;
+					&lt;conditions&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableAccountPayableGlobalSetting__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableStandardPurchasingGlobalSetting__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+					&lt;/conditions&gt;
+				&lt;/dataCondition&gt;</listDataConditions>
+    </dataConditions>
+    <dbIndex>
+      <AUTO_AAUBQT400153EA>&lt;Index&gt;&lt;Ref Name="AAUBQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AAUBQT400153EA>
+      <AUTO_ABUBQT400153EA>&lt;Index&gt;&lt;Ref Name="ABUBQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_ABUBQT400153EA>
+      <AUTO_ACUBQT400153EA>&lt;Index&gt;&lt;Ref Name="ACUBQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_ACUBQT400153EA>
+    </dbIndex>
+    <lg>
+      <process_da>{
+	"_CapEx": "CapEx",
+	"_CompanyCode": "Virksomhedskode",
+	"_CompanyCode_report": "Virksomhedskode",
+	"_CostType": "Omkostningstype",
+	"_CostType_report": "Omkostningstype",
+	"_Document data": "Dokumentdata",
+	"_FromGLAccount": "Fra artskontonummer",
+	"_FromGLAccount_report": "Fra artskontonummer",
+	"_OpEx": "OpEx",
+	"_ToGLAccount": "Til artskontonummer",
+	"_ToGLAccount_report": "Til artskontonummer",
+	"P2P - G/L account to Cost type": "S2P – artskonti/omkostningstyper",
+	"P2P - G/L account to Cost type__": "S2P – artskonti/omkostningstyper"
+}</process_da>
+      <process_de>{
+	"_CapEx": "CapEx",
+	"_CompanyCode": "Buchungskreis",
+	"_CompanyCode_report": "Buchungskreis",
+	"_CostType": "Kostenart",
+	"_CostType_report": "Kostenart",
+	"_Document data": "Dokumentdaten",
+	"_FromGLAccount": "Von Sachkontonummer",
+	"_FromGLAccount_report": "Von Sachkontonummer",
+	"_OpEx": "OpEx",
+	"_ToGLAccount": "Bis Sachkontonummer",
+	"_ToGLAccount_report": "Bis Sachkontonummer",
+	"P2P - G/L account to Cost type": "S2P - Sachkonten/Kostenarten",
+	"P2P - G/L account to Cost type__": "S2P - Sachkonten/Kostenarten"
+}</process_de>
+      <process_JA>{
+	"_CapEx": "CapEx",
+	"_CompanyCode": "会社コード",
+	"_CompanyCode_report": "会社コード",
+	"_CostType": "コスト種別",
+	"_CostType_report": "コスト種別",
+	"_Document data": "文書データ",
+	"_FromGLAccount": "勘定科目番号から",
+	"_FromGLAccount_report": "勘定科目番号から",
+	"_OpEx": "OpEx",
+	"_ToGLAccount": "勘定科目番号へ",
+	"_ToGLAccount_report": "勘定科目番号へ",
+	"P2P - G/L account to Cost type": "S2P - 勘定科目/コスト種別",
+	"P2P - G/L account to Cost type__": "S2P - 勘定科目/コスト種別"
+}</process_JA>
+      <process_en>{
+	"_CapEx": "CapEx",
+	"_CompanyCode": "Company code",
+	"_CompanyCode_report": "Company code",
+	"_CostType": "Cost type",
+	"_CostType_report": "Cost type",
+	"_Document data": "Document data",
+	"_FromGLAccount": "From G/L account number",
+	"_FromGLAccount_report": "From G/L account number",
+	"_OpEx": "OpEx",
+	"_ToGLAccount": "To G/L account number",
+	"_ToGLAccount_report": "To G/L account number",
+	"P2P - G/L account to Cost type": "S2P - G/L accounts/Cost types",
+	"P2P - G/L account to Cost type__": "S2P - G/L accounts/Cost types"
+}</process_en>
+      <process_es>{
+	"_CapEx": "CapEx",
+	"_CompanyCode": "Código de empresa",
+	"_CompanyCode_report": "Código de empresa",
+	"_CostType": "Tipo de coste",
+	"_CostType_report": "Tipo de coste",
+	"_Document data": "Datos del documento",
+	"_FromGLAccount": "Número de cuenta de mayor (de)",
+	"_FromGLAccount_report": "Número de cuenta de mayor (de)",
+	"_OpEx": "OpEx",
+	"_ToGLAccount": "Número de cuenta de mayor (a)",
+	"_ToGLAccount_report": "Número de cuenta de mayor (a)",
+	"P2P - G/L account to Cost type": "S2P - Cuenta de mayor/Tipos de coste",
+	"P2P - G/L account to Cost type__": "S2P - Cuentas de mayor/Tipos de coste"
+}</process_es>
+      <process_fr>{
+	"_CapEx": "CapEx",
+	"_CompanyCode": "Code société",
+	"_CompanyCode_report": "Code société",
+	"_CostType": "Type de coût",
+	"_CostType_report": "Type de coût",
+	"_Document data": "Données du document",
+	"_FromGLAccount": "Numéro de compte général (de)",
+	"_FromGLAccount_report": "Numéro de compte général (de)",
+	"_OpEx": "OpEx",
+	"_ToGLAccount": "Numéro de compte général (à)",
+	"_ToGLAccount_report": "Numéro de compte général (à)",
+	"P2P - G/L account to Cost type": "S2P - Comptes généraux/Types de coût",
+	"P2P - G/L account to Cost type__": "S2P - Comptes généraux/Types de coût"
+}</process_fr>
+      <process_nl-NL>{
+	"_CapEx": "CapEx",
+	"_CompanyCode": "Bedrijfscode",
+	"_CompanyCode_report": "Bedrijfscode",
+	"_CostType": "Type kosten",
+	"_CostType_report": "Type kosten",
+	"_Document data": "Documentgegevens",
+	"_FromGLAccount": "Van grootboekrekeningnummer",
+	"_FromGLAccount_report": "Van grootboekrekeningnummer",
+	"_OpEx": "OpEx",
+	"_ToGLAccount": "Naar grootboekrekeningnummer",
+	"_ToGLAccount_report": "Naar grootboekrekeningnummer",
+	"P2P - G/L account to Cost type": "S2P - Grootboekrekeningen/types kosten",
+	"P2P - G/L account to Cost type__": "S2P - Grootboekrekeningen/types kosten"
+}</process_nl-NL>
+      <process_pl>{
+	"_CapEx": "CapEx",
+	"_CompanyCode": "Kod firmy",
+	"_CompanyCode_report": "Kod firmy",
+	"_CostType": "Typ kosztów",
+	"_CostType_report": "Typ kosztów",
+	"_Document data": "Dane dokumentu",
+	"_FromGLAccount": "Z konta KG numer",
+	"_FromGLAccount_report": "Z konta KG numer",
+	"_OpEx": "OpEx",
+	"_ToGLAccount": "Do konta KG numer",
+	"_ToGLAccount_report": "Do konta KG numer",
+	"P2P - G/L account to Cost type": "S2P – konta KG / typy kosztów",
+	"P2P - G/L account to Cost type__": "S2P – konta KG / typy kosztów"
+}</process_pl>
+      <process_it>{
+	"_CapEx": "CapEx",
+	"_CompanyCode": "Codice società",
+	"_CompanyCode_report": "Codice società",
+	"_CostType": "Tipo di costo",
+	"_CostType_report": "Tipo di costo",
+	"_Document data": "Dati documento",
+	"_FromGLAccount": "Numero di conto generale (da)",
+	"_FromGLAccount_report": "Numero di conto generale (da)",
+	"_OpEx": "OpEx",
+	"_ToGLAccount": "Numero di conto generale (a)",
+	"_ToGLAccount_report": "Numero di conto generale (a)",
+	"P2P - G/L account to Cost type": "S2P - Conti generali/Tipi di costo",
+	"P2P - G/L account to Cost type__": "S2P - Conti generali/Tipi di costo"
+}</process_it>
+      <process_sk>{
+	"_CapEx": "CapEx",
+	"_CompanyCode": "Kód spoločnosti",
+	"_CompanyCode_report": "Kód spoločnosti",
+	"_CostType": "Typ nákladov",
+	"_CostType_report": "Typ nákladov",
+	"_Document data": "Dáta dokumentu",
+	"_FromGLAccount": "Z čísla účtu hlavnej knihy",
+	"_FromGLAccount_report": "Z čísla účtu hlavnej knihy",
+	"_OpEx": "OpEx",
+	"_ToGLAccount": "Na číslo účtu hlavnej knihy",
+	"_ToGLAccount_report": "Na číslo účtu hlavnej knihy",
+	"P2P - G/L account to Cost type": "S2P – Účty hlavnej knihy/Typy nákladov",
+	"P2P - G/L account to Cost type__": "S2P – Účty hlavnej knihy/Typy nákladov"
+}</process_sk>
+      <process_zh-CN>{
+	"_CapEx": "资本性支出",
+	"_CostType": "成本类型",
+	"_CostType_report": "成本类型",
+	"_Document data": "文档数据",
+	"_FromGLAccount": "从总账科目编号",
+	"_FromGLAccount_report": "从总账科目编号",
+	"_OpEx": "运营费用",
+	"_ToGLAccount": "至总账科目编号",
+	"_ToGLAccount_report": "至总账科目编号",
+	"P2P - G/L account to Cost type": "寻源到付款 - 总账科目/成本类型",
+	"P2P - G/L account to Cost type__": "寻源到付款 - 总账科目/成本类型"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"_CapEx": "Capex",
+	"_CostType": "Tipo de custo",
+	"_CostType_report": "Tipo de custo",
+	"_Document data": "Informação de documento",
+	"_FromGLAccount": "Do número da conta do Razão",
+	"_FromGLAccount_report": "Do número da conta do Razão",
+	"_OpEx": "OpEx",
+	"_ToGLAccount": "Para o número da conta do Razão",
+	"_ToGLAccount_report": "Para o número da conta do Razão",
+	"P2P - G/L account to Cost type": "S2P - Contas do Razão/Tipos de custo",
+	"P2P - G/L account to Cost type__": "S2P - Contas do Razão/Tipos de custo"
+}</process_pt-BR>
+    </lg>
+    <process>
+      <BUColumn>CompanyCode__</BUColumn>
+      <flowtype>processing</flowtype>
+      <homepagelabel>P2P - G/L account to Cost type</homepagelabel>
+      <upgradable>yes</upgradable>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <OverrideAllowedAttachmentExtensions>*</OverrideAllowedAttachmentExtensions>
+      <AllowUploadAttachment>0</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+      <shouldRollbackManualRecordEdits>true</shouldRollbackManualRecordEdits>
+      <shouldShowManualEditsWarning>false</shouldShowManualEditsWarning>
+      <UseCultureFormat>true</UseCultureFormat>
+      <TransportName>CustomTable</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+    </process>
+    <ui>
+      <customscriptIncludedScripts>[LIB_P2P_CUSTOMIZATION_TABLES_CLIENT]</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Sys/Sys_Helpers</customscriptIncludedScripts>
+      <CustomScript>"use strict";
+var CustomScript;
+(function (CustomScript) {
+    function Start() {
+        Sys.Helpers.TryCallFunction("Lib.P2P.Customization.Tables.Client.Common.OnHTMLScriptEnd");
+    }
+    Start();
+})(CustomScript || (CustomScript = {}));
+//# sourceMappingURL=customscript.js.map</CustomScript>
+      <restorationPanel>DataPanel</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 21,
+	"*": {
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"splitterType": "simple-v",
+				"backColor": "text-backgroundcolor-default",
+				"style": null,
+				"processHelpId": "5092",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 2,
+					"options": {
+						"hidePanelsMenu": false,
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 3,
+					"options": {
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 4,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-center": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 5,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"width": "100%"
+										},
+										"hidden": false
+									},
+									"*": {
+										"form-content-center-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 6,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"DataPanel": {
+													"type": "PanelData",
+													"data": [],
+													"stamp": 7,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": false,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"backgroundcolor": "default",
+														"labelsAlignment": "right",
+														"label": "_Document data",
+														"version": 0
+													},
+													"*": {
+														"FieldsManager": {
+															"type": "FieldsManager",
+															"data": [],
+															"stamp": 8,
+															"options": {
+																"version": 0,
+																"controlsAssociation": {
+																	"CompanyCode__": "LabelCompanyCode__",
+																	"LabelCompanyCode__": "CompanyCode__",
+																	"FromGLAccount__": "LabelFromGLAccount__",
+																	"LabelFromGLAccount__": "FromGLAccount__",
+																	"ToGLAccount__": "LabelToGLAccount__",
+																	"LabelToGLAccount__": "ToGLAccount__",
+																	"CostType__": "LabelCostType__",
+																	"LabelCostType__": "CostType__"
+																}
+															},
+															"*": {
+																"Grid": {
+																	"type": "GridLayout",
+																	"data": [
+																		"fields"
+																	],
+																	"stamp": 9,
+																	"options": {
+																		"version": 0,
+																		"lines": 4,
+																		"columns": 2,
+																		"ctrlsPos": {
+																			"LabelCompanyCode__": {
+																				"line": 1,
+																				"column": 1
+																			},
+																			"CompanyCode__": {
+																				"line": 1,
+																				"column": 2
+																			},
+																			"LabelFromGLAccount__": {
+																				"line": 2,
+																				"column": 1
+																			},
+																			"FromGLAccount__": {
+																				"line": 2,
+																				"column": 2
+																			},
+																			"LabelToGLAccount__": {
+																				"line": 3,
+																				"column": 1
+																			},
+																			"ToGLAccount__": {
+																				"line": 3,
+																				"column": 2
+																			},
+																			"LabelCostType__": {
+																				"line": 4,
+																				"column": 1
+																			},
+																			"CostType__": {
+																				"line": 4,
+																				"column": 2
+																			}
+																		},
+																		"colspans": [
+																			[],
+																			[],
+																			[],
+																			[]
+																		]
+																	},
+																	"*": {
+																		"LabelCompanyCode__": {
+																			"type": "Label",
+																			"data": [
+																				"CompanyCode__"
+																			],
+																			"stamp": 11,
+																			"options": {
+																				"label": "_CompanyCode",
+																				"version": 0
+																			}
+																		},
+																		"CompanyCode__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"CompanyCode__"
+																			],
+																			"stamp": 10,
+																			"options": {
+																				"label": "_CompanyCode",
+																				"version": 1,
+																				"autoCompleteSearchMode": "startswith",
+																				"searchMode": "matches",
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"minNbLines": 1,
+																				"maxNbLines": 1,
+																				"fTSmaxRecords": "20",
+																				"browsable": true,
+																				"PreFillFTS": true
+																			}
+																		},
+																		"LabelFromGLAccount__": {
+																			"type": "Label",
+																			"data": [
+																				"FromGLAccount__"
+																			],
+																			"stamp": 13,
+																			"options": {
+																				"label": "_FromGLAccount",
+																				"version": 0
+																			}
+																		},
+																		"FromGLAccount__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"FromGLAccount__"
+																			],
+																			"stamp": 12,
+																			"options": {
+																				"label": "_FromGLAccount",
+																				"version": 1,
+																				"autoCompleteSearchMode": "startswith",
+																				"searchMode": "matches",
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"minNbLines": 1,
+																				"maxNbLines": 1,
+																				"fTSmaxRecords": "20",
+																				"browsable": true,
+																				"PreFillFTS": true
+																			}
+																		},
+																		"LabelToGLAccount__": {
+																			"type": "Label",
+																			"data": [
+																				"ToGLAccount__"
+																			],
+																			"stamp": 15,
+																			"options": {
+																				"label": "_ToGLAccount",
+																				"version": 0
+																			}
+																		},
+																		"ToGLAccount__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"ToGLAccount__"
+																			],
+																			"stamp": 14,
+																			"options": {
+																				"label": "_ToGLAccount",
+																				"version": 1,
+																				"autoCompleteSearchMode": "startswith",
+																				"searchMode": "matches",
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"minNbLines": 1,
+																				"maxNbLines": 1,
+																				"fTSmaxRecords": "20",
+																				"browsable": true,
+																				"PreFillFTS": true
+																			}
+																		},
+																		"LabelCostType__": {
+																			"type": "Label",
+																			"data": [
+																				"CostType__"
+																			],
+																			"stamp": 17,
+																			"options": {
+																				"label": "_CostType",
+																				"version": 0
+																			}
+																		},
+																		"CostType__": {
+																			"type": "ComboBox",
+																			"data": [
+																				"CostType__"
+																			],
+																			"stamp": 16,
+																			"options": {
+																				"label": "_CostType",
+																				"possibleValues": {
+																					"0": "",
+																					"1": "_OpEx",
+																					"2": "_CapEx"
+																				},
+																				"version": 1,
+																				"keyValueMode": true,
+																				"possibleKeys": {
+																					"0": "",
+																					"1": "OpEx",
+																					"2": "CapEx"
+																				},
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"DataSourceOrigin": "Standalone",
+																				"DisplayedColumns": ""
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 18,
+					"options": {
+						"splitterType": "simple-h",
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 19,
+							"options": {
+								"label": "_Save",
+								"action": "savequit",
+								"submit": true,
+								"shortCut": "S",
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 20,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"shortCut": "Q",
+								"version": 0
+							}
+						},
+						"Delete": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 21,
+							"options": {
+								"label": "_Delete",
+								"action": "delete",
+								"submit": true,
+								"disabled": true,
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <field deleted="0" format="" guid="SKK3FP000M4H" id="AUBQT400153E" label="_CompanyCode_report" length="50" name="CompanyCode__" originalProcessID="TKK3FP000M4H" precision="0" processid="ZTBQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AAUBQT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/CompanyCode__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:08:02</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_CompanyCode_report</Label>
+        <Alias>AAUBQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>true</Editable>
+        <required>false</required>
+        <TableName>CT#BD8QT400153E</TableName>
+        <SortOrder>
+        </SortOrder>
+        <DisplayedColumns>CompanyCode__|CompanyName__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <SavedColumn>CompanyCode__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ProcessName>PurchasingCompanycodes__</ProcessName>
+        <CustomFilter>
+        </CustomFilter>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="PKK3FP000M4H" id="BUBQT400153E" label="_CostType_report" length="50" name="CostType__" originalProcessID="TKK3FP000M4H" precision="0" processid="ZTBQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ABUBQT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/CostType__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:08:02</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Type>webaccess.Process.Columns.WithPossibleValues</Type>
+        <Label>_CostType_report</Label>
+        <Alias>ABUBQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>true</required>
+        <TableName>
+        </TableName>
+        <DisplayedColumns>
+        </DisplayedColumns>
+        <DataSourceOrigin>Standalone</DataSourceOrigin>
+        <possibleKeys>
+OpEx
+CapEx</possibleKeys>
+        <SavedColumn>
+        </SavedColumn>
+        <possibleValues>
+_OpEx
+_CapEx</possibleValues>
+        <ProcessName>
+        </ProcessName>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="RKK3FP000M4H" id="CUBQT400153E" label="_FromGLAccount_report" length="50" name="FromGLAccount__" originalProcessID="TKK3FP000M4H" precision="0" processid="ZTBQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ACUBQT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/FromGLAccount__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:08:02</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_FromGLAccount_report</Label>
+        <Alias>ACUBQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>true</Editable>
+        <required>true</required>
+        <TableName>CT#RQ8QT400153E</TableName>
+        <SortOrder>ASC</SortOrder>
+        <DisplayedColumns>Account__|Description__|Group__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>Account__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ProcessName>AP - G/L accounts__</ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <KeyAttribute>
+        </KeyAttribute>
+        <CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="QKK3FP000M4H" id="DUBQT400153E" label="_ToGLAccount_report" length="50" name="ToGLAccount__" originalProcessID="TKK3FP000M4H" precision="0" processid="ZTBQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ADUBQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ToGLAccount__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:08:02</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ToGLAccount_report</Label>
+        <Alias>ADUBQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>true</Editable>
+        <required>true</required>
+        <TableName>CT#RQ8QT400153E</TableName>
+        <SortOrder>ASC</SortOrder>
+        <DisplayedColumns>Account__|Description__|Group__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>Account__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ProcessName>AP - G/L accounts__</ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <KeyAttribute>
+        </KeyAttribute>
+        <CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <type id="KOLHG0000M4O" name="CT">
+  </type>
+</process>

@@ -1,0 +1,1801 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:06:36" deleted="0" eskerapplication="P2P" global="0" id="H0AQT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="Project Event Linker" needvalidation="1" ootofilter="" ootoversion="2" originalProcessID="CFA000000VLT" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="1" reuseengine="0" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="0" version="1" visibility="0">
+  <properties>
+    <dataConditions>
+      <listDataConditions>&lt;dataCondition&gt;
+					&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+					&lt;filter&gt;msnex=*&lt;/filter&gt;
+					&lt;labelKey&gt;_Project disabled&lt;/labelKey&gt;
+					&lt;multipleConditionsLink&gt;and&lt;/multipleConditionsLink&gt;
+					&lt;conditions&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableProject__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableMarketDojoIntegration__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+					&lt;/conditions&gt;
+				&lt;/dataCondition&gt;</listDataConditions>
+    </dataConditions>
+    <gdr>
+      <validationscriptIncludedScripts>Sys/Sys_GenericAPI_Server</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Sys/Sys_Helpers_LdapUtil</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Sys/Sys_Helpers_Promise</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Sys/Sys_Helpers_String</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Sys/Sys_Helpers_Date</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_Project_V12.0.566.0</validationscriptIncludedScripts>
+      <ValidationScript>"use strict";
+/* eslint-disable dot-notation */
+/* eslint-disable class-methods-use-this,guard-for-in,no-case-declarations */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+var ValidationScript;
+(function (ValidationScript) {
+    class SkipActionError extends Error {
+        constructor(resultData, message) {
+            super(message);
+            this.resultData = resultData;
+            Object.setPrototypeOf(this, SkipActionError.prototype);
+        }
+    }
+    ValidationScript.SkipActionError = SkipActionError;
+    class Main {
+        constructor() {
+            this.projectNumber = Data.GetValue("ProjectNumber__");
+            this.eventId = Data.GetValue("EventId__");
+            this.actions = {
+                Create: {
+                    actionFn: () =&gt; this.ActionCreate()
+                },
+                Delete: {
+                    actionFn: () =&gt; this.ActionDelete()
+                }
+            };
+        }
+        PreventConcurrentAccess(callback) {
+            Log.Info("[Main.PreventConcurrentAccess] call");
+            let resultPromise;
+            Process.PreventConcurrentAccess(`ProjectEventLink-${this.projectNumber}-${this.eventId}`, () =&gt; {
+                // Promises are synchronous here
+                resultPromise = callback();
+            });
+            if (!resultPromise) {
+                Log.Error("[Main.PreventConcurrentAccess] cannot prevent concurrent access");
+                resultPromise = Sys.Helpers.Promise.Reject(new SkipActionError({ error: "PREVENT_CONCURRENT_ACCESS_ERROR" }));
+            }
+            return resultPromise;
+        }
+        QueryLink() {
+            if (!this.lastQueryLinkPromise) {
+                Log.Info("[Main.QueryLink] requesting...");
+                this.lastQueryLinkPromise = Sys.GenericAPI
+                    .PromisedQuery({
+                    table: "Project Event Link__",
+                    attributes: ["*"],
+                    filter: Sys.Helpers.LdapUtil.FilterAnd(Sys.Helpers.LdapUtil.FilterEqual("ProjectNumber__", this.projectNumber), Sys.Helpers.LdapUtil.FilterEqual("EventId__", this.eventId)),
+                    additionalOptions: {
+                        recordBuilder: record =&gt; record // returns xRecord
+                    }
+                })
+                    .Then(queryResult =&gt; {
+                    Log.Info(`[Main.QueryLink] link found: ${!!(queryResult === null || queryResult === void 0 ? void 0 : queryResult.length)}`);
+                    return queryResult;
+                })
+                    .Catch(reason =&gt; this.OnCatch("Main.QueryLink", reason));
+            }
+            return this.lastQueryLinkPromise;
+        }
+        CheckUniqueLink() {
+            Log.Info("[Main.CheckUniqueLink] call");
+            return this.QueryLink()
+                .Then(queryResult =&gt; {
+                const unique = (queryResult === null || queryResult === void 0 ? void 0 : queryResult.length) === 0;
+                Log.Info(`[Main.CheckUniqueLink] unique: ${unique}`);
+                if (!unique) {
+                    throw new SkipActionError({ error: "ALREADY_LINKED" });
+                }
+            })
+                .Catch(reason =&gt; this.OnCatch("Main.CheckUniqueLink", reason));
+        }
+        QueryProject() {
+            if (!this.lastQueryProjectPromise) {
+                Log.Info("[Main.QueryProject] requesting...");
+                this.lastQueryProjectPromise = Sys.GenericAPI
+                    .PromisedQuery({
+                    table: "CDNAME#Project",
+                    attributes: ["*"],
+                    filter: Sys.Helpers.LdapUtil.FilterEqual("ProjectNumber__", this.projectNumber),
+                    maxRecords: 1
+                })
+                    .Then(queryResult =&gt; {
+                    Log.Info(`[Main.QueryProject] project found: ${!!(queryResult === null || queryResult === void 0 ? void 0 : queryResult.length)}`);
+                    return queryResult;
+                })
+                    .Catch(reason =&gt; this.OnCatch("Main.QueryProject", reason));
+            }
+            return this.lastQueryProjectPromise;
+        }
+        CheckAuthorizedUser() {
+            Log.Info("[Main.CheckAuthorizedUser] call");
+            // A user can create/delete a link between project and event if he has at least the read access to both documents
+            // TODO check right on event
+            return this.QueryProject()
+                .Then((projectQueryResult) =&gt; {
+                const authorized = (projectQueryResult === null || projectQueryResult === void 0 ? void 0 : projectQueryResult.length) &gt;= 1; // use '&gt;=' rather than '===' (VLA/sharding)
+                Log.Info(`[Main.CheckAuthorizedUser] authorized: ${authorized}`);
+                if (!authorized) {
+                    throw new SkipActionError({ error: "UNAUTHORIZED_USER" });
+                }
+            })
+                .Catch(reason =&gt; this.OnCatch("Main.CheckAuthorizedUser", reason));
+        }
+        CheckProjectStatus() {
+            Log.Info("[Main.CheckProjectStatus] call");
+            return this.QueryProject()
+                .Then(queryResult =&gt; {
+                const project = queryResult[0];
+                const validStatus = ["Draft", "InProgress"].indexOf(project.Status__) !== -1;
+                Log.Info(`[Main.CheckProjectStatus] valid status: ${validStatus}`);
+                if (!validStatus) {
+                    throw new SkipActionError({ error: "INVALID_DOC" });
+                }
+            })
+                .Catch(reason =&gt; this.OnCatch("Main.CheckProjectStatus", reason));
+        }
+        CreateLink() {
+            Log.Info("[Main.CreateLink] call");
+            return Sys.Helpers.Promise.Resolve()
+                .Then(() =&gt; {
+                const link = Process.CreateTableRecord("Project Event Link__");
+                const linkVars = link.GetVars();
+                linkVars.AddValue_String("ProjectNumber__", this.projectNumber, true);
+                linkVars.AddValue_String("EventId__", this.eventId, true);
+                linkVars.AddValue_String("EventName__", Data.GetValue("EventName__"), true);
+                linkVars.AddValue_String("EventOwner__", Data.GetValue("EventOwner__"), true);
+                linkVars.AddValue_String("EventType__", Data.GetValue("EventType__"), true);
+                link.Commit();
+                if (link.GetLastError() === 0) {
+                    Log.Info("[Main.CreateLink] link created successfully");
+                    this.SetResultJSON({
+                        error: false,
+                        linkLongId: linkVars.GetValue_String("LongId", 0)
+                    });
+                }
+                else {
+                    Log.Error(`[Main.CreateLink] cannot create link. Error: ${link.GetLastErrorMessage()}`);
+                    throw new SkipActionError({
+                        error: "CREATE_LINK_ERROR",
+                        message: link.GetLastErrorMessage()
+                    });
+                }
+            })
+                .Catch(reason =&gt; this.OnCatch("Main.CreateLink", reason));
+        }
+        DeleteLink() {
+            Log.Info("[Main.DeleteLink] call");
+            return this.QueryLink()
+                .Then(queryResult =&gt; {
+                if (queryResult &amp;&amp; queryResult.length) {
+                    const link = queryResult[0];
+                    const result = link.Delete();
+                    if (result === 0) {
+                        Log.Info("[Main.DeleteLink] link deleted successfully");
+                        this.SetResultJSON({
+                            error: false
+                        });
+                    }
+                    else {
+                        Log.Error(`[Main.DeleteLink] cannot delete link. Error: ${link.GetLastErrorMessage()}`);
+                        throw new SkipActionError({
+                            error: "DELETE_LINK_ERROR",
+                            message: link.GetLastErrorMessage()
+                        });
+                    }
+                }
+                else {
+                    Log.Info("[Main.DeleteLink] no link to delete");
+                    this.SetResultJSON({
+                        error: false
+                    });
+                }
+            })
+                .Catch(reason =&gt; this.OnCatch("Main.DeleteLink", reason));
+        }
+        ActionCreate() {
+            Log.Info("[Main.ActionCreate] call");
+            return this.CheckAuthorizedUser()
+                .Then(() =&gt; this.CheckProjectStatus())
+                .Then(() =&gt; {
+                return this.PreventConcurrentAccess(() =&gt; {
+                    return this.CheckUniqueLink()
+                        .Then(() =&gt; this.CreateLink());
+                });
+            })
+                .Catch((reason) =&gt; this.SetResultJSON(reason.resultData));
+        }
+        ActionDelete() {
+            Log.Info("[Main.ActionDelete] call");
+            return this.CheckAuthorizedUser()
+                .Then(() =&gt; this.CheckProjectStatus())
+                .Then(() =&gt; this.DeleteLink())
+                .Catch((reason) =&gt; this.SetResultJSON(reason.resultData));
+        }
+        SetResultJSON(resultData) {
+            Data.SetValue("ResultJSON__", JSON.stringify(resultData));
+        }
+        OnCatch(caller, reason) {
+            if (!(reason instanceof SkipActionError)) {
+                Log.Error(`[${caller}] unexpected error: ${reason}`);
+                reason = new SkipActionError({
+                    error: "UNEXPECTED_ERROR",
+                    message: reason
+                });
+            }
+            throw reason;
+        }
+        Start() {
+            let actionName = Data.GetActionName();
+            const actionType = Data.GetActionType();
+            Log.Info(`ActionName: "${actionName}" ActionType: "${actionType}"`);
+            if (Data.GetValue("State") != 0) {
+                const actionByField = Data.GetValue("Action__");
+                if (actionByField) {
+                    actionName = actionByField;
+                }
+                else if (!actionName) {
+                    actionName = "Create";
+                }
+                Data.SetValue("Action__", actionName);
+            }
+            Log.Info(`Action to execute: ${actionName}, for project: ${this.projectNumber}, event: ${this.eventId}`);
+            const action = this.actions[actionName];
+            if (action) {
+                return action.actionFn();
+            }
+            // ELSE
+            Log.Warn("Unknown action");
+            this.SetResultJSON({ error: "UNKNOWN_ACTION" });
+            return Sys.Helpers.Promise.Resolve({ error: "UNKNOWN_ACTION" });
+        }
+    }
+    ValidationScript.Main = Main;
+    if (typeof _ENV_TEST_ENABLED === "undefined") {
+        const main = new Main();
+        main.Start();
+    }
+})(ValidationScript || (ValidationScript = {}));
+//# sourceMappingURL=validationscript.js.map</ValidationScript>
+      <AllowTagCoverPages>true</AllowTagCoverPages>
+      <AllowTagNewDocuments>true</AllowTagNewDocuments>
+      <AllowTagAttachments>true</AllowTagAttachments>
+      <AllowRemovePages>true</AllowRemovePages>
+      <AllowSwapPages>true</AllowSwapPages>
+    </gdr>
+    <lg>
+      <process_da>{
+	"_Action": "Handling",
+	"_Action_report": "Handling",
+	"_EventId": "Event-id",
+	"_EventId_report": "Event-id",
+	"_EventOwner": "Ejer",
+	"_EventOwner_report": "Ejer",
+	"_EventType": "Type",
+	"_EventType_report": "Type",
+	"_Project Event Linker": "Tilknytning af event til projekt",
+	"_ProjectNumber": "Projektnummer",
+	"_ProjectNumber_report": "Projektnummer",
+	"_ResultJSON": "Resultat (JSON-format)",
+	"_ResultJSON_report": "Resultat (JSON-format)",
+	"Project Event Linker": "Tilknytning af event til projekt",
+	"_AddEventQuestionnaire": "Spørgeskema",
+	"_Call Sourcing API Error msg": "Der opstod en fejl under forsøget på at få adgang til sourcing-eventene.\n\nKontakt din administrator",
+	"_Call Sourcing API Error msg api key": "API-nøgle:",
+	"_Call Sourcing API Error msg authorization": "Der er muligvis et problem med dine sourcing-loginoplysninger eller konfigurationen af dit modul. Kontrollér, at loginindstillingerne på siden med dine personlige oplysninger matcher dine Market Dojo-kontooplysninger, eller kontakt din administrator.",
+	"_Call Sourcing API Error msg email": "Market Dojo-identifikator:",
+	"_Call Sourcing API Error msg environment": "Market Dojo-miljø:",
+	"_Call Sourcing API Error msg remote server error": "Fejlmeddelelse:",
+	"_Call Sourcing API Error msg remote server error http": "Fejlkode:",
+	"_CancelButton": "Annuller",
+	"_Cannot reach Market Dojo": "Kunne ikke få adgang til sourcing-eventene",
+	"_CreateSourcingEvent": "Ny sourcing-event",
+	"_Event from dashboard creation msg": "Opret din event fra bunden, eller vælg blandt dine tidligere gemte skabeloner ud fra eventtype.",
+	"_EventCreationMessage": "Kontrollér de forhåndsudfyldte oplysninger nedenfor. Vælg 'Tilbudsanmodning' eller 'Auktion' som eventtype, og tilføj eventuelt et spørgeskema.",
+	"_EventDescription": "Beskrivelse",
+	"_EventName": "Begivenhedsnavn",
+	"_EventName_report": "Navn",
+	"_Hide error details dialog": "Skjul oplysninger",
+	"_MarketDojoPRODEnvironment": "Produktion",
+	"_MarketDojoQAEnvironment": "Midlertidig lagring (kun udv.)",
+	"_New Sourcing Event": "Ny sourcing-event",
+	"_NSEFromScratch": "Opret fra bunden",
+	"_NSEUseTemplate": "Opret fra skabelon",
+	"_PleaseSelectTemplate": "- Vælg en skabelon -",
+	"_Show error details dialog": "Vis oplysninger",
+	"_SourcingData": "Sourcing-eventdata i JSON-format",
+	"_SourcingEventCreation": "Ny sourcing-event",
+	"_SourcingEventId": "Sourcing-id",
+	"_SourcingEventId_report": "Sourcing-id",
+	"_UseOnlineAuctionMethod": "Auktion",
+	"_UseRFQMethod": "Tilbudsanmodning",
+	"_ValidateButton": "Opret event"
+}</process_da>
+      <process_de>{
+	"_Action": "Aktion",
+	"_Action_report": "Aktion",
+	"_EventId": "Ereignis-ID",
+	"_EventId_report": "Ereignis-ID",
+	"_EventOwner": "Besitzer",
+	"_EventOwner_report": "Besitzer",
+	"_EventType": "Typ",
+	"_EventType_report": "Typ",
+	"_Project Event Linker": "Ereignis mit Projekt verknüpft",
+	"_ProjectNumber": "Projektnummer",
+	"_ProjectNumber_report": "Projektnummer",
+	"_ResultJSON": "Ergebnis (JSON-Format)",
+	"_ResultJSON_report": "Ergebnis (JSON-Format)",
+	"Project Event Linker": "Ereignis mit Projekt verknüpft",
+	"_AddEventQuestionnaire": "Fragebogen",
+	"_Call Sourcing API Error msg": "Beim Zugriffsversuch auf die Beschaffungsereignisse ist ein Fehler aufgetreten.\n\nBitte wenden Sie sich an Ihren Administrator.",
+	"_Call Sourcing API Error msg api key": "API-Schlüssel:",
+	"_Call Sourcing API Error msg authorization": "Möglicherweise liegt ein Problem mit Ihren Sourcing-Anmeldeinformationen oder der Modulkonfiguration vor. \n\nStellen Sie sicher, dass die Anmeldeeinstellungen auf Ihrer persönlichen Informationsseite mit Ihren Market Dojo-Kontoangaben übereinstimmen bzw. setzen Sie sich mit Ihrem Administrator in Verbindung.",
+	"_Call Sourcing API Error msg email": "Market Dojo-Kennung:",
+	"_Call Sourcing API Error msg environment": "Market Dojo-Umgebung:",
+	"_Call Sourcing API Error msg remote server error": "Fehlermeldung:",
+	"_Call Sourcing API Error msg remote server error http": "Fehlercode:",
+	"_CancelButton": "Abbrechen",
+	"_Cannot reach Market Dojo": "Zugriff auf Beschaffungsereignisse nicht möglich",
+	"_CreateSourcingEvent": "Neuer Beschaffungsvorgang",
+	"_Event from dashboard creation msg": "Erstellen Sie Ihre Veranstaltung von Grund auf oder wählen Sie aus Ihren zuvor gespeicherten Vorlagen basierend auf dem Ereignistyp.",
+	"_EventCreationMessage": "Überprüfen Sie die vorgegebenen Informationen unten. Wählen Sie ‚Ausschreibung‘ oder ‚Auktion‘ aus und fügen Sie ggf. einen Fragebogen hinzu.",
+	"_EventDescription": "Beschreibung",
+	"_EventName": "Name des Ereignisses",
+	"_EventName_report": "Name",
+	"_Hide error details dialog": "Details ausblenden",
+	"_MarketDojoPRODEnvironment": "Produktion",
+	"_MarketDojoQAEnvironment": "Staging (nur für Entwickler)",
+	"_New Sourcing Event": "Neuer Beschaffungsvorgang",
+	"_NSEFromScratch": "Von Grund auf erstellen",
+	"_NSEUseTemplate": "Aus einer Vorlage erstellen",
+	"_PleaseSelectTemplate": "- Wählen Sie eine Vorlage aus -",
+	"_Show error details dialog": "Details einblenden",
+	"_SourcingData": "Beschaffungsereignisdaten im JSON-Format",
+	"_SourcingEventCreation": "Neuer Beschaffungsvorgang",
+	"_SourcingEventId": "Beschaffungs-Kennung",
+	"_SourcingEventId_report": "Beschaffungs-Kennung",
+	"_UseOnlineAuctionMethod": "Auktion",
+	"_UseRFQMethod": "Ausschreibung",
+	"_ValidateButton": "Vorgang erstellen"
+}</process_de>
+      <process_ja>{
+	"_Action": "アクション",
+	"_Action_report": "アクション",
+	"_EventId": "イベントID",
+	"_EventId_report": "イベントID",
+	"_EventOwner": "所有者",
+	"_EventOwner_report": "所有者",
+	"_EventType": "タイプ",
+	"_EventType_report": "タイプ",
+	"_Project Event Linker": "プロジェクトにリンクするイベント",
+	"_ProjectNumber": "プロジェクト番号",
+	"_ProjectNumber_report": "プロジェクト番号",
+	"_ResultJSON": "結果 (JSON形式)",
+	"_ResultJSON_report": "結果 (JSON形式)",
+	"Project Event Linker": "プロジェクトにリンクするイベント",
+	"_AddEventQuestionnaire": "質問票",
+	"_Call Sourcing API Error msg": "ソーシングイベントにアクセス中にエラーが発生しました。\n\n管理者に連絡してください。",
+	"_Call Sourcing API Error msg api key": "APIキー:",
+	"_Call Sourcing API Error msg authorization": "Sourcing資格情報またはモジュール構成に問題がある可能性があります。\n\n個人情報ページのログイン設定がMarket Dojoアカウントの詳細と一致していることを確認するか、管理者に連絡してください。",
+	"_Call Sourcing API Error msg email": "Market Dojo識別子:\n",
+	"_Call Sourcing API Error msg environment": "Market Dojo環境:",
+	"_Call Sourcing API Error msg remote server error": "エラーメッセージ:",
+	"_Call Sourcing API Error msg remote server error http": "エラーコード:",
+	"_CancelButton": "キャンセル",
+	"_Cannot reach Market Dojo": "ソーシングイベントにアクセスできません",
+	"_CreateSourcingEvent": "新しいソーシングイベント",
+	"_Event from dashboard creation msg": "最初からイベントを作成するか、イベントタイプに基づいて以前に保存したテンプレートから選択します。",
+	"_EventCreationMessage": "以下の事前に入力された情報を確認してください。\nイベントタイプに 'RFQ' または 'オークション' を選択し、必要に応じてアンケートを追加します。",
+	"_EventDescription": "説明",
+	"_EventName": "イベント名",
+	"_EventName_report": "名前",
+	"_Hide error details dialog": "詳細を表示しない",
+	"_MarketDojoPRODEnvironment": "プロダクション",
+	"_MarketDojoQAEnvironment": "ステージング (開発のみ)",
+	"_New Sourcing Event": "新しいソーシングイベント",
+	"_NSEFromScratch": "最初から作る",
+	"_NSEUseTemplate": "テンプレートから作る",
+	"_PleaseSelectTemplate": "- テンプレートを選択 -",
+	"_Show error details dialog": "詳細を表示",
+	"_SourcingData": "JSON形式のソーシングイベントデータ",
+	"_SourcingEventCreation": "新しいソーシングイベント",
+	"_SourcingEventId": "ソーシングID",
+	"_SourcingEventId_report": "ソーシングID",
+	"_UseOnlineAuctionMethod": "オークション",
+	"_UseRFQMethod": "RFQ",
+	"_ValidateButton": "イベントを作成"
+}</process_ja>
+      <process_en>{
+	"_Action": "Action",
+	"_Action_report": "Action",
+	"_EventId": "Event ID",
+	"_EventId_report": "Event ID",
+	"_EventOwner": "Owner",
+	"_EventOwner_report": "Owner",
+	"_EventType": "Type",
+	"_EventType_report": "Type",
+	"_Project Event Linker": "Event linking to project",
+	"_ProjectNumber": "Project number",
+	"_ProjectNumber_report": "Project number",
+	"_ResultJSON": "Result (JSON format)",
+	"_ResultJSON_report": "Result (JSON format)",
+	"Project Event Linker": "Event linking to project",
+	"_AddEventQuestionnaire": "Questionnaire",
+	"_Call Sourcing API Error msg": "An error occurred while trying to access the sourcing events.\n\nPlease contact your administrator.",
+	"_Call Sourcing API Error msg api key": "API key:",
+	"_Call Sourcing API Error msg authorization": "There may be an issue with your Sourcing credentials or module configuration.\n\nMake sure the login settings in your personal information page match your Market Dojo account details or contact your administrator.",
+	"_Call Sourcing API Error msg email": "Market Dojo identifier:",
+	"_Call Sourcing API Error msg environment": "Market Dojo environment:",
+	"_Call Sourcing API Error msg remote server error": "Error message:",
+	"_Call Sourcing API Error msg remote server error http": "Error code:",
+	"_CancelButton": "Cancel",
+	"_Cannot reach Market Dojo": "Unable to access sourcing events",
+	"_CreateSourcingEvent": "New sourcing event",
+	"_Event from dashboard creation msg": "Create your event from scratch or choose from your previously saved templates based on the event type.",
+	"_EventCreationMessage": "Check the pre-filled information below.\nSelect 'RFQ' or 'Auction' as event type and add a questionnaire if needed.",
+	"_EventDescription": "Description",
+	"_EventName": "Event name",
+	"_EventName_report": "Name",
+	"_Hide error details dialog": "Hide details",
+	"_MarketDojoPRODEnvironment": "Production",
+	"_MarketDojoQAEnvironment": "Staging (dev only)",
+	"_New Sourcing Event": "New Sourcing Event",
+	"_NSEFromScratch": "Create from scratch",
+	"_NSEUseTemplate": "Create from template",
+	"_PleaseSelectTemplate": "- Select a template -",
+	"_Show error details dialog": "Show details",
+	"_SourcingData": "Sourcing event data in JSON format",
+	"_SourcingEventCreation": "New sourcing event",
+	"_SourcingEventId": "Sourcing ID",
+	"_SourcingEventId_report": "Sourcing ID",
+	"_UseOnlineAuctionMethod": "Auction",
+	"_UseRFQMethod": "RFQ",
+	"_ValidateButton": "Create event"
+}</process_en>
+      <process_es>{
+	"_Action": "Acción",
+	"_Action_report": "Acción",
+	"_EventId": "ID del evento",
+	"_EventId_report": "ID del evento",
+	"_EventOwner": "Propietario",
+	"_EventOwner_report": "Propietario",
+	"_EventType": "Tipo",
+	"_EventType_report": "Tipo",
+	"_Project Event Linker": "Vinculación del evento al proyecto",
+	"_ProjectNumber": "Número del proyecto ",
+	"_ProjectNumber_report": "Número del proyecto",
+	"_ResultJSON": "Resultado (formato JSON)",
+	"_ResultJSON_report": "Resultado (formato JSON)",
+	"Project Event Linker": "Vinculación del evento al proyecto",
+	"_AddEventQuestionnaire": "Cuestionario",
+	"_Call Sourcing API Error msg": "Se ha producido un error al intentar acceder a los eventos de sourcing. \n\nPor favor, póngase en contacto con su administrador.",
+	"_Call Sourcing API Error msg api key": "Clave API:",
+	"_Call Sourcing API Error msg authorization": "Puede haber un problema con sus credenciales de Sourcing o con la configuración del módulo.\n\nAsegúrese de que la configuración de inicio de sesión en su página de información personal coincide con los datos de su cuenta de Market Dojo o póngase en contacto con su administrador.",
+	"_Call Sourcing API Error msg email": "Identificador de Market Dojo:",
+	"_Call Sourcing API Error msg environment": "Entorno Market Dojo:",
+	"_Call Sourcing API Error msg remote server error": "Mensaje de error:",
+	"_Call Sourcing API Error msg remote server error http": "Código de error:",
+	"_CancelButton": "Cancelar",
+	"_Cannot reach Market Dojo": "No se puede acceder a los eventos de sourcing",
+	"_CreateSourcingEvent": "Nuevo evento de sourcing",
+	"_Event from dashboard creation msg": "Cree su evento desde cero o elija entre las plantillas previamente guardadas en función del tipo de evento.",
+	"_EventCreationMessage": "Comprobar la información.\nSeleccione 'RFQ' o 'Subasta' como tipo de evento y añada un cuestionario si es necesario.",
+	"_EventDescription": "Descripción",
+	"_EventName": "Nombre del evento",
+	"_EventName_report": "Nombre",
+	"_Hide error details dialog": "Ocultar detalles",
+	"_MarketDojoPRODEnvironment": "Producción",
+	"_MarketDojoQAEnvironment": "Staging (solo para programadores)",
+	"_New Sourcing Event": "Nuevo evento de sourcing",
+	"_NSEFromScratch": "Crear desde cero",
+	"_NSEUseTemplate": "Crear desde plantilla",
+	"_PleaseSelectTemplate": "- Seleccionar una plantilla -",
+	"_Show error details dialog": "Mostrar detalles",
+	"_SourcingData": "Datos de eventos de sourcing en formato JSON",
+	"_SourcingEventCreation": "Nuevo evento de sourcing",
+	"_SourcingEventId": "ID de sourcing",
+	"_SourcingEventId_report": "ID de sourcing",
+	"_UseOnlineAuctionMethod": "Subasta inversa",
+	"_UseRFQMethod": "Solicitud de cotización (RFQ)",
+	"_ValidateButton": "Crear evento"
+}</process_es>
+      <process_fr>{
+	"_Action": "Action",
+	"_Action_report": "Action",
+	"_EventId": "ID évènement",
+	"_EventId_report": "ID évènement",
+	"_EventOwner": "Propriétaire",
+	"_EventOwner_report": "Propriétaire",
+	"_EventType": "Type",
+	"_EventType_report": "Type",
+	"_Project Event Linker": "Association évènement/projet",
+	"_ProjectNumber": "Numéro de projet",
+	"_ProjectNumber_report": "Numéro de projet",
+	"_ResultJSON": "Résultat (format JSON)",
+	"_ResultJSON_report": "Résultat (format JSON)",
+	"Project Event Linker": "Association évènement/projet",
+	"_AddEventQuestionnaire": "Questionnaire",
+	"_Call Sourcing API Error msg": "Une erreur est survenue lors de l'accès aux évènements de sourcing.\n\nVeuillez contacter votre administrateur.",
+	"_Call Sourcing API Error msg api key": "Clé API :",
+	"_Call Sourcing API Error msg authorization": "Il se peut qu'il y ait un problème avec vos identifiants du module Sourcing ou avec la configuration du module.\n\nAssurez-vous que les paramètres de connexion définis dans vos informations personnelles correspondent aux détails de votre compte Market Dojo ou contactez votre administrateur.",
+	"_Call Sourcing API Error msg email": "Identifiant Market Dojo :",
+	"_Call Sourcing API Error msg environment": "Environnement Market Dojo :",
+	"_Call Sourcing API Error msg remote server error": "Message d'erreur :",
+	"_Call Sourcing API Error msg remote server error http": "Code d'erreur : ",
+	"_CancelButton": "Annuler",
+	"_Cannot reach Market Dojo": "Échec d’accès aux évènements de sourcing",
+	"_CreateSourcingEvent": "Nouvel évènement de sourcing",
+	"_Event from dashboard creation msg": "Créez votre évènement à partir de zéro ou à partir de vos modèles préenregistrés en fonction du type d'évènement.",
+	"_EventCreationMessage": "Vérifiez les informations pré-remplies ci-dessous.\nSélectionnez 'Grille de prix' ou 'Enchère' comme type d'évènement et ajoutez un questionnaire si nécessaire.",
+	"_EventDescription": "Description",
+	"_EventName": "Nom de l'évènement",
+	"_EventName_report": "Nom",
+	"_Hide error details dialog": "Masquer les détails",
+	"_MarketDojoPRODEnvironment": "Production",
+	"_MarketDojoQAEnvironment": "Staging (réservé aux développeurs)",
+	"_New Sourcing Event": "Nouvel évènement de sourcing",
+	"_NSEFromScratch": "Créer sans modèle",
+	"_NSEUseTemplate": "Créer à partir d'un modèle",
+	"_PleaseSelectTemplate": "- Sélectionnez un modèle -",
+	"_Show error details dialog": "Afficher les détails",
+	"_SourcingData": "Données d'évènement de sourcing au format JSON",
+	"_SourcingEventCreation": "Nouvel évènement de sourcing",
+	"_SourcingEventId": "ID de sourcing",
+	"_SourcingEventId_report": "ID de sourcing",
+	"_UseOnlineAuctionMethod": "Enchère",
+	"_UseRFQMethod": "Grille de prix",
+	"_ValidateButton": "Créer l'évènement"
+}</process_fr>
+      <process_nl-NL>{
+	"_Action": "Actie",
+	"_Action_report": "Actie",
+	"_EventId": "Gebeurtenis-ID",
+	"_EventId_report": "Gebeurtenis-ID",
+	"_EventOwner": "Eigenaar",
+	"_EventOwner_report": "Eigenaar",
+	"_EventType": "Type",
+	"_EventType_report": "Type",
+	"_Project Event Linker": "Gebeurtenis koppelen met project",
+	"_ProjectNumber": "Projectnummer",
+	"_ProjectNumber_report": "Projectnummer",
+	"_ResultJSON": "Resultaat (JSON-indeling)",
+	"_ResultJSON_report": "Resultaat (JSON-indeling)",
+	"Project Event Linker": "Gebeurtenis koppelen met project",
+	"_AddEventQuestionnaire": "Vragenlijst",
+	"_Call Sourcing API Error msg": "Er is een fout opgetreden bij de poging om om toegang te krijgen tot de sourcing events.\n\nNeem contact op met uw beheerder.",
+	"_Call Sourcing API Error msg api key": "API-sleutel:",
+	"_Call Sourcing API Error msg authorization": "Er kan een probleem zijn met jouw Sourcing aanmeldingsinstellingen  of de configuratie van de module.\n\nVerzeker je ervan dat de aanmeldingsinstellingen in jouw persoonlijke informatie pagina overeenkomen met je Market Dojo accountgegevens of contacteer de beheerder.",
+	"_Call Sourcing API Error msg email": "Identificatie Market Dojo:",
+	"_Call Sourcing API Error msg environment": "Market Dojo-omgeving:",
+	"_Call Sourcing API Error msg remote server error": "Foutmelding:",
+	"_Call Sourcing API Error msg remote server error http": "Foutcode:",
+	"_CancelButton": "Annuleren",
+	"_Cannot reach Market Dojo": "Geen toegang tot sourcing events",
+	"_CreateSourcingEvent": "Nieuw Sourcing Event",
+	"_Event from dashboard creation msg": "Maakt een even aan vanaf nul of kies uit je reeds opgeslagen templates gebaseerd op het type event.",
+	"_EventCreationMessage": "Controleer de vooraf ingevulde informatie hieronder. Selecteer ‘Prijsaanvraag’ of ‘Veiling’ als type event en voeg een vragenlijst toe indien nodig.",
+	"_EventDescription": "Beschrijving",
+	"_EventName": "Naam event",
+	"_EventName_report": "Naam",
+	"_Hide error details dialog": "Details verbergen",
+	"_MarketDojoPRODEnvironment": "Productie",
+	"_MarketDojoQAEnvironment": "Staging (dev only)",
+	"_New Sourcing Event": "Nieuw Sourcing Event",
+	"_NSEFromScratch": "Creëren vanaf nul.",
+	"_NSEUseTemplate": "Creëren vanaf template.",
+	"_PleaseSelectTemplate": "- Template selecteren -",
+	"_Show error details dialog": "Details tonen",
+	"_SourcingData": "Sourcing event gegevens in JSON-formaat",
+	"_SourcingEventCreation": "Nieuw Sourcing Event",
+	"_SourcingEventId": "Sourcing-ID",
+	"_SourcingEventId_report": "Sourcing-ID",
+	"_UseOnlineAuctionMethod": "Veiling",
+	"_UseRFQMethod": "Prijsaanvraag",
+	"_ValidateButton": "Event aanmaken"
+}</process_nl-NL>
+      <process_pl>{
+	"_Action": "Działanie",
+	"_Action_report": "Działanie",
+	"_EventId": "Id. zdarzenia",
+	"_EventId_report": "Id. zdarzenia",
+	"_EventOwner": "Właściciel",
+	"_EventOwner_report": "Właściciel",
+	"_EventType": "Typ",
+	"_EventType_report": "Typ",
+	"_Project Event Linker": "Zdarzenie połączone z projektem",
+	"_ProjectNumber": "Numer projektu",
+	"_ProjectNumber_report": "Numer projektu",
+	"_ResultJSON": "Wynik (format JSON)",
+	"_ResultJSON_report": "Wynik (format JSON)",
+	"Project Event Linker": "Zdarzenie połączone z projektem",
+	"_AddEventQuestionnaire": "Kwestionariusz",
+	"_Call Sourcing API Error msg": "Podczas próby uzyskania dostępu do wydarzeń zaopatrzeniowych wystąpił błąd.\n\nSkontaktuj się z administratorem.",
+	"_Call Sourcing API Error msg api key": "Klucz API:",
+	"_Call Sourcing API Error msg authorization": "Mógł wystąpić błąd z danymi uwierzytelniającymi w module zaopatrzenia lub jego konfiguracją.\n\nUpewnij się, że ustawienia logowania na stronie Twoich danych osobowych są zgodne z danymi konta Market Dojo, lub skontaktuj się z administratorem.",
+	"_Call Sourcing API Error msg email": "Identyfikator Market Dojo:",
+	"_Call Sourcing API Error msg environment": "Środowisko Market Dojo:",
+	"_Call Sourcing API Error msg remote server error": "Komunikat o błędzie:",
+	"_Call Sourcing API Error msg remote server error http": "Kod błędu:",
+	"_CancelButton": "Anuluj",
+	"_Cannot reach Market Dojo": "Nie można uzyskać dostępu do wydarzeń zaopatrzeniowych",
+	"_CreateSourcingEvent": "Nowe wydarzenie zaopatrzeniowe",
+	"_Event from dashboard creation msg": "Utwórz wydarzenie od podstaw lub wybierz jeden z wcześniej zapisanych szablonów w zależności od typu wydarzenia.",
+	"_EventCreationMessage": "Sprawdź wstępnie wypełnione informacje poniżej.\nWybierz „RFQ” lub „Aukcja” jako typ wydarzenia i w razie potrzeby dodaj kwestionariusz.",
+	"_EventDescription": "Opis",
+	"_EventName": "Nazwa wydarzenia",
+	"_EventName_report": "Nazwa",
+	"_Hide error details dialog": "Ukryj szczegóły",
+	"_MarketDojoPRODEnvironment": "Produkcja",
+	"_MarketDojoQAEnvironment": "Tymczasowe (tylko DEV)",
+	"_New Sourcing Event": "Nowe wydarzenie zaopatrzeniowe",
+	"_NSEFromScratch": "Utwórz od podstaw",
+	"_NSEUseTemplate": "Utwórz z szablonu",
+	"_PleaseSelectTemplate": "- Wybierz szablon -",
+	"_Show error details dialog": "Pokaż szczegóły",
+	"_SourcingData": "Dane wydarzenia zaopatrzeniowego w formacie JSON",
+	"_SourcingEventCreation": "Nowe wydarzenie zaopatrzeniowe",
+	"_SourcingEventId": "Id. zaopatrzenia",
+	"_SourcingEventId_report": "Id. zaopatrzenia",
+	"_UseOnlineAuctionMethod": "Aukcja",
+	"_UseRFQMethod": "RFQ",
+	"_ValidateButton": "Utwórz wydarzenie"
+}</process_pl>
+      <process_it>{
+	"_Action": "Azione",
+	"_Action_report": "Azione",
+	"_EventId": "ID evento",
+	"_EventId_report": "ID evento",
+	"_EventOwner": "Proprietario",
+	"_EventOwner_report": "Proprietario",
+	"_EventType": "Tipo",
+	"_EventType_report": "Tipo",
+	"_Project Event Linker": "Collegamento evento/progetto",
+	"_ProjectNumber": "Numero progetto",
+	"_ProjectNumber_report": "Numero progetto",
+	"_ResultJSON": "Risultato (formato JSON)",
+	"_ResultJSON_report": "Risultato (formato JSON)",
+	"Project Event Linker": "Collegamento evento/progetto",
+	"_AddEventQuestionnaire": "Questionario",
+	"_Call Sourcing API Error msg": "Si è verificato un errore durante il tentativo di accesso agli eventi di sourcing.\n\nContattare l'amministratore.",
+	"_Call Sourcing API Error msg api key": "Chiave API:",
+	"_Call Sourcing API Error msg authorization": "Potrebbe esserci un problema con le credenziali di Sourcing o con la configurazione del modulo.\n\nAssicurarsi che le impostazioni di accesso definite nelle informazioni personali corrispondano ai dati dell'account Market Dojo o contattare l'amministratore.",
+	"_Call Sourcing API Error msg email": "Identificatore Market Dojo:",
+	"_Call Sourcing API Error msg environment": "Ambiente Market Dojo:",
+	"_Call Sourcing API Error msg remote server error": "Messaggio di errore:",
+	"_Call Sourcing API Error msg remote server error http": "Codice errore:",
+	"_CancelButton": "Annulla",
+	"_Cannot reach Market Dojo": "Impossibile accedere agli eventi di sourcing",
+	"_CreateSourcingEvent": "Nuovo evento di sourcing",
+	"_Event from dashboard creation msg": "Creare un evento da zero o a partire dai modelli precedentemente salvati in base al tipo di evento.",
+	"_EventCreationMessage": "Verificare le informazioni precompilate di seguito.\nSelezionare 'Richiesta di quotazione (RFQ)' o 'Asta' come tipo di evento e aggiungere un questionario se necessario.",
+	"_EventDescription": "Descrizione",
+	"_EventName": "Nome evento",
+	"_EventName_report": "Nome",
+	"_Hide error details dialog": "Nascondi dettagli",
+	"_MarketDojoPRODEnvironment": "Produzione",
+	"_MarketDojoQAEnvironment": "Staging (team di sviluppo)",
+	"_New Sourcing Event": "Nuovo evento di sourcing",
+	"_NSEFromScratch": "Crea senza modello",
+	"_NSEUseTemplate": "Crea da modello",
+	"_PleaseSelectTemplate": "- Seleziona un modello - ",
+	"_Show error details dialog": "Mostra dettagli",
+	"_SourcingData": "Dati di evento sourcing in formato JSON",
+	"_SourcingEventCreation": "Nuovo evento di sourcing",
+	"_SourcingEventId": "ID sourcing",
+	"_SourcingEventId_report": "ID sourcing",
+	"_UseOnlineAuctionMethod": "Asta",
+	"_UseRFQMethod": "Richiesta di quotazione (RFQ)",
+	"_ValidateButton": "Crea evento"
+}</process_it>
+      <process_sk>{
+	"_Action": "Akcia",
+	"_Action_report": "Akcia",
+	"_EventId": "ID udalosti",
+	"_EventId_report": "ID udalosti",
+	"_EventOwner": "Vlastník",
+	"_EventOwner_report": "Vlastník",
+	"_EventType": "Typ",
+	"_EventType_report": "Typ",
+	"_Project Event Linker": "Udalosť spojená s projektom",
+	"_ProjectNumber": "Číslo projektu",
+	"_ProjectNumber_report": "Číslo projektu",
+	"_ResultJSON": "Výsledok (formát JSON)",
+	"_ResultJSON_report": "Výsledok (formát JSON)",
+	"Project Event Linker": "Udalosť spojená s projektom",
+	"_AddEventQuestionnaire": "Dotazník",
+	"_Call Sourcing API Error msg": "Pri pokuse o prístup k udalostiam stanovenia zdroja odberu nastala chyba.\n\nObráťte sa na svojho administrátora.",
+	"_Call Sourcing API Error msg api key": "Kľúč API:",
+	"_Call Sourcing API Error msg authorization": "Môže dôjsť k problému s vašimi prihlasovacími údajmi do modulu Sourcing alebo s konfiguráciou modulu.\n\nSkontrolujte, či nastavenia prihlásenia na stránke s osobnými údajmi zodpovedajú údajom vášho účtu Market Dojo, alebo kontaktujte administrátora.",
+	"_Call Sourcing API Error msg email": "Identifikátor Market Dojo:",
+	"_Call Sourcing API Error msg environment": "Prostredie Market Dojo:",
+	"_Call Sourcing API Error msg remote server error": "Chybové hlásenie:",
+	"_Call Sourcing API Error msg remote server error http": "Kód chyby:",
+	"_CancelButton": "Zrušiť",
+	"_Cannot reach Market Dojo": "Nie je možné pristúpiť k udalostiam stanovenia zdroja odberu",
+	"_CreateSourcingEvent": "Nová udalosť v module Sourcing",
+	"_Event from dashboard creation msg": "Vytvorte udalosť od začiatku alebo vyberte jednu z predtým uložených šablón podľa typu udalosti.",
+	"_EventCreationMessage": "Skontrolujte predvyplnené informácie nižšie.\nAko typ udalosti vyberte 'RFQ' alebo 'Aukcia' a v prípade potreby pridajte dotazník.",
+	"_EventDescription": "Popis",
+	"_EventName": "Názov udalosti",
+	"_EventName_report": "Názov",
+	"_Hide error details dialog": "Skryť podrobnosti",
+	"_MarketDojoPRODEnvironment": "Výroba",
+	"_MarketDojoQAEnvironment": "Dočasné uloženie (len dev)",
+	"_New Sourcing Event": "Nová udalosť v Sourcing",
+	"_NSEFromScratch": "Vytvoriť od začiatku",
+	"_NSEUseTemplate": "Vytvoriť zo šablóny",
+	"_PleaseSelectTemplate": "- Vybrať šablónu -",
+	"_Show error details dialog": "Zobraziť podrobnosti",
+	"_SourcingData": "Dáta udalostí stanovenia zdroja odberu vo formáte JSON",
+	"_SourcingEventCreation": "Nová udalosť v module Sourcing",
+	"_SourcingEventId": "ID Sourcing",
+	"_SourcingEventId_report": "ID Sourcing",
+	"_UseOnlineAuctionMethod": "Dražba",
+	"_UseRFQMethod": "RFQ",
+	"_ValidateButton": "Vytvoriť udalosť"
+}</process_sk>
+      <process_zh-CN>{
+	"_Action": "操作",
+	"_Action_report": "操作",
+	"_EventId": "事件 ID",
+	"_EventId_report": "事件 ID",
+	"_EventOwner": "所有者",
+	"_EventOwner_report": "所有者",
+	"_EventType": "类型",
+	"_EventType_report": "类型",
+	"_Project Event Linker": "事件链接到项目",
+	"_ProjectNumber": "项目编号",
+	"_ProjectNumber_report": "项目编号",
+	"_ResultJSON": "结果（JSON 格式）",
+	"_ResultJSON_report": "结果（JSON 格式）",
+	"Project Event Linker": "事件链接到项目",
+	"_AddEventQuestionnaire": "问卷",
+	"_Call Sourcing API Error msg": "尝试访问采购事件时出错。\n\n请联系管理员。",
+	"_Call Sourcing API Error msg api key": "API 密钥:",
+	"_Call Sourcing API Error msg authorization": "您的采购登陆信息或模块配置可能有问题。\n\n请确保个人信息页中的登录设置与 Market Dojo 帐户信息相匹配，或联系管理员。",
+	"_Call Sourcing API Error msg email": "Market Dojo ID:",
+	"_Call Sourcing API Error msg environment": "Market Dojo 环境:",
+	"_Call Sourcing API Error msg remote server error": "错误消息:",
+	"_Call Sourcing API Error msg remote server error http": "错误代码:",
+	"_CancelButton": "取消",
+	"_Cannot reach Market Dojo": "无法访问采购事件",
+	"_CreateSourcingEvent": "新寻源事件",
+	"_Event from dashboard creation msg": "从头开始创建事件，或根据事件类型从以前保存的模板中进行选择。",
+	"_EventCreationMessage": "请检查下列预填写的信息。\n选择“询价”或“拍卖”作为事件类型，并根据需要添加问卷。",
+	"_EventDescription": "说明/描述",
+	"_EventName": "事件名称",
+	"_EventName_report": "名称",
+	"_Hide error details dialog": "隐藏详细信息",
+	"_MarketDojoPRODEnvironment": "生产",
+	"_MarketDojoQAEnvironment": "Staging (dev only)",
+	"_New Sourcing Event": "新寻源事件",
+	"_NSEFromScratch": "从头开始创建",
+	"_NSEUseTemplate": "从模板创建",
+	"_PleaseSelectTemplate": "- 选择模板 -",
+	"_Show error details dialog": "显示详情",
+	"_SourcingData": "JSON 格式的寻源事件数据",
+	"_SourcingEventCreation": "新寻源事件",
+	"_SourcingEventId": "寻源 ID",
+	"_SourcingEventId_report": "寻源 ID",
+	"_UseOnlineAuctionMethod": "拍卖",
+	"_UseRFQMethod": "询价",
+	"_ValidateButton": "创建事件"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"_Action": "Ação",
+	"_Action_report": "Ação",
+	"_EventId": "ID do evento",
+	"_EventId_report": "ID do evento",
+	"_EventOwner": "Proprietário",
+	"_EventOwner_report": "Proprietário",
+	"_EventType": "Tipo",
+	"_EventType_report": "Tipo",
+	"_Project Event Linker": "Vinculação de evento ao projeto",
+	"_ProjectNumber": "Número do projeto",
+	"_ProjectNumber_report": "Número do projeto",
+	"_ResultJSON": "Resultado (formato JSON)",
+	"_ResultJSON_report": "Resultado (formato JSON)",
+	"Project Event Linker": "Vinculação de evento ao projeto",
+	"_AddEventQuestionnaire": "Questionário",
+	"_Call Sourcing API Error msg": "Ocorreu um erro ao tentar acessar os eventos de sourcing.\n\nEntre em contato com o administrador.",
+	"_Call Sourcing API Error msg api key": "Chave API:",
+	"_Call Sourcing API Error msg authorization": "Pode haver um problema com suas credenciais de abastecimento ou configuração do módulo.\n\nCertifique-se de que as configurações de login em sua página de informações pessoais correspondam aos detalhes da sua conta do Market Dojo ou entre em contato com seu administrador.",
+	"_Call Sourcing API Error msg email": "Identificador Market Dojo:",
+	"_Call Sourcing API Error msg environment": "Ambiente Market Dojo:",
+	"_Call Sourcing API Error msg remote server error": "Mensagem de erro:",
+	"_Call Sourcing API Error msg remote server error http": "Código de erro:",
+	"_CancelButton": "Cancelar",
+	"_Cannot reach Market Dojo": "Não é possível acessar eventos de sourcing",
+	"_CreateSourcingEvent": "Novo evento de abastecimento",
+	"_Event from dashboard creation msg": "Crie seu evento do zero ou escolha um dos modelos salvos anteriormente com base no tipo de evento.",
+	"_EventCreationMessage": "Verifique as informações pré-preenchidas abaixo. Selecione “RFQ” ou “Leilão” como tipo de evento e adicione um questionário, se necessário.",
+	"_EventDescription": "Descrição",
+	"_EventName": "Nome do evento",
+	"_EventName_report": "Nome",
+	"_Hide error details dialog": "Ocultar detalhes",
+	"_MarketDojoPRODEnvironment": "Produção",
+	"_MarketDojoQAEnvironment": "Staging (dev only)",
+	"_New Sourcing Event": "Novo evento de abastecimento",
+	"_NSEFromScratch": "Criar do zero",
+	"_NSEUseTemplate": "Criar a partir do modelo",
+	"_PleaseSelectTemplate": "- Selecione um modelo -",
+	"_Show error details dialog": "Mostrar detalhes",
+	"_SourcingData": "Dados de eventos de sourcing no formato JSON",
+	"_SourcingEventCreation": "Novo evento de abastecimento",
+	"_SourcingEventId": "ID de abastecimento",
+	"_SourcingEventId_report": "ID de abastecimento",
+	"_UseOnlineAuctionMethod": "Leilão",
+	"_UseRFQMethod": "Solicitação de Cotação (RFQ)",
+	"_ValidateButton": "Criar evento"
+}</process_pt-BR>
+    </lg>
+    <process>
+      <flowtype>processing</flowtype>
+      <ocrpreset>scan</ocrpreset>
+      <EnableNegativeNumbersBetweenBrackets>true</EnableNegativeNumbersBetweenBrackets>
+      <homepagelabel>Project Event Linker</homepagelabel>
+      <enableflexibleauditing>
+      </enableflexibleauditing>
+      <enableflexibleediting>
+      </enableflexibleediting>
+      <enableflexibleteaching>
+      </enableflexibleteaching>
+      <disableocr>
+      </disableocr>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <disableautolearning>true</disableautolearning>
+      <backgroundprocessingthreshold>
+      </backgroundprocessingthreshold>
+      <EnablePreviewPrecomputation>
+      </EnablePreviewPrecomputation>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <enablerounddecimal>true</enablerounddecimal>
+      <pdfNormalizeFilter>
+      </pdfNormalizeFilter>
+      <archiveDuration>0</archiveDuration>
+      <ocrpagestoprocess>0</ocrpagestoprocess>
+      <ScriptEngineType>2</ScriptEngineType>
+      <UseActionNameWithScriptApproval>true</UseActionNameWithScriptApproval>
+      <displayWidth>
+      </displayWidth>
+      <AllowUploadAttachment>1</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>1</AllowUploadReferenceDocument>
+      <RemovePointWhenCastingIntToString>true</RemovePointWhenCastingIntToString>
+      <UseCultureFormat>true</UseCultureFormat>
+      <AllowRetryExtractCD>true</AllowRetryExtractCD>
+      <TransportName>CustomData</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+      <printToProcess>
+      </printToProcess>
+    </process>
+    <ui>
+      <restorationPanel>DataPanel</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 44,
+	"*": {
+		"GDRData": {
+			"type": "GDRData",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"version": 0
+			}
+		},
+		"OCRParams": {
+			"type": "OCRParams",
+			"data": [],
+			"stamp": 2,
+			"options": {
+				"version": 0
+			}
+		},
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 3,
+			"options": {
+				"splitterType": "complex",
+				"style": "FlexibleFormLight",
+				"maxwidth": "",
+				"backColor": "text-backgroundcolor-default",
+				"footerStyle": "default",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 4,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 5,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 6,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-top": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 7,
+									"options": {
+										"autosize": true,
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"height": "25%"
+										},
+										"hidden": true,
+										"hideSeparator": true
+									},
+									"*": {
+										"form-content-top-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 8,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"DocumentsPanel": {
+													"type": "PanelDocument",
+													"data": [],
+													"stamp": 9,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": false,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"sameHeightAsSiblings": false,
+														"label": "_Documents",
+														"version": 0
+													},
+													"*": {
+														"Document": {
+															"type": "Documents",
+															"data": [
+																"documentscontroldata"
+															],
+															"stamp": 10,
+															"options": {
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								},
+								"form-content-bottom": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 11,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": "25%",
+											"left": "0%",
+											"height": "75%"
+										},
+										"hidden": false,
+										"hideSeparator": true
+									},
+									"*": {
+										"form-content-left": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 12,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "0%",
+													"width": "45%"
+												},
+												"hidden": false,
+												"hideSeparator": true
+											},
+											"*": {
+												"form-content-left-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 13,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"DataPanel": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 14,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_Document data",
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 15,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {
+																			"Action__": "LabelAction__",
+																			"LabelAction__": "Action__",
+																			"EventId__": "LabelEventId__",
+																			"LabelEventId__": "EventId__",
+																			"ProjectNumber__": "LabelProjectNumber__",
+																			"LabelProjectNumber__": "ProjectNumber__",
+																			"EventName__": "LabelEventName__",
+																			"LabelEventName__": "EventName__",
+																			"EventOwner__": "LabelEventOwner__",
+																			"LabelEventOwner__": "EventOwner__",
+																			"EventType__": "LabelEventType__",
+																			"LabelEventType__": "EventType__",
+																			"ResultJSON__": "LabelResultJSON__",
+																			"LabelResultJSON__": "ResultJSON__"
+																		}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 16,
+																			"options": {
+																				"version": 0,
+																				"lines": 7,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"LabelAction__": {
+																						"line": 1,
+																						"column": 1
+																					},
+																					"Action__": {
+																						"line": 1,
+																						"column": 2
+																					},
+																					"LabelEventId__": {
+																						"line": 2,
+																						"column": 1
+																					},
+																					"EventId__": {
+																						"line": 2,
+																						"column": 2
+																					},
+																					"LabelProjectNumber__": {
+																						"line": 3,
+																						"column": 1
+																					},
+																					"ProjectNumber__": {
+																						"line": 3,
+																						"column": 2
+																					},
+																					"LabelEventName__": {
+																						"line": 4,
+																						"column": 1
+																					},
+																					"EventName__": {
+																						"line": 4,
+																						"column": 2
+																					},
+																					"LabelEventOwner__": {
+																						"line": 5,
+																						"column": 1
+																					},
+																					"EventOwner__": {
+																						"line": 5,
+																						"column": 2
+																					},
+																					"LabelEventType__": {
+																						"line": 6,
+																						"column": 1
+																					},
+																					"EventType__": {
+																						"line": 6,
+																						"column": 2
+																					},
+																					"LabelResultJSON__": {
+																						"line": 7,
+																						"column": 1
+																					},
+																					"ResultJSON__": {
+																						"line": 7,
+																						"column": 2
+																					}
+																				},
+																				"colspans": [
+																					[],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[]
+																				]
+																			},
+																			"*": {
+																				"LabelAction__": {
+																					"type": "Label",
+																					"data": [
+																						"Action__"
+																					],
+																					"stamp": 18,
+																					"options": {
+																						"label": "_Action",
+																						"version": 0
+																					}
+																				},
+																				"Action__": {
+																					"type": "ShortText",
+																					"data": [
+																						"Action__"
+																					],
+																					"stamp": 17,
+																					"options": {
+																						"label": "_Action",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"browsable": false
+																					}
+																				},
+																				"LabelEventId__": {
+																					"type": "Label",
+																					"data": [
+																						"EventId__"
+																					],
+																					"stamp": 20,
+																					"options": {
+																						"label": "_EventId",
+																						"version": 0
+																					}
+																				},
+																				"EventId__": {
+																					"type": "ShortText",
+																					"data": [
+																						"EventId__"
+																					],
+																					"stamp": 19,
+																					"options": {
+																						"label": "_EventId",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"browsable": false
+																					}
+																				},
+																				"LabelProjectNumber__": {
+																					"type": "Label",
+																					"data": [
+																						"ProjectNumber__"
+																					],
+																					"stamp": 22,
+																					"options": {
+																						"label": "_ProjectNumber",
+																						"version": 0
+																					}
+																				},
+																				"ProjectNumber__": {
+																					"type": "ShortText",
+																					"data": [
+																						"ProjectNumber__"
+																					],
+																					"stamp": 21,
+																					"options": {
+																						"label": "_ProjectNumber",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"browsable": false
+																					}
+																				},
+																				"LabelEventName__": {
+																					"type": "Label",
+																					"data": [
+																						"EventName__"
+																					],
+																					"stamp": 24,
+																					"options": {
+																						"label": "_EventName",
+																						"version": 0
+																					}
+																				},
+																				"EventName__": {
+																					"type": "ShortText",
+																					"data": [
+																						"EventName__"
+																					],
+																					"stamp": 23,
+																					"options": {
+																						"label": "_EventName",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"browsable": false
+																					}
+																				},
+																				"LabelEventOwner__": {
+																					"type": "Label",
+																					"data": [
+																						"EventOwner__"
+																					],
+																					"stamp": 26,
+																					"options": {
+																						"label": "_EventOwner",
+																						"version": 0
+																					}
+																				},
+																				"EventOwner__": {
+																					"type": "ShortText",
+																					"data": [
+																						"EventOwner__"
+																					],
+																					"stamp": 25,
+																					"options": {
+																						"label": "_EventOwner",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"browsable": false
+																					}
+																				},
+																				"LabelEventType__": {
+																					"type": "Label",
+																					"data": [
+																						"EventType__"
+																					],
+																					"stamp": 28,
+																					"options": {
+																						"label": "_EventType",
+																						"version": 0
+																					}
+																				},
+																				"EventType__": {
+																					"type": "ShortText",
+																					"data": [
+																						"EventType__"
+																					],
+																					"stamp": 27,
+																					"options": {
+																						"label": "_EventType",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"browsable": false
+																					}
+																				},
+																				"LabelResultJSON__": {
+																					"type": "Label",
+																					"data": [
+																						"ResultJSON__"
+																					],
+																					"stamp": 30,
+																					"options": {
+																						"label": "_ResultJSON",
+																						"version": 0
+																					}
+																				},
+																				"ResultJSON__": {
+																					"type": "LongText",
+																					"data": [
+																						"ResultJSON__"
+																					],
+																					"stamp": 29,
+																					"options": {
+																						"label": "_ResultJSON",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"minNbLines": 3,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"browsable": false
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-2": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 31,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"SystemData": {
+															"type": "PanelSystemData",
+															"data": [],
+															"stamp": 32,
+															"options": {
+																"multicolumn": false,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_System data",
+																"hidden": true,
+																"version": 0
+															}
+														}
+													}
+												},
+												"form-content-left-3": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 33,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"NextProcess": {
+															"type": "PanelNextProcess",
+															"data": [],
+															"stamp": 34,
+															"options": {
+																"hidden": true,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_Next Process",
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-right": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 35,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "45%",
+													"width": "55%"
+												},
+												"hidden": true
+											},
+											"*": {
+												"form-content-right-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 36,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"PreviewPanel": {
+															"type": "PanelPreview",
+															"data": [],
+															"stamp": 37,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_Document Preview",
+																"version": 0
+															},
+															"*": {
+																"Preview": {
+																	"type": "Preview",
+																	"data": [
+																		"previewdata"
+																	],
+																	"stamp": 38,
+																	"options": {
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 39,
+					"options": {
+						"splitterType": "simple-h",
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 40,
+							"options": {
+								"label": "_Save",
+								"action": "save",
+								"submit": true,
+								"textSize": "S",
+								"version": 0
+							}
+						},
+						"Approve": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 41,
+							"options": {
+								"label": "_Approve",
+								"action": "approve",
+								"submit": true,
+								"textSize": "S",
+								"version": 0
+							}
+						},
+						"Reject": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 42,
+							"options": {
+								"label": "_Reject",
+								"action": "reject",
+								"submit": true,
+								"textSize": "S",
+								"version": 0
+							}
+						},
+						"Reprocess": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 43,
+							"options": {
+								"label": "_Reprocess",
+								"action": "reprocess",
+								"submit": true,
+								"textSize": "S",
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 44,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"textSize": "S",
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <field deleted="0" format="" guid="DFA000000VLT" id="I0AQT400153E" label="_Action_report" length="50" name="Action__" originalProcessID="CFA000000VLT" precision="0" processid="H0AQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AI0AQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Action__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:35</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Action_report</Label>
+        <Alias>AI0AQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="EFA000000VLT" id="J0AQT400153E" label="_EventId_report" length="50" name="EventId__" originalProcessID="CFA000000VLT" precision="0" processid="H0AQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AJ0AQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/EventId__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:35</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_EventId_report</Label>
+        <Alias>AJ0AQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="GFA000000VLT" id="K0AQT400153E" label="_EventName_report" length="50" name="EventName__" originalProcessID="CFA000000VLT" precision="0" processid="H0AQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AK0AQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/EventName__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:35</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_EventName_report</Label>
+        <Alias>AK0AQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="HFA000000VLT" id="L0AQT400153E" label="_EventOwner_report" length="50" name="EventOwner__" originalProcessID="CFA000000VLT" precision="0" processid="H0AQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AL0AQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/EventOwner__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:35</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_EventOwner_report</Label>
+        <Alias>AL0AQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="IFA000000VLT" id="M0AQT400153E" label="_EventType_report" length="50" name="EventType__" originalProcessID="CFA000000VLT" precision="0" processid="H0AQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AM0AQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/EventType__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:35</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_EventType_report</Label>
+        <Alias>AM0AQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="FFA000000VLT" id="N0AQT400153E" label="_ProjectNumber_report" length="50" name="ProjectNumber__" originalProcessID="CFA000000VLT" precision="0" processid="H0AQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AN0AQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ProjectNumber__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:35</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ProjectNumber_report</Label>
+        <Alias>AN0AQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="JFA000000VLT" id="O0AQT400153E" label="_ResultJSON_report" length="32766" name="ResultJSON__" originalProcessID="CFA000000VLT" precision="0" processid="H0AQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AO0AQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ResultJSON__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:35</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ResultJSON_report</Label>
+        <Alias>AO0AQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <type id="GOLHG0000M4O" name="CD">
+  </type>
+</process>

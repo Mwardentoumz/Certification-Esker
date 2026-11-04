@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mappingDef xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<tableName>ODUSER</tableName>
+	<options>
+		<hasHeader>true</hasHeader>
+		<separator>;</separator>
+	</options>
+	<script>
+		<include>..\\..\\..\\tools\\CustomerImport\\Utils.js</include>
+		<include>..\\..\\..\\tools\\CustomerImport\\CustomerImportHelper.js</include>
+		<code><![CDATA[
+			var Tools = window.external;
+
+			var RECIPIENTACCOUNT = "Customers list";
+			var RECIPIENTROLE = "customer";
+
+			var CSVColumnName = {
+				login: "LOGIN",
+				profileName: "PROFILENAME",
+				culture: "CULTURE",
+				language: "LANGUAGE",
+				timezoneIndex: "TIMEZONEINDEX",
+				environment: "ENVIRONMENT",
+				title: "TITLE",
+				firstName: "FIRSTNAME",
+				middleName:"MIDDLENAME",
+				lastName: "LASTNAME",
+				street: "STREET",
+				company: "COMPANY",
+				country: "COUNTRY",
+				countryCode: "COUNTRYCODE",
+				mailState: "MAILSTATE",
+				stateCode: "STATECODE",
+				zipCode: "ZIPCODE",
+				city: "CITY",
+				department: "DEPARTMENT",
+				mailSub: "MAILSUB",
+				poBox: "POBOX",
+				companyInFirstAddress: "COMPANYINFIRSTADDRESS",
+				preferedDeliveryMethod: "PREFERREDDELIVERYMETHOD"
+			};
+
+			var eddContext = null;
+			var adminUserVars = null;
+			var adminProfileVars = null;
+			var adminAccountVars = null;
+			var recipientsListAccountVars = null;
+			var recipientTemplateVars = null;
+			var profileCache = {};
+
+			var currentUser = {};
+
+			// Init function
+			function Init()
+			{
+				eddContext = Tools.GetEddContext();
+				recipientTemplateVars = GetUserVars(eddContext, "recipientusertemplate", true);
+
+				adminUserVars = Tools.GetAdminUserVars();
+				if (!adminUserVars)
+					return Tools.NotifyError("Init: Cannot access logged user data");
+
+
+				adminProfileVars = GetProfileVars(eddContext, adminUserVars.GetValue_String("PROFILEID", 0));
+				if (!adminProfileVars)
+					return Tools.NotifyError("Init: Cannot find profile " + adminUserVars.GetValue_String("PROFILEID", 0));
+
+
+				adminAccountVars = GetAccountVars(eddContext, adminProfileVars.GetValue_String("ACCOUNTID", 0));
+				if (!adminAccountVars)
+					return Tools.NotifyError("Init: Cannot find account " + adminProfileVars.GetValue_String("ACCOUNTID", 0));
+
+
+				var accountOwnerID = "ou=" + adminAccountVars.GetValue_String("IDENT", 0) + "," + adminAccountVars.GetValue_String("OWNERID", 0);
+				recipientsListAccountVars = GetAccountVarsEx(eddContext, accountOwnerID, RECIPIENTACCOUNT);
+				if (!recipientsListAccountVars)
+					return Tools.NotifyError("Init: Cannot find recipients list account " + RECIPIENTACCOUNT);
+
+			}
+
+			function Reset()
+			{
+				currentUser = {};
+			}
+
+			function GetProfileValues(profileName, role)
+			{
+				if (!profileCache[profileName + role])
+				{
+					var profileVars = GetProfileVarsEx(eddContext, recipientsListAccountVars, profileName, role);
+					if (!profileVars)
+					{
+						Tools.NotifyError("Compute: Cannot find default recipient profile " + profileName);
+						throw "Cannot find default recipient profile " + profileName;
+					}
+
+					profileCache[profileName + role] = {
+						ownePb: profileVars.GetValue_String("OWNERPB", 0),
+						mainAccountId: profileVars.GetValue_String("MAINACCOUNTID", 0),
+						profileId: profileVars.GetValue_String("MSN", 0),
+						accountId: profileVars.GetValue_String("ACCOUNTID", 0)
+					}
+				}
+
+				return profileCache[profileName + role];
+			}
+
+			// Computation function just for recipient login
+			function ComputeLogin()
+			{
+				// Do not remove these 3 lines: they are essential to distinguish the advanced properties of users imported in different child accounts
+				currentUser.loginRecipient = adminAccountVars.GetValue_String("MSN", 0) + "$" + Tools.GetCsvColumnValue(CSVColumnName.login);
+				currentUser.loginRecipient = Tools.GetFieldValue("LOGINFIELD");
+				currentUser.recipientId = currentUser.loginRecipient;
+
+				if (!Tools.Check("CUSTOMERLOGIN", currentUser.loginRecipient))
+					return Tools.NotifyError("ComputeLogin: " + Tools.GetLastCheckErrorMessage());
+
+			}
+
+			function ComputeFields(ctx, recipientProfileValues, recipientAccountVars, adminUserVars, adminAccountVars)
+			{
+				try
+				{	
+					var recipientVars = GetUserVars(ctx, currentUser.loginRecipient, true)
+					currentUser.ownerID = "ou=" + recipientAccountVars.GetValue_String("IDENT", 0) + "," + recipientAccountVars.GetValue_String("OWNERID", 0);
+
+					// inherit from existing record or recipient template or admin that could be overriden					
+					var vars = recipientVars || recipientTemplateVars || adminUserVars;
+					currentUser.culture = vars.GetValue_String("CULTURE", 0);
+					currentUser.language = vars.GetValue_String("LANGUAGE", 0);
+					currentUser.timeZoneIndex = vars.GetValue_String("TIMEZONEINDEX", 0);
+					currentUser.environment = vars.GetValue_String("ENVIRONMENT", 0);
+
+					// Display name
+					currentUser.displayName = Tools.GetCsvColumnValue(CSVColumnName.title) + " ";
+					var firstName = Tools.GetCsvColumnValue(CSVColumnName.firstName);
+					if (firstName)
+						currentUser.displayName += firstName + " ";
+
+					var middleName = Tools.GetCsvColumnValue(CSVColumnName.middleName);
+					if (middleName)
+						currentUser.displayName += middleName + " ";
+
+					currentUser.displayName += Tools.GetCsvColumnValue(CSVColumnName.lastName);
+					currentUser.displayName = Trim(currentUser.displayName);
+
+					currentUser.culture = Tools.GetCsvColumnValue(CSVColumnName.culture) || currentUser.culture;
+					currentUser.language = Tools.GetCsvColumnValue(CSVColumnName.language) || currentUser.language;
+					currentUser.timeZoneIndex = Tools.GetCsvColumnValue(CSVColumnName.timezoneIndex) || currentUser.timeZoneIndex;
+					currentUser.environment = Tools.GetCsvColumnValue(CSVColumnName.environment) || currentUser.environment;
+
+					// inherit from admin	
+					currentUser.skin = adminUserVars.GetValue_String("SKIN", 0);
+
+					// invariant from profile
+					currentUser.ownerPB = recipientProfileValues.ownePb;
+					currentUser.mainAccountId = recipientProfileValues.mainAccountId;
+					currentUser.mainAccountId2 = adminAccountVars.GetValue_String("IDENT", 0);
+					currentUser.profileId = recipientProfileValues.profileId;
+					currentUser.accountId = recipientProfileValues.accountId;
+					currentUser.folderId = recipientProfileValues.accountId;
+
+					// Check mail address
+					Tools.ResetAdvancedCheckMap();
+					Tools.AddValueToCheck("name", currentUser.displayName);
+					Tools.AddValueToCheck("mail", Tools.GetCsvColumnValue(CSVColumnName.street));
+					Tools.AddValueToCheck("company", Tools.GetCsvColumnValue(CSVColumnName.company));
+					Tools.AddValueToCheck("country", Tools.GetCsvColumnValue(CSVColumnName.country));
+					Tools.AddValueToCheck("countrycode", Tools.GetCsvColumnValue(CSVColumnName.countryCode));
+					Tools.AddValueToCheck("state", Tools.GetCsvColumnValue(CSVColumnName.mailState));
+					Tools.AddValueToCheck("statecode", Tools.GetCsvColumnValue(CSVColumnName.stateCode));
+					Tools.AddValueToCheck("postalcode", Tools.GetCsvColumnValue(CSVColumnName.zipCode));
+					Tools.AddValueToCheck("city", Tools.GetCsvColumnValue(CSVColumnName.city));
+					Tools.AddValueToCheck("department", Tools.GetCsvColumnValue(CSVColumnName.department));
+					Tools.AddValueToCheck("sub", Tools.GetCsvColumnValue(CSVColumnName.mailSub));
+					Tools.AddValueToCheck("pobox", Tools.GetCsvColumnValue(CSVColumnName.poBox));
+					Tools.AddValueToCheck("companyfirst", Tools.GetCsvColumnValue(CSVColumnName.companyInFirstAddress));
+
+					Tools.AddValueToCheck("culture", currentUser.culture);
+
+					Tools.AdvancedCheck("MailAddress");
+					currentUser.mailAddressError = Tools.GetLastAdvancedCheckErrorMessage();
+				}
+				catch (e)
+				{
+					throw ("Exception in ComputeRecipientFields msg: " + e.description);
+				}
+			}
+
+			// Computation function for each Csv line
+			function Compute()
+			{
+				var profileName = Tools.GetCsvColumnValue("PROFILENAME");
+				var recipientProfileValues = GetProfileValues(profileName, profileName ? "" : RECIPIENTROLE);
+
+				try
+				{
+					ComputeFields(eddContext, recipientProfileValues, recipientsListAccountVars, adminUserVars, adminAccountVars);
+				}
+				catch (e)
+				{
+					return Tools.NotifyError("Compute: " + e);
+				}
+			}
+			
+			function GetPreferredDeliveryMethod()
+			{
+				var csvDeliveryMethod = Tools.GetCsvColumnValue(CSVColumnName.preferedDeliveryMethod);
+				csvDeliveryMethod = csvDeliveryMethod.toUpperCase();
+				var result="";
+				
+				switch (csvDeliveryMethod)
+				{
+					case "E-MAIL":
+					case "EMAIL":
+					case "COURRIEL" :
+					case "COURRIER ELECTRONIQUE" :
+						result = "SM";
+						break;
+					case "EDI":
+						result = "EDI";
+						break;
+					case "PORTAL":
+					case "PORTAIL":
+						result = "PORTAL";
+						break;
+					case "FAX":
+					case "FGFAXOUT":
+						result = "FGFAXOUT";
+						break;
+					case "COURRIER":
+					case "MAIL":
+					default:
+						result = "MOD";
+						break;
+				}
+
+				return result;
+			}
+			
+			// Accessors
+			function GetDisplayName()				{ return currentUser.displayName; }
+			function GetLoginRecipient()			{ return currentUser.loginRecipient; }
+			function GetRecipientOwnerID()			{ return currentUser.ownerID; }
+			function GetCulture()					{ return currentUser.culture; }
+			function GetLanguage()					{ return currentUser.language; }
+			function GetTimeZoneIndex()				{ return currentUser.timeZoneIndex; }
+			function GetEnvironment()				{ return currentUser.environment; }
+			function GetSkin()						{ return currentUser.skin; }
+			function GetOrganizationID()			{ return currentUser.mainAccountId; }
+			function GetRecipientOwnerPB()			{ return currentUser.ownerPB; }
+			function GetRecipientMainAccountID()	{ return currentUser.mainAccountId; }
+			function GetRecipientMainAccountID2()	{ return currentUser.mainAccountId2; }
+			function GetRecipientProfileID()		{ return currentUser.profileId; }
+			function GetRecipientAccountID()		{ return currentUser.accountId; }
+			function GetRecipientFolderID()			{ return currentUser.folderId; }
+			function GetMailAddressError()			{ return currentUser.mailAddressError; }
+			function GetRecipientID() 				{ return currentUser.recipientId; }
+
+			function GetTitle()		{ return Tools.GetCsvColumnValue(CSVColumnName.title); }
+			function GetFirstName() { return Tools.GetCsvColumnValue(CSVColumnName.firstName); }
+			function GetLastName()	{ return Tools.GetCsvColumnValue(CSVColumnName.lastName); }
+			function GetMiddleName(){ return Tools.GetCsvColumnValue(CSVColumnName.middleName); }
+			function GetStreet()	{ return Tools.GetCsvColumnValue(CSVColumnName.street); }
+			function GetCompany()	{ return Tools.GetCsvColumnValue(CSVColumnName.company); }
+			function GetCountry()	{ return Tools.GetCsvColumnValue(CSVColumnName.country); }
+			function GetMailState() { return Tools.GetCsvColumnValue(CSVColumnName.mailState); }
+			function GetZipCode()	{ return Tools.GetCsvColumnValue(CSVColumnName.zipCode); }
+			function GetCity()		{ return Tools.GetCsvColumnValue(CSVColumnName.city); }
+			function GetMailSub()	{ return Tools.GetCsvColumnValue(CSVColumnName.mailSub); }
+			function GetPoBox()		{ return Tools.GetCsvColumnValue(CSVColumnName.poBox); }
+
+
+		]]></code>
+		<eval onEachCsvLine="false">Init</eval>
+		<eval onEachCsvLine="true" onDelete="false">Reset</eval>
+		<eval onEachCsvLine="true">ComputeLogin</eval>
+		<eval onEachCsvLine="true" onDelete="false">Compute</eval>
+	</script>
+	<mappings>
+		<mapping key="true" fieldName="LOGINFIELD" fieldType="CUSTOMERLOGIN">
+			<fieldInFile>
+				<fieldNameInFile>LOGIN</fieldNameInFile>
+			</fieldInFile>
+			<evalScript>GetLoginRecipient</evalScript>
+			<fieldInTable>LOGIN</fieldInTable>
+		</mapping>
+		<mapping>
+			<fieldInFile>
+				<fieldNameInFile>LOGIN</fieldNameInFile>
+			</fieldInFile>
+			<fieldInTable>BUSINESSPARTNERID</fieldInTable>
+		</mapping>
+		<mapping fieldType="PHONENUMBER" countryColumnName="COUNTRY">
+			<fieldInFile>
+				<fieldNameInFile>PHONENUMBER</fieldNameInFile>
+			</fieldInFile>
+			<fieldInTable>PHONENUMBER</fieldInTable>
+		</mapping>
+		<mapping fieldType="EMAILADDRESS">
+			<fieldInFile>
+				<fieldNameInFile>EMAILADDRESS</fieldNameInFile>
+			</fieldInFile>
+			<fieldInTable>EMAILADDRESS</fieldInTable>
+		</mapping>
+		<mapping fieldOverriden="false">
+			<evalScript>GetPreferredDeliveryMethod</evalScript>
+			<fieldInTable>PREFERREDDELIVERYMETHOD</fieldInTable>
+		</mapping>
+		<mapping>
+			<fieldInFile>
+				<fieldNameInFile>DELIVERYCOPYEMAIL</fieldNameInFile>
+			</fieldInFile>
+			<fieldInTable>DELIVERYCOPYEMAIL</fieldInTable>
+		</mapping>
+		<!--
+		<mapping>
+			<fieldInFile>
+				<fieldNameInFile>DESCRIPTION</fieldNameInFile>
+			</fieldInFile>
+			<fieldInTable>DESCRIPTION</fieldInTable>
+		</mapping>
+		<mapping fieldType="PHONENUMBER" countryColumnName="COUNTRY">
+			<fieldInFile>
+				<fieldNameInFile>FAXNUMBER</fieldNameInFile>
+			</fieldInFile>
+			<fieldInTable>FAXNUMBER</fieldInTable>
+		</mapping>
+		<mapping fieldType="PHONENUMBER" countryColumnName="COUNTRY">
+			<fieldInFile>
+				<fieldNameInFile>MOBILENUMBER</fieldNameInFile>
+			</fieldInFile>
+			<fieldInTable>MOBILENUMBER</fieldInTable>
+		</mapping>
+		<mapping>
+			<fieldInFile>
+				<fieldNameInFile>ALLOWEDDELIVERYMETHODS</fieldNameInFile>
+			</fieldInFile>
+			<fieldInTable>ALLOWEDDELIVERYMETHODS</fieldInTable>
+		</mapping>
+		<mapping fieldType="PASSWORD" fieldOverriden="false">
+			<fieldInFile defaultValue="" />
+			<fieldInTable>PASSWORD</fieldInTable>
+		</mapping>
+		-->
+		
+<!--************************************************************************************************************************************************************-->
+<!-- The following field are to defined in the script part. Modify the CSVColumnName object definition to give the correct mapping -->
+<!--************************************************************************************************************************************************************-->
+		<mapping>
+			<evalScript>GetDisplayName</evalScript>
+			<fieldInTable>DISPLAYNAME</fieldInTable>
+		</mapping>
+		<mapping>
+			<evalScript>GetTitle</evalScript>
+			<fieldInTable>TITLE</fieldInTable>
+		</mapping>
+		<mapping>
+			<evalScript>GetFirstName</evalScript>
+			<fieldInTable>FIRSTNAME</fieldInTable>
+		</mapping>
+		<mapping>
+			<evalScript>GetLastName</evalScript>
+			<fieldInTable>LASTNAME</fieldInTable>
+		</mapping>
+		<mapping>
+			<evalScript>GetMiddleName</evalScript>
+			<fieldInTable>MIDDLENAME</fieldInTable>
+		</mapping>
+		<mapping>
+			<evalScript>GetLanguage</evalScript>
+			<fieldInTable>LANGUAGE</fieldInTable>
+		</mapping>
+		<mapping>
+			<evalScript>GetTimeZoneIndex</evalScript>
+			<fieldInTable>TIMEZONEINDEX</fieldInTable>
+		</mapping>
+		<mapping>
+			<evalScript>GetCulture</evalScript>
+			<fieldInTable>CULTURE</fieldInTable>
+		</mapping>		
+		<mapping>
+			<evalScript>GetCompany</evalScript>
+			<fieldInTable>COMPANY</fieldInTable>
+		</mapping>
+		<mapping fieldName="STREET">
+			<evalScript>GetStreet</evalScript>
+			<fieldInTable>STREET</fieldInTable>
+		</mapping>
+		<mapping>
+			<evalScript>GetPoBox</evalScript>
+			<fieldInTable>POBOX</fieldInTable>
+		</mapping>
+		<mapping>
+			<evalScript>GetZipCode</evalScript>
+			<fieldInTable>ZIPCODE</fieldInTable>
+		</mapping>
+		<mapping>
+			<evalScript>GetCity</evalScript>
+			<fieldInTable>CITY</fieldInTable>
+		</mapping>
+		<mapping>
+			<evalScript>GetMailState</evalScript>
+			<fieldInTable>MAILSTATE</fieldInTable>
+		</mapping>
+		<mapping>
+			<evalScript>GetMailSub</evalScript>
+			<fieldInTable>MAILSUB</fieldInTable>
+		</mapping>		
+		
+		<mapping fieldType="COUNTRY">
+			<evalScript>GetCountry</evalScript>
+			<fieldInTable>COUNTRY</fieldInTable>
+		</mapping>
+
+<!--************************************************************************************************************************************************************-->
+<!-- Technical field. Do not modify -->
+<!--************************************************************************************************************************************************************-->
+		<mapping>
+			<evalScript>GetRecipientOwnerID</evalScript>
+			<fieldInTable>OWNERID</fieldInTable>
+		</mapping>
+		<mapping>
+			<fieldInFile defaultValue="20" />
+			<fieldInTable>WEBLISTITEMCOUNT</fieldInTable>
+		</mapping>
+		<mapping>
+			<fieldInFile defaultValue="modern15" />
+			<fieldInTable>WEBLAYOUT</fieldInTable>
+		</mapping>
+		<mapping>
+			<evalScript>GetEnvironment</evalScript>
+			<fieldInTable>ENVIRONMENT</fieldInTable>
+		</mapping>
+		<mapping>
+			<fieldInFile defaultValue="1" />
+			<fieldInTable>CUSTOMER</fieldInTable>
+		</mapping>
+		<mapping>
+			<evalScript>GetSkin</evalScript>
+			<fieldInTable>SKIN</fieldInTable>
+		</mapping>
+		<mapping>
+			<evalScript>GetOrganizationID</evalScript>
+			<fieldInTable>ORGANIZATIONID</fieldInTable>
+		</mapping>
+		<mapping>
+			<evalScript>GetRecipientOwnerPB</evalScript>
+			<fieldInTable>OWNERPB</fieldInTable>
+		</mapping>
+		<mapping>
+			<evalScript>GetRecipientMainAccountID</evalScript>
+			<fieldInTable>MAINACCOUNTID</fieldInTable>
+		</mapping>
+		<mapping>
+			<evalScript>GetRecipientMainAccountID2</evalScript>
+			<fieldInTable>MAINACCOUNTID2</fieldInTable>
+		</mapping>
+		<mapping>
+			<evalScript>GetRecipientProfileID</evalScript>
+			<fieldInTable>PROFILEID</fieldInTable>
+		</mapping>
+		<mapping>
+			<evalScript>GetRecipientAccountID</evalScript>
+			<fieldInTable>ACCOUNTID</fieldInTable>
+		</mapping>
+		<mapping>
+			<evalScript>GetRecipientFolderID</evalScript>
+			<fieldInTable>FOLDERID</fieldInTable>
+		</mapping>
+		<mapping>
+			<fieldInFile defaultValue="0" />
+			<fieldInTable>TECHNICALUSER</fieldInTable>
+		</mapping>
+		<mapping>
+			<evalScript>GetMailAddressError</evalScript>
+			<fieldInTable>MAILADDRESSERROR</fieldInTable>
+		</mapping>
+	</mappings>
+	
+<!--************************************************************************************************************************************************************-->
+<!-- Extended delivery options -->
+<!-- Warning: Do not add the key attribute to any other child node in the extendedMappings node -->
+<!--************************************************************************************************************************************************************-->
+	<extendedMappings tableName="Customer_Extended_Delivery_Properties__" keyCount="1">
+		<mapping key="true">
+			<fieldInFile>
+				<fieldNameInFile>LOGIN</fieldNameInFile>
+			</fieldInFile>
+			<evalScript>GetRecipientID</evalScript>
+			<fieldInTable>CustomerID__</fieldInTable>
+		</mapping>
+		<!--
+		<mapping>
+			<fieldInFile>
+				<fieldNameInFile>ADDITIONALMODCOPIES</fieldNameInFile>
+			</fieldInFile>
+			<fieldInTable>NbAdditionalModCopies__</fieldInTable>
+		</mapping>
+		-->
+	</extendedMappings>
+	
+</mappingDef>

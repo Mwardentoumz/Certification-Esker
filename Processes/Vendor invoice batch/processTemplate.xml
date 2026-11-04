@@ -1,0 +1,340 @@
+<process accountid="" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:07:08" deleted="0" eskerapplication="P2P" global="0" id="NoID" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="Vendor invoice batch" needvalidation="0" ootofilter="" ootoversion="0" originalProcessID="VSDC667212" ownerid="" ownerpb="" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="" version="1" visibility="0">
+	<properties>
+		<dataConditions>
+			<listDataConditions>
+				&lt;dataCondition&gt;
+					&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+					&lt;filter&gt;msnex=*&lt;/filter&gt;
+					&lt;labelKey&gt;_AP disabled&lt;/labelKey&gt;
+					&lt;conditions&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableAccountPayableGlobalSetting__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+					&lt;/conditions&gt;
+				&lt;/dataCondition&gt;
+			</listDataConditions>
+		</dataConditions>
+		<dbIndex>
+			<AUTO_AKKAQT400153EA>&lt;Index&gt;&lt;Ref Name="AKKAQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AKKAQT400153EA>
+			<AUTO_ALKAQT400153EA>&lt;Index&gt;&lt;Ref Name="ALKAQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_ALKAQT400153EA>
+			<AUTO_AMKAQT400153EA>&lt;Index&gt;&lt;Ref Name="AMKAQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AMKAQT400153EA>
+			<AUTO_ANKAQT400153EA>&lt;Index&gt;&lt;Ref Name="ANKAQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_ANKAQT400153EA>
+			<AUTO_AOKAQT400153EA>&lt;Index&gt;&lt;Ref Name="AOKAQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AOKAQT400153EA>
+			<AUTO_APKAQT400153EA>&lt;Index&gt;&lt;Ref Name="APKAQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_APKAQT400153EA>
+			<AUTO_AQKAQT400153EA>&lt;Index&gt;&lt;Ref Name="AQKAQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AQKAQT400153EA>
+		</dbIndex>
+		<externalvariables>
+			<GenerateEmbeddingsForModelCreation>enable</GenerateEmbeddingsForModelCreation>
+			<Configuration>Default</Configuration>
+			<minimum_number_of_training>25</minimum_number_of_training>
+		</externalvariables>
+		<gdr>
+			<FinalizationScriptAllowRetry>false</FinalizationScriptAllowRetry>
+			<FinalizationScript>
+				<!--finalizationscript.js--></FinalizationScript>
+			<ValidationScriptAllowRetry>false</ValidationScriptAllowRetry>
+			<validationscriptIncludedScripts>Sys/Sys_Helpers_Batch</validationscriptIncludedScripts>
+			<ValidationScript>
+				<!--validationscript.js--></ValidationScript>
+			<AllowTagCoverPages>true</AllowTagCoverPages>
+			<AllowTagNewDocuments>true</AllowTagNewDocuments>
+			<AllowTagAttachments>true</AllowTagAttachments>
+			<ExtractionScriptAllowRetry>false</ExtractionScriptAllowRetry>
+			<extractionscriptIncludedScripts>Sys/Sys_Helpers</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_P2P_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_Parameters_P2P_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>[Lib_Custom_Parameters]</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>[Lib_P2P_Custom_Parameters]</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>[LIB_AP_CUSTOMIZATION_EXTRACTION]</extractionscriptIncludedScripts>
+			<ExtractionScript>
+				<!--extractionscript.js--></ExtractionScript>
+			<AllowRemovePages>true</AllowRemovePages>
+			<AllowSwapPages>true</AllowSwapPages>
+			<PostProcessingScriptAllowRetry>false</PostProcessingScriptAllowRetry>
+			<postprocessingscriptIncludedScripts>Sys/Sys_Helpers_Batch</postprocessingscriptIncludedScripts>
+			<PostProcessingScript>
+				<!--postprocessingscript.js--></PostProcessingScript>
+		</gdr>
+		<lg>
+			<!--*.xml-->
+		</lg>
+		<ocr>
+			<trade-off>accurate</trade-off>
+			<image-binarization>no</image-binarization>
+			<image-draft-fax>no</image-draft-fax>
+			<image-despeckle>no</image-despeckle>
+			<allowed-language>0</allowed-language>
+			<image-resolution-enhancement>auto</image-resolution-enhancement>
+			<ocr_engine>Nuance222</ocr_engine>
+			<extractionAdditionalOptions />
+		</ocr>
+		<process>
+			<flowtype>processing</flowtype>
+			<ocrpreset>custom</ocrpreset>
+			<EnablePrecomputedPngPreview>1</EnablePrecomputedPngPreview>
+			<homepagelabel>_Split a batch of vendor invoices</homepagelabel>
+			<enableflexibleauditing />
+			<enableflexibleediting />
+			<enableflexibleteaching />
+			<upgradable>yes</upgradable>
+			<disableocr>yes</disableocr>
+			<instanciable>1</instanciable>
+			<disableScriptModification>true</disableScriptModification>
+			<disableautolearning>true</disableautolearning>
+			<backgroundprocessingthreshold />
+			<EnablePreviewPrecomputation>true</EnablePreviewPrecomputation>
+			<enableUpgradableDesign>true</enableUpgradableDesign>
+			<archiveDuration>0</archiveDuration>
+			<ocrpagestoprocess>0</ocrpagestoprocess>
+			<ScriptEngineType>2</ScriptEngineType>
+			<displayWidth />
+			<AllowUploadAttachment>1</AllowUploadAttachment>
+			<AllowUploadReferenceDocument>1</AllowUploadReferenceDocument>
+			<UseCultureFormat>true</UseCultureFormat>
+			<AllowRetryExtractCD>true</AllowRetryExtractCD>
+			<TransportName>CustomData</TransportName>
+			<LayoutVersion>1.0</LayoutVersion>
+		</process>
+		<ui>
+			<CustomScriptDebug>false</CustomScriptDebug>
+			<CustomScriptReadonly>false</CustomScriptReadonly>
+			<CustomScript>
+				<!--customscript.js--></CustomScript>
+			<restorationPanel>DataPanel</restorationPanel>
+			<layout>
+				<!--layout.json--></layout>
+		</ui>
+	</properties>
+	<processlink condition="" deleted="0" destinationProcessID="U5AQT400153E" guid="G2GQT400153E" id="NoID" name="next_process" originalProcessID="VSDC667212" position="0" type="" userid="" userpb="">
+		<properties>
+			<link>
+				<ProcessName>Vendor invoice</ProcessName>
+			</link>
+		</properties>
+	</processlink>
+	<type id="NoID" name="CD" />
+	<field deleted="0" format="" guid="AW4E77100VLT" id="NoID" label="_ModelName" length="50" name="ModelName__" originalProcessID="VSDC667212" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ModelName__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ModelName</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="GW4E77100VLT" id="NoID" label="_nbExpectedPagesAsAttachment" length="0" name="nbExpectedPagesAsAttachment__" originalProcessID="VSDC667212" precision="0" processid="" submitable="1" type="INT">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/nbExpectedPagesAsAttachment__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_nbExpectedPagesAsAttachment</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<SetNullOnEmptyValue>0</SetNullOnEmptyValue>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="FW4E77100VLT" id="NoID" label="_nbExpectedPagesToMerge" length="0" name="nbExpectedPagesToMerge__" originalProcessID="VSDC667212" precision="0" processid="" submitable="1" type="INT">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/nbExpectedPagesToMerge__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_nbExpectedPagesToMerge</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<SetNullOnEmptyValue>0</SetNullOnEmptyValue>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="HW4E77100VLT" id="NoID" label="_nbExpectedPagesToSplit" length="0" name="nbExpectedPagesToSplit__" originalProcessID="VSDC667212" precision="0" processid="" submitable="1" type="INT">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/nbExpectedPagesToSplit__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_nbExpectedPagesToSplit</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<SetNullOnEmptyValue>0</SetNullOnEmptyValue>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="EW4E77100VLT" id="NoID" label="_nbPredictedPagesAsAttachment" length="0" name="nbPredictedPagesAsAttachment__" originalProcessID="VSDC667212" precision="0" processid="" submitable="1" type="INT">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/nbPredictedPagesAsAttachment__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_nbPredictedPagesAsAttachment</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<SetNullOnEmptyValue>0</SetNullOnEmptyValue>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="CW4E77100VLT" id="NoID" label="_nbPredictedPagesToMerge" length="0" name="nbPredictedPagesToMerge__" originalProcessID="VSDC667212" precision="0" processid="" submitable="1" type="INT">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/nbPredictedPagesToMerge__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_nbPredictedPagesToMerge</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<SetNullOnEmptyValue>0</SetNullOnEmptyValue>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="DW4E77100VLT" id="NoID" label="_NbPredictedPagesToSplit" length="0" name="NbPredictedPagesToSplit__" originalProcessID="VSDC667212" precision="0" processid="" submitable="1" type="INT">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/NbPredictedPagesToSplit__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_NbPredictedPagesToSplit</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<SetNullOnEmptyValue>0</SetNullOnEmptyValue>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="BW4E77100VLT" id="NoID" label="_splitStateLength" length="0" name="splitStateLength__" originalProcessID="VSDC667212" precision="0" processid="" submitable="1" type="INT">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/splitStateLength__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_splitStateLength</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<SetNullOnEmptyValue>0</SetNullOnEmptyValue>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+</process>

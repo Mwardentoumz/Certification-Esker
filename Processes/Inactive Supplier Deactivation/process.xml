@@ -1,0 +1,757 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:09:53" deleted="0" eskerapplication="P2P" global="0" id="PGEQT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="Inactive Supplier Deactivation" needvalidation="0" ootofilter="" ootoversion="0" originalProcessID="CBU200001535" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="0" version="1" visibility="1">
+  <properties>
+    <dataConditions>
+      <listDataConditions>
+				&lt;dataCondition&gt;
+					&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+					&lt;filter&gt;msnex=*&lt;/filter&gt;
+					&lt;labelKey&gt;_Vendor management disabled&lt;/labelKey&gt;
+					&lt;conditions&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableVendorManagementGlobalSetting__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+					&lt;/conditions&gt;
+				&lt;/dataCondition&gt;
+			</listDataConditions>
+    </dataConditions>
+    <gdr>
+      <FinalizationScriptAllowRetry>true</FinalizationScriptAllowRetry>
+      <finalizationscriptIncludedScripts>Sys/Sys_Helpers_LdapUtil</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Sys/Sys_Helpers_Date</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Lib_P2P_V12.0.566.0</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Lib_V12.0.566.0</finalizationscriptIncludedScripts>
+      <FinalizationScript>"use strict";
+// DBSET_READONLY | DBSET_QUICK
+const DB_FAST_ACCESS = 0x00210000;
+// also returns owned records
+const DB_DIRTY_READ = 0x00020000;
+// Number of records to update in a single batch when deactivating vendors
+const VENDOR_UPDATE_BATCH_SIZE = 200;
+// Below this threshold, vendor filters are pushed to the DB-level activity query to reduce scanned rows.
+// Above it, a date-only query is used.
+const ACTIVITY_VENDOR_FILTER_THRESHOLD = 200;
+function getVendorKey(vendor) {
+    return `${vendor.companyCode}|${vendor.vendorNumber}`;
+}
+function getGlobalParameter(paramName, defaultValue) {
+    return Sys.Parameters.GetInstance("P2P").GetParameter(paramName, defaultValue);
+}
+function isFeatureEnabled() {
+    return getGlobalParameter("EnableAutomaticSuppliersDeactivation", "0") === "1";
+}
+function getInactivityThresholdMonths() {
+    const value = getGlobalParameter("NumberOfMonthsForAutomaticDeactivation", "0");
+    return Number.parseInt(value, 10) || 0;
+}
+function computeCutoffDate(monthsBack) {
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth() - monthsBack, now.getDate());
+}
+function deactivateVendor(vendorRecord, numberOfMonths) {
+    const vars = vendorRecord.GetVars();
+    const comment = Language.Translate(`_AutomaticSupplierDeactivation`, false, numberOfMonths);
+    vars.AddValue_String("LifeCycleStatusCode__", Lib.P2P.VendorLifeCycleStatus.DISABLED, true);
+    vars.AddValue_String("LifeCycleComment__", comment, true);
+    vars.AddValue_Date("LastLifeCycleStatusChangeDate__", new Date(), true);
+    vendorRecord.Commit();
+    if (vendorRecord.GetLastError()) {
+        const vendorNumber = vars.GetValue_String("Number__", 0);
+        const companyCode = vars.GetValue_String("CompanyCode__", 0);
+        const vendorLabel = companyCode ? `${vendorNumber} / ${companyCode}` : vendorNumber;
+        Log.Error(`Failed to deactivate vendor ${vendorLabel}: ${vendorRecord.GetLastError()}`);
+    }
+}
+function initializeVendorChangeDate(vendorsToUpdate) {
+    if (vendorsToUpdate.length === 0) {
+        Log.Info("All vendors have LastLifeCycleStatusChangeDate__ initialized.");
+        return;
+    }
+    Log.Info(`${vendorsToUpdate.length} vendors found without LastLifeCycleStatusChangeDate__. Initializing this field to today for these vendors.`);
+    // Update collected vendors in batches
+    for (let startIndex = 0; startIndex &lt; vendorsToUpdate.length; startIndex += VENDOR_UPDATE_BATCH_SIZE) {
+        const batch = vendorsToUpdate.slice(startIndex, startIndex + VENDOR_UPDATE_BATCH_SIZE);
+        const vendorFilter = batch.map(vendor =&gt; Sys.Helpers.LdapUtil.FilterAnd(Sys.Helpers.LdapUtil.FilterEqual("Number__", vendor.vendorNumber), Sys.Helpers.LdapUtil.FilterEqual("CompanyCode__", vendor.companyCode)));
+        const updateQuery = Process.CreateQueryAsProcessAdmin();
+        updateQuery.SetSpecificTable("AP - Vendors__");
+        updateQuery.SetFilter(Sys.Helpers.LdapUtil.FilterOr(...vendorFilter).toString());
+        updateQuery.SetAttributesList("CompanyCode__,Number__,LastLifeCycleStatusChangeDate__");
+        if (!updateQuery.MoveFirst()) {
+            Log.Error(`Failed to retrieve vendors to initialize for batch starting at index ${startIndex}.`);
+            continue;
+        }
+        let vendorRecord = updateQuery.MoveNextRecord();
+        while (vendorRecord) {
+            const vars = vendorRecord.GetVars();
+            vars.AddValue_Date("LastLifeCycleStatusChangeDate__", new Date(), true);
+            vendorRecord.Commit();
+            if (vendorRecord.GetLastError()) {
+                const vendorNumber = vars.GetValue_String("Number__", 0);
+                const companyCode = vars.GetValue_String("CompanyCode__", 0);
+                const vendorLabel = companyCode ? `${vendorNumber} / ${companyCode}` : vendorNumber;
+                Log.Error(`Failed to initialize LastLifeCycleStatusChangeDate__ for vendor ${vendorLabel}: ${vendorRecord.GetLastError()}`);
+            }
+            vendorRecord = updateQuery.MoveNextRecord();
+        }
+    }
+}
+function deactivateVendors(vendorRecords, numberOfMonths) {
+    for (let startIndex = 0; startIndex &lt; vendorRecords.length; startIndex += VENDOR_UPDATE_BATCH_SIZE) {
+        const batch = vendorRecords.slice(startIndex, startIndex + VENDOR_UPDATE_BATCH_SIZE);
+        let vendorFilter = batch.map(vendor =&gt; Sys.Helpers.LdapUtil.FilterAnd(Sys.Helpers.LdapUtil.FilterEqual("Number__", vendor.vendorNumber), Sys.Helpers.LdapUtil.FilterEqual("CompanyCode__", vendor.companyCode)));
+        const vendorQuery = Process.CreateQueryAsProcessAdmin();
+        vendorQuery.SetSpecificTable("AP - Vendors__");
+        vendorQuery.SetFilter(Sys.Helpers.LdapUtil.FilterOr(...vendorFilter).toString());
+        vendorQuery.SetAttributesList("CompanyCode__,Number__,LifeCycleStatusCode__,LifeCycleComment__,LastLifeCycleStatusChangeDate__");
+        if (!vendorQuery.MoveFirst()) {
+            Log.Error(`Failed to retrieve vendors to deactivate for batch starting at index ${startIndex}.`);
+            continue;
+        }
+        let vendorRecord = vendorQuery.MoveNextRecord();
+        while (vendorRecord) {
+            deactivateVendor(vendorRecord, numberOfMonths);
+            vendorRecord = vendorQuery.MoveNextRecord();
+        }
+    }
+}
+function getAllCandidatesVendors(cutoffDateStr) {
+    const vendorFilter = Sys.Helpers.LdapUtil.FilterAnd(Sys.Helpers.LdapUtil.FilterNotEqual("LifeCycleStatusCode__", Lib.P2P.VendorLifeCycleStatus.DISABLED), Sys.Helpers.LdapUtil.FilterOr(Sys.Helpers.LdapUtil.FilterLesserOrEqual("LastLifeCycleStatusChangeDate__", cutoffDateStr), Sys.Helpers.LdapUtil.FilterNotExist("LastLifeCycleStatusChangeDate__")));
+    const vendorQuery = Process.CreateQueryAsProcessAdmin();
+    vendorQuery.SetSpecificTable("AP - Vendors__");
+    vendorQuery.SetFilter(vendorFilter.toString());
+    vendorQuery.SetAttributesList("CompanyCode__,Number__,LastLifeCycleStatusChangeDate__");
+    vendorQuery.SetOptions(DB_FAST_ACCESS | DB_DIRTY_READ);
+    vendorQuery.SetOptionEx("FastSearch=1");
+    vendorQuery.SetOptionEx("Limit=-1");
+    if (!vendorQuery.MoveFirst()) {
+        Log.Info("No active or blocked vendors found.");
+        return [];
+    }
+    let vendorRecord = vendorQuery.MoveNextRecord();
+    const vendors = [];
+    const vendorsToInitialize = [];
+    // First pass: collect identifiers only (no record references kept across cursor moves)
+    while (vendorRecord) {
+        const vars = vendorRecord.GetVars();
+        const companyCode = vars.GetValue_String("CompanyCode__", 0);
+        const vendorNumber = vars.GetValue_String("Number__", 0);
+        if (vars.GetValue_Date("LastLifeCycleStatusChangeDate__", 0)) {
+            vendors.push({ companyCode, vendorNumber });
+        }
+        else {
+            vendorsToInitialize.push({ companyCode, vendorNumber });
+        }
+        vendorRecord = vendorQuery.MoveNextRecord();
+    }
+    // Second pass: initialize LastLifeCycleStatusChangeDate__ in batches using separate queries
+    initializeVendorChangeDate(vendorsToInitialize);
+    Log.Info(`${vendors.length} vendors to check for inactivity.`);
+    return vendors;
+}
+function getVendorsWithRecentActivity(candidates, cutoffDateStr, tableToCheck) {
+    const dateFilter = Sys.Helpers.LdapUtil.FilterGreaterOrEqual("SubmitDateTime", cutoffDateStr);
+    let filter;
+    if (candidates.length &lt;= ACTIVITY_VENDOR_FILTER_THRESHOLD) {
+        // Small candidate set: push vendor filtering to the DB to avoid a full table scan.
+        const vendorFilters = candidates.map(vendor =&gt; Sys.Helpers.LdapUtil.FilterAnd(Sys.Helpers.LdapUtil.FilterEqual("VendorNumber__", vendor.vendorNumber), Sys.Helpers.LdapUtil.FilterEqual("CompanyCode__", vendor.companyCode)));
+        filter = Sys.Helpers.LdapUtil.FilterAnd(dateFilter, Sys.Helpers.LdapUtil.FilterOr(...vendorFilters));
+    }
+    else {
+        // Large candidate set: date-only filter at the DB level, vendor membership checked in memory.
+        filter = dateFilter;
+    }
+    const invoicesQuery = Process.CreateQueryAsProcessAdmin();
+    invoicesQuery.SetSpecificTable(tableToCheck);
+    invoicesQuery.SetFilter(filter.toString());
+    invoicesQuery.SetAttributesList("VendorNumber__,CompanyCode__");
+    invoicesQuery.SetGroupBy("CompanyCode__,VendorNumber__");
+    invoicesQuery.SetOptionEx("FastSearch=1");
+    invoicesQuery.SetOptionEx("DONOTGETLOCALDBFILES=1");
+    invoicesQuery.SetSearchInArchive(true);
+    invoicesQuery.SetOptionEx("Limit=-1");
+    if (!invoicesQuery.MoveFirst()) {
+        Log.Info("No vendors with recent activity found.");
+        return {};
+    }
+    const vendorsWithRecentActivity = {};
+    let invoiceRecord = invoicesQuery.MoveNextRecord();
+    while (invoiceRecord) {
+        const vars = invoiceRecord.GetVars();
+        const vendorWithActivity = {
+            companyCode: vars.GetValue_String("CompanyCode__", 0),
+            vendorNumber: vars.GetValue_String("VendorNumber__", 0)
+        };
+        vendorsWithRecentActivity[getVendorKey(vendorWithActivity)] = true;
+        invoiceRecord = invoicesQuery.MoveNextRecord();
+    }
+    return vendorsWithRecentActivity;
+}
+function extractVendorsToDeactivate(vendors, vendorsWithRecentActivityLookup) {
+    const vendorsToDeactivate = [];
+    vendors.forEach(vendor =&gt; {
+        if (!vendorsWithRecentActivityLookup[getVendorKey(vendor)]) {
+            vendorsToDeactivate.push(vendor);
+        }
+    });
+    return vendorsToDeactivate;
+}
+function getVendorWithoutRecentActivity(vendors, cutoffDateStr, tableToCheck) {
+    const vendorsWithRecentActivityLookup = getVendorsWithRecentActivity(vendors, cutoffDateStr, tableToCheck);
+    const vendorsWithRecentActivityCount = Object.keys(vendorsWithRecentActivityLookup).length;
+    if (vendorsWithRecentActivityCount === vendors.length) {
+        Log.Info("All vendors have recent activity. No deactivation needed.");
+        return [];
+    }
+    if (vendorsWithRecentActivityCount === 0) {
+        return vendors;
+    }
+    return extractVendorsToDeactivate(vendors, vendorsWithRecentActivityLookup);
+}
+function run() {
+    Log.Info("Starting automatic supplier deactivation process.");
+    // Make sure the functionality is enabled
+    if (!isFeatureEnabled()) {
+        Log.Warn("Automatic supplier deactivation is disabled.");
+        return;
+    }
+    // Get the number of months required to consider a supplier as inactive
+    const numberOfMonths = getInactivityThresholdMonths();
+    if (!numberOfMonths || numberOfMonths &lt;= 0) {
+        Log.Warn("NumberOfMonthsForAutomaticDeactivation is not set or invalid. Skipping deactivation.");
+        return;
+    }
+    // Determine the date before which a supplier is considered as inactive
+    const cutoffDate = computeCutoffDate(numberOfMonths);
+    const cutoffDateStr = Sys.Helpers.Date.Date2DBDate(cutoffDate);
+    Log.Info(`Deactivation threshold: ${numberOfMonths} months. Cutoff date: ${cutoffDateStr}`);
+    // Get all non-disabled suppliers whose LCM status was last changed before the cutoff date
+    let vendors = getAllCandidatesVendors(cutoffDateStr);
+    if (vendors.length === 0) {
+        Log.Info("No vendors found for deactivation.");
+        return;
+    }
+    vendors = getVendorWithoutRecentActivity(vendors, cutoffDateStr, "CDNAME#Vendor invoice");
+    if (vendors.length === 0) {
+        Log.Info("No vendors found for deactivation after invoice activity check.");
+        return;
+    }
+    vendors = getVendorWithoutRecentActivity(vendors, cutoffDateStr, "CDNAME#Purchase order V2");
+    if (vendors.length === 0) {
+        Log.Info("No vendors found for deactivation after invoice and purchase order activity check.");
+        return;
+    }
+    Log.Info(`${vendors.length} vendors found for deactivation after activity checks. Proceeding with deactivation.`);
+    deactivateVendors(vendors, numberOfMonths);
+}
+run();
+//# sourceMappingURL=finalizationscript.js.map</FinalizationScript>
+      <ValidationScriptAllowRetry>
+      </ValidationScriptAllowRetry>
+      <ValidationScript>
+      </ValidationScript>
+      <AllowTagCoverPages>true</AllowTagCoverPages>
+      <AllowTagNewDocuments>true</AllowTagNewDocuments>
+      <AllowTagAttachments>true</AllowTagAttachments>
+      <ExtractionScriptAllowRetry>
+      </ExtractionScriptAllowRetry>
+      <ExtractionScript>
+      </ExtractionScript>
+      <AllowRemovePages>true</AllowRemovePages>
+      <AllowSwapPages>true</AllowSwapPages>
+      <PostProcessingScriptAllowRetry>
+      </PostProcessingScriptAllowRetry>
+      <PostProcessingScript>
+      </PostProcessingScript>
+    </gdr>
+    <lg>
+      <process_da>{
+	"_AutomaticSupplierDeactivation": "Automatisk deaktiveret på grund af {0} måneders inaktivitet.",
+	"_Inactive Supplier Deactivation": "Deaktivering af leverandør",
+	"Inactive Supplier Deactivation": "Deaktivering af leverandør"
+}</process_da>
+      <process_de>{
+	"_AutomaticSupplierDeactivation": "Aufgrund von {0} Monaten Inaktivität automatisch deaktiviert.",
+	"_Inactive Supplier Deactivation": "Lieferanten-Deaktivierung",
+	"Inactive Supplier Deactivation": "Lieferanten-Deaktivierung"
+}</process_de>
+      <process_ja>{
+	"_AutomaticSupplierDeactivation": "{0} か月間、非アクティブのため、自動的に無効化されました。",
+	"_Inactive Supplier Deactivation": "サプライヤーの無効化",
+	"Inactive Supplier Deactivation": "サプライヤーの無効化"
+}</process_ja>
+      <process_en>{
+	"_AutomaticSupplierDeactivation": "Automatically deactivated due to {0} months of inactivity.",
+	"_Inactive Supplier Deactivation": "Supplier deactivation",
+	"Inactive Supplier Deactivation": "Supplier deactivation"
+}</process_en>
+      <process_es>{
+	"_AutomaticSupplierDeactivation": "Desactivado automáticamente tras {0} meses de inactividad.",
+	"_Inactive Supplier Deactivation": "Desactivación de proveedor",
+	"Inactive Supplier Deactivation": "Desactivación de proveedor"
+}</process_es>
+      <process_fr>{
+	"_AutomaticSupplierDeactivation": "Désactivé automatiquement après {0} mois d'inactivité.",
+	"_Inactive Supplier Deactivation": "Désactivation de fournisseur",
+	"Inactive Supplier Deactivation": "Désactivation de fournisseur"
+}</process_fr>
+      <process_nl-NL>{
+	"_AutomaticSupplierDeactivation": "Automatisch gedeactiveerd naar aanleiding van {0} maanden inactiviteit.",
+	"_Inactive Supplier Deactivation": "Deactivatie van de leverancier",
+	"Inactive Supplier Deactivation": "Deactivatie van de leverancier"
+}</process_nl-NL>
+      <process_pl>{
+	"_AutomaticSupplierDeactivation": "Dezaktywowany automatycznie z powodu {0}-miesięcznej nieaktywności.",
+	"_Inactive Supplier Deactivation": "Dezaktywacja dostawcy",
+	"Inactive Supplier Deactivation": "Dezaktywacja dostawcy"
+}</process_pl>
+      <process_it>{
+	"_AutomaticSupplierDeactivation": "Disattivato automaticamente dopo {0} mesi di inattività.",
+	"_Inactive Supplier Deactivation": "Disattivazione fornitori",
+	"Inactive Supplier Deactivation": "Disattivazione fornitori"
+}</process_it>
+      <process_sk>{
+	"_AutomaticSupplierDeactivation": "Automaticky deaktivované z dôvodu nečinnosti počas {0} mesiacov.",
+	"_Inactive Supplier Deactivation": "Deaktivácia dodávateľa",
+	"Inactive Supplier Deactivation": "Deaktivácia dodávateľa"
+}</process_sk>
+      <process_zh-CN>{
+	"_AutomaticSupplierDeactivation": "已自动停用，原因：{0} 个月无活动。",
+	"_Inactive Supplier Deactivation": "供应商停用",
+	"Inactive Supplier Deactivation": "供应商停用"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"_AutomaticSupplierDeactivation": "Fornecedor desativado automaticamente após {0} meses de inatividade.",
+	"_Inactive Supplier Deactivation": "Desativação de fornecedor",
+	"Inactive Supplier Deactivation": "Desativação de fornecedor"
+}</process_pt-BR>
+    </lg>
+    <process>
+      <flowtype>processing</flowtype>
+      <ocrpreset>scan</ocrpreset>
+      <homepagelabel>_Inactive Supplier Deactivation</homepagelabel>
+      <enableflexibleauditing>
+      </enableflexibleauditing>
+      <enableflexibleediting>
+      </enableflexibleediting>
+      <enableflexibleteaching>
+      </enableflexibleteaching>
+      <upgradable>yes</upgradable>
+      <disableocr>
+      </disableocr>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <disableautolearning>true</disableautolearning>
+      <backgroundprocessingthreshold>
+      </backgroundprocessingthreshold>
+      <EnablePreviewPrecomputation>
+      </EnablePreviewPrecomputation>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <archiveDuration>0</archiveDuration>
+      <ownhomepage>
+      </ownhomepage>
+      <ocrpagestoprocess>
+      </ocrpagestoprocess>
+      <ScriptEngineType>2</ScriptEngineType>
+      <displayWidth>
+      </displayWidth>
+      <AllowUploadAttachment>1</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>1</AllowUploadReferenceDocument>
+      <UseCultureFormat>true</UseCultureFormat>
+      <AllowRetryExtractCD>true</AllowRetryExtractCD>
+      <TransportName>CustomData</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+    </process>
+    <ui>
+      <CustomScriptDebug>false</CustomScriptDebug>
+      <CustomScriptReadonly>false</CustomScriptReadonly>
+      <CustomScript>
+      </CustomScript>
+      <restorationPanel>DataPanel</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 30,
+	"*": {
+		"GDRData": {
+			"type": "GDRData",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"version": 0
+			}
+		},
+		"OCRParams": {
+			"type": "OCRParams",
+			"data": [],
+			"stamp": 2,
+			"options": {
+				"version": 0
+			}
+		},
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 3,
+			"options": {
+				"splitterType": "complex",
+				"maxwidth": "",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 4,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 5,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 6,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-top": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 7,
+									"options": {
+										"autosize": true,
+										"version": 1,
+										"box": {
+											"top": 0,
+											"left": 0,
+											"width": 100,
+											"height": 17
+										},
+										"hidden": false
+									},
+									"*": {
+										"form-content-top-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 8,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"DocumentsPanel": {
+													"type": "PanelDocument",
+													"data": [],
+													"stamp": 9,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": false,
+														"hideTitleBar": false,
+														"label": "_Documents",
+														"version": 0
+													},
+													"*": {
+														"Document": {
+															"type": "Documents",
+															"data": [
+																"documentscontroldata"
+															],
+															"stamp": 10,
+															"options": {
+																"version": 1,
+																"previewButton": false,
+																"downloadButton": true
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								},
+								"form-content-bottom": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 11,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": "17%",
+											"left": "0%",
+											"width": null,
+											"height": "83%"
+										},
+										"hidden": false
+									},
+									"*": {
+										"form-content-left": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 12,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "0%",
+													"width": "45%",
+													"height": null
+												},
+												"hidden": false
+											},
+											"*": {
+												"form-content-left-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 13,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"DataPanel": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 14,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_Document data",
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 15,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 16,
+																			"options": {
+																				"version": 0,
+																				"lines": 0,
+																				"columns": 2,
+																				"ctrlsPos": {},
+																				"colspans": []
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-2": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 17,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"SystemData": {
+															"type": "PanelSystemData",
+															"data": [],
+															"stamp": 18,
+															"options": {
+																"multicolumn": false,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"label": "_System data",
+																"version": 0
+															}
+														}
+													}
+												},
+												"form-content-left-3": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 19,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"NextProcess": {
+															"type": "PanelNextProcess",
+															"data": [],
+															"stamp": 20,
+															"options": {
+																"hidden": true,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"label": "_Next Process",
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-right": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 21,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "45%",
+													"width": "55%",
+													"height": null
+												},
+												"hidden": false
+											},
+											"*": {
+												"form-content-right-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 22,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"PreviewPanel": {
+															"type": "PanelPreview",
+															"data": [],
+															"stamp": 23,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"label": "_Document Preview",
+																"version": 0
+															},
+															"*": {
+																"Preview": {
+																	"type": "Preview",
+																	"data": [
+																		"previewdata"
+																	],
+																	"stamp": 24,
+																	"options": {
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 25,
+					"options": {
+						"splitterType": "simple-h",
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 26,
+							"options": {
+								"label": "_Save",
+								"action": "save",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Approve": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 27,
+							"options": {
+								"label": "_Approve",
+								"action": "approve",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Reject": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 28,
+							"options": {
+								"label": "_Reject",
+								"action": "reject",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Reprocess": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 29,
+							"options": {
+								"label": "_Reprocess",
+								"action": "reprocess",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 30,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <type id="GOLHG0000M4O" name="CD">
+  </type>
+</process>

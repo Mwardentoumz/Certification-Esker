@@ -1,0 +1,958 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:24:19" deleted="0" eskerapplication="P2P" global="0" id="L70LT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="S2P - Demo - Vendor scoring__" needvalidation="0" ootofilter="" ootoversion="1" originalProcessID="QKFE00000PA9" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomTable" upgradable="1" userid="0" version="1" visibility="0">
+  <properties>
+    <dbIndex>
+      <AUTO_AO70LT400153EA>&lt;Index&gt;&lt;Ref Name="AO70LT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AO70LT400153EA>
+      <AUTO_AQ70LT400153EA>&lt;Index&gt;&lt;Ref Name="AQ70LT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AQ70LT400153EA>
+      <AUTO_AS70LT400153EA>&lt;Index&gt;&lt;Ref Name="AS70LT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AS70LT400153EA>
+    </dbIndex>
+    <lg>
+      <process_da>{
+	"_CompanyCode": "Virksomhedskode",
+	"_CompanyCode_report": "Virksomhedskode",
+	"_SourceRUIDEX": "Udvidet id for proces",
+	"_SourceRUIDEX_report": "Udvidet id for proces",
+	"_TimeEffectivenessScore": "Tidseffektivitet",
+	"_VendorNumber": "Leverandørnummer",
+	"_VendorNumber_report": "Leverandørnummer"
+}</process_da>
+      <process_de>{
+	"_Comment": "Kommentar",
+	"_Comment_report": "Kommentar",
+	"_CompanyCode": "Buchungskreis",
+	"_CompanyCode_report": "Buchungskreis",
+	"_SourceRUIDEX": "Erweiterte Prozess-ID",
+	"_SourceRUIDEX_report": "Erweiterte Prozess-ID",
+	"_VendorNumber": "Lieferantennummer",
+	"_VendorNumber_report": "Lieferantennummer"
+}</process_de>
+      <process_ja>{
+	"_Comment": "コメント",
+	"_Comment_report": "コメント",
+	"_CompanyCode": "会社コード",
+	"_CompanyCode_report": "会社コード",
+	"_SourceRUIDEX": "処理拡張 ID",
+	"_SourceRUIDEX_report": "処理拡張 ID",
+	"_VendorNumber": "仕入先番号",
+	"_VendorNumber_report": "仕入先番号"
+}</process_ja>
+      <process_en>{
+	"_Author": "Author",
+	"_Author_report": "Author",
+	"_Comment": "Comment",
+	"_Comment_report": "Comment",
+	"_CompanyCode": "Company code",
+	"_CompanyCode_report": "Company code",
+	"_CostScore": "Cost",
+	"_CustomerSupportScore": "Customer support",
+	"_DeliveryScore": "Delivery",
+	"_InvoicingScore": "Invoicing",
+	"_QualityScore": "Quality",
+	"_Score": "Score",
+	"_Score_report": "Score",
+	"_ScoringType": "Scoring type",
+	"_ScoringType_report": "Scoring type",
+	"_SourceRUIDEX": "Process extended ID",
+	"_SourceRUIDEX_report": "Process extended ID",
+	"_TimeEffectivenessScore": "Time effectiveness",
+	"_VendorNumber": "Supplier number",
+	"_VendorNumber_report": "Supplier number"
+}</process_en>
+      <process_es>{
+	"_Comment": "Comentario",
+	"_Comment_report": "Comentario",
+	"_CompanyCode": "Código de empresa",
+	"_CompanyCode_report": "Código de empresa",
+	"_SourceRUIDEX": "Id. extendido del proceso",
+	"_SourceRUIDEX_report": "Id. largo del proceso",
+	"_VendorNumber": "Número de proveedor",
+	"_VendorNumber_report": "Número de proveedor"
+}</process_es>
+      <process_fr>{
+	"_Comment": "Commentaire",
+	"_Comment_report": "Commentaire",
+	"_CompanyCode": "Code société",
+	"_CompanyCode_report": "Code société",
+	"_SourceRUIDEX": "Identifiant long du processus",
+	"_SourceRUIDEX_report": "Identifiant long du processus",
+	"_VendorNumber": "Numéro du fournisseur",
+	"_VendorNumber_report": "Numéro du fournisseur"
+}</process_fr>
+      <process_nl-NL>{
+	"_CompanyCode": "Bedrijfscode",
+	"_CompanyCode_report": "Bedrijfscode",
+	"_SourceRUIDEX": "Uitgebreide proces-ID",
+	"_SourceRUIDEX_report": "Uitgebreide proces-ID",
+	"_VendorNumber_report": "Nummer leverancier"
+}</process_nl-NL>
+      <process_pl>{
+	"_Author": "Autor",
+	"_Author_report": "Autor",
+	"_Comment": "Komentarz",
+	"_Comment_report": "Komentarz",
+	"_CompanyCode": "Kod firmy",
+	"_CompanyCode_report": "Kod firmy",
+	"_CostScore": "Koszt",
+	"_CustomerSupportScore": "Obsługa klienta",
+	"_DeliveryScore": "Dostawa",
+	"_InvoicingScore": "Fakturowanie",
+	"_QualityScore": "Jakość",
+	"_Score": "Ocena",
+	"_Score_report": "Ocena",
+	"_ScoringType": "Typ oceny",
+	"_ScoringType_report": "Typ oceny",
+	"_SourceRUIDEX": "Rozszerzony id. procesu",
+	"_SourceRUIDEX_report": "Rozszerzony id. procesu",
+	"_TimeEffectivenessScore": "Efektywność czasowa",
+	"_VendorNumber": "Numer dostawcy",
+	"_VendorNumber_report": "Numer dostawcy"
+}</process_pl>
+      <process_it>{
+	"_Comment": "Commento",
+	"_Comment_report": "Commento",
+	"_CompanyCode": "Codice società",
+	"_CompanyCode_report": "Codice società",
+	"_SourceRUIDEX": "ID esteso del trattamento",
+	"_SourceRUIDEX_report": "ID esteso del trattamento",
+	"_VendorNumber": "Numero fornitore",
+	"_VendorNumber_report": "Numero fornitore"
+}</process_it>
+      <process_sk>{
+	"_Author": "Autor",
+	"_Author_report": "Autor",
+	"_Comment": "Poznámka",
+	"_Comment_report": "Poznámka",
+	"_CompanyCode": "Kód spoločnosti",
+	"_CompanyCode_report": "Kód spoločnosti",
+	"_CostScore": "Náklad",
+	"_CustomerSupportScore": "Zákaznícka podpora",
+	"_DeliveryScore": "Doručovanie",
+	"_InvoicingScore": "Fakturácia",
+	"_QualityScore": "Kvalita",
+	"_Score": "Skóre",
+	"_Score_report": "Skóre",
+	"_ScoringType": "Typ skóre",
+	"_ScoringType_report": "Typ skóre",
+	"_SourceRUIDEX": "Spracovať rozšírené ID",
+	"_SourceRUIDEX_report": "Spracovať rozšírené ID",
+	"_TimeEffectivenessScore": "Časová efektívnosť",
+	"_VendorNumber": "Číslo dodávateľa",
+	"_VendorNumber_report": "Číslo dodávateľa"
+}</process_sk>
+      <process_zh-CN>{
+	"_Comment": "备注",
+	"_Comment_report": "备注",
+	"_CompanyCode": "公司代码",
+	"_CompanyCode_report": "公司代码",
+	"_SourceRUIDEX": "进程长ID",
+	"_SourceRUIDEX_report": "进程长ID",
+	"_VendorNumber": "供应商编号",
+	"_VendorNumber_report": "供应商编号"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"_Comment": "Comentário",
+	"_Comment_report": "Comentário",
+	"_CompanyCode": "Código da empresa",
+	"_CompanyCode_report": "Código da empresa",
+	"_SourceRUIDEX": "ID estendido do processo",
+	"_SourceRUIDEX_report": "ID estendido do processo",
+	"_VendorNumber": "Número do fornecedor",
+	"_VendorNumber_report": "Número do fornecedor"
+}</process_pt-BR>
+      <process_pt>{
+	"_SourceRUIDEX": "ID alargado do processo",
+	"_SourceRUIDEX_report": "ID alargado do processo"
+}</process_pt>
+    </lg>
+    <process>
+      <flowtype>processing</flowtype>
+      <EnableNegativeNumbersBetweenBrackets>true</EnableNegativeNumbersBetweenBrackets>
+      <homepagelabel>S2P - Demo - Vendor scoring</homepagelabel>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <enablerounddecimal>true</enablerounddecimal>
+      <OverrideAllowedAttachmentExtensions>*</OverrideAllowedAttachmentExtensions>
+      <UseActionNameWithScriptApproval>true</UseActionNameWithScriptApproval>
+      <AllowUploadAttachment>0</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+      <shouldRollbackManualRecordEdits>true</shouldRollbackManualRecordEdits>
+      <shouldShowManualEditsWarning>false</shouldShowManualEditsWarning>
+      <UseCultureFormat>true</UseCultureFormat>
+      <TransportName>CustomTable</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+    </process>
+    <ui>
+      <restorationPanel>DataPanel</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 27,
+	"*": {
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"splitterType": "simple-v",
+				"backColor": "text-backgroundcolor-default",
+				"style": null,
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 2,
+					"options": {
+						"hidePanelsMenu": false,
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 3,
+					"options": {
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 4,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-center": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 5,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"width": "100%"
+										},
+										"hidden": false,
+										"hideSeparator": true
+									},
+									"*": {
+										"form-content-center-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 6,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"DataPanel": {
+													"type": "PanelData",
+													"data": [],
+													"stamp": 7,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": false,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"sameHeightAsSiblings": false,
+														"backgroundcolor": "default",
+														"labelsAlignment": "right",
+														"label": "_Document data",
+														"version": 0
+													},
+													"*": {
+														"FieldsManager": {
+															"type": "FieldsManager",
+															"data": [],
+															"stamp": 8,
+															"options": {
+																"version": 0,
+																"controlsAssociation": {
+																	"CompanyCode__": "LabelCompanyCode__",
+																	"LabelCompanyCode__": "CompanyCode__",
+																	"VendorNumber__": "LabelVendorNumber__",
+																	"LabelVendorNumber__": "VendorNumber__",
+																	"ScoringType__": "LabelScoringType__",
+																	"LabelScoringType__": "ScoringType__",
+																	"Score__": "LabelScore__",
+																	"LabelScore__": "Score__",
+																	"SourceRUIDEX__": "LabelSourceRUIDEX__",
+																	"LabelSourceRUIDEX__": "SourceRUIDEX__",
+																	"Author__": "LabelAuthor__",
+																	"LabelAuthor__": "Author__",
+																	"Comment__": "LabelComment__",
+																	"LabelComment__": "Comment__"
+																}
+															},
+															"*": {
+																"Grid": {
+																	"type": "GridLayout",
+																	"data": [
+																		"fields"
+																	],
+																	"stamp": 9,
+																	"options": {
+																		"version": 0,
+																		"lines": 7,
+																		"columns": 2,
+																		"ctrlsPos": {
+																			"LabelCompanyCode__": {
+																				"line": 1,
+																				"column": 1
+																			},
+																			"CompanyCode__": {
+																				"line": 1,
+																				"column": 2
+																			},
+																			"LabelVendorNumber__": {
+																				"line": 2,
+																				"column": 1
+																			},
+																			"VendorNumber__": {
+																				"line": 2,
+																				"column": 2
+																			},
+																			"LabelScoringType__": {
+																				"line": 3,
+																				"column": 1
+																			},
+																			"ScoringType__": {
+																				"line": 3,
+																				"column": 2
+																			},
+																			"LabelScore__": {
+																				"line": 4,
+																				"column": 1
+																			},
+																			"Score__": {
+																				"line": 4,
+																				"column": 2
+																			},
+																			"LabelSourceRUIDEX__": {
+																				"line": 5,
+																				"column": 1
+																			},
+																			"SourceRUIDEX__": {
+																				"line": 5,
+																				"column": 2
+																			},
+																			"LabelAuthor__": {
+																				"line": 6,
+																				"column": 1
+																			},
+																			"Author__": {
+																				"line": 6,
+																				"column": 2
+																			},
+																			"LabelComment__": {
+																				"line": 7,
+																				"column": 1
+																			},
+																			"Comment__": {
+																				"line": 7,
+																				"column": 2
+																			}
+																		},
+																		"colspans": [
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[]
+																		]
+																	},
+																	"*": {
+																		"LabelCompanyCode__": {
+																			"type": "Label",
+																			"data": [
+																				"CompanyCode__"
+																			],
+																			"stamp": 11,
+																			"options": {
+																				"label": "_CompanyCode",
+																				"version": 0
+																			}
+																		},
+																		"CompanyCode__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"CompanyCode__"
+																			],
+																			"stamp": 10,
+																			"options": {
+																				"label": "_CompanyCode",
+																				"version": 1,
+																				"autoCompleteSearchMode": "startswith",
+																				"searchMode": "matches",
+																				"activable": true,
+																				"width": "300",
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"minNbLines": 1,
+																				"maxNbLines": 1,
+																				"PreFillFTS": true,
+																				"fTSmaxRecords": "20",
+																				"browsable": true
+																			}
+																		},
+																		"LabelVendorNumber__": {
+																			"type": "Label",
+																			"data": [
+																				"VendorNumber__"
+																			],
+																			"stamp": 13,
+																			"options": {
+																				"label": "_VendorNumber",
+																				"version": 0
+																			}
+																		},
+																		"VendorNumber__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"VendorNumber__"
+																			],
+																			"stamp": 12,
+																			"options": {
+																				"label": "_VendorNumber",
+																				"version": 1,
+																				"autoCompleteSearchMode": "startswith",
+																				"searchMode": "matches",
+																				"activable": true,
+																				"width": "300",
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"minNbLines": 1,
+																				"maxNbLines": 1,
+																				"fTSmaxRecords": "20",
+																				"browsable": true
+																			}
+																		},
+																		"LabelScoringType__": {
+																			"type": "Label",
+																			"data": [
+																				"ScoringType__"
+																			],
+																			"stamp": 15,
+																			"options": {
+																				"label": "_ScoringType",
+																				"version": 0
+																			}
+																		},
+																		"ScoringType__": {
+																			"type": "ComboBox",
+																			"data": [
+																				"ScoringType__"
+																			],
+																			"stamp": 14,
+																			"options": {
+																				"label": "_ScoringType",
+																				"possibleValues": {
+																					"0": "_CostScore",
+																					"1": "_CustomerSupportScore",
+																					"2": "_DeliveryScore",
+																					"3": "_InvoicingScore",
+																					"4": "_QualityScore",
+																					"5": "_TimeEffectivenessScore"
+																				},
+																				"maxNbLinesToDisplay": 10,
+																				"version": 1,
+																				"keyValueMode": true,
+																				"possibleKeys": {
+																					"0": "cost",
+																					"1": "customersupport",
+																					"2": "delivery",
+																					"3": "invoicing",
+																					"4": "quality",
+																					"5": "timeeffectiveness"
+																				},
+																				"activable": true,
+																				"width": "300",
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"DataSourceOrigin": "Standalone",
+																				"DisplayedColumns": ""
+																			}
+																		},
+																		"LabelScore__": {
+																			"type": "Label",
+																			"data": [
+																				"Score__"
+																			],
+																			"stamp": 17,
+																			"options": {
+																				"label": "_Score",
+																				"version": 0
+																			}
+																		},
+																		"Score__": {
+																			"type": "Integer",
+																			"data": [
+																				"Score__"
+																			],
+																			"stamp": 16,
+																			"options": {
+																				"label": "_Score",
+																				"version": 2,
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"integer": true,
+																				"precision_internal": 2,
+																				"precision_current": 2,
+																				"activable": true,
+																				"width": "300",
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"defaultValue": "0",
+																				"enablePlusMinus": false,
+																				"browsable": false
+																			}
+																		},
+																		"LabelSourceRUIDEX__": {
+																			"type": "Label",
+																			"data": [
+																				"SourceRUIDEX__"
+																			],
+																			"stamp": 19,
+																			"options": {
+																				"label": "_SourceRUIDEX",
+																				"version": 0
+																			}
+																		},
+																		"SourceRUIDEX__": {
+																			"type": "ShortText",
+																			"data": [
+																				"SourceRUIDEX__"
+																			],
+																			"stamp": 18,
+																			"options": {
+																				"label": "_SourceRUIDEX",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 1,
+																				"activable": true,
+																				"width": "300",
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"browsable": false
+																			}
+																		},
+																		"LabelAuthor__": {
+																			"type": "Label",
+																			"data": [
+																				"Author__"
+																			],
+																			"stamp": 21,
+																			"options": {
+																				"label": "_Author",
+																				"version": 0
+																			}
+																		},
+																		"Author__": {
+																			"type": "ShortText",
+																			"data": [
+																				"Author__"
+																			],
+																			"stamp": 20,
+																			"options": {
+																				"label": "_Author",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 1,
+																				"activable": true,
+																				"width": "300",
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"length": 250,
+																				"browsable": false
+																			}
+																		},
+																		"LabelComment__": {
+																			"type": "Label",
+																			"data": [
+																				"Comment__"
+																			],
+																			"stamp": 23,
+																			"options": {
+																				"label": "_Comment",
+																				"version": 0
+																			}
+																		},
+																		"Comment__": {
+																			"type": "LongText",
+																			"data": [
+																				"Comment__"
+																			],
+																			"stamp": 22,
+																			"options": {
+																				"label": "_Comment",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 1,
+																				"minNbLines": 3,
+																				"activable": true,
+																				"width": "500",
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"browsable": false
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 24,
+					"options": {
+						"splitterType": "simple-h",
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 25,
+							"options": {
+								"label": "_Save",
+								"action": "savequit",
+								"submit": true,
+								"shortCut": "S",
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 26,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"shortCut": "Q",
+								"version": 0
+							}
+						},
+						"Delete": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 27,
+							"options": {
+								"label": "_Delete",
+								"action": "delete",
+								"submit": true,
+								"disabled": true,
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <field deleted="0" format="" guid="E0JE00000PA9" id="M70LT400153E" label="_Author_report" length="250" name="Author__" originalProcessID="QKFE00000PA9" precision="0" processid="L70LT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AM70LT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Author__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:24:19</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Author_report</Label>
+        <Alias>AM70LT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="F0JE00000PA9" id="N70LT400153E" label="_Comment_report" length="32766" name="Comment__" originalProcessID="QKFE00000PA9" precision="0" processid="L70LT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AN70LT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Comment__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:24:19</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Comment_report</Label>
+        <Alias>AN70LT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="ZZIE00000PA9" id="O70LT400153E" label="_CompanyCode_report" length="50" name="CompanyCode__" originalProcessID="QKFE00000PA9" precision="0" processid="L70LT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AO70LT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/CompanyCode__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:24:19</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_CompanyCode_report</Label>
+        <Alias>AO70LT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>false</Editable>
+        <required>true</required>
+        <TableName>CT#BD8QT400153E</TableName>
+        <SortOrder>ASC</SortOrder>
+        <DisplayedColumns>CompanyCode__|CompanyName__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>CompanyCode__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ExposedColumns>
+        </ExposedColumns>
+        <ProcessName>PurchasingCompanycodes__</ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <KeyAttribute>
+        </KeyAttribute>
+        <CustomFilter>
+        </CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="C0JE00000PA9" id="P70LT400153E" label="_Score_report" length="0" name="Score__" originalProcessID="QKFE00000PA9" precision="0" processid="L70LT400153E" submitable="1" type="INT">
+    <properties>
+      <db>
+        <alias>AP70LT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Score__</fullname>
+        <defaultvalue>0</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:24:19</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Score_report</Label>
+        <Alias>AP70LT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="B0JE00000PA9" id="Q70LT400153E" label="_ScoringType_report" length="50" name="ScoringType__" originalProcessID="QKFE00000PA9" precision="0" processid="L70LT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AQ70LT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ScoringType__</fullname>
+        <defaultvalue>cost</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:24:19</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Type>webaccess.Process.Columns.WithPossibleValues</Type>
+        <Label>_ScoringType_report</Label>
+        <Alias>AQ70LT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>true</required>
+        <TableName>
+        </TableName>
+        <DisplayedColumns>
+        </DisplayedColumns>
+        <DataSourceOrigin>Standalone</DataSourceOrigin>
+        <possibleKeys>cost
+customersupport
+delivery
+invoicing
+quality
+timeeffectiveness</possibleKeys>
+        <SavedColumn>
+        </SavedColumn>
+        <possibleValues>_CostScore
+_CustomerSupportScore
+_DeliveryScore
+_InvoicingScore
+_QualityScore
+_TimeEffectivenessScore</possibleValues>
+        <ProcessName>
+        </ProcessName>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="D0JE00000PA9" id="R70LT400153E" label="_SourceRUIDEX_report" length="50" name="SourceRUIDEX__" originalProcessID="QKFE00000PA9" precision="0" processid="L70LT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AR70LT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/SourceRUIDEX__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:24:19</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_SourceRUIDEX_report</Label>
+        <Alias>AR70LT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="A0JE00000PA9" id="S70LT400153E" label="_VendorNumber_report" length="50" name="VendorNumber__" originalProcessID="QKFE00000PA9" precision="0" processid="L70LT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AS70LT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/VendorNumber__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:24:19</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_VendorNumber_report</Label>
+        <Alias>AS70LT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>false</Editable>
+        <required>true</required>
+        <TableName>CT#SX8QT400153E</TableName>
+        <SortOrder>ASC</SortOrder>
+        <DisplayedColumns>Number__|Name__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>Number__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ExposedColumns>
+        </ExposedColumns>
+        <ProcessName>AP - Vendors__</ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <KeyAttribute>
+        </KeyAttribute>
+        <CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(!(CompanyCode__=*)))</CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <type id="KOLHG0000M4O" name="CT">
+  </type>
+</process>

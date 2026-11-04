@@ -1,0 +1,609 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:05:27" deleted="0" eskerapplication="P2P" global="0" id="RG8QT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="AP - Cost centers__" needvalidation="1" ootofilter="" ootoversion="0" originalProcessID="RFSX13696" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomTable" upgradable="1" userid="0" version="1" visibility="0">
+  <properties>
+    <dataConditions>
+      <listDataConditions>
+				&lt;dataCondition&gt;
+					&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+					&lt;filter&gt;msnex=*&lt;/filter&gt;
+					&lt;labelKey&gt;_Purchasing or _AP disabled&lt;/labelKey&gt;
+					&lt;multipleConditionsLink&gt;or&lt;/multipleConditionsLink&gt;
+					&lt;conditions&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableAccountPayableGlobalSetting__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableStandardPurchasingGlobalSetting__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+					&lt;/conditions&gt;
+				&lt;/dataCondition&gt;</listDataConditions>
+    </dataConditions>
+    <dbIndex>
+      <Join>&lt;Index Join="1"&gt;
+				&lt;Ref Name="CompanyCode__" Option="ASC"/&gt;
+				&lt;Ref Name="CostCenter__" Option="ASC"/&gt;
+				&lt;/Index&gt;</Join>
+      <AUTO_ASG8QT400153EA>&lt;Index&gt;&lt;Ref Name="ASG8QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_ASG8QT400153EA>
+      <AUTO_ATG8QT400153EA>&lt;Index&gt;&lt;Ref Name="ATG8QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_ATG8QT400153EA>
+      <AUTO_AUG8QT400153EA>&lt;Index&gt;&lt;Ref Name="AUG8QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AUG8QT400153EA>
+      <AUTO_AVG8QT400153EA>&lt;Index&gt;&lt;Ref Name="AVG8QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AVG8QT400153EA>
+    </dbIndex>
+    <lg>
+      <process_da>{
+	"AP - Cost centers": "S2P – omkostningssteder",
+	"Company code": "Virksomhedskode",
+	"Cost center": "Omkostningssted",
+	"Description": "Beskrivelse",
+	"Manager": "Leder for omkostningssted",
+	"Manager_Name": "Navn på leder for omkostningssted"
+}</process_da>
+      <process_de>{
+	"AP - Cost centers": "S2P - Kostenstellen",
+	"Company code": "Buchungskreis",
+	"Cost center": "Kostenstelle",
+	"Description": "Beschreibung",
+	"Manager": "Kostenstellenmanager",
+	"Manager_Name": "Name des Kostenstellenmanagers"
+}</process_de>
+      <process_ja>{
+	"AP - Cost centers": "S2P - コストセンター",
+	"Company code": "会社コード",
+	"Cost center": "コストセンター",
+	"Description": "説明",
+	"Manager": "コストセンターマネージャー",
+	"Manager_Name": "コストセンターマネージャー名"
+}</process_ja>
+      <process_en>{
+	"AP - Cost centers": "S2P - Cost centers",
+	"Company code": "Company code",
+	"Cost center": "Cost center",
+	"Description": "Description",
+	"Manager": "Cost center manager",
+	"Manager_Name": "Cost center manager name"
+}</process_en>
+      <process_es>{
+	"AP - Cost centers": "S2P - Centros de costes",
+	"Company code": "Código de empresa",
+	"Cost center": "Centro de costes",
+	"Description": "Descripción",
+	"Manager": "Responsable de centro de costes",
+	"Manager_Name": "Nombre del responsable de centro de costes"
+}</process_es>
+      <process_fr>{
+	"AP - Cost centers": "S2P - Centres de coût",
+	"Company code": "Code société",
+	"Cost center": "Centre de coût",
+	"Description": "Description",
+	"Manager": "Responsable du centre de coût",
+	"Manager_Name": "Nom du responsable du centre de coût"
+}</process_fr>
+      <process_nl-NL>{
+	"AP - Cost centers": "S2P - Kostenplaatsen",
+	"Company code": "Bedrijfscode",
+	"Cost center": "Kostenplaats",
+	"Description": "Beschrijving",
+	"Manager": "Manager kostenplaats",
+	"Manager_Name": "Naam manager kostenplaats"
+}</process_nl-NL>
+      <process_pl>{
+	"AP - Cost centers": "S2P – centra kosztów",
+	"Company code": "Kod firmy",
+	"Cost center": "Centrum kosztów",
+	"Description": "Opis",
+	"Manager": "Menedżer centrum kosztów",
+	"Manager_Name": "Nazwa menedżera centrum kosztów"
+}</process_pl>
+      <process_it>{
+	"AP - Cost centers": "S2P - Centri di costo",
+	"Company code": "Codice società",
+	"Cost center": "Centro di costo",
+	"Description": "Descrizione",
+	"Manager": "Responsabile centro di costo",
+	"Manager_Name": "Nome responsabile centro di costo"
+}</process_it>
+      <process_sk>{
+	"AP - Cost centers": "S2P – Nákladové strediská",
+	"Company code": "Kód spoločnosti",
+	"Cost center": "Nákladové stredisko",
+	"Description": "Popis",
+	"Manager": "Správca nákladového strediska",
+	"Manager_Name": "Meno manažéra nákladového strediska"
+}</process_sk>
+      <process_zh-CN>{
+	"AP - Cost centers": "寻源到付款 - 成本中心",
+	"Company code": "公司代码",
+	"Cost center": "成本中心",
+	"Description": "说明",
+	"Manager": "成本中心负责人",
+	"Manager_Name": "成本中心负责人名称"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"AP - Cost centers": "S2P - Centros de custo",
+	"Company code": "Código da empresa",
+	"Cost center": "Centro de custo",
+	"Description": "Descrição",
+	"Manager": "Gerente de centro de custo",
+	"Manager_Name": "Nome do gerente de centro de custo"
+}</process_pt-BR>
+    </lg>
+    <process>
+      <BUColumn>CompanyCode__</BUColumn>
+      <flowtype>processing</flowtype>
+      <homepagelabel>AP - Cost centers</homepagelabel>
+      <upgradable>yes</upgradable>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <OverrideAllowedAttachmentExtensions>*</OverrideAllowedAttachmentExtensions>
+      <AllowUploadAttachment>0</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+      <shouldRollbackManualRecordEdits>true</shouldRollbackManualRecordEdits>
+      <UseCultureFormat>true</UseCultureFormat>
+      <TransportName>CustomTable</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+    </process>
+    <ui>
+      <customscriptIncludedScripts>[LIB_P2P_CUSTOMIZATION_TABLES_CLIENT]</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Sys/Sys_Helpers</customscriptIncludedScripts>
+      <CustomScript>"use strict";
+var CustomScript;
+(function (CustomScript) {
+    function Start() {
+        Sys.Helpers.TryCallFunction("Lib.P2P.Customization.Tables.Client.Common.OnHTMLScriptEnd");
+    }
+    Start();
+})(CustomScript || (CustomScript = {}));
+//# sourceMappingURL=customscript.js.map</CustomScript>
+      <restorationPanel>DataPanel</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 21,
+	"*": {
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"splitterType": "simple-v",
+				"processHelpId": "5087",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 2,
+					"options": {
+						"hidePanelsMenu": false,
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 3,
+					"options": {
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 4,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-center": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 5,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"width": "100%"
+										},
+										"hidden": false
+									},
+									"*": {
+										"form-content-center-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 6,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"DataPanel": {
+													"type": "PanelData",
+													"data": [],
+													"stamp": 7,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"label": "_Document data",
+														"version": 0
+													},
+													"*": {
+														"FieldsManager": {
+															"type": "FieldsManager",
+															"data": [],
+															"stamp": 8,
+															"options": {
+																"version": 0,
+																"controlsAssociation": {
+																	"CompanyCode__": "LabelCompanyCode__",
+																	"LabelCompanyCode__": "CompanyCode__",
+																	"CostCenter__": "LabelCostCenter__",
+																	"LabelCostCenter__": "CostCenter__",
+																	"Description__": "LabelDescription__",
+																	"LabelDescription__": "Description__",
+																	"Manager__": "LabelManager__",
+																	"LabelManager__": "Manager__"
+																}
+															},
+															"*": {
+																"Grid": {
+																	"type": "GridLayout",
+																	"data": [
+																		"fields"
+																	],
+																	"stamp": 9,
+																	"options": {
+																		"version": 0,
+																		"lines": 4,
+																		"columns": 2,
+																		"ctrlsPos": {
+																			"LabelCompanyCode__": {
+																				"line": 1,
+																				"column": 1
+																			},
+																			"CompanyCode__": {
+																				"line": 1,
+																				"column": 2
+																			},
+																			"LabelCostCenter__": {
+																				"line": 2,
+																				"column": 1
+																			},
+																			"CostCenter__": {
+																				"line": 2,
+																				"column": 2
+																			},
+																			"LabelDescription__": {
+																				"line": 3,
+																				"column": 1
+																			},
+																			"Description__": {
+																				"line": 3,
+																				"column": 2
+																			},
+																			"LabelManager__": {
+																				"line": 4,
+																				"column": 1
+																			},
+																			"Manager__": {
+																				"line": 4,
+																				"column": 2
+																			}
+																		},
+																		"colspans": [
+																			[],
+																			[],
+																			[],
+																			[]
+																		]
+																	},
+																	"*": {
+																		"LabelCompanyCode__": {
+																			"type": "Label",
+																			"data": [
+																				"CompanyCode__"
+																			],
+																			"stamp": 11,
+																			"options": {
+																				"label": "Company code",
+																				"version": 0
+																			}
+																		},
+																		"CompanyCode__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"CompanyCode__"
+																			],
+																			"stamp": 10,
+																			"options": {
+																				"label": "Company code",
+																				"browsable": true,
+																				"activable": true,
+																				"width": 500,
+																				"fTSmaxRecords": "20",
+																				"PreFillFTS": true,
+																				"helpURL": "5087",
+																				"helpText": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"version": 0
+																			}
+																		},
+																		"LabelCostCenter__": {
+																			"type": "Label",
+																			"data": [
+																				"CostCenter__"
+																			],
+																			"stamp": 13,
+																			"options": {
+																				"label": "Cost center",
+																				"version": 0
+																			}
+																		},
+																		"CostCenter__": {
+																			"type": "ShortText",
+																			"data": [
+																				"CostCenter__"
+																			],
+																			"stamp": 12,
+																			"options": {
+																				"label": "Cost center",
+																				"activable": true,
+																				"width": 500,
+																				"length": 20,
+																				"version": 0
+																			}
+																		},
+																		"LabelDescription__": {
+																			"type": "Label",
+																			"data": [
+																				"Description__"
+																			],
+																			"stamp": 15,
+																			"options": {
+																				"label": "Description",
+																				"version": 0
+																			}
+																		},
+																		"Description__": {
+																			"type": "ShortText",
+																			"data": [
+																				"Description__"
+																			],
+																			"stamp": 14,
+																			"options": {
+																				"label": "Description",
+																				"activable": true,
+																				"width": 500,
+																				"version": 0
+																			}
+																		},
+																		"LabelManager__": {
+																			"type": "Label",
+																			"data": [
+																				"Manager__"
+																			],
+																			"stamp": 17,
+																			"options": {
+																				"label": "Manager",
+																				"version": 0
+																			}
+																		},
+																		"Manager__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"Manager__"
+																			],
+																			"stamp": 16,
+																			"options": {
+																				"label": "Manager",
+																				"activable": true,
+																				"width": "500",
+																				"fTSmaxRecords": "20",
+																				"PreFillFTS": true,
+																				"version": 0
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 18,
+					"options": {
+						"splitterType": "simple-h",
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 19,
+							"options": {
+								"label": "_Save",
+								"action": "savequit",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 20,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Delete": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 21,
+							"options": {
+								"label": "_Delete",
+								"action": "delete",
+								"submit": true,
+								"disabled": true,
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <field deleted="0" format="" guid="VSCX667517" id="SG8QT400153E" label="Company code" length="50" name="CompanyCode__" originalProcessID="RFSX13696" precision="0" processid="RG8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ASG8QT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/CompanyCode__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:26</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Company code</Label>
+        <Alias>ASG8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>true</Editable>
+        <required>false</required>
+        <TableName>CT#BD8QT400153E</TableName>
+        <SortOrder>
+        </SortOrder>
+        <DisplayedColumns>CompanyCode__|CompanyName__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <SavedColumn>CompanyCode__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ProcessName>PurchasingCompanycodes__</ProcessName>
+        <CustomFilter>
+        </CustomFilter>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"5087","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="HUME13697" id="TG8QT400153E" label="Cost center" length="20" name="CostCenter__" originalProcessID="RFSX13696" precision="0" processid="RG8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ATG8QT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/CostCenter__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:26</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Cost center</Label>
+        <Alias>ATG8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="AYLN13698" id="UG8QT400153E" label="Description" length="50" name="Description__" originalProcessID="RFSX13696" precision="0" processid="RG8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AUG8QT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Description__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:26</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Description</Label>
+        <Alias>AUG8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="LTDF1003508" id="VG8QT400153E" label="Manager" length="80" name="Manager__" originalProcessID="RFSX13696" precision="0" processid="RG8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AVG8QT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Manager__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:26</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Manager</Label>
+        <Alias>AVG8QT400153E</Alias>
+        <DocMgrDisplayType>webaccess.Edd.ui.DNorLogin</DocMgrDisplayType>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>false</Editable>
+        <required>false</required>
+        <TableName>ODUSER</TableName>
+        <SortOrder>ASC</SortOrder>
+        <DisplayedColumns>Login|DisplayName</DisplayedColumns>
+        <SavedColumn>Login</SavedColumn>
+        <ProcessName>
+        </ProcessName>
+        <CustomFilter>(&amp;(Vendor=0)(Customer=0)(|(PortalUser!=1)(PortalUser!=*)))</CustomFilter>
+      </field>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <type id="KOLHG0000M4O" name="CT">
+  </type>
+</process>

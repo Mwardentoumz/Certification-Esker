@@ -1,0 +1,3233 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:07:44" deleted="0" eskerapplication="P2P" global="0" id="JFBQT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="Purchasing Supply Updater" needvalidation="1" ootofilter="" ootoversion="2" originalProcessID="VHY200000YRL" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="1" reuseengine="1" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="0" version="1" visibility="0">
+  <properties>
+    <dbIndex>
+      <AUTO_AKFBQT400153EA>&lt;Index&gt;&lt;Ref Name="AKFBQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AKFBQT400153EA>
+    </dbIndex>
+    <gdr>
+      <ValidationScriptAllowRetry>
+      </ValidationScriptAllowRetry>
+      <validationscriptIncludedScripts>Sys/Sys_Helpers_CsvExport</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_P2P_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_Purchasing_SupplyType_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_P2P_EmailNotification_Server_V12.0.566.0</validationscriptIncludedScripts>
+      <ValidationScript>"use strict";
+/* eslint-disable class-methods-use-this */
+var ValidationScript;
+(function (ValidationScript) {
+    var SupplyType = Lib.Purchasing.SupplyType;
+    var CSVExport = Sys.Helpers.CSVExport;
+    var TimeOut = Lib.P2P.Timeout;
+    class Updater {
+        constructor(initialNoActionCount = 0, initialUpdateCount = 0, initialErrorsCount = 0) {
+            // extends
+            //super("SuppliesCheckMaxDuration");
+            this.MAX_SUMMARY_TABLE_LENGTH = 20;
+            this.csvHeaders = [
+                "CompanyCode__",
+                "SupplyID__",
+                "Name__",
+                "ParentSupplyID__",
+                "FullName__",
+                "DisableRestrictionInheritance__",
+                "TechnicalAllowedUsersOrGroups__"
+            ];
+            this.csv = {
+                errors: {
+                    fileName: "Errors",
+                    headers: this.csvHeaders.concat(["Errors__"])
+                },
+                updates: {
+                    fileName: "Updates",
+                    headers: this.csvHeaders
+                }
+            };
+            this.counters = {
+                noAction: 0,
+                updates: 0,
+                errors: 0
+            };
+            this.counters.noAction = initialNoActionCount;
+            this.counters.updates = initialUpdateCount;
+            this.counters.errors = initialErrorsCount;
+            const summary = SupplyType.ReadSummary();
+            this.summary = summary || {
+                errors: []
+            };
+        }
+        static BuildCSVBuilder() {
+            const builder = new CSVExport.OutputCSV(Updater.csvSplitter, Updater.csvReturnSeparator);
+            builder.SetAutoFlush(1000);
+            return builder;
+        }
+        static GetFileIndex(fileName) {
+            const attachCount = Attach.GetNbAttach();
+            for (let idx = attachCount - 1; idx &gt;= 0; idx--) {
+                const attachName = Attach.GetName(idx);
+                if (attachName === fileName) {
+                    Log.Info(`Found file with name ${fileName} at index ${idx}`);
+                    return idx;
+                }
+            }
+            return null;
+        }
+        static SummarizeSupply(supply, errors) {
+            const summaryItem = {
+                companyCode: supply.companyCode,
+                id: supply.id,
+                parentId: supply.parentId
+            };
+            if (errors &amp;&amp; errors.length) {
+                summaryItem.errors = errors.map(err =&gt; err.userError);
+            }
+            return summaryItem;
+        }
+        AddError(supply, errors) {
+            var _a;
+            this.counters.errors++;
+            if (this.summary.errors.length &lt; this.MAX_SUMMARY_TABLE_LENGTH) {
+                const summaryItem = Updater.SummarizeSupply(supply, errors);
+                this.summary.errors.push(summaryItem);
+            }
+            (_a = this.csv.errors).builder || (_a.builder = Updater.BuildCSVBuilder());
+            const csvLine = this.ParseSupplyToCSVLine(supply, errors);
+            this.csv.errors.builder.AddLine(csvLine);
+        }
+        AddUpdate(supply) {
+            var _a;
+            this.counters.updates++;
+            (_a = this.csv.updates).builder || (_a.builder = Updater.BuildCSVBuilder());
+            const csvLine = this.ParseSupplyToCSVLine(supply);
+            this.csv.updates.builder.AddLine(csvLine);
+        }
+        CheckAndUpdateTree(companyCode, id) {
+            if (!id) {
+                throw "No supply id provided";
+            }
+            const checkedIds = new Set();
+            const parent = SupplyType.manager.GetFromCache(companyCode, id);
+            const children = SupplyType.manager.GetChildrenTree(companyCode, id);
+            Log.Verbose(`${children.length} descendants in category : CompanyCode=${companyCode} and ID=${id}`);
+            for (const supply of [parent].concat(children)) {
+                const errors = SupplyType.manager.CheckSupplyType(companyCode, id);
+                checkedIds.add(supply.id);
+                if (!errors.length) {
+                    try {
+                        if (SupplyType.manager.UpdateParentDependencies(supply)) {
+                            Log.Verbose(`Updated Supply : CompanyCode=${supply.companyCode}, ID=${supply.id}`);
+                            SaveSupplyTypeInDB(supply);
+                            this.AddUpdate(supply);
+                        }
+                        else {
+                            this.counters.noAction++;
+                        }
+                    }
+                    catch (error) {
+                        if (error instanceof SupplyType.Errors.SupplyTypeError) {
+                            Log.Error(error.technicalError);
+                            errors.push(error);
+                        }
+                        else {
+                            throw error;
+                        }
+                    }
+                }
+                if (errors.length) {
+                    this.AddError(supply, errors);
+                }
+            }
+            return checkedIds;
+        }
+        Finalize(sendErrorNotification = true) {
+            this.WriteOnProcess();
+            if (this.counters.errors) {
+                if (sendErrorNotification) {
+                    const ownerDN = Data.GetValue("OwnerID");
+                    Log.Warn(`Notify ${Sys.Helpers.String.ExtractLoginFromDN(ownerDN)} due to ${this.counters.errors} errors`);
+                    Lib.P2P.EmailNotification.SendEmailNotification({
+                        userId: ownerDN,
+                        template: "Purchasing_Email_SupplyError.htm",
+                        fromName: "_EskerProcurement",
+                        customTags: {
+                            validationURL: Data.GetValue("ValidationUrl"),
+                            ErrorCount: this.counters.errors
+                        }
+                    });
+                }
+                else {
+                    Log.Warn("Email error notification not sent");
+                }
+            }
+        }
+        ParseSupplyToCSVLine(supply, errors) {
+            const columnsValues = [
+                supply.companyCode,
+                supply.id,
+                supply.name,
+                supply.parentId,
+                supply.fullName,
+                supply.inheritRights === true ? "0" : "1",
+                supply.localAllowedLogins.join(","),
+            ];
+            if (errors &amp;&amp; errors.length) {
+                columnsValues.push(errors.map(err =&gt; err.userError).join(','));
+            }
+            return columnsValues.map(val =&gt; !!val ? val : "");
+        }
+        WriteOnProcess() {
+            Data.SetValue("NoActionCount__", this.counters.noAction);
+            Data.SetValue("UpdateCount__", this.counters.updates);
+            Data.SetValue("ErrorCount__", this.counters.errors);
+            for (const key in this.csv) {
+                const csvInfo = this.csv[key];
+                if (csvInfo.builder &amp;&amp; csvInfo.builder.GetNbColumnsLines()) {
+                    const attachIndex = Updater.GetFileIndex(csvInfo.fileName);
+                    if (attachIndex || attachIndex === 0) {
+                        csvInfo.builder.AppendContentToExistingAttachment(attachIndex);
+                    }
+                    else {
+                        csvInfo.builder.SetHeader(csvInfo.headers);
+                        csvInfo.builder.AttachCSVFile(csvInfo.fileName, false);
+                    }
+                }
+            }
+            if (this.summary.errors.length) {
+                SupplyType.SaveSummary(this.summary);
+            }
+        }
+    }
+    Updater.csvSplitter = ";";
+    Updater.csvReturnSeparator = "\n";
+    function SaveSupplyTypeInDB(supplyType) {
+        const exists = !!supplyType.ruidex;
+        const record = exists ? Process.GetUpdatableTableRecord(supplyType.ruidex) : Process.CreateTableRecord(SupplyType.tableName);
+        if (!record) {
+            Log.Error(`Unable to get record for Supply Type with ID &lt;${supplyType.id}&gt; and Name &lt;${supplyType.name}&gt; (${supplyType.ruidex})`);
+            return;
+        }
+        const vars = record.GetVars();
+        vars.AddValue_String("FullName__", supplyType.fullName, true);
+        vars.AddValue_String("TechnicalAllowedUsersOrGroups__", supplyType.localAllowedLogins.join(";"), true);
+        vars.AddValue_String("ComputedTechnicalAllowedLogins__", supplyType.computedAllowedLogins.join(";"), true);
+        record.Commit();
+        if (record.GetLastError()) {
+            // ? PAC : Need to throw to prevent recompute of next children ??
+            throw new SupplyType.Errors.DatabaseError("An error occured on Supply Type save", supplyType, record.GetLastErrorMessage());
+        }
+    }
+    async function GetCompanyCodes() {
+        const options = {
+            table: SupplyType.tableName,
+            attributes: ["CompanyCode__"],
+            groupBy: ["CompanyCode__"],
+            sortOrder: "CompanyCode__ ASC NULLS FIRST",
+            maxRecords: 500,
+            additionalOptions: "EnableJoin=1"
+        };
+        const startingCompanyCode = Variable.GetValueAsString("NextCompanyCode");
+        if (!Sys.Helpers.IsEmpty(startingCompanyCode)) {
+            options.filter = Sys.Helpers.LdapUtil.FilterGreaterOrEqual("CompanyCode__", startingCompanyCode);
+            Log.Verbose(`CompanyCode query with filter ${options.filter}`);
+        }
+        const records = await Sys.GenericAPI.PromisedQuery(options);
+        Log.Info(`Found ${records.length} CompanyCodes in table ${SupplyType.tableName}`);
+        return records.map(record =&gt; record.CompanyCode__);
+    }
+    class Main {
+        constructor(action) {
+            this.timer = new TimeOut.Timer("SuppliesCheckMaxDuration");
+            this.scriptAction = action;
+        }
+        ComputeAction() {
+            if (!Sys.Helpers.IsEmpty(this.scriptAction.name)) {
+                return this.scriptAction.name;
+            }
+            const hasSupplyID = !Data.IsNullOrEmpty("SupplyID__");
+            if (hasSupplyID) {
+                return SupplyType.Action.UpdateChildrenTree;
+            }
+        }
+        async HandleAction() {
+            const action = this.ComputeAction();
+            switch (action) {
+                case SupplyType.Action.UpdateChildrenTree: return await this.UpdateChildrenTree();
+                case SupplyType.Action.CheckTableIntegrity: return await this.CheckTableIntegrity();
+                default: throw new Error(`Unknown required action: ${action}`);
+            }
+        }
+        async Start() {
+            Sys.Helpers.EnableSmartSilentChange();
+            this.updater = new Updater(Data.GetValue("NoActionCount__"), Data.GetValue("UpdateCount__"), Data.GetValue("ErrorCount__"));
+            const recallAction = await this.HandleAction();
+            this.updater.Finalize(!recallAction);
+            if (recallAction) {
+                Log.Warn(`Recall script required with action ${recallAction}`);
+                Process.RecallScript(recallAction, true);
+            }
+        }
+        //#region ACTIONS
+        async CheckTableIntegrity() {
+            const companyCodes = await GetCompanyCodes();
+            for (const companyCode of companyCodes) {
+                if (!this.timer.RemainsTime()) {
+                    Log.Warn(`Maximum time reached, can not execute check on Company Code ${companyCode}`);
+                    Variable.SetValueAsString("NextCompanyCode", companyCode);
+                    return SupplyType.Action.CheckTableIntegrity;
+                }
+                Log.Info(`Start coherency check for CompanyCode ${companyCode}`);
+                await SupplyType.manager.Query(companyCode);
+                const ids = SupplyType.manager.GetSuppliesId(companyCode);
+                const roots = SupplyType.manager.GetChildren(companyCode);
+                if (roots.length) {
+                    for (const supplyRoot of roots) {
+                        const checkedIds = this.updater.CheckAndUpdateTree(companyCode, supplyRoot.id);
+                        checkedIds.forEach(checkedId =&gt; ids.delete(checkedId));
+                    }
+                }
+                else {
+                    Log.Error(`No Root Supply for CompanyCode ${companyCode}`);
+                }
+                /**
+                 * Not reachable from any roots
+                 * - Orphan
+                 * - Child of missing ascendent (ignore errors because its due to parent)
+                 * - Self parent (ID === ParentID)
+                 */
+                if (ids.size) {
+                    Log.Error("Supply Types with problem detected");
+                    for (const id of ids) {
+                        const supplyType = SupplyType.manager.GetFromCache(companyCode, id);
+                        const errors = SupplyType.manager.CheckSupplyType(companyCode, id);
+                        // Recursion
+                        const recursionId = SupplyType.manager.GetRecursionID(companyCode, id);
+                        if (recursionId) {
+                            errors.push(new SupplyType.Errors.Recursion(`Recursion detected : ID=${supplyType.id}, CompanyCode=${companyCode}, parent=${recursionId}`, supplyType));
+                        }
+                        if (errors.length) {
+                            this.updater.AddError(supplyType, errors);
+                        }
+                    }
+                }
+            }
+        }
+        async UpdateChildrenTree() {
+            const companyCode = Data.GetValue("CompanyCode__");
+            const supplyTypeID = Data.GetValue("SupplyID__");
+            await SupplyType.manager.Query(companyCode);
+            this.updater.CheckAndUpdateTree(companyCode, supplyTypeID);
+        }
+    }
+    if (typeof _ENV_TEST_ENABLED === "undefined") {
+        const action = Lib.P2P.GetScriptAction("SupplyType Update");
+        // Prevent multiple validation : Come from 'SendCD' Action if state = 50;
+        const canRunProcess = Data.GetValue("State") == 50 &amp;&amp; ((action.name === "" &amp;&amp; action.type === "") || action.type.toLocaleLowerCase().includes("approve"));
+        if (!canRunProcess) {
+            Log.Info("Skipping script");
+        }
+        else {
+            const main = new Main(action);
+            Lib.P2P.HandleScriptError(main.Start());
+        }
+    }
+})(ValidationScript || (ValidationScript = {}));
+//# sourceMappingURL=validationscript.js.map</ValidationScript>
+      <AllowTagCoverPages>true</AllowTagCoverPages>
+      <AllowTagNewDocuments>true</AllowTagNewDocuments>
+      <AllowTagAttachments>true</AllowTagAttachments>
+      <ExtractionScript>
+      </ExtractionScript>
+      <AllowRemovePages>true</AllowRemovePages>
+      <AllowSwapPages>true</AllowSwapPages>
+    </gdr>
+    <lg>
+      <process_da>{
+	"_CancelDialog": "Annuller",
+	"_DetailsPanel": "Resultater",
+	"_ErrorCount": "Kategorier med fejl",
+	"_ErrorCount_report": "Kategorier med fejl",
+	"_Errors": "Fejloplysninger",
+	"_ErrorsPane": "Fejl",
+	"_EskerProcurement": "Esker Procurement",
+	"_FormBanner_SubTitle_Processing": "Igangværende",
+	"_FormBanner_SubTitle_Success": "Udført",
+	"_FormBanner_SubTitle_WithError": "Ikke udført",
+	"_FormBannerTitle": "Opdatering af positionskategori",
+	"_NoActionCount": "Uændrede kategorier",
+	"_NoActionCount_report": "Uændrede kategorier",
+	"_ParentSupplyID": "Id for overordnet kategori",
+	"_ParentSupplyName": "Overordnet kategori",
+	"_PopupStartupMode_Message": "Denne kontrol vil rette uoverensstemmelser i kategorihierarkier ved at opdatere overordnede kategorioplysninger i deres underkategorier. Denne handling kan tage et par minutter og vil foregå i baggrunden.",
+	"_PopupStartupMode_Title": "Kør konsekvenskontrol",
+	"_SupplyID": "Kategori-id",
+	"_SupplyID_report": "Varekategori-id",
+	"_SupplyName": "Kategori",
+	"_SupplyTypeError_DuplicateCategory": "Der findes allerede en kategori med dette id for denne virksomhedskode.",
+	"_SupplyTypeError_IdenticalIdAndParent": "Det overordnede id må ikke være identisk med id'et for positionskategorien.\n",
+	"_SupplyTypeError_MissingFieldData": "Manglende kolonneværdi: '{0}'.",
+	"_SupplyTypeError_Recursion": "Denne handling ({0}) er under den aktuelle kategori i hierarkiet.",
+	"_SupplyTypeError_UnknownParent": "Id for overordnet kategori blev ikke fundet for denne virksomhedskode.",
+	"_UpdateCount": "Opdaterede kategorier",
+	"_UpdateCount_report": "Opdaterede kategorier",
+	"_ValidateDialog": "Kør",
+	"Purchasing Supply Updater": "Opdatering af positionskategori",
+	"PurchasingSupplyUpdater": "Opdatering af positionskategori",
+	"_AccessRestrictionPane": "Adgangsbegrænsning",
+	"_action_createflexible:Purchasing Supply Updater": "Kør konsekvenskontrol",
+	"_AddFavoriteSupplier": "Tilføj leverandører",
+	"_AllowedUsersOrGroups": "Begræns adgang til",
+	"_AnalyticsPane": "Regnskabsdata",
+	"_BuyerLogin": "Køber-id",
+	"_BuyerLogin_report": "Køber-id",
+	"_BuyerLogin_report_Name": "Købers navn",
+	"_CapEx": "CapEx",
+	"_CompanyCode": "Virksomhedskode",
+	"_CompanyCode_report": "Virksomhedskode",
+	"_ComputedTechnicalAllowedLogins": "Valgte brugere med nedarvet adgang",
+	"_ComputedTechnicalAllowedLogins_report": "Begrænset til valgte brugere med nedarvet adgang",
+	"_DefaultCostType": "Standardomkostningstype",
+	"_DefaultCostType_report": "Standardomkostningstype",
+	"_DefaultGLAccount": "Standard artskonto",
+	"_DefaultTaxCode": "Standard afgiftskode",
+	"_DefaultTaxCode_report": "Standard afgiftskode",
+	"_Description": "Beskrivelse",
+	"_Description_report": "Beskrivelse",
+	"_DisableRestrictionInheritance": "Deaktiver nedarvning af overordnet kategori",
+	"_DisableRestrictionInheritance_report": "Nedarvning af overordnet kategori deaktiveret",
+	"_Document data": "Kategorioplysninger",
+	"_EmptyFavoriteSuppliersList": "Der er endnu ikke tilføjet leverandører. Tilføj foretrukne leverandører for at få forslag, når du anmoder om varer.",
+	"_FavoriteSuppliersList": "Foretrukne leverandører",
+	"_FavoriteSuppliersPane": "Foretrukne leverandører",
+	"_FullName": "Fuld sti",
+	"_FullName_report": "Fuld sti",
+	"_InheritedAllowedLogins": "Nedarvet adgang fra overordnet kategori",
+	"_InheritedTechnicalAllowedLogins": "Bruger med nedarvet adgang",
+	"_LongProcessingWarning": "De ændringer, der er lavet i identifikationsoplysningerne eller begrænsningerne i denne kategori, vil blive anvendt i dens underkategorier. Denne handling kan tage et par minutter og vil foregå i baggrunden.",
+	"_LongProcessingWarningTitle": "Opdater underkategorier",
+	"_MultipleChangesWarningConfirm": "Bekræft",
+	"_MultipleChangesWarningMessage": "Dine ændringer af identifikationsoplysningerne eller begrænsningerne gælder også for underkategorier. En eller flere af de UNSPSC-koder, du har tilføjet, er allerede tilknyttet en anden varekategori.",
+	"_MultipleChangesWarningTitle": "Bekræft ændringer",
+	"_NoGoodsReceipt": "Intet krav om kvittering for varer og serviceydelser",
+	"_NoGoodsReceipt_report": "Intet krav om kvittering for varer og serviceydelser",
+	"_NotifyRequesterOnReceipt": "Informer anmoder ved modtagelse",
+	"_NotifyRequesterOnReceipt_report": "Informer anmoder ved modtagelse",
+	"_OpEx": "OpEx",
+	"_ParentSupplyID_report": "Id for overordnet varekategori",
+	"_RecipientLogin": "Modtager-id",
+	"_RecipientLogin_report": "Modtager-id",
+	"_RecipientLogin_report_Name": "Modtagers navn",
+	"_SelectOrEnterEmailAddress": "Vælg eller indtast en mailadresse...",
+	"_SupplyName_report": "Navn på positionskategori",
+	"_TechnicalAllowedUsersOrGroups": "Valgte brugere med adgang",
+	"_TechnicalAllowedUsersOrGroups_report": "Begrænset til valgte brugere  ",
+	"_UpdateChildren": "Atualizar",
+	"_UserPopup_Groups": "Grupper",
+	"_UserPopup_Title": "Begræns adgang til denne varekategori",
+	"_UserPopup_Users": "Brugere",
+	"_UserPopup_UsersOrGroups": "Godkendte brugere",
+	"_VendorName": "Leverandørnavn",
+	"_VendorNumber": "Leverandørnummer",
+	"_VendorScore": "Samlet score",
+	"Purchasing - Supply": "S2P – varekategorier",
+	"PurchasingSupply": "S2P – varekategori",
+	"PurchasingSupply__": "S2P – varekategorier"
+}</process_da>
+      <process_de>{
+	"_CancelDialog": "Abbrechen",
+	"_DetailsPanel": "Ergebnisse",
+	"_ErrorCount": "Fehlerhafte Kategorien",
+	"_ErrorCount_report": "Fehlerhafte Kategorien",
+	"_Errors": "Fehlerdetails",
+	"_ErrorsPane": "Fehler",
+	"_EskerProcurement": "Esker Einkauf",
+	"_FormBanner_SubTitle_Processing": "In Bearbeitung",
+	"_FormBanner_SubTitle_Success": "Concluída",
+	"_FormBanner_SubTitle_WithError": "Incompleta",
+	"_FormBannerTitle": "Aktualisierung der Artikelkategorie",
+	"_NoActionCount": "Unveränderte Kategorien",
+	"_NoActionCount_report": "Unveränderte Kategorien",
+	"_ParentSupplyID": "ID der übergeordneten Kategorie",
+	"_ParentSupplyName": "Übergeordnete Kategorie",
+	"_PopupStartupMode_Message": "Mit dieser Prüfung werden Inkonsistenzen in Kategoriehierarchien beseitigt, indem die Informationen der übergeordneten Kategorie in ihren Unterkategorien aktualisiert werden. Dieser Vorgang kann einige Minuten dauern und wird im Hintergrund ausgeführt.",
+	"_PopupStartupMode_Title": "Konsistenzprüfung durchführen",
+	"_SupplyID": "Kategorie-ID",
+	"_SupplyID_report": "Artikelkategorie-ID",
+	"_SupplyName": "Kategorie",
+	"_SupplyTypeError_DuplicateCategory": "Für diesen Buchungskreis existiert bereits eine Kategorie mit dieser ID.",
+	"_SupplyTypeError_IdenticalIdAndParent": "Die ID der übergeordneten Kategorie darf nicht mit der Artikelkategorie-ID übereinstimmen.",
+	"_SupplyTypeError_MissingFieldData": "Fehlender Spaltenwert: '{0}'.",
+	"_SupplyTypeError_Recursion": "Diese Kategorie ({0}) steht hierarchisch unterhalb der aktuellen Kategorie.",
+	"_SupplyTypeError_UnknownParent": "ID der übergeordneten Kategorie für diesen Buchungskreis nicht gefunden.",
+	"_UpdateCount": "Aktualisierte Kategorien",
+	"_UpdateCount_report": "Aktualisierte Kategorien",
+	"_ValidateDialog": "Ausführen",
+	"Purchasing Supply Updater": "Aktualisierung der Artikelkategorie",
+	"PurchasingSupplyUpdater": "Aktualisierung der Artikelkategorie",
+	"_AccessRestrictionPane": "Zugriffsbeschränkung",
+	"_action_createflexible:Purchasing Supply Updater": "Konsistenzprüfung durchführen",
+	"_AddFavoriteSupplier": "Lieferanten hinzufügen",
+	"_AllowedUsersOrGroups": "Zugriffsbeschränkung für",
+	"_AnalyticsPane": "Buchungsdaten",
+	"_BuyerLogin": "Einkäufer-ID",
+	"_BuyerLogin_report": "Einkäufer-ID",
+	"_BuyerLogin_report_Name": "Name des Einkäufers",
+	"_CapEx": "CapEx",
+	"_CompanyCode": "Buchungskreis",
+	"_CompanyCode_report": "Buchungskreis",
+	"_ComputedTechnicalAllowedLogins": "Ausgewählte Benutzer und Benutzer mit geerbtem Zugriff",
+	"_ComputedTechnicalAllowedLogins_report": "Beschränkt auf ausgewählte Benutzer und Benutzer mit geerbtem Zugriff",
+	"_DefaultCostType": "Standardkostenart",
+	"_DefaultCostType_report": "Standardkostenart",
+	"_DefaultGLAccount": "Standard-Sachkonto",
+	"_DefaultTaxCode": "Standard-Steuerschlüssel",
+	"_DefaultTaxCode_report": "Standard-Steuerschlüssel",
+	"_Description": "Beschreibung",
+	"_Description_report": "Beschreibung",
+	"_DisableRestrictionInheritance": "Vererbung der übergeordneten Kategorie deaktivieren",
+	"_DisableRestrictionInheritance_report": "Vererbung der übergeordneten Kategorie deaktiviert",
+	"_Document data": "Kategoriedetails",
+	"_EmptyFavoriteSuppliersList": "Es wurde noch kein Lieferant hinzugefügt. Fügen Sie bevorzugte Lieferanten hinzu, um bei der Anforderung von Artikeln Vorschläge zu erhalten.",
+	"_FavoriteSuppliersList": "Bevorzugte Lieferanten",
+	"_FavoriteSuppliersPane": "Bevorzugte Lieferanten",
+	"_FullName": "Vollständiger Pfad",
+	"_FullName_report": "Vollständiger Pfad",
+	"_InheritedAllowedLogins": "Geerbter Zugriff der übergeordneten Kategorie",
+	"_InheritedTechnicalAllowedLogins": "Benutzer mit geerbtem Zugriff",
+	"_LongProcessingWarning": "Änderungen an den Kennzeichnungsdetails oder Einschränkungen dieser Kategorie werden auf ihre Unterkategorien übertragen.\n\nDieser Vorgang kann einige Minuten dauern und wird im Hintergrund ausgeführt.",
+	"_LongProcessingWarningTitle": "Unterkategorien aktualisieren",
+	"_MultipleChangesWarningConfirm": "Bestätigen",
+	"_MultipleChangesWarningMessage": "Ihre Änderungen an den Identifikationsdaten oder Einschränkungen gelten auch für Unterkategorien. Einer anderen Artikelkategorie wurde bereits mindestens einer der von Ihnen hinzugefügten UNSPSC-Codes zugewiesen.",
+	"_MultipleChangesWarningTitle": "Änderungen bestätigen",
+	"_NoGoodsReceipt": "Kein Wareneingangs- und Serviceerbringungsbeleg erforderlich",
+	"_NoGoodsReceipt_report": "Kein Wareneingangs- und Serviceerbringungsbeleg erforderlich",
+	"_NotifyRequesterOnReceipt": "Anforderer bei Empfang benachrichtigen",
+	"_NotifyRequesterOnReceipt_report": "Anforderer bei Empfang benachrichtigen",
+	"_OpEx": "OpEx",
+	"_ParentSupplyID_report": "ID der übergeordneten Artikelkategorie",
+	"_RecipientLogin": "Empfänger-ID ",
+	"_RecipientLogin_report": "Empfänger-ID ",
+	"_RecipientLogin_report_Name": "Name des Empfängers",
+	"_SelectOrEnterEmailAddress": "Wählen oder geben Sie eine E-Mail-Adresse ein ...",
+	"_SupplyName_report": "Name der Artikelkategorie",
+	"_TechnicalAllowedUsersOrGroups": "Ausgewählte Benutzer mit Zugriff",
+	"_TechnicalAllowedUsersOrGroups_report": "Beschränkt auf ausgewählte Benutzer",
+	"_UpdateChildren": "Aktualisierung",
+	"_UserPopup_Groups": "Gruppen",
+	"_UserPopup_Title": "Zugriff auf diese Artikelkategorie einschränken",
+	"_UserPopup_Users": "Benutzer",
+	"_UserPopup_UsersOrGroups": "Autorisierte Benutzer",
+	"_VendorName": "Lieferantenname",
+	"_VendorNumber": "Lieferantennummer",
+	"_VendorScore": "Gesamtpunktzahl",
+	"Purchasing - Supply": "S2P - Artikelkategorien",
+	"PurchasingSupply": "S2P - Artikelkategorie",
+	"PurchasingSupply__": "S2P - Artikelkategorien"
+}</process_de>
+      <process_ja>{
+	"_CancelDialog": "キャンセル",
+	"_DetailsPanel": "結果",
+	"_ErrorCount": "エラーのあるカテゴリー",
+	"_ErrorCount_report": "エラーのあるカテゴリー",
+	"_Errors": "エラー詳細",
+	"_ErrorsPane": "エラー",
+	"_EskerProcurement": "Esker調達",
+	"_FormBanner_SubTitle_Processing": "実行中",
+	"_FormBanner_SubTitle_Success": "完了",
+	"_FormBanner_SubTitle_WithError": "未完了",
+	"_FormBannerTitle": "品目カテゴリーの更新",
+	"_NoActionCount": "変更なしのカテゴリー",
+	"_NoActionCount_report": "変更なしのカテゴリー",
+	"_ParentSupplyID": "親カテゴリーID",
+	"_ParentSupplyName": "親カテゴリー",
+	"_PopupStartupMode_Message": "このチェックは、サブカテゴリーの親カテゴリー情報を更新することで、カテゴリー階層間の不一致を解決します。\n\nこのアクションはバックグラウンドで処理され、数分かかることがあります。",
+	"_PopupStartupMode_Title": "整合性チェックを実行",
+	"_SupplyID": "カテゴリーID",
+	"_SupplyID_report": "品目カテゴリーID",
+	"_SupplyName": "カテゴリー",
+	"_SupplyTypeError_DuplicateCategory": "この会社コードには、このIDのカテゴリーがすでに存在します。",
+	"_SupplyTypeError_IdenticalIdAndParent": "親カテゴリーIDは、品目カテゴリーIDと異なるIDでなければなりません。",
+	"_SupplyTypeError_MissingFieldData": "列の値がありません: '{0}'。",
+	"_SupplyTypeError_Recursion": "このカテゴリー ({0}) は、現在のカテゴリーの下の階層にあります。",
+	"_SupplyTypeError_UnknownParent": "この会社コードでは、親カテゴリーIDがありません。",
+	"_UpdateCount": "更新されたカテゴリー",
+	"_UpdateCount_report": "更新されたカテゴリー",
+	"_ValidateDialog": "実行",
+	"Purchasing Supply Updater": "品目カテゴリーの更新",
+	"PurchasingSupplyUpdater": "品目カテゴリーの更新",
+	"_AccessRestrictionPane": "アクセス制限",
+	"_action_createflexible:Purchasing Supply Updater": "整合性チェックを実行",
+	"_AddFavoriteSupplier": "サプライヤーを追加する",
+	"_AllowedUsersOrGroups": "アクセス制限",
+	"_AnalyticsPane": "会計データ",
+	"_BuyerLogin": "購入者ID",
+	"_BuyerLogin_report": "購入者ID",
+	"_BuyerLogin_report_Name": "購入者名",
+	"_CapEx": "CapEx",
+	"_CompanyCode": "会社コード",
+	"_CompanyCode_report": "会社コード",
+	"_ComputedTechnicalAllowedLogins": "選択したユーザーと継承したアクセスユーザー",
+	"_ComputedTechnicalAllowedLogins_report": "選択したユーザーと継承したアクセスユーザーに限定",
+	"_DefaultCostType": "デフォルトのコスト種別",
+	"_DefaultCostType_report": "デフォルトのコスト種別",
+	"_DefaultGLAccount": "デフォルトの勘定科目",
+	"_DefaultTaxCode": "デフォルトの税コード",
+	"_DefaultTaxCode_report": "デフォルトの税コード",
+	"_Description": "説明",
+	"_Description_report": "説明",
+	"_DisableRestrictionInheritance": "親カテゴリーの継承を無効にする",
+	"_DisableRestrictionInheritance_report": "親カテゴリーの継承は無効",
+	"_Document data": "カテゴリーの詳細",
+	"_EmptyFavoriteSuppliersList": "サプライヤーはまだ追加されていません。 優先サプライヤーを追加すると、品目をリクエストするときに候補として表示されます。",
+	"_FavoriteSuppliersList": "優先サプライヤー",
+	"_FavoriteSuppliersPane": "優先サプライヤー",
+	"_FullName": "フルパス",
+	"_FullName_report": "フルパス",
+	"_InheritedAllowedLogins": "親カテゴリーから継承されたアクセス",
+	"_InheritedTechnicalAllowedLogins": "継承されたアクセス権を持つユーザー",
+	"_LongProcessingWarning": "このカテゴリーの識別情報の詳細または制限に加えられた変更は、そのサブカテゴリーに適用されます。\n\nこのアクションはバックグラウンドで処理され、数分かかることがあります。",
+	"_LongProcessingWarningTitle": "サブカテゴリーを更新",
+	"_MultipleChangesWarningConfirm": "確認",
+	"_MultipleChangesWarningMessage": "識別情報の詳細または制限の変更は、サブカテゴリーにも適用されます。追加されたUNSPSCコードの1つ以上は、すでに他の品目カテゴリーに割り当てられています。",
+	"_MultipleChangesWarningTitle": "変更を確認",
+	"_NoGoodsReceipt": "品物とサービスの受領書不要",
+	"_NoGoodsReceipt_report": "品物とサービスの受領書不要",
+	"_NotifyRequesterOnReceipt": "受領時に送信者に通知する",
+	"_NotifyRequesterOnReceipt_report": "受領時に送信者に通知する",
+	"_OpEx": "OpEx",
+	"_ParentSupplyID_report": "親アイテムのカテゴリーID",
+	"_RecipientLogin": "受信者ID",
+	"_RecipientLogin_report": "受信者ID",
+	"_RecipientLogin_report_Name": "受領者名",
+	"_SelectOrEnterEmailAddress": "メールアドレスを選択または入力してください...",
+	"_SupplyName_report": "品目カテゴリー名",
+	"_TechnicalAllowedUsersOrGroups": "アクセス権のある選択されたユーザー",
+	"_TechnicalAllowedUsersOrGroups_report": "選択したユーザーに限定 ",
+	"_UpdateChildren": "Opdater",
+	"_UserPopup_Groups": "グループ",
+	"_UserPopup_Title": "この品目分類へのアクセスを制限する",
+	"_UserPopup_Users": "ユーザー",
+	"_UserPopup_UsersOrGroups": "許可されたユーザー",
+	"_VendorName": "仕入先名",
+	"_VendorNumber": "仕入先番号",
+	"_VendorScore": "総合スコア",
+	"Purchasing - Supply": "S2P - 品目分類",
+	"PurchasingSupply": "S2P - 品目分類",
+	"PurchasingSupply__": "S2P - 品目分類"
+}</process_ja>
+      <process_en>{
+	"_CancelDialog": "Cancel",
+	"_DetailsPanel": "Results",
+	"_ErrorCount": "Categories in error",
+	"_ErrorCount_report": "Categories in error",
+	"_Errors": "Error details",
+	"_ErrorsPane": "Errors",
+	"_EskerProcurement": "Esker Procurement",
+	"_FormBanner_SubTitle_Processing": "In progress",
+	"_FormBanner_SubTitle_Success": "Completed",
+	"_FormBanner_SubTitle_WithError": "Incomplete",
+	"_FormBannerTitle": "Item category update",
+	"_NoActionCount": "Unchanged categories",
+	"_NoActionCount_report": "Unchanged categories",
+	"_ParentSupplyID": "Parent category ID",
+	"_ParentSupplyName": "Parent category",
+	"_PopupStartupMode_Message": "This check will resolve inconsistencies in category hierarchies by updating parent category information in their sub-categories.\n\nThis action may take a few minutes and will be processed in the background.",
+	"_PopupStartupMode_Title": "Run consistency check",
+	"_SupplyID": "Category ID",
+	"_SupplyID_report": "Item category ID",
+	"_SupplyName": "Category",
+	"_SupplyTypeError_DuplicateCategory": "A category with this ID already exists for this company code.",
+	"_SupplyTypeError_IdenticalIdAndParent": "The parent category ID must be different than the item category ID.\n",
+	"_SupplyTypeError_MissingFieldData": "Missing column value: '{0}'.",
+	"_SupplyTypeError_Recursion": "This category ({0}) is hierarchically under the current category.",
+	"_SupplyTypeError_UnknownParent": "Parent category ID not found for this company code.",
+	"_UpdateCount": "Updated categories",
+	"_UpdateCount_report": "Updated categories",
+	"_ValidateDialog": "Run",
+	"Purchasing Supply Updater": "Item category update",
+	"PurchasingSupplyUpdater": "Item category update",
+	"_AccessRestrictionPane": "Access Restriction",
+	"_action_createflexible:Purchasing Supply Updater": "Run consistency check",
+	"_AddFavoriteSupplier": "Add suppliers",
+	"_AllowedUsersOrGroups": "Restrict access to",
+	"_AnalyticsPane": "Accounting Data",
+	"_BuyerLogin": "Buyer ID",
+	"_BuyerLogin_report": "Buyer ID",
+	"_BuyerLogin_report_Name": "Buyer name",
+	"_CapEx": "CapEx",
+	"_CompanyCode": "Company code",
+	"_CompanyCode_report": "Company code",
+	"_ComputedTechnicalAllowedLogins": "Selected and inherited-access users",
+	"_ComputedTechnicalAllowedLogins_report": "Restricted to selected and inherited-access users",
+	"_DefaultCostType": "Default cost type",
+	"_DefaultCostType_report": "Default cost type",
+	"_DefaultGLAccount": "Default G/L account",
+	"_DefaultTaxCode": "Default tax code",
+	"_DefaultTaxCode_report": "Default tax code",
+	"_Description": "Description",
+	"_Description_report": "Description",
+	"_DisableRestrictionInheritance": "Disable parent category inheritance",
+	"_DisableRestrictionInheritance_report": "Parent category inheritance disabled",
+	"_Document data": "Category Details",
+	"_EmptyFavoriteSuppliersList": "No supplier added yet. Add preferred suppliers to get suggestions when requesting items.",
+	"_FavoriteSuppliersList": "Preferred suppliers",
+	"_FavoriteSuppliersPane": "Preferred Suppliers",
+	"_FullName": "Full path",
+	"_FullName_report": "Full path",
+	"_InheritedAllowedLogins": "Inherited access from parent category",
+	"_InheritedTechnicalAllowedLogins": "Users with inherited access",
+	"_LongProcessingWarning": "Changes made to the identification details or restrictions of this category will be applied to its sub-categories.\n\nThis action may take a few minutes and will be processed in the background.",
+	"_LongProcessingWarningTitle": "Update sub-categories",
+	"_MultipleChangesWarningConfirm": "Confirm",
+	"_MultipleChangesWarningMessage": "Your changes to the identification details or restrictions will also apply to subcategories.\n\nOne or more of the UNSPSC codes you added are already assigned to another item category.",
+	"_MultipleChangesWarningTitle": "Confirm changes",
+	"_NoGoodsReceipt": "No goods and services receipt required",
+	"_NoGoodsReceipt_report": "No goods and services receipt required",
+	"_NotifyRequesterOnReceipt": "Notify requester upon receipt",
+	"_NotifyRequesterOnReceipt_report": "Notify requester upon receipt",
+	"_OpEx": "OpEx",
+	"_ParentSupplyID_report": "Parent item category ID",
+	"_RecipientLogin": "Recipient ID",
+	"_RecipientLogin_report": "Recipient ID",
+	"_RecipientLogin_report_Name": "Recipient name",
+	"_SelectOrEnterEmailAddress": "Select or enter an email address...",
+	"_SupplyName_report": "Item category name",
+	"_TechnicalAllowedUsersOrGroups": "Selected users with access",
+	"_TechnicalAllowedUsersOrGroups_report": "Restricted to selected users  ",
+	"_UpdateChildren": "Update",
+	"_UserPopup_Groups": "Groups",
+	"_UserPopup_Title": "Restrict access to this item category",
+	"_UserPopup_Users": "Users",
+	"_UserPopup_UsersOrGroups": "Authorized users",
+	"_VendorName": "Supplier name",
+	"_VendorNumber": "Supplier number",
+	"_VendorScore": "Overall score",
+	"Purchasing - Supply": "S2P - Item categories",
+	"PurchasingSupply": "S2P - Item category",
+	"PurchasingSupply__": "S2P - Item categories"
+}</process_en>
+      <process_es>{
+	"_CancelDialog": "Cancelar",
+	"_DetailsPanel": "Resultados",
+	"_ErrorCount": "Categorías en error",
+	"_ErrorCount_report": "Categorías en error",
+	"_Errors": "Detalles de los errores",
+	"_ErrorsPane": "Errores",
+	"_EskerProcurement": "Esker Compras",
+	"_FormBanner_SubTitle_Processing": "En curso",
+	"_FormBanner_SubTitle_Success": "Completada",
+	"_FormBanner_SubTitle_WithError": "Incompleta",
+	"_FormBannerTitle": "Actualización de las categorías de artículos",
+	"_NoActionCount": "Categorías sin cambios",
+	"_NoActionCount_report": "Categorías sin cambios",
+	"_ParentSupplyID": "ID de la categoría principal",
+	"_ParentSupplyName": "Categoría principal",
+	"_PopupStartupMode_Message": "Esta verificación resolverá las incoherencias en las jerarquías de categorías actualizando la información de las categorías principales en sus subcategorías.\n\nEsta acción puede tardar unos minutos y se procesará en segundo plano.",
+	"_PopupStartupMode_Title": "Realizar la verificación de coherencia",
+	"_SupplyID": "ID de la categoría",
+	"_SupplyID_report": "ID de la categoría de artículo",
+	"_SupplyName": "Categoría",
+	"_SupplyTypeError_DuplicateCategory": "Ya existe una categoría con este ID para este código de empresa.",
+	"_SupplyTypeError_IdenticalIdAndParent": "El identificador de la categoría principal debe ser diferente del de la categoría artículo.",
+	"_SupplyTypeError_MissingFieldData": "Falta el valor de columna: '{0}'.",
+	"_SupplyTypeError_Recursion": "Esta categoría ({0}) está jerárquicamente por debajo de la categoría actual.",
+	"_SupplyTypeError_UnknownParent": "No se ha encontrado el ID de categoría principal para este código de empresa.",
+	"_UpdateCount": "Categorías actualizadas",
+	"_UpdateCount_report": "Categorías actualizadas",
+	"_ValidateDialog": "Ejecutar",
+	"Purchasing Supply Updater": "Actualización de las categorías de artículo",
+	"PurchasingSupplyUpdater": "Actualización de las categorías de artículo",
+	"_AccessRestrictionPane": "Restricción de acceso",
+	"_action_createflexible:Purchasing Supply Updater": "Ejecutar la verificación de coherencia",
+	"_AddFavoriteSupplier": "Añadir proveedores",
+	"_AllowedUsersOrGroups": "Restringir el acceso a",
+	"_AnalyticsPane": "Datos contables",
+	"_BuyerLogin": "ID del comprador",
+	"_BuyerLogin_report": "ID del comprador",
+	"_BuyerLogin_report_Name": "Nombre del comprador",
+	"_CapEx": "CapEx",
+	"_CompanyCode": "Código de empresa",
+	"_CompanyCode_report": "Código de empresa",
+	"_ComputedTechnicalAllowedLogins": "Usuarios seleccionados y con acceso heredado",
+	"_ComputedTechnicalAllowedLogins_report": "Restringido a usuarios seleccionados y con acceso heredado",
+	"_DefaultCostType": "Tipo de coste predeterminado",
+	"_DefaultCostType_report": "Tipo de coste predeterminado",
+	"_DefaultGLAccount": "Cuenta de mayor predeterminada",
+	"_DefaultTaxCode": "Código de impuestos predeterminado",
+	"_DefaultTaxCode_report": "Código de impuestos predeterminado",
+	"_Description": "Descripción",
+	"_Description_report": "Descripción",
+	"_DisableRestrictionInheritance": "Desactivar la herencia de la categoría principal",
+	"_DisableRestrictionInheritance_report": "Herencia de categoría principal desactivada",
+	"_Document data": "Detalles de la categoría",
+	"_EmptyFavoriteSuppliersList": "Aún no se ha añadido ningún proveedor. Añada proveedores preferidos para obtener sugerencias al solicitar artículos.",
+	"_FavoriteSuppliersList": "Proveedores preferidos",
+	"_FavoriteSuppliersPane": "Proveedores preferidos",
+	"_FullName": "Ruta de acceso completa",
+	"_FullName_report": "Ruta de acceso completa",
+	"_InheritedAllowedLogins": "Acceso heredado de la categoría principal",
+	"_InheritedTechnicalAllowedLogins": "Usuarios con acceso heredado",
+	"_LongProcessingWarning": "Los cambios realizados en los detalles o restricciones de esta categoría se aplicarán a sus subcategorías.\n\nEsta acción puede tardar unos minutos y se procesará en segundo plano.",
+	"_LongProcessingWarningTitle": "Actualizar subcategorías",
+	"_MultipleChangesWarningConfirm": "Confirmar",
+	"_MultipleChangesWarningMessage": "Los cambios realizados en los detalles o restricciones de esta categoría también se aplicarán a las subcategorías.\n\nAtención: uno o varios de los códigos UNSPSC que ha añadido ya están asignados a otra categoría de artículo.",
+	"_MultipleChangesWarningTitle": "Confirmar cambios",
+	"_NoGoodsReceipt": "Entrada de bienes y servicios no requerida",
+	"_NoGoodsReceipt_report": "Entrada de bienes y servicios no requerida",
+	"_NotifyRequesterOnReceipt": "Notificar al solicitante en el momento de la recepción",
+	"_NotifyRequesterOnReceipt_report": "Notificar al solicitante en el momento de la recepción",
+	"_OpEx": "OpEx",
+	"_ParentSupplyID_report": "ID de la categoría de artículo principal",
+	"_RecipientLogin": "ID del destinatario",
+	"_RecipientLogin_report": "ID del destinatario",
+	"_RecipientLogin_report_Name": "Nombre del destinatario",
+	"_SelectOrEnterEmailAddress": "Seleccione o introduzca una dirección de e-mail...",
+	"_SupplyName_report": "Nombre de la categoría de artículo",
+	"_TechnicalAllowedUsersOrGroups": "Usuarios seleccionados con acceso",
+	"_TechnicalAllowedUsersOrGroups_report": "Restringida a usuarios seleccionados",
+	"_UpdateChildren": "Actualizar",
+	"_UserPopup_Groups": "Grupos",
+	"_UserPopup_Title": "Restringir el acceso a esta categoría",
+	"_UserPopup_Users": "Usuarios",
+	"_UserPopup_UsersOrGroups": "Usuarios autorizados",
+	"_VendorName": "Nombre proveedor",
+	"_VendorNumber": "Número proveedor",
+	"_VendorScore": "Puntuación global",
+	"Purchasing - Supply": "S2P - Categorías de artículos",
+	"PurchasingSupply": "S2P - Categoría de artículo",
+	"PurchasingSupply__": "S2P - Categorías de artículos"
+}</process_es>
+      <process_fr>{
+	"_CancelDialog": "Annuler",
+	"_DetailsPanel": "Résultats",
+	"_ErrorCount": "Catégories en erreur",
+	"_ErrorCount_report": "Catégories en erreur",
+	"_Errors": "Détails des erreurs",
+	"_ErrorsPane": "Erreurs",
+	"_EskerProcurement": "Esker Achats",
+	"_FormBanner_SubTitle_Processing": "En cours",
+	"_FormBanner_SubTitle_Success": "Terminée",
+	"_FormBanner_SubTitle_WithError": "Incomplète",
+	"_FormBannerTitle": "Mise à jour des catégories d'articles",
+	"_NoActionCount": "Catégories inchangées",
+	"_NoActionCount_report": "Catégories inchangées",
+	"_ParentSupplyID": "ID de la catégorie parente",
+	"_ParentSupplyName": "Catégorie parente",
+	"_PopupStartupMode_Message": "Ce contrôle résoudra les incohérences dans les hiérarchies des catégories en mettant à jour les informations des catégories parentes dans leurs sous-catégories.\n\nCette action peut prendre quelques minutes et sera traitée en arrière-plan.",
+	"_PopupStartupMode_Title": "Exécuter le contrôle de cohérence",
+	"_SupplyID": "ID de la catégorie",
+	"_SupplyID_report": "ID de la catégorie d'article",
+	"_SupplyName": "Catégorie",
+	"_SupplyTypeError_DuplicateCategory": "Une catégorie avec cet identifiant existe déjà pour ce code société.",
+	"_SupplyTypeError_IdenticalIdAndParent": "L'identifiant de la catégorie parente doit être différent de celui de la catégorie d'article.",
+	"_SupplyTypeError_MissingFieldData": "Valeur de colonne manquante : '{0}'.",
+	"_SupplyTypeError_Recursion": "Cette catégorie ({0}) se situe hiérarchiquement sous la catégorie actuelle.",
+	"_SupplyTypeError_UnknownParent": "L'ID de la catégorie parente n'a pas été trouvé pour ce code société.",
+	"_UpdateCount": "Catégories mises à jour",
+	"_UpdateCount_report": "Catégories mises à jour",
+	"_ValidateDialog": "Exécuter",
+	"Purchasing Supply Updater": "Mise à jour des catégories d'articles",
+	"PurchasingSupplyUpdater": "Mise à jour des catégories d'articles",
+	"_AccessRestrictionPane": "Restriction d'accès",
+	"_action_createflexible:Purchasing Supply Updater": "Exécuter le contrôle de cohérence",
+	"_AddFavoriteSupplier": "Ajouter des fournisseurs",
+	"_AllowedUsersOrGroups": "Restreindre l'accès à",
+	"_AnalyticsPane": "Données comptables",
+	"_BuyerLogin": "ID de l'acheteur",
+	"_BuyerLogin_report": "ID de l'acheteur",
+	"_BuyerLogin_report_Name": "Nom de l'acheteur",
+	"_CapEx": "CapEx",
+	"_CompanyCode": "Code société",
+	"_CompanyCode_report": "Code société",
+	"_ComputedTechnicalAllowedLogins": "Utilisateurs sélectionnés et avec accès hérité",
+	"_ComputedTechnicalAllowedLogins_report": "Restreinte aux utilisateurs sélectionnés et avec accès hérité",
+	"_DefaultCostType": "Type de coût par défaut",
+	"_DefaultCostType_report": "Type de coût par défaut",
+	"_DefaultGLAccount": "Compte général par défaut",
+	"_DefaultTaxCode": "Code TVA par défaut",
+	"_DefaultTaxCode_report": "Code TVA par défaut",
+	"_Description": "Description",
+	"_Description_report": "Description",
+	"_DisableRestrictionInheritance": "Désactiver l'héritage de la catégorie parente",
+	"_DisableRestrictionInheritance_report": "Héritage de la catégorie parente désactivé",
+	"_Document data": "Détails de la catégorie",
+	"_EmptyFavoriteSuppliersList": "Aucun fournisseur n'a encore été ajouté. Ajoutez vos fournisseurs préférés pour obtenir des suggestions lors de vos demandes d'articles.",
+	"_FavoriteSuppliersList": "Fournisseurs préférés",
+	"_FavoriteSuppliersPane": "Fournisseurs préférés",
+	"_FullName": "Chemin complet",
+	"_FullName_report": "Chemin complet",
+	"_InheritedAllowedLogins": "Accès hérité de la catégorie parente",
+	"_InheritedTechnicalAllowedLogins": "Utilisateurs avec accès hérité",
+	"_LongProcessingWarning": "Les modifications apportées aux détails d'identification ou aux restrictions de cette catégorie seront appliquées à ses sous-catégories.\n\nCette action peut durer quelques minutes et sera traitée en arrière-plan. ",
+	"_LongProcessingWarningTitle": "Mettre à jour les sous-catégories",
+	"_MultipleChangesWarningConfirm": "Confirmer",
+	"_MultipleChangesWarningMessage": "Les modifications apportées aux détails d'identification ou aux restrictions s'appliqueront également aux sous-catégories.\n\nUn ou plusieurs des codes UNSPSC que vous avez ajoutés sont déjà attribués à une autre catégorie d'article.",
+	"_MultipleChangesWarningTitle": "Confirmer les modifications",
+	"_NoGoodsReceipt": "Entrée de biens et services non requise",
+	"_NoGoodsReceipt_report": "Entrée de biens et services non requise",
+	"_NotifyRequesterOnReceipt": "Notifier le demandeur à la réception",
+	"_NotifyRequesterOnReceipt_report": "Notifier le demandeur à la réception",
+	"_OpEx": "OpEx",
+	"_ParentSupplyID_report": "ID de la catégorie d'article parente",
+	"_RecipientLogin": "ID du réceptionnaire",
+	"_RecipientLogin_report": "ID du réceptionnaire",
+	"_RecipientLogin_report_Name": "Nom du réceptionnaire",
+	"_SelectOrEnterEmailAddress": "Sélectionnez ou saisissez une adresse e-mail...",
+	"_SupplyName_report": "Nom de la catégorie d'article",
+	"_TechnicalAllowedUsersOrGroups": "Utilisateurs sélectionnés avec accès",
+	"_TechnicalAllowedUsersOrGroups_report": "Restreinte aux utilisateurs sélectionnés",
+	"_UpdateChildren": "Mettre à jour",
+	"_UserPopup_Groups": "Groupes",
+	"_UserPopup_Title": "Restreindre l'accès à cette catégorie d'article",
+	"_UserPopup_Users": "Utilisateurs",
+	"_UserPopup_UsersOrGroups": "Utilisateurs autorisés",
+	"_VendorName": "Nom du fournisseur",
+	"_VendorNumber": "Numéro du fournisseur",
+	"_VendorScore": "Score global",
+	"Purchasing - Supply": "S2P - Catégories d'articles",
+	"PurchasingSupply": "S2P - Catégorie d'article",
+	"PurchasingSupply__": "S2P - Catégories d'articles"
+}</process_fr>
+      <process_nl-NL>{
+	"_CancelDialog": "Annuleren",
+	"_DetailsPanel": "Resultaten",
+	"_ErrorCount": "Categorieën met foutmelding",
+	"_ErrorCount_report": "Categorieën met foutmelding",
+	"_Errors": "Foutdetails",
+	"_ErrorsPane": "Fouten",
+	"_EskerProcurement": "Esker Inkoop",
+	"_FormBanner_SubTitle_Processing": "In uitvoering",
+	"_FormBanner_SubTitle_Success": "Voltooid",
+	"_FormBanner_SubTitle_WithError": "Onvoltooid",
+	"_FormBannerTitle": "Update itemcategorie",
+	"_NoActionCount": "Onveranderde categorieën ",
+	"_NoActionCount_report": "Onveranderde categorieën ",
+	"_ParentSupplyID": "Bovenliggende categorie-ID",
+	"_ParentSupplyName": "Bovenliggende categorie",
+	"_PopupStartupMode_Message": "Deze controle lost inconsistenties in categoriehiërarchieën op door informatie over de bovenliggende categorie in hun subcategorieën bij te werken.\n\nDeze actie kan enkele minuten in beslag nemen en wordt op de achtergrond verwerkt.",
+	"_PopupStartupMode_Title": "Consistentiecontrole uitvoeren",
+	"_SupplyID": "Categorie-ID",
+	"_SupplyID_report": "Itemcategorie-ID",
+	"_SupplyName": "Categorie",
+	"_SupplyTypeError_DuplicateCategory": "Er bestaat al een categorie met deze ID voor deze bedrijfscode. ",
+	"_SupplyTypeError_IdenticalIdAndParent": "Het bovenliggende categorie-ID moet verschillen van het itemcategorie-ID.\n",
+	"_SupplyTypeError_MissingFieldData": "Ontbrekende kolomwaarde: '{0}'.",
+	"_SupplyTypeError_Recursion": "Deze categorie {0} is in de hiërarchie onder de huidige categorie.",
+	"_SupplyTypeError_UnknownParent": "Bovenliggende categorie-ID niet gevonden voor deze bedrijfscode.",
+	"_UpdateCount": "Bijgewerkte categorieën ",
+	"_UpdateCount_report": "Bijgewerkte categorieën ",
+	"_ValidateDialog": "Uitvoeren",
+	"Purchasing Supply Updater": "Update itemcategorie",
+	"PurchasingSupplyUpdater": "Update itemcategorie",
+	"_AccessRestrictionPane": "Toegangsbeperking",
+	"_action_createflexible:Purchasing Supply Updater": "Consistentiecontrole uitvoeren",
+	"_AddFavoriteSupplier": "Leveranciers toevoegen",
+	"_AllowedUsersOrGroups": "Toegang beperken tot ",
+	"_AnalyticsPane": "Boekhoudgegevens",
+	"_BuyerLogin": "Koper-ID",
+	"_BuyerLogin_report": "Koper-ID",
+	"_BuyerLogin_report_Name": "Naam koper",
+	"_CapEx": "CapEx",
+	"_CompanyCode": "Bedrijfscode",
+	"_CompanyCode_report": "Bedrijfscode",
+	"_ComputedTechnicalAllowedLogins": "Gebruikers met gekozen of verkregen toegang.",
+	"_ComputedTechnicalAllowedLogins_report": "Beperkt tot gebruikers met gekozen of verkregen toegang.",
+	"_DefaultCostType": "Standaardtype kosten",
+	"_DefaultCostType_report": "Standaardtype kosten",
+	"_DefaultGLAccount": "Standaard grootboekrekening",
+	"_DefaultTaxCode": "Standaard belastingcode",
+	"_DefaultTaxCode_report": "Standaard belastingcode",
+	"_Description": "Beschrijving",
+	"_Description_report": "Beschrijving",
+	"_DisableRestrictionInheritance": "Bovenliggende categorie verkrijgen uitschakelen",
+	"_DisableRestrictionInheritance_report": "Bovenliggende categorie verkrijgen uitgeschakeld",
+	"_Document data": "Details categorie",
+	"_EmptyFavoriteSuppliersList": "Nog geen leverancier toegevoegd. Voeg favoriete leveranciers toe om voorstellen te krijgen bij het aanvragen van items.",
+	"_FavoriteSuppliersList": "Favoriete leveranciers",
+	"_FavoriteSuppliersPane": "Favoriete leveranciers",
+	"_FullName": "Volledig pad",
+	"_FullName_report": "Volledig pad",
+	"_InheritedAllowedLogins": "Toegang verkregen via bovenliggende categorie",
+	"_InheritedTechnicalAllowedLogins": "Gebruikers met verkregen toegang",
+	"_LongProcessingWarning": "Wijzigingen aan de identificatiegegevens of beperkingen van deze categorie zullen worden toegepast op de subcategorieën.\n\nDeze actie kan enkele minuten in beslag nemen en wordt op de achtergrond verwerkt.",
+	"_LongProcessingWarningTitle": "Subcategorieën bijwerken",
+	"_MultipleChangesWarningConfirm": "Bevestigen",
+	"_MultipleChangesWarningMessage": "Uw wijzigingen in de identificatiegegevens of -restricties zijn ook van toepassing op subcategorieën. Een of meerdere UNSPSC-codes die u heeft toegevoegd zijn al toegewezen aan een andere itemcategorie.",
+	"_MultipleChangesWarningTitle": "Wijzigingen bevestigen",
+	"_NoGoodsReceipt": "Geen ontvangstbewijs goederen en services vereist",
+	"_NoGoodsReceipt_report": "Geen ontvangstbewijs goederen en services vereist",
+	"_NotifyRequesterOnReceipt": "Aanvrager melden bij ontvangst",
+	"_NotifyRequesterOnReceipt_report": "Aanvrager melden bij ontvangst",
+	"_OpEx": "OpEx",
+	"_ParentSupplyID_report": "Bovenliggende itemcategorie-ID",
+	"_RecipientLogin": "Ontvanger-ID",
+	"_RecipientLogin_report": "Ontvanger-ID",
+	"_RecipientLogin_report_Name": "Naam ontvanger",
+	"_SelectOrEnterEmailAddress": "Selecteer of voer een e-mailadres in...",
+	"_SupplyName_report": "Naam itemcategorie",
+	"_TechnicalAllowedUsersOrGroups": "Geselecteerde gebruikers met toegang",
+	"_TechnicalAllowedUsersOrGroups_report": "Beperkt tot geselecteerde gebruikers.  ",
+	"_UpdateChildren": "更新",
+	"_UserPopup_Groups": "Groepen",
+	"_UserPopup_Title": "Beperk toegang tot deze categorie",
+	"_UserPopup_Users": "Gebruikers",
+	"_UserPopup_UsersOrGroups": "Gemachtigde gebruikers",
+	"_VendorName": "Naam leverancier",
+	"_VendorNumber": "Nummer leverancier",
+	"_VendorScore": "Totale score",
+	"Purchasing - Supply": "S2P - Itemcategorieën",
+	"PurchasingSupply": "S2P - Itemcategorie",
+	"PurchasingSupply__": "S2P - Itemcategorieën"
+}</process_nl-NL>
+      <process_pl>{
+	"_CancelDialog": "Anuluj",
+	"_DetailsPanel": "Wyniki",
+	"_ErrorCount": "Kategorie z błędem",
+	"_ErrorCount_report": "Kategorie z błędem",
+	"_Errors": "Szczegóły błędu",
+	"_ErrorsPane": "Błędy",
+	"_EskerProcurement": "Esker Procurement",
+	"_FormBanner_SubTitle_Processing": "W toku",
+	"_FormBanner_SubTitle_Success": "Ukończono",
+	"_FormBanner_SubTitle_WithError": "Nie ukończono",
+	"_FormBannerTitle": "Aktualizacja kategorii pozycji",
+	"_NoActionCount": "Kategorie bez zmian",
+	"_NoActionCount_report": "Kategorie bez zmian",
+	"_ParentSupplyID": "Id. kategorii nadrzędnej",
+	"_ParentSupplyName": "Kategoria nadrzędna",
+	"_PopupStartupMode_Message": "Ta kontrola spowoduje usunięcie niespójności w hierarchii kategorii przez zaktualizowanie informacji o kategorii nadrzędnej w podkategoriach.\n\nTo działanie może potrwać kilka minut i zostanie wykonane w tle.",
+	"_PopupStartupMode_Title": "Uruchom kontrolę spójności",
+	"_SupplyID": "Id. kategorii",
+	"_SupplyID_report": "Id. kategorii pozycji",
+	"_SupplyName": "Kategoria",
+	"_SupplyTypeError_DuplicateCategory": "Kategoria o tym identyfikatorze już istnieje dla tego kodu firmy.",
+	"_SupplyTypeError_IdenticalIdAndParent": "Identyfikator kategorii nadrzędnej musi się różnić od identyfikatora kategorii pozycji.",
+	"_SupplyTypeError_MissingFieldData": "Brak wartości kolumny: „{0}”.",
+	"_SupplyTypeError_Recursion": "Ta kategoria ({0}) w hierarchii znajduje się pod bieżącą kategorią.",
+	"_SupplyTypeError_UnknownParent": "Nie znaleziono identyfikatora kategorii nadrzędnej dla tego kodu firmy.",
+	"_UpdateCount": "Zaktualizowane kategorie",
+	"_UpdateCount_report": "Zaktualizowane kategorie",
+	"_ValidateDialog": "Uruchom",
+	"Purchasing Supply Updater": "Aktualizacja kategorii pozycji",
+	"PurchasingSupplyUpdater": "Aktualizacja kategorii pozycji",
+	"_AccessRestrictionPane": "Ograniczenie adresu",
+	"_action_createflexible:Purchasing Supply Updater": "Uruchom kontrolę spójności",
+	"_AddFavoriteSupplier": "Dodaj dostawców",
+	"_AllowedUsersOrGroups": "Ogranicz dostęp do",
+	"_AnalyticsPane": "Dane rachunkowe",
+	"_BuyerLogin": "Id. kupującego",
+	"_BuyerLogin_report": "Id. kupującego",
+	"_BuyerLogin_report_Name": "Nazwa kupującego",
+	"_CapEx": "CapEx",
+	"_CompanyCode": "Kod firmy",
+	"_CompanyCode_report": "Kod firmy",
+	"_ComputedTechnicalAllowedLogins": "Użytkownicy wybrani i z odziedziczonym dostępem",
+	"_ComputedTechnicalAllowedLogins_report": "Ograniczenie do użytkowników wybranych i z odziedziczonym dostępem",
+	"_DefaultCostType": "Domyślny typ kosztów",
+	"_DefaultCostType_report": "Domyślny typ kosztów",
+	"_DefaultGLAccount": "Domyślne konto KG",
+	"_DefaultTaxCode": "Domyślny kod podatku",
+	"_DefaultTaxCode_report": "Domyślny kod podatku",
+	"_Description": "Opis",
+	"_Description_report": "Opis",
+	"_DisableRestrictionInheritance": "Wyłącz dziedziczenie z kategorii nadrzędnej",
+	"_DisableRestrictionInheritance_report": "Wyłączono dziedziczenie z kategorii nadrzędnej",
+	"_Document data": "Szczegóły kategorii",
+	"_EmptyFavoriteSuppliersList": "Jeszcze nie dodano dostawcy. Dodaj preferowanych dostawców, aby otrzymywać sugestie podczas tworzenia zapotrzebowań na pozycje.",
+	"_FavoriteSuppliersList": "Preferowani dostawcy",
+	"_FavoriteSuppliersPane": "Preferowani dostawcy",
+	"_FullName": "Pełna ścieżka",
+	"_FullName_report": "Pełna ścieżka",
+	"_InheritedAllowedLogins": "Odziedziczony dostęp z kategorii nadrzędnej",
+	"_InheritedTechnicalAllowedLogins": "Użytkownicy z odziedziczonym dostępem",
+	"_LongProcessingWarning": "Zmiany wprowadzone w szczegółach identyfikacyjnych lub ograniczeniach tej kategorii zostaną zastosowane do jej podkategorii.\n\nTo działanie może potrwać kilka minut i zostanie wykonane w tle.",
+	"_LongProcessingWarningTitle": "Aktualizuj podkategorie",
+	"_MultipleChangesWarningConfirm": "Potwierdź",
+	"_MultipleChangesWarningMessage": "Zmiany wprowadzone w szczegółach identyfikacyjnych lub ograniczeniach zostaną również zastosowane do podkategorii. Co najmniej jeden z dodanych kodów UNSPSC już jest przypisany do innej kategorii pozycji.",
+	"_MultipleChangesWarningTitle": "Potwierdź zmiany",
+	"_NoGoodsReceipt": "Nie jest wymagane przyjęcie materiałów i usług",
+	"_NoGoodsReceipt_report": "Nie jest wymagane przyjęcie materiałów i usług",
+	"_NotifyRequesterOnReceipt": "Powiadom wnioskodawcę po otrzymaniu",
+	"_NotifyRequesterOnReceipt_report": "Powiadom wnioskodawcę po otrzymaniu",
+	"_OpEx": "OpEx",
+	"_ParentSupplyID_report": "Id. kategorii pozycji nadrzędnej",
+	"_RecipientLogin": "Id. odbiorcy",
+	"_RecipientLogin_report": "Id. odbiorcy",
+	"_RecipientLogin_report_Name": "Nazwa odbiorcy",
+	"_SelectOrEnterEmailAddress": "Wybierz lub wprowadź adres e-mail...",
+	"_SupplyName_report": "Nazwa kategorii pozycji",
+	"_TechnicalAllowedUsersOrGroups": "Wybrani użytkownicy z dostępem",
+	"_TechnicalAllowedUsersOrGroups_report": "Ograniczenie do wybranych użytkowników",
+	"_UpdateChildren": "Aktualizuj",
+	"_UserPopup_Groups": "Grupy",
+	"_UserPopup_Title": "Ogranicz dostęp do tej kategorii pozycji",
+	"_UserPopup_Users": "Użytkownicy",
+	"_UserPopup_UsersOrGroups": "Autoryzowani użytkownicy",
+	"_VendorName": "Nazwa dostawcy",
+	"_VendorNumber": "Numer dostawcy",
+	"_VendorScore": "Ocena ogólna",
+	"Purchasing - Supply": "S2P – kategorie pozycji",
+	"PurchasingSupply": "S2P – kategoria pozycji",
+	"PurchasingSupply__": "S2P – kategorie pozycji"
+}</process_pl>
+      <process_it>{
+	"_CancelDialog": "Annulla",
+	"_DetailsPanel": "Risultati",
+	"_ErrorCount": "Categorie in errore",
+	"_ErrorCount_report": "Categorie in errore",
+	"_Errors": "Dettagli errori",
+	"_ErrorsPane": "Errori",
+	"_EskerProcurement": "Esker Acquisti",
+	"_FormBanner_SubTitle_Processing": "In corso",
+	"_FormBanner_SubTitle_Success": "Completato",
+	"_FormBanner_SubTitle_WithError": "Incompleto",
+	"_FormBannerTitle": "Aggiornamento categorie articoli",
+	"_NoActionCount": "Categorie non modificate",
+	"_NoActionCount_report": "Categorie non modificate",
+	"_ParentSupplyID": "ID categoria principale",
+	"_ParentSupplyName": "Categoria principale",
+	"_PopupStartupMode_Message": "La verifica risolverà le incoerenze nelle gerarchie delle categorie aggiornando le informazioni delle categorie principali nelle loro categorie secondarie.\n\nQuesta azione può richiedere alcuni minuti e sarà elaborata in background.",
+	"_PopupStartupMode_Title": "Esegui verifica di coerenza",
+	"_SupplyID": "ID categoria",
+	"_SupplyID_report": "ID categoria di articolo",
+	"_SupplyName": "Categoria",
+	"_SupplyTypeError_DuplicateCategory": "Esiste già una categoria con lo stesso ID per questo codice società.",
+	"_SupplyTypeError_IdenticalIdAndParent": "L'ID della categoria principale deve essere diverso da quello della categoria di articolo.",
+	"_SupplyTypeError_MissingFieldData": "Valore colonna mancante: '{0}'.",
+	"_SupplyTypeError_Recursion": "Questa categoria ({0}) si trova gerarchicamente sotto la categoria corrente.",
+	"_SupplyTypeError_UnknownParent": "ID categoria principale non trovato per questo codice società.",
+	"_UpdateCount": "Categorie aggiornate",
+	"_UpdateCount_report": "Categorie aggiornate",
+	"_ValidateDialog": "Esegui",
+	"Purchasing Supply Updater": "Aggiornamento categorie articoli",
+	"PurchasingSupplyUpdater": "Aggiornamento categorie articoli",
+	"_AccessRestrictionPane": "Restrizione accesso",
+	"_action_createflexible:Purchasing Supply Updater": "Esegui verifica di coerenza",
+	"_AddFavoriteSupplier": "Aggiungi fornitori",
+	"_AllowedUsersOrGroups": "Limita l'accesso a",
+	"_AnalyticsPane": "Dati contabili",
+	"_BuyerLogin": "ID compratore",
+	"_BuyerLogin_report": "ID compratore",
+	"_BuyerLogin_report_Name": "Nome compratore",
+	"_CapEx": "CapEx",
+	"_CompanyCode": "Codice società",
+	"_CompanyCode_report": "Codice società",
+	"_ComputedTechnicalAllowedLogins": "Utenti selezionati e con accesso ereditato",
+	"_ComputedTechnicalAllowedLogins_report": "Limitata a utenti selezionati e con accesso ereditato",
+	"_DefaultCostType": "Tipo di costo predefinito",
+	"_DefaultCostType_report": "Tipo di costo predefinito",
+	"_DefaultGLAccount": "Conto generale predefinito",
+	"_DefaultTaxCode": "Codice IVA predefinito",
+	"_DefaultTaxCode_report": "Codice IVA predefinito",
+	"_Description": "Descrizione",
+	"_Description_report": "Descrizione",
+	"_DisableRestrictionInheritance": "Disattiva ereditarietà categoria principale",
+	"_DisableRestrictionInheritance_report": "Ereditarietà categoria principale disattivata",
+	"_Document data": "Dettagli categoria",
+	"_EmptyFavoriteSuppliersList": "Non è stato ancora aggiunto alcun fornitore. Aggiungi i fornitori preferiti per ricevere suggerimenti nelle richieste di articoli.",
+	"_FavoriteSuppliersList": "Fornitori preferiti",
+	"_FavoriteSuppliersPane": "Fornitori preferiti",
+	"_FullName": "Percorso completo",
+	"_FullName_report": "Percorso completo",
+	"_InheritedAllowedLogins": "Accesso ereditato dalla categoria principale",
+	"_InheritedTechnicalAllowedLogins": "Utenti con accesso ereditato",
+	"_LongProcessingWarning": "Le modifiche apportate ai dettagli identificativi o alle restrizioni della categoria saranno applicate alle sue categorie secondarie.\n\nQuesta operazione può richiedere alcuni minuti e sarà elaborata in background.",
+	"_LongProcessingWarningTitle": "Aggiorna categorie secondarie",
+	"_MultipleChangesWarningConfirm": "Conferma",
+	"_MultipleChangesWarningMessage": "Le modifiche apportate ai dettagli identificativi o alle restrizioni si applicheranno anche alle categorie secondarie.\n\nUno o più dei codici UNSPSC aggiunti sono già assegnati a un’altra categoria di articolo.",
+	"_MultipleChangesWarningTitle": "Conferma modifiche",
+	"_NoGoodsReceipt": "Entrata merci e servizi non richiesta",
+	"_NoGoodsReceipt_report": "Entrata merci e servizi non richiesta",
+	"_NotifyRequesterOnReceipt": "Notifica richiedente alla ricezione",
+	"_NotifyRequesterOnReceipt_report": "Notifica richiedente alla ricezione",
+	"_OpEx": "OpEx",
+	"_ParentSupplyID_report": "ID della categoria di articolo principale",
+	"_RecipientLogin": "ID destinatario",
+	"_RecipientLogin_report": "ID destinatario",
+	"_RecipientLogin_report_Name": "Nome destinatario",
+	"_SelectOrEnterEmailAddress": "Seleziona o immetti un indirizzo e-mail...",
+	"_SupplyName_report": "Nome categoria di articolo",
+	"_TechnicalAllowedUsersOrGroups": "Utenti selezionati con accesso",
+	"_TechnicalAllowedUsersOrGroups_report": "Limitata agli utenti selezionati",
+	"_UpdateChildren": "Aggiorna",
+	"_UserPopup_Groups": "Gruppi",
+	"_UserPopup_Title": "Limita l'accesso a questa categoria",
+	"_UserPopup_Users": "Utenti",
+	"_UserPopup_UsersOrGroups": "Utenti autorizzati",
+	"_VendorName": "Nome fornitore",
+	"_VendorNumber": "Numero fornitore",
+	"_VendorScore": "Punteggio complessivo",
+	"Purchasing - Supply": "S2P - Categorie di articoli",
+	"PurchasingSupply": "S2P - Categoria di articolo",
+	"PurchasingSupply__": "S2P - Categorie di articoli"
+}</process_it>
+      <process_sk>{
+	"_CancelDialog": "Zrušiť",
+	"_DetailsPanel": "Výsledky",
+	"_ErrorCount": "Chybné kategórie",
+	"_ErrorCount_report": "Chybné kategórie",
+	"_Errors": "Detaily o chybe",
+	"_ErrorsPane": "Chyby",
+	"_EskerProcurement": "Obstarávanie Esker",
+	"_FormBanner_SubTitle_Processing": "Prebieha",
+	"_FormBanner_SubTitle_Success": "Dokončené",
+	"_FormBanner_SubTitle_WithError": "Neúplný",
+	"_FormBannerTitle": "Aktualizácia kategórie položky",
+	"_NoActionCount": "Nezmenené kategórie",
+	"_NoActionCount_report": "Nezmenené kategórie",
+	"_ParentSupplyID": "ID nadradenej kategórie",
+	"_ParentSupplyName": "Nadradená kategória",
+	"_PopupStartupMode_Message": "Táto kontrola vyrieši nezrovnalosti v hierarchii kategórií aktualizovaním informácií o nadradených kategóriách v ich podkategóriách.\n\nTáto činnosť môže trvať niekoľko minút a bude spracovaná na pozadí.",
+	"_PopupStartupMode_Title": "Spustiť kontrolu konzistencie",
+	"_SupplyID": "Kategória ID",
+	"_SupplyID_report": "ID kategórie položky",
+	"_SupplyName": "Kategória",
+	"_SupplyTypeError_DuplicateCategory": "Kód spoločnosti pre túto kategóriu už existuje.",
+	"_SupplyTypeError_IdenticalIdAndParent": "ID nadradenej kategórie sa musí líšiť od ID kategórie položky.",
+	"_SupplyTypeError_MissingFieldData": "Chýba hodnota stĺpca: '{0}'.",
+	"_SupplyTypeError_Recursion": "Táto kategória ({0}) je hierarchicky pod aktuálnou kategóriou.",
+	"_SupplyTypeError_UnknownParent": "ID nadradenej kategórie nebolo nájdené pre tento kód spoločnosti.",
+	"_UpdateCount": "Aktualizované kategórie",
+	"_UpdateCount_report": "Aktualizované kategórie",
+	"_ValidateDialog": "Spustiť",
+	"Purchasing Supply Updater": "Aktualizácia kategórie položky",
+	"PurchasingSupplyUpdater": "Aktualizácia kategórie položky",
+	"_AccessRestrictionPane": "Obmedzenie prístupu",
+	"_action_createflexible:Purchasing Supply Updater": "Spustiť kontrolu konzistencie",
+	"_AddFavoriteSupplier": "Pridať dodávateľov",
+	"_AllowedUsersOrGroups": "Obmedziť prístup k",
+	"_AnalyticsPane": "Účtovné údaje",
+	"_BuyerLogin": "ID nákupcu",
+	"_BuyerLogin_report": "ID nákupcu",
+	"_BuyerLogin_report_Name": "Meno nákupcu",
+	"_CapEx": "CapEx",
+	"_CompanyCode": "Kód spoločnosti",
+	"_CompanyCode_report": "Kód spoločnosti",
+	"_ComputedTechnicalAllowedLogins": "Vybraní používatelia a používatelia s dedičným prístupom",
+	"_ComputedTechnicalAllowedLogins_report": "Obmedzené na vybraných používateľov a používateľov s dedičným prístupom",
+	"_DefaultCostType": "Predvolený typ nákladov",
+	"_DefaultCostType_report": "Predvolený typ nákladov",
+	"_DefaultGLAccount": "Predvolený účet hlavnej knihy",
+	"_DefaultTaxCode": "Predvolený daňový kód",
+	"_DefaultTaxCode_report": "Predvolený daňový kód",
+	"_Description": "Popis",
+	"_Description_report": "Popis",
+	"_DisableRestrictionInheritance": "Zakázať dedičnosť nadradenej kategórie",
+	"_DisableRestrictionInheritance_report": "Dedičnosť nadradenej kategórie zakázaná",
+	"_Document data": "Detaily kategórie",
+	"_EmptyFavoriteSuppliersList": "Zatiaľ nebol pridaný žiadny dodávateľ. Pridajte preferovaných dodávateľov, aby ste pri žiadosti o položky dostávali návrhy.",
+	"_FavoriteSuppliersList": "Preferovaní dodávatelia",
+	"_FavoriteSuppliersPane": "Preferovaní dodávatelia",
+	"_FullName": "Úplná cesta",
+	"_FullName_report": "Úplná cesta",
+	"_InheritedAllowedLogins": "Dedičný prístup z nadradenej kategórie",
+	"_InheritedTechnicalAllowedLogins": "Používatelia s dedičným prístupom",
+	"_LongProcessingWarning": "Zmeny identifikačných údajov alebo obmedzení tejto kategórie sa uplatnia na jej podkategórie.\n\nTáto činnosť môže trvať niekoľko minút a bude spracovaná na pozadí.",
+	"_LongProcessingWarningTitle": "Aktualizovať podkategórie",
+	"_MultipleChangesWarningConfirm": "Potvrdiť",
+	"_MultipleChangesWarningMessage": "Vaše zmeny identifikačných údajov alebo obmedzení sa budú vzťahovať aj na podkategórie.\n\nJeden alebo viac kódov UNSPSC, ktoré ste pridali, je už priradených k inej kategórii položiek.",
+	"_MultipleChangesWarningTitle": "Potvrdiť zmeny",
+	"_NoGoodsReceipt": "Nevyžaduje sa potvrdenie o prijatí tovaru a služieb",
+	"_NoGoodsReceipt_report": "Nevyžaduje sa potvrdenie o prijatí tovaru a služieb",
+	"_NotifyRequesterOnReceipt": "Upozorniť žiadateľa po prijatí",
+	"_NotifyRequesterOnReceipt_report": "Upozorniť žiadateľa po prijatí",
+	"_OpEx": "OpEx",
+	"_ParentSupplyID_report": "ID nadradenej položky",
+	"_RecipientLogin": "ID príjemcu",
+	"_RecipientLogin_report": "ID príjemcu",
+	"_RecipientLogin_report_Name": "Meno príjemcu",
+	"_SelectOrEnterEmailAddress": "Vybrať alebo zadať e-mailovú adresu...",
+	"_SupplyName_report": "Názov kategórie položky",
+	"_TechnicalAllowedUsersOrGroups": "Vybraní používatelia s prístupom",
+	"_TechnicalAllowedUsersOrGroups_report": "Obmedzené na vybraných používateľov",
+	"_UpdateChildren": "Aktualizácia",
+	"_UserPopup_Groups": "Skupiny",
+	"_UserPopup_Title": "Obmedziť prístup k tejto kategórii položiek",
+	"_UserPopup_Users": "Používatelia",
+	"_UserPopup_UsersOrGroups": "Autorizovaní používatelia",
+	"_VendorName": "Názov dodávateľa",
+	"_VendorNumber": "Číslo dodávateľa",
+	"_VendorScore": "Celkové skóre",
+	"Purchasing - Supply": "S2P – Kategória položiek",
+	"PurchasingSupply": "S2P – Kategória položiek",
+	"PurchasingSupply__": "S2P – Kategória položiek"
+}</process_sk>
+      <process_zh-CN>{
+	"_CancelDialog": "取消",
+	"_DetailsPanel": "结果",
+	"_ErrorCount": "错误类别",
+	"_ErrorCount_report": "错误类别",
+	"_Errors": "错误详情",
+	"_ErrorsPane": "错误",
+	"_EskerProcurement": "Esker 采购",
+	"_FormBanner_SubTitle_Processing": "进行中",
+	"_FormBanner_SubTitle_Success": "已完成",
+	"_FormBanner_SubTitle_WithError": "未完成",
+	"_FormBannerTitle": "项目类别更新",
+	"_NoActionCount": "未变更类别",
+	"_NoActionCount_report": "未变更类别",
+	"_ParentSupplyID": "上级类别 ID",
+	"_ParentSupplyName": "上级类别",
+	"_PopupStartupMode_Message": "此检查将通过更新子类别中的上级类别信息，来解决类别层级不一致问题。\n\n此操作可能需要几分钟，将在后台处理。",
+	"_PopupStartupMode_Title": "运行一致性检查",
+	"_SupplyID": "类别 ID",
+	"_SupplyID_report": "项目类别 ID",
+	"_SupplyName": "类别",
+	"_SupplyTypeError_DuplicateCategory": "此公司代码已有同 ID 类别。",
+	"_SupplyTypeError_IdenticalIdAndParent": "上级类别 ID 必须与项目类别 ID 不同。\n",
+	"_SupplyTypeError_MissingFieldData": "缺少列值：“{0}”。",
+	"_SupplyTypeError_Recursion": "此类别（{0}）在层级上处于当前类别下级。",
+	"_SupplyTypeError_UnknownParent": "此公司代码未找到上级类别 ID。",
+	"_UpdateCount": "已更新类别",
+	"_UpdateCount_report": "已更新类别",
+	"_ValidateDialog": "运行",
+	"Purchasing Supply Updater": "项目类别更新",
+	"PurchasingSupplyUpdater": "项目类别更新",
+	"_AccessRestrictionPane": "访问限制",
+	"_action_createflexible:Purchasing Supply Updater": "运行一致性检查",
+	"_AddFavoriteSupplier": "添加供应商",
+	"_AllowedUsersOrGroups": "限制访问",
+	"_AnalyticsPane": "会计数据",
+	"_BuyerLogin": "采购员ID",
+	"_BuyerLogin_report": "采购员ID",
+	"_BuyerLogin_report_Name": "采购员名称",
+	"_CapEx": "资本性支出",
+	"_CompanyCode": "公司代码",
+	"_CompanyCode_report": "公司代码",
+	"_ComputedTechnicalAllowedLogins": "选定的和继承访问权的用户",
+	"_ComputedTechnicalAllowedLogins_report": "仅限于选定的和继承访问权的用户",
+	"_DefaultCostType": "默认成本类型",
+	"_DefaultCostType_report": "默认成本类型",
+	"_DefaultGLAccount": "默认总账科目",
+	"_DefaultTaxCode": "默认税码",
+	"_DefaultTaxCode_report": "默认税码",
+	"_Description": "名称/描述",
+	"_Description_report": "名称/描述",
+	"_DisableRestrictionInheritance": "停用上级类别继承",
+	"_DisableRestrictionInheritance_report": "已停用上级类别继承",
+	"_Document data": "类别详情",
+	"_EmptyFavoriteSuppliersList": "尚未添加供应商。请添加首选供应商以在请求项目时获得建议。",
+	"_FavoriteSuppliersList": "首选供应商",
+	"_FavoriteSuppliersPane": "首选供应商",
+	"_FullName": "完整路径",
+	"_FullName_report": "完整路径",
+	"_InheritedAllowedLogins": "从上级类别继承的访问权限",
+	"_InheritedTechnicalAllowedLogins": "继承了访问权限的用户",
+	"_LongProcessingWarning": "对该类别的身份验证信息或限制所作的更改将适用于其子类别。\n\n此操作可能需要几分钟，将在后台处理。",
+	"_LongProcessingWarningTitle": "更新子类别",
+	"_MultipleChangesWarningConfirm": "确认",
+	"_MultipleChangesWarningMessage": "对身份验证信息或限制的更改也将适用于子类别。\n\n您所添加的 UNSPSC 代码中有的已分配给另一个物料类别。",
+	"_MultipleChangesWarningTitle": "确认修改",
+	"_NoGoodsReceipt": "无需货物与服务接收单",
+	"_NoGoodsReceipt_report": "无需货物与服务接收单",
+	"_NotifyRequesterOnReceipt": "收到后通知申请人",
+	"_NotifyRequesterOnReceipt_report": "收到后通知申请人",
+	"_OpEx": "运营费用",
+	"_ParentSupplyID_report": "上级商品类别 ID",
+	"_RecipientLogin": "收货人ID",
+	"_RecipientLogin_report": "收货人ID",
+	"_RecipientLogin_report_Name": "接收人名称",
+	"_SelectOrEnterEmailAddress": "请选择或输入电子邮件地址...",
+	"_SupplyName_report": "项目类别名称",
+	"_TechnicalAllowedUsersOrGroups": "具有访问权限的选定用户",
+	"_TechnicalAllowedUsersOrGroups_report": "仅限于选定用户",
+	"_UpdateChildren": "Bijwerken",
+	"_UserPopup_Groups": "组",
+	"_UserPopup_Title": "限制访问此项目类别",
+	"_UserPopup_Users": "用户",
+	"_UserPopup_UsersOrGroups": "授权用户",
+	"_VendorName": "供应商名称",
+	"_VendorNumber": "供应商号",
+	"_VendorScore": "总体评分",
+	"Purchasing - Supply": "寻源到付款 - 商品类别",
+	"PurchasingSupply": "寻源到付款 - 商品类别",
+	"PurchasingSupply__": "寻源到付款 - 商品类别"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"_CancelDialog": "Cancelar",
+	"_DetailsPanel": "Resultados",
+	"_ErrorCount": "Categorias com erro",
+	"_ErrorCount_report": "Categorias com erro",
+	"_Errors": "Detalhes do erro",
+	"_ErrorsPane": "Erros",
+	"_EskerProcurement": "Esker Compras",
+	"_FormBanner_SubTitle_Processing": "Em andamento",
+	"_FormBanner_SubTitle_Success": "Concluída",
+	"_FormBanner_SubTitle_WithError": "Incompleta",
+	"_FormBannerTitle": "Atualização da categoria do item",
+	"_NoActionCount": "Categorias inalteradas",
+	"_NoActionCount_report": "Categorias inalteradas",
+	"_ParentSupplyID": "ID da categoria principal",
+	"_ParentSupplyName": "Categoria principal",
+	"_PopupStartupMode_Message": "Esta verificação resolverá inconsistências nas hierarquias de categorias atualizando as informações da categoria principal em suas subcategorias. Esta ação pode demorar alguns minutos e será processada em segundo plano.",
+	"_PopupStartupMode_Title": "Realizar verificação de consistência",
+	"_SupplyID": "ID da categoria",
+	"_SupplyID_report": "ID da categoria do item",
+	"_SupplyName": "Categoria",
+	"_SupplyTypeError_DuplicateCategory": "Já existe uma categoria com essa ID para esse código de empresa.",
+	"_SupplyTypeError_IdenticalIdAndParent": "A ID da categoria principal deve ser diferente da ID da categoria do item.",
+	"_SupplyTypeError_MissingFieldData": "Valor da coluna ausente: '{0}'.",
+	"_SupplyTypeError_Recursion": "Esta categoria ({0}) está hierarquicamente abaixo da categoria atual.",
+	"_SupplyTypeError_UnknownParent": "ID da categoria principal não encontrado para este código de empresa.",
+	"_UpdateCount": "Categorias atualizadas",
+	"_UpdateCount_report": "Categorias atualizadas",
+	"_ValidateDialog": "Executar",
+	"Purchasing Supply Updater": "Atualização da categoria do item",
+	"PurchasingSupplyUpdater": "Atualização da categoria do item",
+	"_AccessRestrictionPane": "Restrição de acesso",
+	"_action_createflexible:Purchasing Supply Updater": "Realizar verificação de consistência",
+	"_AddFavoriteSupplier": "Adicionar fornecedores",
+	"_AllowedUsersOrGroups": "Restringir o acesso a",
+	"_AnalyticsPane": "Dados contábeis",
+	"_BuyerLogin": "ID do comprador",
+	"_BuyerLogin_report": "ID do comprador",
+	"_BuyerLogin_report_Name": "Nome do comprador",
+	"_CapEx": "Capex",
+	"_CompanyCode": "Código da empresa",
+	"_CompanyCode_report": "Código da empresa",
+	"_ComputedTechnicalAllowedLogins": "Usuários selecionados e com acesso herdado",
+	"_ComputedTechnicalAllowedLogins_report": "Restrito a usuários selecionados e com acesso herdado",
+	"_DefaultCostType": "Tipo de custo padrão",
+	"_DefaultCostType_report": "Tipo de custo padrão",
+	"_DefaultGLAccount": "Conta do Razão padrão",
+	"_DefaultTaxCode": "Código fiscal padrão",
+	"_DefaultTaxCode_report": "Código fiscal padrão",
+	"_Description": "Descrição",
+	"_Description_report": "Descrição",
+	"_DisableRestrictionInheritance": "Desabilitar herança de categoria principal",
+	"_DisableRestrictionInheritance_report": "Herança de categoria principal desabilitada",
+	"_Document data": "Detalhes da categoria",
+	"_EmptyFavoriteSuppliersList": "Nenhum fornecedor foi adicionado ainda. Adicione fornecedores aos preferidos para receber sugestões ao solicitar itens.",
+	"_FavoriteSuppliersList": "Fornecedores preferidos",
+	"_FavoriteSuppliersPane": "Fornecedores preferidos",
+	"_FullName": "Caminho completo",
+	"_FullName_report": "Caminho completo",
+	"_InheritedAllowedLogins": "Acesso herdado da categoria principal",
+	"_InheritedTechnicalAllowedLogins": "Usuários com acesso herdado",
+	"_LongProcessingWarning": "As alterações realizadas nos detalhes de identificação ou restrições desta categoria serão aplicadas às suas subcategorias. Esta ação pode demorar alguns minutos e será processada em segundo plano.",
+	"_LongProcessingWarningTitle": "Atualizar subcategorias",
+	"_MultipleChangesWarningConfirm": "Confirmar",
+	"_MultipleChangesWarningMessage": "As alterações nos detalhes de identificação ou nas restrições também serão aplicadas às subcategorias. Um ou mais códigos UNSPSC adicionados já estão atribuídos a outra categoria de itens.",
+	"_MultipleChangesWarningTitle": "Confirmar alterações",
+	"_NoGoodsReceipt": "Nenhum recebimento de bens e serviços necessário",
+	"_NoGoodsReceipt_report": "Nenhum recebimento de bens e serviços necessário",
+	"_NotifyRequesterOnReceipt": "Notificar o solicitante após o recebimento",
+	"_NotifyRequesterOnReceipt_report": "Notificar o solicitante após o recebimento",
+	"_OpEx": "OpEx",
+	"_ParentSupplyID_report": "ID da categoria do item principal",
+	"_RecipientLogin": "ID de destinatário",
+	"_RecipientLogin_report": "ID de destinatário",
+	"_RecipientLogin_report_Name": "Nome do destinatário",
+	"_SelectOrEnterEmailAddress": "Selecione ou digite um endereço de e-mail...",
+	"_SupplyName_report": "Nome da categoria do item",
+	"_TechnicalAllowedUsersOrGroups": "Usuários selecionados com acesso",
+	"_TechnicalAllowedUsersOrGroups_report": "Restrito a usuários selecionados",
+	"_UpdateChildren": "更新",
+	"_UserPopup_Groups": "Grupos",
+	"_UserPopup_Title": "Restringir acesso a esta categoria de item",
+	"_UserPopup_Users": "Usuários",
+	"_UserPopup_UsersOrGroups": "Usuários autorizados",
+	"_VendorName": "Nome do fornecedor",
+	"_VendorNumber": "Número do fornecedor",
+	"_VendorScore": "Classificação geral",
+	"Purchasing - Supply": "S2P - Categorias de itens",
+	"PurchasingSupply": "S2P - Categoria do item",
+	"PurchasingSupply__": "S2P - Categorias de itens"
+}</process_pt-BR>
+    </lg>
+    <ocr>
+      <trade-off>accurate</trade-off>
+      <image-ocr-timeout>
+      </image-ocr-timeout>
+      <image-binarization>no</image-binarization>
+      <image-draft-fax>no</image-draft-fax>
+      <image-despeckle>no</image-despeckle>
+      <allowed-language>0</allowed-language>
+      <image-resolution-enhancement>auto</image-resolution-enhancement>
+      <pdf-processing>no-ocr</pdf-processing>
+      <ocr_engine>Nuance210</ocr_engine>
+      <extractionAdditionalOptions>
+      </extractionAdditionalOptions>
+    </ocr>
+    <process>
+      <flowtype>processing</flowtype>
+      <ocrpreset>scan</ocrpreset>
+      <cacheableprocess>PurchasingSupply__</cacheableprocess>
+      <EnableCatchNetworkError>
+      </EnableCatchNetworkError>
+      <EnableNegativeNumbersBetweenBrackets>true</EnableNegativeNumbersBetweenBrackets>
+      <panelLabelWidth>
+      </panelLabelWidth>
+      <homepagelabel>PurchasingSupplyUpdater</homepagelabel>
+      <enableflexibleauditing>
+      </enableflexibleauditing>
+      <enableflexibleediting>
+      </enableflexibleediting>
+      <enableflexibleteaching>
+      </enableflexibleteaching>
+      <enableInternalConversation>
+      </enableInternalConversation>
+      <disableocr>
+      </disableocr>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <disableautolearning>true</disableautolearning>
+      <backgroundprocessingthreshold>
+      </backgroundprocessingthreshold>
+      <EnablePreviewPrecomputation>
+      </EnablePreviewPrecomputation>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <enablerounddecimal>true</enablerounddecimal>
+      <pdfNormalizeFilter>
+      </pdfNormalizeFilter>
+      <archiveDuration>0</archiveDuration>
+      <ocrpagestoprocess>0</ocrpagestoprocess>
+      <ScriptEngineType>2</ScriptEngineType>
+      <UseActionNameWithScriptApproval>true</UseActionNameWithScriptApproval>
+      <displayWidth>1280</displayWidth>
+      <AllowUploadAttachment>1</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>1</AllowUploadReferenceDocument>
+      <RemovePointWhenCastingIntToString>true</RemovePointWhenCastingIntToString>
+      <UseCultureFormat>true</UseCultureFormat>
+      <AllowRetryExtractCD>true</AllowRetryExtractCD>
+      <TransportName>CustomData</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+      <printToProcess>
+      </printToProcess>
+    </process>
+    <ui>
+      <CustomScriptDebug>false</CustomScriptDebug>
+      <customscriptIncludedScripts>Sys/Sys_Helpers_Banner</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Lib_P2P_Layout_V12.0.566.0</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Lib_Purchasing_SupplyType_V12.0.566.0</customscriptIncludedScripts>
+      <CustomScriptReadonly>true</CustomScriptReadonly>
+      <CustomScript>"use strict";
+/* eslint-disable class-methods-use-this */
+var CustomScript;
+(function (CustomScript) {
+    var SupplyType = Lib.Purchasing.SupplyType;
+    var Banner = Sys.Helpers.Banner;
+    class Main {
+        get hasError() {
+            return !!Data.GetValue("ErrorCount__");
+        }
+        get statusKey() {
+            if (Variable.GetValueAsString("NextCompanyCode")) {
+                return "_FormBanner_SubTitle_Processing";
+            }
+            if (this.hasError) {
+                return "_FormBanner_SubTitle_WithError";
+            }
+            return "_FormBanner_SubTitle_Success";
+        }
+        Start() {
+            Sys.Helpers.EnableSmartSilentChange();
+        }
+        DisplayBanner() {
+            Banner.SetHTMLBanner(Controls.HTMLBanner__);
+            Banner.SetMainTitle("_FormBannerTitle");
+            Banner.SetSubTitle(this.statusKey);
+        }
+        InitLayout() {
+            this.DisplayBanner();
+            Controls.CompanyCode__.Hide(Data.IsNullOrEmpty("CompanyCode__"));
+            Controls.SupplyID__.Hide(Data.IsNullOrEmpty("SupplyID__"));
+            Controls.ErrorCount__.Hide(!this.hasError);
+            Controls.NoActionCount__.Hide(Data.IsNullOrEmpty("NoActionCount__"));
+            Controls.UpdateCount__.Hide(Data.IsNullOrEmpty("UpdateCount__"));
+            Controls.ErrorsTable__.SetExtendableColumn("Errors__");
+        }
+        async DisplaySummary() {
+            var _a;
+            const summary = SupplyType.ReadSummary();
+            if (summary &amp;&amp; summary.errors.length) {
+                Controls.ErrorsPanel.SetLabel(Language.Translate("_ErrorsPane", true));
+                let displayParentColumns = false;
+                for (const line of summary.errors) {
+                    const item = Controls.ErrorsTable__.AddItem();
+                    item.SetValue("CompanyCode__", line.companyCode);
+                    await SupplyType.manager.Query(line.companyCode);
+                    const supply = SupplyType.manager.GetFromCache(line.companyCode, line.id);
+                    item.SetValue("SupplyId__", line.id);
+                    item.SetValue("SupplyName__", supply.name);
+                    item.SetValue("Errors__", (_a = line.errors) === null || _a === void 0 ? void 0 : _a.join("\n"));
+                    if (!!line.parentId) {
+                        displayParentColumns = true;
+                        item.SetValue("ParentId__", line.parentId);
+                        const parentSupply = SupplyType.manager.GetFromCache(line.companyCode, line.parentId);
+                        if (parentSupply) {
+                            item.SetValue("ParentName__", parentSupply.name);
+                        }
+                    }
+                }
+                if (displayParentColumns) {
+                    Controls.ErrorsTable__.ParentId__.Hide(false);
+                    Controls.ErrorsTable__.ParentName__.Hide(false);
+                }
+                Controls.ErrorsTable__.Errors__.Hide(!this.hasError);
+                Controls.ErrorsPanel.Hide(false);
+            }
+        }
+    }
+    class PopupForAdminList {
+        async Start() {
+            Sys.Helpers.Object.ForEach(Controls, function (control) {
+                const type = control.GetType();
+                if (type.startsWith("Panel")) {
+                    control.Hide(true);
+                }
+            });
+            Lib.CommonDialog.PopupYesCancel((action) =&gt; {
+                if (action === "Yes" /* Lib.CommonDialog.Action.Yes */) {
+                    ProcessInstance.ApproveAsynchronous(SupplyType.Action.CheckTableIntegrity);
+                }
+                ProcessInstance.Quit("quit");
+            }, "_PopupStartupMode_Title", "_PopupStartupMode_Message", "_ValidateDialog", "_CancelDialog", 5149);
+        }
+    }
+    async function Run() {
+        if (typeof _ENV_TEST_ENABLED === "undefined") {
+            const panes = ["DetailsPane", "DocumentPane"];
+            const buttons = ["Save", "Approve", "Reject", "Reprocess", "Close"];
+            const layout = new Lib.P2P.Layout.Manager(panes, buttons);
+            try {
+                layout.ShowWaitScreen();
+                if (ProcessInstance.isOpenInPopup) {
+                    const popup = new PopupForAdminList();
+                    await popup.Start();
+                }
+                else {
+                    const main = new Main();
+                    main.InitLayout();
+                    main.Start();
+                    await main.DisplaySummary();
+                }
+            }
+            finally {
+                layout.HideWaitScreen();
+            }
+        }
+    }
+    Run();
+})(CustomScript || (CustomScript = {}));
+//# sourceMappingURL=customscript.js.map</CustomScript>
+      <restorationPanel>DetailsPanel</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 79,
+	"*": {
+		"GDRData": {
+			"type": "GDRData",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"version": 0
+			}
+		},
+		"OCRParams": {
+			"type": "OCRParams",
+			"data": [],
+			"stamp": 2,
+			"options": {
+				"version": 0
+			}
+		},
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 3,
+			"options": {
+				"splitterType": "complex",
+				"style": "FlexibleFormLight",
+				"maxwidth": 1280,
+				"backColor": "text-backgroundcolor-color7",
+				"footerStyle": "LargeFooter",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 4,
+					"options": {
+						"maxwidth": 1280,
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 5,
+					"options": {
+						"maxwidth": 1280,
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 6,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-top": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 7,
+									"options": {
+										"autosize": true,
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"width": null,
+											"height": "23%"
+										},
+										"hidden": true,
+										"hideSeparator": true
+									}
+								},
+								"form-content-bottom": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 8,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": "23%",
+											"left": "0%",
+											"width": null,
+											"height": "77%"
+										},
+										"hidden": false,
+										"hideSeparator": true
+									},
+									"*": {
+										"form-content-left": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 9,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "0%",
+													"width": "100%",
+													"height": null
+												},
+												"hidden": false,
+												"hideSeparator": true
+											},
+											"*": {
+												"form-content-left-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 10,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"Banner": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 11,
+															"options": {
+																"border": {},
+																"iconURL": "",
+																"TitleFontSize": "L",
+																"hideActionButtons": true,
+																"hideTitleBar": true,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"backgroundcolor": "none",
+																"labelsAlignment": "right",
+																"label": "Banner",
+																"hidden": false,
+																"leftImageURL": "",
+																"removeMargins": false,
+																"elementsAlignment": "left",
+																"labelLength": 0,
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 12,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 13,
+																			"options": {
+																				"version": 0,
+																				"lines": 1,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"HTMLBanner__": {
+																						"line": 1,
+																						"column": 1
+																					}
+																				},
+																				"colspans": [
+																					[
+																						{
+																							"index": 0,
+																							"length": 2
+																						}
+																					]
+																				]
+																			},
+																			"*": {
+																				"HTMLBanner__": {
+																					"type": "HTML",
+																					"data": false,
+																					"stamp": 14,
+																					"options": {
+																						"label": "HTMLBanner__",
+																						"version": 1,
+																						"width": "100%",
+																						"htmlContent": ""
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-2": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 15,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"SystemData": {
+															"type": "PanelSystemData",
+															"data": [],
+															"stamp": 16,
+															"options": {
+																"multicolumn": false,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_System data",
+																"hidden": true,
+																"version": 0
+															}
+														}
+													}
+												},
+												"form-content-left-3": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 17,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"NextProcess": {
+															"type": "PanelNextProcess",
+															"data": [],
+															"stamp": 18,
+															"options": {
+																"hidden": true,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_Next Process",
+																"version": 0
+															}
+														}
+													}
+												},
+												"form-content-left-6": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 19,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"DetailsPanel": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 20,
+															"options": {
+																"border": {},
+																"iconURL": "",
+																"TitleFontSize": "L",
+																"hideActionButtons": true,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_DetailsPanel",
+																"leftImageURL": "",
+																"removeMargins": false,
+																"elementsAlignment": "left",
+																"labelLength": 0,
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 21,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {
+																			"CompanyCode__": "LabelCompanyCode__",
+																			"LabelCompanyCode__": "CompanyCode__",
+																			"SupplyID__": "LabelSupplyID__",
+																			"LabelSupplyID__": "SupplyID__",
+																			"NoActionCount__": "LabelNoActionCount__",
+																			"LabelNoActionCount__": "NoActionCount__",
+																			"UpdateCount__": "LabelUpdateCount__",
+																			"LabelUpdateCount__": "UpdateCount__",
+																			"ErrorCount__": "LabelErrorCount__",
+																			"LabelErrorCount__": "ErrorCount__"
+																		}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 22,
+																			"options": {
+																				"version": 0,
+																				"lines": 5,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"LabelCompanyCode__": {
+																						"line": 1,
+																						"column": 1
+																					},
+																					"CompanyCode__": {
+																						"line": 1,
+																						"column": 2
+																					},
+																					"LabelSupplyID__": {
+																						"line": 2,
+																						"column": 1
+																					},
+																					"SupplyID__": {
+																						"line": 2,
+																						"column": 2
+																					},
+																					"LabelNoActionCount__": {
+																						"line": 3,
+																						"column": 1
+																					},
+																					"NoActionCount__": {
+																						"line": 3,
+																						"column": 2
+																					},
+																					"LabelUpdateCount__": {
+																						"line": 4,
+																						"column": 1
+																					},
+																					"UpdateCount__": {
+																						"line": 4,
+																						"column": 2
+																					},
+																					"LabelErrorCount__": {
+																						"line": 5,
+																						"column": 1
+																					},
+																					"ErrorCount__": {
+																						"line": 5,
+																						"column": 2
+																					}
+																				},
+																				"colspans": [
+																					[],
+																					[],
+																					[],
+																					[],
+																					[]
+																				]
+																			},
+																			"*": {
+																				"LabelCompanyCode__": {
+																					"type": "Label",
+																					"data": [
+																						"CompanyCode__"
+																					],
+																					"stamp": 24,
+																					"options": {
+																						"label": "_CompanyCode",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				},
+																				"CompanyCode__": {
+																					"type": "DatabaseComboBox",
+																					"data": [
+																						"CompanyCode__"
+																					],
+																					"stamp": 23,
+																					"options": {
+																						"label": "_CompanyCode",
+																						"version": 1,
+																						"autoCompleteSearchMode": "startswith",
+																						"searchMode": "matches",
+																						"activable": true,
+																						"width": "180",
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"minNbLines": 1,
+																						"maxNbLines": 1,
+																						"PreFillFTS": true,
+																						"fTSmaxRecords": "20",
+																						"browsable": true,
+																						"hidden": true
+																					}
+																				},
+																				"LabelSupplyID__": {
+																					"type": "Label",
+																					"data": [
+																						"SupplyID__"
+																					],
+																					"stamp": 26,
+																					"options": {
+																						"label": "_SupplyID",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				},
+																				"SupplyID__": {
+																					"type": "DatabaseComboBox",
+																					"data": [
+																						"SupplyID__"
+																					],
+																					"stamp": 25,
+																					"options": {
+																						"label": "_SupplyID",
+																						"version": 1,
+																						"autoCompleteSearchMode": "startswith",
+																						"searchMode": "matches",
+																						"activable": true,
+																						"width": "180",
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"minNbLines": 1,
+																						"maxNbLines": 1,
+																						"PreFillFTS": true,
+																						"RestrictSearch": true,
+																						"fTSmaxRecords": "20",
+																						"hidden": true,
+																						"browsable": true
+																					}
+																				},
+																				"LabelNoActionCount__": {
+																					"type": "Label",
+																					"data": [
+																						"NoActionCount__"
+																					],
+																					"stamp": 28,
+																					"options": {
+																						"label": "_NoActionCount",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				},
+																				"NoActionCount__": {
+																					"type": "Integer",
+																					"data": [
+																						"NoActionCount__"
+																					],
+																					"stamp": 27,
+																					"options": {
+																						"label": "_NoActionCount",
+																						"version": 2,
+																						"textSize": "S",
+																						"textAlignment": "right",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"integer": true,
+																						"precision_internal": 0,
+																						"precision_current": 0,
+																						"activable": true,
+																						"width": "70",
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"enableRoundedStyle": false,
+																						"enablePlusMinus": false,
+																						"hidden": true,
+																						"readonly": true,
+																						"browsable": false
+																					}
+																				},
+																				"LabelUpdateCount__": {
+																					"type": "Label",
+																					"data": [
+																						"UpdateCount__"
+																					],
+																					"stamp": 30,
+																					"options": {
+																						"label": "_UpdateCount",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				},
+																				"UpdateCount__": {
+																					"type": "Integer",
+																					"data": [
+																						"UpdateCount__"
+																					],
+																					"stamp": 29,
+																					"options": {
+																						"label": "_UpdateCount",
+																						"version": 2,
+																						"textSize": "S",
+																						"textAlignment": "right",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"integer": true,
+																						"precision_internal": 0,
+																						"precision_current": 0,
+																						"activable": true,
+																						"width": "70",
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"enableRoundedStyle": false,
+																						"enablePlusMinus": false,
+																						"readonly": true,
+																						"browsable": false,
+																						"hidden": true
+																					}
+																				},
+																				"LabelErrorCount__": {
+																					"type": "Label",
+																					"data": [
+																						"ErrorCount__"
+																					],
+																					"stamp": 32,
+																					"options": {
+																						"label": "_ErrorCount",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				},
+																				"ErrorCount__": {
+																					"type": "Integer",
+																					"data": [
+																						"ErrorCount__"
+																					],
+																					"stamp": 31,
+																					"options": {
+																						"label": "_ErrorCount",
+																						"version": 2,
+																						"textSize": "S",
+																						"textAlignment": "right",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"integer": true,
+																						"precision_internal": 0,
+																						"precision_current": 0,
+																						"activable": true,
+																						"width": "70",
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"enableRoundedStyle": false,
+																						"enablePlusMinus": false,
+																						"hidden": true,
+																						"readonly": true,
+																						"browsable": false
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-5": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 33,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"DocumentsPanel": {
+															"type": "PanelDocument",
+															"data": [],
+															"stamp": 34,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "L",
+																"hideActionButtons": true,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_Documents",
+																"version": 0
+															},
+															"*": {
+																"Document": {
+																	"type": "Documents",
+																	"data": [
+																		"documentscontroldata"
+																	],
+																	"stamp": 35,
+																	"options": {
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-4": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 36,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"ErrorsPanel": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 37,
+															"options": {
+																"border": {},
+																"iconURL": "",
+																"TitleFontSize": "L",
+																"hideActionButtons": true,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_ErrorsPane",
+																"hidden": true,
+																"leftImageURL": "",
+																"removeMargins": false,
+																"elementsAlignment": "left",
+																"labelLength": 0,
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 38,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 39,
+																			"options": {
+																				"version": 0,
+																				"lines": 1,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"ErrorsTable__": {
+																						"line": 1,
+																						"column": 1
+																					}
+																				},
+																				"colspans": [
+																					[
+																						{
+																							"index": 0,
+																							"length": 2
+																						}
+																					]
+																				]
+																			},
+																			"*": {
+																				"ErrorsTable__": {
+																					"type": "Table",
+																					"data": [],
+																					"stamp": 40,
+																					"options": {
+																						"columns": 6,
+																						"label": "_ErrorsPane",
+																						"version": 5,
+																						"lines": 10,
+																						"stickedColumns": 0,
+																						"displayEmptyLines": false,
+																						"alwaysOneLine": false,
+																						"menuOptions": {
+																							"disableInsertLine": false,
+																							"autoWidth": false,
+																							"disableAddLine": false,
+																							"hideTopNavigation": false,
+																							"hideBottomNavigation": false,
+																							"hideTableRowMenu": "hideNothing",
+																							"hideTableRowDelete": true,
+																							"hideTableRowAdd": true,
+																							"hideTableRowMove": true,
+																							"hideTableRowDuplicate": true,
+																							"hideTableRowButtonDuplicate": true,
+																							"allowSortTable": false,
+																							"allowFilter": false,
+																							"addButtonShouldInsert": false
+																						},
+																						"item": {
+																							"display": null
+																						},
+																						"group": {
+																							"name": "GDR\nPage"
+																						},
+																						"height": "",
+																						"hidden": false,
+																						"readonly": true,
+																						"notInDB": true,
+																						"dataType": "Enumeration",
+																						"subsection": null
+																					},
+																					"*": {
+																						"Actions": {
+																							"type": "$TableActions",
+																							"subtype": "Actions",
+																							"data": [],
+																							"stamp": 41,
+																							"options": {
+																								"version": 0
+																							},
+																							"*": {
+																								"Top": {
+																									"type": "$TableActions",
+																									"subtype": "Top",
+																									"data": [],
+																									"stamp": 42,
+																									"options": {
+																										"version": 0
+																									}
+																								},
+																								"Bottom": {
+																									"type": "$TableActions",
+																									"subtype": "Top",
+																									"data": [],
+																									"stamp": 43,
+																									"options": {
+																										"version": 0
+																									}
+																								}
+																							}
+																						},
+																						"Header": {
+																							"type": "$TableRow",
+																							"subtype": "Header",
+																							"data": [
+																								null
+																							],
+																							"stamp": 44,
+																							"options": {
+																								"version": 0
+																							},
+																							"*": {
+																								"Cell1": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 47,
+																									"options": {
+																										"minwidth": 140,
+																										"version": 0
+																									},
+																									"*": {
+																										"CompanyCode__": {
+																											"type": "Label",
+																											"data": [],
+																											"stamp": 48,
+																											"options": {
+																												"label": "_CompanyCode",
+																												"type": "ShortText",
+																												"minwidth": 140,
+																												"version": 0
+																											},
+																											"position": [
+																												"_CompanyCode",
+																												false,
+																												false,
+																												"ShortText"
+																											]
+																										}
+																									}
+																								},
+																								"Cell2": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 51,
+																									"options": {
+																										"minwidth": 140,
+																										"hidden": false,
+																										"version": 0
+																									},
+																									"*": {
+																										"SupplyId__": {
+																											"type": "Label",
+																											"data": [],
+																											"stamp": 52,
+																											"options": {
+																												"label": "_SupplyID",
+																												"type": "ShortText",
+																												"minwidth": 140,
+																												"hidden": false,
+																												"version": 0
+																											},
+																											"position": [
+																												"_SupplyID",
+																												false,
+																												false,
+																												"ShortText"
+																											]
+																										}
+																									}
+																								},
+																								"Cell3": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 55,
+																									"options": {
+																										"minwidth": 140,
+																										"version": 0
+																									},
+																									"*": {
+																										"SupplyName__": {
+																											"type": "Label",
+																											"data": [],
+																											"stamp": 56,
+																											"options": {
+																												"label": "_SupplyName",
+																												"type": "ShortText",
+																												"minwidth": 140,
+																												"version": 0
+																											},
+																											"position": [
+																												"_SupplyName",
+																												false,
+																												false,
+																												"ShortText"
+																											]
+																										}
+																									}
+																								},
+																								"Cell4": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 59,
+																									"options": {
+																										"minwidth": "0",
+																										"hidden": true,
+																										"version": 0
+																									},
+																									"*": {
+																										"ParentId__": {
+																											"type": "Label",
+																											"data": [],
+																											"stamp": 60,
+																											"options": {
+																												"label": "_ParentSupplyID",
+																												"type": "ShortText",
+																												"minwidth": 140,
+																												"hidden": true,
+																												"version": 0
+																											},
+																											"position": [
+																												"_ParentSupplyID",
+																												false,
+																												false,
+																												"ShortText"
+																											]
+																										}
+																									}
+																								},
+																								"Cell5": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 63,
+																									"options": {
+																										"minwidth": "0",
+																										"hidden": true,
+																										"version": 0
+																									},
+																									"*": {
+																										"ParentName__": {
+																											"type": "Label",
+																											"data": [],
+																											"stamp": 64,
+																											"options": {
+																												"label": "_ParentSupplyName",
+																												"type": "ShortText",
+																												"minwidth": 140,
+																												"hidden": true,
+																												"version": 0
+																											},
+																											"position": [
+																												"_ParentSupplyName",
+																												false,
+																												false,
+																												"ShortText"
+																											]
+																										}
+																									}
+																								},
+																								"Cell6": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 67,
+																									"options": {
+																										"minwidth": 140,
+																										"hidden": false,
+																										"version": 0
+																									},
+																									"*": {
+																										"Errors__": {
+																											"type": "Label",
+																											"data": [],
+																											"stamp": 68,
+																											"options": {
+																												"label": "_Errors",
+																												"type": "LongText",
+																												"minwidth": 140,
+																												"hidden": false,
+																												"version": 0
+																											},
+																											"position": [
+																												"_Errors",
+																												false,
+																												false,
+																												"LongText"
+																											]
+																										}
+																									}
+																								}
+																							}
+																						},
+																						"Clipboard": {
+																							"type": "$TableRow",
+																							"subtype": "Clipboard",
+																							"data": [
+																								null
+																							],
+																							"stamp": 45,
+																							"options": {
+																								"version": 0
+																							},
+																							"*": {
+																								"Cell1": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 49,
+																									"options": {
+																										"version": 0
+																									},
+																									"*": {
+																										"CompanyCode__": {
+																											"type": "ShortText",
+																											"data": [],
+																											"stamp": 46,
+																											"options": {
+																												"label": "_CompanyCode",
+																												"notInDB": true,
+																												"dataType": "String",
+																												"textSize": "S",
+																												"textAlignment": "left",
+																												"textStyle": "default",
+																												"textColor": "default",
+																												"version": 1,
+																												"activable": true,
+																												"width": 140,
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"helpIconPosition": "Right",
+																												"browsable": false
+																											},
+																											"position": [
+																												"_CompanyCode"
+																											]
+																										}
+																									}
+																								},
+																								"Cell2": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 53,
+																									"options": {
+																										"hidden": true,
+																										"version": 0
+																									},
+																									"*": {
+																										"SupplyId__": {
+																											"type": "ShortText",
+																											"data": [],
+																											"stamp": 50,
+																											"options": {
+																												"label": "_SupplyID",
+																												"notInDB": true,
+																												"dataType": "String",
+																												"textSize": "S",
+																												"textAlignment": "left",
+																												"textStyle": "default",
+																												"textColor": "default",
+																												"version": 1,
+																												"activable": true,
+																												"width": 140,
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"helpIconPosition": "Right",
+																												"hidden": false,
+																												"readonly": true,
+																												"browsable": false,
+																												"autocompletable": false
+																											},
+																											"position": [
+																												"_SupplyID"
+																											]
+																										}
+																									}
+																								},
+																								"Cell3": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 57,
+																									"options": {
+																										"version": 0
+																									},
+																									"*": {
+																										"SupplyName__": {
+																											"type": "ShortText",
+																											"data": [],
+																											"stamp": 54,
+																											"options": {
+																												"label": "_SupplyName",
+																												"notInDB": true,
+																												"dataType": "String",
+																												"textSize": "S",
+																												"textAlignment": "left",
+																												"textStyle": "default",
+																												"textColor": "default",
+																												"version": 1,
+																												"activable": true,
+																												"width": 140,
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"helpIconPosition": "Right",
+																												"browsable": false
+																											},
+																											"position": [
+																												"_SupplyName"
+																											]
+																										}
+																									}
+																								},
+																								"Cell4": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 61,
+																									"options": {
+																										"hidden": true,
+																										"version": 0
+																									},
+																									"*": {
+																										"ParentId__": {
+																											"type": "ShortText",
+																											"data": [],
+																											"stamp": 58,
+																											"options": {
+																												"label": "_ParentSupplyID",
+																												"notInDB": true,
+																												"dataType": "String",
+																												"textSize": "S",
+																												"textAlignment": "left",
+																												"textStyle": "default",
+																												"textColor": "default",
+																												"version": 1,
+																												"activable": true,
+																												"width": 140,
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"helpIconPosition": "Right",
+																												"hidden": true,
+																												"readonly": true,
+																												"browsable": false,
+																												"autocompletable": false
+																											},
+																											"position": [
+																												"_ParentSupplyID"
+																											]
+																										}
+																									}
+																								},
+																								"Cell5": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 65,
+																									"options": {
+																										"version": 0
+																									},
+																									"*": {
+																										"ParentName__": {
+																											"type": "ShortText",
+																											"data": [],
+																											"stamp": 62,
+																											"options": {
+																												"label": "_ParentSupplyName",
+																												"notInDB": true,
+																												"dataType": "String",
+																												"textSize": "S",
+																												"textAlignment": "left",
+																												"textStyle": "default",
+																												"textColor": "default",
+																												"version": 1,
+																												"activable": true,
+																												"width": 140,
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"helpIconPosition": "Right",
+																												"browsable": false,
+																												"hidden": true
+																											},
+																											"position": [
+																												"_ParentSupplyName"
+																											]
+																										}
+																									}
+																								},
+																								"Cell6": {
+																									"type": "$TableCell",
+																									"subtype": "Cell",
+																									"data": [],
+																									"stamp": 69,
+																									"options": {
+																										"hidden": true,
+																										"version": 0
+																									},
+																									"*": {
+																										"Errors__": {
+																											"type": "LongText",
+																											"data": [],
+																											"stamp": 66,
+																											"options": {
+																												"label": "_Errors",
+																												"notInDB": true,
+																												"dataType": "String",
+																												"textSize": "S",
+																												"textAlignment": "left",
+																												"textStyle": "default",
+																												"textColor": "default",
+																												"version": 1,
+																												"numberOfLines": 5,
+																												"minNbLines": 0,
+																												"activable": true,
+																												"width": 140,
+																												"helpText": "",
+																												"helpURL": "",
+																												"helpFormat": "HTML Format",
+																												"helpIconPosition": "Right",
+																												"hidden": false,
+																												"readonly": true,
+																												"browsable": false
+																											},
+																											"position": [
+																												"_Errors"
+																											]
+																										}
+																									}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-right": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 70,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "45%",
+													"width": "55%"
+												},
+												"hidden": true
+											},
+											"*": {
+												"form-content-right-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 71,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"PreviewPanel": {
+															"type": "PanelPreview",
+															"data": [],
+															"stamp": 72,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_Document Preview",
+																"hidden": false,
+																"version": 0
+															},
+															"*": {
+																"Preview": {
+																	"type": "Preview",
+																	"data": [
+																		"previewdata"
+																	],
+																	"stamp": 73,
+																	"options": {
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 74,
+					"options": {
+						"splitterType": "simple-h",
+						"maxwidth": 1280,
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 75,
+							"options": {
+								"label": "_Save",
+								"action": "save",
+								"submit": true,
+								"textSize": "S",
+								"textPosition": "text-right",
+								"textStyle": "default",
+								"textColor": "default",
+								"iconColor": "default",
+								"nextprocess": {
+									"processName": "Advanced Shipping Notice",
+									"attachmentsMode": "all",
+									"willBeChild": true,
+									"returnToOriginalUrl": false
+								},
+								"urlImageOverlay": "",
+								"urlImage": "",
+								"awesomeClasses": "",
+								"style": 1,
+								"buttonLabel": "",
+								"isRounded": true,
+								"isOutline": false,
+								"url": "",
+								"position": null,
+								"hidden": true,
+								"version": 0
+							}
+						},
+						"Approve": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 76,
+							"options": {
+								"label": "_Approve",
+								"action": "approve",
+								"submit": true,
+								"textSize": "S",
+								"textPosition": "text-right",
+								"textStyle": "default",
+								"textColor": "default",
+								"iconColor": "default",
+								"nextprocess": {
+									"processName": "Advanced Shipping Notice",
+									"attachmentsMode": "all",
+									"willBeChild": true,
+									"returnToOriginalUrl": false
+								},
+								"urlImageOverlay": "",
+								"urlImage": "",
+								"awesomeClasses": "",
+								"style": 1,
+								"buttonLabel": "",
+								"isRounded": true,
+								"isOutline": false,
+								"url": "",
+								"position": null,
+								"hidden": true,
+								"version": 0
+							}
+						},
+						"Reject": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 77,
+							"options": {
+								"label": "_Reject",
+								"action": "reject",
+								"submit": true,
+								"textSize": "S",
+								"textPosition": "text-right",
+								"textStyle": "default",
+								"textColor": "default",
+								"iconColor": "default",
+								"nextprocess": {
+									"processName": "Advanced Shipping Notice",
+									"attachmentsMode": "all",
+									"willBeChild": true,
+									"returnToOriginalUrl": false
+								},
+								"urlImageOverlay": "",
+								"urlImage": "",
+								"awesomeClasses": "",
+								"style": 3,
+								"buttonLabel": "",
+								"isRounded": true,
+								"isOutline": false,
+								"url": "",
+								"position": null,
+								"hidden": true,
+								"version": 0
+							}
+						},
+						"Reprocess": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 78,
+							"options": {
+								"label": "_Reprocess",
+								"action": "reprocess",
+								"submit": true,
+								"textSize": "S",
+								"textPosition": "text-right",
+								"textStyle": "default",
+								"textColor": "default",
+								"iconColor": "default",
+								"nextprocess": {
+									"processName": "Advanced Shipping Notice",
+									"attachmentsMode": "all",
+									"willBeChild": true,
+									"returnToOriginalUrl": false
+								},
+								"urlImageOverlay": "",
+								"urlImage": "",
+								"awesomeClasses": "",
+								"style": 2,
+								"buttonLabel": "",
+								"isRounded": true,
+								"isOutline": false,
+								"url": "",
+								"position": null,
+								"hidden": true,
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 79,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"textSize": "S",
+								"textPosition": "text-right",
+								"textStyle": "default",
+								"textColor": "default",
+								"iconColor": "default",
+								"nextprocess": {
+									"processName": "Advanced Shipping Notice",
+									"attachmentsMode": "all",
+									"willBeChild": true,
+									"returnToOriginalUrl": false
+								},
+								"urlImageOverlay": "",
+								"urlImage": "",
+								"awesomeClasses": "",
+								"style": 1,
+								"buttonLabel": "",
+								"isRounded": true,
+								"isOutline": true,
+								"url": "",
+								"position": null,
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <field deleted="0" format="" guid="X1XKG0000YRL" id="KFBQT400153E" label="_CompanyCode_report" length="50" name="CompanyCode__" originalProcessID="VHY200000YRL" precision="0" processid="JFBQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AKFBQT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/CompanyCode__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:43</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_CompanyCode_report</Label>
+        <Alias>AKFBQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>false</Editable>
+        <TableName>CT#BD8QT400153E</TableName>
+        <SortOrder>
+        </SortOrder>
+        <SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+        <DisplayedColumns>CompanyCode__|CompanyName__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>CompanyCode__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ExposedColumns>
+        </ExposedColumns>
+        <ProcessName>PurchasingCompanycodes__</ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <KeyAttribute>
+        </KeyAttribute>
+        <CustomFilter>
+        </CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="CQWKG0000YRL" id="LFBQT400153E" label="ErrorCount__" length="0" name="ErrorCount__" originalProcessID="VHY200000YRL" precision="0" processid="JFBQT400153E" submitable="1" type="INT">
+    <properties>
+      <db>
+        <alias>ALFBQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ErrorCount__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:43</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>ErrorCount__</Label>
+        <Alias>ALFBQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        <SetNullOnEmptyValue>0</SetNullOnEmptyValue>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="KYWKG0000YRL" id="MFBQT400153E" label="_NoActionCount" length="0" name="NoActionCount__" originalProcessID="VHY200000YRL" precision="0" processid="JFBQT400153E" submitable="1" type="INT">
+    <properties>
+      <db>
+        <alias>AMFBQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/NoActionCount__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:43</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_NoActionCount</Label>
+        <Alias>AMFBQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        <SetNullOnEmptyValue>0</SetNullOnEmptyValue>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="Y1XKG0000YRL" id="NFBQT400153E" label="_SupplyID_report" length="50" name="SupplyID__" originalProcessID="VHY200000YRL" precision="0" processid="JFBQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ANFBQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/SupplyID__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:43</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_SupplyID_report</Label>
+        <Alias>ANFBQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>false</Editable>
+        <TableName>CT#CEBQT400153E</TableName>
+        <SortOrder>ASC</SortOrder>
+        <SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+        <DisplayedColumns>SupplyID__|Name__|FullName__|Description__|BuyerLogin__|RecipientLogin__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>SupplyID__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ExposedColumns>
+        </ExposedColumns>
+        <ProcessName>PurchasingSupply__</ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <KeyAttribute>
+        </KeyAttribute>
+        <CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="BQWKG0000YRL" id="OFBQT400153E" label="UpdateCount__" length="0" name="UpdateCount__" originalProcessID="VHY200000YRL" precision="0" processid="JFBQT400153E" submitable="1" type="INT">
+    <properties>
+      <db>
+        <alias>AOFBQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/UpdateCount__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:43</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>UpdateCount__</Label>
+        <Alias>AOFBQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        <SetNullOnEmptyValue>0</SetNullOnEmptyValue>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <type id="GOLHG0000M4O" name="CD">
+  </type>
+</process>

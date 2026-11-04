@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mappingDef xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<options>
+		<separator>,</separator>
+		<newLine />
+		<escape />
+		<hasHeader>true</hasHeader>
+		<comment />
+		<textQualifier>"</textQualifier>
+		<hasLastDelimiter>false</hasLastDelimiter>
+	</options>
+	<script>
+		<code><![CDATA[
+			var Tools = window.external;
+			var CurrentYear, NextYear;
+			var ReplaceYears;
+
+			function Init()
+			{
+				var CurrentDate = new Date();
+				CurrentYear = CurrentDate.getFullYear();
+				NextYear = CurrentYear + 1;
+
+				ReplaceYears = function(CsvColumn)
+				{
+					return Tools.GetCsvColumnValue(CsvColumn).replace("<CurrentYear>", CurrentYear).replace("<NextYear>", NextYear);
+				}
+			}
+
+			function GetPeriodCode()
+			{
+				return ReplaceYears("PeriodCode__");
+			}
+
+			function GetPeriodName()
+			{
+				return ReplaceYears("PeriodName__");
+			}
+
+			function GetPeriodStart()
+			{
+				return ReplaceYears("PeriodStart__");
+			}
+
+			function GetPeriodEnd()
+			{
+				return ReplaceYears("PeriodEnd__");
+			}
+
+			]]>
+		</code>
+		<eval onEachCsvLine="false">Init</eval>
+	</script>
+	<tableName>P2P - Accounting period__</tableName>
+	<mappings>
+		<mapping key="true">
+			<fieldInTable>CompanyCode__</fieldInTable>
+			<fieldInFile defaultValue="">
+				<fieldNameInFile>CompanyCode__</fieldNameInFile>
+			</fieldInFile>
+		</mapping>
+		<mapping key="true">
+			<evalScript>GetPeriodCode</evalScript>
+			<fieldInTable>PeriodCode__</fieldInTable>
+			<fieldInFile defaultValue="">
+				<fieldNameInFile>PeriodCode__</fieldNameInFile>
+			</fieldInFile>
+		</mapping>
+		<mapping key="false">
+			<evalScript>GetPeriodName</evalScript>
+			<fieldInTable>PeriodName__</fieldInTable>
+		</mapping>
+		<mapping key="false">
+			<evalScript>GetPeriodStart</evalScript>
+			<fieldInTable>PeriodStart__</fieldInTable>
+		</mapping>
+		<mapping key="false">
+			<evalScript>GetPeriodEnd</evalScript>
+			<fieldInTable>PeriodEnd__</fieldInTable>
+		</mapping>
+	</mappings>
+</mappingDef>

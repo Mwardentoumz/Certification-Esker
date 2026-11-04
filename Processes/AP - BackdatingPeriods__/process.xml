@@ -1,0 +1,887 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:06:04" deleted="0" eskerapplication="P2P" global="0" id="V99QT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="AP - BackdatingPeriods__" needvalidation="0" ootofilter="" ootoversion="1" originalProcessID="B34E77100SG1" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomTable" upgradable="1" userid="0" version="1" visibility="1">
+  <properties>
+    <dataConditions>
+      <listDataConditions>
+				&lt;dataCondition&gt;
+					&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt; &lt;filter&gt;msnex=*&lt;/filter&gt;
+					&lt;labelKey&gt;_AP disabled&lt;/labelKey&gt;
+					&lt;conditions&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableAccountPayableGlobalSetting__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+					&lt;/conditions&gt;
+				&lt;/dataCondition&gt;
+			</listDataConditions>
+    </dataConditions>
+    <dbIndex>
+      <AUTO_AZ99QT400153EA>&lt;Index&gt;&lt;Ref Name="AZ99QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AZ99QT400153EA>
+    </dbIndex>
+    <lg>
+      <process_da>{
+	"_Backdating End Date": "Slutdato for interval",
+	"_Backdating End Date_report": "Slutdato for bogføringsinterval",
+	"_Backdating start date": "Startdato for interval",
+	"_Backdating start date_report": "Startdato for bogføringsinterval",
+	"_Backdating Target Date": "Brugerdefineret bogføringsdato",
+	"_Backdating Target Date_report": "Brugerdefineret bogføringsdato",
+	"_Company Code": "Virksomhedskode",
+	"_Company Code_report": "Virksomhedskode",
+	"_Invoice Type": "Fakturatype",
+	"_Invoice Type_report": "Fakturatype",
+	"AP - BackdatingPeriods": "S2P – datoområder for bogføring",
+	"AP - BackdatingPeriods__": "S2P – startdato for interval",
+	"Consignment": "Konsignationsfaktura",
+	"Downpayment Invoice": "Forudbetalt faktura",
+	"Non-PO Invoice": "Faktura uden indkøbsordre",
+	"PO Invoice": "Faktura med indkøbsordre",
+	"PO Invoice (as FI)": "Faktura med indkøbsordre (ikke ERP-ordre)"
+}</process_da>
+      <process_de>{
+	"_Backdating End Date": "Enddatum des Bereichs",
+	"_Backdating End Date_report": "Enddatum des Buchungsbereichs",
+	"_Backdating start date": "Startdatum des Bereichs",
+	"_Backdating start date_report": "Startdatum des Buchungsbereichs",
+	"_Backdating Target Date": "Benutzerdefiniertes Buchungsdatum",
+	"_Backdating Target Date_report": "Benutzerdefiniertes Buchungsdatum",
+	"_Company Code": "Buchungskreis",
+	"_Company Code_report": "Buchungskreis",
+	"_Invoice Type": "Rechnungsart",
+	"_Invoice Type_report": "Rechnungsart",
+	"AP - BackdatingPeriods": "S2P - Buchungsdatumbereiche",
+	"AP - BackdatingPeriods__": "S2P-Buchungsdatumbereich",
+	"Consignment": "Konsignationsrechnung",
+	"Downpayment Invoice": "Vorauszahlungsrechnung",
+	"Non-PO Invoice": "Rechnung ohne Bestellung",
+	"PO Invoice": "Rechnung mit Bestellung",
+	"PO Invoice (as FI)": "Rechnung mit Bestellung (Nicht-ERP-Bestellung)"
+}</process_de>
+      <process_ja>{
+	"_Backdating End Date": "範囲の終了日",
+	"_Backdating End Date_report": "登録日範囲の終了日",
+	"_Backdating start date": "範囲の開始日",
+	"_Backdating start date_report": "登録日範囲の開始日",
+	"_Backdating Target Date": "カスタムの登録日",
+	"_Backdating Target Date_report": "カスタムの登録日",
+	"_Company Code": "会社コード",
+	"_Company Code_report": "会社コード",
+	"_Invoice Type": "請求書種別",
+	"_Invoice Type_report": "請求書種別",
+	"AP - BackdatingPeriods": "S2P - 登録日の範囲",
+	"AP - BackdatingPeriods__": "S2P - 登録日の範囲",
+	"Consignment": "委託請求書",
+	"Downpayment Invoice": "前払い請求書",
+	"Non-PO Invoice": "PO なし請求書",
+	"PO Invoice": "PO 請求書",
+	"PO Invoice (as FI)": "PO 請求書（ERP以外の注文）"
+}</process_ja>
+      <process_en>{
+	"_Backdating End Date": "Range end date",
+	"_Backdating End Date_report": "Posting range end date",
+	"_Backdating start date": "Range start date",
+	"_Backdating start date_report": "Posting range start date",
+	"_Backdating Target Date": "Custom posting date",
+	"_Backdating Target Date_report": "Custom posting date",
+	"_Company Code": "Company code",
+	"_Company Code_report": "Company code",
+	"_Invoice Type": "Invoice type",
+	"_Invoice Type_report": "Invoice type",
+	"AP - BackdatingPeriods": "S2P - Posting date ranges",
+	"AP - BackdatingPeriods__": "S2P - Posting date range",
+	"Consignment": "Consignment invoice",
+	"Downpayment Invoice": "Prepayment invoice",
+	"Non-PO Invoice": "Non-PO Invoice",
+	"PO Invoice": "PO Invoice",
+	"PO Invoice (as FI)": "PO Invoice (non-ERP order)"
+}</process_en>
+      <process_es>{
+	"_Backdating End Date": "Fecha de fin del intervalo",
+	"_Backdating End Date_report": "Fecha de fin del intervalo de contabilización",
+	"_Backdating start date": "Fecha de inicio del intervalo",
+	"_Backdating start date_report": "Fecha de inicio del intervalo de contabilización",
+	"_Backdating Target Date": "Fecha de contabilización personalizada",
+	"_Backdating Target Date_report": "Fecha de contabilización personalizada",
+	"_Company Code": "Código de empresa",
+	"_Company Code_report": "Código de empresa",
+	"_Invoice Type": "Tipo de factura",
+	"_Invoice Type_report": "Tipo de factura",
+	"AP - BackdatingPeriods": "S2P - Intervalos de fechas de contabilización",
+	"AP - BackdatingPeriods__": "S2P - Intervalos de fechas de contabilización",
+	"Consignment": "Factura de consignación",
+	"Downpayment Invoice": "Factura de anticipo",
+	"Non-PO Invoice": "Factura sin pedido de compra",
+	"PO Invoice": "Factura con pedido de compra",
+	"PO Invoice (as FI)": "Factura con pedido de compra (pedido fuera del ERP)"
+}</process_es>
+      <process_fr>{
+	"_Backdating End Date": "Fin de plage",
+	"_Backdating End Date_report": "Fin de la plage de comptabilisation",
+	"_Backdating start date": "Début de plage",
+	"_Backdating start date_report": "Début de la plage de comptabilisation",
+	"_Backdating Target Date": "Date de comptabilisation personnalisée",
+	"_Backdating Target Date_report": "Date de comptabilisation personnalisée",
+	"_Company Code": "Code société",
+	"_Company Code_report": "Code société",
+	"_Invoice Type": "Type de facture",
+	"_Invoice Type_report": "Type de facture",
+	"AP - BackdatingPeriods": "S2P - Plages de dates de comptabilisation",
+	"AP - BackdatingPeriods__": "S2P - Plage de dates de comptabilisation",
+	"Consignment": "Facture de consignation",
+	"Downpayment Invoice": "Facture d'acompte",
+	"Non-PO Invoice": "Facture sans commande",
+	"PO Invoice": "Facture avec commande",
+	"PO Invoice (as FI)": "Facture avec commande (commande hors ERP)"
+}</process_fr>
+      <process_nl-NL>{
+	"_Backdating End Date": "Einddatum bereik",
+	"_Backdating End Date_report": "Einddatum bereik boeking",
+	"_Backdating start date": "Startdatum bereik",
+	"_Backdating start date_report": "Startdatum bereik boeking",
+	"_Backdating Target Date": "Aangepaste boekingsdatum",
+	"_Backdating Target Date_report": "Aangepaste boekingsdatum",
+	"_Company Code": "Bedrijfscode",
+	"_Company Code_report": "Bedrijfscode",
+	"_Invoice Type": "Type factuur",
+	"_Invoice Type_report": "Type factuur",
+	"AP - BackdatingPeriods": "S2P - Boekingsperiodes",
+	"AP - BackdatingPeriods__": "S2P - Boekingperiode",
+	"Consignment": "Factuur zending",
+	"Downpayment Invoice": "Vooruitbetalingsfactuur",
+	"Non-PO Invoice": "Factuur zonder PO",
+	"PO Invoice": "Factuur met PO",
+	"PO Invoice (as FI)": "Factuur met PO (order niet in ERP)"
+}</process_nl-NL>
+      <process_pl>{
+	"_Backdating End Date": "Data końcowa zakresu",
+	"_Backdating End Date_report": "Data końcowa zakresu księgowania",
+	"_Backdating start date": "Data początkowa zakresu",
+	"_Backdating start date_report": "Data początkowa zakresu księgowania",
+	"_Backdating Target Date": "Niestandardowa data księgowania",
+	"_Backdating Target Date_report": "Niestandardowa data księgowania",
+	"_Company Code": "Kod firmy",
+	"_Company Code_report": "Kod firmy",
+	"_Invoice Type": "Typ faktury",
+	"_Invoice Type_report": "Typ faktury",
+	"AP - BackdatingPeriods": "S2P – zakresy dat księgowania",
+	"AP - BackdatingPeriods__": "S2P – zakres dat księgowania",
+	"Consignment": "Faktura konsygnacyjna",
+	"Downpayment Invoice": "Faktura z tytułu przedpłaty",
+	"Non-PO Invoice": "Faktura bez ZZ",
+	"PO Invoice": "Faktura ZZ",
+	"PO Invoice (as FI)": "Faktura ZZ (zamówienie bez ERP)"
+}</process_pl>
+      <process_it>{
+	"_Backdating End Date": "Data fine intervallo",
+	"_Backdating End Date_report": "Data fine intervallo registrazione",
+	"_Backdating start date": "Data inizio intervallo",
+	"_Backdating start date_report": "Data inizio intervallo registrazione",
+	"_Backdating Target Date": "Data registrazione personalizzata",
+	"_Backdating Target Date_report": "Data registrazione personalizzata",
+	"_Company Code": "Codice società",
+	"_Company Code_report": "Codice società",
+	"_Invoice Type": "Tipo fattura",
+	"_Invoice Type_report": "Tipo fattura",
+	"AP - BackdatingPeriods": "S2P - Intervalli di date di registrazione",
+	"AP - BackdatingPeriods__": "S2P - Intervallo di date di registrazione",
+	"Consignment": "Fattura conto deposito",
+	"Downpayment Invoice": "Fattura di acconto",
+	"Non-PO Invoice": "Fattura senza ordine",
+	"PO Invoice": "Fattura con ordine",
+	"PO Invoice (as FI)": "Fattura con ordine (ordine fuori ERP)"
+}</process_it>
+      <process_sk>{
+	"_Backdating End Date": "Dátum ukončenia rozsahu",
+	"_Backdating End Date_report": "Dátum ukončenia rozsahu zaúčtovania",
+	"_Backdating start date": "Dátum začiatku rozsahu",
+	"_Backdating start date_report": "Dátum začiatku rozsahu zaúčtovania",
+	"_Backdating Target Date": "Vlastný dátum zaúčtovania",
+	"_Backdating Target Date_report": "Vlastný dátum zaúčtovania",
+	"_Company Code": "Kód spoločnosti",
+	"_Company Code_report": "Kód spoločnosti",
+	"_Invoice Type": "Typ faktúry",
+	"_Invoice Type_report": "Typ faktúry",
+	"AP - BackdatingPeriods": "S2P – Rozsahy dátumov zaúčtovania",
+	"AP - BackdatingPeriods__": "S2P – Rozsahy dátumov zaúčtovania",
+	"Consignment": "Faktúra za zásielku",
+	"Downpayment Invoice": "Zálohová faktúra",
+	"Non-PO Invoice": "Faktúra bez obj.",
+	"PO Invoice": "Faktúra s obj.",
+	"PO Invoice (as FI)": "Faktúra s obj. (obj. mimo ERP)"
+}</process_sk>
+      <process_zh-CN>{
+	"_Backdating End Date": "范围结束日期",
+	"_Backdating End Date_report": "过帐范围结束日期",
+	"_Backdating start date": "范围开始日期",
+	"_Backdating start date_report": "过帐范围开始日期",
+	"_Backdating Target Date": "自定义过帐日期",
+	"_Backdating Target Date_report": "自定义过帐日期",
+	"_Company Code": "公司代码",
+	"_Company Code_report": "公司代码",
+	"_Invoice Type": "发票类型",
+	"_Invoice Type_report": "发票类型",
+	"AP - BackdatingPeriods": "寻源到付款 - 过帐日期范围",
+	"AP - BackdatingPeriods__": "寻源到付款 - 过帐日期范围",
+	"Consignment": "寄售账单",
+	"Downpayment Invoice": "预付款账单发票",
+	"Non-PO Invoice": "无订单发票",
+	"PO Invoice": "有订单发票",
+	"PO Invoice (as FI)": "有订单发票（订单不在ERP中）"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"_Backdating End Date": "Data final do intervalo",
+	"_Backdating End Date_report": "Data final do intervalo de lançamento",
+	"_Backdating start date": "Data de início do intervalo",
+	"_Backdating start date_report": "Data de início do intervalo de lançamento",
+	"_Backdating Target Date": "Data de lançamento personalizada",
+	"_Backdating Target Date_report": "Data de lançamento personalizada",
+	"_Company Code": "Código da empresa",
+	"_Company Code_report": "Código da empresa",
+	"_Invoice Type": "Tipo de fatura",
+	"_Invoice Type_report": "Tipo de fatura",
+	"AP - BackdatingPeriods": "S2P - Intervalo de data de lançamento",
+	"AP - BackdatingPeriods__": "S2P - Intervalo de data de lançamento",
+	"Consignment": "Fatura em consignação",
+	"Downpayment Invoice": "Fatura de pré-pagamento",
+	"Non-PO Invoice": "Fatura sem pedido",
+	"PO Invoice": "Fatura com pedido",
+	"PO Invoice (as FI)": "Fatura com pedido (pedido não ERP)"
+}</process_pt-BR>
+    </lg>
+    <process>
+      <BUColumn>CompanyCode__</BUColumn>
+      <flowtype>processing</flowtype>
+      <EnableNegativeNumbersBetweenBrackets>true</EnableNegativeNumbersBetweenBrackets>
+      <homepagelabel>AP - BackdatingPeriods</homepagelabel>
+      <upgradable>yes</upgradable>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <ESDirectIndexing>1</ESDirectIndexing>
+      <enablerounddecimal>true</enablerounddecimal>
+      <OverrideAllowedAttachmentExtensions>*</OverrideAllowedAttachmentExtensions>
+      <UseActionNameWithScriptApproval>true</UseActionNameWithScriptApproval>
+      <AllowUploadAttachment>0</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+      <RemovePointWhenCastingIntToString>true</RemovePointWhenCastingIntToString>
+      <shouldRollbackManualRecordEdits>true</shouldRollbackManualRecordEdits>
+      <shouldShowManualEditsWarning>false</shouldShowManualEditsWarning>
+      <UseCultureFormat>true</UseCultureFormat>
+      <TransportName>CustomTable</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+    </process>
+    <ui>
+      <customscriptIncludedScripts>[LIB_P2P_CUSTOMIZATION_TABLES_CLIENT]</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Sys/Sys_Helpers</customscriptIncludedScripts>
+      <CustomScript>"use strict";
+var CustomScript;
+(function (CustomScript) {
+    function Start() {
+        Sys.Helpers.TryCallFunction("Lib.P2P.Customization.Tables.Client.Common.OnHTMLScriptEnd");
+    }
+    Start();
+})(CustomScript || (CustomScript = {}));
+//# sourceMappingURL=customscript.js.map</CustomScript>
+      <restorationPanel>DataPanel</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 23,
+	"*": {
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"splitterType": "simple-v",
+				"style": "FlexibleFormLight",
+				"backColor": "text-backgroundcolor-default",
+				"footerStyle": "default",
+				"processHelpId": "5140",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 2,
+					"options": {
+						"hidePanelsMenu": false,
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 3,
+					"options": {
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 4,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-center": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 5,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"width": "100%"
+										},
+										"hidden": false,
+										"hideSeparator": true
+									},
+									"*": {
+										"form-content-center-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 6,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"DataPanel": {
+													"type": "PanelData",
+													"data": [],
+													"stamp": 7,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": false,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"sameHeightAsSiblings": false,
+														"backgroundcolor": "default",
+														"labelsAlignment": "right",
+														"label": "_Document data",
+														"version": 0
+													},
+													"*": {
+														"FieldsManager": {
+															"type": "FieldsManager",
+															"data": [],
+															"stamp": 8,
+															"options": {
+																"version": 0,
+																"controlsAssociation": {
+																	"CompanyCode__": "LabelCompanyCode__",
+																	"LabelCompanyCode__": "CompanyCode__",
+																	"InvoiceType__": "LabelInvoiceType__",
+																	"LabelInvoiceType__": "InvoiceType__",
+																	"BackdatingStartDate__": "LabelBackdatingStartDate__",
+																	"LabelBackdatingStartDate__": "BackdatingStartDate__",
+																	"BackdatingEndDate__": "LabelBackdatingEndDate__",
+																	"LabelBackdatingEndDate__": "BackdatingEndDate__",
+																	"BackdatingTargetDate__": "LabelBackdatingTargetDate__",
+																	"LabelBackdatingTargetDate__": "BackdatingTargetDate__"
+																}
+															},
+															"*": {
+																"Grid": {
+																	"type": "GridLayout",
+																	"data": [
+																		"fields"
+																	],
+																	"stamp": 9,
+																	"options": {
+																		"version": 0,
+																		"lines": 5,
+																		"columns": 2,
+																		"ctrlsPos": {
+																			"LabelCompanyCode__": {
+																				"line": 1,
+																				"column": 1
+																			},
+																			"CompanyCode__": {
+																				"line": 1,
+																				"column": 2
+																			},
+																			"LabelInvoiceType__": {
+																				"line": 2,
+																				"column": 1
+																			},
+																			"InvoiceType__": {
+																				"line": 2,
+																				"column": 2
+																			},
+																			"LabelBackdatingStartDate__": {
+																				"line": 3,
+																				"column": 1
+																			},
+																			"BackdatingStartDate__": {
+																				"line": 3,
+																				"column": 2
+																			},
+																			"LabelBackdatingEndDate__": {
+																				"line": 4,
+																				"column": 1
+																			},
+																			"BackdatingEndDate__": {
+																				"line": 4,
+																				"column": 2
+																			},
+																			"LabelBackdatingTargetDate__": {
+																				"line": 5,
+																				"column": 1
+																			},
+																			"BackdatingTargetDate__": {
+																				"line": 5,
+																				"column": 2
+																			}
+																		},
+																		"colspans": [
+																			[],
+																			[],
+																			[],
+																			[],
+																			[]
+																		]
+																	},
+																	"*": {
+																		"LabelCompanyCode__": {
+																			"type": "Label",
+																			"data": [
+																				"CompanyCode__"
+																			],
+																			"stamp": 11,
+																			"options": {
+																				"label": "_Company Code",
+																				"version": 0
+																			}
+																		},
+																		"CompanyCode__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"CompanyCode__"
+																			],
+																			"stamp": 10,
+																			"options": {
+																				"label": "_Company Code",
+																				"version": 1,
+																				"autoCompleteSearchMode": "startswith",
+																				"searchMode": "matches",
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"minNbLines": 1,
+																				"maxNbLines": 1,
+																				"PreFillFTS": true,
+																				"fTSmaxRecords": "20",
+																				"browsable": true
+																			}
+																		},
+																		"LabelInvoiceType__": {
+																			"type": "Label",
+																			"data": [
+																				"InvoiceType__"
+																			],
+																			"stamp": 13,
+																			"options": {
+																				"label": "_Invoice Type",
+																				"version": 0
+																			}
+																		},
+																		"InvoiceType__": {
+																			"type": "ComboBox",
+																			"data": [
+																				"InvoiceType__"
+																			],
+																			"stamp": 12,
+																			"options": {
+																				"label": "_Invoice Type",
+																				"possibleValues": {
+																					"0": "",
+																					"1": "Non-PO Invoice",
+																					"2": "PO Invoice",
+																					"3": "PO Invoice (as FI)",
+																					"4": "Consignment",
+																					"5": "Downpayment Invoice"
+																				},
+																				"maxNbLinesToDisplay": 10,
+																				"version": 1,
+																				"keyValueMode": true,
+																				"possibleKeys": {
+																					"0": "",
+																					"1": "Non-PO Invoice",
+																					"2": "PO Invoice",
+																					"3": "PO Invoice (as FI)",
+																					"4": "Consignment",
+																					"5": "Downpayment Invoice"
+																				},
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"DataSourceOrigin": "Standalone",
+																				"DisplayedColumns": ""
+																			}
+																		},
+																		"LabelBackdatingStartDate__": {
+																			"type": "Label",
+																			"data": [
+																				"BackdatingStartDate__"
+																			],
+																			"stamp": 15,
+																			"options": {
+																				"label": "_Backdating start date",
+																				"version": 0
+																			}
+																		},
+																		"BackdatingStartDate__": {
+																			"type": "DateTime",
+																			"data": [
+																				"BackdatingStartDate__"
+																			],
+																			"stamp": 14,
+																			"options": {
+																				"label": "_Backdating start date",
+																				"displayLongFormat": false,
+																				"showWeek": false,
+																				"hideButtonPanel": false,
+																				"showOtherMonths": false,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"version": 0
+																			}
+																		},
+																		"LabelBackdatingEndDate__": {
+																			"type": "Label",
+																			"data": [
+																				"BackdatingEndDate__"
+																			],
+																			"stamp": 17,
+																			"options": {
+																				"label": "_Backdating End Date",
+																				"version": 0
+																			}
+																		},
+																		"BackdatingEndDate__": {
+																			"type": "DateTime",
+																			"data": [
+																				"BackdatingEndDate__"
+																			],
+																			"stamp": 16,
+																			"options": {
+																				"label": "_Backdating End Date",
+																				"displayLongFormat": false,
+																				"showWeek": false,
+																				"hideButtonPanel": false,
+																				"showOtherMonths": false,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"version": 0
+																			}
+																		},
+																		"LabelBackdatingTargetDate__": {
+																			"type": "Label",
+																			"data": [
+																				"BackdatingTargetDate__"
+																			],
+																			"stamp": 19,
+																			"options": {
+																				"label": "_Backdating Target Date",
+																				"version": 0
+																			}
+																		},
+																		"BackdatingTargetDate__": {
+																			"type": "DateTime",
+																			"data": [
+																				"BackdatingTargetDate__"
+																			],
+																			"stamp": 18,
+																			"options": {
+																				"label": "_Backdating Target Date",
+																				"displayLongFormat": false,
+																				"showWeek": false,
+																				"hideButtonPanel": false,
+																				"showOtherMonths": false,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"version": 0
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 20,
+					"options": {
+						"splitterType": "simple-h",
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 21,
+							"options": {
+								"label": "_Save",
+								"action": "savequit",
+								"submit": true,
+								"textSize": "S",
+								"shortCut": "S",
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 22,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"textSize": "S",
+								"shortCut": "Q",
+								"version": 0
+							}
+						},
+						"Delete": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 23,
+							"options": {
+								"label": "_Delete",
+								"action": "delete",
+								"submit": true,
+								"textSize": "S",
+								"disabled": true,
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <field deleted="0" format="" guid="F34E77100SG1" id="W99QT400153E" label="_Backdating End Date_report" length="0" name="BackdatingEndDate__" originalProcessID="B34E77100SG1" precision="0" processid="V99QT400153E" submitable="1" type="DATE">
+    <properties>
+      <db>
+        <alias>AW99QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/BackdatingEndDate__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:03</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Backdating End Date_report</Label>
+        <Alias>AW99QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>true</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <ui>
+        <_type>Date</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="D34E77100SG1" id="X99QT400153E" label="_Backdating start date_report" length="0" name="BackdatingStartDate__" originalProcessID="B34E77100SG1" precision="0" processid="V99QT400153E" submitable="1" type="DATE">
+    <properties>
+      <db>
+        <alias>AX99QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/BackdatingStartDate__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:03</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Backdating start date_report</Label>
+        <Alias>AX99QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>true</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <ui>
+        <_type>Date</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="G34E77100SG1" id="Y99QT400153E" label="_Backdating Target Date_report" length="0" name="BackdatingTargetDate__" originalProcessID="B34E77100SG1" precision="0" processid="V99QT400153E" submitable="1" type="DATE">
+    <properties>
+      <db>
+        <alias>AY99QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/BackdatingTargetDate__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:03</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Backdating Target Date_report</Label>
+        <Alias>AY99QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>true</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <ui>
+        <_type>Date</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="C34E77100SG1" id="Z99QT400153E" label="_Company Code_report" length="50" name="CompanyCode__" originalProcessID="B34E77100SG1" precision="0" processid="V99QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AZ99QT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/CompanyCode__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:03</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Company Code_report</Label>
+        <Alias>AZ99QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>false</Editable>
+        <TableName>CT#BD8QT400153E</TableName>
+        <SortOrder>
+        </SortOrder>
+        <DisplayedColumns>CompanyCode__|CompanyName__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>CompanyCode__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ExposedColumns>
+        </ExposedColumns>
+        <ProcessName>PurchasingCompanycodes__</ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <KeyAttribute>
+        </KeyAttribute>
+        <CustomFilter>
+        </CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="E34E77100SG1" id="AA9QT400153E" label="_Invoice Type_report" length="50" name="InvoiceType__" originalProcessID="B34E77100SG1" precision="0" processid="V99QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AAA9QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/InvoiceType__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:03</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Type>webaccess.Process.Columns.WithPossibleValues</Type>
+        <Label>_Invoice Type_report</Label>
+        <Alias>AAA9QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <TableName>
+        </TableName>
+        <DisplayedColumns>
+        </DisplayedColumns>
+        <DataSourceOrigin>Standalone</DataSourceOrigin>
+        <possibleKeys>
+Non-PO Invoice
+PO Invoice
+PO Invoice (as FI)
+Consignment
+Downpayment Invoice</possibleKeys>
+        <SavedColumn>
+        </SavedColumn>
+        <possibleValues>
+Non-PO Invoice
+PO Invoice
+PO Invoice (as FI)
+Consignment
+Downpayment Invoice</possibleValues>
+        <ProcessName>
+        </ProcessName>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <type id="KOLHG0000M4O" name="CT">
+  </type>
+</process>

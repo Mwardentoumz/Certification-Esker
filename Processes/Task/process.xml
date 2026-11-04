@@ -1,0 +1,3024 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:06:39" deleted="0" eskerapplication="P2P" global="0" id="P2AQT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="Task" needvalidation="1" ootofilter="(|(state=70)(state=90)(state=100))" ootoversion="2" originalProcessID="LK5JG0000VLT" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="1" reuseengine="0" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="0" version="1" visibility="0">
+  <properties>
+    <dataConditions>
+      <listDataConditions>
+				&lt;dataCondition&gt;
+					&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+					&lt;filter&gt;msnex=*&lt;/filter&gt;
+					&lt;labelKey&gt;_Project disabled&lt;/labelKey&gt;
+					&lt;conditions&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableProject__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+					&lt;/conditions&gt;
+				&lt;/dataCondition&gt;
+			</listDataConditions>
+    </dataConditions>
+    <externalvariables>
+      <EnableSRO>1</EnableSRO>
+    </externalvariables>
+    <gdr>
+      <validationscriptIncludedScripts>Lib_Project_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_ModuleProject_Server_V12.0.566.0</validationscriptIncludedScripts>
+      <ValidationScript>"use strict";
+/* eslint-disable dot-notation */
+/* eslint-disable class-methods-use-this,guard-for-in,no-case-declarations */
+var ValidationScript;
+(function (ValidationScript) {
+    class Main {
+        constructor() {
+            this.VARIABLE_PROP = Lib.Project.VARIABLE_PROP;
+            this.IsNew = false;
+        }
+        ///#region Initialisation
+        InitTaskNumber() {
+            let taskNumber = Data.GetValue("TaskNumber__");
+            if (!taskNumber) {
+                this.IsNew = true;
+                taskNumber = Lib.Project.NextNumber("Task", "TaskNumber__");
+                Data.SetValue("TaskNumber__", taskNumber);
+            }
+        }
+        ///#endregion
+        ActionSave(leaveForm) {
+            this.InitTaskNumber();
+            Lib.Project.ModifyTaskRights();
+            Lib.Project.IsStartEndDateValid("StartDate__", "EndDate__", "_Task_end_date_before_start_date");
+            this.NotifyTaskOwnerIfNecessary();
+            Sys.TechnicalData.SetValue("FormerTaskOwner", Data.GetValue("OwnerLogin__"));
+            Process.PreventApproval();
+            if (leaveForm) {
+                Process.LeaveForm();
+            }
+        }
+        NotifyTaskOwnerIfNecessary() {
+            const currentOwner = Data.GetValue("OwnerLogin__");
+            const formerOwner = this.IsNew ? "" : Sys.TechnicalData.GetValue("FormerTaskOwner");
+            const loggedUser = Users.GetUser(Data.GetValue("LastSavedOwnerID"));
+            // no owner or owner is the logged user --&gt; do not send
+            if (Sys.Helpers.IsEmpty(currentOwner) || loggedUser.GetValue("Login") === currentOwner) {
+                return;
+            }
+            // owner has changed --&gt; do send
+            if (this.IsNew || (!this.IsNew &amp;&amp; !Sys.Helpers.IsEmpty(formerOwner) &amp;&amp; formerOwner !== currentOwner)) {
+                const customTags = {
+                    OwnerName: Data.GetValue("OwnerName__"),
+                    ModifierName: loggedUser.GetValue("DisplayName"),
+                    TaskName: Data.GetValue("Name__"),
+                    TaskNumber: Data.GetValue("TaskNumber__"),
+                    ProjectName: Data.GetValue("ProjectName__"),
+                    ProjectNumber: Data.GetValue("ProjectNumber__")
+                };
+                Lib.Project.SendEmailNotification("Project_Email_NotifChangeTaskOwner.htm", customTags, "_EskerTask");
+            }
+        }
+        ActionDelete() {
+            Log.Info("[ActionDelete] try to cancel...");
+            Process.Cancel();
+            Log.Info("[ActionDelete] End");
+        }
+        ActionSynchronize() {
+            Log.Info("[ActionSynchronize] Start");
+            return Sys.GenericAPI.PromisedQuery({
+                table: "CDNAME#Project",
+                attributes: ["*"],
+                filter: Sys.Helpers.LdapUtil.FilterEqual("ProjectNumber__", Data.GetValue("ProjectNumber__")),
+                maxRecords: 1,
+                additionalOptions: {
+                    asAdmin: true
+                }
+            }).Then((queryResults) =&gt; {
+                if (queryResults.length &gt; 0) {
+                    const project = queryResults[0];
+                    let projectTechnicalData;
+                    try {
+                        Log.Info(`Project TechnicalData__=${project.TechnicalData__}`);
+                        projectTechnicalData = JSON.parse(project.TechnicalData__);
+                        Sys.TechnicalData.SetValue("ProjectOwner", projectTechnicalData === null || projectTechnicalData === void 0 ? void 0 : projectTechnicalData.ProjectOwner);
+                        Sys.TechnicalData.SetValue("ProjectMembers", projectTechnicalData === null || projectTechnicalData === void 0 ? void 0 : projectTechnicalData.ProjectMembers);
+                        if ((projectTechnicalData === null || projectTechnicalData === void 0 ? void 0 : projectTechnicalData.MakeTasksCompleted) &amp;&amp; Data.GetValue("Progress__") &lt; 100) {
+                            Data.SetValue("Progress__", 100);
+                        }
+                    }
+                    catch (e) {
+                        Log.Error(`[ActionSynchronize] TechnicalData is not set properly to initialize task's members with project members. error : ${e.message}`);
+                    }
+                    Data.SetValue("ProjectName__", project.Name__);
+                    Data.SetValue("CompanyCode__", project.CompanyCode__);
+                    Data.SetValue("ProjectStatus__", project.Status__);
+                    Data.SetValue("ArchiveDuration", project.ArchiveDuration);
+                    Data.SetValue("ValidityDateTime", project.ValidityDateTime);
+                    Lib.Project.ModifyTaskRights();
+                    if (!(projectTechnicalData === null || projectTechnicalData === void 0 ? void 0 : projectTechnicalData.MakeTasksSuccess)) {
+                        Process.PreventApproval();
+                    }
+                }
+                else {
+                    Log.Error(`[ActionSynchronize] Cannot retrieve the project associated to the task "${Data.GetValue("TaskNumber__")}" (${queryResults.length} results found.`);
+                }
+                Log.Info("[ActionSynchronize] End");
+            });
+        }
+        Start() {
+            Log.Info(`ActionName: "${Data.GetActionName()}" ActionType: "${Data.GetActionType()}"`);
+            const action = `${Data.GetActionType()}_${Data.GetActionName()}`;
+            try {
+                switch (action) {
+                    case "approve_Save": // From Project
+                        this.ActionSave(false);
+                        break;
+                    case "approve_asynchronous_Save": // From AdminList
+                        this.ActionSave(true);
+                        break;
+                    case "approve_synchronizeTasks":
+                    case "ResumeWithAction_synchronizeTasks":
+                        this.ActionSynchronize();
+                        break;
+                    case "approve_Delete":
+                        this.ActionDelete();
+                        break;
+                    default:
+                        break;
+                }
+            }
+            catch (e) {
+                let errorMsg = Language.Translate("_technical_error");
+                if (typeof e === "string") {
+                    errorMsg = e;
+                }
+                else {
+                    Log.Info("A error occured: ", e);
+                }
+                // Don't use state 200, because customscript are not re-execute after post back, c-epalle 26/09/2022
+                Variable.SetValueAsString(this.VARIABLE_PROP.Error__, errorMsg);
+            }
+        }
+    }
+    ValidationScript.Main = Main;
+    if (typeof _ENV_TEST_ENABLED === "undefined") {
+        const main = new Main();
+        main.Start();
+    }
+})(ValidationScript || (ValidationScript = {}));
+//# sourceMappingURL=validationscript.js.map</ValidationScript>
+      <AllowTagCoverPages>true</AllowTagCoverPages>
+      <AllowTagNewDocuments>true</AllowTagNewDocuments>
+      <AllowTagAttachments>true</AllowTagAttachments>
+      <AllowRemovePages>true</AllowRemovePages>
+      <AllowSwapPages>true</AllowSwapPages>
+    </gdr>
+    <lg>
+      <process_da>{
+	"_action_createflexible:Task": "Ny opgave",
+	"_CompanyCode": "Virksomhedskode",
+	"_CompanyCode_report": "Virksomhedskode",
+	"_Completed": "Afsluttet",
+	"_Description": "Beskrivelse",
+	"_Description_report": "Beskrivelse",
+	"_Draft": "Ikke påbegyndt",
+	"_EndDate": "Forfaldsdato",
+	"_EndDate_report": "Forfaldsdato",
+	"_Error while retrieving a new task number": "Kunne ikke hente det nye opgavenummer.",
+	"_EskerTask": "Esker-projekter",
+	"_EstimatedDays": "Estimeret antal dage",
+	"_EstimatedDays_report": "Estimeret antal dage",
+	"_GeneralInformation": "Oplysninger",
+	"_InProgress": "Igangværende",
+	"_Name": "Navn",
+	"_Name_report": "Opgavenavn",
+	"_OwnerLogin": "Tildelt til id",
+	"_OwnerLogin_report": "Tildelt til id",
+	"_OwnerName": "Tildelt til",
+	"_OwnerName_report": "Tildelt til",
+	"_Progress": "Status (%)",
+	"_Progress_report": "Status (%)",
+	"_ProgressPane": "Status",
+	"_Project_Canceled": "Annulleret",
+	"_Project_Done": "Afsluttet",
+	"_Project_Draft": "Udkast",
+	"_Project_InProgress": "Igangværende",
+	"_ProjectName": "Projekt",
+	"_ProjectName_report": "Projektnavn",
+	"_ProjectNumber": "Projektnummer",
+	"_ProjectNumber_report": "Projektnummer",
+	"_ProjectStatus": "Projektstatus",
+	"_ProjectStatus_report": "Projektstatus",
+	"_RemainingEstimatedDays": "Dage til gennemførelse",
+	"_RemainingEstimatedDays_report": "Dage til gennemførelse",
+	"_StartDate": "Startdato",
+	"_StartDate_report": "Startdato",
+	"_Task": "Opgave",
+	"_Task_end_date_before_start_date": "Slutdatoen skal være efter startdatoen.",
+	"_TaskNumber": "Opgavenummer",
+	"_TaskNumber_report": "Opgavenummer",
+	"_TechnicalData": "Data i JSON-format",
+	"_View as admin on bealf of {0}": "Som administrator kan du udføre nogle af {0}s aktiviteter i denne opgave.",
+	"_View on bealf of {0}": "Du er blevet tilknyttet denne opgave, idet {0} i øjeblikket er fraværende.",
+	"ProgressPane": "Status",
+	"Task": "Opgave"
+}</process_da>
+      <process_de>{
+	"_action_createflexible:Task": "Neue Aufgabe",
+	"_CompanyCode": "Buchungskreis",
+	"_CompanyCode_report": "Buchungskreis",
+	"_Completed": "Abgeschlossen",
+	"_Description": "Beschreibung",
+	"_Description_report": "Beschreibung",
+	"_Draft": "Nicht begonnen",
+	"_EndDate": "Fälligkeitsdatum",
+	"_EndDate_report": "Fälligkeitsdatum",
+	"_Error while retrieving a new task number": "Fehler beim Abrufen der neuen Aufgabennummer.",
+	"_EskerTask": "Esker-Projekte",
+	"_EstimatedDays": "Geschätzte Aufwandstage",
+	"_EstimatedDays_report": "Geschätzte Aufwandstage",
+	"_GeneralInformation": "Details",
+	"_InProgress": "In Bearbeitung",
+	"_Name": "Name",
+	"_Name_report": "Aufgabenname",
+	"_OwnerLogin": "ID des zugewiesenen Benutzers",
+	"_OwnerLogin_report": "ID des zugewiesenen Benutzers",
+	"_OwnerName": "Zugewiesen an",
+	"_OwnerName_report": "Zugewiesen an",
+	"_Progress": "Fortschritt (%)",
+	"_Progress_report": "Fortschritt (%)",
+	"_ProgressPane": "Fortschritt",
+	"_Project_Canceled": "Storniert",
+	"_Project_Done": "Abgeschlossen",
+	"_Project_Draft": "Entwurf",
+	"_Project_InProgress": "In Bearbeitung",
+	"_ProjectName": "Projekt",
+	"_ProjectName_report": "Projektname",
+	"_ProjectNumber": "Projektnummer",
+	"_ProjectNumber_report": "Projektnummer",
+	"_ProjectStatus": "Projektstatus",
+	"_ProjectStatus_report": "Projektstatus",
+	"_RemainingEstimatedDays": "Verbleibende Aufwandstage",
+	"_RemainingEstimatedDays_report": "Verbleibende Aufwandstage",
+	"_StartDate": "Startdatum",
+	"_StartDate_report": "Startdatum",
+	"_Task": "Aufgabe",
+	"_Task_end_date_before_start_date": "Enddatum muss später als Startdatum sein.",
+	"_TaskNumber": "Aufgaben-Nr.",
+	"_TaskNumber_report": "Aufgaben-Nr.",
+	"_TechnicalData": "Daten im JSON-Format",
+	"_View as admin on bealf of {0}": "Als Administrator können Sie einige der Aktionen von {0} an dieser Aufgabe durchführen.",
+	"_View on bealf of {0}": "Dieses Aufgabe wurde Ihnen in Abwesenheit von {0} zugewiesen.",
+	"ProgressPane": "Fortschritt",
+	"Task": "Aufgabe"
+}</process_de>
+      <process_ja>{
+	"_action_createflexible:Task": "新しいタスク",
+	"_CompanyCode": "会社コード",
+	"_CompanyCode_report": "会社コード",
+	"_Completed": "完了",
+	"_Description": "説明",
+	"_Description_report": "説明",
+	"_Draft": "開始していません",
+	"_EndDate": "期限",
+	"_EndDate_report": "期限",
+	"_Error while retrieving a new task number": "新しいタスク番号を取得できませんでした。",
+	"_EskerTask": "Eskerプロジェクト",
+	"_EstimatedDays": "推定作業日数",
+	"_EstimatedDays_report": "推定作業日数",
+	"_GeneralInformation": "詳細",
+	"_InProgress": "実行中",
+	"_Name": "名前",
+	"_Name_report": "タスク名",
+	"_OwnerLogin": "担当者のID",
+	"_OwnerLogin_report": "担当者のID",
+	"_OwnerName": "担当者",
+	"_OwnerName_report": "担当者",
+	"_Progress": "進捗 (%)",
+	"_Progress_report": "進捗 (%)",
+	"_ProgressPane": "進捗状況",
+	"_Project_Canceled": "キャンセル済み",
+	"_Project_Done": "完了",
+	"_Project_Draft": "ドラフト",
+	"_Project_InProgress": "実行中",
+	"_ProjectName": "プロジェクト",
+	"_ProjectName_report": "プロジェクト名",
+	"_ProjectNumber": "プロジェクト番号",
+	"_ProjectNumber_report": "プロジェクト番号",
+	"_ProjectStatus": "プロジェクトステータス",
+	"_ProjectStatus_report": "プロジェクトステータス",
+	"_RemainingEstimatedDays": "残りの作業日数",
+	"_RemainingEstimatedDays_report": "残りの作業日数",
+	"_StartDate": "開始日",
+	"_StartDate_report": "開始日",
+	"_Task": "タスク",
+	"_Task_end_date_before_start_date": "終了日は開始日より後でなければなりません",
+	"_TaskNumber": "タスク番号",
+	"_TaskNumber_report": "タスク番号",
+	"_TechnicalData": "JSON形式のデータ",
+	"_View as admin on bealf of {0}": "管理者として、あなたはこのタスクに {0} のアクションの一部を実行できます。",
+	"_View on bealf of {0}": "{0} さんが現在不在のため、このタスクはあなたに割り当てられました。",
+	"ProgressPane": "進捗状況",
+	"Task": "タスク"
+}</process_ja>
+      <process_en>{
+	"_action_createflexible:Task": "New task",
+	"_CompanyCode": "Company code",
+	"_CompanyCode_report": "Company code",
+	"_Completed": "Completed",
+	"_Description": "Description",
+	"_Description_report": "Description",
+	"_Draft": "Not started",
+	"_EndDate": "Due date",
+	"_EndDate_report": "Due date",
+	"_Error while retrieving a new task number": "Failed to retrieve the new task number.",
+	"_EskerTask": "Esker Projects",
+	"_EstimatedDays": "Estimated effort days",
+	"_EstimatedDays_report": "Estimated effort days",
+	"_GeneralInformation": "Details",
+	"_InProgress": "In progress",
+	"_Name": "Name",
+	"_Name_report": "Task name",
+	"_OwnerLogin": "Assigned to ID",
+	"_OwnerLogin_report": "Assigned to ID",
+	"_OwnerName": "Assigned to",
+	"_OwnerName_report": "Assigned to",
+	"_Progress": "Progress (%)",
+	"_Progress_report": "Progress (%)",
+	"_ProgressPane": "Progress",
+	"_Project_Canceled": "Canceled",
+	"_Project_Done": "Completed",
+	"_Project_Draft": "Draft",
+	"_Project_InProgress": "In progress",
+	"_ProjectName": "Project",
+	"_ProjectName_report": "Project name",
+	"_ProjectNumber": "Project number",
+	"_ProjectNumber_report": "Project number",
+	"_ProjectStatus": "Project status",
+	"_ProjectStatus_report": "Project status",
+	"_RemainingEstimatedDays": "Effort days remaining",
+	"_RemainingEstimatedDays_report": "Effort days remaining",
+	"_StartDate": "Start date",
+	"_StartDate_report": "Start date",
+	"_Task": "Task",
+	"_Task_end_date_before_start_date": "The end date must be later than the start date.",
+	"_TaskNumber": "Task number",
+	"_TaskNumber_report": "Task number",
+	"_TechnicalData": "Data in JSON format",
+	"_View as admin on bealf of {0}": "As an administrator, you can perform some of {0}'s actions on this task.",
+	"_View on bealf of {0}": "You have been assigned this task as {0} is currently out of office.",
+	"ProgressPane": "Progress",
+	"Task": "Task"
+}</process_en>
+      <process_es>{
+	"_action_createflexible:Task": "Nueva tarea",
+	"_CompanyCode": "Código de empresa",
+	"_CompanyCode_report": "Código de empresa",
+	"_Completed": "Realizada",
+	"_Description": "Descripción",
+	"_Description_report": "Descripción",
+	"_Draft": "No ha iniciado",
+	"_EndDate": "Fecha de vencimiento",
+	"_EndDate_report": "Fecha de vencimiento",
+	"_Error while retrieving a new task number": "Error al recuperar el nuevo número de tarea.",
+	"_EskerTask": "Esker Proyectos",
+	"_EstimatedDays": "Días de esfuerzo estimados",
+	"_EstimatedDays_report": "Días de esfuerzo estimados",
+	"_GeneralInformation": "Detalles",
+	"_InProgress": "En curso",
+	"_Name": "Nombre",
+	"_Name_report": "Nombre de la tarea",
+	"_OwnerLogin": "ID de la persona asignada",
+	"_OwnerLogin_report": "ID de la persona asignada",
+	"_OwnerName": "Asignada a",
+	"_OwnerName_report": "Asignada a",
+	"_Progress": "Progreso (%)",
+	"_Progress_report": "Progreso (%)",
+	"_ProgressPane": "Progreso",
+	"_Project_Canceled": "Cancelado",
+	"_Project_Done": "Realizado",
+	"_Project_Draft": "Borrador",
+	"_Project_InProgress": "En curso",
+	"_ProjectName": "Proyecto",
+	"_ProjectName_report": "Nombre de proyecto",
+	"_ProjectNumber": "Número de proyecto",
+	"_ProjectNumber_report": "Número de proyecto",
+	"_ProjectStatus": "Estado de proyectos",
+	"_ProjectStatus_report": "Estado de proyecto",
+	"_RemainingEstimatedDays": "Días de esfuerzo restantes",
+	"_RemainingEstimatedDays_report": "Días de esfuerzo restantes",
+	"_StartDate": "Fecha de inicio",
+	"_StartDate_report": "Fecha de inicio",
+	"_Task": "Tarea",
+	"_Task_end_date_before_start_date": "La fecha de fin debe ser posterior a la fecha inicial.",
+	"_TaskNumber": "Número de tarea",
+	"_TaskNumber_report": "Número de tarea",
+	"_TechnicalData": "Datos en formato JSON",
+	"_View as admin on bealf of {0}": "Como administrador, puede realizar algunas acciones de {0} en esta tarea.",
+	"_View on bealf of {0}": "Se le ha asignado este proyecto ya que {0} se encuentra fuera de la oficina. ",
+	"ProgressPane": "Progreso",
+	"Task": "Tarea"
+}</process_es>
+      <process_fr>{
+	"_action_createflexible:Task": "Nouvelle tâche",
+	"_CompanyCode": "Code société",
+	"_CompanyCode_report": "Code société",
+	"_Completed": "Terminée",
+	"_Description": "Description",
+	"_Description_report": "Description",
+	"_Draft": "Non commencée",
+	"_EndDate": "Date d'échéance",
+	"_EndDate_report": "Date d'échéance",
+	"_Error while retrieving a new task number": "Impossible de récupérer le nouveau numéro de la tâche.",
+	"_EskerTask": "Esker Projets",
+	"_EstimatedDays": "Charge estimée (jours)",
+	"_EstimatedDays_report": "Charge estimée (jours)",
+	"_GeneralInformation": "Détails",
+	"_InProgress": "En cours",
+	"_Name": "Nom",
+	"_Name_report": "Nom de la tâche",
+	"_OwnerLogin": "ID de l'utilisateur assigné",
+	"_OwnerLogin_report": "ID de l'utilisateur assigné",
+	"_OwnerName": "Assignée à",
+	"_OwnerName_report": "Assignée à",
+	"_Progress": "Avancement (%)",
+	"_Progress_report": "Avancement (%)",
+	"_ProgressPane": "Avancement",
+	"_Project_Canceled": "Annulé",
+	"_Project_Done": "Terminé",
+	"_Project_Draft": "Brouillon",
+	"_Project_InProgress": "En cours",
+	"_ProjectName": "Projet",
+	"_ProjectName_report": "Nom du projet",
+	"_ProjectNumber": "Numéro de projet",
+	"_ProjectNumber_report": "Numéro de projet",
+	"_ProjectStatus": "État du projet",
+	"_ProjectStatus_report": "État du projet",
+	"_RemainingEstimatedDays": "Charge restante (jours)",
+	"_RemainingEstimatedDays_report": "Charge restante (jours)",
+	"_StartDate": "Date de début",
+	"_StartDate_report": "Date de début",
+	"_Task": "Tâche",
+	"_Task_end_date_before_start_date": "La date de fin doit être ultérieure à la date de début.",
+	"_TaskNumber": "Numéro de la tâche",
+	"_TaskNumber_report": "Numéro de la tâche",
+	"_TechnicalData": "Données au format JSON",
+	"_View as admin on bealf of {0}": "En tant qu'administrateur, vous pouvez effectuer certaines des actions de {0} sur cette tâche.",
+	"_View on bealf of {0}": "Cette tâche vous a été assignée en l'absence de {0}.",
+	"ProgressPane": "Avancement",
+	"Task": "Tâche"
+}</process_fr>
+      <process_nl-NL>{
+	"_action_createflexible:Task": "Nieuwe taak",
+	"_CompanyCode": "Bedrijfscode",
+	"_CompanyCode_report": "Bedrijfscode",
+	"_Completed": "Voltooid",
+	"_Description": "Beschrijving",
+	"_Description_report": "Beschrijving",
+	"_Draft": "Niet gestart",
+	"_EndDate": "Vervaldatum",
+	"_EndDate_report": "Vervaldatum",
+	"_Error while retrieving a new task number": "Nieuw taaknummer ophalen mislukt.",
+	"_EskerTask": "Esker-projecten",
+	"_EstimatedDays": "Schatting dagen inspanning",
+	"_EstimatedDays_report": "Schatting dagen inspanning",
+	"_GeneralInformation": "Details",
+	"_InProgress": "In uitvoering",
+	"_Name": "Naam",
+	"_Name_report": "Naam taak",
+	"_OwnerLogin": "ID toegewezen gebruiker",
+	"_OwnerLogin_report": "ID toegewezen gebruiker",
+	"_OwnerName": "Toegewezen aan",
+	"_OwnerName_report": "Toegewezen aan",
+	"_Progress": "Voortgang (%)",
+	"_Progress_report": "Voortgang (%)",
+	"_ProgressPane": "Voortgang",
+	"_Project_Canceled": "Geannuleerd",
+	"_Project_Done": "Voltooid",
+	"_Project_Draft": "Ontwerp",
+	"_Project_InProgress": "In uitvoering",
+	"_ProjectName": "Project",
+	"_ProjectName_report": "Projectnaam",
+	"_ProjectNumber": "Projectnummer",
+	"_ProjectNumber_report": "Projectnummer",
+	"_ProjectStatus": "Projectstatus",
+	"_ProjectStatus_report": "Projectstatus",
+	"_RemainingEstimatedDays": "Resterende dagen inspanning",
+	"_RemainingEstimatedDays_report": "Resterende dagen inspanning",
+	"_StartDate": "Startdatum",
+	"_StartDate_report": "Startdatum",
+	"_Task": "Taak",
+	"_Task_end_date_before_start_date": "De einddatum moet later zijn dan de startdatum.",
+	"_TaskNumber": "Taaknummer",
+	"_TaskNumber_report": "Taaknummer",
+	"_TechnicalData": "Gegevens in JSON-formaat",
+	"_View as admin on bealf of {0}": "Als beheerder kunt u enkele acties van {0} uitvoeren op deze taak.",
+	"_View on bealf of {0}": "U hebt deze taak toegewezen gekregen aangezien {0} momenteel niet op kantoor is.",
+	"ProgressPane": "Voortgang",
+	"Task": "Taak"
+}</process_nl-NL>
+      <process_pl>{
+	"_action_createflexible:Task": "Nowe zadanie",
+	"_CompanyCode": "Kod firmy",
+	"_CompanyCode_report": "Kod firmy",
+	"_Completed": "Ukończone",
+	"_Description": "Opis",
+	"_Description_report": "Opis",
+	"_Draft": "Nierozpoczęte",
+	"_EndDate": "Termin",
+	"_EndDate_report": "Termin",
+	"_Error while retrieving a new task number": "Nie udało się pobrać nowego numeru zadania.",
+	"_EskerTask": "Projekty Esker",
+	"_EstimatedDays": "Szacunkowa liczba dni pracy",
+	"_EstimatedDays_report": "Szacunkowa liczba dni pracy",
+	"_GeneralInformation": "Szczegóły",
+	"_InProgress": "W toku",
+	"_Name": "Nazwa",
+	"_Name_report": "Nazwa zadania",
+	"_OwnerLogin": "Przypisano do id.",
+	"_OwnerLogin_report": "Przypisano do id.",
+	"_OwnerName": "Przypisane do",
+	"_OwnerName_report": "Przypisane do",
+	"_Progress": "Postęp (%)",
+	"_Progress_report": "Postęp (%)",
+	"_ProgressPane": "Postęp",
+	"_Project_Canceled": "Anulowano",
+	"_Project_Done": "Ukończono",
+	"_Project_Draft": "Wersja robocza",
+	"_Project_InProgress": "W toku",
+	"_ProjectName": "Projekt",
+	"_ProjectName_report": "Nazwa projektu",
+	"_ProjectNumber": "Numer projektu",
+	"_ProjectNumber_report": "Numer projektu",
+	"_ProjectStatus": "Status projektu",
+	"_ProjectStatus_report": "Status projektu",
+	"_RemainingEstimatedDays": "Pozostałe dni pracy",
+	"_RemainingEstimatedDays_report": "Pozostałe dni pracy",
+	"_StartDate": "Data początkowa",
+	"_StartDate_report": "Data początkowa",
+	"_Task": "Zadanie",
+	"_Task_end_date_before_start_date": "Data końcowa musi być późniejsza niż data początkowa.",
+	"_TaskNumber": "Numer zadania",
+	"_TaskNumber_report": "Numer zadania",
+	"_TechnicalData": "Dane w formacie JSON",
+	"_View as admin on bealf of {0}": "Jako administrator możesz wykonywać niektóre działania użytkownika {0} na tym zadaniu.",
+	"_View on bealf of {0}": "Przypisano Ci to zadanie ponieważ {0} obecnie jest poza biurem.",
+	"ProgressPane": "Postęp",
+	"Task": "Zadanie"
+}</process_pl>
+      <process_it>{
+	"_action_createflexible:Task": "Nuova attività",
+	"_CompanyCode": "Codice società",
+	"_CompanyCode_report": "Codice società",
+	"_Completed": "Terminata",
+	"_Description": "Descrizione",
+	"_Description_report": "Descrizione",
+	"_Draft": "Non avviata",
+	"_EndDate": "Data scadenza",
+	"_EndDate_report": "Data scadenza",
+	"_Error while retrieving a new task number": "Impossibile recuperare il nuovo numero dell'attività.",
+	"_EskerTask": "Esker Progetti",
+	"_EstimatedDays": "Giorni di lavoro previsti",
+	"_EstimatedDays_report": "Giorni di lavoro previsti",
+	"_GeneralInformation": "Dettagli",
+	"_InProgress": "In corso",
+	"_Name": "Nome",
+	"_Name_report": "Nome attività",
+	"_OwnerLogin": "ID utente assegnato",
+	"_OwnerLogin_report": "ID utente assegnato",
+	"_OwnerName": "Assegnata a",
+	"_OwnerName_report": "Assegnata a",
+	"_Progress": "Avanzamento (%)",
+	"_Progress_report": "Avanzamento (%)",
+	"_ProgressPane": "Avanzamento",
+	"_Project_Canceled": "Annullato",
+	"_Project_Done": "Terminato",
+	"_Project_Draft": "Bozza",
+	"_Project_InProgress": "In corso",
+	"_ProjectName": "Progetto",
+	"_ProjectName_report": "Nome progetto",
+	"_ProjectNumber": "Numero progetto",
+	"_ProjectNumber_report": "Numero progetto",
+	"_ProjectStatus": "Stato progetto",
+	"_ProjectStatus_report": "Stato progetto",
+	"_RemainingEstimatedDays": "Giorni di lavoro rimanenti",
+	"_RemainingEstimatedDays_report": "Giorni di lavoro rimanenti",
+	"_StartDate": "Data di inizio",
+	"_StartDate_report": "Data di inizio",
+	"_Task": "Attività",
+	"_Task_end_date_before_start_date": "La data di fine deve essere successiva alla data di inizio.",
+	"_TaskNumber": "Numero attività",
+	"_TaskNumber_report": "Numero attività",
+	"_TechnicalData": "Dati in formato JSON",
+	"_View as admin on bealf of {0}": "Come amministratore, puoi eseguire alcune delle azioni di {0} su questa attività.",
+	"_View on bealf of {0}": "Questa attività ti è stata assegnata in assenza di {0}.",
+	"ProgressPane": "Avanzamento",
+	"Task": "Attività"
+}</process_it>
+      <process_sk>{
+	"_action_createflexible:Task": "Nová úloha",
+	"_CompanyCode": "Kód spoločnosti",
+	"_CompanyCode_report": "Kód spoločnosti",
+	"_Completed": "Dokončené",
+	"_Description": "Popis",
+	"_Description_report": "Popis",
+	"_Draft": "Nezačaté",
+	"_EndDate": "Dátum splatnosti",
+	"_EndDate_report": "Dátum splatnosti",
+	"_Error while retrieving a new task number": "Nepodarilo sa získať číslo novej úlohy.",
+	"_EskerTask": "Projekty Esker",
+	"_EstimatedDays": "Odhadované dni práce",
+	"_EstimatedDays_report": "Odhadované dni práce",
+	"_GeneralInformation": "Podrobnosti",
+	"_InProgress": "Prebieha",
+	"_Name": "Názov",
+	"_Name_report": "Názov úlohy",
+	"_OwnerLogin": "Pridelený k ID",
+	"_OwnerLogin_report": "Pridelený k ID",
+	"_OwnerName": "Pridelený k",
+	"_OwnerName_report": "Pridelený k",
+	"_Progress": "Pokrok (%)",
+	"_Progress_report": "Pokrok (%)",
+	"_ProgressPane": "Pokrok",
+	"_Project_Canceled": "Zrušený",
+	"_Project_Done": "Dokončené",
+	"_Project_Draft": "Návrh",
+	"_Project_InProgress": "Prebieha",
+	"_ProjectName": "Projekt",
+	"_ProjectName_report": "Názov projektu",
+	"_ProjectNumber": "Číslo projektu",
+	"_ProjectNumber_report": "Číslo projektu",
+	"_ProjectStatus": "Stav projektu",
+	"_ProjectStatus_report": "Stav projektu",
+	"_RemainingEstimatedDays": "Zostávajúce dni práce",
+	"_RemainingEstimatedDays_report": "Zostávajúce dni práce",
+	"_StartDate": "Dátum začiatku",
+	"_StartDate_report": "Dátum začiatku",
+	"_Task": "Úloha",
+	"_Task_end_date_before_start_date": "Dátum ukončenia musí byť neskorší ako dátum začiatku.",
+	"_TaskNumber": "Číslo úlohy",
+	"_TaskNumber_report": "Číslo úlohy",
+	"_TechnicalData": "Dáta vo formáte JSON",
+	"_View as admin on bealf of {0}": "Ako administrátor môžete vykonávať niektoré akcie {0} v tejto úlohe.",
+	"_View on bealf of {0}": "Táto úloha vám bola pridelená, pretože {0} je momentálne mimo pracoviska.",
+	"ProgressPane": "Pokrok",
+	"Task": "Úloha"
+}</process_sk>
+      <process_zh-CN>{
+	"_action_createflexible:Task": "新任务",
+	"_CompanyCode": "公司代码",
+	"_CompanyCode_report": "公司代码",
+	"_Completed": "已完成",
+	"_Description": "描述",
+	"_Description_report": "描述",
+	"_Draft": "未开始",
+	"_EndDate": "截止日期",
+	"_EndDate_report": "截止日期",
+	"_Error while retrieving a new task number": "无法检索新的任务编号。",
+	"_EskerTask": "Esker 项目",
+	"_EstimatedDays": "预计工作天数",
+	"_EstimatedDays_report": "预计工作天数",
+	"_GeneralInformation": "详细信息",
+	"_InProgress": "进行中",
+	"_Name": "名称",
+	"_Name_report": "任务名称",
+	"_OwnerLogin": "被分派人 ID",
+	"_OwnerLogin_report": "被分派人 ID",
+	"_OwnerName": "指派给",
+	"_OwnerName_report": "指派给",
+	"_Progress": "进度（%）",
+	"_Progress_report": "进度（%）",
+	"_ProgressPane": "进度",
+	"_Project_Canceled": "已取消",
+	"_Project_Done": "已完成",
+	"_Project_Draft": "草稿",
+	"_Project_InProgress": "进行中",
+	"_ProjectName": "项目",
+	"_ProjectName_report": "项目名称",
+	"_ProjectNumber": "项目编号",
+	"_ProjectNumber_report": "项目编号",
+	"_ProjectStatus": "项目状态",
+	"_ProjectStatus_report": "项目状态",
+	"_RemainingEstimatedDays": "剩余工作天数",
+	"_RemainingEstimatedDays_report": "剩余工作天数",
+	"_StartDate": "开始日期",
+	"_StartDate_report": "开始日期",
+	"_Task": "任务",
+	"_Task_end_date_before_start_date": "结束日期必须晚于开始日期",
+	"_TaskNumber": "任务编号",
+	"_TaskNumber_report": "任务编号",
+	"_TechnicalData": "JSON 格式的数据",
+	"_View as admin on bealf of {0}": "作为管理员，您可以对此任务执行部分属于 {0} 权限范围内的操作。",
+	"_View on bealf of {0}": "您的同事 {0} 正在休假或外出，该任务由您代为处理。",
+	"ProgressPane": "进度",
+	"Task": "任务"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"_action_createflexible:Task": "Nova tarefa",
+	"_CompanyCode": "Código da empresa",
+	"_CompanyCode_report": "Código da empresa",
+	"_Completed": "Concluído",
+	"_Description": "Descrição",
+	"_Description_report": "Descrição",
+	"_Draft": "Não iniciado",
+	"_EndDate": "Data de vencimento",
+	"_EndDate_report": "Data de vencimento",
+	"_Error while retrieving a new task number": "Falha ao recuperar o novo número da tarefa.",
+	"_EskerTask": "Projetos Esker",
+	"_EstimatedDays": "Dias de esforço estimados",
+	"_EstimatedDays_report": "Dias de esforço estimados",
+	"_GeneralInformation": "Detalhes",
+	"_InProgress": "Em andamento",
+	"_Name": "Nome",
+	"_Name_report": "Nome da tarefa",
+	"_OwnerLogin": "ID to usuário responsável",
+	"_OwnerLogin_report": "ID to usuário responsável",
+	"_OwnerName": "Atribuída a",
+	"_OwnerName_report": "Atribuída a",
+	"_Progress": "Evolução (%)",
+	"_Progress_report": "Evolução (%)",
+	"_ProgressPane": "Evolução",
+	"_Project_Canceled": "Cancelado",
+	"_Project_Done": "Concluído",
+	"_Project_Draft": "Rascunho",
+	"_Project_InProgress": "Em andamento",
+	"_ProjectName": "Projeto",
+	"_ProjectName_report": "Nome do projeto",
+	"_ProjectNumber": "Número do projeto",
+	"_ProjectNumber_report": "Número do projeto",
+	"_ProjectStatus": "Status do projeto",
+	"_ProjectStatus_report": "Status do projeto",
+	"_RemainingEstimatedDays": "Dias de esforço restantes",
+	"_RemainingEstimatedDays_report": "Dias de esforço restantes",
+	"_StartDate": "Data de início",
+	"_StartDate_report": "Data de início",
+	"_Task": "Tarefa",
+	"_Task_end_date_before_start_date": "A data final deve ser posterior à data de início.",
+	"_TaskNumber": "Número da tarefa",
+	"_TaskNumber_report": "Número da tarefa",
+	"_TechnicalData": "Dados no formato JSON",
+	"_View as admin on bealf of {0}": "Como administrador, você pode executar algumas das ações de {0} nessa tarefa.",
+	"_View on bealf of {0}": "Você recebeu essa tarefa porque {0} está fora do escritório.",
+	"ProgressPane": "Evolução",
+	"Task": "Tarefa"
+}</process_pt-BR>
+    </lg>
+    <ocr>
+      <trade-off>accurate</trade-off>
+      <image-ocr-timeout>
+      </image-ocr-timeout>
+      <image-binarization>no</image-binarization>
+      <image-draft-fax>no</image-draft-fax>
+      <image-despeckle>no</image-despeckle>
+      <allowed-language>0</allowed-language>
+      <image-resolution-enhancement>auto</image-resolution-enhancement>
+      <pdf-processing>no-ocr</pdf-processing>
+      <ocr_engine>Nuance222</ocr_engine>
+      <ocrpagestoprocess>0</ocrpagestoprocess>
+      <extractionAdditionalOptions>
+      </extractionAdditionalOptions>
+    </ocr>
+    <process>
+      <flowtype>processing</flowtype>
+      <ocrpreset>scan</ocrpreset>
+      <cacheableprocess>P2P - Global Application Settings__</cacheableprocess>
+      <cacheableprocess>P2P - User properties__</cacheableprocess>
+      <cacheableprocess>P2P - Exchange rate__</cacheableprocess>
+      <cacheableprocess>PurchasingCompanycodes__</cacheableprocess>
+      <EnableNegativeNumbersBetweenBrackets>true</EnableNegativeNumbersBetweenBrackets>
+      <homepagelabel>P2P - Task</homepagelabel>
+      <enableflexibleauditing>true</enableflexibleauditing>
+      <enableflexibleediting>true</enableflexibleediting>
+      <enableflexibleteaching>
+      </enableflexibleteaching>
+      <enableInternalConversation>true</enableInternalConversation>
+      <disableocr>
+      </disableocr>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <disableautolearning>true</disableautolearning>
+      <backgroundprocessingthreshold>
+      </backgroundprocessingthreshold>
+      <EnablePreviewPrecomputation>true</EnablePreviewPrecomputation>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <enablerounddecimal>true</enablerounddecimal>
+      <pdfNormalizeFilter>
+      </pdfNormalizeFilter>
+      <archiveDuration>0</archiveDuration>
+      <ocrpagestoprocess>0</ocrpagestoprocess>
+      <ScriptEngineType>2</ScriptEngineType>
+      <UseActionNameWithScriptApproval>true</UseActionNameWithScriptApproval>
+      <displayWidth>
+      </displayWidth>
+      <AllowUploadAttachment>1</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+      <RemovePointWhenCastingIntToString>true</RemovePointWhenCastingIntToString>
+      <UseCultureFormat>true</UseCultureFormat>
+      <DoNotUseProcessState>1</DoNotUseProcessState>
+      <AllowRetryExtractCD>true</AllowRetryExtractCD>
+      <TransportName>CustomData</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+      <printToProcess>
+      </printToProcess>
+    </process>
+    <ui>
+      <customscriptIncludedScripts>Sys/Sys_Helpers</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Sys/Sys_Helpers_Banner</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Sys/Sys_Helpers_Controls</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Sys/SYS_HELPERS_PROMISE</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Sys/SYS_HELPERS_PROMISE_TOOLS</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Sys/Sys_Helpers_LdapUtil</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Lib_Parameters_P2P_V12.0.566.0</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Lib_Project_V12.0.566.0</customscriptIncludedScripts>
+      <customscriptIncludedScripts>LIB_P2P_Layout_V12.0.566.0</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Lib_ModuleProject_Client_V12.0.566.0</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Lib_P2P_UserProperties_V12.0.566.0</customscriptIncludedScripts>
+      <CustomScriptReadonly>true</CustomScriptReadonly>
+      <CustomScript>"use strict";
+/* eslint-disable class-methods-use-this */
+var CustomScript;
+(function (CustomScript) {
+    const gComesFromProject = !!Process.GetURLParameter("ls");
+    const panes = ["Title", "GeneralInformation", "ProgressPane", "DocumentsPanel", "PreviewPanel", "TopPaneWarning"];
+    const buttons = ["Save", "Close"];
+    const globalLayout = new Lib.P2P.Layout.Manager(panes, buttons);
+    function FeedFromProject() {
+        const projectNumber = Sys.Helpers.String.DecodeURLParameter("projectNumber");
+        if (Sys.Helpers.IsEmpty(Controls.ProjectNumber__.GetValue()) &amp;&amp; projectNumber !== "newproject") {
+            Data.SetValue("ProjectNumber__", projectNumber);
+        }
+        const projectName = Sys.Helpers.String.DecodeURLParameter("projectName");
+        Controls.ProjectName__.Hide(Sys.Helpers.IsEmpty(projectName));
+        Controls.ProjectName__.SetValue(projectName);
+        Controls.CompanyCode__.SetValue(Sys.Helpers.String.DecodeURLParameter("companyCode"));
+        const projectOwner = Sys.Helpers.String.DecodeURLParameter("projectOwner");
+        Sys.TechnicalData.SetValue("ProjectOwner", !Sys.Helpers.IsEmpty(projectOwner) ? JSON.parse(projectOwner) : null);
+        const projectMembers = Sys.Helpers.String.DecodeURLParameter("projectMembers");
+        Sys.TechnicalData.SetValue("ProjectMembers", !Sys.Helpers.IsEmpty(projectMembers) ? JSON.parse(projectMembers) : null);
+    }
+    class Main {
+        constructor() {
+        }
+        ComputeRemainingEstimatedDays() {
+            const estimatedDays = Controls.EstimatedDays__.GetValue();
+            let remainingEstimatedDays = null;
+            if (estimatedDays !== null &amp;&amp; estimatedDays &gt;= 0) {
+                remainingEstimatedDays = estimatedDays - estimatedDays * Controls.Progress__.GetValue() / 100;
+                remainingEstimatedDays = Math.max(remainingEstimatedDays, 0);
+            }
+            Controls.RemainingEstimatedDays__.SetValue(remainingEstimatedDays);
+        }
+        InitControls() {
+            Controls.TaskNumber__.Hide(Sys.Helpers.IsEmpty(Controls.TaskNumber__.GetValue()));
+            Controls.Close.OnClick = function () {
+                ProcessInstance.Quit("Quit");
+                return false;
+            };
+            Controls.Save.OnClick = function () {
+                if (gComesFromProject) // we come from "Project"
+                 {
+                    ProcessInstance.SetUrlParametersForPreventApproval("syncWithProjectOnExit=1");
+                    ProcessInstance.Approve("Save");
+                }
+                else {
+                    // Always approve due to possible change of task owner
+                    ProcessInstance.ApproveAsynchronous("Save");
+                }
+                return false;
+            };
+            Controls.Save.Hide(ProcessInstance.isReadOnly || ProcessInstance.state &gt;= 100);
+            Controls.HTMLProgressBar__.BindEvent("onInput", (evt) =&gt; {
+                Controls.Progress__.SetValue(evt.progressValue);
+                this.ComputeRemainingEstimatedDays();
+                this.DisplayBanner();
+            });
+            Controls.EstimatedDays__.OnChange = () =&gt; {
+                this.ComputeRemainingEstimatedDays();
+            };
+            Controls.Progress__.OnChange = () =&gt; {
+                Controls.HTMLProgressBar__.FireEvent("handler", { value: Controls.Progress__.GetValue() });
+                this.ComputeRemainingEstimatedDays();
+                this.DisplayBanner();
+            };
+            /* Work Arround at the end of the file
+            Controls.HTMLProgressBar__.BindEvent("onLoad", function (): void
+            {
+                Controls.HTMLProgressBar__.FireEvent("handler", { value: Controls.Progress__.GetValue(), disabled: ProcessInstance.isReadOnly });
+            });*/
+            Controls.EndDate__.OnChange = function () {
+                Lib.Project.IsStartEndDateValid("StartDate__", "EndDate__", "_Task_end_date_before_start_date");
+            };
+            Controls.StartDate__.OnChange = function () {
+                Lib.Project.IsStartEndDateValid("StartDate__", "EndDate__", "_Task_end_date_before_start_date");
+            };
+            this.InitOwnerControls();
+        }
+        DisplayBanner() {
+            const banner = Sys.Helpers.Banner;
+            banner.SetMainTitle("_Task");
+            banner.SetHTMLBanner(Controls.HTMLBanner__);
+            banner.SetSubTitle(this.TaskStatus());
+        }
+        TaskStatus() {
+            const progressValue = Controls.Progress__.GetValue();
+            if (!progressValue) {
+                return "_Draft";
+            }
+            else if (progressValue &gt;= 100) {
+                return "_Completed";
+            }
+            return "_InProgress";
+        }
+        Start() {
+            Log.Info("Start custom script");
+            Controls.form_header.SetProcessDisplayName(Language.Translate("_Task"));
+            // Pass the information wether the account is a demo account or not to the server
+            Variable.SetValueAsString("InDemoAccount", User.isInDemoAccount ? "1" : "0");
+            if (gComesFromProject &amp;&amp; ProcessInstance.state &amp;&amp; Data.GetValue("Deleted") != "1" &amp;&amp; Process.GetURLParameter("syncWithProjectOnExit") == "1") {
+                let taskItem = GetTaskDataFromForm();
+                Data.StorageSetValue(Process.GetURLParameter("ls"), JSON.stringify(taskItem));
+                ProcessInstance.Quit("Quit");
+            }
+            this.InitControls();
+            Lib.ModuleProject.InitWarnings();
+            this.DisplayBanner();
+        }
+        InitOwnerControls() {
+            Controls.OwnerName__.DisableExposedColumnImplicitRequest();
+            const OnSelectOwner = (item) =&gt; {
+                Data.SetValue("OwnerName__", item.GetValue("DisplayName"));
+                Data.SetValue("OwnerLogin__", item.GetValue("Login"));
+            };
+            const OnUnknownOrEmptyOwner = () =&gt; {
+                Data.SetValue("OwnerLogin__", "");
+            };
+            Sys.Helpers.Controls.OnDatabaseComboboxEvents(Controls.OwnerName__, OnSelectOwner, OnUnknownOrEmptyOwner, OnUnknownOrEmptyOwner);
+            Lib.Project.GetPossibleTaskOwnerLogins()
+                .Then(logins =&gt; {
+                const filter = Sys.Helpers.LdapUtil.FilterIn("Login", logins).toString();
+                Sys.Helpers.SilentChange(() =&gt; Controls.OwnerName__.SetFilter(filter));
+            });
+        }
+    }
+    CustomScript.Main = Main;
+    function GetTaskDataFromForm(exceptions = []) {
+        let data = { ValidationUrl: Data.GetValue("ValidationUrl") };
+        Sys.Helpers.Object.ForEach(Controls, (control) =&gt; {
+            const name = control.GetName();
+            const type = control.GetType();
+            if (name.endsWith("__") &amp;&amp;
+                Sys.Helpers.Array.IndexOf(exceptions, name) &lt; 0 &amp;&amp;
+                !type.startsWith("Panel") &amp;&amp;
+                type !== "FormButton" &amp;&amp;
+                type !== "SubmitButton" &amp;&amp;
+                type !== "Spacer" &amp;&amp;
+                type !== "HTML") {
+                let value = control.GetValue();
+                if (value === null) {
+                    value = "";
+                }
+                data[name] = type === "Date" ? Sys.Helpers.Date.Date2DBDate(value) : value;
+            }
+        });
+        return data;
+    }
+    function Run() {
+        Process.ShowFirstErrorAfterBoot(false);
+        Sys.Helpers.EnableSmartSilentChange();
+        ProcessInstance.SetSilentChange(true);
+        globalLayout.ShowWaitScreen();
+        globalLayout.Hide(true);
+        const initPromises = [];
+        const OnloadPromise = Sys.Helpers.TryCallFunction("Lib.Project.Customization.Client.OnLoad");
+        if (OnloadPromise) {
+            initPromises.push(OnloadPromise);
+        }
+        if (gComesFromProject) {
+            FeedFromProject();
+        }
+        initPromises.push(Lib.ModuleProject.LoadUserProperties());
+        Sys.Helpers.Promise.All(initPromises)
+            .Then(() =&gt; {
+            globalLayout.Hide(false);
+            const main = new Main();
+            main.Start();
+        })
+            .Catch(reason =&gt; {
+            Log.Error("GlobalError : " + reason);
+        })
+            .Finally(() =&gt; {
+            globalLayout.HideWaitScreen();
+            // Work Arround for function OnLoad not called
+            Controls.HTMLProgressBar__.FireEvent("handler", { value: Controls.Progress__.GetValue(), disabled: ProcessInstance.isReadOnly });
+            ProcessInstance.SetSilentChange(false);
+            Process.ShowFirstError();
+        });
+    }
+    CustomScript.Run = Run;
+    if (typeof _ENV_TEST_ENABLED === "undefined") {
+        Run();
+    }
+})(CustomScript || (CustomScript = {}));
+//# sourceMappingURL=customscript.js.map</CustomScript>
+      <restorationPanel>GeneralInformation</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 78,
+	"*": {
+		"GDRData": {
+			"type": "GDRData",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"version": 0
+			}
+		},
+		"OCRParams": {
+			"type": "OCRParams",
+			"data": [],
+			"stamp": 2,
+			"options": {
+				"version": 0
+			}
+		},
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 3,
+			"options": {
+				"splitterType": "complex-internalconversation",
+				"style": "FlexibleFormLight",
+				"maxwidth": "",
+				"backColor": "text-backgroundcolor-color7",
+				"footerStyle": "LargeFooter",
+				"processHelpId": "5115",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 4,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 5,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 6,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-top": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 7,
+									"options": {
+										"autosize": true,
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"height": "25%"
+										},
+										"hidden": true,
+										"hideSeparator": true
+									}
+								},
+								"form-content-bottom": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 8,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": "25%",
+											"left": "0%",
+											"height": "75%"
+										},
+										"hidden": false,
+										"hideSeparator": true
+									},
+									"*": {
+										"form-content-left": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 9,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "0%",
+													"width": "51%"
+												},
+												"hidden": false,
+												"hideSeparator": true
+											},
+											"*": {
+												"form-content-left-4": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 10,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"TopPaneWarning": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 11,
+															"options": {
+																"border": {},
+																"iconURL": "",
+																"TitleFontSize": "L",
+																"hideActionButtons": true,
+																"hideTitleBar": true,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"backgroundcolor": "color3",
+																"labelsAlignment": "right",
+																"label": "TopPaneWarning",
+																"hidden": false,
+																"leftImageURL": "",
+																"removeMargins": false,
+																"elementsAlignment": "left",
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 12,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 13,
+																			"options": {
+																				"version": 0,
+																				"lines": 1,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"TopMessageWarning__": {
+																						"line": 1,
+																						"column": 1
+																					}
+																				},
+																				"colspans": [
+																					[
+																						{
+																							"index": 0,
+																							"length": 2
+																						}
+																					]
+																				]
+																			},
+																			"*": {
+																				"TopMessageWarning__": {
+																					"type": "HTML",
+																					"data": false,
+																					"stamp": 14,
+																					"options": {
+																						"label": "TopMessageWarning__",
+																						"width": "100%",
+																						"version": 0
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-6": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 15,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"Title": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 16,
+															"options": {
+																"border": {},
+																"iconURL": "",
+																"TitleFontSize": "L",
+																"hideActionButtons": true,
+																"hideTitleBar": true,
+																"hideTitle": false,
+																"sameHeightAsSiblings": true,
+																"backgroundcolor": "none",
+																"labelsAlignment": "right",
+																"label": "_Title",
+																"hidden": false,
+																"leftImageURL": "",
+																"removeMargins": false,
+																"elementsAlignment": "left",
+																"labelLength": "154px",
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 17,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 18,
+																			"options": {
+																				"version": 0,
+																				"lines": 1,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"HTMLBanner__": {
+																						"line": 1,
+																						"column": 1
+																					}
+																				},
+																				"colspans": [
+																					[
+																						{
+																							"index": 0,
+																							"length": 2
+																						}
+																					]
+																				]
+																			},
+																			"*": {
+																				"HTMLBanner__": {
+																					"type": "HTML",
+																					"data": false,
+																					"stamp": 19,
+																					"options": {
+																						"label": "_HTMLBanner",
+																						"htmlContent": "Task",
+																						"width": "100%",
+																						"version": 0
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 20,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"GeneralInformation": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 21,
+															"options": {
+																"border": {},
+																"labelLength": "154px",
+																"iconURL": "",
+																"TitleFontSize": "L",
+																"hideActionButtons": true,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": true,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_GeneralInformation",
+																"leftImageURL": "",
+																"removeMargins": false,
+																"elementsAlignment": "left",
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 22,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {
+																			"ProjectNumber__": "LabelProjectNumber__",
+																			"LabelProjectNumber__": "ProjectNumber__",
+																			"ProjectStatus__": "LabelProjectStatus__",
+																			"LabelProjectStatus__": "ProjectStatus__",
+																			"CompanyCode__": "LabelCompanyCode__",
+																			"LabelCompanyCode__": "CompanyCode__",
+																			"TaskNumber__": "LabelTaskNumber__",
+																			"LabelTaskNumber__": "TaskNumber__",
+																			"Name__": "LabelName__",
+																			"LabelName__": "Name__",
+																			"Description__": "LabelDescription__",
+																			"LabelDescription__": "Description__",
+																			"ProjectName__": "LabelProjectName__",
+																			"LabelProjectName__": "ProjectName__",
+																			"OwnerName__": "LabelOwnerName__",
+																			"LabelOwnerName__": "OwnerName__",
+																			"OwnerLogin__": "LabelOwnerLogin__",
+																			"LabelOwnerLogin__": "OwnerLogin__",
+																			"TechnicalData__": "LabelTechnicalData__",
+																			"LabelTechnicalData__": "TechnicalData__"
+																		}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 23,
+																			"options": {
+																				"version": 0,
+																				"lines": 10,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"LabelProjectNumber__": {
+																						"line": 1,
+																						"column": 1
+																					},
+																					"ProjectNumber__": {
+																						"line": 1,
+																						"column": 2
+																					},
+																					"LabelProjectStatus__": {
+																						"line": 2,
+																						"column": 1
+																					},
+																					"ProjectStatus__": {
+																						"line": 2,
+																						"column": 2
+																					},
+																					"LabelCompanyCode__": {
+																						"line": 3,
+																						"column": 1
+																					},
+																					"CompanyCode__": {
+																						"line": 3,
+																						"column": 2
+																					},
+																					"LabelTaskNumber__": {
+																						"line": 4,
+																						"column": 1
+																					},
+																					"TaskNumber__": {
+																						"line": 4,
+																						"column": 2
+																					},
+																					"LabelName__": {
+																						"line": 5,
+																						"column": 1
+																					},
+																					"Name__": {
+																						"line": 5,
+																						"column": 2
+																					},
+																					"LabelDescription__": {
+																						"line": 6,
+																						"column": 1
+																					},
+																					"Description__": {
+																						"line": 6,
+																						"column": 2
+																					},
+																					"LabelProjectName__": {
+																						"line": 7,
+																						"column": 1
+																					},
+																					"ProjectName__": {
+																						"line": 7,
+																						"column": 2
+																					},
+																					"LabelOwnerName__": {
+																						"line": 8,
+																						"column": 1
+																					},
+																					"OwnerName__": {
+																						"line": 8,
+																						"column": 2
+																					},
+																					"LabelOwnerLogin__": {
+																						"line": 9,
+																						"column": 1
+																					},
+																					"OwnerLogin__": {
+																						"line": 9,
+																						"column": 2
+																					},
+																					"LabelTechnicalData__": {
+																						"line": 10,
+																						"column": 1
+																					},
+																					"TechnicalData__": {
+																						"line": 10,
+																						"column": 2
+																					}
+																				},
+																				"colspans": [
+																					[],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[]
+																				]
+																			},
+																			"*": {
+																				"LabelProjectNumber__": {
+																					"type": "Label",
+																					"data": [
+																						"ProjectNumber__"
+																					],
+																					"stamp": 25,
+																					"options": {
+																						"label": "_ProjectNumber",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				},
+																				"ProjectNumber__": {
+																					"type": "ShortText",
+																					"data": [
+																						"ProjectNumber__"
+																					],
+																					"stamp": 24,
+																					"options": {
+																						"label": "_ProjectNumber",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": "180",
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"hidden": true,
+																						"readonly": true,
+																						"browsable": false
+																					}
+																				},
+																				"LabelProjectStatus__": {
+																					"type": "Label",
+																					"data": [
+																						"ProjectStatus__"
+																					],
+																					"stamp": 27,
+																					"options": {
+																						"label": "_ProjectStatus",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				},
+																				"ProjectStatus__": {
+																					"type": "ComboBox",
+																					"data": [
+																						"ProjectStatus__"
+																					],
+																					"stamp": 26,
+																					"options": {
+																						"label": "_ProjectStatus",
+																						"possibleValues": {
+																							"0": "_Project_Draft",
+																							"1": "_Project_InProgress",
+																							"2": "_Project_Done",
+																							"3": "_Project_Canceled"
+																						},
+																						"maxNbLinesToDisplay": 10,
+																						"version": 1,
+																						"keyValueMode": true,
+																						"possibleKeys": {
+																							"0": "Draft",
+																							"1": "InProgress",
+																							"2": "Done",
+																							"3": "Canceled"
+																						},
+																						"activable": true,
+																						"width": "180",
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"DataSourceOrigin": "Standalone",
+																						"DisplayedColumns": "",
+																						"hidden": true,
+																						"readonly": true,
+																						"browsable": false
+																					}
+																				},
+																				"LabelCompanyCode__": {
+																					"type": "Label",
+																					"data": [
+																						"CompanyCode__"
+																					],
+																					"stamp": 29,
+																					"options": {
+																						"label": "_CompanyCode",
+																						"version": 0
+																					}
+																				},
+																				"CompanyCode__": {
+																					"type": "DatabaseComboBox",
+																					"data": [
+																						"CompanyCode__"
+																					],
+																					"stamp": 28,
+																					"options": {
+																						"label": "_CompanyCode",
+																						"version": 1,
+																						"autoCompleteSearchMode": "startswith",
+																						"searchMode": "matches",
+																						"activable": true,
+																						"width": "180",
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"minNbLines": 1,
+																						"maxNbLines": 1,
+																						"PreFillFTS": true,
+																						"fTSmaxRecords": "20",
+																						"readonly": true,
+																						"browsable": true,
+																						"hidden": true
+																					}
+																				},
+																				"LabelTaskNumber__": {
+																					"type": "Label",
+																					"data": [
+																						"TaskNumber__"
+																					],
+																					"stamp": 31,
+																					"options": {
+																						"label": "_TaskNumber",
+																						"version": 0
+																					}
+																				},
+																				"TaskNumber__": {
+																					"type": "ShortText",
+																					"data": [
+																						"TaskNumber__"
+																					],
+																					"stamp": 30,
+																					"options": {
+																						"label": "_TaskNumber",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": "180",
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"readonly": true,
+																						"browsable": false
+																					}
+																				},
+																				"LabelName__": {
+																					"type": "Label",
+																					"data": [
+																						"Name__"
+																					],
+																					"stamp": 33,
+																					"options": {
+																						"label": "_Name",
+																						"version": 0
+																					}
+																				},
+																				"Name__": {
+																					"type": "ShortText",
+																					"data": [
+																						"Name__"
+																					],
+																					"stamp": 32,
+																					"options": {
+																						"label": "_Name",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": "350",
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"browsable": false,
+																						"length": 100
+																					}
+																				},
+																				"LabelDescription__": {
+																					"type": "Label",
+																					"data": [
+																						"Description__"
+																					],
+																					"stamp": 35,
+																					"options": {
+																						"label": "_Description",
+																						"version": 0
+																					}
+																				},
+																				"Description__": {
+																					"type": "LongText",
+																					"data": [
+																						"Description__"
+																					],
+																					"stamp": 34,
+																					"options": {
+																						"label": "_Description",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"minNbLines": 3,
+																						"activable": true,
+																						"width": "350",
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"browsable": false,
+																						"numberOfLines": 3
+																					}
+																				},
+																				"LabelProjectName__": {
+																					"type": "Label",
+																					"data": [
+																						"ProjectName__"
+																					],
+																					"stamp": 37,
+																					"options": {
+																						"label": "_ProjectName",
+																						"hidden": false,
+																						"version": 0
+																					}
+																				},
+																				"ProjectName__": {
+																					"type": "DatabaseComboBox",
+																					"data": [
+																						"ProjectName__"
+																					],
+																					"stamp": 36,
+																					"options": {
+																						"label": "_ProjectName",
+																						"version": 1,
+																						"autoCompleteSearchMode": "contains",
+																						"searchMode": "matches",
+																						"activable": true,
+																						"width": "350",
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"minNbLines": 1,
+																						"maxNbLines": 1,
+																						"fTSmaxRecords": "20",
+																						"hidden": false,
+																						"readonly": true,
+																						"browsable": true,
+																						"PreFillFTS": true,
+																						"RestrictSearch": true,
+																						"length": 100
+																					}
+																				},
+																				"LabelOwnerName__": {
+																					"type": "Label",
+																					"data": [
+																						"OwnerName__"
+																					],
+																					"stamp": 39,
+																					"options": {
+																						"label": "_OwnerName",
+																						"version": 0
+																					}
+																				},
+																				"OwnerName__": {
+																					"type": "DatabaseComboBox",
+																					"data": [
+																						"OwnerName__"
+																					],
+																					"stamp": 38,
+																					"options": {
+																						"label": "_OwnerName",
+																						"version": 1,
+																						"autoCompleteSearchMode": "startswith",
+																						"searchMode": "contains",
+																						"activable": true,
+																						"width": "230",
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"minNbLines": 1,
+																						"maxNbLines": 1,
+																						"fTSmaxRecords": "20",
+																						"browsable": true,
+																						"length": 180,
+																						"PreFillFTS": true,
+																						"RestrictSearch": true
+																					}
+																				},
+																				"LabelOwnerLogin__": {
+																					"type": "Label",
+																					"data": [
+																						"OwnerLogin__"
+																					],
+																					"stamp": 41,
+																					"options": {
+																						"label": "_OwnerLogin",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				},
+																				"OwnerLogin__": {
+																					"type": "ShortText",
+																					"data": [
+																						"OwnerLogin__"
+																					],
+																					"stamp": 40,
+																					"options": {
+																						"label": "_OwnerLogin",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": "230",
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"length": 180,
+																						"hidden": true,
+																						"readonly": true,
+																						"browsable": false,
+																						"autocompletable": false
+																					}
+																				},
+																				"LabelTechnicalData__": {
+																					"type": "Label",
+																					"data": [
+																						"TechnicalData__"
+																					],
+																					"stamp": 43,
+																					"options": {
+																						"label": "_TechnicalData",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				},
+																				"TechnicalData__": {
+																					"type": "ShortText",
+																					"data": [
+																						"TechnicalData__"
+																					],
+																					"stamp": 42,
+																					"options": {
+																						"label": "_TechnicalData",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"length": 5000,
+																						"defaultValue": "{}",
+																						"hidden": true,
+																						"readonly": true,
+																						"browsable": false,
+																						"autocompletable": false
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-2": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 44,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"SystemData": {
+															"type": "PanelSystemData",
+															"data": [],
+															"stamp": 45,
+															"options": {
+																"multicolumn": false,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_System data",
+																"hidden": true,
+																"version": 0
+															}
+														}
+													}
+												},
+												"form-content-left-3": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 46,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"NextProcess": {
+															"type": "PanelNextProcess",
+															"data": [],
+															"stamp": 47,
+															"options": {
+																"hidden": true,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_Next Process",
+																"version": 0
+															}
+														}
+													}
+												},
+												"form-content-left-9": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 48,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"ProgressPane": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 49,
+															"options": {
+																"border": {},
+																"iconURL": "",
+																"TitleFontSize": "L",
+																"hideActionButtons": true,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_ProgressPane",
+																"hidden": false,
+																"leftImageURL": "",
+																"removeMargins": false,
+																"elementsAlignment": "left",
+																"labelLength": "154px",
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 50,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {
+																			"StartDate__": "LabelStartDate__",
+																			"LabelStartDate__": "StartDate__",
+																			"EndDate__": "LabelEndDate__",
+																			"LabelEndDate__": "EndDate__",
+																			"EstimatedDays__": "LabelEstimatedDays__",
+																			"LabelEstimatedDays__": "EstimatedDays__",
+																			"RemainingEstimatedDays__": "LabelRemainingEstimatedDays__",
+																			"LabelRemainingEstimatedDays__": "RemainingEstimatedDays__",
+																			"Progress__": "LabelProgress__",
+																			"LabelProgress__": "Progress__",
+																			"HTMLProgressBar__": "LabelHTMLProgressBar__",
+																			"LabelHTMLProgressBar__": "HTMLProgressBar__"
+																		}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 51,
+																			"options": {
+																				"version": 0,
+																				"lines": 6,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"LabelStartDate__": {
+																						"line": 1,
+																						"column": 1
+																					},
+																					"StartDate__": {
+																						"line": 1,
+																						"column": 2
+																					},
+																					"LabelEndDate__": {
+																						"line": 2,
+																						"column": 1
+																					},
+																					"EndDate__": {
+																						"line": 2,
+																						"column": 2
+																					},
+																					"LabelEstimatedDays__": {
+																						"line": 3,
+																						"column": 1
+																					},
+																					"EstimatedDays__": {
+																						"line": 3,
+																						"column": 2
+																					},
+																					"LabelRemainingEstimatedDays__": {
+																						"line": 4,
+																						"column": 1
+																					},
+																					"RemainingEstimatedDays__": {
+																						"line": 4,
+																						"column": 2
+																					},
+																					"LabelProgress__": {
+																						"line": 5,
+																						"column": 1
+																					},
+																					"Progress__": {
+																						"line": 5,
+																						"column": 2
+																					},
+																					"LabelHTMLProgressBar__": {
+																						"line": 6,
+																						"column": 1
+																					},
+																					"HTMLProgressBar__": {
+																						"line": 6,
+																						"column": 2
+																					}
+																				},
+																				"colspans": [
+																					[],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[]
+																				]
+																			},
+																			"*": {
+																				"LabelStartDate__": {
+																					"type": "Label",
+																					"data": [
+																						"StartDate__"
+																					],
+																					"stamp": 53,
+																					"options": {
+																						"label": "_StartDate",
+																						"version": 0
+																					}
+																				},
+																				"StartDate__": {
+																					"type": "DateTime",
+																					"data": [
+																						"StartDate__"
+																					],
+																					"stamp": 52,
+																					"options": {
+																						"label": "_StartDate",
+																						"displayLongFormat": false,
+																						"showWeek": false,
+																						"hideButtonPanel": false,
+																						"showOtherMonths": false,
+																						"activable": true,
+																						"width": "85",
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"version": 0
+																					}
+																				},
+																				"LabelEndDate__": {
+																					"type": "Label",
+																					"data": [
+																						"EndDate__"
+																					],
+																					"stamp": 55,
+																					"options": {
+																						"label": "_EndDate",
+																						"version": 0
+																					}
+																				},
+																				"EndDate__": {
+																					"type": "DateTime",
+																					"data": [
+																						"EndDate__"
+																					],
+																					"stamp": 54,
+																					"options": {
+																						"label": "_EndDate",
+																						"displayLongFormat": false,
+																						"showWeek": false,
+																						"hideButtonPanel": false,
+																						"showOtherMonths": false,
+																						"activable": true,
+																						"width": "85",
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"version": 0
+																					}
+																				},
+																				"LabelEstimatedDays__": {
+																					"type": "Label",
+																					"data": [
+																						"EstimatedDays__"
+																					],
+																					"stamp": 57,
+																					"options": {
+																						"label": "_EstimatedDays",
+																						"version": 0
+																					}
+																				},
+																				"EstimatedDays__": {
+																					"type": "Decimal",
+																					"data": [
+																						"EstimatedDays__"
+																					],
+																					"stamp": 56,
+																					"options": {
+																						"label": "_EstimatedDays",
+																						"version": 2,
+																						"textSize": "S",
+																						"textAlignment": "right",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"integer": false,
+																						"precision_internal": 2,
+																						"precision_current": 2,
+																						"activable": true,
+																						"width": "50",
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"enableRoundedStyle": false,
+																						"precision_min": 0,
+																						"forceRoundCurrencyPrecision": false,
+																						"enablePlusMinus": false
+																					}
+																				},
+																				"LabelRemainingEstimatedDays__": {
+																					"type": "Label",
+																					"data": [
+																						"RemainingEstimatedDays__"
+																					],
+																					"stamp": 59,
+																					"options": {
+																						"label": "_RemainingEstimatedDays",
+																						"version": 0
+																					}
+																				},
+																				"RemainingEstimatedDays__": {
+																					"type": "Decimal",
+																					"data": [
+																						"RemainingEstimatedDays__"
+																					],
+																					"stamp": 58,
+																					"options": {
+																						"label": "_RemainingEstimatedDays",
+																						"version": 2,
+																						"textSize": "S",
+																						"textAlignment": "right",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"integer": false,
+																						"precision_internal": 2,
+																						"precision_current": 2,
+																						"activable": true,
+																						"width": "50",
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"enableRoundedStyle": false,
+																						"precision_min": 0,
+																						"forceRoundCurrencyPrecision": false,
+																						"enablePlusMinus": false,
+																						"readonly": true
+																					}
+																				},
+																				"LabelProgress__": {
+																					"type": "Label",
+																					"data": [
+																						"Progress__"
+																					],
+																					"stamp": 61,
+																					"options": {
+																						"label": "_Progress",
+																						"version": 0
+																					}
+																				},
+																				"Progress__": {
+																					"type": "Decimal",
+																					"data": [
+																						"Progress__"
+																					],
+																					"stamp": 60,
+																					"options": {
+																						"label": "_Progress",
+																						"version": 2,
+																						"textSize": "S",
+																						"textAlignment": "right",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"integer": false,
+																						"precision_internal": 2,
+																						"precision_current": 2,
+																						"activable": true,
+																						"width": "50",
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"enableRoundedStyle": false,
+																						"precision_min": 0,
+																						"forceRoundCurrencyPrecision": false,
+																						"enablePlusMinus": false,
+																						"defaultValue": "0"
+																					}
+																				},
+																				"LabelHTMLProgressBar__": {
+																					"type": "Label",
+																					"data": false,
+																					"stamp": 63,
+																					"options": {
+																						"label": "",
+																						"version": 0
+																					}
+																				},
+																				"HTMLProgressBar__": {
+																					"type": "HTML",
+																					"data": false,
+																					"stamp": 62,
+																					"options": {
+																						"label": "",
+																						"htmlContent": "&lt;script&gt;\n    window.postMessage({ eventName: \"onLoad\", control: \"HTMLProgressBar__\" }, document.location.origin);\n\tdocument.getElementById(\"progress\").addEventListener(\"input\", function(event)\n\t{\n\t\tvar progressValue = event.target.value;\n\t\tdocument.getElementById(\"progress\").style.backgroundSize = progressValue + '% 100%'\n\t\twindow.postMessage(\n\t\t\t{\n\t\t\t\teventName: \"onInput\",\n\t\t\t\tprogressValue: progressValue,\n\t\t\t\tcontrol: \"HTMLProgressBar__\"\n\t\t\t}, document.location.origin);\n\t});\n\tdocument.getElementById(\"progress\").addEventListener(\"mouseout\", function(event)\n\t{\n\t\tdocument.getElementById(\"progress\").blur();\n\t});\n\tfunction setProgressValue(event)\n\t{\n\t\tconst value = event.value || 0;\n\t\tdocument.getElementById(\"progress\").value = value;\n\t\tdocument.getElementById(\"progress\").style.backgroundSize = value + '% 100%';\n\t\tif (event.disabled)\n\t\t{\n\t\t\tdocument.getElementById(\"progress\").disabled = true;\n\t\t}\n\t}\n&lt;/script&gt;\n&lt;div&gt;\n0%\n&lt;input type=\"range\" id=\"progress\" class=\"progress\" min=\"0\" max=\"100\" value=\"0\" /&gt;\n100%\n&lt;/div&gt;\n&lt;span id=\"handler\" style=\"display: none\" onclick=\"setProgressValue(event)\"&gt;&lt;/span&gt;",
+																						"width": "",
+																						"css": "input#progress\n{\n\twidth: 300px;\n\tmargin: 10px 10px;\n}",
+																						"version": 0
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-10": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 64,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"DocumentsPanel": {
+															"type": "PanelDocument",
+															"data": [],
+															"stamp": 65,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "L",
+																"hideActionButtons": true,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_Documents",
+																"version": 0
+															},
+															"*": {
+																"Document": {
+																	"type": "Documents",
+																	"data": [
+																		"documentscontroldata"
+																	],
+																	"stamp": 66,
+																	"options": {
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-right": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 67,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "51%",
+													"width": "49%"
+												},
+												"hidden": false
+											},
+											"*": {
+												"form-content-right-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 68,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"PreviewPanel": {
+															"type": "PanelPreview",
+															"data": [],
+															"stamp": 69,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "L",
+																"hideActionButtons": true,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_Document Preview",
+																"version": 0
+															},
+															"*": {
+																"Preview": {
+																	"type": "Preview",
+																	"data": [
+																		"previewdata"
+																	],
+																	"stamp": 70,
+																	"options": {
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-internalconversation": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 71,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "75%",
+													"width": "25%",
+													"height": null
+												},
+												"hidden": true,
+												"hideOnDesign": true
+											},
+											"*": {
+												"form-content-internalconversation-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 72,
+													"options": {
+														"height": "100%",
+														"scrollable": null,
+														"version": 0
+													},
+													"*": {
+														"InternalConversationPanel": {
+															"type": "InternalConversationPanel",
+															"data": [],
+															"stamp": 73,
+															"options": {
+																"border": {},
+																"label": "_InternalConversationTitle",
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"scrollable": null,
+																"version": 0
+															},
+															"*": {
+																"InternalConversation__": {
+																	"type": "InternalConversation",
+																	"data": [],
+																	"stamp": 74,
+																	"options": {
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 75,
+					"options": {
+						"splitterType": "simple-h",
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 76,
+							"options": {
+								"label": "_Save",
+								"action": "savequit",
+								"submit": true,
+								"textSize": "S",
+								"textPosition": "text-right",
+								"textStyle": "default",
+								"textColor": "default",
+								"iconColor": "default",
+								"nextprocess": {
+									"processName": "Advanced Shipping Notice",
+									"attachmentsMode": "all",
+									"willBeChild": true,
+									"returnToOriginalUrl": false
+								},
+								"urlImageOverlay": "",
+								"style": 1,
+								"buttonLabel": "",
+								"isRounded": true,
+								"isOutline": false,
+								"url": "",
+								"position": null,
+								"version": 0
+							}
+						},
+						"Delete": {
+							"type": "SubmitButton",
+							"data": false,
+							"stamp": 77,
+							"options": {
+								"textSize": "S",
+								"label": "Delete",
+								"textPosition": "text-right",
+								"textStyle": "default",
+								"textColor": "default",
+								"iconColor": "default",
+								"nextprocess": {
+									"processName": "Advanced Shipping Notice",
+									"attachmentsMode": "all",
+									"willBeChild": true,
+									"returnToOriginalUrl": false
+								},
+								"urlImageOverlay": "",
+								"style": 1,
+								"buttonLabel": "",
+								"isRounded": true,
+								"isOutline": true,
+								"url": "",
+								"position": null,
+								"action": "delete",
+								"disabled": true,
+								"hidden": true,
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 78,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"textSize": "S",
+								"textPosition": "text-right",
+								"textStyle": "default",
+								"textColor": "default",
+								"iconColor": "default",
+								"nextprocess": {
+									"processName": "Advanced Shipping Notice",
+									"attachmentsMode": "all",
+									"willBeChild": true,
+									"returnToOriginalUrl": false
+								},
+								"urlImageOverlay": "",
+								"buttonLabel": "",
+								"isRounded": true,
+								"isOutline": true,
+								"url": "",
+								"position": null,
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <field deleted="0" format="" guid="P0AJG0000VLT" id="Q2AQT400153E" label="_CompanyCode_report" length="50" name="CompanyCode__" originalProcessID="LK5JG0000VLT" precision="0" processid="P2AQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AQ2AQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/CompanyCode__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:38</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_CompanyCode_report</Label>
+        <Alias>AQ2AQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>false</Editable>
+        <required>true</required>
+        <TableName>CT#BD8QT400153E</TableName>
+        <SortOrder>
+        </SortOrder>
+        <SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+        <DisplayedColumns>CompanyCode__|CompanyName__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>CompanyCode__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ExposedColumns>
+        </ExposedColumns>
+        <ProcessName>PurchasingCompanycodes__</ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <KeyAttribute>
+        </KeyAttribute>
+        <CustomFilter>
+        </CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="NK5JG0000VLT" id="R2AQT400153E" label="_Description_report" length="32766" name="Description__" originalProcessID="LK5JG0000VLT" precision="0" processid="P2AQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AR2AQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Description__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:38</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Description_report</Label>
+        <Alias>AR2AQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="W2W6FP000VLT" id="S2AQT400153E" label="_EndDate_report" length="0" name="EndDate__" originalProcessID="LK5JG0000VLT" precision="0" processid="P2AQT400153E" submitable="1" type="DATE">
+    <properties>
+      <db>
+        <alias>AS2AQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/EndDate__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:38</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_EndDate_report</Label>
+        <Alias>AS2AQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Date</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="IPU7FP000VLT" id="T2AQT400153E" label="_EstimatedDays_report" length="17" name="EstimatedDays__" originalProcessID="LK5JG0000VLT" precision="2" processid="P2AQT400153E" submitable="1" type="DECIMAL">
+    <properties>
+      <db>
+        <alias>AT2AQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/EstimatedDays__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:38</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_EstimatedDays_report</Label>
+        <Alias>AT2AQT400153E</Alias>
+        <DecimalPrecision vartype="INT">2</DecimalPrecision>
+        <DecimalPrecisionMinDisplay>0</DecimalPrecisionMinDisplay>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="MK5JG0000VLT" id="U2AQT400153E" label="_Name_report" length="100" name="Name__" originalProcessID="LK5JG0000VLT" precision="0" processid="P2AQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AU2AQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Name__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:38</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Name_report</Label>
+        <Alias>AU2AQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>true</required>
+        <lazyTranslatable>
+        </lazyTranslatable>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="CC07FP000VLT" id="V2AQT400153E" label="_OwnerLogin_report" length="180" name="OwnerLogin__" originalProcessID="LK5JG0000VLT" precision="0" processid="P2AQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AV2AQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/OwnerLogin__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:38</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_OwnerLogin_report</Label>
+        <Alias>AV2AQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="BC07FP000VLT" id="W2AQT400153E" label="_OwnerName_report" length="180" name="OwnerName__" originalProcessID="LK5JG0000VLT" precision="0" processid="P2AQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AW2AQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/OwnerName__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:38</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_OwnerName_report</Label>
+        <Alias>AW2AQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>false</Editable>
+        <TableName>ODUSER</TableName>
+        <SortOrder>ASC</SortOrder>
+        <SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+        <DisplayedColumns>DisplayName|Login</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>DisplayName</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ExposedColumns>
+        </ExposedColumns>
+        <ProcessName>
+        </ProcessName>
+        <KeyColumnId>Login</KeyColumnId>
+        <KeyAttribute>OwnerLogin__</KeyAttribute>
+        <CustomFilter>(&amp;(|(ACCOUNTLOCKED=0)(!(ACCOUNTLOCKED=*)))(Customer=0)(Vendor=0)(|(PortalUser!=1)(PortalUser!=*)))</CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="QK5JG0000VLT" id="X2AQT400153E" label="_Progress_report" length="17" name="Progress__" originalProcessID="LK5JG0000VLT" precision="2" processid="P2AQT400153E" submitable="1" type="DECIMAL">
+    <properties>
+      <db>
+        <alias>AX2AQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Progress__</fullname>
+        <defaultvalue>0</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:38</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Progress_report</Label>
+        <Alias>AX2AQT400153E</Alias>
+        <DecimalPrecision vartype="INT">2</DecimalPrecision>
+        <DecimalPrecisionMinDisplay>0</DecimalPrecisionMinDisplay>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="QZV6FP000VLT" id="Y2AQT400153E" label="_ProjectName_report" length="100" name="ProjectName__" originalProcessID="LK5JG0000VLT" precision="0" processid="P2AQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AY2AQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ProjectName__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:39</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ProjectName_report</Label>
+        <Alias>AY2AQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>true</Editable>
+        <required>true</required>
+        <TableName>CD#DY9QT400153E</TableName>
+        <SortOrder>
+        </SortOrder>
+        <SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+        <DisplayedColumns>Name__|ProjectCode__|Status__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>Name__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ExposedColumns>
+        </ExposedColumns>
+        <ProcessName>Project</ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <KeyAttribute>
+        </KeyAttribute>
+        <CustomFilter>
+        </CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="RZV6FP000VLT" id="Z2AQT400153E" label="_ProjectNumber_report" length="50" name="ProjectNumber__" originalProcessID="LK5JG0000VLT" precision="0" processid="P2AQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AZ2AQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ProjectNumber__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:39</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ProjectNumber_report</Label>
+        <Alias>AZ2AQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="A6YJG0000VLT" id="A3AQT400153E" label="_ProjectStatus_report" length="50" name="ProjectStatus__" originalProcessID="LK5JG0000VLT" precision="0" processid="P2AQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AA3AQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ProjectStatus__</fullname>
+        <defaultvalue>Draft</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:39</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Type>webaccess.Process.Columns.WithPossibleValues</Type>
+        <Label>_ProjectStatus_report</Label>
+        <Alias>AA3AQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <TableName>
+        </TableName>
+        <DisplayedColumns>
+        </DisplayedColumns>
+        <DataSourceOrigin>Standalone</DataSourceOrigin>
+        <possibleKeys>Draft
+InProgress
+Done
+Canceled</possibleKeys>
+        <SavedColumn>
+        </SavedColumn>
+        <possibleValues>_Project_Draft
+_Project_InProgress
+_Project_Done
+_Project_Canceled</possibleValues>
+        <ProcessName>
+        </ProcessName>
+        <lazyTranslatable>
+        </lazyTranslatable>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="JPU7FP000VLT" id="B3AQT400153E" label="_RemainingEstimatedDays_report" length="17" name="RemainingEstimatedDays__" originalProcessID="LK5JG0000VLT" precision="2" processid="P2AQT400153E" submitable="1" type="DECIMAL">
+    <properties>
+      <db>
+        <alias>AB3AQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/RemainingEstimatedDays__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:39</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_RemainingEstimatedDays_report</Label>
+        <Alias>AB3AQT400153E</Alias>
+        <DecimalPrecision vartype="INT">2</DecimalPrecision>
+        <DecimalPrecisionMinDisplay>0</DecimalPrecisionMinDisplay>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="X2W6FP000VLT" id="C3AQT400153E" label="_StartDate_report" length="0" name="StartDate__" originalProcessID="LK5JG0000VLT" precision="0" processid="P2AQT400153E" submitable="1" type="DATE">
+    <properties>
+      <db>
+        <alias>AC3AQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/StartDate__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:39</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_StartDate_report</Label>
+        <Alias>AC3AQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Date</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="ZR3JG0000VLT" id="D3AQT400153E" label="_TaskNumber_report" length="0" name="TaskNumber__" originalProcessID="LK5JG0000VLT" precision="0" processid="P2AQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AD3AQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/TaskNumber__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:39</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_TaskNumber_report</Label>
+        <Alias>AD3AQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="GJB3FP000IYP" id="E3AQT400153E" label="_TechnicalData" length="5000" name="TechnicalData__" originalProcessID="LK5JG0000VLT" precision="0" processid="P2AQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AE3AQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/TechnicalData__</fullname>
+        <defaultvalue>{}</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:39</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_TechnicalData</Label>
+        <Alias>AE3AQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        <DoNotShowInDM>1</DoNotShowInDM>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <type id="GOLHG0000M4O" name="CD">
+  </type>
+</process>

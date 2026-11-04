@@ -1,0 +1,813 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:09:50" deleted="0" eskerapplication="P2P" global="0" id="SDEQT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="VM System Score Polling" needvalidation="0" ootofilter="" ootoversion="1" originalProcessID="UWPX00000SG1" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="0" version="1" visibility="1">
+  <properties>
+    <gdr>
+      <FinalizationScriptAllowRetry>true</FinalizationScriptAllowRetry>
+      <finalizationscriptIncludedScripts>Sys/Sys_Helpers_TimeoutHelper</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Lib_V12.0.566.0</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Lib_VM_ScoringProviders_Server_V12.0.566.0</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>[Lib_VM_ScoringProviders_Duns_Server_V12.0.566.0]</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>[Lib_VM_ScoringProviders_Ecovadis_Server_V12.0.566.0]</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>[Lib_VM_ScoringProviders_IndueD_Server_V12.0.566.0]</finalizationscriptIncludedScripts>
+      <FinalizationScript>"use strict";
+//Required: Sys/Sys_Helpers_TimeoutHelper, Lib_VM_ScoringProviders_Server
+function runFinalization() {
+    var _a;
+    const showAlertsVendorCache = {};
+    const nbAttach = Attach.GetNbAttach();
+    if (nbAttach === 0) {
+        return;
+    }
+    const file = Attach.GetInputFile(nbAttach - 1);
+    let scores = null;
+    try {
+        scores = JSON.parse(file.GetContent());
+    }
+    catch (_b) {
+        Log.Error("Failed to parse JSON file");
+    }
+    if (scores) {
+        const timeoutHelper = new Sys.Helpers.TimeoutHelper();
+        for (const scoreType in scores) {
+            if (Object.prototype.hasOwnProperty.call(scores, scoreType)) {
+                for (const score of scores[scoreType]) {
+                    const scoreUpdated = Lib.VM.ScoringProviders.Server.Providers.Store(scoreType, score);
+                    if (scoreUpdated &amp;&amp; scoreUpdated.setShowAlerts) {
+                        showAlertsVendorCache[scoreUpdated.identifier] =
+                            showAlertsVendorCache[scoreUpdated.identifier] || ((_a = scoreUpdated === null || scoreUpdated === void 0 ? void 0 : scoreUpdated.alerts) === null || _a === void 0 ? void 0 : _a.indicator) === "warning";
+                    }
+                    timeoutHelper.NotifyIteration();
+                }
+            }
+        }
+        const providerName = Lib.VM.ScoringProviders.Server.GetScoringProviderFromParameters();
+        Log.Info(`Provider name: ${providerName}`);
+        const providerInstance = Lib.VM.ScoringProviders.Server.Manager.GetProviderOrDefault(providerName);
+        for (const identifier in showAlertsVendorCache) {
+            if (Object.prototype.hasOwnProperty.call(showAlertsVendorCache, identifier)) {
+                providerInstance.UpdateVendorShowAlerts(identifier, showAlertsVendorCache[identifier]);
+                timeoutHelper.NotifyIteration();
+            }
+        }
+    }
+    UpdateVendorInternalScoring();
+}
+function UpdateVendorInternalScoring() {
+    if (Variable.GetValueAsString("InternalScoreNeedUpdate") === "true") {
+        const vendors = Attach.GetContent(0);
+        const vendorsListFile = TemporaryFile.CreateFile("json", "utf8");
+        TemporaryFile.Append(vendorsListFile, vendors);
+        const VendorScoringDetails = Process.CreateProcessInstanceAsProcessAdmin("Vendor Scoring Details", true, false);
+        const attach = VendorScoringDetails.AddAttachEx(vendorsListFile);
+        const vars = attach.GetVars();
+        vars.AddValue_String("AttachOutputName", "VendorsToUpdate", true);
+        vars.AddValue_Long("AttachAsConverted", 1, true);
+        vars.AddValue_Long("IsTechnical", 1, true);
+        VendorScoringDetails.Process();
+        const ret = VendorScoringDetails.GetLastError();
+        if (ret === 0) {
+            Log.Info("VendorScoringDetails process call OK");
+        }
+        else {
+            Log.Error("VendorScoringDetails process call returns with error message : " + VendorScoringDetails.GetLastErrorMessage());
+        }
+    }
+    else {
+        Log.Info("No vendor requiring score re-computation");
+    }
+}
+runFinalization();
+//# sourceMappingURL=finalizationscript.js.map</FinalizationScript>
+      <ValidationScriptAllowRetry>true</ValidationScriptAllowRetry>
+      <validationscriptIncludedScripts>Sys/Sys_Helpers_TimeoutHelper</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Sys/Sys_DunsServer</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Sys/Sys_DunsHelper</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Sys/Sys_IndueDHelper</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Sys/Sys_IndueDServer</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Sys/Sys_EcovadisHelper</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Sys/Sys_EcovadisServer</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_VM_ScoringProviders_Server_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_VM_ScoringProviders_Common_V12.0.566.0</validationscriptIncludedScripts>
+      <ValidationScript>"use strict";
+/* eslint-disable max-depth */
+//Required: Sys/Sys_Helpers_TimeoutHelper, Sys/Sys_DunsServer, Lib_VM_ScoringProviders_Server, Sys/Sys_DunsHelper, Sys/Sys_IndueDHelper, Sys/Sys_IndueDServer, Sys/Sys_EcovadisServer, Sys/Sys_EcovadisHelper
+function GetProviderAccessor(configuration, providerString) {
+    if (!(configuration === null || configuration === void 0 ? void 0 : configuration.credentials)) {
+        return null;
+    }
+    switch (providerString) {
+        case Lib.VM.ScoringProviders.Common.ProviderName.duns:
+            return new Sys.DunsServer(configuration.credentials, configuration.settings);
+        case Lib.VM.ScoringProviders.Common.ProviderName.indueD:
+            return new Sys.IndueDServer(configuration.credentials);
+        case Lib.VM.ScoringProviders.Common.ProviderName.ecovadis:
+            return new Sys.EcovadisServer(configuration.credentials);
+    }
+}
+async function GetData(vendorIds, provider) {
+    const configuration = Lib.VM.ScoringProviders.Server.Providers.GetConfiguration(provider);
+    const accessor = GetProviderAccessor(configuration, provider);
+    if (!accessor || !configuration.scoreTypes) {
+        return;
+    }
+    const vendorIdsToDelete = initializeVendorIdsToDelete(configuration.scoreTypes);
+    for (const scoreType of configuration.scoreTypes) {
+        if (!await processVendorIds(vendorIds, accessor, scoreType, vendorIdsToDelete, provider)) {
+            return;
+        }
+    }
+    deleteVendorScores(configuration.scoreTypes, vendorIdsToDelete, provider);
+}
+function initializeVendorIdsToDelete(scoreTypes) {
+    return scoreTypes.reduce((acc, scoreType) =&gt; {
+        acc[scoreType] = [];
+        return acc;
+    }, {});
+}
+async function processVendorIds(vendorIds, accessor, scoreType, vendorIdsToDelete, provider) {
+    for (const vendorId of vendorIds) {
+        if (accessor instanceof Sys.DunsServer &amp;&amp; !isValidSession(accessor)) {
+            return false;
+        }
+        const data = await accessor.GetCompanyData(vendorId, scoreType);
+        if (!handleCompanyData(data, vendorId, scoreType, vendorIdsToDelete, provider)) {
+            return false;
+        }
+        ScoringAgenciesHandler.TimeOutHelper.NotifyIteration();
+    }
+    return true;
+}
+function isValidSession(accessor) {
+    if (!accessor.IsSessionKey() &amp;&amp; !accessor.GetSessionKey()) {
+        Data.SetValue("State", 200);
+        Data.SetValue("ShortStatus", "Error getting session key");
+        return false;
+    }
+    return true;
+}
+function handleCompanyData(data, vendorId, scoreType, vendorIdsToDelete, provider) {
+    if (data) {
+        if (data.msg) {
+            Log.Warn(data.msg);
+        }
+        if (data.error) {
+            // Probably a configuration/credentials issue - exit processing
+            const errorMsg = `Error getting company data for ${provider} ${vendorId}`;
+            Log.Error(errorMsg);
+            Data.SetValue("State", 200);
+            Data.SetValue("ShortStatus", errorMsg);
+            return false;
+        }
+        if (data.noScore) {
+            vendorIdsToDelete[scoreType].push(vendorId);
+        }
+        else {
+            ResultHelper.Add(vendorId, provider, scoreType, data);
+        }
+    }
+    else {
+        vendorIdsToDelete[scoreType].push(vendorId);
+    }
+    return true;
+}
+function deleteVendorScores(scoreTypes, vendorIdsToDelete, provider) {
+    for (const scoreType of scoreTypes) {
+        if (vendorIdsToDelete[scoreType].length &gt; 0) {
+            Lib.VM.ScoringProviders.Server.Providers.Clear(vendorIdsToDelete[scoreType], provider, scoreType);
+        }
+    }
+}
+const ResultHelper = {
+    _results: {},
+    Add: function (vendorId, provider, scoreType, data) {
+        if (!scoreType) {
+            scoreType = "FailureScore";
+        }
+        if (data) {
+            data.identifier = vendorId;
+            data.provider = provider;
+            if (!this._results[scoreType]) {
+                this._results[scoreType] = [];
+            }
+            this._results[scoreType].push(data);
+        }
+    },
+    Get: function () {
+        return this._results;
+    }
+};
+const ScoringAgenciesHandler = {
+    TimeOutHelper: null,
+    GetData,
+    GetProviderAccessor,
+};
+function GetScoringAgencies() {
+    const parameterString = Variable.GetValueAsString("reportParameter");
+    if (parameterString) {
+        try {
+            const { provider } = JSON.parse(parameterString);
+            return [provider];
+        }
+        catch (e) {
+            Log.Error(`Error parsing the reportParameter JSON: ${parameterString}`);
+            return [];
+        }
+    }
+    return [Lib.VM.ScoringProviders.Common.ProviderName.duns];
+}
+async function runValidation() {
+    if (Variable.GetValueAsString("ScoreRequestDone") !== "true") {
+        Sys.Helpers.TryCallFunction("Lib.VM.Customization.Server.OnValidationScriptBegin");
+        const nbAttach = Attach.GetNbAttach();
+        if (nbAttach === 0) {
+            return;
+        }
+        const file = Attach.GetInputFile(nbAttach - 1);
+        const vendorIds = JSON.parse(file.GetContent());
+        const scoringAgencies = GetScoringAgencies();
+        ScoringAgenciesHandler.TimeOutHelper = Sys.Helpers.TimeoutHelper.GetTimeoutHelper();
+        await Promise.all(scoringAgencies.map(async (scoringAgency) =&gt; {
+            Log.Info(`Refreshing data from ${scoringAgency}...`);
+            await ScoringAgenciesHandler.GetData(vendorIds, scoringAgency);
+        }));
+        Log.Info("Serializing results in Scores.json");
+        const tempFile = TemporaryFile.CreateFile("json", "utf8");
+        TemporaryFile.Append(tempFile, JSON.stringify(ResultHelper.Get()));
+        Attach.AttachTemporaryFile(tempFile, "Scores");
+        Variable.SetValueAsString("ScoreRequestDone", "true");
+    }
+}
+runValidation();
+//# sourceMappingURL=validationscript.js.map</ValidationScript>
+      <AllowTagCoverPages>true</AllowTagCoverPages>
+      <AllowTagNewDocuments>true</AllowTagNewDocuments>
+      <AllowTagAttachments>true</AllowTagAttachments>
+      <ExtractionScriptAllowRetry>true</ExtractionScriptAllowRetry>
+      <extractionscriptIncludedScripts>Sys/Sys_Helpers_Object</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>Sys/Sys_Helpers_LdapUtil</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>Sys/Sys_Helpers_TimeoutHelper</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>Lib_V12.0.566.0</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>Lib_VM_ScoringProviders_Server_V12.0.566.0</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>[Lib_VM_ScoringProviders_Duns_Server_V12.0.566.0]</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>[Lib_VM_ScoringProviders_Ecovadis_Server_V12.0.566.0]</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>[Lib_VM_ScoringProviders_IndueD_Server_V12.0.566.0]</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>[Lib_VM_Customization_Server]</extractionscriptIncludedScripts>
+      <ExtractionScript>"use strict";
+//Required: Sys/Sys_Helpers_LdapUtil, Sys/Sys_Helpers_TimeoutHelper, Lib_VM_Customization_Server
+var ExtractionScript;
+(function (ExtractionScript) {
+    function fillVendorInfoMap(vendors, vendorNumber, vendorCompanyCode) {
+        if (!vendors[vendorCompanyCode]) {
+            vendors[vendorCompanyCode] = [];
+        }
+        if (!vendors[vendorCompanyCode].includes(vendorNumber)) {
+            vendors[vendorCompanyCode].push(vendorNumber);
+        }
+    }
+    function fillVendorResults(vendorIds, vendorId) {
+        if (vendorId &amp;&amp; vendorIds.indexOf(vendorId) &lt; 0) {
+            vendorIds.push(vendorId);
+        }
+    }
+    function GetVendorsToUpdateFromDB(providerInstance) {
+        const customQueryFilter = Sys.Helpers.TryCallFunction("Lib.VM.Customization.Server.GetExtraFilterForVendorFailureRiskSynchronization");
+        const vendorQuery = providerInstance.GetVendorToUpdateQuery(customQueryFilter);
+        const results = [];
+        const vendors = {};
+        if (vendorQuery.MoveFirst()) {
+            const timeoutHelper = Sys.Helpers.TimeoutHelper.GetTimeoutHelper();
+            let record = vendorQuery.MoveNextRecord();
+            const vendorIdColumnName = providerInstance.GetVendorToUpdateIdColumnName();
+            while (record) {
+                const recordVars = record.GetVars();
+                if (recordVars) {
+                    const vendorId = recordVars.GetValue_String(vendorIdColumnName, 0);
+                    fillVendorInfoMap(vendors, recordVars.GetValue_String("Number__", 0), recordVars.GetValue_String("CompanyCode__", 0));
+                    fillVendorResults(results, vendorId);
+                    record = vendorQuery.MoveNextRecord();
+                    timeoutHelper.NotifyIteration();
+                }
+            }
+        }
+        return [JSON.stringify(results), JSON.stringify(vendors)];
+    }
+    ExtractionScript.GetVendorsToUpdateFromDB = GetVendorsToUpdateFromDB;
+    function CreateFileVendorInternalScoring(vendors) {
+        if (vendors) {
+            Variable.SetValueAsString("InternalScoreNeedUpdate", "true");
+            const vendorsListFile = TemporaryFile.CreateFile("json", "utf8");
+            TemporaryFile.Append(vendorsListFile, vendors);
+            Attach.AttachTemporaryFile(vendorsListFile, "InternalScoreVendorsToUpdate");
+        }
+        else {
+            Log.Info("No vendor requiring score re-computation");
+        }
+    }
+    ExtractionScript.CreateFileVendorInternalScoring = CreateFileVendorInternalScoring;
+    function CreateFile(vendors) {
+        const tempFile = TemporaryFile.CreateFile("json", "utf8");
+        TemporaryFile.Append(tempFile, vendors);
+        Attach.AttachTemporaryFile(tempFile, "VendorsToUpdate");
+    }
+    ExtractionScript.CreateFile = CreateFile;
+    function RunExtraction() {
+        const providerName = Lib.VM.ScoringProviders.Server.GetScoringProviderFromParameters();
+        Log.Info(`Provider name: ${providerName}`);
+        // Instantiate the scoring provider instance
+        // It will allow to customize the query to list the vendors ID to update
+        // Returned a default Provider Instance for compatibility with previous implementation
+        const providerInstance = Lib.VM.ScoringProviders.Server.Manager.GetProviderOrDefault(providerName);
+        if (!providerInstance) {
+            Log.Error(`Provider '${providerName}' not found`);
+            return;
+        }
+        const [vendorsToUpdate, intenalSCoreVendorsToUpdate] = ExtractionScript.GetVendorsToUpdateFromDB(providerInstance);
+        ExtractionScript.CreateFileVendorInternalScoring(intenalSCoreVendorsToUpdate);
+        ExtractionScript.CreateFile(vendorsToUpdate);
+    }
+    ExtractionScript.RunExtraction = RunExtraction;
+})(ExtractionScript || (ExtractionScript = {}));
+ExtractionScript.RunExtraction();
+//# sourceMappingURL=extractionscript.js.map</ExtractionScript>
+      <ExtractionScriptRunOnOCRFailed>
+      </ExtractionScriptRunOnOCRFailed>
+      <AllowRemovePages>true</AllowRemovePages>
+      <AllowSwapPages>true</AllowSwapPages>
+      <PostProcessingScriptAllowRetry>
+      </PostProcessingScriptAllowRetry>
+    </gdr>
+    <lg>
+      <process_da>{
+	"VM System Score Polling": "Leverandørstyring – polling af risikoscore"
+}</process_da>
+      <process_de>{
+	"VM System Score Polling": "Lieferantenmanagement - Abfrage der Risikobewertung"
+}</process_de>
+      <process_ja>{
+	"VM System Score Polling": "仕入先管理 - リスクスコアのポーリング"
+}</process_ja>
+      <process_en>{
+	"VM System Score Polling": "Supplier Management - Risk score polling"
+}</process_en>
+      <process_es>{
+	"VM System Score Polling": "Gestión de proveedores - Recuperación de la puntuación de riesgo"
+}</process_es>
+      <process_fr>{
+	"VM System Score Polling": "Gestion des fournisseurs - Récupération des scores de risque"
+}</process_fr>
+      <process_nl-NL>{
+	"VM System Score Polling": "Leveranciersbeheer - Peiling risicoscore"
+}</process_nl-NL>
+      <process_pl>{
+	"VM System Score Polling": "Zarządzanie dostawcami – sondowanie oceny ryzyka"
+}</process_pl>
+      <process_it>{
+	"VM System Score Polling": "Gestione fornitori - Recupero punteggi di rischio"
+}</process_it>
+      <process_sk>{
+	"VM System Score Polling": "Riadenie dodávateľov – zisťovanie rizikového skóre"
+}</process_sk>
+      <process_zh-CN>{
+	"VM System Score Polling": "供应商管理 - 风险评分投票"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"VM System Score Polling": "Gerenciamento de fornecedores - Recuperação de score de risco"
+}</process_pt-BR>
+    </lg>
+    <process>
+      <flowtype>processing</flowtype>
+      <ocrpreset>scan</ocrpreset>
+      <homepagelabel>VM System Score Polling</homepagelabel>
+      <enableflexibleauditing>
+      </enableflexibleauditing>
+      <enableflexibleediting>
+      </enableflexibleediting>
+      <enableflexibleteaching>
+      </enableflexibleteaching>
+      <upgradable>yes</upgradable>
+      <disableocr>
+      </disableocr>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <disableautolearning>true</disableautolearning>
+      <backgroundprocessingthreshold>
+      </backgroundprocessingthreshold>
+      <EnablePreviewPrecomputation>
+      </EnablePreviewPrecomputation>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <enablerounddecimal>true</enablerounddecimal>
+      <pdfNormalizeFilter>
+      </pdfNormalizeFilter>
+      <archiveDuration>0</archiveDuration>
+      <ownhomepage>
+      </ownhomepage>
+      <ocrpagestoprocess>0</ocrpagestoprocess>
+      <ScriptEngineType>2</ScriptEngineType>
+      <UseActionNameWithScriptApproval>true</UseActionNameWithScriptApproval>
+      <displayWidth>1024</displayWidth>
+      <AllowUploadAttachment>1</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>1</AllowUploadReferenceDocument>
+      <UseCultureFormat>true</UseCultureFormat>
+      <AllowRetryExtractCD>true</AllowRetryExtractCD>
+      <TransportName>CustomData</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+    </process>
+    <ui>
+      <CustomScriptDebug>false</CustomScriptDebug>
+      <CustomScriptReadonly>true</CustomScriptReadonly>
+      <CustomScript>
+      </CustomScript>
+      <restorationPanel>DataPanel</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 30,
+	"*": {
+		"GDRData": {
+			"type": "GDRData",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"version": 0
+			}
+		},
+		"OCRParams": {
+			"type": "OCRParams",
+			"data": [],
+			"stamp": 2,
+			"options": {
+				"version": 0
+			}
+		},
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 3,
+			"options": {
+				"splitterType": "complex",
+				"maxwidth": "",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 4,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 5,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 6,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-top": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 7,
+									"options": {
+										"autosize": true,
+										"version": 1,
+										"box": {
+											"top": 0,
+											"left": 0,
+											"width": 100,
+											"height": 17
+										},
+										"hidden": false
+									},
+									"*": {
+										"form-content-top-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 8,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"DocumentsPanel": {
+													"type": "PanelDocument",
+													"data": [],
+													"stamp": 9,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": false,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"label": "_Documents",
+														"version": 0
+													},
+													"*": {
+														"Document": {
+															"type": "Documents",
+															"data": [
+																"documentscontroldata"
+															],
+															"stamp": 10,
+															"options": {
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								},
+								"form-content-bottom": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 11,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": 17,
+											"left": 0,
+											"width": 100,
+											"height": 83
+										},
+										"hidden": false
+									},
+									"*": {
+										"form-content-left": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 12,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": 0,
+													"left": 0,
+													"width": 100,
+													"height": 99
+												},
+												"hidden": false
+											},
+											"*": {
+												"form-content-left-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 13,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"DataPanel": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 14,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_Document data",
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 15,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 16,
+																			"options": {
+																				"version": 0,
+																				"lines": 0,
+																				"columns": 2,
+																				"ctrlsPos": {},
+																				"colspans": []
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-2": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 17,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"SystemData": {
+															"type": "PanelSystemData",
+															"data": [],
+															"stamp": 18,
+															"options": {
+																"multicolumn": false,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"label": "_System data",
+																"hidden": true,
+																"version": 0
+															}
+														}
+													}
+												},
+												"form-content-left-3": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 19,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"NextProcess": {
+															"type": "PanelNextProcess",
+															"data": [],
+															"stamp": 20,
+															"options": {
+																"hidden": true,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"label": "_Next Process",
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-right": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 21,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": 0,
+													"left": 45,
+													"width": 55,
+													"height": 99
+												},
+												"hidden": true,
+												"hideSeparator": true
+											},
+											"*": {
+												"form-content-right-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 22,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"PreviewPanel": {
+															"type": "PanelPreview",
+															"data": [],
+															"stamp": 23,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"label": "_Document Preview",
+																"version": 0
+															},
+															"*": {
+																"Preview": {
+																	"type": "Preview",
+																	"data": [
+																		"previewdata"
+																	],
+																	"stamp": 24,
+																	"options": {
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 25,
+					"options": {
+						"splitterType": "simple-h",
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 26,
+							"options": {
+								"label": "_Save",
+								"action": "save",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Approve": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 27,
+							"options": {
+								"label": "_Approve",
+								"action": "approve",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Reject": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 28,
+							"options": {
+								"label": "_Reject",
+								"action": "reject",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Reprocess": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 29,
+							"options": {
+								"label": "_Reprocess",
+								"action": "reprocess",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 30,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <type id="GOLHG0000M4O" name="CD">
+  </type>
+</process>

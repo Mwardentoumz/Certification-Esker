@@ -1,0 +1,2163 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:07:41" deleted="0" eskerapplication="P2P" global="0" id="BDBQT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="PurchasingShipTo__" needvalidation="1" ootofilter="" ootoversion="0" originalProcessID="PHQG132937" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomTable" upgradable="1" userid="0" version="1" visibility="0">
+  <properties>
+    <dataConditions>
+      <listDataConditions>
+			&lt;dataCondition&gt;
+				&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+				&lt;filter&gt;msnex=*&lt;/filter&gt;
+				&lt;labelKey&gt;_Purchasing disabled&lt;/labelKey&gt;
+				&lt;conditions&gt;
+					&lt;allowCondition&gt;
+						&lt;fieldName&gt;EnablePurchasingGlobalSetting__&lt;/fieldName&gt;
+						&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+					&lt;/allowCondition&gt;
+					&lt;allowCondition&gt;
+						&lt;fieldName&gt;EnableStandardPurchasingGlobalSetting__&lt;/fieldName&gt;
+						&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+					&lt;/allowCondition&gt;
+				&lt;/conditions&gt;
+			&lt;/dataCondition&gt;</listDataConditions>
+    </dataConditions>
+    <dbIndex>
+      <Join>&lt;Index Join="1"&gt;
+				&lt;Ref Name="CompanyCode__" Option="ASC"/&gt;
+				&lt;/Index&gt;</Join>
+      <AUTO_ACDBQT400153EA>&lt;Index&gt;&lt;Ref Name="ACDBQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_ACDBQT400153EA>
+      <AUTO_AFDBQT400153EA>&lt;Index&gt;&lt;Ref Name="AFDBQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AFDBQT400153EA>
+    </dbIndex>
+    <lg>
+      <process_da>{
+	"_AddressInfo": "Adresse",
+	"_Company code": "Virksomhedskode",
+	"_Company code report": "Virksomhedskode",
+	"_DeliveryAddressFormated": "Adresseeksempel",
+	"_Document data": "Dokumentdata",
+	"_GeneralInfo": "Generelle oplysninger",
+	"_ID": "Id",
+	"_ID_report": "Id",
+	"_Ship to city": "By",
+	"_Ship to city report": "By",
+	"_Ship to company": "Virksomhed",
+	"_Ship to company report": "Virksomhed",
+	"_Ship to contact": "Kontakt",
+	"_Ship to contact report": "Kontakt",
+	"_Ship to country": "Landekode",
+	"_Ship to country report": "Landekode",
+	"_Ship to email": "Mailadresse",
+	"_Ship to email report": "Mailadresse",
+	"_Ship to phone": "Telefonnummer",
+	"_Ship to phone report": "Telefonnummer",
+	"_Ship to region": "Stat/region",
+	"_Ship to region report": "Stat/region",
+	"_Ship to street": "Adresse",
+	"_Ship to street report": "Adresse",
+	"_Ship to sub": "Bygning, IA, service...",
+	"_Ship to sub report": "Bygning, IA, service...",
+	"_Ship to zip code": "Postnummer",
+	"_Ship to zip code report": "Postnummer",
+	"Purchasing - ShipTo": "S2P – leveringsadresser",
+	"PurchasingShipTo": "S2P – leveringsadresser",
+	"PurchasingShipTo__": "S2P – leveringsadresser",
+	"_CF_C5_EDI_Identifier": "Id for elektronisk adresse (Peppol CTC)",
+	"_CF_C5_EDI_Identifier_report": "Id for elektronisk adresse (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType": "Skema-id for elektronisk adresse (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType_report": "Skema-id for elektronisk adresse (Peppol CTC)",
+	"_CompanyAddress": "Virksomhedens adresse",
+	"_CompanyAddressFormated": "Adresseeksempel",
+	"_CompanyInfo": "Virksomhedsoplysninger",
+	"_DefaultConfiguration": "Standardkonfiguration",
+	"_DefaultConfiguration_report": "Standardkonfiguration",
+	"_DefaultExpenseReportType": "Standard udgiftsrapporttype",
+	"_DefaultExpenseReportType_report": "Standard udgiftsrapporttype",
+	"_DeliveryAddressID": "Id for standard leveringsadresse",
+	"_DeliveryAddressID_report": "Id for standard leveringsadresse",
+	"_DeterminationKeyword": "Nøgleord anvendt til automatisk fastsættelse",
+	"_DeterminationKeyword_report": "Nøgleord anvendt til automatisk fastsættelse",
+	"_ERP": "ERP-integration",
+	"_errorExistingCompanyCode": "Denne virksomhedskode findes allerede i tabellen",
+	"_PDPConfiguration": "PA-konfiguration af e-rapportering (Frankrig)",
+	"_PDPConfiguration_report": "PA-konfiguration af e-rapportering (Frankrig)",
+	"_PurchasingGroup": "Indkøbsgruppe",
+	"_PurchasingGroup_report": "Indkøbsgruppe",
+	"_PurchasingOrganization": "Indkøbsorganisation",
+	"_PurchasingOrganization_report": "Indkøbsorganisation",
+	"_Sub": "Bygning, IA, service...",
+	"_Sub report": "Bygning, IA, service...",
+	"_TaxMode": "E-rapportal (Frankrig) skattepunkt",
+	"_TaxMode_report": "E-rapportal (Frankrig) skattepunkt",
+	"_TVAModeNotDefined": " ",
+	"_TVAOverCredit": "Ved modtagelse af betaling",
+	"_TVAOverDebit": "Ved udstedelse af faktura",
+	"_WorkingDays": "Arbejdsdage",
+	"_WorkingDays_report": "Arbejdsdage",
+	"City": "By",
+	"Company code": "Virksomhedskode",
+	"Company name": "Virksomhedsnavn",
+	"Contact email": "Mail",
+	"Country": "Landekode",
+	"Currency": "Valuta",
+	"Fax number": "Faxnummer",
+	"P2P - Company codes": "Virksomhedskode",
+	"P2P - Company codes__": "Virksomhedskode",
+	"Phone number": "Telefonnummer",
+	"Postal code": "Postnummer",
+	"PostOfficeBox": "Sted eller postboks",
+	"PurchasingCompanycodes": "S2P – virksomhedskoder",
+	"Region": "Stat/region",
+	"SIRET": "Momsregistreringsnummer (kun USA)",
+	"Street": "Adresse",
+	"VAT number": "Momsnummer"
+}</process_da>
+      <process_de>{
+	"_AddressInfo": "Adresse",
+	"_Company code": "Buchungskreis",
+	"_Company code report": "Buchungskreis",
+	"_DeliveryAddressFormated": "Adressvorschau",
+	"_Document data": "Dokumentdaten",
+	"_GeneralInfo": "Allgemeine Informationen",
+	"_ID": "ID",
+	"_ID_report": "ID",
+	"_Ship to city": "Ort",
+	"_Ship to city report": "Ort",
+	"_Ship to company": "Firma",
+	"_Ship to company report": "Firma",
+	"_Ship to contact": "Kontakt",
+	"_Ship to contact report": "Kontakt",
+	"_Ship to country": "Ländercode",
+	"_Ship to country report": "Ländercode",
+	"_Ship to email": "E-Mail-Adresse",
+	"_Ship to email report": "E-Mail-Adresse",
+	"_Ship to phone": "Telefonnummer",
+	"_Ship to phone report": "Telefonnummer",
+	"_Ship to region": "Bundesland/Region",
+	"_Ship to region report": "Bundesland/Region",
+	"_Ship to street": "Straße",
+	"_Ship to street report": "Straße",
+	"_Ship to sub": "Gebäude, Industriegebiet, Dienst...",
+	"_Ship to sub report": "Gebäude, Industriegebiet, Dienst...",
+	"_Ship to zip code": "PLZ",
+	"_Ship to zip code report": "PLZ",
+	"Purchasing - ShipTo": "S2P - Lieferadressen",
+	"PurchasingShipTo": "S2P - Lieferadressen",
+	"PurchasingShipTo__": "S2P - Lieferadressen",
+	"_CF_C5_EDI_Identifier": "ID der elektronischen Adresse (Peppol CTC)",
+	"_CF_C5_EDI_Identifier_report": "ID der elektronischen Adresse (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType": "ID des Schemas der elektronischen Adresse (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType_report": "ID des Schemas der elektronischen Adresse (Peppol CTC)",
+	"_CompanyAddress": "Firmenandresse",
+	"_CompanyAddressFormated": "Adressvorschau",
+	"_CompanyInfo": "Firmeninformationen",
+	"_DefaultConfiguration": "Standard-Konfiguration",
+	"_DefaultConfiguration_report": "Standard-Konfiguration",
+	"_DefaultExpenseReportType": "Standard-Ausgabenberichtstyp",
+	"_DefaultExpenseReportType_report": "Standard-Ausgabenberichtstyp",
+	"_DeliveryAddressID": "ID der Standardlieferadresse",
+	"_DeliveryAddressID_report": "ID der Standardlieferadresse",
+	"_DeterminationKeyword": "Schlüsselwörter für automatische Buchungskreisermittlung",
+	"_DeterminationKeyword_report": "Schlüsselwörter für automatische Buchungskreisermittlung",
+	"_ERP": "ERP-Integration",
+	"_errorExistingCompanyCode": "Dieser Buchungskreis ist bereits in der Tabelle enthalten.",
+	"_PDPConfiguration": "PA-Konfiguration für die E-Berichterstattung (Frankreich)",
+	"_PDPConfiguration_report": "PA-Konfiguration für die E-Berichterstattung (Frankreich)",
+	"_PurchasingGroup": "Einkäufergruppe",
+	"_PurchasingGroup_report": "Einkäufergruppe",
+	"_PurchasingOrganization": "Einkaufsorganisation",
+	"_PurchasingOrganization_report": "Einkaufsorganisation",
+	"_Sub": "Gebäude, Industriegebiet, Dienst...",
+	"_Sub report": "Gebäude, Industriegebiet, Dienst...",
+	"_TaxMode": "Umsatzsteuer-Besteuerungszeitpunkt für die E-Berichterstattung (Frankreich)",
+	"_TaxMode_report": "Umsatzsteuer-Besteuerungszeitpunkt für die E-Berichterstattung (Frankreich)",
+	"_TVAModeNotDefined": " ",
+	"_TVAOverCredit": "Bei Erhalt der Zahlung",
+	"_TVAOverDebit": "Bei Ausstellung der Rechnung",
+	"_WorkingDays": "Werktage",
+	"_WorkingDays_report": "Werktage",
+	"City": "Ort",
+	"Company code": "Buchungskreis",
+	"Company name": "Firmenname",
+	"Contact email": "E-Mail-Adresse",
+	"Country": "Ländercode",
+	"Currency": "Währung",
+	"Fax number": "Faxnummer",
+	"P2P - Company codes": "Buchungskreis",
+	"P2P - Company codes__": "Buchungskreis",
+	"Phone number": "Telefonnummer",
+	"Postal code": "PLZ",
+	"PostOfficeBox": "Ort oder Postfach",
+	"PurchasingCompanycodes": "S2P - Buchungskreise",
+	"Region": "Bundesland/Region",
+	"SIRET": "Steuernummer",
+	"Street": "Straße",
+	"VAT number": "Umsatzsteuernummer"
+}</process_de>
+      <process_JA>{
+	"_AddressInfo": "住所",
+	"_Company code": "会社コード",
+	"_Company code report": "会社コード",
+	"_DeliveryAddressFormated": "住所プレビュー",
+	"_Document data": "文書データ",
+	"_GeneralInfo": "全般情報",
+	"_ID": "ID",
+	"_ID_report": "ID",
+	"_Ship to city": "市区町村",
+	"_Ship to city report": "市区町村",
+	"_Ship to company": "会社",
+	"_Ship to company report": "会社",
+	"_Ship to contact": "連絡先",
+	"_Ship to contact report": "連絡先",
+	"_Ship to country": "国コード",
+	"_Ship to country report": "国コード",
+	"_Ship to email": "Emailアドレス",
+	"_Ship to email report": "Emailアドレス",
+	"_Ship to phone": "電話番号",
+	"_Ship to phone report": "電話番号",
+	"_Ship to region": "都道府県",
+	"_Ship to region report": "都道府県",
+	"_Ship to street": "番地",
+	"_Ship to street report": "番地",
+	"_Ship to sub": "建物、IA、サービス...",
+	"_Ship to sub report": "建物、IA、サービス...",
+	"_Ship to zip code": "郵便番号",
+	"_Ship to zip code report": "郵便番号",
+	"Purchasing - ShipTo": "S2P - 納品先住所",
+	"PurchasingShipTo": "S2P - 納品先住所",
+	"PurchasingShipTo__": "S2P - 納品先住所",
+	"_CF_C5_EDI_Identifier": "電子アドレスID (Peppol CTC)",
+	"_CF_C5_EDI_Identifier_report": "電子アドレスID (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType": "電子アドレススキームID (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType_report": "電子アドレススキームID (Peppol CTC)",
+	"_CompanyAddress": "会社住所",
+	"_CompanyAddressFormated": "住所プレビュー",
+	"_CompanyInfo": "会社情報",
+	"_DefaultConfiguration": "既定の設定",
+	"_DefaultConfiguration_report": "既定の設定",
+	"_DefaultExpenseReportType": "既定の費用レポート種別",
+	"_DefaultExpenseReportType_report": "既定の費用レポート種別",
+	"_DeliveryAddressID": "既定の納品先住所ID",
+	"_DeliveryAddressID_report": "既定の納品先住所ID",
+	"_DeterminationKeyword": "自動決定用キーワード",
+	"_DeterminationKeyword_report": "自動決定用キーワード",
+	"_ERP": "ERP統合",
+	"_errorExistingCompanyCode": "この会社カードはテーブルに存在します",
+	"_PDPConfiguration": "電子レポート（フランス）PA設定",
+	"_PDPConfiguration_report": "電子レポート（フランス）PA設定",
+	"_PurchasingGroup": "購買グループ",
+	"_PurchasingGroup_report": "購買グループ",
+	"_PurchasingOrganization": "購買組織",
+	"_PurchasingOrganization_report": "購買組織",
+	"_Sub": "建物、IA、サービス...",
+	"_Sub report": "建物、IA、サービス...",
+	"_TaxMode": "電子レポート (フランス) 付加価値税納税義務成立日",
+	"_TaxMode_report": "電子レポート (フランス) 付加価値税納税義務成立日",
+	"_TVAModeNotDefined": " ",
+	"_TVAOverCredit": "支払い受領時",
+	"_TVAOverDebit": "請求書発行時",
+	"_WorkingDays": "営業日",
+	"_WorkingDays_report": "営業日",
+	"City": "市区町村",
+	"Company code": "会社コード",
+	"Company name": "会社名",
+	"Contact email": "電子メール",
+	"Country": "国コード",
+	"Currency": "通貨",
+	"Fax number": "Fax番号",
+	"P2P - Company codes": "会社コード",
+	"P2P - Company codes__": "会社コード",
+	"Phone number": "電話番号",
+	"Postal code": "郵便番号",
+	"PostOfficeBox": "私書箱",
+	"PurchasingCompanycodes": "S2P - 会社コード",
+	"Region": "都道府県/地域",
+	"SIRET": "納税者識別番号",
+	"Street": "番地",
+	"VAT number": "付加価値税登録番号"
+}</process_JA>
+      <process_en>{
+	"_AddressInfo": "Address",
+	"_Company code": "Company code",
+	"_Company code report": "Company code",
+	"_DeliveryAddressFormated": "Address preview",
+	"_Document data": "Document data",
+	"_GeneralInfo": "General Information",
+	"_ID": "ID",
+	"_ID_report": "ID",
+	"_Ship to city": "City",
+	"_Ship to city report": "City",
+	"_Ship to company": "Company",
+	"_Ship to company report": "Company",
+	"_Ship to contact": "Contact",
+	"_Ship to contact report": "Contact",
+	"_Ship to country": "Country code",
+	"_Ship to country report": "Country code",
+	"_Ship to email": "Email address",
+	"_Ship to email report": "Email address",
+	"_Ship to phone": "Phone number",
+	"_Ship to phone report": "Phone number",
+	"_Ship to region": "State/Region",
+	"_Ship to region report": "State/Region",
+	"_Ship to street": "Street",
+	"_Ship to street report": "Street",
+	"_Ship to sub": "Building, IA, Service...",
+	"_Ship to sub report": "Building, IA, Service...",
+	"_Ship to zip code": "Postal code",
+	"_Ship to zip code report": "Postal code",
+	"Purchasing - ShipTo": "S2P - Delivery addresses",
+	"PurchasingShipTo": "S2P - Delivery addresses",
+	"PurchasingShipTo__": "S2P - Delivery addresses",
+	"_CF_C5_EDI_Identifier": "Electronic address ID (Peppol CTC)",
+	"_CF_C5_EDI_Identifier_report": "Electronic address ID (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType": "Electronic address scheme ID (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType_report": "Electronic address scheme ID (Peppol CTC)",
+	"_CompanyAddress": "Company Address",
+	"_CompanyAddressFormated": "Address preview",
+	"_CompanyInfo": "Company Information",
+	"_DefaultConfiguration": "Default configuration",
+	"_DefaultConfiguration_report": "Default configuration",
+	"_DefaultExpenseReportType": "Default expense report type",
+	"_DefaultExpenseReportType_report": "Default expense report type",
+	"_DeliveryAddressID": "ID of default delivery address",
+	"_DeliveryAddressID_report": "ID of default delivery address",
+	"_DeterminationKeyword": "Keywords used for automatic determination",
+	"_DeterminationKeyword_report": "Keywords used for automatic determination",
+	"_ERP": "ERP integration",
+	"_errorExistingCompanyCode": "This company code already exists in the table",
+	"_PurchasingGroup": "Purchasing group",
+	"_PurchasingGroup_report": "Purchasing group",
+	"_PurchasingOrganization": "Purchasing organization",
+	"_PurchasingOrganization_report": "Purchasing organization",
+	"_Sub": "Building, IA, Service...",
+	"_Sub report": "Building, IA, Service...",
+	"_TaxMode": "E-reporting (France) tax point",
+	"_TaxMode_report": "E-reporting (France) tax point",
+	"_PDPConfiguration": "E-reporting (France) PA configuration",
+	"_PDPConfiguration_report": "E-reporting (France) PA configuration",
+	"_TVAModeNotDefined": " ",
+	"_TVAOverCredit": "On payment received",
+	"_TVAOverDebit": "On invoice issued",
+	"_WorkingDays": "Working days",
+	"_WorkingDays_report": "Working days",
+	"City": "City",
+	"Company code": "Company code",
+	"Company name": "Company name",
+	"Contact email": "Email",
+	"Country": "Country code",
+	"Currency": "Currency",
+	"Fax number": "Fax number",
+	"P2P - Company codes": "Company code",
+	"P2P - Company codes__": "Company code",
+	"Phone number": "Phone number",
+	"Postal code": "Postal code",
+	"PostOfficeBox": "Locality or P.O. Box",
+	"PurchasingCompanycodes": "S2P - Company codes",
+	"Region": "State/Region",
+	"SIRET": "Tax identification number",
+	"Street": "Street",
+	"VAT number": "VAT number"
+}</process_en>
+      <process_es>{
+	"_AddressInfo": "Dirección",
+	"_Company code": "Código de empresa",
+	"_Company code report": "Código de empresa",
+	"_DeliveryAddressFormated": "Vista previa de la dirección",
+	"_Document data": "Datos del documento",
+	"_GeneralInfo": "Información general",
+	"_ID": "ID",
+	"_ID_report": "ID",
+	"_Ship to city": "Ciudad",
+	"_Ship to city report": "Ciudad",
+	"_Ship to company": "Empresa",
+	"_Ship to company report": "Empresa",
+	"_Ship to contact": "Contacto",
+	"_Ship to contact report": "Contacto",
+	"_Ship to country": "Código de país",
+	"_Ship to country report": "Código de país",
+	"_Ship to email": "Dirección de e-mail",
+	"_Ship to email report": "Dirección de e-mail",
+	"_Ship to phone": "Número de teléfono",
+	"_Ship to phone report": "Número de teléfono",
+	"_Ship to region": "Estado/Provincia",
+	"_Ship to region report": "Estado/Provincia",
+	"_Ship to street": "Calle",
+	"_Ship to street report": "Calle",
+	"_Ship to sub": "Edificio, P.I., Servicio...",
+	"_Ship to sub report": "Edificio, P.I., Servicio...",
+	"_Ship to zip code": "Código postal",
+	"_Ship to zip code report": "Código postal",
+	"Purchasing - ShipTo": "S2P - Direcciones de entrega",
+	"PurchasingShipTo": "S2P - Direcciones de entrega",
+	"PurchasingShipTo__": "S2P - Direcciones de entrega",
+	"_CF_C5_EDI_Identifier": "ID de la dirección de correo electrónico (Peppol CTC)",
+	"_CF_C5_EDI_Identifier_report": "ID de la dirección de correo electrónico (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType": "ID del esquema de dirección de correo electrónico (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType_report": "ID del esquema de dirección de correo electrónico (Peppol CTC)",
+	"_CompanyAddress": "Dirección de la empresa",
+	"_CompanyAddressFormated": "Vista previa de la dirección",
+	"_CompanyInfo": "Información de la empresa",
+	"_DefaultConfiguration": "Configuración predeterminada",
+	"_DefaultConfiguration_report": "Configuración predeterminada",
+	"_DefaultExpenseReportType": "Tipo de informe de gastos predeterminado",
+	"_DefaultExpenseReportType_report": "Tipo de informe de gastos predeterminado",
+	"_DeliveryAddressID": "ID de dirección de entrega predeterminada",
+	"_DeliveryAddressID_report": "ID de dirección de entrega predeterminada",
+	"_DeterminationKeyword": "Palabras clave usadas para la determinación automática",
+	"_DeterminationKeyword_report": "Palabras clave usadas para la determinación automática",
+	"_ERP": "Integración ERP",
+	"_errorExistingCompanyCode": "Este código de empresa ya existe en la tabla",
+	"_PDPConfiguration": "Configuración PA (Informe electrónico Francia)",
+	"_PDPConfiguration_report": "Configuración PA (Informe electrónico Francia)",
+	"_PurchasingGroup": "Grupo de compras",
+	"_PurchasingGroup_report": "Grupo de compras",
+	"_PurchasingOrganization": "Organización de compras",
+	"_PurchasingOrganization_report": "Organización de compras",
+	"_Sub": "Edificio, P.I., Servicio...",
+	"_Sub report": "Edificio, P.I., Servicio...",
+	"_TaxMode": "Informes electrónicos (Francia) punto fiscal",
+	"_TaxMode_report": "Informes electrónicos (Francia) punto fiscal",
+	"_TVAModeNotDefined": " ",
+	"_TVAOverCredit": "Al recibir el pago",
+	"_TVAOverDebit": "Al emitir la factura",
+	"_WorkingDays": "Días laborables",
+	"_WorkingDays_report": "Días laborables",
+	"City": "Ciudad",
+	"Company code": "Código de empresa",
+	"Company name": "Nombre de la empresa",
+	"Contact email": "Dirección de e-mail",
+	"Country": "Código de país",
+	"Currency": "Divisa",
+	"Fax number": "Número de fax",
+	"P2P - Company codes": "Código de empresa",
+	"P2P - Company codes__": "Código de empresa",
+	"Phone number": "Número de teléfono",
+	"Postal code": "Código postal",
+	"PostOfficeBox": "Localidad o apartado postal",
+	"PurchasingCompanycodes": "S2P - Códigos de empresa",
+	"Region": "Estado/Provincia",
+	"SIRET": "N° ident. fiscal",
+	"Street": "Calle",
+	"VAT number": "Nº de IVA"
+}</process_es>
+      <process_fr>{
+	"_AddressInfo": "Adresse",
+	"_Company code": "Code société",
+	"_Company code report": "Code société",
+	"_DeliveryAddressFormated": "Aperçu de l'adresse",
+	"_Document data": "Données du document",
+	"_GeneralInfo": "Informations générales",
+	"_ID": "Identifiant",
+	"_ID_report": "Identifiant",
+	"_Ship to city": "Ville",
+	"_Ship to city report": "Ville",
+	"_Ship to company": "Société",
+	"_Ship to company report": "Société",
+	"_Ship to contact": "Contact",
+	"_Ship to contact report": "Contact",
+	"_Ship to country": "Code pays",
+	"_Ship to country report": "Code pays",
+	"_Ship to email": "Adresse e-mail",
+	"_Ship to email report": "Adresse e-mail",
+	"_Ship to phone": "Numéro de téléphone",
+	"_Ship to phone report": "Numéro de téléphone",
+	"_Ship to region": "État/Région",
+	"_Ship to region report": "État/Région",
+	"_Ship to street": "Rue",
+	"_Ship to street report": "Rue",
+	"_Ship to sub": "Bâtiment, ZI, Service...",
+	"_Ship to sub report": "Bâtiment, ZI, Service...",
+	"_Ship to zip code": "Code postal",
+	"_Ship to zip code report": "Code postal",
+	"Purchasing - ShipTo": "S2P - Adresses de livraison",
+	"PurchasingShipTo": "S2P - Adresses de livraison",
+	"PurchasingShipTo__": "S2P - Adresses de livraison",
+	"_CF_C5_EDI_Identifier": "ID de l'adresse électronique (Peppol CTC)",
+	"_CF_C5_EDI_Identifier_report": "ID de l'adresse électronique (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType": "ID du schéma de l'adresse électronique (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType_report": "ID du schéma de l'adresse électronique (Peppol CTC)",
+	"_CompanyAddress": "Adresse de la société",
+	"_CompanyAddressFormated": "Aperçu de l'adresse",
+	"_CompanyInfo": "Informations sur la société",
+	"_DefaultConfiguration": "Configuration par défaut",
+	"_DefaultConfiguration_report": "Configuration par défaut",
+	"_DefaultExpenseReportType": "Type de note de frais par défaut",
+	"_DefaultExpenseReportType_report": "Type de note de frais par défaut",
+	"_DeliveryAddressID": "Identifiant de l'adresse de livraison par défaut",
+	"_DeliveryAddressID_report": "Identifiant de l'adresse de livraison par défaut",
+	"_DeterminationKeyword": "Mots-clés utilisés pour la détermination automatique",
+	"_DeterminationKeyword_report": "Mots-clés utilisés pour la détermination automatique",
+	"_ERP": "Intégration ERP",
+	"_errorExistingCompanyCode": "Ce code société existe déjà dans la table",
+	"_PDPConfiguration": "Configuration PA (E-reporting France)",
+	"_PDPConfiguration_report": "Configuration PA (E-reporting France)",
+	"_PurchasingGroup": "Groupe d'acheteurs",
+	"_PurchasingGroup_report": "Groupe d'acheteurs",
+	"_PurchasingOrganization": "Organisation d'achats",
+	"_PurchasingOrganization_report": "Organisation d'achats",
+	"_Sub": "Bâtiment, ZI, Service...",
+	"_Sub report": "Bâtiment, ZI, Service...",
+	"_TaxMode": "Régime d'exigibilité TVA (E-reporting France)",
+	"_TaxMode_report": "Régime d'exigibilité TVA (E-reporting France)",
+	"_TVAModeNotDefined": " ",
+	"_TVAOverCredit": "TVA sur les encaissements",
+	"_TVAOverDebit": "TVA sur les débits",
+	"_WorkingDays": "Jours ouvrés",
+	"_WorkingDays_report": "Jours ouvrés",
+	"City": "Ville",
+	"Company code": "Code société",
+	"Company name": "Nom de la société",
+	"Contact email": "Adresse e-mail",
+	"Country": "Code pays",
+	"Currency": "Devise",
+	"Fax number": "Numéro de fax",
+	"P2P - Company codes": "Code société",
+	"P2P - Company codes__": "Code société",
+	"Phone number": "Numéro de téléphone",
+	"Postal code": "Code postal",
+	"PostOfficeBox": "Lieu-dit ou boîte postale",
+	"PurchasingCompanycodes": "S2P - Codes société",
+	"Region": "État/Région",
+	"SIRET": "SIRET",
+	"Street": "Rue",
+	"VAT number": "Numéro de TVA"
+}</process_fr>
+      <process_nl-NL>{
+	"_AddressInfo": "Adres",
+	"_Company code": "Bedrijfscode",
+	"_Company code report": "Bedrijfscode",
+	"_DeliveryAddressFormated": "Voorbeeldweergave adres",
+	"_Document data": "Documentgegevens",
+	"_GeneralInfo": "Algemene informatie",
+	"_ID": "ID",
+	"_ID_report": "ID",
+	"_Ship to city": "Stad",
+	"_Ship to city report": "Stad",
+	"_Ship to company": "Bedrijf",
+	"_Ship to company report": "Bedrijf",
+	"_Ship to contact": "Contact",
+	"_Ship to contact report": "Contact",
+	"_Ship to country": "Landcode",
+	"_Ship to country report": "Landcode",
+	"_Ship to email": "E-mailadres",
+	"_Ship to email report": "E-mailadres",
+	"_Ship to phone": "Telefoonnummer",
+	"_Ship to phone report": "Telefoonnummer",
+	"_Ship to region": "Staat/Regio",
+	"_Ship to region report": "Staat/Regio",
+	"_Ship to street": "Straat",
+	"_Ship to street report": "Straat",
+	"_Ship to sub": "Gebouw, IZ, service",
+	"_Ship to sub report": "Gebouw, IZ, service",
+	"_Ship to zip code": "Postcode",
+	"_Ship to zip code report": "Postcode",
+	"Purchasing - ShipTo": "S2P - Afleveringsadres",
+	"PurchasingShipTo": "S2P - Afleveringsadres",
+	"PurchasingShipTo__": "S2P - Afleveringsadres",
+	"_CF_C5_EDI_Identifier": "ID-electronisch adres (Peppol CTC)",
+	"_CF_C5_EDI_Identifier_report": "ID-electronisch adres (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType": "ID-schema electronisch adres (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType_report": "ID-schema electronisch adres (Peppol CTC)",
+	"_CompanyAddress": "Adres bedrijf",
+	"_CompanyAddressFormated": "Voorbeeldweergave adres",
+	"_CompanyInfo": "Informatie bedrijf",
+	"_DefaultConfiguration": "Standaardconfiguratie",
+	"_DefaultConfiguration_report": "Standaardconfiguratie",
+	"_DefaultExpenseReportType": "Standaardtype uitgavenstaat",
+	"_DefaultExpenseReportType_report": "Standaardtype uitgavenstaat",
+	"_DeliveryAddressID": "ID van standaard leveringsadres",
+	"_DeliveryAddressID_report": "ID van standaard leveringsadres",
+	"_DeterminationKeyword": "Trefwoorden gebruikt voor automatische bepaling",
+	"_DeterminationKeyword_report": "Trefwoorden gebruikt voor automatische bepaling",
+	"_ERP": "ERP-integratie",
+	"_errorExistingCompanyCode": "Deze bedrijfscode bestaat al in de tabel",
+	"_PDPConfiguration": "PA-configuratie E-rapportage (Frankrijk)",
+	"_PDPConfiguration_report": "PA-configuratie E-rapportage (Frankrijk)",
+	"_PurchasingGroup": "Inkoopgroep",
+	"_PurchasingGroup_report": "Inkoopgroep",
+	"_PurchasingOrganization": "Inkooporganisatie",
+	"_PurchasingOrganization_report": "Inkooporganisatie",
+	"_Sub": "Gebouw, IZ, service",
+	"_Sub report": "Gebouw, IZ, service",
+	"_TaxMode": "Aangrijpingspunt btw e-rapportage (Frankrijk)",
+	"_TaxMode_report": "Aangrijpingspunt btw e-rapportage (Frankrijk)",
+	"_TVAModeNotDefined": " ",
+	"_TVAOverCredit": "Bij ontvangen bedrag",
+	"_TVAOverDebit": "Bij uitgave factuur",
+	"_WorkingDays": "Werkdagen",
+	"_WorkingDays_report": "Werkdagen",
+	"City": "Stad",
+	"Company code": "Bedrijfscode",
+	"Company name": "Bedrijfsnaam",
+	"Contact email": "E-mail",
+	"Country": "Landcode",
+	"Currency": "Valuta",
+	"Fax number": "Faxnummer",
+	"P2P - Company codes": "Bedrijfscode",
+	"P2P - Company codes__": "Bedrijfscode",
+	"Phone number": "Telefoonnummer",
+	"Postal code": "Postcode",
+	"PostOfficeBox": "Locatie of postbus",
+	"PurchasingCompanycodes": "S2P - Bedrijfscodes",
+	"Region": "Staat/Regio",
+	"SIRET": "Belastingnummer",
+	"Street": "Straat",
+	"VAT number": "Btw-nummer"
+}</process_nl-NL>
+      <process_pl>{
+	"_AddressInfo": "Adres",
+	"_Company code": "Kod firmy",
+	"_Company code report": "Kod firmy",
+	"_DeliveryAddressFormated": "Podgląd adresu",
+	"_Document data": "Dane dokumentu",
+	"_GeneralInfo": "Informacje ogólne",
+	"_ID": "Id.",
+	"_ID_report": "Id.",
+	"_Ship to city": "Miejscowość",
+	"_Ship to city report": "Miejscowość",
+	"_Ship to company": "Firma",
+	"_Ship to company report": "Firma",
+	"_Ship to contact": "Kontakt",
+	"_Ship to contact report": "Kontakt",
+	"_Ship to country": "Kod kraju",
+	"_Ship to country report": "Kod kraju",
+	"_Ship to email": "Adres e-mail",
+	"_Ship to email report": "Adres e-mail",
+	"_Ship to phone": "Numer telefonu",
+	"_Ship to phone report": "Numer telefonu",
+	"_Ship to region": "Województwo/region",
+	"_Ship to region report": "Województwo/region",
+	"_Ship to street": "Ulica",
+	"_Ship to street report": "Ulica",
+	"_Ship to sub": "Budynek, strefa przemysłowa, dział...",
+	"_Ship to sub report": "Budynek, strefa przemysłowa, dział...",
+	"_Ship to zip code": "Kod pocztowy",
+	"_Ship to zip code report": "Kod pocztowy",
+	"Purchasing - ShipTo": "S2P – adresy dostawy",
+	"PurchasingShipTo": "S2P – adresy dostawy",
+	"PurchasingShipTo__": "S2P – adresy dostawy",
+	"_CF_C5_EDI_Identifier": "Id. adresu elektronicznego (Peppol CTC)",
+	"_CF_C5_EDI_Identifier_report": "Id. adresu elektronicznego (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType": "Id. schematu adresu elektronicznego (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType_report": "Id. schematu adresu elektronicznego (Peppol CTC)",
+	"_CompanyAddress": "Adres firmy",
+	"_CompanyAddressFormated": "Podgląd adresu",
+	"_CompanyInfo": "Informacje o firmie",
+	"_DefaultConfiguration": "Konfiguracja domyślna",
+	"_DefaultConfiguration_report": "Konfiguracja domyślna",
+	"_DefaultExpenseReportType": "Domyślny typ raportu z wydatków",
+	"_DefaultExpenseReportType_report": "Domyślny typ raportu z wydatków",
+	"_DeliveryAddressID": "Id. domyślnego adresu dostawy",
+	"_DeliveryAddressID_report": "Id. domyślnego adresu dostawy",
+	"_DeterminationKeyword": "Słowa kluczowe używane do automatycznego ustalania",
+	"_DeterminationKeyword_report": "Słowa kluczowe używane do automatycznego ustalania",
+	"_ERP": "Integracja ERP",
+	"_errorExistingCompanyCode": "Ten kod firmy już istnieje w tabeli",
+	"_PDPConfiguration": "System e-raportowania (Francja) – konfiguracja PA",
+	"_PDPConfiguration_report": "System e-raportowania (Francja) – konfiguracja PA",
+	"_PurchasingGroup": "Grupa nabycia",
+	"_PurchasingGroup_report": "Grupa nabycia",
+	"_PurchasingOrganization": "Dział nabycia",
+	"_PurchasingOrganization_report": "Dział nabycia",
+	"_Sub": "Budynek, strefa przemysłowa, dział...",
+	"_Sub report": "Budynek, strefa przemysłowa, dział...",
+	"_TaxMode": "Moment powstania obowiązku podatkowego dla e-raportowania (Francja)",
+	"_TaxMode_report": "Moment powstania obowiązku podatkowego dla e-raportowania (Francja)",
+	"_TVAModeNotDefined": "",
+	"_TVAOverCredit": "W chwili otrzymania płatności",
+	"_TVAOverDebit": "W chwili wystawienia faktury",
+	"_WorkingDays": "Dni robocze",
+	"_WorkingDays_report": "Dni robocze",
+	"City": "Miejscowość",
+	"Company code": "Kod firmy",
+	"Company name": "Nazwa firmy",
+	"Contact email": "E-mail",
+	"Country": "Kod kraju",
+	"Currency": "Waluta",
+	"Fax number": "Numer faksu",
+	"P2P - Company codes": "Kod firmy",
+	"P2P - Company codes__": "Kod firmy",
+	"Phone number": "Numer telefonu",
+	"Postal code": "Kod pocztowy",
+	"PostOfficeBox": "Okręg lub skrytka pocztowa",
+	"PurchasingCompanycodes": "S2P – kody firm",
+	"Region": "Województwo/region",
+	"SIRET": "Numer identyfikacji podatkowej",
+	"Street": "Ulica",
+	"VAT number": "Numer VAT"
+}</process_pl>
+      <process_it>{
+	"_AddressInfo": "Indirizzo",
+	"_Company code": "Codice società",
+	"_Company code report": "Codice società",
+	"_DeliveryAddressFormated": "Anteprima indirizzo",
+	"_Document data": "Dati documento",
+	"_GeneralInfo": "Informazioni generali",
+	"_ID": "ID",
+	"_ID_report": "ID",
+	"_Ship to city": "Città",
+	"_Ship to city report": "Città",
+	"_Ship to company": "Società",
+	"_Ship to company report": "Società",
+	"_Ship to contact": "Contatto",
+	"_Ship to contact report": "Contatto",
+	"_Ship to country": "Codice paese",
+	"_Ship to country report": "Codice paese",
+	"_Ship to email": "Indirizzo e-mail",
+	"_Ship to email report": "Indirizzo e-mail",
+	"_Ship to phone": "Numero di telefono",
+	"_Ship to phone report": "Numero di telefono",
+	"_Ship to region": "Stato/Regione",
+	"_Ship to region report": "Stato/Regione",
+	"_Ship to street": "Via",
+	"_Ship to street report": "Via",
+	"_Ship to sub": "Edificio, ZI, Servizio...",
+	"_Ship to sub report": "Edificio, ZI, Servizio...",
+	"_Ship to zip code": "CAP",
+	"_Ship to zip code report": "CAP",
+	"Purchasing - ShipTo": "S2P - Indirizzi di spedizione",
+	"PurchasingShipTo": "S2P - Indirizzi di spedizione",
+	"PurchasingShipTo__": "S2P - Indirizzi di spedizione",
+	"_CF_C5_EDI_Identifier": "ID indirizzo elettronico (Peppol CTC)",
+	"_CF_C5_EDI_Identifier_report": "ID indirizzo elettronico (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType": "ID schema dell'indirizzo elettronico (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType_report": "ID schema dell'indirizzo elettronico (Peppol CTC)",
+	"_CompanyAddress": "Indirizzo società",
+	"_CompanyAddressFormated": "Anteprima indirizzo",
+	"_CompanyInfo": "Informazioni società",
+	"_DefaultConfiguration": "Configurazione predefinita",
+	"_DefaultConfiguration_report": "Configurazione predefinita",
+	"_DefaultExpenseReportType": "Tipo di nota spese predefinito",
+	"_DefaultExpenseReportType_report": "Tipo di nota spese predefinito",
+	"_DeliveryAddressID": "ID indirizzo di spedizione predefinito",
+	"_DeliveryAddressID_report": "ID indirizzo di spedizione predefinito",
+	"_DeterminationKeyword": "Parole chiave per la determinazione automatica del codice società",
+	"_DeterminationKeyword_report": "Parole chiave per la determinazione automatica del codice società",
+	"_ERP": "Integrazione ERP",
+	"_errorExistingCompanyCode": "Questo codice società esiste già nella tabella",
+	"_PDPConfiguration": "Configurazione PA (E-reporting Francia)",
+	"_PDPConfiguration_report": "Configurazione PA (E-reporting Francia)",
+	"_PurchasingGroup": "Gruppo acquisti",
+	"_PurchasingGroup_report": "Gruppo acquisti",
+	"_PurchasingOrganization": "Organizzazione acquisti",
+	"_PurchasingOrganization_report": "Organizzazione acquisti",
+	"_Sub": "Edificio, ZI, Servizio...",
+	"_Sub report": "Edificio, ZI, Servizio...",
+	"_TaxMode": "Regime di esigibilità IVA (E-reporting Francia)",
+	"_TaxMode_report": "Regime di esigibilità IVA (E-reporting Francia)",
+	"_TVAModeNotDefined": " ",
+	"_TVAOverCredit": "Differita",
+	"_TVAOverDebit": "Immediata",
+	"_WorkingDays": "Giorni lavorativi",
+	"_WorkingDays_report": "Giorni lavorativi",
+	"City": "Città",
+	"Company code": "Codice società",
+	"Company name": "Nome società",
+	"Contact email": "Indirizzo e-mail",
+	"Country": "Codice paese",
+	"Currency": "Valuta",
+	"Fax number": "Numero fax",
+	"P2P - Company codes": "Codice società",
+	"P2P - Company codes__": "Codice società",
+	"Phone number": "Numero di telefono",
+	"Postal code": "CAP",
+	"PostOfficeBox": "Località o casella postale",
+	"PurchasingCompanycodes": "S2P - Codici società",
+	"Region": "Stato/Regione",
+	"SIRET": "Codice di identificazione fiscale",
+	"Street": "Via",
+	"VAT number": "Partita IVA"
+}</process_it>
+      <process_sk>{
+	"_AddressInfo": "Adresa",
+	"_Company code": "Kód spoločnosti",
+	"_Company code report": "Kód spoločnosti",
+	"_DeliveryAddressFormated": "Náhľad adresy",
+	"_Document data": "Dáta dokumentu",
+	"_GeneralInfo": "Všeobecné informácie",
+	"_ID": "ID",
+	"_ID_report": "ID",
+	"_Ship to city": "Mesto",
+	"_Ship to city report": "Mesto",
+	"_Ship to company": "Spoločnosť",
+	"_Ship to company report": "Spoločnosť",
+	"_Ship to contact": "Kontakt",
+	"_Ship to contact report": "Kontakt",
+	"_Ship to country": "Kód krajiny",
+	"_Ship to country report": "Kód krajiny",
+	"_Ship to email": "Emailová adresa",
+	"_Ship to email report": "Emailová adresa",
+	"_Ship to phone": "Telefónne číslo",
+	"_Ship to phone report": "Telefónne číslo",
+	"_Ship to region": "Štát/región",
+	"_Ship to region report": "Štát/región",
+	"_Ship to street": "Ulica",
+	"_Ship to street report": "Ulica",
+	"_Ship to sub": "Budova, PZ, Servis...",
+	"_Ship to sub report": "Budova, PZ, Servis...",
+	"_Ship to zip code": "PSČ",
+	"_Ship to zip code report": "PSČ",
+	"Purchasing - ShipTo": "S2P – Dodacie adresy",
+	"PurchasingShipTo": "S2P – Dodacie adresy",
+	"PurchasingShipTo__": "S2P – Dodacie adresy",
+	"_CF_C5_EDI_Identifier": "ID elektronickej adresy (Peppol CTC)",
+	"_CF_C5_EDI_Identifier_report": "ID elektronickej adresy (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType": "ID schémy elektronickej adresy (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType_report": "ID schémy elektronickej adresy (Peppol CTC)",
+	"_CompanyAddress": "Adresa spoločnosti",
+	"_CompanyAddressFormated": "Náhľad adresy",
+	"_CompanyInfo": "Informácie o spoločnosti",
+	"_DefaultConfiguration": "Predvolená konfigurácia",
+	"_DefaultConfiguration_report": "Predvolená konfigurácia",
+	"_DefaultExpenseReportType": "Predvolený typ výkazu výdavkov",
+	"_DefaultExpenseReportType_report": "Predvolený typ výkazu výdavkov",
+	"_DeliveryAddressID": "ID predvolenej doručovacej adresy",
+	"_DeliveryAddressID_report": "ID predvolenej doručovacej adresy",
+	"_DeterminationKeyword": "Kľúčové slová používané na automatické určenie",
+	"_DeterminationKeyword_report": "Kľúčové slová používané na automatické určenie",
+	"_ERP": "Integrácia ERP",
+	"_errorExistingCompanyCode": "Tento kód spoločnosti už existuje v tabuľke",
+	"_PDPConfiguration": "Konfigurácia PA pre elektronické výkazníctvo (Francúzsko)",
+	"_PDPConfiguration_report": "Konfigurácia PA pre elektronické výkazníctvo (Francúzsko)",
+	"_PurchasingGroup": "Nákupná skupina",
+	"_PurchasingGroup_report": "Nákupná skupina",
+	"_PurchasingOrganization": "Nákupná organizácia",
+	"_PurchasingOrganization_report": "Nákupná organizácia",
+	"_Sub": "Budova, PZ, Servis...",
+	"_Sub report": "Budova, PZ, Servis...",
+	"_TaxMode": "Daňová lokalita pre elektronické výkazníctvo (Francúzsko)",
+	"_TaxMode_report": "Daňová lokalita pre elektronické výkazníctvo (Francúzsko)",
+	"_TVAModeNotDefined": "",
+	"_TVAOverCredit": "Pri prijatí platby",
+	"_TVAOverDebit": "Pri vystavení faktúry",
+	"_WorkingDays": "Pracovné dni",
+	"_WorkingDays_report": "Pracovné dni",
+	"City": "Mesto",
+	"Company code": "Kód spoločnosti",
+	"Company name": "Meno spoločnosti",
+	"Contact email": "E-mail",
+	"Country": "Kód krajiny",
+	"Currency": "Mena",
+	"Fax number": "Faxové číslo",
+	"P2P - Company codes": "Kód spoločnosti",
+	"P2P - Company codes__": "Kód spoločnosti",
+	"Phone number": "Telefónne číslo",
+	"Postal code": "PSČ",
+	"PostOfficeBox": "Lokalita alebo P.O. Box",
+	"PurchasingCompanycodes": "S2P – Kódy spoločnosti",
+	"Region": "Štát/región",
+	"SIRET": "Identifikačné číslo pre daň",
+	"Street": "Ulica",
+	"VAT number": "IČ DPH"
+}</process_sk>
+      <process_zh-CN>{
+	"_AddressInfo": "地址",
+	"_Company code": "公司代码",
+	"_Company code report": "公司代码",
+	"_DeliveryAddressFormated": "地址预览",
+	"_Document data": "文档数据",
+	"_GeneralInfo": "常规信息",
+	"_ID": "ID",
+	"_ID_report": "ID",
+	"_Ship to city": "城市",
+	"_Ship to city report": "城市",
+	"_Ship to company": "公司",
+	"_Ship to company report": "公司",
+	"_Ship to contact": "联系人",
+	"_Ship to contact report": "联系人",
+	"_Ship to country": "国家/地区",
+	"_Ship to country report": "国家/地区",
+	"_Ship to email": "电子邮件",
+	"_Ship to email report": "电子邮件",
+	"_Ship to phone": "电话号码",
+	"_Ship to phone report": "电话号码",
+	"_Ship to region": "州/省/大区",
+	"_Ship to region report": "州/省/大区",
+	"_Ship to street": "街道地址",
+	"_Ship to street report": "街道地址",
+	"_Ship to sub": "楼号、工业区、部门……",
+	"_Ship to sub report": "楼号、工业区、部门……",
+	"_Ship to zip code": "邮政编码",
+	"_Ship to zip code report": "邮政编码",
+	"Purchasing - ShipTo": "寻源到付款 - 交付地址",
+	"PurchasingShipTo": "寻源到付款 - 交付地址",
+	"PurchasingShipTo__": "寻源到付款 - 交付地址",
+	"_CF_C5_EDI_Identifier": "电子地址 ID (Peppol CTC)",
+	"_CF_C5_EDI_Identifier_report": "电子地址 ID (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType": "电子地址方案 ID (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType_report": "电子地址方案 ID (Peppol CTC)",
+	"_CompanyAddress": "公司地址",
+	"_CompanyAddressFormated": "地址预览",
+	"_CompanyInfo": "公司信息",
+	"_DefaultConfiguration": "默认配置",
+	"_DefaultConfiguration_report": "默认配置",
+	"_DefaultExpenseReportType": "默认费用报销单类型",
+	"_DefaultExpenseReportType_report": "默认费用报销单类型",
+	"_DeliveryAddressID": "默认交付地址的ID",
+	"_DeliveryAddressID_report": "默认交付地址的ID",
+	"_DeterminationKeyword": "自动决定使用的关键字",
+	"_DeterminationKeyword_report": "自动决定使用的关键字",
+	"_ERP": "ERP 集成",
+	"_errorExistingCompanyCode": "此公司代码已存在于表中",
+	"_PDPConfiguration": "电子申报（法国）PA 配置",
+	"_PDPConfiguration_report": "电子申报（法国）PA 配置",
+	"_PurchasingGroup": "采购组",
+	"_PurchasingGroup_report": "采购组",
+	"_PurchasingOrganization": "采购组织",
+	"_PurchasingOrganization_report": "采购组织",
+	"_Sub": "楼号、工业区、部门……",
+	"_Sub report": "楼号、工业区、部门……",
+	"_TaxMode": "电子申报（法国）税点日（tax point）",
+	"_TaxMode_report": "电子申报（法国）税点日（tax point）",
+	"_TVAModeNotDefined": " ",
+	"_TVAOverCredit": "收到付款后",
+	"_TVAOverDebit": "开账单发票后",
+	"_WorkingDays": "工作日",
+	"_WorkingDays_report": "工作日",
+	"City": "城市",
+	"Company code": "公司代码",
+	"Company name": "公司名",
+	"Contact email": "电子邮件",
+	"Country": "国家/地区代码",
+	"Currency": "货币",
+	"Fax number": "传真号码",
+	"P2P - Company codes": "公司代码",
+	"P2P - Company codes__": "公司代码",
+	"Phone number": "电话号码",
+	"Postal code": "邮政编码",
+	"PostOfficeBox": "地点或邮政信箱",
+	"PurchasingCompanycodes": "寻源到付款 - 公司代码",
+	"Region": "州/省/大区",
+	"SIRET": "税务识别号",
+	"Street": "街道地址",
+	"VAT number": "增值税号(VAT)"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"_AddressInfo": "Morada",
+	"_Company code": "Código da empresa",
+	"_Company code report": "Código da empresa",
+	"_DeliveryAddressFormated": "Visualização do endereço",
+	"_Document data": "Informação de documento",
+	"_GeneralInfo": "Informação geral",
+	"_ID": "ID",
+	"_ID_report": "ID",
+	"_Ship to city": "Cidade",
+	"_Ship to city report": "Cidade",
+	"_Ship to company": "Empresa",
+	"_Ship to company report": "Empresa",
+	"_Ship to contact": "Contato",
+	"_Ship to contact report": "Contato",
+	"_Ship to country": "Código do país",
+	"_Ship to country report": "Código do país",
+	"_Ship to email": "Endereço de e-mail",
+	"_Ship to email report": "Endereço de e-mail",
+	"_Ship to phone": "Número de telefone",
+	"_Ship to phone report": "Número de telefone",
+	"_Ship to region": "Estado/Região",
+	"_Ship to region report": "Estado/Região",
+	"_Ship to street": "Rua",
+	"_Ship to street report": "Rua",
+	"_Ship to sub": "Prédio, área industrial, serviço",
+	"_Ship to sub report": "Prédio, área industrial, serviço",
+	"_Ship to zip code": "Código postal",
+	"_Ship to zip code report": "Código postal",
+	"Purchasing - ShipTo": "S2P - Endereços de entrega",
+	"PurchasingShipTo": "S2P - Endereços de entrega",
+	"PurchasingShipTo__": "S2P - Endereços de entrega",
+	"_CF_C5_EDI_Identifier": "ID do endereço de e-mail (Peppol CTC)",
+	"_CF_C5_EDI_Identifier_report": "ID do endereço de e-mail (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType": "ID do esquema do endereço de e-mail (Peppol CTC)",
+	"_CF_C5_EDI_IdentifierType_report": "ID do esquema do endereço de e-mail (Peppol CTC)",
+	"_CompanyAddress": "Endereço da empresa",
+	"_CompanyAddressFormated": "Visualização do endereço",
+	"_CompanyInfo": "Informações sobre a empresa",
+	"_DefaultConfiguration": "Configuração padrão",
+	"_DefaultConfiguration_report": "Configuração padrão",
+	"_DefaultExpenseReportType": "Tipo de relatório de despesas padrão",
+	"_DefaultExpenseReportType_report": "Tipo de relatório de despesas padrão",
+	"_DeliveryAddressID": "ID do endereço de entrega padrão",
+	"_DeliveryAddressID_report": "ID do endereço de entrega padrão",
+	"_DeterminationKeyword": "Palavras-chave usadas para determinação automática",
+	"_DeterminationKeyword_report": "Palavras-chave usadas para determinação automática",
+	"_ERP": "Integração ERP",
+	"_errorExistingCompanyCode": "Essa empresa já existe na tabela",
+	"_PDPConfiguration": "Configuração de relatórios eletrônicos AP (França)",
+	"_PDPConfiguration_report": "Configuração de relatórios eletrônicos AP (França)",
+	"_PurchasingGroup": "Grupo de compras",
+	"_PurchasingGroup_report": "Grupo de compras",
+	"_PurchasingOrganization": "Organização de compras",
+	"_PurchasingOrganization_report": "Organização de compras",
+	"_Sub": "Prédio, área industrial, serviço",
+	"_Sub report": "Prédio, área industrial, serviço",
+	"_TaxMode": "Ponto fiscal de relatórios eletrônicos (França)",
+	"_TaxMode_report": "Ponto fiscal de relatórios eletrônicos (França)",
+	"_TVAModeNotDefined": " ",
+	"_TVAOverCredit": "No pagamento recebido",
+	"_TVAOverDebit": "Na fatura emitida",
+	"_WorkingDays": "Dias úteis",
+	"_WorkingDays_report": "Dias úteis",
+	"City": "Cidade",
+	"Company code": "Código da empresa",
+	"Company name": "Nome da empresa",
+	"Contact email": "E-mail",
+	"Country": "Código do país",
+	"Currency": "Moeda",
+	"Fax number": "Número de fax",
+	"P2P - Company codes": "Código da empresa",
+	"P2P - Company codes__": "Código da empresa",
+	"Phone number": "Número de telefone",
+	"Postal code": "Código postal",
+	"PostOfficeBox": "Localidade ou apartado",
+	"PurchasingCompanycodes": "S2P - Códigos da empresa",
+	"Region": "Estado/Região",
+	"SIRET": "Número de identificação fiscal",
+	"Street": "Rua",
+	"VAT number": "Número de IVA"
+}</process_pt-BR>
+    </lg>
+    <process>
+      <BUColumn>CompanyCode__</BUColumn>
+      <flowtype>processing</flowtype>
+      <homepagelabel>Purchasing - ShipTo</homepagelabel>
+      <upgradable>yes</upgradable>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <OverrideAllowedAttachmentExtensions>*</OverrideAllowedAttachmentExtensions>
+      <AllowUploadAttachment>0</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+      <shouldRollbackManualRecordEdits>true</shouldRollbackManualRecordEdits>
+      <UseCultureFormat>true</UseCultureFormat>
+      <TransportName>CustomTable</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+    </process>
+    <ui>
+      <CustomScriptDebug>false</CustomScriptDebug>
+      <customscriptIncludedScripts>Lib_P2P_Address_V12.0.566.0</customscriptIncludedScripts>
+      <customscriptIncludedScripts>[LIB_P2P_CUSTOMIZATION_TABLES_CLIENT]</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Sys/Sys_Helpers</customscriptIncludedScripts>
+      <CustomScriptReadonly>true</CustomScriptReadonly>
+      <CustomScript>"use strict";
+Lib.P2P.Address.SetFormattedAddressControl(Controls.DeliveryAddress__);
+function ComputeDeliveryAddress() {
+    var options = {
+        "isVariablesAddress": true,
+        "address": {
+            "ToName": "ToRemove",
+            "ToSub": Controls.ShipToSub__.GetValue(),
+            "ToMail": Controls.ShipToStreet__.GetValue(),
+            "ToPostal": Controls.ShipToZipCode__.GetValue(),
+            "ToCountryCode": Controls.ShipToCountry__.GetValue(),
+            "ToState": Controls.ShipToRegion__.GetValue(),
+            "ToCity": Controls.ShipToCity__.GetValue(),
+            "ForceCountry": true
+        },
+        "countryCode": Controls.ShipToCountry__.GetValue()
+    };
+    Lib.P2P.Address.ComputeFormattedAddressWithOptions(options);
+}
+Controls.ShipToStreet__.OnChange = ComputeDeliveryAddress;
+Controls.ShipToZipCode__.OnChange = ComputeDeliveryAddress;
+Controls.ShipToCountry__.OnChange = ComputeDeliveryAddress;
+Controls.ShipToRegion__.OnChange = ComputeDeliveryAddress;
+Controls.ShipToCity__.OnChange = ComputeDeliveryAddress;
+Controls.ShipToSub__.OnChange = ComputeDeliveryAddress;
+ComputeDeliveryAddress();
+Sys.Helpers.TryCallFunction("Lib.P2P.Customization.Tables.Client.Common.OnHTMLScriptEnd");
+//# sourceMappingURL=customscript.js.map</CustomScript>
+      <restorationPanel>GeneralInfo</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 42,
+	"*": {
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"splitterType": "simple-v",
+				"processHelpId": "5089",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 2,
+					"options": {
+						"hidePanelsMenu": false,
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 3,
+					"options": {
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 4,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-center": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 5,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"width": "100%"
+										},
+										"hidden": false
+									},
+									"*": {
+										"form-content-center-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 6,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"GeneralInfo": {
+													"type": "PanelData",
+													"data": [],
+													"stamp": 7,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"label": "_GeneralInfo",
+														"iconURL": "",
+														"TitleFontSize": "M",
+														"hideActionButtons": true,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"backgroundcolor": "default",
+														"labelsAlignment": "right",
+														"leftImageURL": "",
+														"removeMargins": false,
+														"elementsAlignment": "left",
+														"version": 0
+													},
+													"*": {
+														"FieldsManager": {
+															"type": "FieldsManager",
+															"data": [],
+															"stamp": 8,
+															"options": {
+																"version": 0,
+																"controlsAssociation": {
+																	"CompanyCode__": "LabelCompanyCode__",
+																	"LabelCompanyCode__": "CompanyCode__",
+																	"ID__": "LabelID__",
+																	"LabelID__": "ID__",
+																	"ShipToCompany__": "LabelShipToCompany__",
+																	"LabelShipToCompany__": "ShipToCompany__",
+																	"ShipToContact__": "LabelShipToContact__",
+																	"LabelShipToContact__": "ShipToContact__",
+																	"ShipToPhone__": "LabelShipToPhone__",
+																	"LabelShipToPhone__": "ShipToPhone__",
+																	"ShipToEmail__": "LabelShipToEmail__",
+																	"LabelShipToEmail__": "ShipToEmail__"
+																}
+															},
+															"*": {
+																"Grid": {
+																	"type": "GridLayout",
+																	"data": [
+																		"fields"
+																	],
+																	"stamp": 9,
+																	"options": {
+																		"version": 0,
+																		"lines": 6,
+																		"columns": 2,
+																		"ctrlsPos": {
+																			"LabelCompanyCode__": {
+																				"line": 1,
+																				"column": 1
+																			},
+																			"CompanyCode__": {
+																				"line": 1,
+																				"column": 2
+																			},
+																			"LabelID__": {
+																				"line": 2,
+																				"column": 1
+																			},
+																			"ID__": {
+																				"line": 2,
+																				"column": 2
+																			},
+																			"LabelShipToCompany__": {
+																				"line": 3,
+																				"column": 1
+																			},
+																			"ShipToCompany__": {
+																				"line": 3,
+																				"column": 2
+																			},
+																			"LabelShipToContact__": {
+																				"line": 4,
+																				"column": 1
+																			},
+																			"ShipToContact__": {
+																				"line": 4,
+																				"column": 2
+																			},
+																			"LabelShipToPhone__": {
+																				"line": 5,
+																				"column": 1
+																			},
+																			"ShipToPhone__": {
+																				"line": 5,
+																				"column": 2
+																			},
+																			"LabelShipToEmail__": {
+																				"line": 6,
+																				"column": 1
+																			},
+																			"ShipToEmail__": {
+																				"line": 6,
+																				"column": 2
+																			}
+																		},
+																		"colspans": [
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[]
+																		]
+																	},
+																	"*": {
+																		"LabelCompanyCode__": {
+																			"type": "Label",
+																			"data": [
+																				"CompanyCode__"
+																			],
+																			"stamp": 11,
+																			"options": {
+																				"label": "_Company code",
+																				"version": 0
+																			}
+																		},
+																		"CompanyCode__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"CompanyCode__"
+																			],
+																			"stamp": 10,
+																			"options": {
+																				"label": "_Company code",
+																				"browsable": true,
+																				"activable": true,
+																				"width": 230,
+																				"fTSmaxRecords": "20",
+																				"PreFillFTS": true,
+																				"version": 0
+																			}
+																		},
+																		"LabelID__": {
+																			"type": "Label",
+																			"data": [
+																				"ID__"
+																			],
+																			"stamp": 13,
+																			"options": {
+																				"label": "_ID",
+																				"version": 0
+																			}
+																		},
+																		"ID__": {
+																			"type": "ShortText",
+																			"data": [
+																				"ID__"
+																			],
+																			"stamp": 12,
+																			"options": {
+																				"label": "_ID",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"activable": true,
+																				"width": 230,
+																				"browsable": false,
+																				"version": 0
+																			}
+																		},
+																		"LabelShipToCompany__": {
+																			"type": "Label",
+																			"data": [
+																				"ShipToCompany__"
+																			],
+																			"stamp": 15,
+																			"options": {
+																				"label": "_Ship to company",
+																				"version": 0
+																			}
+																		},
+																		"ShipToCompany__": {
+																			"type": "ShortText",
+																			"data": [
+																				"ShipToCompany__"
+																			],
+																			"stamp": 14,
+																			"options": {
+																				"label": "_Ship to company",
+																				"activable": true,
+																				"width": 230,
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 0
+																			}
+																		},
+																		"LabelShipToContact__": {
+																			"type": "Label",
+																			"data": [
+																				"ShipToContact__"
+																			],
+																			"stamp": 17,
+																			"options": {
+																				"label": "_Ship to contact",
+																				"version": 0
+																			}
+																		},
+																		"ShipToContact__": {
+																			"type": "ShortText",
+																			"data": [
+																				"ShipToContact__"
+																			],
+																			"stamp": 16,
+																			"options": {
+																				"label": "_Ship to contact",
+																				"activable": true,
+																				"width": 230,
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 0
+																			}
+																		},
+																		"LabelShipToPhone__": {
+																			"type": "Label",
+																			"data": [
+																				"ShipToPhone__"
+																			],
+																			"stamp": 19,
+																			"options": {
+																				"label": "_Ship to phone",
+																				"version": 0
+																			}
+																		},
+																		"ShipToPhone__": {
+																			"type": "ShortText",
+																			"data": [
+																				"ShipToPhone__"
+																			],
+																			"stamp": 18,
+																			"options": {
+																				"label": "_Ship to phone",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 1,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"browsable": false
+																			}
+																		},
+																		"LabelShipToEmail__": {
+																			"type": "Label",
+																			"data": [
+																				"ShipToEmail__"
+																			],
+																			"stamp": 21,
+																			"options": {
+																				"label": "_Ship to email",
+																				"version": 0
+																			}
+																		},
+																		"ShipToEmail__": {
+																			"type": "ShortText",
+																			"data": [
+																				"ShipToEmail__"
+																			],
+																			"stamp": 20,
+																			"options": {
+																				"label": "_Ship to email",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 1,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"browsable": false
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"AddressInfo": {
+													"type": "PanelData",
+													"data": [],
+													"stamp": 22,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"iconURL": "",
+														"TitleFontSize": "M",
+														"hideActionButtons": true,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"backgroundcolor": "default",
+														"labelsAlignment": "right",
+														"label": "_AddressInfo",
+														"hidden": false,
+														"leftImageURL": "",
+														"removeMargins": false,
+														"elementsAlignment": "left",
+														"version": 0
+													},
+													"*": {
+														"FieldsManager": {
+															"type": "FieldsManager",
+															"data": [],
+															"stamp": 23,
+															"options": {
+																"version": 0,
+																"controlsAssociation": {
+																	"ShipToSub__": "LabelShipToSub__",
+																	"LabelShipToSub__": "ShipToSub__",
+																	"ShipToStreet__": "LabelShipToStreet__",
+																	"LabelShipToStreet__": "ShipToStreet__",
+																	"ShipToCity__": "LabelShipToCity__",
+																	"LabelShipToCity__": "ShipToCity__",
+																	"ShipToZipCode__": "LabelShipToZipCode__",
+																	"LabelShipToZipCode__": "ShipToZipCode__",
+																	"ShipToRegion__": "LabelShipToRegion__",
+																	"LabelShipToRegion__": "ShipToRegion__",
+																	"ShipToCountry__": "LabelShipToCountry__",
+																	"LabelShipToCountry__": "ShipToCountry__",
+																	"DeliveryAddress__": "LabelDeliveryAddress__",
+																	"LabelDeliveryAddress__": "DeliveryAddress__"
+																}
+															},
+															"*": {
+																"Grid": {
+																	"type": "GridLayout",
+																	"data": [
+																		"fields"
+																	],
+																	"stamp": 24,
+																	"options": {
+																		"version": 0,
+																		"lines": 7,
+																		"columns": 2,
+																		"ctrlsPos": {
+																			"LabelShipToSub__": {
+																				"line": 1,
+																				"column": 1
+																			},
+																			"ShipToSub__": {
+																				"line": 1,
+																				"column": 2
+																			},
+																			"LabelShipToStreet__": {
+																				"line": 2,
+																				"column": 1
+																			},
+																			"ShipToStreet__": {
+																				"line": 2,
+																				"column": 2
+																			},
+																			"LabelShipToCity__": {
+																				"line": 3,
+																				"column": 1
+																			},
+																			"ShipToCity__": {
+																				"line": 3,
+																				"column": 2
+																			},
+																			"LabelShipToZipCode__": {
+																				"line": 4,
+																				"column": 1
+																			},
+																			"ShipToZipCode__": {
+																				"line": 4,
+																				"column": 2
+																			},
+																			"LabelShipToRegion__": {
+																				"line": 5,
+																				"column": 1
+																			},
+																			"ShipToRegion__": {
+																				"line": 5,
+																				"column": 2
+																			},
+																			"LabelShipToCountry__": {
+																				"line": 6,
+																				"column": 1
+																			},
+																			"ShipToCountry__": {
+																				"line": 6,
+																				"column": 2
+																			},
+																			"LabelDeliveryAddress__": {
+																				"line": 7,
+																				"column": 1
+																			},
+																			"DeliveryAddress__": {
+																				"line": 7,
+																				"column": 2
+																			}
+																		},
+																		"colspans": [
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[]
+																		]
+																	},
+																	"*": {
+																		"LabelShipToSub__": {
+																			"type": "Label",
+																			"data": [
+																				"ShipToSub__"
+																			],
+																			"stamp": 26,
+																			"options": {
+																				"label": "_Ship to sub",
+																				"version": 0
+																			}
+																		},
+																		"ShipToSub__": {
+																			"type": "ShortText",
+																			"data": [
+																				"ShipToSub__"
+																			],
+																			"stamp": 25,
+																			"options": {
+																				"label": "_Ship to sub",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 1,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"browsable": false
+																			}
+																		},
+																		"LabelShipToStreet__": {
+																			"type": "Label",
+																			"data": [
+																				"ShipToStreet__"
+																			],
+																			"stamp": 28,
+																			"options": {
+																				"label": "_Ship to street",
+																				"version": 0
+																			}
+																		},
+																		"ShipToStreet__": {
+																			"type": "ShortText",
+																			"data": [
+																				"ShipToStreet__"
+																			],
+																			"stamp": 27,
+																			"options": {
+																				"label": "_Ship to street",
+																				"activable": true,
+																				"width": 230,
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 0
+																			}
+																		},
+																		"LabelShipToCity__": {
+																			"type": "Label",
+																			"data": [
+																				"ShipToCity__"
+																			],
+																			"stamp": 30,
+																			"options": {
+																				"label": "_Ship to city",
+																				"version": 0
+																			}
+																		},
+																		"ShipToCity__": {
+																			"type": "ShortText",
+																			"data": [
+																				"ShipToCity__"
+																			],
+																			"stamp": 29,
+																			"options": {
+																				"label": "_Ship to city",
+																				"activable": true,
+																				"width": 230,
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 0
+																			}
+																		},
+																		"LabelShipToZipCode__": {
+																			"type": "Label",
+																			"data": [
+																				"ShipToZipCode__"
+																			],
+																			"stamp": 32,
+																			"options": {
+																				"label": "_Ship to zip code",
+																				"version": 0
+																			}
+																		},
+																		"ShipToZipCode__": {
+																			"type": "ShortText",
+																			"data": [
+																				"ShipToZipCode__"
+																			],
+																			"stamp": 31,
+																			"options": {
+																				"label": "_Ship to zip code",
+																				"activable": true,
+																				"width": 230,
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 0
+																			}
+																		},
+																		"LabelShipToRegion__": {
+																			"type": "Label",
+																			"data": [
+																				"ShipToRegion__"
+																			],
+																			"stamp": 34,
+																			"options": {
+																				"label": "_Ship to region",
+																				"version": 0
+																			}
+																		},
+																		"ShipToRegion__": {
+																			"type": "ShortText",
+																			"data": [
+																				"ShipToRegion__"
+																			],
+																			"stamp": 33,
+																			"options": {
+																				"label": "_Ship to region",
+																				"activable": true,
+																				"width": 230,
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 0
+																			}
+																		},
+																		"LabelShipToCountry__": {
+																			"type": "Label",
+																			"data": [
+																				"ShipToCountry__"
+																			],
+																			"stamp": 36,
+																			"options": {
+																				"label": "_Ship to country",
+																				"version": 0
+																			}
+																		},
+																		"ShipToCountry__": {
+																			"type": "ShortText",
+																			"data": [
+																				"ShipToCountry__"
+																			],
+																			"stamp": 35,
+																			"options": {
+																				"label": "_Ship to country",
+																				"activable": true,
+																				"width": 230,
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 0
+																			}
+																		},
+																		"LabelDeliveryAddress__": {
+																			"type": "Label",
+																			"data": [],
+																			"stamp": 38,
+																			"options": {
+																				"label": "_DeliveryAddressFormated",
+																				"version": 0
+																			}
+																		},
+																		"DeliveryAddress__": {
+																			"type": "LongText",
+																			"data": [],
+																			"stamp": 37,
+																			"options": {
+																				"label": "_DeliveryAddressFormated",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 1,
+																				"minNbLines": 5,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"numberOfLines": 5,
+																				"readonly": true,
+																				"notInDB": true,
+																				"dataType": "String",
+																				"browsable": false
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 39,
+					"options": {
+						"splitterType": "simple-h",
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 40,
+							"options": {
+								"label": "_Save",
+								"action": "savequit",
+								"submit": true,
+								"shortCut": "S",
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 41,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"shortCut": "Q",
+								"version": 0
+							}
+						},
+						"Delete": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 42,
+							"options": {
+								"label": "_Delete",
+								"action": "delete",
+								"submit": true,
+								"disabled": true,
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <field deleted="0" format="" guid="PZWW135023" id="CDBQT400153E" label="_Company code report" length="50" name="CompanyCode__" originalProcessID="PHQG132937" precision="0" processid="BDBQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ACDBQT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/CompanyCode__</fullname>
+        <jointable>PurchasingCompanycodes__</jointable>
+        <jointableid>CT#BD8QT400153E</jointableid>
+        <defaultvalue>
+        </defaultvalue>
+        <joincondition>(source.CompanyCode__=dest.CompanyCode__)</joincondition>
+        <RecordLastWrite>2026-11-04 11:07:40</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Company code report</Label>
+        <Alias>ACDBQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>true</Editable>
+        <required>false</required>
+        <TableName>CT#BD8QT400153E</TableName>
+        <SortOrder>
+        </SortOrder>
+        <DisplayedColumns>CompanyCode__|CompanyName__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <SavedColumn>CompanyCode__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ProcessName>PurchasingCompanycodes__</ProcessName>
+        <CustomFilter>
+        </CustomFilter>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="PHQG138659" id="DDBQT400153E" label="_ID_report" length="50" name="ID__" originalProcessID="PHQG132937" precision="0" processid="BDBQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ADDBQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ID__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:40</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ID_report</Label>
+        <Alias>ADDBQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="HTXI132941" id="EDBQT400153E" label="_Ship to city report" length="50" name="ShipToCity__" originalProcessID="PHQG132937" precision="0" processid="BDBQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AEDBQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ShipToCity__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:40</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Ship to city report</Label>
+        <Alias>AEDBQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="RWEE132938" id="FDBQT400153E" label="_Ship to company report" length="50" name="ShipToCompany__" originalProcessID="PHQG132937" precision="0" processid="BDBQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AFDBQT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ShipToCompany__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:40</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Ship to company report</Label>
+        <Alias>AFDBQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="XWZS132939" id="GDBQT400153E" label="_Ship to contact report" length="50" name="ShipToContact__" originalProcessID="PHQG132937" precision="0" processid="BDBQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AGDBQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ShipToContact__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:40</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Ship to contact report</Label>
+        <Alias>AGDBQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="IHYB132944" id="HDBQT400153E" label="_Ship to country report" length="80" name="ShipToCountry__" originalProcessID="PHQG132937" precision="0" processid="BDBQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AHDBQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ShipToCountry__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:40</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Ship to country report</Label>
+        <Alias>AHDBQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="XY62FP000FSX" id="IDBQT400153E" label="_Ship to email report" length="250" name="ShipToEmail__" originalProcessID="PHQG132937" precision="0" processid="BDBQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AIDBQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ShipToEmail__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:40</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Ship to email report</Label>
+        <Alias>AIDBQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="WY62FP000FSX" id="JDBQT400153E" label="_Ship to phone report" length="50" name="ShipToPhone__" originalProcessID="PHQG132937" precision="0" processid="BDBQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AJDBQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ShipToPhone__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:40</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Ship to phone report</Label>
+        <Alias>AJDBQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="WLVX132943" id="KDBQT400153E" label="_Ship to region report" length="50" name="ShipToRegion__" originalProcessID="PHQG132937" precision="0" processid="BDBQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AKDBQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ShipToRegion__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:40</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Ship to region report</Label>
+        <Alias>AKDBQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="TPKD132940" id="LDBQT400153E" label="_Ship to street report" length="50" name="ShipToStreet__" originalProcessID="PHQG132937" precision="0" processid="BDBQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ALDBQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ShipToStreet__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:40</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Ship to street report</Label>
+        <Alias>ALDBQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="VY62FP000FSX" id="MDBQT400153E" label="_Ship to sub report" length="50" name="ShipToSub__" originalProcessID="PHQG132937" precision="0" processid="BDBQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AMDBQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ShipToSub__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:40</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Ship to sub report</Label>
+        <Alias>AMDBQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="RYCM132942" id="NDBQT400153E" label="_Ship to zip code report" length="50" name="ShipToZipCode__" originalProcessID="PHQG132937" precision="0" processid="BDBQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ANDBQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ShipToZipCode__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:40</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Ship to zip code report</Label>
+        <Alias>ANDBQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <type id="KOLHG0000M4O" name="CT">
+  </type>
+</process>

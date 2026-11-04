@@ -1,0 +1,914 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:08:07" deleted="0" eskerapplication="P2P" global="0" id="FYBQT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="Record Manager" needvalidation="0" ootofilter="" ootoversion="2" originalProcessID="PAC20230712" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="1" reuseengine="0" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="0" version="1" visibility="0">
+  <properties>
+    <gdr>
+      <ValidationScriptAllowRetry>
+      </ValidationScriptAllowRetry>
+      <validationscriptIncludedScripts>Lib_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_Parameters_P2P_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>[Lib_Custom_Parameters]</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>[Lib_P2P_Custom_Parameters]</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_P2P_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_P2P_Notification_Server_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>LIB_CONTRACT_NOTIFICATION_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_Project_Notification_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_P2P_Notification_Migration_Server_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_Purchasing_CatalogHelper_Migration_Server_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_P2P_BillingSchedule_Migration_Server_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_Contract_Spending_Migration_Server_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_P2P_VendorLink_RecordManager_Server_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_P2P_Notification_RecordManager_Server_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_P2P_ContractPolicy_RecordManager_Server_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_P2P_UNSPSC_RecordManager_Server_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_P2P_Clean_Resources_Server_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_P2P_PreferredSuppliers_RecordManager_Server_V12.0.566.0</validationscriptIncludedScripts>
+      <ValidationScript>"use strict";
+/* eslint-disable max-depth */
+var ValidationScript;
+(function (ValidationScript) {
+    async function Run() {
+        const currentName = Data.GetActionName();
+        const currentAction = Data.GetActionType();
+        const requestedAction = Data.GetValue("Action__");
+        Log.Info(`-- Record Manager Validation Script -- Name: '${currentName || "&lt;empty&gt;"}', Action: '${currentAction || "&lt;empty&gt;"}', RequestedAction: '${requestedAction || "&lt;empty&gt;"}'`);
+        // Prevent multiple validation : Come from 'SendCD' Action if state = 50;
+        if (Data.GetValue("State") == 50 &amp;&amp; (currentName === "" &amp;&amp; currentAction === ""
+            || currentName === "Approve" &amp;&amp; currentAction === "approve")) {
+            await Lib.P2P.RecordManager.Server.HandleAction(requestedAction);
+        }
+    }
+    ValidationScript.Run = Run;
+    Lib.P2P.HandleScriptError(Run());
+})(ValidationScript || (ValidationScript = {}));
+//# sourceMappingURL=validationscript.js.map</ValidationScript>
+      <AllowTagCoverPages>true</AllowTagCoverPages>
+      <AllowTagNewDocuments>true</AllowTagNewDocuments>
+      <AllowTagAttachments>true</AllowTagAttachments>
+      <AllowRemovePages>true</AllowRemovePages>
+      <AllowSwapPages>true</AllowSwapPages>
+    </gdr>
+    <lg>
+      <process_da>{
+	"_Action": "Handling",
+	"_ResultJSON": "Resultat (JSON-format)",
+	"Record Manager": "Poststyring",
+	"Record Manager__": "Poststyring",
+	"_ActionState": "Status for post",
+	"_ErrorOnFields": "Følgende felter mangler: {0}.",
+	"_RecordManager_Error_OnDelete": "Kunne ikke slette meddelelse. Prøv igen senere.",
+	"_RecordManager_Error_OnSaved": "Kunne ikke gemme meddelelse. Prøv igen senere.",
+	"_Value must be between 0 and 100": "Værdien skal være mellem 0 og 100",
+	"_Value must greater than today": "Vælg en fremtidig dato",
+	"TRAD_EXECUTIONDATE_VIEWURL_P2P - Contract": "Vis kontrakt",
+	"TRAD_EXECUTIONDATE_VIEWURL_Project": "Vis projekt"
+}</process_da>
+      <process_de>{
+	"_Action": "Aktion",
+	"_ResultJSON": "Ergebnis (JSON-Format)",
+	"Record Manager": "Datensatzmanagement",
+	"Record Manager__": "Datensatzmanagement",
+	"_ActionState": "Datensatzstatus",
+	"_ErrorOnFields": "Die folgenden Felder fehlen: {0}.",
+	"_RecordManager_Error_OnDelete": "Benachrichtigung konnte nicht gelöscht werden. Versuchen Sie es später noch einmal.",
+	"_RecordManager_Error_OnSaved": "Benachrichtigung konnte nicht gespeichert werden. Versuchen Sie es später noch einmal.",
+	"_Value must be between 0 and 100": "Der Wert muss zwischen 0 und 100 liegen.",
+	"_Value must greater than today": "Wählen Sie bitte ein künftiges Datum aus",
+	"TRAD_EXECUTIONDATE_VIEWURL_P2P - Contract": "Vertrag anzeigen",
+	"TRAD_EXECUTIONDATE_VIEWURL_Project": "Projekt anzeigen"
+}</process_de>
+      <process_ja>{
+	"_Action": "アクション",
+	"_ResultJSON": "結果 (JSON形式)",
+	"Record Manager": "レコード管理",
+	"Record Manager__": "レコード管理",
+	"_ActionState": "レコードのステータス",
+	"_ErrorOnFields": "次のフィールドがありません: {0}。",
+	"_RecordManager_Error_OnDelete": "通知を削除できませんでした。後でもう一度お試しください。",
+	"_RecordManager_Error_OnSaved": "通知を保存できませんでした。後でもう一度お試しください。",
+	"_Value must be between 0 and 100": "値は、0から100の間でなければなりません",
+	"_Value must greater than today": "将来の日付を選択してください",
+	"TRAD_EXECUTIONDATE_VIEWURL_P2P - Contract": "契約を表示",
+	"TRAD_EXECUTIONDATE_VIEWURL_Project": "プロジェクトの表示"
+}</process_ja>
+      <process_en>{
+	"_Action": "Action",
+	"_ResultJSON": "Result (JSON format)",
+	"Record Manager": "Record management",
+	"Record Manager__": "Record management",
+	"_ActionState": "Record status",
+	"_ErrorOnFields": "The following fields are missing: {0}.",
+	"_RecordManager_Error_OnDelete": "Failed to delete notification. Try again later.",
+	"_RecordManager_Error_OnSaved": "Failed to save notification. Try again later.",
+	"_Value must be between 0 and 100": "Value must be between 0 and 100",
+	"_Value must greater than today": "Please select a future date",
+	"TRAD_EXECUTIONDATE_VIEWURL_P2P - Contract": "View contract",
+	"TRAD_EXECUTIONDATE_VIEWURL_Project": "View project"
+}</process_en>
+      <process_es>{
+	"_Action": "Acción",
+	"_ResultJSON": "Resultado (formato JSON)",
+	"Record Manager": "Gestión de registros",
+	"Record Manager__": "Gestión de registros",
+	"_ActionState": "Estado del record",
+	"_ErrorOnFields": "Faltan los siguientes campos: {0}.",
+	"_RecordManager_Error_OnDelete": "Error al eliminar la notificación. Vuelva a intentarlo más tarde.",
+	"_RecordManager_Error_OnSaved": "Error al guardar la notificación. Vuelva a intentarlo más tarde.",
+	"_Value must be between 0 and 100": "El valor debe estar comprendido entre 0 y 100",
+	"_Value must greater than today": "Seleccione una fecha posterior a la fecha actual",
+	"TRAD_EXECUTIONDATE_VIEWURL_P2P - Contract": "Ver el contrato",
+	"TRAD_EXECUTIONDATE_VIEWURL_Project": "Ver el proyecto"
+}</process_es>
+      <process_fr>{
+	"_Action": "Action",
+	"_ResultJSON": "Résultat (format JSON)",
+	"Record Manager": "Gestion d'enregistrements",
+	"Record Manager__": "Gestion d'enregistrements",
+	"_ActionState": "État de l'enregistrement",
+	"_ErrorOnFields": "Les champs suivants sont manquants : {0}.",
+	"_RecordManager_Error_OnDelete": "La notification n'a pas été supprimée. Réessayez plus tard.",
+	"_RecordManager_Error_OnSaved": "La notification n'a pas été enregistrée. Réessayez plus tard.",
+	"_Value must be between 0 and 100": "La valeur doit être comprise entre 0 et 100",
+	"_Value must greater than today": "Sélectionnez une date ultérieure à la date du jour",
+	"TRAD_EXECUTIONDATE_VIEWURL_P2P - Contract": "Afficher le contrat",
+	"TRAD_EXECUTIONDATE_VIEWURL_Project": "Afficher le projet"
+}</process_fr>
+      <process_nl-NL>{
+	"_Action": "Actie",
+	"_ResultJSON": "Resultaat (JSON-indeling)",
+	"Record Manager": "Registratiebeheer",
+	"Record Manager__": "Registratiebeheer",
+	"_ActionState": "Status registratie",
+	"_ErrorOnFields": "De volgende velden ontbreken: {0}.",
+	"_RecordManager_Error_OnDelete": "Kennisgeving verwijderen mislukt. Probeer het later opnieuw.",
+	"_RecordManager_Error_OnSaved": "Kennisgeving opslaan mislukt. Probeer het later opnieuw.",
+	"_Value must be between 0 and 100": "Waarde moet tussen 0 en 100 liggen",
+	"_Value must greater than today": "Selecteer een datum in de toekomst",
+	"TRAD_EXECUTIONDATE_VIEWURL_P2P - Contract": "Contract bekijken",
+	"TRAD_EXECUTIONDATE_VIEWURL_Project": "Project weergeven"
+}</process_nl-NL>
+      <process_pl>{
+	"_Action": "Działanie",
+	"_ResultJSON": "Wynik (format JSON)",
+	"Record Manager": "Zarządzanie rekordami",
+	"Record Manager__": "Zarządzanie rekordami",
+	"_ActionState": "Status rekordu",
+	"_ErrorOnFields": "Brakuje następujących pól: {0}.",
+	"_RecordManager_Error_OnDelete": "Nie udało się usunąć powiadomienia. Spróbuj ponownie później.",
+	"_RecordManager_Error_OnSaved": "Nie udało się zapisać powiadomienia. Spróbuj ponownie później.",
+	"_Value must be between 0 and 100": "Wartość musi się zawierać w przedziale od 0 do 100",
+	"_Value must greater than today": "Wybierz datę przyszłą",
+	"TRAD_EXECUTIONDATE_VIEWURL_P2P - Contract": "Wyświetl kontrakt",
+	"TRAD_EXECUTIONDATE_VIEWURL_Project": "Wyświetl projekt"
+}</process_pl>
+      <process_it>{
+	"_Action": "Azione",
+	"_ResultJSON": "Risultato (formato JSON)",
+	"Record Manager": "Gestione record",
+	"Record Manager__": "Gestione record",
+	"_ActionState": "Stato record",
+	"_ErrorOnFields": "Mancano i seguenti campi: {0}.",
+	"_RecordManager_Error_OnDelete": "Impossibile eliminare la notifica. Riprovare più tardi.",
+	"_RecordManager_Error_OnSaved": "Impossibile salvare la notifica. Riprovare più tardi.",
+	"_Value must be between 0 and 100": "Il valore deve essere compreso tra 0 e 100",
+	"_Value must greater than today": "Selezionare una data successiva a quella odierna",
+	"TRAD_EXECUTIONDATE_VIEWURL_P2P - Contract": "Visualizza il contratto",
+	"TRAD_EXECUTIONDATE_VIEWURL_Project": "Visualizza il progetto"
+}</process_it>
+      <process_sk>{
+	"_Action": "Akcia",
+	"_ResultJSON": "Výsledok (formát JSON)",
+	"Record Manager": "Riadenie záznamov",
+	"Record Manager__": "Riadenie záznamov",
+	"_ActionState": "Stav záznamu",
+	"_ErrorOnFields": "Chýbajú nasledujúce polia: {0}.",
+	"_RecordManager_Error_OnDelete": "Odstránenie oznámenia sa nepodarilo. Skúste to neskôr.",
+	"_RecordManager_Error_OnSaved": "Uloženie oznámenia sa nepodarilo. Skúste to neskôr.",
+	"_Value must be between 0 and 100": "Hodnota musí byť v rozmedzí 0 až 100",
+	"_Value must greater than today": "Vyberte dátum v budúcnosti",
+	"TRAD_EXECUTIONDATE_VIEWURL_P2P - Contract": "Zobraziť zmluvu",
+	"TRAD_EXECUTIONDATE_VIEWURL_Project": "Zobraziť projekt"
+}</process_sk>
+      <process_zh-CN>{
+	"_Action": "操作",
+	"_ResultJSON": "结果（JSON 格式）",
+	"Record Manager": "记录管理",
+	"Record Manager__": "记录管理",
+	"_ActionState": "记录状态",
+	"_ErrorOnFields": "缺少以下字段：{0}。",
+	"_RecordManager_Error_OnDelete": "删除通知失败。请稍后再试。",
+	"_RecordManager_Error_OnSaved": "保存通知失败。请稍后再试。",
+	"_Value must be between 0 and 100": "值必须介于 0 到 100 之间",
+	"_Value must greater than today": "请选择未来日期",
+	"TRAD_EXECUTIONDATE_VIEWURL_P2P - Contract": "查看合同",
+	"TRAD_EXECUTIONDATE_VIEWURL_Project": "查看项目"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"_Action": "Ação",
+	"_ResultJSON": "Resultado (formato JSON)",
+	"Record Manager": "Gerenciamento de registros",
+	"Record Manager__": "Gerenciamento de registros",
+	"_ActionState": "Estado do registro",
+	"_ErrorOnFields": "Os campos seguintes estão faltando: {0}.",
+	"_RecordManager_Error_OnDelete": "Falha ao excluir a notificação. Tente novamente mais tarde.",
+	"_RecordManager_Error_OnSaved": "Falha ao salvar a notificação. Tente novamente mais tarde.",
+	"_Value must be between 0 and 100": "O valor deve estar entre 0 e 100",
+	"_Value must greater than today": "Por favor, selecione uma data futura",
+	"TRAD_EXECUTIONDATE_VIEWURL_P2P - Contract": "Ver contrato",
+	"TRAD_EXECUTIONDATE_VIEWURL_Project": "Ver projeto"
+}</process_pt-BR>
+    </lg>
+    <process>
+      <Tags>PAC Record Manager</Tags>
+      <flowtype>processing</flowtype>
+      <ocrpreset>scan</ocrpreset>
+      <EnableNegativeNumbersBetweenBrackets>true</EnableNegativeNumbersBetweenBrackets>
+      <homepagelabel>Record Manager</homepagelabel>
+      <enableflexibleauditing>
+      </enableflexibleauditing>
+      <enableflexibleediting>
+      </enableflexibleediting>
+      <enableflexibleteaching>
+      </enableflexibleteaching>
+      <enableInternalConversation>false</enableInternalConversation>
+      <upgradable>yes</upgradable>
+      <disableocr>
+      </disableocr>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <disableautolearning>true</disableautolearning>
+      <backgroundprocessingthreshold>
+      </backgroundprocessingthreshold>
+      <EnablePreviewPrecomputation>
+      </EnablePreviewPrecomputation>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <enablerounddecimal>true</enablerounddecimal>
+      <pdfNormalizeFilter>
+      </pdfNormalizeFilter>
+      <archiveDuration>0</archiveDuration>
+      <ownhomepage>
+      </ownhomepage>
+      <ocrpagestoprocess>0</ocrpagestoprocess>
+      <ScriptEngineType>2</ScriptEngineType>
+      <UseActionNameWithScriptApproval>true</UseActionNameWithScriptApproval>
+      <displayWidth>
+      </displayWidth>
+      <AllowUploadAttachment>1</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+      <RemovePointWhenCastingIntToString>true</RemovePointWhenCastingIntToString>
+      <UseCultureFormat>true</UseCultureFormat>
+      <AllowRetryExtractCD>true</AllowRetryExtractCD>
+      <TransportName>CustomData</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+      <printToProcess>
+      </printToProcess>
+    </process>
+    <ui>
+      <restorationPanel>DataPanel</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 34,
+	"*": {
+		"GDRData": {
+			"type": "GDRData",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"version": 0
+			}
+		},
+		"OCRParams": {
+			"type": "OCRParams",
+			"data": [],
+			"stamp": 2,
+			"options": {
+				"version": 0
+			}
+		},
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 3,
+			"options": {
+				"splitterType": "complex",
+				"style": "FlexibleFormLight",
+				"maxwidth": "",
+				"backColor": "text-backgroundcolor-color7",
+				"footerStyle": "LargeFooter",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 4,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 5,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 6,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-top": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 7,
+									"options": {
+										"autosize": true,
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"height": "25%"
+										},
+										"hidden": true,
+										"hideSeparator": true
+									},
+									"*": {
+										"form-content-top-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 8,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"DocumentsPanel": {
+													"type": "PanelDocument",
+													"data": [],
+													"stamp": 9,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": false,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"sameHeightAsSiblings": false,
+														"label": "_Documents",
+														"version": 0
+													},
+													"*": {
+														"Document": {
+															"type": "Documents",
+															"data": [
+																"documentscontroldata"
+															],
+															"stamp": 10,
+															"options": {
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								},
+								"form-content-bottom": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 11,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": "25%",
+											"left": "0%",
+											"height": "75%"
+										},
+										"hidden": false,
+										"hideSeparator": true
+									},
+									"*": {
+										"form-content-left": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 12,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "0%",
+													"width": "45%"
+												},
+												"hidden": false,
+												"hideSeparator": true
+											},
+											"*": {
+												"form-content-left-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 13,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"DataPanel": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 14,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_Document data",
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 15,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {
+																			"Action__": "LabelAction__",
+																			"LabelAction__": "Action__",
+																			"ResultJSON__": "LabelResultJSON__",
+																			"LabelResultJSON__": "ResultJSON__"
+																		}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 16,
+																			"options": {
+																				"version": 0,
+																				"lines": 2,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"LabelAction__": {
+																						"line": 1,
+																						"column": 1
+																					},
+																					"Action__": {
+																						"line": 1,
+																						"column": 2
+																					},
+																					"LabelResultJSON__": {
+																						"line": 2,
+																						"column": 1
+																					},
+																					"ResultJSON__": {
+																						"line": 2,
+																						"column": 2
+																					}
+																				},
+																				"colspans": [
+																					[],
+																					[]
+																				]
+																			},
+																			"*": {
+																				"LabelAction__": {
+																					"type": "Label",
+																					"data": [
+																						"Action__"
+																					],
+																					"stamp": 18,
+																					"options": {
+																						"label": "_Action",
+																						"version": 0
+																					}
+																				},
+																				"Action__": {
+																					"type": "ShortText",
+																					"data": [
+																						"Action__"
+																					],
+																					"stamp": 17,
+																					"options": {
+																						"label": "_Action",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"readonly": false,
+																						"browsable": false
+																					}
+																				},
+																				"LabelResultJSON__": {
+																					"type": "Label",
+																					"data": [
+																						"ResultJSON__"
+																					],
+																					"stamp": 20,
+																					"options": {
+																						"label": "_ResultJSON",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				},
+																				"ResultJSON__": {
+																					"type": "ShortText",
+																					"data": [
+																						"ResultJSON__"
+																					],
+																					"stamp": 19,
+																					"options": {
+																						"label": "_ResultJSON",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"defaultValue": "{}",
+																						"hidden": true,
+																						"readonly": true,
+																						"browsable": false
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-2": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 21,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"SystemData": {
+															"type": "PanelSystemData",
+															"data": [],
+															"stamp": 22,
+															"options": {
+																"multicolumn": false,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_System data",
+																"version": 0
+															}
+														}
+													}
+												},
+												"form-content-left-3": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 23,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"NextProcess": {
+															"type": "PanelNextProcess",
+															"data": [],
+															"stamp": 24,
+															"options": {
+																"hidden": true,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_Next Process",
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-right": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 25,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "45%",
+													"width": "55%"
+												},
+												"hidden": true
+											},
+											"*": {
+												"form-content-right-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 26,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"PreviewPanel": {
+															"type": "PanelPreview",
+															"data": [],
+															"stamp": 27,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_Document Preview",
+																"version": 0
+															},
+															"*": {
+																"Preview": {
+																	"type": "Preview",
+																	"data": [
+																		"previewdata"
+																	],
+																	"stamp": 28,
+																	"options": {
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 29,
+					"options": {
+						"splitterType": "simple-h",
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 30,
+							"options": {
+								"label": "_Save",
+								"action": "save",
+								"submit": true,
+								"textSize": "S",
+								"textPosition": "text-right",
+								"textStyle": "default",
+								"textColor": "default",
+								"iconColor": "default",
+								"nextprocess": {
+									"processName": "Advanced Shipping Notice",
+									"attachmentsMode": "all",
+									"willBeChild": true,
+									"returnToOriginalUrl": false
+								},
+								"urlImageOverlay": "",
+								"buttonLabel": "",
+								"isRounded": true,
+								"isOutline": false,
+								"url": "",
+								"position": null,
+								"hidden": true,
+								"style": 1,
+								"version": 0
+							}
+						},
+						"Approve": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 31,
+							"options": {
+								"label": "_Approve",
+								"action": "approve",
+								"submit": true,
+								"textSize": "S",
+								"textPosition": "text-right",
+								"textStyle": "default",
+								"textColor": "default",
+								"iconColor": "default",
+								"nextprocess": {
+									"processName": "Advanced Shipping Notice",
+									"attachmentsMode": "all",
+									"willBeChild": true,
+									"returnToOriginalUrl": false
+								},
+								"urlImageOverlay": "",
+								"buttonLabel": "",
+								"isRounded": true,
+								"isOutline": false,
+								"url": "",
+								"position": null,
+								"hidden": false,
+								"style": 1,
+								"urlImage": "",
+								"awesomeClasses": "",
+								"version": 0
+							}
+						},
+						"Reprocess": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 32,
+							"options": {
+								"label": "_Reprocess",
+								"action": "reprocess",
+								"submit": true,
+								"textSize": "S",
+								"textPosition": "text-right",
+								"textStyle": "default",
+								"textColor": "default",
+								"iconColor": "default",
+								"nextprocess": {
+									"processName": "Advanced Shipping Notice",
+									"attachmentsMode": "all",
+									"willBeChild": true,
+									"returnToOriginalUrl": false
+								},
+								"urlImageOverlay": "",
+								"buttonLabel": "",
+								"isRounded": true,
+								"isOutline": true,
+								"url": "",
+								"position": null,
+								"hidden": true,
+								"style": 1,
+								"version": 0
+							}
+						},
+						"Reject": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 33,
+							"options": {
+								"label": "_Reject",
+								"action": "reject",
+								"submit": true,
+								"textSize": "S",
+								"textPosition": "text-right",
+								"textStyle": "default",
+								"textColor": "default",
+								"iconColor": "default",
+								"nextprocess": {
+									"processName": "Advanced Shipping Notice",
+									"attachmentsMode": "all",
+									"willBeChild": true,
+									"returnToOriginalUrl": false
+								},
+								"urlImageOverlay": "",
+								"buttonLabel": "",
+								"isRounded": true,
+								"isOutline": true,
+								"url": "",
+								"position": null,
+								"hidden": true,
+								"style": 3,
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 34,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"textSize": "S",
+								"textPosition": "text-right",
+								"textStyle": "default",
+								"textColor": "default",
+								"iconColor": "default",
+								"nextprocess": {
+									"processName": "Advanced Shipping Notice",
+									"attachmentsMode": "all",
+									"willBeChild": true,
+									"returnToOriginalUrl": false
+								},
+								"urlImageOverlay": "",
+								"style": 1,
+								"buttonLabel": "",
+								"isRounded": true,
+								"isOutline": true,
+								"url": "",
+								"position": null,
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <field deleted="0" format="" guid="NIFIG0000VLT" id="GYBQT400153E" label="_Action_report" length="50" name="Action__" originalProcessID="PAC20230712" precision="0" processid="FYBQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AGYBQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Action__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:08:07</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Action_report</Label>
+        <Alias>AGYBQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="DARIG0000VLT" id="HYBQT400153E" label="_ResultJSON" length="32766" name="ResultJSON__" originalProcessID="PAC20230712" precision="0" processid="FYBQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AHYBQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ResultJSON__</fullname>
+        <defaultvalue>{}</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:08:07</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ResultJSON</Label>
+        <Alias>AHYBQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <type id="GOLHG0000M4O" name="CD">
+  </type>
+</process>

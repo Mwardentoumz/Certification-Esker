@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<viewType xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<reportpreselectedonlydefined>true</reportpreselectedonlydefined>
+	<headers>
+		<header name="RFQStatus__" fromflexible="true">
+			<custom-styles>
+				<custom-style hasFlexibleAttributes="true" style-name="warning border" ldapfilter="(RFQStatus__[=](Draft,Pending response))" />
+				<custom-style hasFlexibleAttributes="true" style-name="urgent border" ldapfilter="(RFQStatus__[=](Expired,Canceled))" />
+				<custom-style hasFlexibleAttributes="true" style-name="success border" ldapfilter="(RFQStatus__=Closed)"/>
+			</custom-styles>
+		</header>
+	</headers>
+</viewType>

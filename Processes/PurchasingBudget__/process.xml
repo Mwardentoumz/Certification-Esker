@@ -1,0 +1,3317 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:07:57" deleted="0" eskerapplication="P2P" global="0" id="QOBQT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="PurchasingBudget__" needvalidation="1" ootofilter="" ootoversion="0" originalProcessID="YQTF132290" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomTable" upgradable="1" userid="0" version="1" visibility="0">
+  <properties>
+    <dataConditions>
+      <listDataConditions>
+			&lt;dataCondition&gt;
+				&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+				&lt;filter&gt;msnex=*&lt;/filter&gt;
+				&lt;labelKey&gt;_Purchasing disabled&lt;/labelKey&gt;
+				&lt;conditions&gt;
+					&lt;allowCondition&gt;
+						&lt;fieldName&gt;EnablePurchasingGlobalSetting__&lt;/fieldName&gt;
+						&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+					&lt;/allowCondition&gt;
+					&lt;allowCondition&gt;
+						&lt;fieldName&gt;EnableStandardPurchasingGlobalSetting__&lt;/fieldName&gt;
+						&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+					&lt;/allowCondition&gt;
+				&lt;/conditions&gt;
+			&lt;/dataCondition&gt;</listDataConditions>
+    </dataConditions>
+    <dbIndex>
+      <AUTO_AAPBQT400153EA>&lt;Index&gt;&lt;Ref Name="AAPBQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AAPBQT400153EA>
+      <AUTO_ASOBQT400153EA>&lt;Index Option="Unique"&gt;&lt;Ref Name="ASOBQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_ASOBQT400153EA>
+      <AUTO_AWOBQT400153EA>&lt;Index&gt;&lt;Ref Name="AWOBQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AWOBQT400153EA>
+    </dbIndex>
+    <lg>
+      <process_da>{
+	"_Accounting_Data_Pane": "Regnskabsdata",
+	"_Amounts_Pane": "Budgetoplysninger",
+	"_Budget": "Budget",
+	"_Budget report": "Budget",
+	"_BudgetID": "Budget-id",
+	"_BudgetID report": "Budget-id",
+	"_BudgetRemaining": "Resterende budget",
+	"_BudgetRemaining report": "Resterende budget",
+	"_CapEx": "CapEx",
+	"_Closed": "Budget lukket",
+	"_Closed report": "Budget lukket",
+	"_Committed": "Forpligtet",
+	"_Committed report": "Forpligtet",
+	"_Cost center": "Omkostningssted",
+	"_Cost center report": "Omkostningssted",
+	"_Cost center report.Company code": "Virksomhedskode (omkostningssted)",
+	"_Cost center report.Cost center": "Id (omkostningssted)",
+	"_Cost center report.Description": "Beskrivelse (omkostningssted)",
+	"_Cost center report.Manager": "Leder (omkostningssted)",
+	"_CostType": "Omkostningstype",
+	"_CostType report": "Omkostningstype",
+	"_Description": "Beskrivelse",
+	"_Description report": "Budgetbeskrivelse",
+	"_Document data": "Dokumentdata",
+	"_General_Information_Pane": "Generelle oplysninger",
+	"_Glaccount report.Account": "Konto (artskonto)",
+	"_Glaccount report.Allocable1": "Kan allokeres til akse 1 (artskonto)",
+	"_Glaccount report.Allocable2": "Kan allokeres til akse 2 (artskonto)",
+	"_Glaccount report.Allocable3": "Kan allokeres til akse 3 (artskonto)",
+	"_Glaccount report.Allocable4": "Kan allokeres til akse 4 (artskonto)",
+	"_Glaccount report.Allocable5": "Kan allokeres til akse 5 (artskonto)",
+	"_Glaccount report.Company code": "Virksomhedskode (artskonto)",
+	"_Glaccount report.Description": "Beskrivelse (artskonto)",
+	"_Group": "Udgiftskategori",
+	"_Group_report": "Udgiftskategori",
+	"_Invoiced non po": "Faktureret (uden indkøbsordre)",
+	"_Invoiced po": "Faktureret (indkøbsordre)",
+	"_NotificationsPane": "Budgetadvarsler",
+	"_NotifyOwner": "Send advarsler",
+	"_NotifyOwner_report": "Send budgetadvarsler",
+	"_Operation_Details_Pane": "Transaktionsoplysninger for budget",
+	"_OpEx": "OpEx",
+	"_Ordered": "Bestilt",
+	"_Ordered report": "Bestilt",
+	"_OwnerLogin": "Modtager",
+	"_OwnerLogin_report": "Modtager af budgetadvarsel",
+	"_Period code": "Periodekode",
+	"_Period code report": "Periodekode",
+	"_Period code report._Company code report": "Virksomhedskode (periodekode)",
+	"_Period code report._Period code report": "Periodekode (periodekode)",
+	"_Period code report._Period end report": "Periodeafslutning (periodekode)",
+	"_Period code report._Period name report": "Periodenavn (periodekode)",
+	"_Period code report._Period start report": "Periodestart (periodekode)",
+	"_processFormula_AvailableAmount": "Tilgængeligt budget",
+	"_processFormula_SpentAmount": "Budgetforbrug (%)",
+	"_processFormula_WarningThreshold": "Grænse for budgetadvarsel (%)",
+	"_Received": "Modtaget",
+	"_Received report": "Modtaget",
+	"_RelatedInvoiceAdminList": "Fakturerede varer",
+	"_RelatedInvoicePanel": "Fakturerede varer",
+	"_RelatedPOAdminList": "Bestilte varer",
+	"_RelatedPOPanel": "Bestilte varer",
+	"_RelatedPRAdminList": "Ønskede varer",
+	"_RelatedPRPanel": "Ønskede varer",
+	"_ToApprove": "Afventer forpligtelser",
+	"_ToApprove report": "Afventer forpligtelser",
+	"_WarningThreshold": "Grænse for advarsel (%)",
+	"_WarningThreshold_report": "Grænse for budgetadvarsel (%)",
+	"Company code": "Virksomhedskode",
+	"Purchasing - Budget": "S2P – budget",
+	"PurchasingBudget": "S2P – budget",
+	"PurchasingBudget__": "S2P – budget"
+}</process_da>
+      <process_de>{
+	"_Accounting_Data_Pane": "Buchungsdaten",
+	"_Amounts_Pane": "Budgetdetails",
+	"_Budget": "Budget",
+	"_Budget report": "Budget",
+	"_BudgetID": "Budget-ID",
+	"_BudgetID report": "Budget-ID",
+	"_BudgetRemaining": "Restbudget",
+	"_BudgetRemaining report": "Restbudget",
+	"_CapEx": "CapEx",
+	"_Closed": "Budget geschlossen",
+	"_Closed report": "Budget geschlossen",
+	"_Committed": "Gebunden",
+	"_Committed report": "Gebunden",
+	"_Cost center": "Kostenstelle",
+	"_Cost center report": "Kostenstelle",
+	"_Cost center report.Company code": "Buchungskreis (Kostenstelle)",
+	"_Cost center report.Cost center": "ID (Kostenstelle)",
+	"_Cost center report.Description": "Beschreibung (Kostenstelle)",
+	"_Cost center report.Manager": "Manager (Kostenstelle)",
+	"_CostType": "Kostenart",
+	"_CostType report": "Kostenart",
+	"_Description": "Beschreibung",
+	"_Description report": "Budgetbeschreibung",
+	"_Document data": "Dokumentdaten",
+	"_General_Information_Pane": "Allgemeine Informationen",
+	"_Glaccount report.Account": "Konto (Sachkonto)",
+	"_Glaccount report.Allocable1": "Achse 1 zurechenbar (Sachkonto)",
+	"_Glaccount report.Allocable2": "Achse 2 zurechenbar (Sachkonto)",
+	"_Glaccount report.Allocable3": "Achse 3 zurechenbar (Sachkonto)",
+	"_Glaccount report.Allocable4": "Achse 4 zurechenbar (Sachkonto)",
+	"_Glaccount report.Allocable5": "Achse 5 zurechenbar (Sachkonto)",
+	"_Glaccount report.Company code": "Buchungskreis (Sachkonto)",
+	"_Glaccount report.Description": "Beschreibung (Sachkonto)",
+	"_Group": "Spesenkategorie",
+	"_Group_report": "Spesenkategorie",
+	"_Invoiced non po": "Fakturiert (ohne Bestellung)",
+	"_Invoiced po": "Fakturiert (mit Bestellung)",
+	"_NotificationsPane": "Budgetwarnmeldungen",
+	"_NotifyOwner": "Warnmeldungen senden",
+	"_NotifyOwner_report": "Budgetwarnmeldungen senden",
+	"_Operation_Details_Pane": "Details zu den Budgetvorgängen",
+	"_OpEx": "OpEx",
+	"_Ordered": "Bestellt",
+	"_Ordered report": "Bestellt",
+	"_OwnerLogin": "Empfänger",
+	"_OwnerLogin_report": "Empfänger der Budgetwarnmeldungen",
+	"_Period code": "Periodencode",
+	"_Period code report": "Periodencode",
+	"_Period code report._Company code report": "Buchungskreis (Periodencode)",
+	"_Period code report._Period code report": "Periodencode (Periodencode)",
+	"_Period code report._Period end report": "Periodenende (Periodencode)",
+	"_Period code report._Period name report": "Periodenname (Periodencode)",
+	"_Period code report._Period start report": "Periodenanfang (Periodencode)",
+	"_processFormula_AvailableAmount": "Verfügbares Budget",
+	"_processFormula_SpentAmount": "Verbrauchtes Budget",
+	"_processFormula_WarningThreshold": "Schwellenwert für Budgetwarnmeldung (%)",
+	"_Received": "Empfangen",
+	"_Received report": "Empfangen",
+	"_RelatedInvoiceAdminList": "In Rechnung gestellte Artikel",
+	"_RelatedInvoicePanel": "In Rechnung gestellte Artikel",
+	"_RelatedPOAdminList": "Bestellte Artikel",
+	"_RelatedPOPanel": "Bestellte Artikel",
+	"_RelatedPRAdminList": "Angeforderte Artikel",
+	"_RelatedPRPanel": "Angeforderte Artikel",
+	"_ToApprove": "Ausstehende Mittelbindungen",
+	"_ToApprove report": "Ausstehende Mittelbindungen",
+	"_WarningThreshold": "Grenzwert für Warnmeldung (%)",
+	"_WarningThreshold_report": "Schwellenwert für Budgetwarnmeldung (%)",
+	"Company code": "Buchungskreis",
+	"Purchasing - Budget": "S2P - Budget",
+	"PurchasingBudget": "S2P - Budget",
+	"PurchasingBudget__": "S2P - Budget"
+}</process_de>
+      <process_JA>{
+	"_Accounting_Data_Pane": "会計データ",
+	"_Amounts_Pane": "予算の詳細",
+	"_Budget": "予算",
+	"_Budget report": "予算",
+	"_BudgetID": "予算ID",
+	"_BudgetID report": "予算ID",
+	"_BudgetRemaining": "残りの予算",
+	"_BudgetRemaining report": "残りの予算",
+	"_CapEx": "CapEx",
+	"_Closed": "クローズ済み予算",
+	"_Closed report": "クローズ済み予算",
+	"_Committed": "対応済み",
+	"_Committed report": "対応済み",
+	"_Cost center": "コストセンター",
+	"_Cost center report": "コストセンター",
+	"_Cost center report.Company code": "会社コード（コストセンター）",
+	"_Cost center report.Cost center": "ID（コストセンター）",
+	"_Cost center report.Description": "説明（コストセンター）",
+	"_Cost center report.Manager": "マネージャー（コストセンター）",
+	"_CostType": "コスト種別",
+	"_CostType report": "コスト種別",
+	"_Description": "説明",
+	"_Description report": "予算の説明",
+	"_Document data": "文書データ",
+	"_General_Information_Pane": "全般情報",
+	"_Glaccount report.Account": "勘定（勘定科目）",
+	"_Glaccount report.Allocable1": "軸1に割り当て可能（勘定科目）",
+	"_Glaccount report.Allocable2": "軸2に割り当て可能（勘定科目）",
+	"_Glaccount report.Allocable3": "軸3に割り当て可能（勘定科目）",
+	"_Glaccount report.Allocable4": "軸4に割り当て可能（勘定科目）",
+	"_Glaccount report.Allocable5": "軸5に割り当て可能（勘定科目）",
+	"_Glaccount report.Company code": "会社コード（勘定科目）",
+	"_Glaccount report.Description": "説明（勘定科目）",
+	"_Group": "費用分類",
+	"_Group_report": "費用分類",
+	"_Invoiced non po": "請求済み（POなし）",
+	"_Invoiced po": "請求済み（PO）",
+	"_NotificationsPane": "予算アラート",
+	"_NotifyOwner": "アラートを送信",
+	"_NotifyOwner_report": "予算アラートを送信",
+	"_Operation_Details_Pane": "予算運用の詳細",
+	"_OpEx": "OpEx",
+	"_Ordered": "注文済み",
+	"_Ordered report": "注文済み",
+	"_OwnerLogin": "受信者",
+	"_OwnerLogin_report": "予算アラートの受信者",
+	"_Period code": "期間コード",
+	"_Period code report": "期間コード",
+	"_Period code report._Company code report": "会社コード（期間コード）",
+	"_Period code report._Period code report": "期間コード（期間コード）",
+	"_Period code report._Period end report": "期間終了（期間コード）",
+	"_Period code report._Period name report": "期間名（期間コード）",
+	"_Period code report._Period start report": "期間開始（期間コード）",
+	"_processFormula_AvailableAmount": "利用可能な予算",
+	"_processFormula_SpentAmount": "使用済み予算 (%)",
+	"_processFormula_WarningThreshold": "予算アラートの閾値 (%)",
+	"_Received": "受信済み",
+	"_Received report": "受信済み",
+	"_RelatedInvoiceAdminList": "請求済み品目",
+	"_RelatedInvoicePanel": "請求済み品目",
+	"_RelatedPOAdminList": "注文品目",
+	"_RelatedPOPanel": "注文品目",
+	"_RelatedPRAdminList": "要求された品目",
+	"_RelatedPRPanel": "要求された品目",
+	"_ToApprove": "保留中の対応",
+	"_ToApprove report": "保留中の対応",
+	"_WarningThreshold": "アラートのしきい値 (%)",
+	"_WarningThreshold_report": "予算アラートの閾値 (%)",
+	"Company code": "会社コード",
+	"Purchasing - Budget": "S2P - 予算",
+	"PurchasingBudget": "S2P - 予算",
+	"PurchasingBudget__": "S2P - 予算"
+}</process_JA>
+      <process_en>{
+	"_Accounting_Data_Pane": "Accounting Data",
+	"_Amounts_Pane": "Budget Details",
+	"_Budget": "Budget",
+	"_Budget report": "Budget",
+	"_BudgetID": "Budget ID",
+	"_BudgetID report": "Budget ID",
+	"_BudgetRemaining": "Remaining budget",
+	"_BudgetRemaining report": "Remaining budget",
+	"_CapEx": "CapEx",
+	"_Closed": "Budget closed",
+	"_Closed report": "Budget closed",
+	"_Committed": "Committed",
+	"_Committed report": "Committed",
+	"_Cost center": "Cost center",
+	"_Cost center report": "Cost center",
+	"_Cost center report.Company code": "Company code (Cost center)",
+	"_Cost center report.Cost center": "ID (Cost center)",
+	"_Cost center report.Description": "Description (Cost center)",
+	"_Cost center report.Manager": "Manager (Cost center)",
+	"_CostType": "Cost type",
+	"_CostType report": "Cost type",
+	"_Description": "Description",
+	"_Description report": "Budget description",
+	"_Document data": "Document data",
+	"_General_Information_Pane": "General Information",
+	"_Glaccount report.Account": "Account (G/L account)",
+	"_Glaccount report.Allocable1": "Allocable to axis 1 (G/L account)",
+	"_Glaccount report.Allocable2": "Allocable to axis 2 (G/L account)",
+	"_Glaccount report.Allocable3": "Allocable to axis 3 (G/L account)",
+	"_Glaccount report.Allocable4": "Allocable to axis 4 (G/L account)",
+	"_Glaccount report.Allocable5": "Allocable to axis 5 (G/L account)",
+	"_Glaccount report.Company code": "Company code (G/L account)",
+	"_Glaccount report.Description": "Description (G/L account)",
+	"_Group": "Expense category",
+	"_Group_report": "Expense category",
+	"_Invoiced non po": "Invoiced (non-PO)",
+	"_Invoiced po": "Invoiced (PO)",
+	"_NotificationsPane": "Budget Alerts",
+	"_NotifyOwner": "Send alerts",
+	"_NotifyOwner_report": "Send budget alerts",
+	"_Operation_Details_Pane": "Budget Operation Details",
+	"_OpEx": "OpEx",
+	"_Ordered": "Ordered",
+	"_Ordered report": "Ordered",
+	"_OwnerLogin": "Recipient",
+	"_OwnerLogin_report": "Budget alert recipient",
+	"_Period code": "Period code",
+	"_Period code report": "Period code",
+	"_Period code report._Company code report": "Company code (Period code)",
+	"_Period code report._Period code report": "Period code (Period code)",
+	"_Period code report._Period end report": "Period end (Period code)",
+	"_Period code report._Period name report": "Period name (Period code)",
+	"_Period code report._Period start report": "Period start (Period code)",
+	"_processFormula_AvailableAmount": "Available budget",
+	"_processFormula_SpentAmount": "Spent budget (%)",
+	"_processFormula_WarningThreshold": "Budget alert threshold (%)",
+	"_Received": "Received",
+	"_Received report": "Received",
+	"_RelatedInvoiceAdminList": "Invoiced Items",
+	"_RelatedInvoicePanel": "Invoiced Items",
+	"_RelatedPOAdminList": "Ordered Items",
+	"_RelatedPOPanel": "Ordered Items",
+	"_RelatedPRAdminList": "Requested Items",
+	"_RelatedPRPanel": "Requested Items",
+	"_ToApprove": "Pending commitments",
+	"_ToApprove report": "Pending commitments",
+	"_WarningThreshold": "Alert threshold (%)",
+	"_WarningThreshold_report": "Budget alert threshold (%)",
+	"Company code": "Company code",
+	"Purchasing - Budget": "S2P - Budget",
+	"PurchasingBudget": "S2P - Budget",
+	"PurchasingBudget__": "S2P - Budget"
+}</process_en>
+      <process_es>{
+	"_Accounting_Data_Pane": "Datos contables",
+	"_Amounts_Pane": "Detalles del presupuesto",
+	"_Budget": "Presupuesto",
+	"_Budget report": "Presupuesto",
+	"_BudgetID": "ID de presupuesto",
+	"_BudgetID report": "ID de presupuesto",
+	"_BudgetRemaining": "Presupuesto restante",
+	"_BudgetRemaining report": "Presupuesto restante",
+	"_CapEx": "CapEx",
+	"_Closed": "Presupuesto cerrado",
+	"_Closed report": "Presupuesto cerrado",
+	"_Committed": "Comprometido",
+	"_Committed report": "Comprometido",
+	"_Cost center": "Centro de costes",
+	"_Cost center report": "Centro de costes",
+	"_Cost center report.Company code": "Código de empresa (Centro de costes)",
+	"_Cost center report.Cost center": "ID (Centro de costes)",
+	"_Cost center report.Description": "Descripción (Centro de costes)",
+	"_Cost center report.Manager": "Responsable (Centro de costes)",
+	"_CostType": "Tipo de coste",
+	"_CostType report": "Tipo de coste",
+	"_Description": "Descripción",
+	"_Description report": "Descripción del presupuesto",
+	"_Document data": "Datos del documento",
+	"_General_Information_Pane": "Información general",
+	"_Glaccount report.Account": "Cuenta (Cuenta de mayor)",
+	"_Glaccount report.Allocable1": "Imputable al eje 1 (Cuenta de mayor)",
+	"_Glaccount report.Allocable2": "Imputable al eje 2 (Cuenta de mayor)",
+	"_Glaccount report.Allocable3": "Imputable al eje 3 (Cuenta de mayor)",
+	"_Glaccount report.Allocable4": "Imputable al eje 4 (Cuenta de mayor)",
+	"_Glaccount report.Allocable5": "Imputable al eje 5 (Cuenta de mayor)",
+	"_Glaccount report.Company code": "Código de empresa (Cuenta de mayor)",
+	"_Glaccount report.Description": "Descripción (Cuenta de mayor)",
+	"_Group": "Categoría de gastos",
+	"_Group_report": "Categoría de gastos",
+	"_Invoiced non po": "Facturado (sin pedido)",
+	"_Invoiced po": "Facturado (con pedido)",
+	"_NotificationsPane": "Alertas de presupuesto",
+	"_NotifyOwner": "Enviar las alertas",
+	"_NotifyOwner_report": "Enviar las alertas de presupuesto",
+	"_Operation_Details_Pane": "Detalles de las operaciones presupuestarias",
+	"_OpEx": "OpEx",
+	"_Ordered": "Pedido",
+	"_Ordered report": "Pedido",
+	"_OwnerLogin": "Destinatario",
+	"_OwnerLogin_report": "Destinatario de alertas de presupuesto",
+	"_Period code": "Código del período",
+	"_Period code report": "Código del período",
+	"_Period code report._Company code report": "Código de empresa (Código del período)",
+	"_Period code report._Period code report": "Código del período (Código del período)",
+	"_Period code report._Period end report": "Fin del período (Código del período)",
+	"_Period code report._Period name report": "Nombre del período (Código del período)",
+	"_Period code report._Period start report": "Inicio del período (Código del período)",
+	"_processFormula_AvailableAmount": "Presupuesto disponible",
+	"_processFormula_SpentAmount": "Presupuesto gastado",
+	"_processFormula_WarningThreshold": "Límite de alerta de presupuesto (%)",
+	"_Received": "Recibido",
+	"_Received report": "Recibido",
+	"_RelatedInvoiceAdminList": "Artículos facturados",
+	"_RelatedInvoicePanel": "Artículos facturados",
+	"_RelatedPOAdminList": "Artículos pedidos",
+	"_RelatedPOPanel": "Artículos pedidos",
+	"_RelatedPRAdminList": "Artículos solicitados",
+	"_RelatedPRPanel": "Artículos solicitados",
+	"_ToApprove": "Compromisos pendientes",
+	"_ToApprove report": "Compromisos pendientes",
+	"_WarningThreshold": "Límite de alerta (%)",
+	"_WarningThreshold_report": "Límite de alerta de presupuesto (%)",
+	"Company code": "Código de empresa",
+	"Purchasing - Budget": "S2P - Presupuesto",
+	"PurchasingBudget": "S2P - Presupuesto",
+	"PurchasingBudget__": "S2P - Presupuesto"
+}</process_es>
+      <process_fr>{
+	"_Accounting_Data_Pane": "Données comptables",
+	"_Amounts_Pane": "Détails du budget",
+	"_Budget": "Budget",
+	"_Budget report": "Budget",
+	"_BudgetID": "ID de budget",
+	"_BudgetID report": "ID de budget",
+	"_BudgetRemaining": "Budget restant",
+	"_BudgetRemaining report": "Budget restant",
+	"_CapEx": "CapEx",
+	"_Closed": "Budget clos",
+	"_Closed report": "Budget clos",
+	"_Committed": "Engagé",
+	"_Committed report": "Engagé",
+	"_Cost center": "Centre de coût",
+	"_Cost center report": "Centre de coût",
+	"_Cost center report.Company code": "Code société (Centre de coût)",
+	"_Cost center report.Cost center": "Identifiant (Centre de coût)",
+	"_Cost center report.Description": "Description (Centre de coût)",
+	"_Cost center report.Manager": "Gestionnaire (Centre de coût)",
+	"_CostType": "Type de coût",
+	"_CostType report": "Type de coût",
+	"_Description": "Description",
+	"_Description report": "Description du budget",
+	"_Document data": "Données du document",
+	"_General_Information_Pane": "Informations générales",
+	"_Glaccount report.Account": "Compte (Compte général)",
+	"_Glaccount report.Allocable1": "Ventilable sur l'axe 1 (Compte général)",
+	"_Glaccount report.Allocable2": "Ventilable sur l'axe 2 (Compte général)",
+	"_Glaccount report.Allocable3": "Ventilable sur l'axe 3 (Compte général)",
+	"_Glaccount report.Allocable4": "Ventilable sur l'axe 4 (Compte général)",
+	"_Glaccount report.Allocable5": "Ventilable sur l'axe 5 (Compte général)",
+	"_Glaccount report.Company code": "Code société (Compte général)",
+	"_Glaccount report.Description": "Description (Compte général)",
+	"_Group": "Catégorie de dépenses",
+	"_Group_report": "Catégorie de dépenses",
+	"_Invoiced non po": "Facturé (sans commande)",
+	"_Invoiced po": "Facturé (avec commande)",
+	"_NotificationsPane": "Alertes de budget",
+	"_NotifyOwner": "Envoyer les alertes",
+	"_NotifyOwner_report": "Envoyer les alertes de budget",
+	"_Operation_Details_Pane": "Détails des opérations budgétaires",
+	"_OpEx": "OpEx",
+	"_Ordered": "Commandé",
+	"_Ordered report": "Commandé",
+	"_OwnerLogin": "Destinataire",
+	"_OwnerLogin_report": "Destinataire des alertes de budget",
+	"_Period code": "Code période",
+	"_Period code report": "Code période",
+	"_Period code report._Company code report": "Code société (Code période)",
+	"_Period code report._Period code report": "Code période (Code période)",
+	"_Period code report._Period end report": "Fin de période (Code période)",
+	"_Period code report._Period name report": "Nom de la période (Code période)",
+	"_Period code report._Period start report": "Début de période (Code période)",
+	"_processFormula_AvailableAmount": "Budget disponible",
+	"_processFormula_SpentAmount": "Budget dépensé",
+	"_processFormula_WarningThreshold": "Seuil d’alerte de budget (%)",
+	"_Received": "Reçu",
+	"_Received report": "Reçu",
+	"_RelatedInvoiceAdminList": "Articles facturés",
+	"_RelatedInvoicePanel": "Articles facturés",
+	"_RelatedPOAdminList": "Articles commandés",
+	"_RelatedPOPanel": "Articles commandés",
+	"_RelatedPRAdminList": "Articles demandés",
+	"_RelatedPRPanel": "Articles demandés",
+	"_ToApprove": "Engagements en cours",
+	"_ToApprove report": "Engagements en cours",
+	"_WarningThreshold": "Seuil d’alerte (%)",
+	"_WarningThreshold_report": "Seuil d’alerte de budget (%)",
+	"Company code": "Code société",
+	"Purchasing - Budget": "S2P - Budget",
+	"PurchasingBudget": "S2P - Budget",
+	"PurchasingBudget__": "S2P - Budget"
+}</process_fr>
+      <process_nl-NL>{
+	"_Accounting_Data_Pane": "Boekhoudgegevens",
+	"_Amounts_Pane": "Details budget",
+	"_Budget": "Budget",
+	"_Budget report": "Budget",
+	"_BudgetID": "Budget-ID",
+	"_BudgetID report": "Budget-ID",
+	"_BudgetRemaining": "Resterend budget",
+	"_BudgetRemaining report": "Resterend budget",
+	"_CapEx": "CapEx",
+	"_Closed": "Budget afgesloten",
+	"_Closed report": "Budget afgesloten",
+	"_Committed": "Geëngageerd",
+	"_Committed report": "Geëngageerd",
+	"_Cost center": "Kostenplaats",
+	"_Cost center report": "Kostenplaats",
+	"_Cost center report.Company code": "Bedrijfscode (kostenplaats)",
+	"_Cost center report.Cost center": "ID (kostenplaats)",
+	"_Cost center report.Description": "Beschrijving (kostenplaats)",
+	"_Cost center report.Manager": "Manager (kostenplaats)",
+	"_CostType": "Type kosten",
+	"_CostType report": "Type kosten",
+	"_Description": "Beschrijving",
+	"_Description report": "Beschrijving budget",
+	"_Document data": "Documentgegevens",
+	"_General_Information_Pane": "Algemene informatie",
+	"_Glaccount report.Account": "Rekening (grootboekrekening)",
+	"_Glaccount report.Allocable1": "Toewijsbaar aan as 1 (grootboekrekening)",
+	"_Glaccount report.Allocable2": "Toewijsbaar aan as 2 (grootboekrekening)",
+	"_Glaccount report.Allocable3": "Toewijsbaar aan as 3 (grootboekrekening)",
+	"_Glaccount report.Allocable4": "Toewijsbaar aan as 4 (grootboekrekening)",
+	"_Glaccount report.Allocable5": "Toewijsbaar aan as 5 (grootboekrekening)",
+	"_Glaccount report.Company code": "Bedrijfscode (grootboekrekening)",
+	"_Glaccount report.Description": "Beschrijving (grootboekrekening)",
+	"_Group": "Uitgavencategorie",
+	"_Group_report": "Uitgavencategorie",
+	"_Invoiced non po": "Gefactureerd (zonder PO)",
+	"_Invoiced po": "Gefactureerd (PO)",
+	"_NotificationsPane": "Waarschuwingen budget",
+	"_NotifyOwner": "Waarschuwingen verzenden",
+	"_NotifyOwner_report": "Waarschuwingen budget sturen",
+	"_Operation_Details_Pane": "Budget details",
+	"_OpEx": "OpEx",
+	"_Ordered": "Besteld",
+	"_Ordered report": "Besteld",
+	"_OwnerLogin": "Ontvanger",
+	"_OwnerLogin_report": "Ontvanger waarschuwingen budget",
+	"_Period code": "Code periode",
+	"_Period code report": "Code periode",
+	"_Period code report._Company code report": "Bedrijfscode (code periode)",
+	"_Period code report._Period code report": "Code periode (code periode)",
+	"_Period code report._Period end report": "Einde periode (code periode)",
+	"_Period code report._Period name report": "Naam periode (code periode)",
+	"_Period code report._Period start report": "Start periode (code periode)",
+	"_processFormula_AvailableAmount": "Beschikbaar budget",
+	"_processFormula_SpentAmount": "Gespendeerd budget (%)",
+	"_processFormula_WarningThreshold": "Drempelwaarde waarschuwingen budget (%)",
+	"_Received": "Ontvangen",
+	"_Received report": "Ontvangen",
+	"_RelatedInvoiceAdminList": "Gefactureerde items",
+	"_RelatedInvoicePanel": "Gefactureerde items",
+	"_RelatedPOAdminList": "Bestelde items",
+	"_RelatedPOPanel": "Bestelde items",
+	"_RelatedPRAdminList": "Gevraagde items ",
+	"_RelatedPRPanel": "Gevraagde items ",
+	"_ToApprove": "In afwachting van engagementen",
+	"_ToApprove report": "In afwachting van engagementen",
+	"_WarningThreshold": "Drempelwaarde waarschuwingen (%)",
+	"_WarningThreshold_report": "Drempelwaarde waarschuwingen budget (%)",
+	"Company code": "Bedrijfscode",
+	"Purchasing - Budget": "S2P - Budget",
+	"PurchasingBudget": "S2P - Budget",
+	"PurchasingBudget__": "S2P - Budget"
+}</process_nl-NL>
+      <process_pl>{
+	"_Accounting_Data_Pane": "Dane rachunkowe",
+	"_Amounts_Pane": "Szczegóły budżetu",
+	"_Budget": "Budżet",
+	"_Budget report": "Budżet",
+	"_BudgetID": "Id. budżetu",
+	"_BudgetID report": "Id. budżetu",
+	"_BudgetRemaining": "Pozostały budżet",
+	"_BudgetRemaining report": "Pozostały budżet",
+	"_CapEx": "CapEx",
+	"_Closed": "Zamknięto budżet",
+	"_Closed report": "Zamknięto budżet",
+	"_Committed": "Zadeklarowano",
+	"_Committed report": "Zadeklarowano",
+	"_Cost center": "Centrum kosztów",
+	"_Cost center report": "Centrum kosztów",
+	"_Cost center report.Company code": "Kod firmy (centrum kosztów)",
+	"_Cost center report.Cost center": "Id. (centrum kosztów)",
+	"_Cost center report.Description": "Opis (centrum kosztów)",
+	"_Cost center report.Manager": "Menedżer (centrum kosztów)",
+	"_CostType": "Typ kosztów",
+	"_CostType report": "Typ kosztów",
+	"_Description": "Opis",
+	"_Description report": "Opis budżetu",
+	"_Document data": "Dane dokumentu",
+	"_General_Information_Pane": "Informacje ogólne",
+	"_Glaccount report.Account": "Konto (konto KG)",
+	"_Glaccount report.Allocable1": "Możliwość przydzielenia do osi 1 (konto KG)",
+	"_Glaccount report.Allocable2": "Możliwość przydzielenia do osi 2 (konto KG)",
+	"_Glaccount report.Allocable3": "Możliwość przydzielenia do osi 3 (konto KG)",
+	"_Glaccount report.Allocable4": "Możliwość przydzielenia do osi 4 (konto KG)",
+	"_Glaccount report.Allocable5": "Możliwość przydzielenia do osi 5 (konto KG)",
+	"_Glaccount report.Company code": "Kod firmy (konto KG)",
+	"_Glaccount report.Description": "Opis (konto KG)",
+	"_Group": "Kategoria wydatków",
+	"_Group_report": "Kategoria wydatków",
+	"_Invoiced non po": "Zafakturowano (bez ZZ)",
+	"_Invoiced po": "Zafakturowano (ZZ)",
+	"_NotificationsPane": "Alerty budżetowe",
+	"_NotifyOwner": "Wyślij alerty",
+	"_NotifyOwner_report": "Wyślij alerty budżetowe",
+	"_Operation_Details_Pane": "Szczegóły operacji budżetowej",
+	"_OpEx": "OpEx",
+	"_Ordered": "Zamówiono",
+	"_Ordered report": "Zamówiono",
+	"_OwnerLogin": "Odbiorca",
+	"_OwnerLogin_report": "Odbiorca alertu budżetowego",
+	"_Period code": "Kod okresu",
+	"_Period code report": "Kod okresu",
+	"_Period code report._Company code report": "Kod firmy (kod okresu)",
+	"_Period code report._Period code report": "Kod okresu (kod okresu)",
+	"_Period code report._Period end report": "Koniec okresu (kod okresu)",
+	"_Period code report._Period name report": "Nazwa okresu (kod okresu)",
+	"_Period code report._Period start report": "Początek okresu (kod okresu)",
+	"_processFormula_AvailableAmount": "Dostępny budżet",
+	"_processFormula_SpentAmount": "Wydatkowanie budżetu (%)",
+	"_processFormula_WarningThreshold": "Próg alertu budżetowego (%)",
+	"_Received": "Otrzymano",
+	"_Received report": "Otrzymano",
+	"_RelatedInvoiceAdminList": "Zafakturowane pozycje",
+	"_RelatedInvoicePanel": "Zafakturowane pozycje",
+	"_RelatedPOAdminList": "Zamówione pozycje",
+	"_RelatedPOPanel": "Zamówione pozycje",
+	"_RelatedPRAdminList": "Wnioskowane pozycje",
+	"_RelatedPRPanel": "Wnioskowane pozycje",
+	"_ToApprove": "Oczekiwanie na zadeklarowanie",
+	"_ToApprove report": "Oczekiwanie na zadeklarowanie",
+	"_WarningThreshold": "Próg alertu (%)",
+	"_WarningThreshold_report": "Próg alertu budżetowego (%)",
+	"Company code": "Kod firmy",
+	"Purchasing - Budget": "S2P – budżet",
+	"PurchasingBudget": "S2P – budżet",
+	"PurchasingBudget__": "S2P – budżet"
+}</process_pl>
+      <process_it>{
+	"_Accounting_Data_Pane": "Dati contabili",
+	"_Amounts_Pane": "Dettagli budget",
+	"_Budget": "Budget",
+	"_Budget report": "Budget",
+	"_BudgetID": "ID budget",
+	"_BudgetID report": "ID budget",
+	"_BudgetRemaining": "Budget residuo",
+	"_BudgetRemaining report": "Budget residuo",
+	"_CapEx": "CapEx",
+	"_Closed": "Budget chiuso",
+	"_Closed report": "Budget chiuso",
+	"_Committed": "Impegnato",
+	"_Committed report": "Impegnato",
+	"_Cost center": "Centro di costo",
+	"_Cost center report": "Centro di costo",
+	"_Cost center report.Company code": "Codice società (Centro di costo)",
+	"_Cost center report.Cost center": "ID (Centro di costo)",
+	"_Cost center report.Description": "Descrizione (Centro di costo)",
+	"_Cost center report.Manager": "Responsabile (Centro di costo)",
+	"_CostType": "Tipo di costo",
+	"_CostType report": "Tipo di costo",
+	"_Description": "Descrizione",
+	"_Description report": "Descrizione budget",
+	"_Document data": "Dati documento",
+	"_General_Information_Pane": "Informazioni generali",
+	"_Glaccount report.Account": "Account (Conto generale)",
+	"_Glaccount report.Allocable1": "Assegnabile all'asse 1 (Conto generale)",
+	"_Glaccount report.Allocable2": "Assegnabile all'asse 2 (Conto generale)",
+	"_Glaccount report.Allocable3": "Assegnabile all'asse 3 (Conto generale)",
+	"_Glaccount report.Allocable4": "Assegnabile all'asse 4 (Conto generale)",
+	"_Glaccount report.Allocable5": "Assegnabile all'asse 5 (Conto generale)",
+	"_Glaccount report.Company code": "Codice società (Conto generale)",
+	"_Glaccount report.Description": "Descrizione (Conto generale)",
+	"_Group": "Categoria di spesa",
+	"_Group_report": "Categoria di spesa",
+	"_Invoiced non po": "Fatturato (senza ordine)",
+	"_Invoiced po": "Fatturato (con ordine)",
+	"_NotificationsPane": "Avvisi di budget",
+	"_NotifyOwner": "Invia avvisi",
+	"_NotifyOwner_report": "Invia avvisi di budget",
+	"_Operation_Details_Pane": "Dettagli delle operazioni di budget",
+	"_OpEx": "OpEx",
+	"_Ordered": "Ordinato",
+	"_Ordered report": "Ordinato",
+	"_OwnerLogin": "Destinatario",
+	"_OwnerLogin_report": "Destinatario avvisi di budget",
+	"_Period code": "Codice periodo",
+	"_Period code report": "Codice periodo",
+	"_Period code report._Company code report": "Codice società (Codice periodo)",
+	"_Period code report._Period code report": "Codice periodo (Codice periodo)",
+	"_Period code report._Period end report": "Fine periodo (Codice periodo)",
+	"_Period code report._Period name report": "Nome periodo (Codice periodo)",
+	"_Period code report._Period start report": "Inizio periodo (Codice periodo)",
+	"_processFormula_AvailableAmount": "Budget disponibile",
+	"_processFormula_SpentAmount": "Budget speso",
+	"_processFormula_WarningThreshold": "Soglia avvisi di budget (%)",
+	"_Received": "Ricevuto",
+	"_Received report": "Ricevuto",
+	"_RelatedInvoiceAdminList": "Articoli fatturati",
+	"_RelatedInvoicePanel": "Articoli fatturati",
+	"_RelatedPOAdminList": "Articoli ordinati",
+	"_RelatedPOPanel": "Articoli ordinati",
+	"_RelatedPRAdminList": "Articoli richiesti",
+	"_RelatedPRPanel": "Articoli richiesti",
+	"_ToApprove": "Impegni in sospeso",
+	"_ToApprove report": "Impegni in sospeso",
+	"_WarningThreshold": "Soglia avvisi (%)",
+	"_WarningThreshold_report": "Soglia avvisi di budget (%)",
+	"Company code": "Codice società",
+	"Purchasing - Budget": "S2P - Budget",
+	"PurchasingBudget": "S2P - Budget",
+	"PurchasingBudget__": "S2P - Budget"
+}</process_it>
+      <process_sk>{
+	"_Accounting_Data_Pane": "Účtovné údaje",
+	"_Amounts_Pane": "Podrobnosti rozpočtu",
+	"_Budget": "Rozpočet",
+	"_Budget report": "Rozpočet",
+	"_BudgetID": "Identifikácia rozpočtu",
+	"_BudgetID report": "Identifikácia rozpočtu",
+	"_BudgetRemaining": "Zostávajúci rozpočet",
+	"_BudgetRemaining report": "Zostávajúci rozpočet",
+	"_CapEx": "CapEx",
+	"_Closed": "Rozpočet uzavretý",
+	"_Closed report": "Rozpočet uzavretý",
+	"_Committed": "Potvrdený",
+	"_Committed report": "Potvrdený",
+	"_Cost center": "Nákladové stredisko",
+	"_Cost center report": "Nákladové stredisko",
+	"_Cost center report.Company code": "Kód spoločnosti (nákladové stredisko)",
+	"_Cost center report.Cost center": "ID (nákladové stredisko)",
+	"_Cost center report.Description": "Opis (nákladové stredisko)",
+	"_Cost center report.Manager": "Manažér (nákladové stredisko)",
+	"_CostType": "Typ nákladov",
+	"_CostType report": "Typ nákladov",
+	"_Description": "Popis",
+	"_Description report": "Popis rozpočtu",
+	"_Document data": "Dáta dokumentu",
+	"_General_Information_Pane": "Všeobecné informácie",
+	"_Glaccount report.Account": "Účet (hlavná kniha)",
+	"_Glaccount report.Allocable1": "Priraditeľné k osi 1 (hlavná kniha)",
+	"_Glaccount report.Allocable2": "Priraditeľné k osi 2 (hlavná kniha)",
+	"_Glaccount report.Allocable3": "Priraditeľné k osi 3 (hlavná kniha)",
+	"_Glaccount report.Allocable4": "Priraditeľné k osi 4 (hlavná kniha)",
+	"_Glaccount report.Allocable5": "Priraditeľné k osi 5 (hlavná kniha)",
+	"_Glaccount report.Company code": "Kód spoločnosti (hlavná kniha)",
+	"_Glaccount report.Description": "Opis (hlavná kniha)",
+	"_Group": "Kategória výdavkov",
+	"_Group_report": "Kategória výdavkov",
+	"_Invoiced non po": "Fakturovaný (bez obj.)",
+	"_Invoiced po": "Fakturovaný (obj.)",
+	"_NotificationsPane": "Upozornenia na rozpočet",
+	"_NotifyOwner": "Odoslať upozornenia",
+	"_NotifyOwner_report": "Odoslať upozornenia na rozpočet",
+	"_Operation_Details_Pane": "Detaily operácií rozpočtu",
+	"_OpEx": "OpEx",
+	"_Ordered": "Objednaný",
+	"_Ordered report": "Objednaný",
+	"_OwnerLogin": "Príjemca",
+	"_OwnerLogin_report": "Príjemca upozornení na rozpočet",
+	"_Period code": "Kód obdobia",
+	"_Period code report": "Kód obdobia",
+	"_Period code report._Company code report": "Kód spoločnosti (kód obdobia)",
+	"_Period code report._Period code report": "Kód obdobia (kód obdobia)",
+	"_Period code report._Period end report": "Koniec obdobia (kód obdobia)",
+	"_Period code report._Period name report": "Názov obdobia (kód obdobia)",
+	"_Period code report._Period start report": "Začiatok obdobia (kód obdobia)",
+	"_processFormula_AvailableAmount": "Dostupný rozpočet",
+	"_processFormula_SpentAmount": "Vyčerpaný rozpočet (%)",
+	"_processFormula_WarningThreshold": "Prahová hodnota upozornenia na rozpočet (%)",
+	"_Received": "Prijatý",
+	"_Received report": "Prijatý",
+	"_RelatedInvoiceAdminList": "Fakturované položky",
+	"_RelatedInvoicePanel": "Fakturované položky",
+	"_RelatedPOAdminList": "Objednané položky",
+	"_RelatedPOPanel": "Objednané položky",
+	"_RelatedPRAdminList": "Požadované položky",
+	"_RelatedPRPanel": "Požadované položky",
+	"_ToApprove": "Nevybavené záväzky",
+	"_ToApprove report": "Nevybavené záväzky",
+	"_WarningThreshold": "Prahová hodnota upozornenia (%)",
+	"_WarningThreshold_report": "Prahová hodnota upozornenia na rozpočet (%)",
+	"Company code": "Kód spoločnosti",
+	"Purchasing - Budget": "S2P – Rozpočet",
+	"PurchasingBudget": "S2P – Rozpočet",
+	"PurchasingBudget__": "S2P – Rozpočet"
+}</process_sk>
+      <process_zh-CN>{
+	"_Accounting_Data_Pane": "会计数据",
+	"_Amounts_Pane": "预算详情",
+	"_Budget": "预算",
+	"_Budget report": "预算",
+	"_BudgetID": "预算ID",
+	"_BudgetID report": "预算ID",
+	"_BudgetRemaining": "预算余额",
+	"_BudgetRemaining report": "预算余额",
+	"_CapEx": "资本性支出",
+	"_Closed": "已锁定预算",
+	"_Closed report": "已锁定预算",
+	"_Committed": "承诺付款",
+	"_Committed report": "承诺付款",
+	"_Cost center": "成本中心",
+	"_Cost center report": "成本中心",
+	"_Cost center report.Company code": "公司代码（成本中心）",
+	"_Cost center report.Cost center": "ID（成本中心）",
+	"_Cost center report.Description": "名称（成本中心）",
+	"_Cost center report.Manager": "负责人（成本中心）",
+	"_CostType": "成本类型",
+	"_CostType report": "成本类型",
+	"_Description": "名称/描述",
+	"_Description report": "预算描述",
+	"_Document data": "文档数据",
+	"_General_Information_Pane": "常规信息",
+	"_Glaccount report.Account": "账户（总账科目）",
+	"_Glaccount report.Allocable1": "可分配到轴1（总账科目）",
+	"_Glaccount report.Allocable2": "可分配到轴2（总账科目）",
+	"_Glaccount report.Allocable3": "可分配到轴3（总账科目）",
+	"_Glaccount report.Allocable4": "可分配到轴4（总账科目）",
+	"_Glaccount report.Allocable5": "可分配到轴5（总账科目）",
+	"_Glaccount report.Company code": "公司代码（总账科目）",
+	"_Glaccount report.Description": "名称（总账科目）",
+	"_Group": "费用类别",
+	"_Group_report": "费用类别",
+	"_Invoiced non po": "已开票（无订单）",
+	"_Invoiced po": "已开票（有订单）",
+	"_NotificationsPane": "预算警报",
+	"_NotifyOwner": "发送警报",
+	"_NotifyOwner_report": "发送预算警报",
+	"_Operation_Details_Pane": "预算操作详情",
+	"_OpEx": "运营费用",
+	"_Ordered": "已订购",
+	"_Ordered report": "已订购",
+	"_OwnerLogin": "收件人",
+	"_OwnerLogin_report": "预算警报收件人",
+	"_Period code": "期间代码",
+	"_Period code report": "期间代码",
+	"_Period code report._Company code report": "公司代码（期间代码）",
+	"_Period code report._Period code report": "期间代码（期间代码）",
+	"_Period code report._Period end report": "期间结束（期间代码）",
+	"_Period code report._Period name report": "期间名称（期间代码）",
+	"_Period code report._Period start report": "期间开始（期间代码）",
+	"_processFormula_AvailableAmount": "可用预算",
+	"_processFormula_SpentAmount": "已用预算（%）",
+	"_processFormula_WarningThreshold": "预算警报阈值（%）",
+	"_Received": "已收到",
+	"_Received report": "已收到",
+	"_RelatedInvoiceAdminList": "开票项目",
+	"_RelatedInvoicePanel": "开票项目",
+	"_RelatedPOAdminList": "已订购商品",
+	"_RelatedPOPanel": "已订购商品",
+	"_RelatedPRAdminList": "请购商品",
+	"_RelatedPRPanel": "请购商品",
+	"_ToApprove": "潜在承诺付款",
+	"_ToApprove report": "潜在承诺付款",
+	"_WarningThreshold": "警报阈值（%）",
+	"_WarningThreshold_report": "预算警报阈值（%）",
+	"Company code": "公司代码",
+	"Purchasing - Budget": "寻源到付款 - 预算",
+	"PurchasingBudget": "寻源到付款 - 预算",
+	"PurchasingBudget__": "寻源到付款 - 预算"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"_Accounting_Data_Pane": "Dados contábeis",
+	"_Amounts_Pane": "Detalhes do orçamento",
+	"_Budget": "Orçamento",
+	"_Budget report": "Orçamento",
+	"_BudgetID": "ID do orçamento",
+	"_BudgetID report": "ID do orçamento",
+	"_BudgetRemaining": "Orçamento remanescente",
+	"_BudgetRemaining report": "Orçamento remanescente",
+	"_CapEx": "Capex",
+	"_Closed": "Orçamento fechado",
+	"_Closed report": "Orçamento fechado",
+	"_Committed": "Comprometido",
+	"_Committed report": "Comprometido",
+	"_Cost center": "Centro de custo",
+	"_Cost center report": "Centro de custo",
+	"_Cost center report.Company code": "Código da empresa (centro de custo)",
+	"_Cost center report.Cost center": "ID (Centro de custo)",
+	"_Cost center report.Description": "Descrição (centro de custo)",
+	"_Cost center report.Manager": "Gerente (centro de custo)",
+	"_CostType": "Tipo de custo",
+	"_CostType report": "Tipo de custo",
+	"_Description": "Descrição",
+	"_Description report": "Descrição do orçamento",
+	"_Document data": "Informação de documento",
+	"_General_Information_Pane": "Informação geral",
+	"_Glaccount report.Account": "Conta (conta do Razão)",
+	"_Glaccount report.Allocable1": "Alocável ao eixo 1 (conta do Razão)",
+	"_Glaccount report.Allocable2": "Alocável ao eixo 2 (conta do Razão)",
+	"_Glaccount report.Allocable3": "Alocável ao eixo 3 (conta do Razão)",
+	"_Glaccount report.Allocable4": "Alocável ao eixo 4 (conta do Razão)",
+	"_Glaccount report.Allocable5": "Alocável ao eixo 5 (conta do Razão)",
+	"_Glaccount report.Company code": "Código da empresa (conta do Razão)",
+	"_Glaccount report.Description": "Descrição (conta do Razão)",
+	"_Group": "Categoria de despesa",
+	"_Group_report": "Categoria de despesa",
+	"_Invoiced non po": "Faturado (não pedido de compra)",
+	"_Invoiced po": "Faturado (pedido de compra)",
+	"_NotificationsPane": "Alertas de orçamento",
+	"_NotifyOwner": "Enviar alertas",
+	"_NotifyOwner_report": "Enviar alertas de orçamento",
+	"_Operation_Details_Pane": "Detalhes da operação do orçamento",
+	"_OpEx": "OpEx",
+	"_Ordered": "Pedido",
+	"_Ordered report": "Pedido",
+	"_OwnerLogin": "Destinatário",
+	"_OwnerLogin_report": "Destinatário do alerta de orçamento",
+	"_Period code": "Código do período",
+	"_Period code report": "Código do período",
+	"_Period code report._Company code report": "Código da empresa (código do período)",
+	"_Period code report._Period code report": "Código do período (código do período)",
+	"_Period code report._Period end report": "Fim do período (código do período)",
+	"_Period code report._Period name report": "Nome do período (código do período)",
+	"_Period code report._Period start report": "Início do período (código do período)",
+	"_processFormula_AvailableAmount": "Orçamento disponível",
+	"_processFormula_SpentAmount": "Orçamento gasto (%)",
+	"_processFormula_WarningThreshold": "Limite do alerta de orçamento (%)",
+	"_Received": "Recebido",
+	"_Received report": "Recebido",
+	"_RelatedInvoiceAdminList": "Itens faturados",
+	"_RelatedInvoicePanel": "Itens faturados",
+	"_RelatedPOAdminList": "Itens pedidos",
+	"_RelatedPOPanel": "Itens pedidos",
+	"_RelatedPRAdminList": "Itens solicitados",
+	"_RelatedPRPanel": "Itens solicitados",
+	"_ToApprove": "Compromissos pendentes",
+	"_ToApprove report": "Compromissos pendentes",
+	"_WarningThreshold": "Limite do alerta (%)",
+	"_WarningThreshold_report": "Limite do alerta de orçamento (%)",
+	"Company code": "Código da empresa",
+	"Purchasing - Budget": "S2P - Orçamento",
+	"PurchasingBudget": "S2P - Orçamento",
+	"PurchasingBudget__": "S2P - Orçamento"
+}</process_pt-BR>
+    </lg>
+    <process>
+      <flowtype>processing</flowtype>
+      <homepagelabel>Purchasing - Budget</homepagelabel>
+      <upgradable>yes</upgradable>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <isTableReadOnly>true</isTableReadOnly>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <OverrideAllowedAttachmentExtensions>*</OverrideAllowedAttachmentExtensions>
+      <displayWidth>
+      </displayWidth>
+      <AllowUploadAttachment>0</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+      <shouldRollbackManualRecordEdits>true</shouldRollbackManualRecordEdits>
+      <shouldShowManualEditsWarning>false</shouldShowManualEditsWarning>
+      <UseCultureFormat>true</UseCultureFormat>
+      <TransportName>CustomTable</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+    </process>
+    <ui>
+      <CustomScriptDebug>false</CustomScriptDebug>
+      <customscriptIncludedScripts>Lib_Parameters_P2P_V12.0.566.0</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Lib_Spending_Budget_V12.0.566.0</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Sys/Sys_Helpers_Array</customscriptIncludedScripts>
+      <customscriptIncludedScripts>[LIB_P2P_CUSTOMIZATION_TABLES_CLIENT]</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Sys/Sys_Helpers</customscriptIncludedScripts>
+      <CustomScriptReadonly>true</CustomScriptReadonly>
+      <CustomScript>"use strict";
+var CustomScript;
+(function (CustomScript) {
+    const budget = {
+        Items: [],
+        PeriodCode__: "",
+        PeriodStart__: "",
+        PeriodEnd__: "",
+        Budget__: 0,
+        Received__: 0,
+        Closed__: false,
+        ToApprove__: 0,
+        Committed__: 0,
+        Ordered__: 0,
+        InvoicedPO__: 0,
+        InvoicedNonPO__: 0,
+        CompanyCode__: ""
+    };
+    /**
+     * Initform
+     */
+    function InitForm() {
+        ProcessInstance.SetFormWidth(1280);
+        InitOperationDetailsPane();
+        InitRelatedPRPOInvoiceViews();
+        Controls.CompanyCode__.OnChange = function () {
+            Sys.Helpers.Array.ForEach([
+                "CostCenter__",
+                "Group__",
+                "PeriodCode__"
+            ], function (field) {
+                Controls[field].SetValue(null);
+            });
+        };
+    }
+    function InitOperationDetailsPane() {
+        Controls.OperationDetailsView__.SetView({
+            tabName: "",
+            viewName: "_Budget Operation Details view",
+            processOrTableName: "PurchasingBudgetOperationDetails__",
+            checkProfileTab: false,
+            isSystem: true,
+            filterParameters: { budgetID: Controls.BudgetID__.GetValue() }
+        });
+        Controls.OperationDetailsView__.Apply();
+    }
+    function InitRelatedPRPOInvoiceViews() {
+        Sys.Parameters.GetInstance("P2P").IsReady(() =&gt; {
+            if (Sys.Parameters.GetInstance("P2P").GetParameter("DisplayEnhancedBudgetInformation", "0") !== "0") {
+                Controls.RelatedPRPanel.Hide(false);
+                Controls.RelatedPOPanel.Hide(false);
+                Controls.RelatedInvoicePanel.Hide(false);
+                Controls.RelatedPRAdminList__.SetView({
+                    tabName: "",
+                    viewName: "_Table 'Purchase requisitions - Items'",
+                    isSystem: true,
+                    checkProfileTab: false,
+                    filterParameters: { BudgetID: Controls.BudgetID__.GetValue() }
+                });
+                Controls.RelatedPRAdminList__.Apply();
+                Controls.RelatedPOAdminList__.SetView({
+                    tabName: "",
+                    viewName: "_Table 'Purchase order - Items'",
+                    isSystem: true,
+                    checkProfileTab: false,
+                    filterParameters: { BudgetID: Controls.BudgetID__.GetValue() }
+                });
+                Controls.RelatedPOAdminList__.Apply();
+                Controls.RelatedInvoiceAdminList__.SetView({
+                    tabName: "",
+                    viewName: "_Table 'Invoice - Items'",
+                    isSystem: true,
+                    checkProfileTab: false,
+                    filterParameters: { BudgetID: Controls.BudgetID__.GetValue() }
+                });
+                Controls.RelatedInvoiceAdminList__.Apply();
+            }
+        });
+    }
+    /**
+     * Start
+     */
+    function Start() {
+        var _a;
+        Sys.Parameters.GetInstance("P2P").IsReady(() =&gt; {
+            const enableLowBudgetNotification = Sys.Parameters.GetInstance("P2P").GetParameterBool("EnableLowBudgetNotification");
+            Controls.NotificationsPane.Hide(!enableLowBudgetNotification);
+            Controls.NotifyOwner__.Hide(false);
+            const notifyOwner = Data.GetValue("NotifyOwner__");
+            Controls.WarningThreshold__.Hide(!notifyOwner);
+            Controls.OwnerLogin__.Hide(!notifyOwner);
+        });
+        Sys.Helpers.Array.ForEach(["Budget__"].concat(Lib.Spending.Budget.budgetHandler.GetImpactSteps()), function (field) {
+            if (field in Controls &amp;&amp; Controls[field].GetValue() === null) {
+                Controls[field].SetValue(0);
+            }
+            budget[field] = Controls[field].GetValue();
+        });
+        Controls.BudgetRemaining__.SetValue(((_a = Lib.Spending.Budget.budgetHandler.ComputeRemainingForSteps(budget, budget.Budget__)) === null || _a === void 0 ? void 0 : _a.toNumber()) || "");
+        if (Controls.BudgetRemaining__.GetValue() &gt;= 0 || Controls.BudgetRemaining__.GetValue() == null) {
+            Controls.BudgetRemaining__.RemoveStyle("text-highlight-warning");
+        }
+        else {
+            Controls.BudgetRemaining__.AddStyle("text-highlight-warning");
+        }
+        Sys.Helpers.TryCallFunction("Lib.P2P.Customization.Tables.Client.Common.OnHTMLScriptEnd");
+    }
+    // Start custom script
+    InitForm();
+    Start();
+})(CustomScript || (CustomScript = {}));
+//# sourceMappingURL=customscript.js.map</CustomScript>
+      <restorationPanel>DataPanel</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 83,
+	"*": {
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"splitterType": "simple-v",
+				"backColor": "text-backgroundcolor-color7",
+				"style": "FlexibleFormLight",
+				"processHelpId": "5083",
+				"footerStyle": "default",
+				"maxwidth": 1280,
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 2,
+					"options": {
+						"hidePanelsMenu": false,
+						"maxwidth": 1280,
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 3,
+					"options": {
+						"maxwidth": 1280,
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 4,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-center": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 5,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"width": "100%"
+										},
+										"hidden": false,
+										"hideSeparator": true
+									},
+									"*": {
+										"form-content-center-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 6,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"DataPanel": {
+													"type": "PanelData",
+													"data": [],
+													"stamp": 7,
+													"options": {
+														"border": {},
+														"labelLength": "230px",
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": true,
+														"hideTitleBar": false,
+														"label": "_General_Information_Pane",
+														"backgroundcolor": "default",
+														"labelsAlignment": "right",
+														"hideTitle": false,
+														"sameHeightAsSiblings": true,
+														"leftImageURL": "",
+														"removeMargins": false,
+														"elementsAlignment": "left",
+														"version": 0
+													},
+													"*": {
+														"FieldsManager": {
+															"type": "FieldsManager",
+															"data": [],
+															"stamp": 8,
+															"options": {
+																"version": 0,
+																"controlsAssociation": {
+																	"BudgetID__": "LabelBudgetID__",
+																	"LabelBudgetID__": "BudgetID__",
+																	"Description__": "LabelDescription__",
+																	"LabelDescription__": "Description__",
+																	"Closed__": "LabelClosed__",
+																	"LabelClosed__": "Closed__"
+																}
+															},
+															"*": {
+																"Grid": {
+																	"type": "GridLayout",
+																	"data": [
+																		"fields"
+																	],
+																	"stamp": 9,
+																	"options": {
+																		"version": 0,
+																		"lines": 3,
+																		"columns": 2,
+																		"ctrlsPos": {
+																			"LabelBudgetID__": {
+																				"line": 1,
+																				"column": 1
+																			},
+																			"BudgetID__": {
+																				"line": 1,
+																				"column": 2
+																			},
+																			"LabelDescription__": {
+																				"line": 2,
+																				"column": 1
+																			},
+																			"Description__": {
+																				"line": 2,
+																				"column": 2
+																			},
+																			"LabelClosed__": {
+																				"line": 3,
+																				"column": 1
+																			},
+																			"Closed__": {
+																				"line": 3,
+																				"column": 2
+																			}
+																		},
+																		"colspans": [
+																			[],
+																			[],
+																			[]
+																		]
+																	},
+																	"*": {
+																		"LabelBudgetID__": {
+																			"type": "Label",
+																			"data": [
+																				"BudgetID__"
+																			],
+																			"stamp": 11,
+																			"options": {
+																				"label": "_BudgetID",
+																				"version": 0
+																			}
+																		},
+																		"BudgetID__": {
+																			"type": "ShortText",
+																			"data": [
+																				"BudgetID__"
+																			],
+																			"stamp": 10,
+																			"options": {
+																				"label": "_BudgetID",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"activable": true,
+																				"width": "230",
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"browsable": false,
+																				"length": 128,
+																				"helpIconPosition": "Right",
+																				"version": 0
+																			}
+																		},
+																		"LabelDescription__": {
+																			"type": "Label",
+																			"data": [
+																				"Description__"
+																			],
+																			"stamp": 13,
+																			"options": {
+																				"label": "_Description",
+																				"version": 0
+																			}
+																		},
+																		"Description__": {
+																			"type": "ShortText",
+																			"data": [
+																				"Description__"
+																			],
+																			"stamp": 12,
+																			"options": {
+																				"label": "_Description",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"activable": true,
+																				"width": "450",
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"browsable": false,
+																				"length": 120,
+																				"helpIconPosition": "Right",
+																				"version": 0
+																			}
+																		},
+																		"LabelClosed__": {
+																			"type": "Label",
+																			"data": [
+																				"Closed__"
+																			],
+																			"stamp": 15,
+																			"options": {
+																				"label": "_Closed",
+																				"version": 0
+																			}
+																		},
+																		"Closed__": {
+																			"type": "CheckBox",
+																			"data": [
+																				"Closed__"
+																			],
+																			"stamp": 14,
+																			"options": {
+																				"label": "_Closed",
+																				"activable": true,
+																				"width": "230",
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"possibleValues": {},
+																				"possibleKeys": {},
+																				"version": 0
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"NotificationsPane": {
+													"type": "PanelData",
+													"data": [],
+													"stamp": 16,
+													"options": {
+														"border": {},
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": true,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"sameHeightAsSiblings": true,
+														"backgroundcolor": "default",
+														"labelsAlignment": "right",
+														"label": "_NotificationsPane",
+														"hidden": false,
+														"leftImageURL": "",
+														"removeMargins": false,
+														"elementsAlignment": "left",
+														"labelLength": "230px",
+														"version": 0
+													},
+													"*": {
+														"FieldsManager": {
+															"type": "FieldsManager",
+															"data": [],
+															"stamp": 17,
+															"options": {
+																"version": 0,
+																"controlsAssociation": {
+																	"NotifyOwner__": "LabelNotifyOwner__",
+																	"LabelNotifyOwner__": "NotifyOwner__",
+																	"WarningThreshold__": "LabelWarningThreshold__",
+																	"LabelWarningThreshold__": "WarningThreshold__",
+																	"OwnerLogin__": "LabelOwnerLogin__",
+																	"LabelOwnerLogin__": "OwnerLogin__"
+																}
+															},
+															"*": {
+																"Grid": {
+																	"type": "GridLayout",
+																	"data": [
+																		"fields"
+																	],
+																	"stamp": 18,
+																	"options": {
+																		"version": 0,
+																		"lines": 3,
+																		"columns": 2,
+																		"ctrlsPos": {
+																			"LabelNotifyOwner__": {
+																				"line": 1,
+																				"column": 1
+																			},
+																			"NotifyOwner__": {
+																				"line": 1,
+																				"column": 2
+																			},
+																			"LabelWarningThreshold__": {
+																				"line": 2,
+																				"column": 1
+																			},
+																			"WarningThreshold__": {
+																				"line": 2,
+																				"column": 2
+																			},
+																			"LabelOwnerLogin__": {
+																				"line": 3,
+																				"column": 1
+																			},
+																			"OwnerLogin__": {
+																				"line": 3,
+																				"column": 2
+																			}
+																		},
+																		"colspans": [
+																			[],
+																			[],
+																			[]
+																		]
+																	},
+																	"*": {
+																		"LabelNotifyOwner__": {
+																			"type": "Label",
+																			"data": [
+																				"NotifyOwner__"
+																			],
+																			"stamp": 20,
+																			"options": {
+																				"label": "_NotifyOwner",
+																				"version": 0
+																			}
+																		},
+																		"NotifyOwner__": {
+																			"type": "CheckBox",
+																			"data": [
+																				"NotifyOwner__"
+																			],
+																			"stamp": 19,
+																			"options": {
+																				"label": "_NotifyOwner",
+																				"activable": true,
+																				"width": "230",
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"possibleValues": {},
+																				"possibleKeys": {},
+																				"version": 0
+																			}
+																		},
+																		"LabelWarningThreshold__": {
+																			"type": "Label",
+																			"data": [
+																				"WarningThreshold__"
+																			],
+																			"stamp": 22,
+																			"options": {
+																				"label": "_WarningThreshold",
+																				"version": 0
+																			}
+																		},
+																		"WarningThreshold__": {
+																			"type": "Integer",
+																			"data": [
+																				"WarningThreshold__"
+																			],
+																			"stamp": 21,
+																			"options": {
+																				"label": "_WarningThreshold",
+																				"version": 2,
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"integer": true,
+																				"precision_internal": 0,
+																				"precision_current": 0,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"enablePlusMinus": false,
+																				"browsable": false
+																			}
+																		},
+																		"LabelOwnerLogin__": {
+																			"type": "Label",
+																			"data": [
+																				"OwnerLogin__"
+																			],
+																			"stamp": 24,
+																			"options": {
+																				"label": "_OwnerLogin",
+																				"version": 0
+																			}
+																		},
+																		"OwnerLogin__": {
+																			"type": "ShortText",
+																			"data": [
+																				"OwnerLogin__"
+																			],
+																			"stamp": 23,
+																			"options": {
+																				"label": "_OwnerLogin",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 1,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"length": 80,
+																				"browsable": false
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-center-3": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 25,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"Amounts_Pane": {
+													"type": "PanelData",
+													"data": [],
+													"stamp": 26,
+													"options": {
+														"border": {},
+														"labelLength": "230px",
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": true,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"sameHeightAsSiblings": true,
+														"backgroundcolor": "default",
+														"labelsAlignment": "right",
+														"label": "_Amounts_Pane",
+														"hidden": false,
+														"leftImageURL": "",
+														"removeMargins": false,
+														"elementsAlignment": "left",
+														"version": 0
+													},
+													"*": {
+														"FieldsManager": {
+															"type": "FieldsManager",
+															"data": [],
+															"stamp": 27,
+															"options": {
+																"version": 0,
+																"controlsAssociation": {
+																	"Budget__": "LabelBudget__",
+																	"LabelBudget__": "Budget__",
+																	"BudgetRemaining__": "LabelBudgetRemaining__",
+																	"LabelBudgetRemaining__": "BudgetRemaining__",
+																	"ToApprove__": "LabelToApprove__",
+																	"LabelToApprove__": "ToApprove__",
+																	"Committed__": "LabelCommitted__",
+																	"LabelCommitted__": "Committed__",
+																	"Ordered__": "LabelOrdered__",
+																	"LabelOrdered__": "Ordered__",
+																	"Received__": "LabelReceived__",
+																	"LabelReceived__": "Received__",
+																	"InvoicedPO__": "LabelInvoicedPO__",
+																	"LabelInvoicedPO__": "InvoicedPO__",
+																	"InvoicedNonPO__": "LabelInvoicedNonPO__",
+																	"LabelInvoicedNonPO__": "InvoicedNonPO__"
+																}
+															},
+															"*": {
+																"Grid": {
+																	"type": "GridLayout",
+																	"data": [
+																		"fields"
+																	],
+																	"stamp": 28,
+																	"options": {
+																		"version": 0,
+																		"lines": 9,
+																		"columns": 2,
+																		"ctrlsPos": {
+																			"LabelBudget__": {
+																				"line": 1,
+																				"column": 1
+																			},
+																			"Budget__": {
+																				"line": 1,
+																				"column": 2
+																			},
+																			"LabelBudgetRemaining__": {
+																				"line": 2,
+																				"column": 1
+																			},
+																			"BudgetRemaining__": {
+																				"line": 2,
+																				"column": 2
+																			},
+																			"LabelToApprove__": {
+																				"line": 3,
+																				"column": 1
+																			},
+																			"ToApprove__": {
+																				"line": 3,
+																				"column": 2
+																			},
+																			"LabelCommitted__": {
+																				"line": 4,
+																				"column": 1
+																			},
+																			"Committed__": {
+																				"line": 4,
+																				"column": 2
+																			},
+																			"LabelOrdered__": {
+																				"line": 5,
+																				"column": 1
+																			},
+																			"Ordered__": {
+																				"line": 5,
+																				"column": 2
+																			},
+																			"LabelReceived__": {
+																				"line": 6,
+																				"column": 1
+																			},
+																			"Received__": {
+																				"line": 6,
+																				"column": 2
+																			},
+																			"LabelInvoicedPO__": {
+																				"line": 7,
+																				"column": 1
+																			},
+																			"InvoicedPO__": {
+																				"line": 7,
+																				"column": 2
+																			},
+																			"LabelInvoicedNonPO__": {
+																				"line": 8,
+																				"column": 1
+																			},
+																			"InvoicedNonPO__": {
+																				"line": 8,
+																				"column": 2
+																			},
+																			"Spacer3__": {
+																				"line": 9,
+																				"column": 1
+																			}
+																		},
+																		"colspans": [
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[
+																				{
+																					"index": 0,
+																					"length": 2
+																				}
+																			]
+																		]
+																	},
+																	"*": {
+																		"LabelBudget__": {
+																			"type": "Label",
+																			"data": [
+																				"Budget__"
+																			],
+																			"stamp": 30,
+																			"options": {
+																				"label": "_Budget",
+																				"version": 0
+																			}
+																		},
+																		"Budget__": {
+																			"type": "Decimal",
+																			"data": [
+																				"Budget__"
+																			],
+																			"stamp": 29,
+																			"options": {
+																				"label": "_Budget",
+																				"integer": false,
+																				"precision_internal": 5,
+																				"activable": true,
+																				"width": "100",
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"precision_current": 5,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"defaultValue": "0",
+																				"helpIconPosition": "Right",
+																				"enableRoundedStyle": false,
+																				"forceRoundCurrencyPrecision": false,
+																				"enablePlusMinus": false,
+																				"precision_min": 2,
+																				"precision_max_display": 2,
+																				"version": 0
+																			}
+																		},
+																		"LabelBudgetRemaining__": {
+																			"type": "Label",
+																			"data": [
+																				"BudgetRemaining__"
+																			],
+																			"stamp": 32,
+																			"options": {
+																				"label": "_BudgetRemaining",
+																				"version": 0
+																			}
+																		},
+																		"BudgetRemaining__": {
+																			"type": "Decimal",
+																			"data": [
+																				"BudgetRemaining__"
+																			],
+																			"stamp": 31,
+																			"options": {
+																				"label": "_BudgetRemaining",
+																				"version": 2,
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"integer": false,
+																				"precision_internal": 5,
+																				"precision_current": 5,
+																				"activable": true,
+																				"width": "100",
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"enableRoundedStyle": false,
+																				"forceRoundCurrencyPrecision": false,
+																				"enablePlusMinus": false,
+																				"precision_min": 2,
+																				"precision_max_display": 2
+																			}
+																		},
+																		"LabelToApprove__": {
+																			"type": "Label",
+																			"data": [
+																				"ToApprove__"
+																			],
+																			"stamp": 34,
+																			"options": {
+																				"label": "_ToApprove",
+																				"version": 0
+																			}
+																		},
+																		"ToApprove__": {
+																			"type": "Decimal",
+																			"data": [
+																				"ToApprove__"
+																			],
+																			"stamp": 33,
+																			"options": {
+																				"label": "_ToApprove",
+																				"integer": false,
+																				"precision_internal": 5,
+																				"activable": true,
+																				"width": "100",
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"precision_current": 5,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"defaultValue": "0",
+																				"helpIconPosition": "Right",
+																				"enableRoundedStyle": false,
+																				"forceRoundCurrencyPrecision": false,
+																				"enablePlusMinus": false,
+																				"precision_min": 2,
+																				"precision_max_display": 2,
+																				"version": 0
+																			}
+																		},
+																		"LabelCommitted__": {
+																			"type": "Label",
+																			"data": [
+																				"Committed__"
+																			],
+																			"stamp": 36,
+																			"options": {
+																				"label": "_Committed",
+																				"version": 0
+																			}
+																		},
+																		"Committed__": {
+																			"type": "Decimal",
+																			"data": [
+																				"Committed__"
+																			],
+																			"stamp": 35,
+																			"options": {
+																				"label": "_Committed",
+																				"integer": false,
+																				"precision_internal": 5,
+																				"activable": true,
+																				"width": "100",
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"precision_current": 5,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"defaultValue": "0",
+																				"helpIconPosition": "Right",
+																				"enableRoundedStyle": false,
+																				"forceRoundCurrencyPrecision": false,
+																				"enablePlusMinus": false,
+																				"precision_min": 2,
+																				"precision_max_display": 2,
+																				"version": 0
+																			}
+																		},
+																		"LabelOrdered__": {
+																			"type": "Label",
+																			"data": [
+																				"Ordered__"
+																			],
+																			"stamp": 38,
+																			"options": {
+																				"label": "_Ordered",
+																				"version": 0
+																			}
+																		},
+																		"Ordered__": {
+																			"type": "Decimal",
+																			"data": [
+																				"Ordered__"
+																			],
+																			"stamp": 37,
+																			"options": {
+																				"label": "_Ordered",
+																				"version": 1,
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"integer": false,
+																				"precision_internal": 5,
+																				"activable": true,
+																				"width": "100",
+																				"precision_current": 5,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"defaultValue": "0",
+																				"helpIconPosition": "Right",
+																				"enableRoundedStyle": false,
+																				"forceRoundCurrencyPrecision": false,
+																				"enablePlusMinus": false,
+																				"precision_min": 2,
+																				"precision_max_display": 2
+																			}
+																		},
+																		"LabelReceived__": {
+																			"type": "Label",
+																			"data": [
+																				"Received__"
+																			],
+																			"stamp": 40,
+																			"options": {
+																				"label": "_Received",
+																				"version": 0
+																			}
+																		},
+																		"Received__": {
+																			"type": "Decimal",
+																			"data": [
+																				"Received__"
+																			],
+																			"stamp": 39,
+																			"options": {
+																				"label": "_Received",
+																				"version": 1,
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"integer": false,
+																				"precision_internal": 5,
+																				"activable": true,
+																				"width": "100",
+																				"precision_current": 5,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"defaultValue": "0",
+																				"helpIconPosition": "Right",
+																				"enableRoundedStyle": false,
+																				"forceRoundCurrencyPrecision": false,
+																				"enablePlusMinus": false,
+																				"precision_min": 2,
+																				"precision_max_display": 2
+																			}
+																		},
+																		"LabelInvoicedPO__": {
+																			"type": "Label",
+																			"data": [
+																				"InvoicedPO__"
+																			],
+																			"stamp": 42,
+																			"options": {
+																				"label": "_Invoiced po",
+																				"version": 0
+																			}
+																		},
+																		"InvoicedPO__": {
+																			"type": "Decimal",
+																			"data": [
+																				"InvoicedPO__"
+																			],
+																			"stamp": 41,
+																			"options": {
+																				"label": "_Invoiced po",
+																				"version": 1,
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"integer": false,
+																				"precision_internal": 5,
+																				"activable": true,
+																				"width": "100",
+																				"autocompletable": false,
+																				"precision_current": 5,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"defaultValue": "0",
+																				"helpIconPosition": "Right",
+																				"enableRoundedStyle": false,
+																				"forceRoundCurrencyPrecision": false,
+																				"enablePlusMinus": false,
+																				"precision_min": 2,
+																				"precision_max_display": 2
+																			}
+																		},
+																		"LabelInvoicedNonPO__": {
+																			"type": "Label",
+																			"data": [
+																				"InvoicedNonPO__"
+																			],
+																			"stamp": 44,
+																			"options": {
+																				"label": "_Invoiced non po",
+																				"version": 0
+																			}
+																		},
+																		"InvoicedNonPO__": {
+																			"type": "Decimal",
+																			"data": [
+																				"InvoicedNonPO__"
+																			],
+																			"stamp": 43,
+																			"options": {
+																				"label": "_Invoiced non po",
+																				"version": 1,
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"integer": false,
+																				"precision_internal": 5,
+																				"activable": true,
+																				"width": "100",
+																				"autocompletable": false,
+																				"precision_current": 5,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"defaultValue": "0",
+																				"helpIconPosition": "Right",
+																				"enableRoundedStyle": false,
+																				"forceRoundCurrencyPrecision": false,
+																				"enablePlusMinus": false,
+																				"precision_min": 2,
+																				"precision_max_display": 2
+																			}
+																		},
+																		"Spacer3__": {
+																			"type": "Spacer",
+																			"data": false,
+																			"stamp": 45,
+																			"options": {
+																				"label": "_Spacer3",
+																				"height": "",
+																				"width": "",
+																				"color": "default",
+																				"version": 0
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"Accounting_Data_Pane": {
+													"type": "PanelData",
+													"data": [],
+													"stamp": 46,
+													"options": {
+														"border": {},
+														"labelLength": "230px",
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": true,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"sameHeightAsSiblings": true,
+														"backgroundcolor": "default",
+														"labelsAlignment": "right",
+														"label": "_Accounting_Data_Pane",
+														"hidden": false,
+														"leftImageURL": "",
+														"removeMargins": false,
+														"elementsAlignment": "left",
+														"version": 0
+													},
+													"*": {
+														"FieldsManager": {
+															"type": "FieldsManager",
+															"data": [],
+															"stamp": 47,
+															"options": {
+																"version": 0,
+																"controlsAssociation": {
+																	"CompanyCode__": "LabelCompanyCode__",
+																	"LabelCompanyCode__": "CompanyCode__",
+																	"PeriodCode__": "LabelPeriodCode__",
+																	"LabelPeriodCode__": "PeriodCode__",
+																	"CostCenter__": "LabelCostCenter__",
+																	"LabelCostCenter__": "CostCenter__",
+																	"Group__": "LabelGroup__",
+																	"LabelGroup__": "Group__",
+																	"CostType__": "LabelCostType__",
+																	"LabelCostType__": "CostType__"
+																}
+															},
+															"*": {
+																"Grid": {
+																	"type": "GridLayout",
+																	"data": [
+																		"fields"
+																	],
+																	"stamp": 48,
+																	"options": {
+																		"version": 0,
+																		"lines": 6,
+																		"columns": 2,
+																		"ctrlsPos": {
+																			"LabelCompanyCode__": {
+																				"line": 1,
+																				"column": 1
+																			},
+																			"CompanyCode__": {
+																				"line": 1,
+																				"column": 2
+																			},
+																			"LabelPeriodCode__": {
+																				"line": 2,
+																				"column": 1
+																			},
+																			"PeriodCode__": {
+																				"line": 2,
+																				"column": 2
+																			},
+																			"LabelCostCenter__": {
+																				"line": 3,
+																				"column": 1
+																			},
+																			"CostCenter__": {
+																				"line": 3,
+																				"column": 2
+																			},
+																			"LabelGroup__": {
+																				"line": 4,
+																				"column": 1
+																			},
+																			"Group__": {
+																				"line": 4,
+																				"column": 2
+																			},
+																			"LabelCostType__": {
+																				"line": 5,
+																				"column": 1
+																			},
+																			"CostType__": {
+																				"line": 5,
+																				"column": 2
+																			},
+																			"Spacer2__": {
+																				"line": 6,
+																				"column": 1
+																			}
+																		},
+																		"colspans": [
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[
+																				{
+																					"index": 0,
+																					"length": 2
+																				}
+																			]
+																		]
+																	},
+																	"*": {
+																		"LabelCompanyCode__": {
+																			"type": "Label",
+																			"data": [
+																				"CompanyCode__"
+																			],
+																			"stamp": 50,
+																			"options": {
+																				"label": "Company code",
+																				"version": 0
+																			}
+																		},
+																		"CompanyCode__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"CompanyCode__"
+																			],
+																			"stamp": 49,
+																			"options": {
+																				"label": "Company code",
+																				"browsable": true,
+																				"activable": true,
+																				"width": 230,
+																				"fTSmaxRecords": "20",
+																				"PreFillFTS": true,
+																				"autoCompleteSearchMode": "startswith",
+																				"searchMode": "matches",
+																				"version": 0
+																			}
+																		},
+																		"LabelPeriodCode__": {
+																			"type": "Label",
+																			"data": [
+																				"PeriodCode__"
+																			],
+																			"stamp": 52,
+																			"options": {
+																				"label": "_Period code",
+																				"version": 0
+																			}
+																		},
+																		"PeriodCode__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"PeriodCode__"
+																			],
+																			"stamp": 51,
+																			"options": {
+																				"label": "_Period code",
+																				"browsable": true,
+																				"activable": true,
+																				"width": 230,
+																				"fTSmaxRecords": "20",
+																				"PreFillFTS": true,
+																				"autoCompleteSearchMode": "startswith",
+																				"searchMode": "matches",
+																				"version": 0
+																			}
+																		},
+																		"LabelCostCenter__": {
+																			"type": "Label",
+																			"data": [
+																				"CostCenter__"
+																			],
+																			"stamp": 54,
+																			"options": {
+																				"label": "_Cost center",
+																				"version": 0
+																			}
+																		},
+																		"CostCenter__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"CostCenter__"
+																			],
+																			"stamp": 53,
+																			"options": {
+																				"label": "_Cost center",
+																				"browsable": true,
+																				"activable": true,
+																				"width": 230,
+																				"PreFillFTS": true,
+																				"fTSmaxRecords": "100",
+																				"autoCompleteSearchMode": "startswith",
+																				"searchMode": "matches",
+																				"version": 0
+																			}
+																		},
+																		"LabelGroup__": {
+																			"type": "Label",
+																			"data": [
+																				"Group__"
+																			],
+																			"stamp": 56,
+																			"options": {
+																				"label": "_Group",
+																				"version": 0
+																			}
+																		},
+																		"Group__": {
+																			"type": "ShortText",
+																			"data": [
+																				"Group__"
+																			],
+																			"stamp": 55,
+																			"options": {
+																				"label": "_Group",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"activable": true,
+																				"width": 230,
+																				"browsable": false,
+																				"version": 0
+																			}
+																		},
+																		"LabelCostType__": {
+																			"type": "Label",
+																			"data": [
+																				"CostType__"
+																			],
+																			"stamp": 58,
+																			"options": {
+																				"label": "_CostType",
+																				"version": 0
+																			}
+																		},
+																		"CostType__": {
+																			"type": "ComboBox",
+																			"data": [
+																				"CostType__"
+																			],
+																			"stamp": 57,
+																			"options": {
+																				"label": "_CostType",
+																				"possibleValues": {
+																					"0": "",
+																					"1": "_OpEx",
+																					"2": "_CapEx"
+																				},
+																				"version": 1,
+																				"keyValueMode": true,
+																				"possibleKeys": {
+																					"0": "",
+																					"1": "OpEx",
+																					"2": "CapEx"
+																				},
+																				"activable": true,
+																				"width": 80,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"DataSourceOrigin": "Standalone",
+																				"DisplayedColumns": "",
+																				"maxNbLinesToDisplay": 10
+																			}
+																		},
+																		"Spacer2__": {
+																			"type": "Spacer",
+																			"data": false,
+																			"stamp": 59,
+																			"options": {
+																				"label": "_Spacer2",
+																				"height": "",
+																				"width": "",
+																				"color": "default",
+																				"version": 0
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-center-6": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 60,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"RelatedPRPanel": {
+													"type": "PanelData",
+													"data": [],
+													"stamp": 61,
+													"options": {
+														"border": {},
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": true,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"sameHeightAsSiblings": false,
+														"backgroundcolor": "default",
+														"labelsAlignment": "right",
+														"label": "_RelatedPRPanel",
+														"hidden": true,
+														"leftImageURL": "",
+														"removeMargins": false,
+														"elementsAlignment": "left",
+														"labelLength": 0,
+														"version": 0
+													},
+													"*": {
+														"FieldsManager": {
+															"type": "FieldsManager",
+															"data": [],
+															"stamp": 62,
+															"options": {
+																"version": 0,
+																"controlsAssociation": {}
+															},
+															"*": {
+																"Grid": {
+																	"type": "GridLayout",
+																	"data": [
+																		"fields"
+																	],
+																	"stamp": 63,
+																	"options": {
+																		"version": 0,
+																		"lines": 1,
+																		"columns": 2,
+																		"ctrlsPos": {
+																			"RelatedPRAdminList__": {
+																				"line": 1,
+																				"column": 1
+																			}
+																		},
+																		"colspans": [
+																			[
+																				{
+																					"index": 0,
+																					"length": 2
+																				}
+																			]
+																		]
+																	},
+																	"*": {
+																		"RelatedPRAdminList__": {
+																			"type": "AdminList",
+																			"data": false,
+																			"stamp": 64,
+																			"options": {
+																				"label": "_RelatedPRAdminList",
+																				"openInReadOnlyMode": true,
+																				"width": "100%",
+																				"restrictToCurrentJobId": false,
+																				"showActions": false,
+																				"openInNewTab": true,
+																				"hideDisplayedFilters": false,
+																				"customizedPageSize": "20",
+																				"version": 0
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-center-7": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 65,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"RelatedPOPanel": {
+													"type": "PanelData",
+													"data": [],
+													"stamp": 66,
+													"options": {
+														"border": {},
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": true,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"sameHeightAsSiblings": false,
+														"backgroundcolor": "default",
+														"labelsAlignment": "right",
+														"label": "_RelatedPOPanel",
+														"hidden": true,
+														"leftImageURL": "",
+														"removeMargins": false,
+														"elementsAlignment": "left",
+														"labelLength": 0,
+														"version": 0
+													},
+													"*": {
+														"FieldsManager": {
+															"type": "FieldsManager",
+															"data": [],
+															"stamp": 67,
+															"options": {
+																"version": 0,
+																"controlsAssociation": {}
+															},
+															"*": {
+																"Grid": {
+																	"type": "GridLayout",
+																	"data": [
+																		"fields"
+																	],
+																	"stamp": 68,
+																	"options": {
+																		"version": 0,
+																		"lines": 1,
+																		"columns": 2,
+																		"ctrlsPos": {
+																			"RelatedPOAdminList__": {
+																				"line": 1,
+																				"column": 1
+																			}
+																		},
+																		"colspans": [
+																			[
+																				{
+																					"index": 0,
+																					"length": 2
+																				}
+																			]
+																		]
+																	},
+																	"*": {
+																		"RelatedPOAdminList__": {
+																			"type": "AdminList",
+																			"data": false,
+																			"stamp": 69,
+																			"options": {
+																				"label": "_RelatedPOAdminList",
+																				"openInReadOnlyMode": true,
+																				"width": "100%",
+																				"restrictToCurrentJobId": false,
+																				"showActions": false,
+																				"openInNewTab": true,
+																				"hideDisplayedFilters": false,
+																				"customizedPageSize": "20",
+																				"version": 0
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-center-8": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 70,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"RelatedInvoicePanel": {
+													"type": "PanelData",
+													"data": [],
+													"stamp": 71,
+													"options": {
+														"border": {},
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": true,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"sameHeightAsSiblings": false,
+														"backgroundcolor": "default",
+														"labelsAlignment": "right",
+														"label": "_RelatedInvoicePanel",
+														"hidden": true,
+														"leftImageURL": "",
+														"removeMargins": false,
+														"elementsAlignment": "left",
+														"labelLength": 0,
+														"version": 0
+													},
+													"*": {
+														"FieldsManager": {
+															"type": "FieldsManager",
+															"data": [],
+															"stamp": 72,
+															"options": {
+																"version": 0,
+																"controlsAssociation": {}
+															},
+															"*": {
+																"Grid": {
+																	"type": "GridLayout",
+																	"data": [
+																		"fields"
+																	],
+																	"stamp": 73,
+																	"options": {
+																		"version": 0,
+																		"lines": 1,
+																		"columns": 2,
+																		"ctrlsPos": {
+																			"RelatedInvoiceAdminList__": {
+																				"line": 1,
+																				"column": 1
+																			}
+																		},
+																		"colspans": [
+																			[
+																				{
+																					"index": 0,
+																					"length": 2
+																				}
+																			]
+																		]
+																	},
+																	"*": {
+																		"RelatedInvoiceAdminList__": {
+																			"type": "AdminList",
+																			"data": false,
+																			"stamp": 74,
+																			"options": {
+																				"label": "_RelatedInvoiceAdminList",
+																				"openInReadOnlyMode": true,
+																				"width": "100%",
+																				"restrictToCurrentJobId": false,
+																				"showActions": false,
+																				"openInNewTab": true,
+																				"hideDisplayedFilters": false,
+																				"customizedPageSize": "20",
+																				"version": 0
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-center-4": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 75,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"Operation_Details_Pane": {
+													"type": "PanelData",
+													"data": [],
+													"stamp": 76,
+													"options": {
+														"border": {},
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": true,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"sameHeightAsSiblings": false,
+														"backgroundcolor": "default",
+														"labelsAlignment": "right",
+														"label": "_Operation_Details_Pane",
+														"hidden": false,
+														"leftImageURL": "",
+														"removeMargins": false,
+														"elementsAlignment": "left",
+														"labelLength": 0,
+														"version": 0
+													},
+													"*": {
+														"FieldsManager": {
+															"type": "FieldsManager",
+															"data": [],
+															"stamp": 77,
+															"options": {
+																"version": 0,
+																"controlsAssociation": {}
+															},
+															"*": {
+																"Grid": {
+																	"type": "GridLayout",
+																	"data": [
+																		"fields"
+																	],
+																	"stamp": 78,
+																	"options": {
+																		"version": 0,
+																		"lines": 1,
+																		"columns": 2,
+																		"ctrlsPos": {
+																			"OperationDetailsView__": {
+																				"line": 1,
+																				"column": 1
+																			}
+																		},
+																		"colspans": [
+																			[
+																				{
+																					"index": 0,
+																					"length": 2
+																				}
+																			]
+																		]
+																	},
+																	"*": {
+																		"OperationDetailsView__": {
+																			"type": "AdminList",
+																			"data": false,
+																			"stamp": 79,
+																			"options": {
+																				"label": "_OperationDetailsView",
+																				"openInReadOnlyMode": true,
+																				"width": "100%",
+																				"restrictToCurrentJobId": false,
+																				"showActions": false,
+																				"openInNewTab": true,
+																				"hideDisplayedFilters": false,
+																				"customizedPageSize": "20",
+																				"version": 0
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 80,
+					"options": {
+						"splitterType": "simple-h",
+						"maxwidth": 1280,
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 81,
+							"options": {
+								"label": "_Save",
+								"action": "savequit",
+								"submit": true,
+								"shortCut": "S",
+								"disabled": true,
+								"textSize": "S",
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 82,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"shortCut": "Q",
+								"textSize": "S",
+								"version": 0
+							}
+						},
+						"Delete": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 83,
+							"options": {
+								"label": "_Delete",
+								"action": "delete",
+								"submit": true,
+								"disabled": true,
+								"textSize": "S",
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <field deleted="0" format="" guid="PHQG42294B10" id="SOBQT400153E" label="_BudgetID report" length="128" name="BudgetID__" originalProcessID="YQTF132290" precision="0" processid="QOBQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ASOBQT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/BudgetID__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:56</RecordLastWrite>
+        <uniqueindex>1</uniqueindex>
+      </db>
+      <extrainfo>
+        <Label>_BudgetID report</Label>
+        <Alias>ASOBQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="YDMIG0000SG1" id="TOBQT400153E" label="_BudgetRemaining report" length="17" name="BudgetRemaining__" originalProcessID="YQTF132290" precision="5" processid="QOBQT400153E" submitable="1" type="DECIMAL">
+    <properties>
+      <db>
+        <alias>ATOBQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/BudgetRemaining__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:56</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_BudgetRemaining report</Label>
+        <Alias>ATOBQT400153E</Alias>
+        <DecimalPrecision vartype="INT">5</DecimalPrecision>
+        <DecimalPrecisionMaxDisplay>2</DecimalPrecisionMaxDisplay>
+        <DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="AYLN132293" id="ROBQT400153E" label="_Budget report" length="17" name="Budget__" originalProcessID="YQTF132290" precision="5" processid="QOBQT400153E" submitable="1" type="DECIMAL">
+    <properties>
+      <db>
+        <alias>AROBQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Budget__</fullname>
+        <defaultvalue>0</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:56</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Budget report</Label>
+        <Alias>AROBQT400153E</Alias>
+        <behavior>Default, ReportPreselectedForProcess</behavior>
+        <DecimalPrecision vartype="INT">5</DecimalPrecision>
+        <DecimalPrecisionMaxDisplay>2</DecimalPrecisionMaxDisplay>
+        <DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        <reportpreselectedorder>3</reportpreselectedorder>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="PHQG3B9D9709" id="UOBQT400153E" label="_Closed report" length="0" name="Closed__" originalProcessID="YQTF132290" precision="0" processid="QOBQT400153E" submitable="1" type="BOOL">
+    <properties>
+      <db>
+        <alias>AUOBQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Closed__</fullname>
+        <defaultvalue>false</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:56</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Closed report</Label>
+        <Alias>AUOBQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Boolean</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="LFDX132294" id="VOBQT400153E" label="_Committed report" length="17" name="Committed__" originalProcessID="YQTF132290" precision="5" processid="QOBQT400153E" submitable="1" type="DECIMAL">
+    <properties>
+      <db>
+        <alias>AVOBQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Committed__</fullname>
+        <defaultvalue>0</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:56</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Committed report</Label>
+        <Alias>AVOBQT400153E</Alias>
+        <DecimalPrecision vartype="INT">5</DecimalPrecision>
+        <DecimalPrecisionMaxDisplay>2</DecimalPrecisionMaxDisplay>
+        <DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="PDJL132125" id="WOBQT400153E" label="Company code" length="50" name="CompanyCode__" originalProcessID="TLBA132124" precision="0" processid="QOBQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AWOBQT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/CompanyCode__</fullname>
+        <jointable>PurchasingCompanycodes__</jointable>
+        <jointableid>CT#BD8QT400153E</jointableid>
+        <defaultvalue>
+        </defaultvalue>
+        <joincondition>(source.CompanyCode__=dest.CompanyCode__)</joincondition>
+        <RecordLastWrite>2026-11-04 11:07:56</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Company code</Label>
+        <Alias>AWOBQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>false</Editable>
+        <required>false</required>
+        <TableName>CT#BD8QT400153E</TableName>
+        <SortOrder>
+        </SortOrder>
+        <DisplayedColumns>CompanyCode__|CompanyName__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <SavedColumn>CompanyCode__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ProcessName>PurchasingCompanycodes__</ProcessName>
+        <CustomFilter>
+        </CustomFilter>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="TFOE134908" id="XOBQT400153E" label="_Cost center report" length="50" name="CostCenter__" originalProcessID="YQTF132290" precision="0" processid="QOBQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AXOBQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/CostCenter__</fullname>
+        <jointable>AP - Cost centers__</jointable>
+        <jointableid>CT#RG8QT400153E</jointableid>
+        <defaultvalue>
+        </defaultvalue>
+        <joincondition>(&amp;(source.CompanyCode__=dest.CompanyCode__)(source.CostCenter__=dest.CostCenter__))</joincondition>
+        <RecordLastWrite>2026-11-04 11:07:56</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Cost center report</Label>
+        <Alias>AXOBQT400153E</Alias>
+        <behavior>Default, ReportPreselectedForProcess</behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        <reportpreselectedorder>1</reportpreselectedorder>
+      </extrainfo>
+      <field>
+        <Editable>false</Editable>
+        <TableName>CT#RG8QT400153E</TableName>
+        <SortOrder>
+        </SortOrder>
+        <DisplayedColumns>CostCenter__|Description__|Manager__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <SavedColumn>CostCenter__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ProcessName>AP - Cost centers__</ProcessName>
+        <CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+      </field>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="HX53FP000M4H" id="YOBQT400153E" label="_CostType report" length="50" name="CostType__" originalProcessID="YQTF132290" precision="0" processid="QOBQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AYOBQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/CostType__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:56</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Type>webaccess.Process.Columns.WithPossibleValues</Type>
+        <Label>_CostType report</Label>
+        <Alias>AYOBQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <TableName>
+        </TableName>
+        <DisplayedColumns>
+        </DisplayedColumns>
+        <DataSourceOrigin>Standalone</DataSourceOrigin>
+        <possibleKeys>
+OpEx
+CapEx</possibleKeys>
+        <SavedColumn>
+        </SavedColumn>
+        <possibleValues>
+_OpEx
+_CapEx</possibleValues>
+        <ProcessName>
+        </ProcessName>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="HUME42294B11" id="ZOBQT400153E" label="_Description report" length="120" name="Description__" originalProcessID="YQTF132290" precision="0" processid="QOBQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AZOBQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Description__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:56</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Description report</Label>
+        <Alias>AZOBQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="PHQG134418" id="APBQT400153E" label="_Group_report" length="50" name="Group__" originalProcessID="YQTF132290" precision="0" processid="QOBQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AAPBQT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Group__</fullname>
+        <jointable>P2P - Expense category__</jointable>
+        <jointableid>CT#ZF8QT400153E</jointableid>
+        <defaultvalue>
+        </defaultvalue>
+        <joincondition>(&amp;(source.Group__=dest.ExpenseCategory__)(source.CompanyCode__=dest.CompanyCode__))</joincondition>
+        <RecordLastWrite>2026-11-04 11:07:56</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Group_report</Label>
+        <Alias>AAPBQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="PHQG1000091" id="BPBQT400153E" label="_Invoiced non po" length="17" name="InvoicedNonPO__" originalProcessID="YQTF132290" precision="5" processid="QOBQT400153E" submitable="1" type="DECIMAL">
+    <properties>
+      <db>
+        <alias>ABPBQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/InvoicedNonPO__</fullname>
+        <defaultvalue>0</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:56</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Invoiced non po</Label>
+        <Alias>ABPBQT400153E</Alias>
+        <DecimalPrecision vartype="INT">5</DecimalPrecision>
+        <DecimalPrecisionMaxDisplay>2</DecimalPrecisionMaxDisplay>
+        <DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="PNVR1011847" id="CPBQT400153E" label="_Invoiced po" length="17" name="InvoicedPO__" originalProcessID="YQTF132290" precision="5" processid="QOBQT400153E" submitable="1" type="DECIMAL">
+    <properties>
+      <db>
+        <alias>ACPBQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/InvoicedPO__</fullname>
+        <defaultvalue>0</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:56</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Invoiced po</Label>
+        <Alias>ACPBQT400153E</Alias>
+        <DecimalPrecision vartype="INT">5</DecimalPrecision>
+        <DecimalPrecisionMaxDisplay>2</DecimalPrecisionMaxDisplay>
+        <DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="IL84FP000PA9" id="DPBQT400153E" label="_NotifyOwner_report" length="0" name="NotifyOwner__" originalProcessID="YQTF132290" precision="0" processid="QOBQT400153E" submitable="1" type="BOOL">
+    <properties>
+      <db>
+        <alias>ADPBQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/NotifyOwner__</fullname>
+        <defaultvalue>false</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:56</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_NotifyOwner_report</Label>
+        <Alias>ADPBQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Boolean</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="PHQG134808" id="EPBQT400153E" label="_Ordered report" length="17" name="Ordered__" originalProcessID="YQTF132290" precision="5" processid="QOBQT400153E" submitable="1" type="DECIMAL">
+    <properties>
+      <db>
+        <alias>AEPBQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Ordered__</fullname>
+        <defaultvalue>0</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:56</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Ordered report</Label>
+        <Alias>AEPBQT400153E</Alias>
+        <DecimalPrecision vartype="INT">5</DecimalPrecision>
+        <DecimalPrecisionMaxDisplay>2</DecimalPrecisionMaxDisplay>
+        <DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="HL84FP000PA9" id="FPBQT400153E" label="_OwnerLogin_report" length="80" name="OwnerLogin__" originalProcessID="YQTF132290" precision="0" processid="QOBQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AFPBQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/OwnerLogin__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:56</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_OwnerLogin_report</Label>
+        <Alias>AFPBQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="PHQG132355" id="GPBQT400153E" label="_Period code report" length="50" name="PeriodCode__" originalProcessID="YQTF132290" precision="0" processid="QOBQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AGPBQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/PeriodCode__</fullname>
+        <jointable>P2P - Accounting period__</jointable>
+        <jointableid>CT#WNBQT400153E</jointableid>
+        <defaultvalue>
+        </defaultvalue>
+        <joincondition>(&amp;(source.CompanyCode__=dest.CompanyCode__)(source.PeriodCode__=dest.PeriodCode__))</joincondition>
+        <RecordLastWrite>2026-11-04 11:07:56</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Period code report</Label>
+        <Alias>AGPBQT400153E</Alias>
+        <behavior>Default, ReportPreselectedForProcess</behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        <reportpreselectedorder>2</reportpreselectedorder>
+      </extrainfo>
+      <field>
+        <Editable>false</Editable>
+        <TableName>CT#WNBQT400153E</TableName>
+        <SortOrder>ASC</SortOrder>
+        <DisplayedColumns>PeriodCode__|PeriodName__|PeriodStart__|PeriodEnd__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <SavedColumn>PeriodCode__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ProcessName>P2P - Accounting period__</ProcessName>
+        <CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+      </field>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="HUME134809" id="HPBQT400153E" label="_Received report" length="17" name="Received__" originalProcessID="YQTF132290" precision="5" processid="QOBQT400153E" submitable="1" type="DECIMAL">
+    <properties>
+      <db>
+        <alias>AHPBQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Received__</fullname>
+        <defaultvalue>0</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:56</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Received report</Label>
+        <Alias>AHPBQT400153E</Alias>
+        <DecimalPrecision vartype="INT">5</DecimalPrecision>
+        <DecimalPrecisionMaxDisplay>2</DecimalPrecisionMaxDisplay>
+        <DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="FIRC132295" id="IPBQT400153E" label="_ToApprove report" length="17" name="ToApprove__" originalProcessID="YQTF132290" precision="5" processid="QOBQT400153E" submitable="1" type="DECIMAL">
+    <properties>
+      <db>
+        <alias>AIPBQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ToApprove__</fullname>
+        <defaultvalue>0</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:56</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ToApprove report</Label>
+        <Alias>AIPBQT400153E</Alias>
+        <DecimalPrecision vartype="INT">5</DecimalPrecision>
+        <DecimalPrecisionMaxDisplay>2</DecimalPrecisionMaxDisplay>
+        <DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="GL84FP000PA9" id="JPBQT400153E" label="_WarningThreshold_report" length="0" name="WarningThreshold__" originalProcessID="YQTF132290" precision="0" processid="QOBQT400153E" submitable="1" type="INT">
+    <properties>
+      <db>
+        <alias>AJPBQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/WarningThreshold__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:56</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_WarningThreshold_report</Label>
+        <Alias>AJPBQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <type id="KOLHG0000M4O" name="CT">
+  </type>
+</process>

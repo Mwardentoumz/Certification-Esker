@@ -1,0 +1,199 @@
+{
+	"*": {
+		"GDRData": {
+			"type": "GDRData"
+		},
+		"OCRParams": {
+			"type": "OCRParams"
+		},
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"options": {
+				"splitterType": "complex"
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"options": {}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"options": {},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"options": {},
+							"*": {
+								"form-content-top": {
+									"type": "FlexibleFormSplitter",
+									"options": {
+										"autosize": true
+									},
+									"*": {
+										"form-content-top-1": {
+											"type": "FlexibleFormLine",
+											"options": {},
+											"*": {
+												"DocumentsPanel": {
+													"type": "PanelDocument",
+													"options": {},
+													"*": {
+														"Document": {
+															"data": "documentscontroldata",
+															"type": "Documents",
+															"options": {}
+														}
+													}
+												}
+											}
+										}
+									}
+								},
+								"form-content-bottom": {
+									"type": "FlexibleFormSplitter",
+									"options": {},
+									"*": {
+										"form-content-left": {
+											"type": "FlexibleFormSplitter",
+											"options": {},
+											"*": {
+												"form-content-left-1": {
+													"type": "FlexibleFormLine",
+													"options": {},
+													"*": {
+														"DataPanel": {
+															"type": "PanelData",
+															"options": {
+																"border": {}
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"options": {
+																		"controlsAssociation": {}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"options": {
+																				"lines": 0,
+																				"columns": 2
+																			},
+																			"data": "fields",
+																			"*": {}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-2": {
+													"type": "FlexibleFormLine",
+													"options": {},
+													"*": {
+														"SystemData": {
+															"type": "PanelSystemData",
+															"options": {
+																"multicolumn": false
+															}
+														}
+													}
+												},
+												"form-content-left-3": {
+													"type": "FlexibleFormLine",
+													"options": {},
+													"*": {
+														"NextProcess": {
+															"type": "PanelNextProcess",
+															"options": {
+																"hidden": true
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-right": {
+											"type": "FlexibleFormSplitter",
+											"options": {},
+											"*": {
+												"form-content-right-1": {
+													"type": "FlexibleFormLine",
+													"options": {},
+													"*": {
+														"PreviewPanel": {
+															"type": "PanelPreview",
+															"options": {
+																"border": {}
+															},
+															"*": {
+																"Preview": {
+																	"data": "previewdata",
+																	"type": "Preview",
+																	"options": {}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"options": {
+						"splitterType": "simple-h"
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"options": {
+								"label": "_Save",
+								"action": "save",
+								"submit": true
+							}
+						},
+						"Approve": {
+							"type": "SubmitButton",
+							"options": {
+								"label": "_Approve",
+								"action": "approve",
+								"submit": true
+							}
+						},
+						"Reject": {
+							"type": "SubmitButton",
+							"options": {
+								"label": "_Reject",
+								"action": "reject",
+								"submit": true
+							}
+						},
+						"Reprocess": {
+							"type": "SubmitButton",
+							"options": {
+								"label": "_Reprocess",
+								"action": "reprocess",
+								"submit": true
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

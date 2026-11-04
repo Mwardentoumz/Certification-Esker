@@ -1,0 +1,504 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:05:44" deleted="0" eskerapplication="P2P" global="0" id="JT8QT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="AP - Sections__" needvalidation="1" ootofilter="" ootoversion="0" originalProcessID="PHQG225546" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomTable" upgradable="1" userid="0" version="1" visibility="0">
+  <properties>
+    <dataConditions>
+      <listDataConditions>
+			&lt;dataCondition&gt;
+				&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+				&lt;filter&gt;msnex=*&lt;/filter&gt;
+				&lt;labelKey&gt;_AP disabled&lt;/labelKey&gt;
+				&lt;conditions&gt;
+					&lt;allowCondition&gt;
+						&lt;fieldName&gt;EnableAccountPayableGlobalSetting__&lt;/fieldName&gt;
+						&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+					&lt;/allowCondition&gt;
+				&lt;/conditions&gt;
+			&lt;/dataCondition&gt;
+		</listDataConditions>
+    </dataConditions>
+    <dbIndex>
+      <AUTO_AKT8QT400153EA>&lt;Index&gt;&lt;Ref Name="AKT8QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AKT8QT400153EA>
+      <AUTO_ALT8QT400153EA>&lt;Index&gt;&lt;Ref Name="ALT8QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_ALT8QT400153EA>
+      <AUTO_AMT8QT400153EA>&lt;Index&gt;&lt;Ref Name="AMT8QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AMT8QT400153EA>
+    </dbIndex>
+    <lg>
+      <process_da>{
+	"Axe": "Analyseakse",
+	"Company code": "Virksomhedskode",
+	"Section": "Afsnit"
+}</process_da>
+      <process_de>{
+	"Axe": "Analytische Achse",
+	"Company code": "Buchungskreis",
+	"Section": "Bereich"
+}</process_de>
+      <process_JA>{
+	"Axe": "分析軸",
+	"Company code": "会社コード",
+	"Section": "区分"
+}</process_JA>
+      <process_en>{
+	"Axe": "Analytical axis",
+	"Company code": "Company code",
+	"Section": "Section"
+}</process_en>
+      <process_es>{
+	"Axe": "Eje analítico",
+	"Company code": "Código de empresa",
+	"Section": "Sección"
+}</process_es>
+      <process_fr>{
+	"Axe": "Axe analytique",
+	"Company code": "Code société",
+	"Section": "Section"
+}</process_fr>
+      <process_nl-NL>{
+	"Axe": "Analytische as",
+	"Company code": "Bedrijfscode",
+	"Section": "Sectie"
+}</process_nl-NL>
+      <process_pl>{
+	"Axe": "Oś analityczna",
+	"Company code": "Kod firmy",
+	"Section": "Sekcja"
+}</process_pl>
+      <process_it>{
+	"Axe": "Asse analitico",
+	"Company code": "Codice società",
+	"Section": "Sezione"
+}</process_it>
+      <process_sk>{
+	"Axe": "Analytická os",
+	"Company code": "Kód spoločnosti",
+	"Section": "Časť"
+}</process_sk>
+      <process_zh-CN>{
+	"Axe": "分析轴",
+	"Company code": "公司代码",
+	"Section": "部分"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"Axe": "Eixo analítico",
+	"Company code": "Código da empresa",
+	"Section": "Secção"
+}</process_pt-BR>
+    </lg>
+    <process>
+      <BUColumn>CompanyCode__</BUColumn>
+      <flowtype>processing</flowtype>
+      <homepagelabel>AP - Sections</homepagelabel>
+      <upgradable>yes</upgradable>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <OverrideAllowedAttachmentExtensions>*</OverrideAllowedAttachmentExtensions>
+      <AllowUploadAttachment>0</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+      <shouldRollbackManualRecordEdits>true</shouldRollbackManualRecordEdits>
+      <UseCultureFormat>true</UseCultureFormat>
+      <TransportName>CustomTable</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+    </process>
+    <ui>
+      <customscriptIncludedScripts>[LIB_P2P_CUSTOMIZATION_TABLES_CLIENT]</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Sys/Sys_Helpers</customscriptIncludedScripts>
+      <CustomScript>"use strict";
+var CustomScript;
+(function (CustomScript) {
+    function Start() {
+        Sys.Helpers.TryCallFunction("Lib.P2P.Customization.Tables.Client.Common.OnHTMLScriptEnd");
+    }
+    Start();
+})(CustomScript || (CustomScript = {}));
+//# sourceMappingURL=customscript.js.map</CustomScript>
+      <restorationPanel>DataPanel</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 19,
+	"*": {
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"splitterType": "simple-v",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 2,
+					"options": {
+						"hidePanelsMenu": false,
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 3,
+					"options": {
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 4,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-center": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 5,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"width": "100%"
+										},
+										"hidden": false
+									},
+									"*": {
+										"form-content-center-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 6,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"DataPanel": {
+													"type": "PanelData",
+													"data": [],
+													"stamp": 7,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": false,
+														"hideTitleBar": false,
+														"backgroundcolor": "default",
+														"labelsAlignment": "right",
+														"label": "_Document data",
+														"version": 0
+													},
+													"*": {
+														"FieldsManager": {
+															"type": "FieldsManager",
+															"data": [],
+															"stamp": 8,
+															"options": {
+																"version": 0,
+																"controlsAssociation": {
+																	"CompanyCode__": "LabelCompanyCode__",
+																	"LabelCompanyCode__": "CompanyCode__",
+																	"Section__": "LabelSection__",
+																	"LabelSection__": "Section__",
+																	"Axe__": "LabelAxe__",
+																	"LabelAxe__": "Axe__"
+																}
+															},
+															"*": {
+																"Grid": {
+																	"type": "GridLayout",
+																	"data": [
+																		"fields"
+																	],
+																	"stamp": 9,
+																	"options": {
+																		"version": 0,
+																		"lines": 3,
+																		"columns": 2,
+																		"ctrlsPos": {
+																			"LabelCompanyCode__": {
+																				"line": 1,
+																				"column": 1
+																			},
+																			"CompanyCode__": {
+																				"line": 1,
+																				"column": 2
+																			},
+																			"LabelSection__": {
+																				"line": 2,
+																				"column": 1
+																			},
+																			"Section__": {
+																				"line": 2,
+																				"column": 2
+																			},
+																			"LabelAxe__": {
+																				"line": 3,
+																				"column": 1
+																			},
+																			"Axe__": {
+																				"line": 3,
+																				"column": 2
+																			}
+																		},
+																		"colspans": [
+																			[],
+																			[],
+																			[]
+																		]
+																	},
+																	"*": {
+																		"LabelCompanyCode__": {
+																			"type": "Label",
+																			"data": [
+																				"CompanyCode__"
+																			],
+																			"stamp": 11,
+																			"options": {
+																				"label": "Company code",
+																				"version": 0
+																			}
+																		},
+																		"CompanyCode__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"CompanyCode__"
+																			],
+																			"stamp": 10,
+																			"options": {
+																				"label": "Company code",
+																				"browsable": true,
+																				"activable": true,
+																				"width": 500,
+																				"PreFillFTS": true,
+																				"fTSmaxRecords": "20",
+																				"version": 0
+																			}
+																		},
+																		"LabelSection__": {
+																			"type": "Label",
+																			"data": [
+																				"Section__"
+																			],
+																			"stamp": 13,
+																			"options": {
+																				"label": "Section",
+																				"version": 0
+																			}
+																		},
+																		"Section__": {
+																			"type": "ShortText",
+																			"data": [
+																				"Section__"
+																			],
+																			"stamp": 12,
+																			"options": {
+																				"label": "Section",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"activable": true,
+																				"width": 500,
+																				"browsable": false,
+																				"version": 0
+																			}
+																		},
+																		"LabelAxe__": {
+																			"type": "Label",
+																			"data": [
+																				"Axe__"
+																			],
+																			"stamp": 15,
+																			"options": {
+																				"label": "Axe",
+																				"version": 0
+																			}
+																		},
+																		"Axe__": {
+																			"type": "ComboBox",
+																			"data": [
+																				"Axe__"
+																			],
+																			"stamp": 14,
+																			"options": {
+																				"label": "Axe",
+																				"possibleValues": {
+																					"0": "A1",
+																					"1": "A2",
+																					"2": "A3",
+																					"3": "A4",
+																					"4": "A5"
+																				},
+																				"keyValueMode": false,
+																				"possibleKeys": {},
+																				"activable": true,
+																				"width": 500,
+																				"version": 0
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 16,
+					"options": {
+						"splitterType": "simple-h",
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 17,
+							"options": {
+								"label": "_Save",
+								"action": "savequit",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 18,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Delete": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 19,
+							"options": {
+								"label": "_Delete",
+								"action": "delete",
+								"submit": true,
+								"disabled": true,
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <field deleted="0" format="" guid="DUXW227548" id="KT8QT400153E" label="Axe" length="2" name="Axe__" originalProcessID="PHQG225546" precision="0" processid="JT8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AKT8QT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Axe__</fullname>
+        <defaultvalue>A1</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:43</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Type>webaccess.Process.Columns.WithPossibleValues</Type>
+        <Label>Axe</Label>
+        <Alias>AKT8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <possibleKeys>
+        </possibleKeys>
+        <possibleValues>A1
+A2
+A3
+A4
+A5</possibleValues>
+      </field>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="NRVY227150" id="LT8QT400153E" label="Company code" length="50" name="CompanyCode__" originalProcessID="PHQG225546" precision="0" processid="JT8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ALT8QT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/CompanyCode__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:43</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Company code</Label>
+        <Alias>ALT8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>true</Editable>
+        <required>false</required>
+        <TableName>CT#BD8QT400153E</TableName>
+        <SortOrder>
+        </SortOrder>
+        <DisplayedColumns>CompanyCode__|CompanyName__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <SavedColumn>CompanyCode__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ProcessName>PurchasingCompanycodes__</ProcessName>
+        <CustomFilter>
+        </CustomFilter>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="EVIK227153" id="MT8QT400153E" label="Section" length="50" name="Section__" originalProcessID="PHQG225546" precision="0" processid="JT8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AMT8QT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Section__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:43</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Section</Label>
+        <Alias>AMT8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <type id="KOLHG0000M4O" name="CT">
+  </type>
+</process>

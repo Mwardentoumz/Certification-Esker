@@ -1,0 +1,889 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:10:54" deleted="0" eskerapplication="P2P" global="0" id="UTFQT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="New Sourcing Event" needvalidation="0" ootofilter="" ootoversion="2" originalProcessID="WCAKG0000YRL" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="1" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="0" version="1" visibility="1">
+  <properties>
+    <gdr>
+      <AllowTagCoverPages>true</AllowTagCoverPages>
+      <AllowTagNewDocuments>true</AllowTagNewDocuments>
+      <AllowTagAttachments>true</AllowTagAttachments>
+      <AllowRemovePages>true</AllowRemovePages>
+      <AllowSwapPages>true</AllowSwapPages>
+    </gdr>
+    <lg>
+      <process_da>{
+	"_AddEventQuestionnaire": "Spørgeskema",
+	"_Call Sourcing API Error msg": "Der opstod en fejl under forsøget på at få adgang til sourcing-eventene.\n\nKontakt din administrator",
+	"_Call Sourcing API Error msg api key": "API-nøgle:",
+	"_Call Sourcing API Error msg authorization": "Der er muligvis et problem med dine sourcing-loginoplysninger eller konfigurationen af dit modul. Kontrollér, at loginindstillingerne på siden med dine personlige oplysninger matcher dine Market Dojo-kontooplysninger, eller kontakt din administrator.",
+	"_Call Sourcing API Error msg email": "Market Dojo-identifikator:",
+	"_Call Sourcing API Error msg environment": "Market Dojo-miljø:",
+	"_Call Sourcing API Error msg remote server error": "Fejlmeddelelse:",
+	"_Call Sourcing API Error msg remote server error http": "Fejlkode:",
+	"_CancelButton": "Annuller",
+	"_Cannot reach Market Dojo": "Kunne ikke få adgang til sourcing-eventene",
+	"_CreateSourcingEvent": "Ny sourcing-event",
+	"_Event from dashboard creation msg": "Opret din event fra bunden, eller vælg blandt dine tidligere gemte skabeloner ud fra eventtype.",
+	"_EventCreationMessage": "Kontrollér de forhåndsudfyldte oplysninger nedenfor. Vælg 'Tilbudsanmodning' eller 'Auktion' som eventtype, og tilføj eventuelt et spørgeskema.",
+	"_EventDescription": "Beskrivelse",
+	"_EventName": "Begivenhedsnavn",
+	"_EventName_report": "Navn",
+	"_Hide error details dialog": "Skjul oplysninger",
+	"_MarketDojoPRODEnvironment": "Produktion",
+	"_MarketDojoQAEnvironment": "Midlertidig lagring (kun udv.)",
+	"_New Sourcing Event": "Ny sourcing-event",
+	"_NSEFromScratch": "Opret fra bunden",
+	"_NSEUseTemplate": "Opret fra skabelon",
+	"_PleaseSelectTemplate": "- Vælg en skabelon -",
+	"_Show error details dialog": "Vis oplysninger",
+	"_SourcingData": "Sourcing-eventdata i JSON-format",
+	"_SourcingEventCreation": "Ny sourcing-event",
+	"_SourcingEventId": "Sourcing-id",
+	"_SourcingEventId_report": "Sourcing-id",
+	"_UseOnlineAuctionMethod": "Auktion",
+	"_UseRFQMethod": "Tilbudsanmodning",
+	"_ValidateButton": "Opret event"
+}</process_da>
+      <process_DE>{
+	"_AddEventQuestionnaire": "Fragebogen",
+	"_Call Sourcing API Error msg": "Beim Zugriffsversuch auf die Beschaffungsereignisse ist ein Fehler aufgetreten.\n\nBitte wenden Sie sich an Ihren Administrator.",
+	"_Call Sourcing API Error msg api key": "API-Schlüssel:",
+	"_Call Sourcing API Error msg authorization": "Möglicherweise liegt ein Problem mit Ihren Sourcing-Anmeldeinformationen oder der Modulkonfiguration vor. \n\nStellen Sie sicher, dass die Anmeldeeinstellungen auf Ihrer persönlichen Informationsseite mit Ihren Market Dojo-Kontoangaben übereinstimmen bzw. setzen Sie sich mit Ihrem Administrator in Verbindung.",
+	"_Call Sourcing API Error msg email": "Market Dojo-Kennung:",
+	"_Call Sourcing API Error msg environment": "Market Dojo-Umgebung:",
+	"_Call Sourcing API Error msg remote server error": "Fehlermeldung:",
+	"_Call Sourcing API Error msg remote server error http": "Fehlercode:",
+	"_CancelButton": "Abbrechen",
+	"_Cannot reach Market Dojo": "Zugriff auf Beschaffungsereignisse nicht möglich",
+	"_CreateSourcingEvent": "Neuer Beschaffungsvorgang",
+	"_Event from dashboard creation msg": "Erstellen Sie Ihre Veranstaltung von Grund auf oder wählen Sie aus Ihren zuvor gespeicherten Vorlagen basierend auf dem Ereignistyp.",
+	"_EventCreationMessage": "Überprüfen Sie die vorgegebenen Informationen unten. Wählen Sie ‚Ausschreibung‘ oder ‚Auktion‘ aus und fügen Sie ggf. einen Fragebogen hinzu.",
+	"_EventDescription": "Beschreibung",
+	"_EventName": "Name des Ereignisses",
+	"_EventName_report": "Name",
+	"_Hide error details dialog": "Details ausblenden",
+	"_MarketDojoPRODEnvironment": "Produktion",
+	"_MarketDojoQAEnvironment": "Staging (nur für Entwickler)",
+	"_New Sourcing Event": "Neuer Beschaffungsvorgang",
+	"_NSEFromScratch": "Von Grund auf erstellen",
+	"_NSEUseTemplate": "Aus einer Vorlage erstellen",
+	"_PleaseSelectTemplate": "- Wählen Sie eine Vorlage aus -",
+	"_Show error details dialog": "Details einblenden",
+	"_SourcingData": "Beschaffungsereignisdaten im JSON-Format",
+	"_SourcingEventCreation": "Neuer Beschaffungsvorgang",
+	"_SourcingEventId": "Beschaffungs-Kennung",
+	"_SourcingEventId_report": "Beschaffungs-Kennung",
+	"_UseOnlineAuctionMethod": "Auktion",
+	"_UseRFQMethod": "Ausschreibung",
+	"_ValidateButton": "Vorgang erstellen"
+}</process_DE>
+      <process_JA>{
+	"_AddEventQuestionnaire": "質問票",
+	"_Call Sourcing API Error msg": "ソーシングイベントにアクセス中にエラーが発生しました。\n\n管理者に連絡してください。",
+	"_Call Sourcing API Error msg api key": "APIキー:",
+	"_Call Sourcing API Error msg authorization": "Sourcing資格情報またはモジュール構成に問題がある可能性があります。\n\n個人情報ページのログイン設定がMarket Dojoアカウントの詳細と一致していることを確認するか、管理者に連絡してください。",
+	"_Call Sourcing API Error msg email": "Market Dojo識別子:\n",
+	"_Call Sourcing API Error msg environment": "Market Dojo環境:",
+	"_Call Sourcing API Error msg remote server error": "エラーメッセージ:",
+	"_Call Sourcing API Error msg remote server error http": "エラーコード:",
+	"_CancelButton": "キャンセル",
+	"_Cannot reach Market Dojo": "ソーシングイベントにアクセスできません",
+	"_CreateSourcingEvent": "新しいソーシングイベント",
+	"_Event from dashboard creation msg": "最初からイベントを作成するか、イベントタイプに基づいて以前に保存したテンプレートから選択します。",
+	"_EventCreationMessage": "以下の事前に入力された情報を確認してください。\nイベントタイプに 'RFQ' または 'オークション' を選択し、必要に応じてアンケートを追加します。",
+	"_EventDescription": "説明",
+	"_EventName": "イベント名",
+	"_EventName_report": "名前",
+	"_Hide error details dialog": "詳細を表示しない",
+	"_MarketDojoPRODEnvironment": "プロダクション",
+	"_MarketDojoQAEnvironment": "ステージング (開発のみ)",
+	"_New Sourcing Event": "新しいソーシングイベント",
+	"_NSEFromScratch": "最初から作る",
+	"_NSEUseTemplate": "テンプレートから作る",
+	"_PleaseSelectTemplate": "- テンプレートを選択 -",
+	"_Show error details dialog": "詳細を表示",
+	"_SourcingData": "JSON形式のソーシングイベントデータ",
+	"_SourcingEventCreation": "新しいソーシングイベント",
+	"_SourcingEventId": "ソーシングID",
+	"_SourcingEventId_report": "ソーシングID",
+	"_UseOnlineAuctionMethod": "オークション",
+	"_UseRFQMethod": "RFQ",
+	"_ValidateButton": "イベントを作成"
+}</process_JA>
+      <process_en>{
+	"_AddEventQuestionnaire": "Questionnaire",
+	"_Call Sourcing API Error msg": "An error occurred while trying to access the sourcing events.\n\nPlease contact your administrator.",
+	"_Call Sourcing API Error msg api key": "API key:",
+	"_Call Sourcing API Error msg authorization": "There may be an issue with your Sourcing credentials or module configuration.\n\nMake sure the login settings in your personal information page match your Market Dojo account details or contact your administrator.",
+	"_Call Sourcing API Error msg email": "Market Dojo identifier:",
+	"_Call Sourcing API Error msg environment": "Market Dojo environment:",
+	"_Call Sourcing API Error msg remote server error": "Error message:",
+	"_Call Sourcing API Error msg remote server error http": "Error code:",
+	"_CancelButton": "Cancel",
+	"_Cannot reach Market Dojo": "Unable to access sourcing events",
+	"_CreateSourcingEvent": "New sourcing event",
+	"_Event from dashboard creation msg": "Create your event from scratch or choose from your previously saved templates based on the event type.",
+	"_EventCreationMessage": "Check the pre-filled information below.\nSelect 'RFQ' or 'Auction' as event type and add a questionnaire if needed.",
+	"_EventDescription": "Description",
+	"_EventName": "Event name",
+	"_EventName_report": "Name",
+	"_Hide error details dialog": "Hide details",
+	"_MarketDojoPRODEnvironment": "Production",
+	"_MarketDojoQAEnvironment": "Staging (dev only)",
+	"_New Sourcing Event": "New Sourcing Event",
+	"_NSEFromScratch": "Create from scratch",
+	"_NSEUseTemplate": "Create from template",
+	"_PleaseSelectTemplate": "- Select a template -",
+	"_Show error details dialog": "Show details",
+	"_SourcingData": "Sourcing event data in JSON format",
+	"_SourcingEventCreation": "New sourcing event",
+	"_SourcingEventId": "Sourcing ID",
+	"_SourcingEventId_report": "Sourcing ID",
+	"_UseOnlineAuctionMethod": "Auction",
+	"_UseRFQMethod": "RFQ",
+	"_ValidateButton": "Create event"
+}</process_en>
+      <process_ES>{
+	"_AddEventQuestionnaire": "Cuestionario",
+	"_Call Sourcing API Error msg": "Se ha producido un error al intentar acceder a los eventos de sourcing. \n\nPor favor, póngase en contacto con su administrador.",
+	"_Call Sourcing API Error msg api key": "Clave API:",
+	"_Call Sourcing API Error msg authorization": "Puede haber un problema con sus credenciales de Sourcing o con la configuración del módulo.\n\nAsegúrese de que la configuración de inicio de sesión en su página de información personal coincide con los datos de su cuenta de Market Dojo o póngase en contacto con su administrador.",
+	"_Call Sourcing API Error msg email": "Identificador de Market Dojo:",
+	"_Call Sourcing API Error msg environment": "Entorno Market Dojo:",
+	"_Call Sourcing API Error msg remote server error": "Mensaje de error:",
+	"_Call Sourcing API Error msg remote server error http": "Código de error:",
+	"_CancelButton": "Cancelar",
+	"_Cannot reach Market Dojo": "No se puede acceder a los eventos de sourcing",
+	"_CreateSourcingEvent": "Nuevo evento de sourcing",
+	"_Event from dashboard creation msg": "Cree su evento desde cero o elija entre las plantillas previamente guardadas en función del tipo de evento.",
+	"_EventCreationMessage": "Comprobar la información.\nSeleccione 'RFQ' o 'Subasta' como tipo de evento y añada un cuestionario si es necesario.",
+	"_EventDescription": "Descripción",
+	"_EventName": "Nombre del evento",
+	"_EventName_report": "Nombre",
+	"_Hide error details dialog": "Ocultar detalles",
+	"_MarketDojoPRODEnvironment": "Producción",
+	"_MarketDojoQAEnvironment": "Staging (solo para programadores)",
+	"_New Sourcing Event": "Nuevo evento de sourcing",
+	"_NSEFromScratch": "Crear desde cero",
+	"_NSEUseTemplate": "Crear desde plantilla",
+	"_PleaseSelectTemplate": "- Seleccionar una plantilla -",
+	"_Show error details dialog": "Mostrar detalles",
+	"_SourcingData": "Datos de eventos de sourcing en formato JSON",
+	"_SourcingEventCreation": "Nuevo evento de sourcing",
+	"_SourcingEventId": "ID de sourcing",
+	"_SourcingEventId_report": "ID de sourcing",
+	"_UseOnlineAuctionMethod": "Subasta inversa",
+	"_UseRFQMethod": "Solicitud de cotización (RFQ)",
+	"_ValidateButton": "Crear evento"
+}</process_ES>
+      <process_FR>{
+	"_AddEventQuestionnaire": "Questionnaire",
+	"_Call Sourcing API Error msg": "Une erreur est survenue lors de l'accès aux évènements de sourcing.\n\nVeuillez contacter votre administrateur.",
+	"_Call Sourcing API Error msg api key": "Clé API :",
+	"_Call Sourcing API Error msg authorization": "Il se peut qu'il y ait un problème avec vos identifiants du module Sourcing ou avec la configuration du module.\n\nAssurez-vous que les paramètres de connexion définis dans vos informations personnelles correspondent aux détails de votre compte Market Dojo ou contactez votre administrateur.",
+	"_Call Sourcing API Error msg email": "Identifiant Market Dojo :",
+	"_Call Sourcing API Error msg environment": "Environnement Market Dojo :",
+	"_Call Sourcing API Error msg remote server error": "Message d'erreur :",
+	"_Call Sourcing API Error msg remote server error http": "Code d'erreur : ",
+	"_CancelButton": "Annuler",
+	"_Cannot reach Market Dojo": "Échec d’accès aux évènements de sourcing",
+	"_CreateSourcingEvent": "Nouvel évènement de sourcing",
+	"_Event from dashboard creation msg": "Créez votre évènement à partir de zéro ou à partir de vos modèles préenregistrés en fonction du type d'évènement.",
+	"_EventCreationMessage": "Vérifiez les informations pré-remplies ci-dessous.\nSélectionnez 'Grille de prix' ou 'Enchère' comme type d'évènement et ajoutez un questionnaire si nécessaire.",
+	"_EventDescription": "Description",
+	"_EventName": "Nom de l'évènement",
+	"_EventName_report": "Nom",
+	"_Hide error details dialog": "Masquer les détails",
+	"_MarketDojoPRODEnvironment": "Production",
+	"_MarketDojoQAEnvironment": "Staging (réservé aux développeurs)",
+	"_New Sourcing Event": "Nouvel évènement de sourcing",
+	"_NSEFromScratch": "Créer sans modèle",
+	"_NSEUseTemplate": "Créer à partir d'un modèle",
+	"_PleaseSelectTemplate": "- Sélectionnez un modèle -",
+	"_Show error details dialog": "Afficher les détails",
+	"_SourcingData": "Données d'évènement de sourcing au format JSON",
+	"_SourcingEventCreation": "Nouvel évènement de sourcing",
+	"_SourcingEventId": "ID de sourcing",
+	"_SourcingEventId_report": "ID de sourcing",
+	"_UseOnlineAuctionMethod": "Enchère",
+	"_UseRFQMethod": "Grille de prix",
+	"_ValidateButton": "Créer l'évènement"
+}</process_FR>
+      <process_nl-NL>{
+	"_AddEventQuestionnaire": "Vragenlijst",
+	"_Call Sourcing API Error msg": "Er is een fout opgetreden bij de poging om om toegang te krijgen tot de sourcing events.\n\nNeem contact op met uw beheerder.",
+	"_Call Sourcing API Error msg api key": "API-sleutel:",
+	"_Call Sourcing API Error msg authorization": "Er kan een probleem zijn met jouw Sourcing aanmeldingsinstellingen  of de configuratie van de module.\n\nVerzeker je ervan dat de aanmeldingsinstellingen in jouw persoonlijke informatie pagina overeenkomen met je Market Dojo accountgegevens of contacteer de beheerder.",
+	"_Call Sourcing API Error msg email": "Identificatie Market Dojo:",
+	"_Call Sourcing API Error msg environment": "Market Dojo-omgeving:",
+	"_Call Sourcing API Error msg remote server error": "Foutmelding:",
+	"_Call Sourcing API Error msg remote server error http": "Foutcode:",
+	"_CancelButton": "Annuleren",
+	"_Cannot reach Market Dojo": "Geen toegang tot sourcing events",
+	"_CreateSourcingEvent": "Nieuw Sourcing Event",
+	"_Event from dashboard creation msg": "Maakt een even aan vanaf nul of kies uit je reeds opgeslagen templates gebaseerd op het type event.",
+	"_EventCreationMessage": "Controleer de vooraf ingevulde informatie hieronder. Selecteer ‘Prijsaanvraag’ of ‘Veiling’ als type event en voeg een vragenlijst toe indien nodig.",
+	"_EventDescription": "Beschrijving",
+	"_EventName": "Naam event",
+	"_EventName_report": "Naam",
+	"_Hide error details dialog": "Details verbergen",
+	"_MarketDojoPRODEnvironment": "Productie",
+	"_MarketDojoQAEnvironment": "Staging (dev only)",
+	"_New Sourcing Event": "Nieuw Sourcing Event",
+	"_NSEFromScratch": "Creëren vanaf nul.",
+	"_NSEUseTemplate": "Creëren vanaf template.",
+	"_PleaseSelectTemplate": "- Template selecteren -",
+	"_Show error details dialog": "Details tonen",
+	"_SourcingData": "Sourcing event gegevens in JSON-formaat",
+	"_SourcingEventCreation": "Nieuw Sourcing Event",
+	"_SourcingEventId": "Sourcing-ID",
+	"_SourcingEventId_report": "Sourcing-ID",
+	"_UseOnlineAuctionMethod": "Veiling",
+	"_UseRFQMethod": "Prijsaanvraag",
+	"_ValidateButton": "Event aanmaken"
+}</process_nl-NL>
+      <process_pl>{
+	"_AddEventQuestionnaire": "Kwestionariusz",
+	"_Call Sourcing API Error msg": "Podczas próby uzyskania dostępu do wydarzeń zaopatrzeniowych wystąpił błąd.\n\nSkontaktuj się z administratorem.",
+	"_Call Sourcing API Error msg api key": "Klucz API:",
+	"_Call Sourcing API Error msg authorization": "Mógł wystąpić błąd z danymi uwierzytelniającymi w module zaopatrzenia lub jego konfiguracją.\n\nUpewnij się, że ustawienia logowania na stronie Twoich danych osobowych są zgodne z danymi konta Market Dojo, lub skontaktuj się z administratorem.",
+	"_Call Sourcing API Error msg email": "Identyfikator Market Dojo:",
+	"_Call Sourcing API Error msg environment": "Środowisko Market Dojo:",
+	"_Call Sourcing API Error msg remote server error": "Komunikat o błędzie:",
+	"_Call Sourcing API Error msg remote server error http": "Kod błędu:",
+	"_CancelButton": "Anuluj",
+	"_Cannot reach Market Dojo": "Nie można uzyskać dostępu do wydarzeń zaopatrzeniowych",
+	"_CreateSourcingEvent": "Nowe wydarzenie zaopatrzeniowe",
+	"_Event from dashboard creation msg": "Utwórz wydarzenie od podstaw lub wybierz jeden z wcześniej zapisanych szablonów w zależności od typu wydarzenia.",
+	"_EventCreationMessage": "Sprawdź wstępnie wypełnione informacje poniżej.\nWybierz „RFQ” lub „Aukcja” jako typ wydarzenia i w razie potrzeby dodaj kwestionariusz.",
+	"_EventDescription": "Opis",
+	"_EventName": "Nazwa wydarzenia",
+	"_EventName_report": "Nazwa",
+	"_Hide error details dialog": "Ukryj szczegóły",
+	"_MarketDojoPRODEnvironment": "Produkcja",
+	"_MarketDojoQAEnvironment": "Tymczasowe (tylko DEV)",
+	"_New Sourcing Event": "Nowe wydarzenie zaopatrzeniowe",
+	"_NSEFromScratch": "Utwórz od podstaw",
+	"_NSEUseTemplate": "Utwórz z szablonu",
+	"_PleaseSelectTemplate": "- Wybierz szablon -",
+	"_Show error details dialog": "Pokaż szczegóły",
+	"_SourcingData": "Dane wydarzenia zaopatrzeniowego w formacie JSON",
+	"_SourcingEventCreation": "Nowe wydarzenie zaopatrzeniowe",
+	"_SourcingEventId": "Id. zaopatrzenia",
+	"_SourcingEventId_report": "Id. zaopatrzenia",
+	"_UseOnlineAuctionMethod": "Aukcja",
+	"_UseRFQMethod": "RFQ",
+	"_ValidateButton": "Utwórz wydarzenie"
+}</process_pl>
+      <process_IT>{
+	"_AddEventQuestionnaire": "Questionario",
+	"_Call Sourcing API Error msg": "Si è verificato un errore durante il tentativo di accesso agli eventi di sourcing.\n\nContattare l'amministratore.",
+	"_Call Sourcing API Error msg api key": "Chiave API:",
+	"_Call Sourcing API Error msg authorization": "Potrebbe esserci un problema con le credenziali di Sourcing o con la configurazione del modulo.\n\nAssicurarsi che le impostazioni di accesso definite nelle informazioni personali corrispondano ai dati dell'account Market Dojo o contattare l'amministratore.",
+	"_Call Sourcing API Error msg email": "Identificatore Market Dojo:",
+	"_Call Sourcing API Error msg environment": "Ambiente Market Dojo:",
+	"_Call Sourcing API Error msg remote server error": "Messaggio di errore:",
+	"_Call Sourcing API Error msg remote server error http": "Codice errore:",
+	"_CancelButton": "Annulla",
+	"_Cannot reach Market Dojo": "Impossibile accedere agli eventi di sourcing",
+	"_CreateSourcingEvent": "Nuovo evento di sourcing",
+	"_Event from dashboard creation msg": "Creare un evento da zero o a partire dai modelli precedentemente salvati in base al tipo di evento.",
+	"_EventCreationMessage": "Verificare le informazioni precompilate di seguito.\nSelezionare 'Richiesta di quotazione (RFQ)' o 'Asta' come tipo di evento e aggiungere un questionario se necessario.",
+	"_EventDescription": "Descrizione",
+	"_EventName": "Nome evento",
+	"_EventName_report": "Nome",
+	"_Hide error details dialog": "Nascondi dettagli",
+	"_MarketDojoPRODEnvironment": "Produzione",
+	"_MarketDojoQAEnvironment": "Staging (team di sviluppo)",
+	"_New Sourcing Event": "Nuovo evento di sourcing",
+	"_NSEFromScratch": "Crea senza modello",
+	"_NSEUseTemplate": "Crea da modello",
+	"_PleaseSelectTemplate": "- Seleziona un modello - ",
+	"_Show error details dialog": "Mostra dettagli",
+	"_SourcingData": "Dati di evento sourcing in formato JSON",
+	"_SourcingEventCreation": "Nuovo evento di sourcing",
+	"_SourcingEventId": "ID sourcing",
+	"_SourcingEventId_report": "ID sourcing",
+	"_UseOnlineAuctionMethod": "Asta",
+	"_UseRFQMethod": "Richiesta di quotazione (RFQ)",
+	"_ValidateButton": "Crea evento"
+}</process_IT>
+      <process_sk>{
+	"_AddEventQuestionnaire": "Dotazník",
+	"_Call Sourcing API Error msg": "Pri pokuse o prístup k udalostiam stanovenia zdroja odberu nastala chyba.\n\nObráťte sa na svojho administrátora.",
+	"_Call Sourcing API Error msg api key": "Kľúč API:",
+	"_Call Sourcing API Error msg authorization": "Môže dôjsť k problému s vašimi prihlasovacími údajmi do modulu Sourcing alebo s konfiguráciou modulu.\n\nSkontrolujte, či nastavenia prihlásenia na stránke s osobnými údajmi zodpovedajú údajom vášho účtu Market Dojo, alebo kontaktujte administrátora.",
+	"_Call Sourcing API Error msg email": "Identifikátor Market Dojo:",
+	"_Call Sourcing API Error msg environment": "Prostredie Market Dojo:",
+	"_Call Sourcing API Error msg remote server error": "Chybové hlásenie:",
+	"_Call Sourcing API Error msg remote server error http": "Kód chyby:",
+	"_CancelButton": "Zrušiť",
+	"_Cannot reach Market Dojo": "Nie je možné pristúpiť k udalostiam stanovenia zdroja odberu",
+	"_CreateSourcingEvent": "Nová udalosť v module Sourcing",
+	"_Event from dashboard creation msg": "Vytvorte udalosť od začiatku alebo vyberte jednu z predtým uložených šablón podľa typu udalosti.",
+	"_EventCreationMessage": "Skontrolujte predvyplnené informácie nižšie.\nAko typ udalosti vyberte 'RFQ' alebo 'Aukcia' a v prípade potreby pridajte dotazník.",
+	"_EventDescription": "Popis",
+	"_EventName": "Názov udalosti",
+	"_EventName_report": "Názov",
+	"_Hide error details dialog": "Skryť podrobnosti",
+	"_MarketDojoPRODEnvironment": "Výroba",
+	"_MarketDojoQAEnvironment": "Dočasné uloženie (len dev)",
+	"_New Sourcing Event": "Nová udalosť v Sourcing",
+	"_NSEFromScratch": "Vytvoriť od začiatku",
+	"_NSEUseTemplate": "Vytvoriť zo šablóny",
+	"_PleaseSelectTemplate": "- Vybrať šablónu -",
+	"_Show error details dialog": "Zobraziť podrobnosti",
+	"_SourcingData": "Dáta udalostí stanovenia zdroja odberu vo formáte JSON",
+	"_SourcingEventCreation": "Nová udalosť v module Sourcing",
+	"_SourcingEventId": "ID Sourcing",
+	"_SourcingEventId_report": "ID Sourcing",
+	"_UseOnlineAuctionMethod": "Dražba",
+	"_UseRFQMethod": "RFQ",
+	"_ValidateButton": "Vytvoriť udalosť"
+}</process_sk>
+      <process_ZH-CN>{
+	"_AddEventQuestionnaire": "问卷",
+	"_Call Sourcing API Error msg": "尝试访问采购事件时出错。\n\n请联系管理员。",
+	"_Call Sourcing API Error msg api key": "API 密钥:",
+	"_Call Sourcing API Error msg authorization": "您的采购登陆信息或模块配置可能有问题。\n\n请确保个人信息页中的登录设置与 Market Dojo 帐户信息相匹配，或联系管理员。",
+	"_Call Sourcing API Error msg email": "Market Dojo ID:",
+	"_Call Sourcing API Error msg environment": "Market Dojo 环境:",
+	"_Call Sourcing API Error msg remote server error": "错误消息:",
+	"_Call Sourcing API Error msg remote server error http": "错误代码:",
+	"_CancelButton": "取消",
+	"_Cannot reach Market Dojo": "无法访问采购事件",
+	"_CreateSourcingEvent": "新寻源事件",
+	"_Event from dashboard creation msg": "从头开始创建事件，或根据事件类型从以前保存的模板中进行选择。",
+	"_EventCreationMessage": "请检查下列预填写的信息。\n选择“询价”或“拍卖”作为事件类型，并根据需要添加问卷。",
+	"_EventDescription": "说明/描述",
+	"_EventName": "事件名称",
+	"_EventName_report": "名称",
+	"_Hide error details dialog": "隐藏详细信息",
+	"_MarketDojoPRODEnvironment": "生产",
+	"_MarketDojoQAEnvironment": "Staging (dev only)",
+	"_New Sourcing Event": "新寻源事件",
+	"_NSEFromScratch": "从头开始创建",
+	"_NSEUseTemplate": "从模板创建",
+	"_PleaseSelectTemplate": "- 选择模板 -",
+	"_Show error details dialog": "显示详情",
+	"_SourcingData": "JSON 格式的寻源事件数据",
+	"_SourcingEventCreation": "新寻源事件",
+	"_SourcingEventId": "寻源 ID",
+	"_SourcingEventId_report": "寻源 ID",
+	"_UseOnlineAuctionMethod": "拍卖",
+	"_UseRFQMethod": "询价",
+	"_ValidateButton": "创建事件"
+}</process_ZH-CN>
+      <process_pt-BR>{
+	"_AddEventQuestionnaire": "Questionário",
+	"_Call Sourcing API Error msg": "Ocorreu um erro ao tentar acessar os eventos de sourcing.\n\nEntre em contato com o administrador.",
+	"_Call Sourcing API Error msg api key": "Chave API:",
+	"_Call Sourcing API Error msg authorization": "Pode haver um problema com suas credenciais de abastecimento ou configuração do módulo.\n\nCertifique-se de que as configurações de login em sua página de informações pessoais correspondam aos detalhes da sua conta do Market Dojo ou entre em contato com seu administrador.",
+	"_Call Sourcing API Error msg email": "Identificador Market Dojo:",
+	"_Call Sourcing API Error msg environment": "Ambiente Market Dojo:",
+	"_Call Sourcing API Error msg remote server error": "Mensagem de erro:",
+	"_Call Sourcing API Error msg remote server error http": "Código de erro:",
+	"_CancelButton": "Cancelar",
+	"_Cannot reach Market Dojo": "Não é possível acessar eventos de sourcing",
+	"_CreateSourcingEvent": "Novo evento de abastecimento",
+	"_Event from dashboard creation msg": "Crie seu evento do zero ou escolha um dos modelos salvos anteriormente com base no tipo de evento.",
+	"_EventCreationMessage": "Verifique as informações pré-preenchidas abaixo. Selecione “RFQ” ou “Leilão” como tipo de evento e adicione um questionário, se necessário.",
+	"_EventDescription": "Descrição",
+	"_EventName": "Nome do evento",
+	"_EventName_report": "Nome",
+	"_Hide error details dialog": "Ocultar detalhes",
+	"_MarketDojoPRODEnvironment": "Produção",
+	"_MarketDojoQAEnvironment": "Staging (dev only)",
+	"_New Sourcing Event": "Novo evento de abastecimento",
+	"_NSEFromScratch": "Criar do zero",
+	"_NSEUseTemplate": "Criar a partir do modelo",
+	"_PleaseSelectTemplate": "- Selecione um modelo -",
+	"_Show error details dialog": "Mostrar detalhes",
+	"_SourcingData": "Dados de eventos de sourcing no formato JSON",
+	"_SourcingEventCreation": "Novo evento de abastecimento",
+	"_SourcingEventId": "ID de abastecimento",
+	"_SourcingEventId_report": "ID de abastecimento",
+	"_UseOnlineAuctionMethod": "Leilão",
+	"_UseRFQMethod": "Solicitação de Cotação (RFQ)",
+	"_ValidateButton": "Criar evento"
+}</process_pt-BR>
+    </lg>
+    <openInProcess>
+      <startWithoutProcessing>true</startWithoutProcessing>
+    </openInProcess>
+    <process>
+      <flowtype>processing</flowtype>
+      <ocrpreset>scan</ocrpreset>
+      <EnableNegativeNumbersBetweenBrackets>true</EnableNegativeNumbersBetweenBrackets>
+      <panelLabelWidth>
+      </panelLabelWidth>
+      <homepagelabel>_New Sourcing Event</homepagelabel>
+      <enableflexibleauditing>
+      </enableflexibleauditing>
+      <enableflexibleediting>
+      </enableflexibleediting>
+      <enableflexibleteaching>
+      </enableflexibleteaching>
+      <upgradable>yes</upgradable>
+      <disableocr>
+      </disableocr>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <disableautolearning>true</disableautolearning>
+      <backgroundprocessingthreshold>
+      </backgroundprocessingthreshold>
+      <EnablePreviewPrecomputation>
+      </EnablePreviewPrecomputation>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <enablerounddecimal>true</enablerounddecimal>
+      <pdfNormalizeFilter>
+      </pdfNormalizeFilter>
+      <archiveDuration>0</archiveDuration>
+      <ownhomepage>
+      </ownhomepage>
+      <ocrpagestoprocess>0</ocrpagestoprocess>
+      <ScriptEngineType>2</ScriptEngineType>
+      <UseActionNameWithScriptApproval>true</UseActionNameWithScriptApproval>
+      <displayWidth>
+      </displayWidth>
+      <AllowUploadAttachment>0</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+      <RemovePointWhenCastingIntToString>true</RemovePointWhenCastingIntToString>
+      <UseCultureFormat>true</UseCultureFormat>
+      <AllowRetryExtractCD>true</AllowRetryExtractCD>
+      <TransportName>CustomData</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+      <printToProcess>
+      </printToProcess>
+    </process>
+    <ui>
+      <CustomScriptDebug>false</CustomScriptDebug>
+      <customscriptIncludedScripts>Lib_Purchasing_Sourcing_Event_Creation_Popup_V12.0.566.0</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Lib_Purchasing_V12.0.566.0</customscriptIncludedScripts>
+      <customscriptIncludedScripts>LIB_P2P_UserProperties_V12.0.566.0</customscriptIncludedScripts>
+      <CustomScriptReadonly>false</CustomScriptReadonly>
+      <CustomScript>"use strict";
+var CustomScript;
+(function (CustomScript) {
+    Controls.DataPanel.Hide(true);
+    Controls.SystemData.Hide(true);
+    ProcessInstance.SetSilentChange(true);
+    async function preload() {
+        await Lib.Purchasing.LoadParameters();
+        await Lib.P2P.UserProperties.QueryValues(User.loginId);
+    }
+    async function Run() {
+        await preload();
+        Lib.Purchasing.Sourcing.EventCreationPopup.ShowFromDashboard();
+    }
+    CustomScript.Run = Run;
+    if (typeof _ENV_TEST_ENABLED === "undefined") {
+        Run();
+    }
+})(CustomScript || (CustomScript = {}));
+//# sourceMappingURL=customscript.js.map</CustomScript>
+      <restorationPanel>DataPanel</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 30,
+	"*": {
+		"GDRData": {
+			"type": "GDRData",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"version": 0
+			}
+		},
+		"OCRParams": {
+			"type": "OCRParams",
+			"data": [],
+			"stamp": 2,
+			"options": {
+				"version": 0
+			}
+		},
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 3,
+			"options": {
+				"splitterType": "complex",
+				"style": "FlexibleFormLight",
+				"maxwidth": "",
+				"backColor": "text-backgroundcolor-default",
+				"footerStyle": "default",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 4,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 5,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 6,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-top": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 7,
+									"options": {
+										"autosize": true,
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"height": "25%"
+										},
+										"hidden": true,
+										"hideSeparator": true
+									},
+									"*": {
+										"form-content-top-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 8,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"DocumentsPanel": {
+													"type": "PanelDocument",
+													"data": [],
+													"stamp": 9,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": false,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"sameHeightAsSiblings": false,
+														"label": "_Documents",
+														"hidden": true,
+														"version": 0
+													},
+													"*": {
+														"Document": {
+															"type": "Documents",
+															"data": [
+																"documentscontroldata"
+															],
+															"stamp": 10,
+															"options": {
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								},
+								"form-content-bottom": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 11,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": "25%",
+											"left": "0%",
+											"height": "75%"
+										},
+										"hidden": false,
+										"hideSeparator": true
+									},
+									"*": {
+										"form-content-left": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 12,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "0%",
+													"width": "45%"
+												},
+												"hidden": false,
+												"hideSeparator": true
+											},
+											"*": {
+												"form-content-left-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 13,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"DataPanel": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 14,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_Document data",
+																"hidden": true,
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 15,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 16,
+																			"options": {
+																				"version": 0,
+																				"lines": 0,
+																				"columns": 2,
+																				"ctrlsPos": {},
+																				"colspans": []
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-2": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 17,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"SystemData": {
+															"type": "PanelSystemData",
+															"data": [],
+															"stamp": 18,
+															"options": {
+																"multicolumn": false,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_System data",
+																"hidden": true,
+																"version": 0
+															}
+														}
+													}
+												},
+												"form-content-left-3": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 19,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"NextProcess": {
+															"type": "PanelNextProcess",
+															"data": [],
+															"stamp": 20,
+															"options": {
+																"hidden": true,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_Next Process",
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-right": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 21,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "45%",
+													"width": "55%"
+												},
+												"hidden": true
+											},
+											"*": {
+												"form-content-right-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 22,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"PreviewPanel": {
+															"type": "PanelPreview",
+															"data": [],
+															"stamp": 23,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_Document Preview",
+																"hidden": true,
+																"version": 0
+															},
+															"*": {
+																"Preview": {
+																	"type": "Preview",
+																	"data": [
+																		"previewdata"
+																	],
+																	"stamp": 24,
+																	"options": {
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 25,
+					"options": {
+						"splitterType": "simple-h",
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 26,
+							"options": {
+								"label": "_Save",
+								"action": "save",
+								"submit": true,
+								"textSize": "S",
+								"version": 0
+							}
+						},
+						"Approve": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 27,
+							"options": {
+								"label": "_Approve",
+								"action": "approve",
+								"submit": true,
+								"textSize": "S",
+								"version": 0
+							}
+						},
+						"Reject": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 28,
+							"options": {
+								"label": "_Reject",
+								"action": "reject",
+								"submit": true,
+								"textSize": "S",
+								"version": 0
+							}
+						},
+						"Reprocess": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 29,
+							"options": {
+								"label": "_Reprocess",
+								"action": "reprocess",
+								"submit": true,
+								"textSize": "S",
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 30,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"textSize": "S",
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <type id="GOLHG0000M4O" name="CD">
+  </type>
+</process>

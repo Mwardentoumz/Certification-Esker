@@ -1,0 +1,2024 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:06:40" deleted="0" eskerapplication="P2P" global="0" id="X3AQT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="Update invoice with ERP ID" needvalidation="0" ootofilter="" ootoversion="0" originalProcessID="UMMI20005489" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="0" version="1" visibility="0">
+  <properties>
+    <dataConditions>
+      <listDataConditions>
+			&lt;dataCondition&gt;
+				&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+				&lt;filter&gt;msnex=*&lt;/filter&gt;
+				&lt;labelKey&gt;_AP disabled&lt;/labelKey&gt;
+				&lt;conditions&gt;
+					&lt;allowCondition&gt;
+						&lt;fieldName&gt;EnableAccountPayableGlobalSetting__&lt;/fieldName&gt;
+						&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+					&lt;/allowCondition&gt;
+				&lt;/conditions&gt;
+			&lt;/dataCondition&gt;
+		</listDataConditions>
+    </dataConditions>
+    <gdr>
+      <FinalizationScriptAllowRetry>true</FinalizationScriptAllowRetry>
+      <FinalizationScript>
+      </FinalizationScript>
+      <ValidationScriptAllowRetry>true</ValidationScriptAllowRetry>
+      <validationscriptIncludedScripts>Lib_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_AP_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_CallScheduledAction_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Sys/Sys_Helpers</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Sys/Sys_Helpers_Date</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Sys/Sys_FRB2B_AP</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>[LIB_AP_CUSTOMIZATION_COMMON]</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>[LIB_AP_CUSTOMIZATION_VALIDATION]</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>[LIB_P2P_CUSTOMIZATION_SERVER]</validationscriptIncludedScripts>
+      <ValidationScript>"use strict";
+let ERPID = Data.GetValue("Document_ERP_ID__");
+let ERPVendorNumber = Data.GetValue("ERP_Vendor_Number__");
+let EskerID = Data.GetValue("EskerID__");
+let ERPError = Data.GetValue("ERPPostingError__");
+let ERPAckData = GetERPAckData();
+let Holds = Variable.GetValueAsString("Holds__");
+let VALIDITY_DURATION = 6;
+let FormErrors = [];
+const validationXpathVendorRegistrationID = "/ERPAck/EskerVendorRegistrationID";
+const validationXpathDetailedAccrualReportLauncherID = "/ERPAck/DetailedAccrualReportLauncherID";
+const validationXpathEskerPOID = "/ERPAck/EskerPOID";
+const validationXpathEskerGRID = "/ERPAck/EskerGRID";
+const validationXpathERPLifecycleStatus = "/ERPAck/ERPLifecycleStatus";
+const ProcessType = {
+    VendorRegistration: "Vendor Registration",
+    VendorInvoice: "Vendor Invoice",
+    DetailedAccrualReportLauncher: "Detailed Accrual Report Launcher",
+    PurchaseOrder: "Purchase Order V2",
+    GoodsReceipt: "Goods receipt V2"
+};
+/**
+ * Throw an error to enter retry mode
+ * @param errorMsg Short error message for logs and EskerID field error message after last try
+ * @param longMsg Description used in logs
+ * @param failAfterLastTry If true, set the status of the process to 200 if retryCount equal MaxRetryCount, otherwise, let in state 70
+ */
+function retryScript(errorMsg, longMsg, failAfterLastTry = false) {
+    Log.Error(`${errorMsg} : ${longMsg}`);
+    if (Process.GetScriptRetryCount() &lt; Process.GetScriptMaxRetryCount() - 1) {
+        // Generate an exception for script to retry
+        throw new Error(errorMsg + ". Retrying...");
+    }
+    else if (failAfterLastTry === true) {
+        // Put the process in failure state
+        Data.SetValue("State", 200);
+    }
+    else {
+        // Let the process in toValidate with error on the Esker ID
+        Data.SetError("EskerID__", errorMsg);
+    }
+}
+function GetERPAckData() {
+    const ERPactionDataStr = Variable.GetValueAsString("ERPAckData");
+    if (ERPactionDataStr) {
+        return JSON.parse(ERPactionDataStr);
+    }
+    return {};
+}
+/*******************************
+Update the Vendor registration or the Vendor Invoice
+********************************/
+function updateProcess(transport, process) {
+    const vars = transport.GetUninheritedVars();
+    const externalVariables = transport.GetExternalVars();
+    const state = vars.GetValue_Long("State", 0);
+    const waitingForUpdate = vars.GetValue_Long("WaitingForUpdate", 0);
+    const contFlag = vars.GetValue_Long("ContainerFlag", 0);
+    const invoiceState = vars.GetValue_String("InvoiceStatus__", 0);
+    const LastSavedDateTime = vars.GetValue_Date("LastSavedDateTime", 0);
+    const vendorRegistrationState = vars.GetValue_String("ProcessStatus__", 0);
+    // Fix RD00031845 : ensure CompareDate returns -1 when ERPIntegrationTimeout has never been set
+    const ERPIntegrationTimeoutDateTime = new Date(externalVariables.GetValue_String("ERPIntegrationTimeout", 0) || 0);
+    const bProcessInERPIntegrationTimeout = Sys.Helpers.Date.CompareDate(ERPIntegrationTimeoutDateTime, LastSavedDateTime) !== -1;
+    // FT-025989 - The vendor invoice process is frozen, add an automatic retry mechanism waiting for the invoice process to be resumed
+    if (contFlag === 123456789) // invoice is frozen
+     {
+        updateProcessInFrozenState(state, process, transport, waitingForUpdate, bProcessInERPIntegrationTimeout);
+    }
+    else if ((state === 90 &amp;&amp; waitingForUpdate) || (state === 70 &amp;&amp; bProcessInERPIntegrationTimeout) ||
+        (state === 100 &amp;&amp; (invoiceState === Lib.AP.InvoiceStatus.ToPost || invoiceState === Lib.AP.InvoiceStatus.ToVerify || vendorRegistrationState === "ToValidate"))) {
+        updateProcessInExpectedState(process, vars, externalVariables, transport, state);
+    }
+    else {
+        // The process is not in the expected state: failure
+        updateProcessInInvalidState(state, waitingForUpdate, bProcessInERPIntegrationTimeout, process);
+    }
+}
+function updateProcessInExpectedState(process, vars, externalVariables, transport, state) {
+    switch (process) {
+        case ProcessType.VendorRegistration:
+            if (ERPVendorNumber === null || ERPVendorNumber === void 0 ? void 0 : ERPVendorNumber.trim()) {
+                Log.Info("Updating vendor registration with vendor number:" + ERPVendorNumber);
+                vars.AddValue_String("VendorNumber__", ERPVendorNumber, true);
+            }
+            else {
+                Log.Info("Cannot update vendor registration because the vendor number is empty");
+            }
+            break;
+        case ProcessType.DetailedAccrualReportLauncher:
+            Log.Info("Updating detailed accrual report with document ID:" + ERPID);
+            vars.AddValue_String("ERPID__", ERPID, true);
+            break;
+        default:
+            {
+                Log.Info("Updating invoice with document ID:" + ERPID);
+                vars.AddValue_String("ERPInvoiceNumber__", ERPID, true);
+                externalVariables.AddValue_String("ScheduledActionParameters", Holds, true);
+                // Persist any ERPLifecycleStatus received alongside this ack so that a subsequent
+                // standard ack (without ERPLifecycleStatus node) can detect a pending TakenInCharge.
+                const pendingLifecycleStatus = Variable.GetValueAsString("ERPLifecycleStatus__");
+                if (pendingLifecycleStatus) {
+                    externalVariables.AddValue_String("PrevERPLifecycleStatusInVIP", pendingLifecycleStatus, true);
+                }
+                break;
+            }
+    }
+    vars.AddValue_String("ERPPostingError__", ERPError, true);
+    vars.AddValue_String("ERPAckRuidEx__", Data.GetValue("RuidEx"), true);
+    Sys.Helpers.TryCallFunction("Lib.AP.Customization.Validation.FinalizeERPAckUpdateInvoice", transport, process);
+    // Update custom fields
+    Sys.Helpers.TryCallFunction("Lib.P2P.Customization.Server.ERPAckProcessing.UpdateProcessVars", process, vars, externalVariables);
+    const scheduledAction = new Lib.CallScheduledAction.ScheduledAction();
+    scheduledAction.msnEx = vars.GetValue_String("MsnEx", 0);
+    scheduledAction.actionName = "continueAfterERPAck";
+    const isSuccess = Lib.CallScheduledAction.executeAction(vars, scheduledAction, transport, true);
+    if (isSuccess) {
+        // Fix RD00031845 : ensure ERPIntegrationTimeout is reset so invoice will not be considered
+        // as in ERPAck timeout if it has been re-posted without user interaction
+        externalVariables.AddValue_String("ERPIntegrationTimeout", "", true);
+    }
+    else if (state === 100) {
+        Log.Info("VIP state 100 - try to reopen it and call scheduled action again");
+        Lib.CallScheduledAction.executeAction(vars, scheduledAction, transport, true);
+    }
+    else {
+        retryScript("Failed resume processing on " + process, transport.GetLastErrorMessage());
+    }
+}
+function updateProcessInFrozenState(state, process, transport, waitingForUpdate, bProcessInERPIntegrationTimeout) {
+    if (state &lt;= 90) {
+        retryScript(`Waiting frozen process ${process} to be resumed`, transport.GetLastErrorMessage());
+    }
+    else {
+        // The process is not in the expected state: failure
+        updateProcessInInvalidState(state, waitingForUpdate, bProcessInERPIntegrationTimeout, process);
+    }
+}
+/**
+ * Manage records in state other than 90 or waiting state
+ * Add a log error in the current process and set in error
+ */
+function updateProcessInInvalidState(state, waitingForUpdate, dateCompare, process) {
+    let errorMsg = `Cannot update invoice with document ID ${ERPID} because it is not in the expected state (state=${state}`;
+    errorMsg += `, waitingForUpdate=${waitingForUpdate}, date compare=${dateCompare})`;
+    if (process === ProcessType.VendorRegistration) {
+        errorMsg = `Cannot update vendor registration with vendor number ${ERPVendorNumber}`;
+        errorMsg += ` because it is not in the expected state (state=${state}, waitingForUpdate=${waitingForUpdate})`;
+    }
+    Log.Error(errorMsg);
+    if (!waitingForUpdate) {
+        FormErrors.push(`The ${process} is not expecting an update from the ERP`);
+    }
+    if (state !== 90) {
+        FormErrors.push(`The ${process} is not in the expected state: ${state} instead of '90'`);
+    }
+    if (!dateCompare) {
+        FormErrors.push(`The ${process} is not in the expected state: The date comparison shows the process has been updated during the waiting period.`);
+    }
+    const errors = FormErrors.join("\n");
+    Data.SetValue("ProcessingError__", errors);
+    Data.SetValue("State", 200);
+}
+/*******************************
+Find the process to update
+********************************/
+function findAndUpdateProcess(process) {
+    var _a, _b;
+    const eddTransport = findRecordToUpdate(process);
+    if (eddTransport) {
+        // When lifecycle is managed by ERP, reject a standard ERPID ack if the VIP is already
+        // waiting for a lifecycle ack (BeingProcessedByERP) and the XML has no ERPLifecycleStatus node.
+        if (process === ProcessType.VendorInvoice) {
+            const invoiceStatus = eddTransport.GetUninheritedVars().GetValue_String("InvoiceStatus__", 0);
+            if (invoiceStatus === Lib.AP.InvoiceStatus.BeingProcessedByERP &amp;&amp; !((_b = (_a = validationGetERPAckXML()) === null || _a === void 0 ? void 0 : _a.selectSingleNode(validationXpathERPLifecycleStatus)) === null || _b === void 0 ? void 0 : _b.text)) {
+                const pendingLifecycleStatus = eddTransport.GetExternalVars().GetValue_String("PrevERPLifecycleStatusInVIP", 0);
+                if (pendingLifecycleStatus === Lib.AP.ERPAcknowledgment.ERPLifecycleStatus.TakenInCharge) {
+                    Log.Info(`Standard ERP ack received while VIP is BeingProcessedByERP with a pending TakenInCharge lifecycle status — firing ${Lib.AP.ERPAcknowledgment.Actions.ERPLifecycleTakenInCharge} (Esker ID: ${EskerID})`);
+                    eddTransport.ResumeWithActionAsync(Lib.AP.ERPAcknowledgment.Actions.ERPLifecycleTakenInCharge);
+                    return;
+                }
+                Log.Error(`Cannot perform standard ERP ID update for ${process} (Esker ID: ${EskerID}): invoice is waiting for an ERP lifecycle ack but ERPLifecycleStatus is missing from the XML`);
+                Data.SetValue("ProcessingError__", `Cannot update ${process}: invoice is awaiting an ERP lifecycle update`);
+                Data.SetValue("State", 200);
+                return;
+            }
+        }
+        updateProcess(eddTransport, process);
+        if (Data.GetValue("State") !== 200) {
+            // Activate a timeout on the process
+            const newValidityDate = new Date();
+            newValidityDate.setHours(newValidityDate.getHours() + VALIDITY_DURATION);
+            Data.SetValue("ValidityDateTime", newValidityDate);
+            // Wait for a response from the record
+            Process.WaitForUpdate();
+        }
+    }
+    else {
+        Data.SetValue("ProcessingError__", `Cannot find any ${process} matching the Esker ID: ${EskerID}`);
+        if (process === ProcessType.VendorInvoice) {
+            retryScript("Unable to retrieve invoice record", `Cannot find any ${process} matching the Esker ID: ${EskerID}`, true);
+        }
+        else {
+            Data.SetValue("State", 200);
+        }
+    }
+}
+/**
+ * Generate the Query and return the eddTransport to update
+ * @param process {string} Type of the process to update (VIP, VR)
+ * @return {xTransport} The transport that match the RUID/MSNEX from the XML
+ */
+function findRecordToUpdate(process) {
+    //MSN and ProcessID are mandatory to commit modification
+    Query.Reset();
+    Query.AddAttribute("MSN");
+    Query.AddAttribute("ProcessID");
+    Query.AddAttribute("ContainerFlag");
+    switch (process) {
+        case ProcessType.VendorRegistration:
+            Query.AddAttribute("ERPVendorNumber__");
+            break;
+        case ProcessType.VendorInvoice:
+            Query.AddAttribute("ERPInvoiceNumber__");
+            break;
+        case ProcessType.DetailedAccrualReportLauncher:
+            Query.AddAttribute("ERPID__");
+            break;
+        default:
+            break;
+    }
+    Query.AddAttribute("State");
+    Query.AddAttribute("WaitingForUpdate");
+    Query.AddAttribute("OwnerId");
+    Query.AddAttribute("OwnerPb");
+    Query.AddAttribute("MainAccountId");
+    Query.AddAttribute("RuidEx");
+    Query.AddAttribute("MsnEx");
+    Query.AddAttribute("InvoiceStatus__");
+    Query.AddAttribute("ProcessStatus__");
+    Query.AddAttribute("LastSavedDateTime");
+    Query.AddAttribute("ValidityDateTime");
+    Query.SetSearchInArchive(true);
+    Query.SetOptionEx("DoNotGetLocalDBFiles=1");
+    let ruid = EskerID;
+    if (ruid &amp;&amp; !ruid.includes("#")) {
+        // add missing process ID
+        switch (process) {
+            case ProcessType.VendorRegistration:
+                ruid = `CD#${Process.GetProcessID("Vendor Registration")}.${EskerID}`;
+                break;
+            case ProcessType.VendorInvoice:
+                ruid = `CD#${Process.GetProcessID("Vendor invoice")}.${EskerID}`;
+                break;
+            case ProcessType.DetailedAccrualReportLauncher:
+                ruid = `CD#${Process.GetProcessID("DetailedAccrualReportLauncher")}.${EskerID}`;
+                break;
+            case ProcessType.PurchaseOrder:
+                ruid = `CD#${Process.GetProcessID(ProcessType.PurchaseOrder)}.${EskerID}`;
+                break;
+            case ProcessType.GoodsReceipt:
+                ruid = `CD#${Process.GetProcessID(ProcessType.GoodsReceipt)}.${EskerID}`;
+                break;
+            default:
+                break;
+        }
+    }
+    Query.SetFilter(`RUIDEX=${ruid}`);
+    Query.MoveFirst();
+    return Query.MoveNext();
+}
+function validationGetERPAckXML() {
+    const xmlFile = Attach.GetInputFile(0);
+    if (xmlFile) {
+        try {
+            return Process.CreateXMLDOMElement(xmlFile);
+        }
+        catch (error) {
+            Log.Error("Cannot parse the XML file: ", error);
+            return null;
+        }
+    }
+    return null;
+}
+function handleErpAcknowledgmentProcessed() {
+    Log.Info("Notification received from the target process. ErpAck completed successfully.");
+    // In case the VIP says ok, restore the ValidityDateTime to 2 month
+    const validityDateTime = Data.GetValue("ValidityDateTime");
+    validityDateTime.setMonth(validityDateTime.getMonth() + 2);
+    Data.SetValue("ValidityDateTime", validityDateTime);
+}
+function updatePurchaseOrderProcess() {
+    Log.Info(`Update the Purchase order process with id ${EskerID}`);
+    let ruid = EskerID;
+    if (ruid &amp;&amp; !ruid.includes("#")) {
+        ruid = `CD#${Process.GetProcessID(ProcessType.PurchaseOrder)}.${EskerID}`;
+    }
+    try {
+        const updatableDocument = Process.GetUpdatableTransportAsProcessAdmin(ruid);
+        const vars = updatableDocument.GetUninheritedVars();
+        const externalVariables = updatableDocument.GetExternalVars();
+        const actionParts = [ERPError ? "OnERPAckError" : "OnERPAckReceived"];
+        if (ERPAckData.action &amp;&amp; ERPAckData.action !== "Create") {
+            actionParts.push(ERPAckData.action);
+        }
+        else {
+            externalVariables.AddValue_String("ERPACK_OrderNumber__", ERPID, true);
+        }
+        externalVariables.AddValue_String("ERPACK_TransactionID__", ERPAckData.transactionID, true);
+        externalVariables.AddValue_String("ERPACK_Error__", ERPError, true);
+        Sys.Helpers.TryCallFunction("Lib.P2P.Customization.Server.ERPAckProcessing.UpdateProcessVars", ProcessType.PurchaseOrder, vars, externalVariables);
+        const action = actionParts.join("-");
+        updatableDocument.ResumeWithActionAsync(action);
+    }
+    catch (error) {
+        Log.Error(`Cannot find any ${ProcessType.PurchaseOrder} matching the Esker ID: ${EskerID}`, error);
+        Data.SetValue("ProcessingError__", `Cannot find any ${ProcessType.PurchaseOrder} matching the Esker ID: ${EskerID}`);
+        Data.SetValue("State", 200);
+    }
+}
+function updateGoodsReceiptProcess() {
+    Log.Info("Update the Goods receipt process");
+    let ruid = EskerID;
+    if (ruid &amp;&amp; !ruid.includes("#")) {
+        ruid = `CD#${Process.GetProcessID(ProcessType.GoodsReceipt)}.${EskerID}`;
+    }
+    try {
+        const updatableDocument = Process.GetUpdatableTransportAsProcessAdmin(ruid);
+        const vars = updatableDocument.GetExternalVars();
+        vars.AddValue_String("ERPACK_GRNumber__", ERPID, true);
+        vars.AddValue_String("ERPACK_Error__", ERPError, true);
+        const action = ERPError ? "OnERPAckError" : "OnERPAckReceived";
+        updatableDocument.ResumeWithActionAsync(action);
+    }
+    catch (error) {
+        Log.Error(`Cannot find any ${ProcessType.GoodsReceipt} matching the Esker ID: ${EskerID}`, error);
+        Data.SetValue("ProcessingError__", `Cannot find any ${ProcessType.GoodsReceipt} matching the Esker ID: ${EskerID}`);
+        Data.SetValue("State", 200);
+    }
+}
+function isCustomLifecycleWaitingStatus(invoiceStatus) {
+    const mapping = Sys.Helpers.TryCallFunction("Lib.AP.Customization.Validation.GetERPLifecycleStatusMapping");
+    if (typeof mapping !== "object" || mapping === null) {
+        return false;
+    }
+    return Object.keys(mapping).some(key =&gt; mapping[key] === invoiceStatus);
+}
+/**
+ * Helper to get ERP lifecycle data variables without duplication
+ */
+function getERPLifecycleData() {
+    return {
+        erpReasonCode: Variable.GetValueAsString("ERPReasonCode__"),
+        erpReason: Variable.GetValueAsString("ERPReason__"),
+        erpReasonComment: Variable.GetValueAsString("ERPReasonComment__"),
+        erpActionCode: Variable.GetValueAsString("ERPActionCode__"),
+        erpActionReason: Variable.GetValueAsString("ERPActionReason__")
+    };
+}
+/**
+ * Maps an ERP lifecycle status to the ReasonCode/ActionCode scope used to resolve the valid code lists
+ * (shared with the CDV generation in Sys.FRB2B.CDV.AP.Mapping so an extended/bypassed code is not dropped from the CDV)
+ */
+function getReasonScopeForLifecycleStatus(lifecycleStatus) {
+    switch (lifecycleStatus) {
+        case Lib.AP.ERPAcknowledgment.ERPLifecycleStatus.Refused:
+            return Sys.FRB2B.AP.ReasonScope.Rejection;
+        case Lib.AP.ERPAcknowledgment.ERPLifecycleStatus.InDispute:
+            return Sys.FRB2B.AP.ReasonScope.Dispute;
+        default:
+            return undefined;
+    }
+}
+function getERPLifecyclePlainErrorMessage(translationKey, erpLifecycleData, lifecycleStatus) {
+    switch (translationKey) {
+        case "_ERPLifecycleInvalidReasonCode":
+            return erpLifecycleData.erpReasonCode
+                ? `Invalid ReasonCode '${erpLifecycleData.erpReasonCode}' for lifecycle status '${lifecycleStatus}'`
+                : `ReasonCode is mandatory for lifecycle status '${lifecycleStatus}'`;
+        case "_ERPLifecycleInvalidActionCode":
+            return `Invalid ActionCode '${erpLifecycleData.erpActionCode || ""}' for lifecycle status '${lifecycleStatus}'`;
+        default:
+            return translationKey;
+    }
+}
+/**
+ * If a reason code is provided, it must match the valid list for the scope (unless bypassed);
+ * completes the reason label from the valid list when absent.
+ */
+function validateReasonCode(validReasonMap, reasonScope, lifecycleStatus, erpLifecycleData, bypassValidation) {
+    if (!erpLifecycleData.erpReasonCode || !reasonScope) {
+        return { error: "", lazyError: "" };
+    }
+    if (!bypassValidation &amp;&amp; !Object.prototype.hasOwnProperty.call(validReasonMap, erpLifecycleData.erpReasonCode)) {
+        return {
+            error: getERPLifecyclePlainErrorMessage("_ERPLifecycleInvalidReasonCode", erpLifecycleData, lifecycleStatus),
+            lazyError: Language.CreateLazyTranslation("_ERPLifecycleInvalidReasonCode", erpLifecycleData.erpReasonCode, lifecycleStatus)
+        };
+    }
+    const resolvedReason = Object.prototype.hasOwnProperty.call(validReasonMap, erpLifecycleData.erpReasonCode)
+        ? validReasonMap[erpLifecycleData.erpReasonCode]
+        : "";
+    if (!erpLifecycleData.erpReason &amp;&amp; resolvedReason) {
+        erpLifecycleData.erpReason = resolvedReason;
+        Variable.SetValueAsString("ERPReason__", resolvedReason);
+    }
+    return { error: "", lazyError: "" };
+}
+/**
+ * Maps an ERP lifecycle status to the action name used to resume the target invoice.
+ * @returns null when the lifecycle status is not recognized.
+ */
+function getLifecycleActionName(lifecycleStatus) {
+    switch (lifecycleStatus) {
+        case Lib.AP.ERPAcknowledgment.ERPLifecycleStatus.Approved:
+            return Lib.AP.ERPAcknowledgment.Actions.ERPLifecycleApproved;
+        case Lib.AP.ERPAcknowledgment.ERPLifecycleStatus.Refused:
+            return Lib.AP.ERPAcknowledgment.Actions.ERPLifecycleRefused;
+        case Lib.AP.ERPAcknowledgment.ERPLifecycleStatus.InDispute:
+            return Lib.AP.ERPAcknowledgment.Actions.ERPLifecycleInDispute;
+        case Lib.AP.ERPAcknowledgment.ERPLifecycleStatus.TakenInCharge:
+            return Lib.AP.ERPAcknowledgment.Actions.ERPLifecycleTakenInCharge;
+        default:
+            return null;
+    }
+}
+/**
+ * If an action code is provided, it must match the valid list (unless bypassed);
+ * completes the action reason label from the valid list when absent.
+ */
+function validateActionCode(validActionMap, lifecycleStatus, erpLifecycleData, bypassValidation) {
+    if (!erpLifecycleData.erpActionCode) {
+        return { error: "", lazyError: "" };
+    }
+    if (!bypassValidation &amp;&amp; !Object.prototype.hasOwnProperty.call(validActionMap, erpLifecycleData.erpActionCode)) {
+        return {
+            error: getERPLifecyclePlainErrorMessage("_ERPLifecycleInvalidActionCode", erpLifecycleData, lifecycleStatus),
+            lazyError: Language.CreateLazyTranslation("_ERPLifecycleInvalidActionCode", erpLifecycleData.erpActionCode, lifecycleStatus)
+        };
+    }
+    if (!erpLifecycleData.erpActionReason &amp;&amp; validActionMap[erpLifecycleData.erpActionCode]) {
+        erpLifecycleData.erpActionReason = validActionMap[erpLifecycleData.erpActionCode];
+        Variable.SetValueAsString("ERPActionReason__", erpLifecycleData.erpActionReason);
+    }
+    return { error: "", lazyError: "" };
+}
+/**
+ * Validate the ERP-provided reason and action data from the ERPAck XML, and resolve the labels
+ * (erpReason/erpActionReason) to complete when missing.
+ * @returns the plain error message (for log/ProcessingError__), the lazy translation (for ERPLifecycleError variable),
+ * and the data when invalid data is detected (data is then the raw unvalidated values), otherwise
+ * empty errors and the data completed with resolved labels - this is what gets propagated to the CDV.
+ */
+function resolveERPLifecycleData(lifecycleStatus, xmlDoc) {
+    const erpLifecycleData = getERPLifecycleData();
+    const userExitResult = Sys.Helpers.TryCallFunction("Lib.AP.Customization.Validation.CustomERPLifecycleDataValidation", xmlDoc, lifecycleStatus, erpLifecycleData);
+    if (typeof userExitResult === "string" &amp;&amp; userExitResult.length &gt; 0) {
+        Log.Error(`ERP lifecycle validation rejected by CustomERPLifecycleDataValidation user exit: ${userExitResult}`);
+        return { error: userExitResult, lazyError: userExitResult, data: erpLifecycleData };
+    }
+    const bypassValidation = userExitResult === true;
+    if (bypassValidation) {
+        Log.Info("ERP lifecycle validation bypassed by CustomERPLifecycleDataValidation user exit");
+    }
+    const reasonScope = getReasonScopeForLifecycleStatus(lifecycleStatus);
+    // Reason (motif) is mandatory for Refused and InDispute statuses
+    if (!bypassValidation &amp;&amp; reasonScope &amp;&amp; !erpLifecycleData.erpReasonCode) {
+        return {
+            error: getERPLifecyclePlainErrorMessage("_ERPLifecycleInvalidReasonCode", erpLifecycleData, lifecycleStatus),
+            lazyError: Language.CreateLazyTranslation("_ERPLifecycleInvalidReasonCode", "", lifecycleStatus),
+            data: erpLifecycleData
+        };
+    }
+    // ExtendValidReasonAndActionCodes user exit is called once here, resolving both maps for the reason and action checks below
+    const { reasonCodes: validReasonMap, actionCodes: validActionMap } = Sys.FRB2B.AP.GetValidReasonAndActionCodes(reasonScope);
+    const reasonError = validateReasonCode(validReasonMap, reasonScope, lifecycleStatus, erpLifecycleData, bypassValidation);
+    if (reasonError.error) {
+        return { error: reasonError.error, lazyError: reasonError.lazyError, data: erpLifecycleData };
+    }
+    const actionError = validateActionCode(validActionMap, lifecycleStatus, erpLifecycleData, bypassValidation);
+    return { error: actionError.error, lazyError: actionError.lazyError, data: erpLifecycleData };
+}
+/**
+ * Update the Vendor Invoice process with the ERP lifecycle status (Approved/Refused/InDispute/TakenInCharge).
+ * Checks that the invoice is waiting for an update (state=90 + WaitingForUpdate) and in a lifecycle-waiting status
+ * (BeingProcessedByERP / OnHold / ToApprove) before waking it.
+ */
+function updateVendorInvoiceWithLifecycleStatus(process) {
+    const lifecycleStatus = Variable.GetValueAsString("ERPLifecycleStatus__");
+    const transport = findRecordToUpdate(process);
+    if (!transport) {
+        Log.Error(`Cannot find any ${process} matching the Esker ID: ${EskerID}`);
+        Data.SetValue("ProcessingError__", `Cannot find any ${process} matching the Esker ID: ${EskerID}`);
+        retryScript("Unable to retrieve invoice record", `Cannot find any ${process} matching the Esker ID: ${EskerID}`, true);
+        return;
+    }
+    const vars = transport.GetUninheritedVars();
+    const externalVars = transport.GetExternalVars();
+    const state = vars.GetValue_Long("State", 0);
+    const waitingForUpdate = vars.GetValue_Long("WaitingForUpdate", 0);
+    const invoiceStatus = vars.GetValue_String("InvoiceStatus__", 0);
+    const isWaitingForLifecycle = invoiceStatus === Lib.AP.InvoiceStatus.BeingProcessedByERP
+        || invoiceStatus === Lib.AP.InvoiceStatus.OnHold
+        || invoiceStatus === Lib.AP.InvoiceStatus.ToApprove
+        || isCustomLifecycleWaitingStatus(invoiceStatus);
+    if (state !== 90 || !waitingForUpdate || !isWaitingForLifecycle) {
+        Log.Info(`Invoice not in lifecycle-waiting state (state=${state}, waitingForUpdate=${waitingForUpdate}, invoiceStatus=${invoiceStatus})`);
+        Log.Info(`Falling back to standard ERP ID update for Esker ID: ${EskerID}`);
+        findAndUpdateProcess(process);
+        return;
+    }
+    // The status must be resolved before validating its payload, so an unsupported status is rejected here
+    // and never reaches the ERPLifecycleError resume path below (which would leave the invoice untouched otherwise).
+    const actionName = getLifecycleActionName(lifecycleStatus);
+    if (!actionName) {
+        Log.Error(`Unknown ERP lifecycle status: ${lifecycleStatus}`);
+        Data.SetValue("ProcessingError__", `Unknown ERP lifecycle status: ${lifecycleStatus}`);
+        Data.SetValue("State", 200);
+        return;
+    }
+    const { error: validationError, lazyError: validationLazyError, data: erpLifecycleData } = resolveERPLifecycleData(lifecycleStatus, validationGetERPAckXML());
+    if (validationError) {
+        Log.Error(`Invalid ERP lifecycle data: ${validationError}`);
+        ERPError = validationLazyError;
+        Data.SetValue("ProcessingError__", validationError);
+        // A dedicated marker (distinct from ERPPostingError__) so Lib.AP.ShouldAllowResumePendingERPDrivenStatus can tell
+        // a lifecycle validation error apart from an ordinary ERP posting error; kept as a Variable (not a Data field)
+        // since it is only ever read/written from scripts, never queried or bound to a layout control
+        externalVars.AddValue_String("ERPLifecycleError", ERPError, true);
+        vars.AddValue_String("ERPAckRuidEx__", Data.GetValue("RuidEx"), true);
+        transport.ResumeWithActionAsync(Lib.AP.ERPAcknowledgment.Actions.ERPLifecycleError);
+        return;
+    }
+    externalVars.AddValue_String("PrevERPLifecycleStatusInVIP", lifecycleStatus, true);
+    externalVars.AddValue_String("ERPReasonOptions", JSON.stringify(erpLifecycleData), true);
+    Log.Info(`Updating vendor invoice ${EskerID} with lifecycle status=${lifecycleStatus}, action=${actionName}`);
+    transport.ResumeWithActionAsync(actionName);
+}
+function main() {
+    var _a;
+    if (Data.GetValue("State") &lt; 50) {
+        // Validation script executed after extraction script, don't do anything
+        // Validation script will be re-executed as the process don't expect a manual approval
+        return;
+    }
+    const xmlDoc = validationGetERPAckXML();
+    const isAccrualReport = xmlDoc === null || xmlDoc === void 0 ? void 0 : xmlDoc.selectSingleNode(validationXpathDetailedAccrualReportLauncherID);
+    // Require at least an ERP error or an identifier (invoice ID, vendor ID) except for Accrual Report
+    if ((!isAccrualReport &amp;&amp; !(ERPID === null || ERPID === void 0 ? void 0 : ERPID.trim())) &amp;&amp; !(ERPVendorNumber === null || ERPVendorNumber === void 0 ? void 0 : ERPVendorNumber.trim()) &amp;&amp; !ERPError) {
+        Data.SetValue("ProcessingError__", "Neither ERP Id nor ERP Error were provided");
+        Data.SetValue("State", 200);
+        return;
+    }
+    if (Data.GetActionName() === Lib.AP.ERPAcknowledgment.Actions.ErpAcknowledgmentProcessed) {
+        handleErpAcknowledgmentProcessed();
+    }
+    else if (xmlDoc === null || xmlDoc === void 0 ? void 0 : xmlDoc.selectSingleNode(validationXpathVendorRegistrationID)) {
+        Log.Info("Update the Vendor Registration process");
+        findAndUpdateProcess(ProcessType.VendorRegistration);
+    }
+    else if (xmlDoc === null || xmlDoc === void 0 ? void 0 : xmlDoc.selectSingleNode(validationXpathDetailedAccrualReportLauncherID)) {
+        Log.Info("Update the Detailed Accrual Report Launcher process");
+        findAndUpdateProcess(ProcessType.DetailedAccrualReportLauncher);
+    }
+    else if (xmlDoc === null || xmlDoc === void 0 ? void 0 : xmlDoc.selectSingleNode(validationXpathEskerPOID)) {
+        updatePurchaseOrderProcess();
+    }
+    else if (xmlDoc === null || xmlDoc === void 0 ? void 0 : xmlDoc.selectSingleNode(validationXpathEskerGRID)) {
+        updateGoodsReceiptProcess();
+    }
+    else if ((_a = xmlDoc === null || xmlDoc === void 0 ? void 0 : xmlDoc.selectSingleNode(validationXpathERPLifecycleStatus)) === null || _a === void 0 ? void 0 : _a.text) {
+        Log.Info("Update the Vendor Invoice process with ERP lifecycle status");
+        updateVendorInvoiceWithLifecycleStatus(ProcessType.VendorInvoice);
+    }
+    else {
+        // By default, update the VIP
+        Log.Info("Update the Vendor Invoice process");
+        findAndUpdateProcess(ProcessType.VendorInvoice);
+    }
+}
+main();
+//# sourceMappingURL=validationscript.js.map</ValidationScript>
+      <AllowTagCoverPages>true</AllowTagCoverPages>
+      <AllowTagNewDocuments>true</AllowTagNewDocuments>
+      <AllowTagAttachments>true</AllowTagAttachments>
+      <ExtractionScriptAllowRetry>true</ExtractionScriptAllowRetry>
+      <extractionscriptIncludedScripts>Sys/Sys_Helpers</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>[LIB_AP_CUSTOMIZATION_EXTRACTION]</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>[LIB_P2P_CUSTOMIZATION_SERVER]</extractionscriptIncludedScripts>
+      <ExtractionScript>"use strict";
+/*******************************
+Expected ERP ACK Format: Vendor Invoice
+********************************
+
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;ERPAck&gt;
+    &lt;ERPID&gt; ERP ID &lt;/ERPID&gt;
+    &lt;EskerInvoiceID&gt; Esker ID &lt;/EskerInvoiceID&gt;
+    &lt;ERPPostingError&gt; ERP Error &lt;/ERPPostingError&gt;
+    &lt;Holds&gt;
+        &lt;Hold&gt;
+            &lt;HoldName&gt;&lt;/HoldName&gt;
+            &lt;HoldDate&gt;&lt;/HoldDate&gt;
+            &lt;HoldReason&gt;&lt;/HoldReason&gt;
+        &lt;/Hold&gt;
+    &lt;/Holds&gt;
+&lt;/ERPAck&gt;
+
+*/
+/*******************************
+Expected ERP ACK Format: Vendor Invoice Lifecycle Status
+********************************
+
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;ERPAck&gt;
+    &lt;EskerInvoiceID&gt; Esker ID &lt;/EskerInvoiceID&gt;
+    &lt;ERPLifecycleStatus&gt;Approved|Refused|InDispute|TakenInCharge&lt;/ERPLifecycleStatus&gt;
+    &lt;ReasonCode&gt; Reason Code (mandatory for Refused and InDispute) &lt;/ReasonCode&gt;
+    &lt;Reason&gt; Reason Label (optional) &lt;/Reason&gt;
+    &lt;ReasonComment&gt; Comment (optional) &lt;/ReasonComment&gt;
+    &lt;ActionCode&gt; Action Code (optional) &lt;/ActionCode&gt;
+    &lt;ActionReason&gt; Action Reason (optional) &lt;/ActionReason&gt;
+&lt;/ERPAck&gt;
+
+*/
+/*******************************
+Expected ERP ACK Format: Vendor Registration
+********************************
+
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;ERPAck&gt;
+    &lt;ERPVendorNumber&gt; ERP ID &lt;/ERPVendorNumber&gt;
+    &lt;EskerVendorRegistrationID&gt; Esker ID &lt;/EskerVendorRegistrationID&gt;
+    &lt;ERPPostingError&gt; ERP Error &lt;/ERPPostingError&gt;
+&lt;/ERPAck&gt;
+
+
+/*******************************
+Expected ERP ACK Format: Detailed Accrual Report
+********************************
+
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;ERPAck&gt;
+    &lt;ERPID&gt; ERP ID &lt;/ERPID&gt;
+    &lt;DetailedAccrualReportLauncherID&gt; Esker ID &lt;/DetailedAccrualReportLauncherID&gt;
+    &lt;ERPPostingError&gt; ERP Error &lt;/ERPPostingError&gt;
+&lt;/ERPAck&gt;
+
+/*******************************
+Expected ERP ACK Format: Purchase order - Create
+********************************
+
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;ERPAck&gt;
+    &lt;TransactionID&gt; Esker ERP Transaction ID &lt;/TransactionID&gt;
+    &lt;ERPID&gt; ERP ID &lt;/ERPID&gt;
+    &lt;EskerPOID&gt; Esker ID &lt;/EskerPOID&gt;
+    &lt;ERPPostingError&gt; ERP Error &lt;/ERPPostingError&gt;
+&lt;/ERPAck&gt;
+
+/*******************************
+Expected ERP ACK Format: Purchase order - Update|CancelItems|ReOpenItems|Cancel // Select the correct action needed among the 3 options depending on the OrderSubStatus__ of the PO in Esker
+********************************
+
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;ERPAck&gt;
+    &lt;TransactionID&gt; Esker ERP Transaction ID &lt;/TransactionID&gt;
+    &lt;ERPID&gt; ERP ID &lt;/ERPID&gt;
+    &lt;EskerPOID&gt; Esker ID &lt;/EskerPOID&gt;
+    &lt;ERPPostingError&gt; ERP Error &lt;/ERPPostingError&gt;
+    &lt;Action&gt;Update|CancelItems|ReOpenItems|Cancel&lt;/Action&gt;
+&lt;/ERPAck&gt;
+
+/*******************************
+Expected ERP ACK Format: Goods Receipt
+********************************
+
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;ERPAck&gt;
+    &lt;ERPID&gt; ERP ID &lt;/ERPID&gt;
+    &lt;EskerGRID&gt; Esker ID &lt;/EskerGRID&gt;
+    &lt;ERPPostingError&gt; ERP Error &lt;/ERPPostingError&gt;
+&lt;/ERPAck&gt;
+
+*/
+// Common xml nodes
+const xpathERPError = "/ERPAck/ERPPostingError";
+const xpathERPAction = "/ERPAck/Action";
+// Vendor invoice nodes
+const xpathERPID = "/ERPAck/ERPID";
+const xpathEskerInvoiceID = "/ERPAck/EskerInvoiceID";
+const xpathHolds = "/ERPAck/Holds/Hold";
+// Vendor registration specifics nodes
+const xpathERPVendorNumber = "/ERPAck/ERPVendorNumber";
+const xpathVendorRegistrationID = "/ERPAck/EskerVendorRegistrationID";
+// Detailed accrual report nodes
+const xpathDetailedAccrualReportLauncherID = "/ERPAck/DetailedAccrualReportLauncherID";
+// Purchase order nodes
+const xpathEskerPOID = "/ERPAck/EskerPOID";
+// Goods receipt nodes
+const xpathEskerGRID = "/ERPAck/EskerGRID";
+// ERP Lifecycle ack nodes
+const xpathERPLifecycleStatus = "/ERPAck/ERPLifecycleStatus";
+const xpathReasonCode = "/ERPAck/ReasonCode";
+const xpathReason = "/ERPAck/Reason";
+const xpathReasonComment = "/ERPAck/ReasonComment";
+const xpathActionCode = "/ERPAck/ActionCode";
+const xpathActionReason = "/ERPAck/ActionReason";
+function serializeAckData(xmlDoc, data) {
+    var _a;
+    const action = (_a = xmlDoc.selectSingleNode(xpathERPAction)) === null || _a === void 0 ? void 0 : _a.text;
+    Variable.SetValueAsString("ERPAckData", JSON.stringify({
+        ...data,
+        action: action
+    }));
+}
+function extractionMain() {
+    // Only an explicit boolean true from the user exit must bypass the standard extraction flow.
+    if (Sys.Helpers.TryCallFunction("Lib.AP.Customization.Extraction.OnERPAckExtractionScriptBegin") === true) {
+        Log.Info("Extraction script bypassed by OnERPAckExtractionScriptBegin user exit");
+        return;
+    }
+    /*******************************
+    Read the ERP Acknowledgment File
+    ********************************/
+    const xmlDoc = getERPAckXML();
+    if (xmlDoc === null) {
+        Log.Info("No attached XML file to read");
+        return;
+    }
+    if (xmlDoc.selectSingleNode(xpathEskerInvoiceID)) {
+        parseInvoiceAckValues(xmlDoc);
+    }
+    else if (xmlDoc.selectSingleNode(xpathEskerPOID)) {
+        parsePurchaseOrderAckValues(xmlDoc);
+    }
+    else if (xmlDoc.selectSingleNode(xpathEskerGRID)) {
+        parseGoodsReceiptAckValues(xmlDoc);
+    }
+    else if (xmlDoc.selectSingleNode(xpathVendorRegistrationID)) {
+        parseVendorRegistrationAckValues(xmlDoc);
+    }
+    else if (xmlDoc.selectSingleNode(xpathDetailedAccrualReportLauncherID)) {
+        parseAccrualAckValues(xmlDoc);
+    }
+    else {
+        throw new Error("No valid value read from ERPAck XML, retrying to avoid temporary error");
+    }
+    parseErrorIfNeeded(xmlDoc);
+    Sys.Helpers.TryCallFunction("Lib.AP.Customization.Extraction.OnERPAckExtractionScriptEnd");
+    // parse custom values
+    Sys.Helpers.TryCallFunction("Lib.P2P.Customization.Server.ERPAckProcessing.ExtractDataFromERPAck", xmlDoc);
+}
+function getERPAckXML() {
+    const xmlFile = Attach.GetInputFile(0);
+    if (xmlFile) {
+        try {
+            return Process.CreateXMLDOMElement(xmlFile);
+        }
+        catch (error) {
+            Log.Error("Cannot parse the XML file: ", error);
+            throw error;
+        }
+    }
+    return null;
+}
+/**
+ * Parse values of an Invoice ERP Ack XML
+ * @param xmlDoc
+ */
+function parseInvoiceAckValues(xmlDoc) {
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
+    var _p;
+    Data.SetValue("UpdateType__", Language.Translate("_Update vendor invoice processing"));
+    Data.SetValue("EskerID__", xmlDoc.selectSingleNode(xpathEskerInvoiceID).text);
+    Data.SetValue("Document_ERP_ID__", (_p = (_a = xmlDoc.selectSingleNode(xpathERPID)) === null || _a === void 0 ? void 0 : _a.text) !== null &amp;&amp; _p !== void 0 ? _p : "");
+    const holdList = xmlDoc.selectNodes(xpathHolds);
+    const jsonHolds = [];
+    for (let i = 0; i &lt; holdList.length; i++) {
+        const holdNode = holdList.item(i);
+        const jsonHold = {
+            HoldName__: holdNode.selectSingleNode("HoldName").text,
+            HoldDate__: holdNode.selectSingleNode("HoldDate").text,
+            HoldReason__: holdNode.selectSingleNode("HoldReason").text
+        };
+        jsonHolds.push(jsonHold);
+    }
+    Variable.SetValueAsString("Holds__", JSON.stringify(jsonHolds));
+    const lifecycleStatus = (_c = (_b = xmlDoc.selectSingleNode(xpathERPLifecycleStatus)) === null || _b === void 0 ? void 0 : _b.text) === null || _c === void 0 ? void 0 : _c.trim();
+    if (lifecycleStatus) {
+        Log.Info("ERPLifecycleStatus value: " + lifecycleStatus);
+        Variable.SetValueAsString("ERPLifecycleStatus__", lifecycleStatus);
+        // Reset reason variables to avoid keeping stale values when the extraction script is re-run.
+        Variable.SetValueAsString("ERPReasonCode__", "");
+        Variable.SetValueAsString("ERPReason__", "");
+        Variable.SetValueAsString("ERPReasonComment__", "");
+        Variable.SetValueAsString("ERPActionCode__", "");
+        Variable.SetValueAsString("ERPActionReason__", "");
+        const reasonCode = (_e = (_d = xmlDoc.selectSingleNode(xpathReasonCode)) === null || _d === void 0 ? void 0 : _d.text) === null || _e === void 0 ? void 0 : _e.trim();
+        if (reasonCode) {
+            Log.Info("ReasonCode value: " + reasonCode);
+            Variable.SetValueAsString("ERPReasonCode__", reasonCode);
+        }
+        const reason = (_g = (_f = xmlDoc.selectSingleNode(xpathReason)) === null || _f === void 0 ? void 0 : _f.text) === null || _g === void 0 ? void 0 : _g.trim();
+        if (reason) {
+            Log.Info("Reason value: " + reason);
+            Variable.SetValueAsString("ERPReason__", reason);
+        }
+        const reasonComment = (_j = (_h = xmlDoc.selectSingleNode(xpathReasonComment)) === null || _h === void 0 ? void 0 : _h.text) === null || _j === void 0 ? void 0 : _j.trim();
+        if (reasonComment) {
+            Log.Info("ReasonComment value: " + reasonComment);
+            Variable.SetValueAsString("ERPReasonComment__", reasonComment);
+        }
+        const actionCode = (_l = (_k = xmlDoc.selectSingleNode(xpathActionCode)) === null || _k === void 0 ? void 0 : _k.text) === null || _l === void 0 ? void 0 : _l.trim();
+        if (actionCode) {
+            Log.Info("ActionCode value: " + actionCode);
+            Variable.SetValueAsString("ERPActionCode__", actionCode);
+        }
+        const actionReason = (_o = (_m = xmlDoc.selectSingleNode(xpathActionReason)) === null || _m === void 0 ? void 0 : _m.text) === null || _o === void 0 ? void 0 : _o.trim();
+        if (actionReason) {
+            Log.Info("ActionReason value: " + actionReason);
+            Variable.SetValueAsString("ERPActionReason__", actionReason);
+        }
+    }
+}
+/**
+ * Parse values from an Vendor Registration ERP Ack XML
+ * @param xmlDoc
+ */
+function parseVendorRegistrationAckValues(xmlDoc) {
+    // We are receiving a vendor registration ack
+    Data.SetValue("UpdateType__", Language.Translate("_Update vendor registration"));
+    Data.SetValue("EskerID__", xmlDoc.selectSingleNode(xpathVendorRegistrationID).text);
+    Data.SetValue("ERP_Vendor_Number__", xmlDoc.selectSingleNode(xpathERPVendorNumber).text);
+}
+/**
+ * Parse values from a Detailed Accrual Report ERP Ack XML
+ * @param xmlDoc
+ */
+function parseAccrualAckValues(xmlDoc) {
+    var _a;
+    var _b;
+    // We are receiving a detailed accrual report ack
+    Data.SetValue("UpdateType__", Language.Translate("_Update Detailed Accrual Report Launcher"));
+    Data.SetValue("EskerID__", xmlDoc.selectSingleNode(xpathDetailedAccrualReportLauncherID).text);
+    Data.SetValue("Document_ERP_ID__", (_b = (_a = xmlDoc.selectSingleNode(xpathERPID)) === null || _a === void 0 ? void 0 : _a.text) !== null &amp;&amp; _b !== void 0 ? _b : "");
+}
+/**
+ * Parse values from a Purchase Order ERP Ack XML
+ * @param xmlDoc
+ */
+function parsePurchaseOrderAckValues(xmlDoc) {
+    var _a, _b;
+    var _c;
+    // We are receiving a purchase order ack
+    Data.SetValue("UpdateType__", Language.Translate("_Update purchase order"));
+    Data.SetValue("EskerID__", xmlDoc.selectSingleNode(xpathEskerPOID).text);
+    Data.SetValue("Document_ERP_ID__", (_c = (_a = xmlDoc.selectSingleNode(xpathERPID)) === null || _a === void 0 ? void 0 : _a.text) !== null &amp;&amp; _c !== void 0 ? _c : "");
+    serializeAckData(xmlDoc, {
+        transactionID: (_b = xmlDoc.selectSingleNode("/ERPAck/TransactionID")) === null || _b === void 0 ? void 0 : _b.text
+    });
+}
+function parseGoodsReceiptAckValues(xmlDoc) {
+    var _a;
+    var _b;
+    // We are receiving a purchase order ack
+    Data.SetValue("UpdateType__", Language.Translate("_Update goods receipt"));
+    Data.SetValue("EskerID__", xmlDoc.selectSingleNode(xpathEskerGRID).text);
+    Data.SetValue("Document_ERP_ID__", (_b = (_a = xmlDoc.selectSingleNode(xpathERPID)) === null || _a === void 0 ? void 0 : _a.text) !== null &amp;&amp; _b !== void 0 ? _b : "");
+}
+/**
+ * Parse the error field from the ERP Ack xml
+ * @param xmlDoc
+ */
+function parseErrorIfNeeded(xmlDoc) {
+    const erpErrorXmlNode = xmlDoc.selectSingleNode(xpathERPError);
+    if (erpErrorXmlNode) {
+        Data.SetValue("ERPPostingError__", erpErrorXmlNode.text);
+    }
+}
+extractionMain();
+//# sourceMappingURL=extractionscript.js.map</ExtractionScript>
+      <AllowRemovePages>true</AllowRemovePages>
+      <AllowSwapPages>true</AllowSwapPages>
+      <PostProcessingScriptAllowRetry>
+      </PostProcessingScriptAllowRetry>
+      <PostProcessingScript>
+      </PostProcessingScript>
+    </gdr>
+    <lg>
+      <process_da>{
+	"_ERP vendor number": "Leverandørnummer i ERP",
+	"_ERP vendor number_report": "Leverandørnummer i ERP",
+	"_ProcessingError": "Fejl under behandling",
+	"_ProcessingError_report": "Fejl under behandling",
+	"_Update Detailed Accrual Report Launcher": "Periodiseringsrapport for indkøbsordrer med varelinjer",
+	"_Update goods receipt": "Kvittering for varer og serviceydelser",
+	"_Update purchase order": "Indkøbsordre",
+	"_Update type": "Procestype",
+	"_Update type_report": "Procestype",
+	"_Update vendor invoice processing": "Leverandørfaktura",
+	"_Update vendor registration": "Leverandørregistrering",
+	"Cannot find any record matching the Esker ID :": "Kan ikke finde nogen poster, der matcher det interne id. ",
+	"Document ERP ID": "Dokument-id i ERP",
+	"ERP Document Identifier": "Dokumentidentifikator i ERP",
+	"ERP posting error": "Fejl i ERP-opslag",
+	"Esker Identifier": "Internt id",
+	"Identifier of invoice to update": "Identifikator for proces, der skal opdateres",
+	"Update invoice with ERP ID": "Opdater faktura med id i ERP"
+}</process_da>
+      <process_de>{
+	"_ERP vendor number": "Lieferantennummer im ERP-System",
+	"_ERP vendor number_report": "Lieferantennummer im ERP-System",
+	"_ProcessingError": "Verarbeitungsfehler",
+	"_ProcessingError_report": "Verarbeitungsfehler",
+	"_Update Detailed Accrual Report Launcher": "Bericht über die Abgrenzung der Bestellpositionen",
+	"_Update goods receipt": "Wareneingangs- und Serviceerbringungsbeleg",
+	"_Update purchase order": "Bestellung",
+	"_Update type": "Prozesstyp",
+	"_Update type_report": "Prozesstyp",
+	"_Update vendor invoice processing": "Lieferantenrechnung",
+	"_Update vendor registration": "Lieferantenregistrierung",
+	"Cannot find any record matching the Esker ID :": "Es wurde keine Rechnung gefunden für die interne ID ",
+	"Document ERP ID": "Dokument-ERP-ID",
+	"ERP Document Identifier": "ERP-ID des Dokuments",
+	"ERP posting error": "ERP-Buchungsfehler",
+	"Esker Identifier": "Interne ID",
+	"Identifier of invoice to update": "ID des zu aktualisierenden Prozess",
+	"Update invoice with ERP ID": "ERP-ID-Aktualisierung"
+}</process_de>
+      <process_JA>{
+	"_ERP vendor number": "ERPの仕入先番号",
+	"_ERP vendor number_report": "ERPの仕入先番号",
+	"_ProcessingError": "処理エラー",
+	"_ProcessingError_report": "処理エラー",
+	"_Update Detailed Accrual Report Launcher": "PO明細品目見越金レポート",
+	"_Update goods receipt": "品物とサービスの受領書",
+	"_Update purchase order": "発注書",
+	"_Update type": "処理タイプ",
+	"_Update type_report": "処理タイプ",
+	"_Update vendor invoice processing": "仕入先請求書",
+	"_Update vendor registration": "仕入先登録",
+	"Cannot find any record matching the Esker ID :": "内部IDに一致するレコードが見つかりません ",
+	"Document ERP ID": "文書ERP ID",
+	"ERP Document Identifier": "文書ERP ID",
+	"ERP posting error": "ERP登録エラー",
+	"Esker Identifier": "内部ID",
+	"Identifier of invoice to update": "更新する処理のID",
+	"Update invoice with ERP ID": "ERP IDでプロセスを更新"
+}</process_JA>
+      <process_en>{
+	"_ERP vendor number": "Supplier number in ERP",
+	"_ERP vendor number_report": "Supplier number in ERP",
+	"_ProcessingError": "Processing error",
+	"_ProcessingError_report": "Processing error",
+	"_Update Detailed Accrual Report Launcher": "Accrual report",
+	"_Update goods receipt": "Goods and services receipt",
+	"_Update purchase order": "Purchase order",
+	"_Update type": "Process type",
+	"_Update type_report": "Process type",
+	"_Update vendor invoice processing": "Supplier invoice",
+	"_Update vendor registration": "Supplier registration",
+	"Cannot find any record matching the Esker ID :": "Cannot find any record matching the internal ID ",
+	"Document ERP ID": "Document ERP ID",
+	"ERP Document Identifier": "Document ERP Identifier",
+	"ERP posting error": "ERP posting error",
+	"Esker Identifier": "Internal ID",
+	"Identifier of invoice to update": "Identifier of process to update",
+	"Update invoice with ERP ID": "Update process with ERP ID"
+}</process_en>
+      <process_es>{
+	"_ERP vendor number": "Número de proveedor en el ERP",
+	"_ERP vendor number_report": "Número de proveedor en el ERP",
+	"_ProcessingError": "Error de procesamiento",
+	"_ProcessingError_report": "Error de procesamiento",
+	"_Update Detailed Accrual Report Launcher": "Informe sobre facturas pendientes de recibir",
+	"_Update goods receipt": "Entrada de bienes y servicios",
+	"_Update purchase order": "Pedido de compra",
+	"_Update type": "Tipo de proceso",
+	"_Update type_report": "Tipo de proceso",
+	"_Update vendor invoice processing": "Factura de proveedor",
+	"_Update vendor registration": "Solicitud de registro del proveedor",
+	"Cannot find any record matching the Esker ID :": "No se puede encontrar la factura número :",
+	"Document ERP ID": "ID de ERP del documento",
+	"ERP Document Identifier": "Identificador de ERP del documento",
+	"ERP posting error": "Error de contabilización en el ERP",
+	"Esker Identifier": "Identificador interno",
+	"Identifier of invoice to update": "Identificador del proceso para actualizar",
+	"Update invoice with ERP ID": "Actualización del proceso con el identificador de ERP"
+}</process_es>
+      <process_fr>{
+	"_ERP vendor number": "Numéro fournisseur dans l'ERP",
+	"_ERP vendor number_report": "Numéro fournisseur dans l'ERP",
+	"_ProcessingError": "Erreur de traitement",
+	"_ProcessingError_report": "Erreur de traitement",
+	"_Update Detailed Accrual Report Launcher": "Rapport des factures non parvenues",
+	"_Update goods receipt": "Entrée de biens et services",
+	"_Update purchase order": "Commande fournisseur",
+	"_Update type": "Type de processus",
+	"_Update type_report": "Type de processus",
+	"_Update vendor invoice processing": "Facture fournisseur",
+	"_Update vendor registration": "Demande d'enregistrement du fournisseur",
+	"Cannot find any record matching the Esker ID :": "Il n'existe aucune facture correspondant à l'identifiant interne ",
+	"Document ERP ID": "ID ERP du document",
+	"ERP Document Identifier": "Identifiant ERP du document",
+	"ERP posting error": "Erreur de comptabilisation dans l'ERP",
+	"Esker Identifier": "Identifiant interne",
+	"Identifier of invoice to update": "Identifiant du processus à mettre à jour",
+	"Update invoice with ERP ID": "Mise à jour du processus avec l'ID ERP"
+}</process_fr>
+      <process_nl-NL>{
+	"_ERP vendor number": "Nummer leverancier in ERP",
+	"_ERP vendor number_report": "Nummer leverancier in ERP",
+	"_ProcessingError": "Fout bij verwerking",
+	"_ProcessingError_report": "Fout bij verwerking",
+	"_Update Detailed Accrual Report Launcher": "PO regelitem toerekeningsrapport ",
+	"_Update goods receipt": "Ontvangstbewijs van goederen en services",
+	"_Update purchase order": "Kooporder",
+	"_Update type": "Procestype",
+	"_Update type_report": "Procestype",
+	"_Update vendor invoice processing": "Leveranciersfactuur",
+	"_Update vendor registration": "Registratie leverancier",
+	"Cannot find any record matching the Esker ID :": "Geen registraties gevonden die overeenkomen met de interne ID",
+	"Document ERP ID": "ID ERP-document",
+	"ERP Document Identifier": "Identificatie ERP-document",
+	"ERP posting error": "Fout boeking ERP",
+	"Esker Identifier": "Interne ID",
+	"Identifier of invoice to update": "Identificatie van bij te werken proces",
+	"Update invoice with ERP ID": "Proces met ERP ID bijwerken"
+}</process_nl-NL>
+      <process_pl>{
+	"_ERP vendor number": "Numer dostawcy w systemie ERP",
+	"_ERP vendor number_report": "Numer dostawcy w systemie ERP",
+	"_ProcessingError": "Błąd przetwarzania",
+	"_ProcessingError_report": "Błąd przetwarzania",
+	"_Update Detailed Accrual Report Launcher": "Raport z rozliczeń międzyokresowych",
+	"_Update goods receipt": "Przyjęcie materiałów i usług",
+	"_Update purchase order": "Zamówienie zakupu",
+	"_Update type": "Typ procesu",
+	"_Update type_report": "Typ procesu",
+	"_Update vendor invoice processing": "Faktura dostawcy",
+	"_Update vendor registration": "Rejestracja dostawcy",
+	"Cannot find any record matching the Esker ID :": "Nie można znaleźć rekordów pasujących do identyfikatora wewnętrznego",
+	"Document ERP ID": "Id. ERP dokumentu",
+	"ERP Document Identifier": "Identyfikator ERP dokumentu",
+	"ERP posting error": "Błąd księgowania ERP",
+	"Esker Identifier": "Id. wewnętrzny",
+	"Identifier of invoice to update": "Identyfikator procesu do aktualizacji",
+	"Update invoice with ERP ID": "Aktualizuj proces z identyfikatorem ERP"
+}</process_pl>
+      <process_it>{
+	"_ERP vendor number": "Numero fornitore nel sistema ERP",
+	"_ERP vendor number_report": "Numero fornitore nel sistema ERP",
+	"_ProcessingError": "Errore di elaborazione",
+	"_ProcessingError_report": "Errore di elaborazione",
+	"_Update Detailed Accrual Report Launcher": "Report sulle fatture da ricevere",
+	"_Update goods receipt": "Entrata merci e servizi",
+	"_Update purchase order": "Ordine di acquisto",
+	"_Update type": "Tipo di trattamento",
+	"_Update type_report": "Tipo di trattamento",
+	"_Update vendor invoice processing": "Fattura fornitore",
+	"_Update vendor registration": "Registrazione fornitore",
+	"Cannot find any record matching the Esker ID :": "Impossibile trovare la fattura numero :",
+	"Document ERP ID": "ID ERP",
+	"ERP Document Identifier": "Identificatore ERP",
+	"ERP posting error": "Errore di registrazione nel sistema ERP",
+	"Esker Identifier": "Identificatore interno",
+	"Identifier of invoice to update": "Identificatore del trattamento da aggiornare",
+	"Update invoice with ERP ID": "Aggiornamento del trattamento con identificatore ERP"
+}</process_it>
+      <process_sk>{
+	"_ERP vendor number": "Číslo dodávateľa v ERP",
+	"_ERP vendor number_report": "Číslo dodávateľa v ERP",
+	"_ProcessingError": "Chyba spracovania",
+	"_ProcessingError_report": "Chyba spracovania",
+	"_Update Detailed Accrual Report Launcher": "Výkaz o časovom rozlíšení",
+	"_Update goods receipt": "Príjmy tovaru a služieb",
+	"_Update purchase order": "Objednávka",
+	"_Update type": "Typ procesu",
+	"_Update type_report": "Typ procesu",
+	"_Update vendor invoice processing": "Faktúra dodávateľa",
+	"_Update vendor registration": "Registrácia dodávateľov",
+	"Cannot find any record matching the Esker ID :": "Nenašiel sa žiadny záznam zodpovedajúci internému ID",
+	"Document ERP ID": "ID dokumentu ERP",
+	"ERP Document Identifier": "Identifikátor dokumentu ERP",
+	"ERP posting error": "Chyba zaúčtovania v ERP",
+	"Esker Identifier": "Interné ID",
+	"Identifier of invoice to update": "Identifikátor procesu na aktualizáciu",
+	"Update invoice with ERP ID": "Aktualizovať proces s ID ERP"
+}</process_sk>
+      <process_zh-CN>{
+	"_ERP vendor number": "ERP 中的供应商编号",
+	"_ERP vendor number_report": "ERP 中的供应商编号",
+	"_ProcessingError": "处理错误",
+	"_ProcessingError_report": "处理错误",
+	"_Update Detailed Accrual Report Launcher": "采购订单行项目应计报告",
+	"_Update goods receipt": "货物与服务接收单",
+	"_Update purchase order": "采购订单",
+	"_Update type": "进程类型",
+	"_Update type_report": "进程类型",
+	"_Update vendor invoice processing": "供应商发票",
+	"_Update vendor registration": "供应商注册",
+	"Cannot find any record matching the Esker ID :": "无法找到匹配此内部 ID 的任何记录",
+	"Document ERP ID": "文档 ERP ID",
+	"ERP Document Identifier": "文档 ERP 标识符",
+	"ERP posting error": "ERP 过账错误",
+	"Esker Identifier": "内部 ID",
+	"Identifier of invoice to update": "要更新进程的标识符",
+	"Update invoice with ERP ID": "用 ERP ID 更新流程"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"_ERP vendor number": "Número de fornecedor em ERP",
+	"_ERP vendor number_report": "Número de fornecedor em ERP",
+	"_ProcessingError": "Erro de processamento",
+	"_ProcessingError_report": "Erro de processamento",
+	"_Update Detailed Accrual Report Launcher": "Relatório de provisões de itens de linha de pedido",
+	"_Update goods receipt": "Recebimento de bens e serviços",
+	"_Update purchase order": "Pedido de compra",
+	"_Update type": "Tipo de processo",
+	"_Update type_report": "Tipo de processo",
+	"_Update vendor invoice processing": "Fatura de fornecedor",
+	"_Update vendor registration": "Registro de fornecedor",
+	"Cannot find any record matching the Esker ID :": "Não é possível encontrar nenhum registro correspondente ao ID interno",
+	"Document ERP ID": "ID do documento ERP",
+	"ERP Document Identifier": "Identificador ERP do documento",
+	"ERP posting error": "Erro de lançamento do ERP",
+	"Esker Identifier": "ID interno",
+	"Identifier of invoice to update": "Identificador do processo a ser atualizado",
+	"Update invoice with ERP ID": "Atualizar processamento com ID de ERP"
+}</process_pt-BR>
+    </lg>
+    <ocr>
+      <trade-off>accurate</trade-off>
+      <image-binarization>no</image-binarization>
+      <image-draft-fax>no</image-draft-fax>
+      <image-despeckle>no</image-despeckle>
+      <allowed-language>0</allowed-language>
+      <image-resolution-enhancement>auto</image-resolution-enhancement>
+      <ocr_engine>Nuance222</ocr_engine>
+      <extractionAdditionalOptions>
+      </extractionAdditionalOptions>
+    </ocr>
+    <process>
+      <flowtype>processing</flowtype>
+      <ocrpreset>scan</ocrpreset>
+      <homepagelabel>Update invoice with ERP ID</homepagelabel>
+      <enableflexibleauditing>
+      </enableflexibleauditing>
+      <enableflexibleediting>
+      </enableflexibleediting>
+      <enableflexibleteaching>
+      </enableflexibleteaching>
+      <upgradable>yes</upgradable>
+      <disableocr>
+      </disableocr>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <disableautolearning>true</disableautolearning>
+      <backgroundprocessingthreshold>
+      </backgroundprocessingthreshold>
+      <EnablePreviewPrecomputation>
+      </EnablePreviewPrecomputation>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <pdfNormalizeFilter>
+      </pdfNormalizeFilter>
+      <archiveDuration>0</archiveDuration>
+      <ocrpagestoprocess>
+      </ocrpagestoprocess>
+      <ScriptEngineType>2</ScriptEngineType>
+      <displayWidth>
+      </displayWidth>
+      <AllowUploadAttachment>1</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+      <UseCultureFormat>true</UseCultureFormat>
+      <AllowRetryExtractCD>true</AllowRetryExtractCD>
+      <TransportName>CustomData</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+      <printToProcess>
+      </printToProcess>
+    </process>
+    <ui>
+      <CustomScriptDebug>false</CustomScriptDebug>
+      <CustomScriptReadonly>false</CustomScriptReadonly>
+      <CustomScript>
+      </CustomScript>
+      <restorationPanel>DataPanel</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 42,
+	"*": {
+		"GDRData": {
+			"type": "GDRData",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"version": 0
+			}
+		},
+		"OCRParams": {
+			"type": "OCRParams",
+			"data": [],
+			"stamp": 2,
+			"options": {
+				"version": 0
+			}
+		},
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 3,
+			"options": {
+				"splitterType": "complex",
+				"maxwidth": "",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 4,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 5,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 6,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-top": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 7,
+									"options": {
+										"autosize": true,
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"width": null,
+											"height": "21%"
+										},
+										"hidden": true
+									}
+								},
+								"form-content-bottom": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 8,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"width": null,
+											"height": "100%"
+										},
+										"hidden": false,
+										"hideSeparator": true
+									},
+									"*": {
+										"form-content-left": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 9,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "0%",
+													"width": "100%",
+													"height": null
+												},
+												"hidden": false
+											},
+											"*": {
+												"form-content-left-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 10,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"DocumentsPanel": {
+															"type": "PanelDocument",
+															"data": [],
+															"stamp": 11,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"label": "_Documents",
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"version": 0
+															},
+															"*": {
+																"Document": {
+																	"type": "Documents",
+																	"data": [
+																		"documentscontroldata"
+																	],
+																	"stamp": 12,
+																	"options": {
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-5": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 13,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"DataPanel": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 14,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"label": "_Document data",
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 15,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {
+																			"EskerID__": "LabelEskerID__",
+																			"LabelEskerID__": "EskerID__",
+																			"Document_ERP_ID__": "LabelDocument_ERP_ID__",
+																			"LabelDocument_ERP_ID__": "Document_ERP_ID__",
+																			"ERPPostingError__": "LabelERPPostingError__",
+																			"LabelERPPostingError__": "ERPPostingError__",
+																			"ProcessingError__": "LabelProcessingError__",
+																			"LabelProcessingError__": "ProcessingError__",
+																			"ERP_Vendor_Number__": "LabelERP_Vendor_Number__",
+																			"LabelERP_Vendor_Number__": "ERP_Vendor_Number__",
+																			"UpdateType__": "LabelUpdateType__",
+																			"LabelUpdateType__": "UpdateType__"
+																		}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 16,
+																			"options": {
+																				"version": 0,
+																				"lines": 6,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"LabelEskerID__": {
+																						"line": 1,
+																						"column": 1
+																					},
+																					"EskerID__": {
+																						"line": 1,
+																						"column": 2
+																					},
+																					"LabelDocument_ERP_ID__": {
+																						"line": 2,
+																						"column": 1
+																					},
+																					"Document_ERP_ID__": {
+																						"line": 2,
+																						"column": 2
+																					},
+																					"LabelERPPostingError__": {
+																						"line": 3,
+																						"column": 1
+																					},
+																					"ERPPostingError__": {
+																						"line": 3,
+																						"column": 2
+																					},
+																					"LabelProcessingError__": {
+																						"line": 4,
+																						"column": 1
+																					},
+																					"ProcessingError__": {
+																						"line": 4,
+																						"column": 2
+																					},
+																					"LabelERP_Vendor_Number__": {
+																						"line": 5,
+																						"column": 1
+																					},
+																					"ERP_Vendor_Number__": {
+																						"line": 5,
+																						"column": 2
+																					},
+																					"LabelUpdateType__": {
+																						"line": 6,
+																						"column": 1
+																					},
+																					"UpdateType__": {
+																						"line": 6,
+																						"column": 2
+																					}
+																				},
+																				"colspans": [
+																					[],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[]
+																				]
+																			},
+																			"*": {
+																				"LabelEskerID__": {
+																					"type": "Label",
+																					"data": [
+																						"EskerID__"
+																					],
+																					"stamp": 18,
+																					"options": {
+																						"label": "Identifier of invoice to update",
+																						"version": 0
+																					}
+																				},
+																				"EskerID__": {
+																					"type": "ShortText",
+																					"data": [
+																						"EskerID__"
+																					],
+																					"stamp": 17,
+																					"options": {
+																						"label": "Identifier of invoice to update",
+																						"activable": true,
+																						"width": 270,
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 0
+																					}
+																				},
+																				"LabelDocument_ERP_ID__": {
+																					"type": "Label",
+																					"data": [
+																						"Document_ERP_ID__"
+																					],
+																					"stamp": 20,
+																					"options": {
+																						"label": "ERP Document Identifier",
+																						"version": 0
+																					}
+																				},
+																				"Document_ERP_ID__": {
+																					"type": "ShortText",
+																					"data": [
+																						"Document_ERP_ID__"
+																					],
+																					"stamp": 19,
+																					"options": {
+																						"label": "ERP Document Identifier",
+																						"activable": true,
+																						"width": 270,
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"browsable": false,
+																						"version": 0
+																					}
+																				},
+																				"LabelERPPostingError__": {
+																					"type": "Label",
+																					"data": [
+																						"ERPPostingError__"
+																					],
+																					"stamp": 22,
+																					"options": {
+																						"label": "ERP posting error",
+																						"version": 0
+																					}
+																				},
+																				"ERPPostingError__": {
+																					"type": "ShortText",
+																					"data": [
+																						"ERPPostingError__"
+																					],
+																					"stamp": 21,
+																					"options": {
+																						"label": "ERP posting error",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"activable": true,
+																						"width": 270,
+																						"browsable": false,
+																						"length": 1024,
+																						"version": 0
+																					}
+																				},
+																				"LabelProcessingError__": {
+																					"type": "Label",
+																					"data": [
+																						"ProcessingError__"
+																					],
+																					"stamp": 24,
+																					"options": {
+																						"label": "_ProcessingError",
+																						"version": 0
+																					}
+																				},
+																				"ProcessingError__": {
+																					"type": "LongText",
+																					"data": [
+																						"ProcessingError__"
+																					],
+																					"stamp": 23,
+																					"options": {
+																						"label": "_ProcessingError",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"minNbLines": 3,
+																						"activable": true,
+																						"width": "500",
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"browsable": false
+																					}
+																				},
+																				"LabelERP_Vendor_Number__": {
+																					"type": "Label",
+																					"data": [
+																						"ERP_Vendor_Number__"
+																					],
+																					"stamp": 26,
+																					"options": {
+																						"label": "_ERP vendor number",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				},
+																				"ERP_Vendor_Number__": {
+																					"type": "ShortText",
+																					"data": [
+																						"ERP_Vendor_Number__"
+																					],
+																					"stamp": 25,
+																					"options": {
+																						"label": "_ERP vendor number",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"browsable": false,
+																						"hidden": true
+																					}
+																				},
+																				"LabelUpdateType__": {
+																					"type": "Label",
+																					"data": [
+																						"UpdateType__"
+																					],
+																					"stamp": 28,
+																					"options": {
+																						"label": "_Update type",
+																						"version": 0
+																					}
+																				},
+																				"UpdateType__": {
+																					"type": "ShortText",
+																					"data": [
+																						"UpdateType__"
+																					],
+																					"stamp": 27,
+																					"options": {
+																						"label": "_Update type",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"browsable": false,
+																						"readonly": true,
+																						"autocompletable": false
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-2": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 29,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"SystemData": {
+															"type": "PanelSystemData",
+															"data": [],
+															"stamp": 30,
+															"options": {
+																"multicolumn": false,
+																"border": {
+																	"collapsed": false
+																},
+																"labelLength": 0,
+																"label": "_System data",
+																"hidden": true,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"version": 0
+															}
+														}
+													}
+												},
+												"form-content-left-3": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 31,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"NextProcess": {
+															"type": "PanelNextProcess",
+															"data": [],
+															"stamp": 32,
+															"options": {
+																"hidden": true,
+																"border": {},
+																"labelLength": 0,
+																"label": "_Next Process",
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-right": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 33,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "45%",
+													"width": "55%",
+													"height": null
+												},
+												"hidden": true,
+												"hideSeparator": true
+											},
+											"*": {
+												"form-content-right-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 34,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"PreviewPanel": {
+															"type": "PanelPreview",
+															"data": [],
+															"stamp": 35,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"label": "_Document Preview",
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"version": 0
+															},
+															"*": {
+																"Preview": {
+																	"type": "Preview",
+																	"data": [
+																		"previewdata"
+																	],
+																	"stamp": 36,
+																	"options": {
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 37,
+					"options": {
+						"splitterType": "simple-h",
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 38,
+							"options": {
+								"label": "_Save",
+								"action": "save",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Approve": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 39,
+							"options": {
+								"label": "_Approve",
+								"action": "approve",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Reject": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 40,
+							"options": {
+								"label": "_Reject",
+								"action": "reject",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Reprocess": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 41,
+							"options": {
+								"label": "_Reprocess",
+								"action": "reprocess",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 42,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <field deleted="0" format="" guid="NAYX20008152" id="Y3AQT400153E" label="Document ERP ID" length="50" name="Document_ERP_ID__" originalProcessID="UMMI20005489" precision="0" processid="X3AQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AY3AQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Document_ERP_ID__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:40</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Document ERP ID</Label>
+        <Alias>AY3AQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="VTDH1000141" id="A4AQT400153E" label="ERP posting error" length="1024" name="ERPPostingError__" originalProcessID="UMMI20005489" precision="0" processid="X3AQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AA4AQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ERPPostingError__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:40</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>ERP posting error</Label>
+        <Alias>AA4AQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="I6MC77100PA9" id="Z3AQT400153E" label="_ERP vendor number_report" length="50" name="ERP_Vendor_Number__" originalProcessID="UMMI20005489" precision="0" processid="X3AQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AZ3AQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ERP_Vendor_Number__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:40</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ERP vendor number_report</Label>
+        <Alias>AZ3AQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="CKLZ20008151" id="B4AQT400153E" label="Esker Identifier" length="80" name="EskerID__" originalProcessID="UMMI20005489" precision="0" processid="X3AQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AB4AQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/EskerID__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:40</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Esker Identifier</Label>
+        <Alias>AB4AQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>true</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="L499S0000M4N" id="C4AQT400153E" label="_ProcessingError_report" length="32766" name="ProcessingError__" originalProcessID="UMMI20005489" precision="0" processid="X3AQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AC4AQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ProcessingError__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:40</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ProcessingError_report</Label>
+        <Alias>AC4AQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="PP5D77100PA9" id="D4AQT400153E" label="_Update type_report" length="50" name="UpdateType__" originalProcessID="UMMI20005489" precision="0" processid="X3AQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AD4AQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/UpdateType__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:40</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Update type_report</Label>
+        <Alias>AD4AQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <type id="GOLHG0000M4O" name="CD">
+  </type>
+</process>

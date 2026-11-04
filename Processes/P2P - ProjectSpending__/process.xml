@@ -1,0 +1,2171 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:09:41" deleted="0" eskerapplication="P2P" global="0" id="I5EQT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="P2P - ProjectSpending__" needvalidation="1" ootofilter="" ootoversion="0" originalProcessID="PAC20230406" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomTable" upgradable="1" userid="0" version="1" visibility="0">
+  <properties>
+    <dataConditions>
+      <listDataConditions>
+				&lt;dataCondition&gt;
+					&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+					&lt;filter&gt;msnex=*&lt;/filter&gt;
+					&lt;labelKey&gt;_Project disabled&lt;/labelKey&gt;
+					&lt;conditions&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableProject__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+					&lt;/conditions&gt;
+				&lt;/dataCondition&gt;
+			</listDataConditions>
+    </dataConditions>
+    <dbIndex>
+      <AUTO_AK5EQT400153EA>&lt;Index&gt;&lt;Ref Name="AK5EQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AK5EQT400153EA>
+    </dbIndex>
+    <lg>
+      <process_da>{
+	"_Amounts_Pane": "Forbrugsgrænser",
+	"_Committed": "Forpligtet",
+	"_Committed_report": "Forpligtet",
+	"_ComputedRemaining": "Restbeløb",
+	"_ComputedRemaining_report": "Restbeløb",
+	"_Currency": "Valuta",
+	"_Currency_report": "Valuta",
+	"_Description": "Beskrivelse",
+	"_Description_report": "Beskrivelse",
+	"_General_Information_Pane": "Generelle oplysninger",
+	"_InvoicedNonPo": "Faktureret (uden indkøbsordre)",
+	"_InvoicedNonPo_report": "Faktureret (uden indkøbsordre)",
+	"_InvoicedPo": "Faktureret (indkøbsordre)",
+	"_InvoicedPo_report": "Faktureret (indkøbsordre)",
+	"_Max": "Maksimalt forbrug",
+	"_Max_report": "Maksimalt forbrugsbeløb",
+	"_Min": "Minimumsforbrug",
+	"_Min_report": "Minimumsforbrugsbeløb",
+	"_Operation_Details_Pane": "Transaktionsoplysninger",
+	"_Ordered": "Bestilt",
+	"_Ordered_report": "Bestilt",
+	"_OutOfAmountBehavior": "Hvis beløbet overskrides",
+	"_OutOfAmountBehavior_Block": "Vis en fejlmeddelelse",
+	"_OutOfAmountBehavior_Ignore": "Vis ikke meddelelser",
+	"_OutOfAmountBehavior_report": "Hvis maksimumsbeløbet overskrides",
+	"_OutOfAmountBehavior_Warn": "Vis en advarsel",
+	"_ProjectNumber": "Projektnummer",
+	"_ProjectNumber_report": "Projektnummer",
+	"_ToApprove": "Afventer forpligtelser",
+	"_ToApprove_report": "Afventer forpligtelser",
+	"P2P - ProjectSpending": "S2P – projektforbrug",
+	"P2P - ProjectSpending__": "S2P – projektforbrug",
+	"_CompanyCode": "Virksomhedskode",
+	"_CompanyCode_report": "Virksomhedskode",
+	"_DocumentData": "Dokumentdata",
+	"_Note": "Oplysninger",
+	"_Note_report": "Oplysninger",
+	"_OperationID": "Dokumentnummer",
+	"_OperationID_report": "Dokumentnummer",
+	"_OperationRuidex": "Id for intern meddelelse",
+	"_OperationRuidex_report": "Id for intern meddelelse",
+	"_PO": "Indkøbsordre",
+	"_PR": "Indkøbsrekvisition",
+	"_SourceType": "Kildetype",
+	"_SourceTypeName": "Kildetype",
+	"_SourceTypeName_report": "Type",
+	"_Vendor invoice": "Leverandørfaktura",
+	"_VendorName": "Leverandørnavn",
+	"_VendorName_report": "Leverandørnavn",
+	"_VendorNumber": "Leverandørnummer",
+	"_VendorNumber_report": "Leverandørnummer",
+	"P2P - ProjectSpendingOperationDetails": "S2P – transaktionsoplysninger for projektforbrug",
+	"P2P - ProjectSpendingOperationDetails__": "S2P – transaktionsoplysninger for projektforbrug"
+}</process_da>
+      <process_de>{
+	"_Amounts_Pane": "Ausgabenschwellen",
+	"_Committed": "Ausgegeben",
+	"_Committed_report": "Ausgegeben",
+	"_ComputedRemaining": "Restbetrag",
+	"_ComputedRemaining_report": "Restbetrag",
+	"_Currency": "Währung",
+	"_Currency_report": "Währung",
+	"_Description": "Beschreibung",
+	"_Description_report": "Beschreibung",
+	"_General_Information_Pane": "Allgemeine Informationen",
+	"_InvoicedNonPo": "Fakturiert (ohne Bestellung)",
+	"_InvoicedNonPo_report": "Invoiced (non-PO)",
+	"_InvoicedPo": "Fakturiert (mit Bestellung)",
+	"_InvoicedPo_report": "Fakturiert (mit Bestellung)",
+	"_Max": "Maximale Höhe der Ausgaben",
+	"_Max_report": "Maximale Höhe der Ausgaben",
+	"_Min": "Minimale Höhe der Ausgaben",
+	"_Min_report": "Minimale Höhe der Ausgaben",
+	"_Operation_Details_Pane": "Vorgangsdetails",
+	"_Ordered": "Bestellt",
+	"_Ordered_report": "Bestellt",
+	"_OutOfAmountBehavior": "Bei Betragsüberschreitung",
+	"_OutOfAmountBehavior_Block": "Fehlermeldung anzeigen",
+	"_OutOfAmountBehavior_Ignore": "Keine Meldung anzeigen",
+	"_OutOfAmountBehavior_report": "Bei Überschreitung des maximalen Betrags",
+	"_OutOfAmountBehavior_Warn": "Warnmeldung anzeigen",
+	"_ProjectNumber": "Projektnummer",
+	"_ProjectNumber_report": "Projektnummer",
+	"_ToApprove": "Ausstehende Mittelbindungen",
+	"_ToApprove_report": "Ausstehende Mittelbindungen",
+	"P2P - ProjectSpending": "S2P - Projektausgaben",
+	"P2P - ProjectSpending__": "S2P - Projektausgaben",
+	"_CompanyCode": "Buchungskreis",
+	"_CompanyCode_report": "Buchungskreis",
+	"_DocumentData": "Dokumentdaten",
+	"_Note": "Details",
+	"_Note_report": "Details",
+	"_OperationID": "Belegnummer",
+	"_OperationID_report": "Belegnummer",
+	"_OperationRuidex": "Interne Nachrichten-ID",
+	"_OperationRuidex_report": "Interne Nachrichten-ID",
+	"_PO": "Bestellung",
+	"_PR": "Bestellanforderung",
+	"_SourceType": "Quelltyp",
+	"_SourceTypeName": "Quelltyp",
+	"_SourceTypeName_report": "Typ",
+	"_Vendor invoice": "Lieferantenrechnung",
+	"_VendorName": "Lieferantenname",
+	"_VendorName_report": "Lieferantenname",
+	"_VendorNumber": "Lieferantennummer",
+	"_VendorNumber_report": "Lieferantennummer",
+	"P2P - ProjectSpendingOperationDetails": "S2P - Arbeitsvorgangsdetails zu den Projektausgaben",
+	"P2P - ProjectSpendingOperationDetails__": "S2P - Arbeitsvorgangsdetails zu den Projektausgaben"
+}</process_de>
+      <process_JA>{
+	"_Amounts_Pane": "支出しきい値",
+	"_Committed": "処理済み",
+	"_Committed_report": "処理済み",
+	"_ComputedRemaining": "残額",
+	"_ComputedRemaining_report": "残額",
+	"_Currency": "通貨",
+	"_Currency_report": "通貨",
+	"_Description": "説明",
+	"_Description_report": "説明",
+	"_General_Information_Pane": "全般情報",
+	"_InvoicedNonPo": "請求済み（POなし）",
+	"_InvoicedNonPo_report": "Invoiced (non-PO)",
+	"_InvoicedPo": "請求済み（PO）",
+	"_InvoicedPo_report": "請求済み（PO）",
+	"_Max": "最大支出額",
+	"_Max_report": "支出最大限度額",
+	"_Min": "最小支出額",
+	"_Min_report": "最小利用額",
+	"_Operation_Details_Pane": "操作の詳細",
+	"_Ordered": "注文済み",
+	"_Ordered_report": "注文済み",
+	"_OutOfAmountBehavior": "金額が超過している場合",
+	"_OutOfAmountBehavior_Block": "エラーメッセージを表示する",
+	"_OutOfAmountBehavior_Ignore": "今後メッセージを表示しない",
+	"_OutOfAmountBehavior_report": "最大金額が超過している場合",
+	"_OutOfAmountBehavior_Warn": "警告メッセージを表示する",
+	"_ProjectNumber": "プロジェクト番号",
+	"_ProjectNumber_report": "プロジェクト番号",
+	"_ToApprove": "保留中の対応",
+	"_ToApprove_report": "保留中の対応",
+	"P2P - ProjectSpending": "S2P - プロジェクト支出",
+	"P2P - ProjectSpending__": "S2P - プロジェクト支出",
+	"_CompanyCode": "会社コード",
+	"_CompanyCode_report": "会社コード",
+	"_DocumentData": "文書データ",
+	"_Note": "詳細",
+	"_Note_report": "詳細",
+	"_OperationID": "書類番号",
+	"_OperationID_report": "書類番号",
+	"_OperationRuidex": "内部メッセージID",
+	"_OperationRuidex_report": "内部メッセージID",
+	"_PO": "発注書",
+	"_PR": "購買依頼",
+	"_SourceType": "ソースタイプ",
+	"_SourceTypeName": "ソースタイプ",
+	"_SourceTypeName_report": "タイプ",
+	"_Vendor invoice": "仕入先請求書",
+	"_VendorName": "仕入先名",
+	"_VendorName_report": "仕入先名",
+	"_VendorNumber": "仕入先番号",
+	"_VendorNumber_report": "仕入先番号",
+	"P2P - ProjectSpendingOperationDetails": "S2P - プロジェクト支出の操作の詳細",
+	"P2P - ProjectSpendingOperationDetails__": "S2P - プロジェクト支出の操作の詳細"
+}</process_JA>
+      <process_en>{
+	"_Amounts_Pane": "Spend Thresholds",
+	"_Committed": "Committed",
+	"_Committed_report": "Committed",
+	"_ComputedRemaining": "Remaining amount",
+	"_ComputedRemaining_report": "Remaining amount",
+	"_ProjectNumber": "Project number",
+	"_ProjectNumber_report": "Project number",
+	"_Currency": "Currency",
+	"_Currency_report": "Currency",
+	"_Description": "Description",
+	"_Description_report": "Description",
+	"_General_Information_Pane": "General Information",
+	"_InvoicedNonPo": "Invoiced (non-PO)",
+	"_InvoicedNonPo_report": "Invoiced (non-PO)",
+	"_InvoicedPo": "Invoiced (PO)",
+	"_InvoicedPo_report": "Invoiced (PO)",
+	"_Max": "Maximum spend",
+	"_Max_report": "Maximum spend amount",
+	"_Min": "Minimum spend",
+	"_Min_report": "Minimum spend amount",
+	"_Operation_Details_Pane": "Operation Details",
+	"_Ordered": "Ordered",
+	"_Ordered_report": "Ordered",
+	"_OutOfAmountBehavior": "If amount is overrun",
+	"_OutOfAmountBehavior_Block": "Show an error message",
+	"_OutOfAmountBehavior_Ignore": "Do not show any message",
+	"_OutOfAmountBehavior_report": "If max amount is overrun",
+	"_OutOfAmountBehavior_Warn": "Show a warning message",
+	"_ToApprove": "Pending commitments",
+	"_ToApprove_report": "Pending commitments",
+	"P2P - ProjectSpending": "S2P - Project spend",
+	"P2P - ProjectSpending__": "S2P - Project spend",
+	"_CompanyCode": "Company code",
+	"_CompanyCode_report": "Company code",
+	"_DocumentData": "Document data",
+	"_Note": "Details",
+	"_Note_report": "Details",
+	"_OperationID": "Document number",
+	"_OperationID_report": "Document number",
+	"_OperationRuidex": "Internal message ID",
+	"_OperationRuidex_report": "Internal message ID",
+	"_PO": "Purchase order",
+	"_PR": "Purchase requisition",
+	"_SourceType": "Source type",
+	"_SourceTypeName": "Source type",
+	"_SourceTypeName_report": "Type",
+	"_Vendor invoice": "Supplier invoice",
+	"_VendorName": "Supplier name",
+	"_VendorName_report": "Supplier name",
+	"_VendorNumber": "Supplier number",
+	"_VendorNumber_report": "Supplier number",
+	"P2P - ProjectSpendingOperationDetails": "S2P - Project spend operation details",
+	"P2P - ProjectSpendingOperationDetails__": "S2P - Project spend operation details"
+}</process_en>
+      <process_es>{
+	"_Amounts_Pane": "Límites de gasto",
+	"_Committed": "Comprometido",
+	"_Committed_report": "Comprometido",
+	"_ComputedRemaining": "Importe restante",
+	"_ComputedRemaining_report": "Importe restante",
+	"_Currency": "Divisa",
+	"_Currency_report": "Divisa",
+	"_Description": "Descripción",
+	"_Description_report": "Descripción",
+	"_General_Information_Pane": "Información general",
+	"_InvoicedNonPo": "Facturado (sin pedido)",
+	"_InvoicedNonPo_report": "Facturado (sin pedido)",
+	"_InvoicedPo": "Facturado (con pedido)",
+	"_InvoicedPo_report": "Facturado (con pedido)",
+	"_Max": "Importe máximo de gastos",
+	"_Max_report": "Importe máximo de gastos",
+	"_Min": "Importe mínimo de gastos",
+	"_Min_report": "Importe mínimo de gastos",
+	"_Operation_Details_Pane": "Detalles de la operación",
+	"_Ordered": "Pedido",
+	"_Ordered_report": "Pedido",
+	"_OutOfAmountBehavior": "Si se excede el importe",
+	"_OutOfAmountBehavior_Block": "Mostrar un mensaje de error",
+	"_OutOfAmountBehavior_Ignore": "No mostrar ningún mensaje",
+	"_OutOfAmountBehavior_report": "Si se excede el importe máx.",
+	"_OutOfAmountBehavior_Warn": "Mostrar un mensaje de advertencia",
+	"_ProjectNumber": "Número de proyecto",
+	"_ProjectNumber_report": "Número de proyecto",
+	"_ToApprove": "Compromisos pendientes",
+	"_ToApprove_report": "Compromisos pendientes",
+	"P2P - ProjectSpending": "S2P - Gastos en proyectos",
+	"P2P - ProjectSpending__": "S2P - Gastos en proyectos",
+	"_CompanyCode": "Código de empresa",
+	"_CompanyCode_report": "Código de empresa",
+	"_DocumentData": "Datos del documento",
+	"_Note": "Detalles",
+	"_Note_report": "Detalles",
+	"_OperationID": "Número de documento",
+	"_OperationID_report": "Número de documento",
+	"_OperationRuidex": "ID interno de mensaje",
+	"_OperationRuidex_report": "ID interno de mensaje",
+	"_PO": "Pedido de compra",
+	"_PR": "Solicitud de compra",
+	"_SourceType": "Tipo de origen",
+	"_SourceTypeName": "Tipo de origen",
+	"_SourceTypeName_report": "Tipo",
+	"_Vendor invoice": "Factura de proveedor",
+	"_VendorName": "Nombre de proveedor",
+	"_VendorName_report": "Nombre de proveedor",
+	"_VendorNumber": "Número de proveedor",
+	"_VendorNumber_report": "Número de proveedor",
+	"P2P - ProjectSpendingOperationDetails": "S2P - Detalles de las operaciones de gastos en proyectos",
+	"P2P - ProjectSpendingOperationDetails__": "S2P - Detalles de las operaciones de gastos en proyectos"
+}</process_es>
+      <process_fr>{
+	"_Amounts_Pane": "Seuils des dépenses",
+	"_Committed": "Engagé",
+	"_Committed_report": "Engagé",
+	"_ComputedRemaining": "Montant restant",
+	"_ComputedRemaining_report": "Montant restant",
+	"_Currency": "Devise",
+	"_Currency_report": "Devise",
+	"_Description": "Description",
+	"_Description_report": "Description",
+	"_General_Information_Pane": "Informations générales",
+	"_InvoicedNonPo": "Facturé (sans commande)",
+	"_InvoicedNonPo_report": "Facturé (sans commande)",
+	"_InvoicedPo": "Facturé (avec commande)",
+	"_InvoicedPo_report": "Facturé (avec commande)",
+	"_Max": "Montant maximum des dépenses",
+	"_Max_report": "Montant maximum des dépenses",
+	"_Min": "Montant minimum des dépenses",
+	"_Min_report": "Montant minimum des dépenses",
+	"_Operation_Details_Pane": "Détails de l'opération",
+	"_Ordered": "Commandé",
+	"_Ordered_report": "Commandé",
+	"_OutOfAmountBehavior": "Si le montant est dépassé",
+	"_OutOfAmountBehavior_Block": "Afficher un message d'erreur",
+	"_OutOfAmountBehavior_Ignore": "Ne pas afficher de message",
+	"_OutOfAmountBehavior_report": "Si le montant max. est dépassé",
+	"_OutOfAmountBehavior_Warn": "Afficher un message d'avertissement",
+	"_ProjectNumber": "Numéro de projet",
+	"_ProjectNumber_report": "Numéro de projet",
+	"_ToApprove": "Engagements en cours",
+	"_ToApprove_report": "Engagements en cours",
+	"P2P - ProjectSpending": "S2P - Dépenses sur projet",
+	"P2P - ProjectSpending__": "S2P - Dépenses sur projet",
+	"_CompanyCode": "Code société",
+	"_CompanyCode_report": "Code société",
+	"_DocumentData": "Données du document",
+	"_Note": "Détails",
+	"_Note_report": "Détails",
+	"_OperationID": "Numéro du document",
+	"_OperationID_report": "Numéro du document",
+	"_OperationRuidex": "ID interne du message",
+	"_OperationRuidex_report": "ID interne du message",
+	"_PO": "Commande fournisseur",
+	"_PR": "Demande d'achat",
+	"_SourceType": "Type de source",
+	"_SourceTypeName": "Type de source",
+	"_SourceTypeName_report": "Type",
+	"_Vendor invoice": "Facture fournisseur",
+	"_VendorName": "Nom du fournisseur",
+	"_VendorName_report": "Nom du fournisseur",
+	"_VendorNumber": "Numéro fournisseur",
+	"_VendorNumber_report": "Numéro fournisseur",
+	"P2P - ProjectSpendingOperationDetails": "S2P - Détails des opérations des dépenses sur projet",
+	"P2P - ProjectSpendingOperationDetails__": "S2P - Détails des opérations des dépenses sur projet"
+}</process_fr>
+      <process_nl-NL>{
+	"_Amounts_Pane": "Drempelwaarden uitgaven",
+	"_Committed": "Geëngageerd",
+	"_Committed_report": "Geëngageerd",
+	"_ComputedRemaining": "Resterend bedrag",
+	"_ComputedRemaining_report": "Resterend bedrag",
+	"_ProjectNumber": "Projectnummer",
+	"_ProjectNumber_report": "Projectnummer",
+	"_Currency": "Valuta",
+	"_Currency_report": "Valuta",
+	"_Description": "Beschrijving",
+	"_Description_report": "Beschrijving",
+	"_General_Information_Pane": "Algemene informatie",
+	"_InvoicedNonPo": "Gefactureerd (zonder PO)",
+	"_InvoicedNonPo_report": "Invoiced (non-PO)",
+	"_InvoicedPo": "Gefactureerd (PO)",
+	"_InvoicedPo_report": "Gefactureerd (PO)",
+	"_Max": "Maximum uitgaven",
+	"_Max_report": "Maximumbedrag uitgaven",
+	"_Min": "Minimum uitgaven",
+	"_Min_report": "Minimumbedrag uitgaven",
+	"_Operation_Details_Pane": "Details handeling",
+	"_Ordered": "Besteld",
+	"_Ordered_report": "Besteld",
+	"_OutOfAmountBehavior": "Als bedrag is overschreden",
+	"_OutOfAmountBehavior_Block": "Foutbericht tonen",
+	"_OutOfAmountBehavior_Ignore": "Geen berichten tonen",
+	"_OutOfAmountBehavior_report": "Als max. bedrag is overschreden",
+	"_OutOfAmountBehavior_Warn": "Waarschuwingsbericht tonen",
+	"_ToApprove": "In afwachting van engagementen",
+	"_ToApprove_report": "In afwachting van engagementen",
+	"P2P - ProjectSpending": "S2P - Uitgaven Project",
+	"P2P - ProjectSpending__": "S2P - Uitgaven Project",
+	"_CompanyCode": "Bedrijfscode",
+	"_CompanyCode_report": "Bedrijfscode",
+	"_DocumentData": "Documentgegevens",
+	"_Note": "Details",
+	"_Note_report": "Details",
+	"_OperationID": "Documentnummer",
+	"_OperationID_report": "Documentnummer",
+	"_OperationRuidex": "Interne bericht-ID",
+	"_OperationRuidex_report": "Interne bericht-ID",
+	"_PO": "Kooporder",
+	"_PR": "Inkoopvordering",
+	"_SourceType": "Type bron",
+	"_SourceTypeName": "Type bron",
+	"_SourceTypeName_report": "Type",
+	"_Vendor invoice": "Leveranciersfactuur",
+	"_VendorName": "Naam leverancier",
+	"_VendorName_report": "Naam leverancier",
+	"_VendorNumber": "Nummer leverancier",
+	"_VendorNumber_report": "Nummer leverancier",
+	"P2P - ProjectSpendingOperationDetails": "S2P - Details handeling uitgaven Project",
+	"P2P - ProjectSpendingOperationDetails__": "S2P - Details handeling uitgaven Project"
+}</process_nl-NL>
+      <process_pl>{
+	"_Amounts_Pane": "Progi wydatków",
+	"_Committed": "Zadeklarowano",
+	"_Committed_report": "Zadeklarowano",
+	"_ComputedRemaining": "Pozostała kwota",
+	"_ComputedRemaining_report": "Pozostała kwota",
+	"_Currency": "Waluta",
+	"_Currency_report": "Waluta",
+	"_Description": "Opis",
+	"_Description_report": "Opis",
+	"_General_Information_Pane": "Informacje ogólne",
+	"_InvoicedNonPo": "Zafakturowano (bez ZZ)",
+	"_InvoicedNonPo_report": "Zafakturowano (bez ZZ)",
+	"_InvoicedPo": "Zafakturowano (ZZ)",
+	"_InvoicedPo_report": "Zafakturowano (ZZ)",
+	"_Max": "Wydatki maksymalne",
+	"_Max_report": "Maksymalna kwota wydatków",
+	"_Min": "Wydatki minimalne",
+	"_Min_report": "Minimalna kwota wydatków",
+	"_Operation_Details_Pane": "Szczegóły operacji",
+	"_Ordered": "Zamówiono",
+	"_Ordered_report": "Zamówiono",
+	"_OutOfAmountBehavior": "W przypadku przekroczenia kwoty",
+	"_OutOfAmountBehavior_Block": "Pokaż komunikat o błędzie",
+	"_OutOfAmountBehavior_Ignore": "Nie pokazuj komunikatu",
+	"_OutOfAmountBehavior_report": "W przypadku przekroczenia kwoty maksymalnej",
+	"_OutOfAmountBehavior_Warn": "Pokaż ostrzeżenie",
+	"_ProjectNumber": "Numer projektu",
+	"_ProjectNumber_report": "Numer projektu",
+	"_ToApprove": "Oczekiwanie na zadeklarowanie",
+	"_ToApprove_report": "Oczekiwanie na zadeklarowanie",
+	"P2P - ProjectSpending": "S2P – wydatki w projekcie",
+	"P2P - ProjectSpending__": "S2P – wydatki w projekcie",
+	"_CompanyCode": "Kod firmy",
+	"_CompanyCode_report": "Kod firmy",
+	"_DocumentData": "Dane dokumentu",
+	"_Note": "Szczegóły",
+	"_Note_report": "Szczegóły",
+	"_OperationID": "Numer dokumentu",
+	"_OperationID_report": "Numer dokumentu",
+	"_OperationRuidex": "Wewnętrzny id. komunikatu",
+	"_OperationRuidex_report": "Wewnętrzny id. komunikatu",
+	"_PO": "Zamówienie zakupu",
+	"_PR": "Zapotrzebowanie zakupu",
+	"_SourceType": "Typ źródła",
+	"_SourceTypeName": "Typ źródła",
+	"_SourceTypeName_report": "Typ",
+	"_Vendor invoice": "Faktura dostawcy",
+	"_VendorName": "Nazwa dostawcy",
+	"_VendorName_report": "Nazwa dostawcy",
+	"_VendorNumber": "Numer dostawcy",
+	"_VendorNumber_report": "Numer dostawcy",
+	"P2P - ProjectSpendingOperationDetails": "S2P – szczegóły operacji wydatków w projekcie",
+	"P2P - ProjectSpendingOperationDetails__": "S2P – szczegóły operacji wydatków w projekcie"
+}</process_pl>
+      <process_it>{
+	"_Amounts_Pane": "Soglie di spesa",
+	"_Committed": "Impegnato",
+	"_Committed_report": "Impegnato",
+	"_ComputedRemaining": "Importo residuo",
+	"_ComputedRemaining_report": "Importo residuo",
+	"_Currency": "Valuta",
+	"_Currency_report": "Valuta",
+	"_Description": "Descrizione",
+	"_Description_report": "Descrizione",
+	"_General_Information_Pane": "Informazioni generali",
+	"_InvoicedNonPo": "Fatturato (senza ordine)",
+	"_InvoicedNonPo_report": "Fatturato (senza ordine)",
+	"_InvoicedPo": "Fatturato (con ordine)",
+	"_InvoicedPo_report": "Fatturato (con ordine)",
+	"_Max": "Importo massimo spesa",
+	"_Max_report": "Importo massimo spesa",
+	"_Min": "Importo minimo spesa",
+	"_Min_report": "Importo minimo spesa",
+	"_Operation_Details_Pane": "Dettagli operazioni",
+	"_Ordered": "Ordinato",
+	"_Ordered_report": "Ordinato",
+	"_OutOfAmountBehavior": "Se si supera l'importo",
+	"_OutOfAmountBehavior_Block": "Mostra messaggio di errore",
+	"_OutOfAmountBehavior_Ignore": "Non mostrare messaggi",
+	"_OutOfAmountBehavior_report": "Se si supera l'importo massimo",
+	"_OutOfAmountBehavior_Warn": "Mostra messaggio di avviso",
+	"_ProjectNumber": "Numero progetto",
+	"_ProjectNumber_report": "Numero progetto",
+	"_ToApprove": "Impegni in sospeso",
+	"_ToApprove_report": "Impegni in sospeso",
+	"P2P - ProjectSpending": "S2P - Spesa dei progetti",
+	"P2P - ProjectSpending__": "S2P - Spesa dei progetti",
+	"_CompanyCode": "Codice società",
+	"_CompanyCode_report": "Codice società",
+	"_DocumentData": "Dati documento",
+	"_Note": "Dettagli",
+	"_Note_report": "Dettagli",
+	"_OperationID": "Numero documento",
+	"_OperationID_report": "Numero documento",
+	"_OperationRuidex": "ID interno messaggio",
+	"_OperationRuidex_report": "ID interno messaggio",
+	"_PO": "Ordine di acquisto",
+	"_PR": "Richiesta di acquisto",
+	"_SourceType": "Tipo di origine",
+	"_SourceTypeName": "Tipo di origine",
+	"_SourceTypeName_report": "Tipo",
+	"_Vendor invoice": "Fattura fornitore",
+	"_VendorName": "Nome fornitore",
+	"_VendorName_report": "Nome fornitore",
+	"_VendorNumber": "Numero fornitore",
+	"_VendorNumber_report": "Numero fornitore",
+	"P2P - ProjectSpendingOperationDetails": "S2P - Dettagli delle operazioni di spesa dei progetti",
+	"P2P - ProjectSpendingOperationDetails__": "S2P - Dettagli delle operazioni di spesa dei progetti"
+}</process_it>
+      <process_sk>{
+	"_Amounts_Pane": "Prahové hodnoty výdavkov",
+	"_Committed": "Potvrdený",
+	"_Committed_report": "Potvrdený",
+	"_ComputedRemaining": "Zostávajúca suma",
+	"_ComputedRemaining_report": "Zostávajúca suma",
+	"_Currency": "Mena",
+	"_Currency_report": "Mena",
+	"_Description": "Popis",
+	"_Description_report": "Popis",
+	"_General_Information_Pane": "Všeobecné informácie",
+	"_InvoicedNonPo": "Fakturovaný (bez obj.)",
+	"_InvoicedNonPo_report": "Fakturovaný (bez obj.)",
+	"_InvoicedPo": "Fakturovaný (obj.)",
+	"_InvoicedPo_report": "Fakturovaný (obj.)",
+	"_Max": "Maximálne výdavky",
+	"_Max_report": "Maximálna výška výdavkov",
+	"_Min": "Minimálne výdavky",
+	"_Min_report": "Minimálna výška výdavkov",
+	"_Operation_Details_Pane": "Detaily operácie",
+	"_Ordered": "Objednaný",
+	"_Ordered_report": "Objednaný",
+	"_OutOfAmountBehavior": "Ak je suma prekročená",
+	"_OutOfAmountBehavior_Block": "Zobraziť chybové hlásenie",
+	"_OutOfAmountBehavior_Ignore": "Nezobrazovať žiadnu správu",
+	"_OutOfAmountBehavior_report": "Ak je maximálna suma prekročená",
+	"_OutOfAmountBehavior_Warn": "Zobraziť varovné hlásenie",
+	"_ProjectNumber": "Číslo projektu",
+	"_ProjectNumber_report": "Číslo projektu",
+	"_ToApprove": "Nevybavené záväzky",
+	"_ToApprove_report": "Nevybavené záväzky",
+	"P2P - ProjectSpending": "S2P – Výdavky na projekt",
+	"P2P - ProjectSpending__": "S2P – Výdavky na projekt",
+	"_CompanyCode": "Kód spoločnosti",
+	"_CompanyCode_report": "Kód spoločnosti",
+	"_DocumentData": "Dáta dokumentu",
+	"_Note": "Podrobnosti",
+	"_Note_report": "Podrobnosti",
+	"_OperationID": "Číslo dokumentu",
+	"_OperationID_report": "Číslo dokumentu",
+	"_OperationRuidex": "ID interného hlásenia",
+	"_OperationRuidex_report": "ID interného hlásenia",
+	"_PO": "Objednávka",
+	"_PR": "Požiadavka na objednávku",
+	"_SourceType": "Typ zdroja",
+	"_SourceTypeName": "Typ zdroja",
+	"_SourceTypeName_report": "Typ",
+	"_Vendor invoice": "Faktúra dodávateľa",
+	"_VendorName": "Názov dodávateľa",
+	"_VendorName_report": "Názov dodávateľa",
+	"_VendorNumber": "Číslo dodávateľa",
+	"_VendorNumber_report": "Číslo dodávateľa",
+	"P2P - ProjectSpendingOperationDetails": "S2P – Detaily operácie projektových výdavkov",
+	"P2P - ProjectSpendingOperationDetails__": "S2P – Detaily operácie projektových výdavkov"
+}</process_sk>
+      <process_zh-CN>{
+	"_Amounts_Pane": "采购额阈值",
+	"_Committed": "承诺",
+	"_Committed_report": "承诺",
+	"_ComputedRemaining": "剩余金额",
+	"_ComputedRemaining_report": "剩余金额",
+	"_Currency": "货币",
+	"_Currency_report": "货币",
+	"_Description": "说明",
+	"_Description_report": "说明",
+	"_General_Information_Pane": "常规信息",
+	"_InvoicedNonPo": "已开票（无订单）",
+	"_InvoicedNonPo_report": "Invoiced (non-PO)",
+	"_InvoicedPo": "已开票（有订单）",
+	"_InvoicedPo_report": "已开票（有订单）",
+	"_Max": "最高采购额",
+	"_Max_report": "最高采购额",
+	"_Min": "最低采购额",
+	"_Min_report": "最低采购额",
+	"_Operation_Details_Pane": "操作详情",
+	"_Ordered": "已订购",
+	"_Ordered_report": "已订购",
+	"_OutOfAmountBehavior": "如果金额超支",
+	"_OutOfAmountBehavior_Block": "显示错误消息",
+	"_OutOfAmountBehavior_Ignore": "不显示任何消息",
+	"_OutOfAmountBehavior_report": "如果最大金额超支",
+	"_OutOfAmountBehavior_Warn": "显示警告消息",
+	"_ProjectNumber": "项目编号",
+	"_ProjectNumber_report": "项目编号",
+	"_ToApprove": "潜在承诺付款",
+	"_ToApprove_report": "潜在承诺付款",
+	"P2P - ProjectSpending": "寻源到付款 - 项目采购额",
+	"P2P - ProjectSpending__": "寻源到付款 - 项目采购额",
+	"_CompanyCode": "公司代码",
+	"_CompanyCode_report": "公司代码",
+	"_DocumentData": "文档数据",
+	"_Note": "详细信息",
+	"_Note_report": "详细信息",
+	"_OperationID": "文件号",
+	"_OperationID_report": "文件号",
+	"_OperationRuidex": "消息内部ID",
+	"_OperationRuidex_report": "消息内部ID",
+	"_PO": "采购订单",
+	"_PR": "请购单",
+	"_SourceType": "源类型",
+	"_SourceTypeName": "源类型",
+	"_SourceTypeName_report": "类型",
+	"_Vendor invoice": "供应商发票",
+	"_VendorName": "供应商名称",
+	"_VendorName_report": "供应商名称",
+	"_VendorNumber": "供应商编号",
+	"_VendorNumber_report": "供应商编号",
+	"P2P - ProjectSpendingOperationDetails": "寻源到付款 - 项目采购额运作详情",
+	"P2P - ProjectSpendingOperationDetails__": "寻源到付款 - 项目采购额运作详情"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"_Amounts_Pane": "Limites de gastos",
+	"_Committed": "Comprometido",
+	"_Committed_report": "Comprometido",
+	"_ComputedRemaining": "Valor restante",
+	"_ComputedRemaining_report": "Valor restante",
+	"_Currency": "Moeda",
+	"_Currency_report": "Moeda",
+	"_Description": "Descrição",
+	"_Description_report": "Descrição",
+	"_General_Information_Pane": "Informação geral",
+	"_InvoicedNonPo": "Faturado (não pedido de compra)",
+	"_InvoicedNonPo_report": "Invoiced (non-PO)",
+	"_InvoicedPo": "Faturado (pedido de compra)",
+	"_InvoicedPo_report": "Faturado (pedido de compra)",
+	"_Max": "Despesa máxima",
+	"_Max_report": "Valor de despesa máximo",
+	"_Min": "Despesa mínima",
+	"_Min_report": "Valor de despesa mínimo",
+	"_Operation_Details_Pane": "Detalhes da operação",
+	"_Ordered": "Pedido realizado",
+	"_Ordered_report": "Pedido realizado",
+	"_OutOfAmountBehavior": "Em caso de ultrapassagem de valor",
+	"_OutOfAmountBehavior_Block": "Apresenta uma mensagem de erro",
+	"_OutOfAmountBehavior_Ignore": "Não apresentar nenhuma mensagem",
+	"_OutOfAmountBehavior_report": "Se o valor máximo for excedido",
+	"_OutOfAmountBehavior_Warn": "Apresenta uma mensagem de aviso",
+	"_ProjectNumber": "Número do projeto",
+	"_ProjectNumber_report": "Número do projeto",
+	"_ToApprove": "Compromissos pendentes",
+	"_ToApprove_report": "Compromissos pendentes",
+	"P2P - ProjectSpending": "S2P - Despesa do projeto",
+	"P2P - ProjectSpending__": "S2P - Despesa do projeto",
+	"_CompanyCode": "Código da empresa",
+	"_CompanyCode_report": "Código da empresa",
+	"_DocumentData": "Informação de documento",
+	"_Note": "Detalhes",
+	"_Note_report": "Detalhes",
+	"_OperationID": "Número de documento",
+	"_OperationID_report": "Número de documento",
+	"_OperationRuidex": "ID da mensagem interna",
+	"_OperationRuidex_report": "ID da mensagem interna",
+	"_PO": "Pedido de compra",
+	"_PR": "Requisição de compra",
+	"_SourceType": "Tipo de origem",
+	"_SourceTypeName": "Tipo de origem",
+	"_SourceTypeName_report": "Tipo",
+	"_Vendor invoice": "Fatura de fornecedor",
+	"_VendorName": "Nome do fornecedor",
+	"_VendorName_report": "Nome do fornecedor",
+	"_VendorNumber": "Número do fornecedor",
+	"_VendorNumber_report": "Número do fornecedor",
+	"P2P - ProjectSpendingOperationDetails": "S2P - Detalhes da operação de despesa do projeto",
+	"P2P - ProjectSpendingOperationDetails__": "S2P - Detalhes da operação de despesa do projeto"
+}</process_pt-BR>
+    </lg>
+    <process>
+      <flowtype>processing</flowtype>
+      <homepagelabel>P2P - ProjectSpending</homepagelabel>
+      <upgradable>yes</upgradable>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <isTableReadOnly>true</isTableReadOnly>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <OverrideAllowedAttachmentExtensions>*</OverrideAllowedAttachmentExtensions>
+      <displayWidth>
+      </displayWidth>
+      <AllowUploadAttachment>0</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+      <shouldRollbackManualRecordEdits>true</shouldRollbackManualRecordEdits>
+      <shouldShowManualEditsWarning>false</shouldShowManualEditsWarning>
+      <UseCultureFormat>true</UseCultureFormat>
+      <TransportName>CustomTable</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+    </process>
+    <ui>
+      <CustomScriptDebug>false</CustomScriptDebug>
+      <customscriptIncludedScripts>Lib_Parameters_P2P_V12.0.566.0</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Lib_Spending_Project_V12.0.566.0</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Lib_Spending_Budget_Management_Mixin_V12.0.566.0</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Sys/Sys_Helpers_Array</customscriptIncludedScripts>
+      <customscriptIncludedScripts>[LIB_P2P_CUSTOMIZATION_TABLES_CLIENT]</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Sys/Sys_Helpers</customscriptIncludedScripts>
+      <CustomScriptReadonly>true</CustomScriptReadonly>
+      <CustomScript>"use strict";
+var CustomScript;
+(function (CustomScript) {
+    function InitOperationDetailsPane() {
+        Controls.OperationDetailsView__.SetView({
+            tabName: "",
+            viewName: "_Project Budget Operation Details view",
+            processOrTableName: "ProjectSpendingOperationDetails__",
+            checkProfileTab: false,
+            isSystem: true,
+            filterParameters: { ProjectNumber: Controls.ProjectNumber__.GetValue() }
+        });
+        Controls.OperationDetailsView__.Apply();
+    }
+    /**
+     * Initform
+     */
+    function InitForm() {
+        ProcessInstance.SetFormWidth(1280);
+        InitOperationDetailsPane();
+    }
+    /**
+     * Start
+     */
+    function Start() {
+        /**
+         * Variables
+         */
+        if (Controls.ComputedRemaining__.GetValue() &gt;= 0 || Controls.ComputedRemaining__.GetValue() == null) {
+            Controls.ComputedRemaining__.RemoveStyle("text-highlight-warning");
+        }
+        else {
+            Controls.ComputedRemaining__.AddStyle("text-highlight-warning");
+        }
+        Sys.Helpers.TryCallFunction("Lib.P2P.Customization.Tables.Client.Common.OnHTMLScriptEnd");
+    }
+    // Start custom script
+    InitForm();
+    Start();
+})(CustomScript || (CustomScript = {}));
+//# sourceMappingURL=customscript.js.map</CustomScript>
+      <restorationPanel>DataPanel</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 48,
+	"*": {
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"splitterType": "simple-v",
+				"backColor": "text-backgroundcolor-color7",
+				"style": "FlexibleFormLight",
+				"processHelpId": "5083",
+				"footerStyle": "LargeFooter",
+				"maxwidth": "",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 2,
+					"options": {
+						"hidePanelsMenu": false,
+						"maxwidth": "",
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 3,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 4,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-center": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 5,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"width": "100%"
+										},
+										"hidden": false,
+										"hideSeparator": true
+									},
+									"*": {
+										"form-content-center-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 6,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"DataPanel": {
+													"type": "PanelData",
+													"data": [],
+													"stamp": 7,
+													"options": {
+														"border": {},
+														"labelLength": "230px",
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": true,
+														"hideTitleBar": false,
+														"label": "_General_Information_Pane",
+														"backgroundcolor": "default",
+														"labelsAlignment": "right",
+														"hideTitle": false,
+														"sameHeightAsSiblings": false,
+														"leftImageURL": "",
+														"removeMargins": false,
+														"elementsAlignment": "left",
+														"hidden": false,
+														"version": 0
+													},
+													"*": {
+														"FieldsManager": {
+															"type": "FieldsManager",
+															"data": [],
+															"stamp": 8,
+															"options": {
+																"version": 0,
+																"controlsAssociation": {
+																	"CompanyCode__": "LabelCompanyCode__",
+																	"LabelCompanyCode__": "CompanyCode__",
+																	"ProjectNumber__": "LabelProjectNumber__",
+																	"LabelProjectNumber__": "ProjectNumber__"
+																}
+															},
+															"*": {
+																"Grid": {
+																	"type": "GridLayout",
+																	"data": [
+																		"fields"
+																	],
+																	"stamp": 9,
+																	"options": {
+																		"version": 0,
+																		"lines": 3,
+																		"columns": 2,
+																		"ctrlsPos": {
+																			"LabelCompanyCode__": {
+																				"line": 1,
+																				"column": 1
+																			},
+																			"CompanyCode__": {
+																				"line": 1,
+																				"column": 2
+																			},
+																			"LabelProjectNumber__": {
+																				"line": 2,
+																				"column": 1
+																			},
+																			"ProjectNumber__": {
+																				"line": 2,
+																				"column": 2
+																			},
+																			"Spacer__": {
+																				"line": 3,
+																				"column": 1
+																			}
+																		},
+																		"colspans": [
+																			[],
+																			[],
+																			[
+																				{
+																					"index": 0,
+																					"length": 2
+																				}
+																			]
+																		]
+																	},
+																	"*": {
+																		"LabelCompanyCode__": {
+																			"type": "Label",
+																			"data": [
+																				"CompanyCode__"
+																			],
+																			"stamp": 11,
+																			"options": {
+																				"label": "_CompanyCode",
+																				"version": 0
+																			}
+																		},
+																		"CompanyCode__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"CompanyCode__"
+																			],
+																			"stamp": 10,
+																			"options": {
+																				"label": "_CompanyCode",
+																				"version": 1,
+																				"autoCompleteSearchMode": "startswith",
+																				"searchMode": "contains",
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"minNbLines": 1,
+																				"maxNbLines": 1,
+																				"PreFillFTS": true,
+																				"fTSmaxRecords": "20",
+																				"browsable": true
+																			}
+																		},
+																		"LabelProjectNumber__": {
+																			"type": "Label",
+																			"data": [
+																				"ProjectNumber__"
+																			],
+																			"stamp": 13,
+																			"options": {
+																				"label": "_ProjectNumber",
+																				"version": 0
+																			}
+																		},
+																		"ProjectNumber__": {
+																			"type": "ShortText",
+																			"data": [
+																				"ProjectNumber__"
+																			],
+																			"stamp": 12,
+																			"options": {
+																				"label": "_ProjectNumber",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 1,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"browsable": false
+																			}
+																		},
+																		"Spacer__": {
+																			"type": "Spacer",
+																			"data": false,
+																			"stamp": 14,
+																			"options": {
+																				"label": "_Spacer",
+																				"height": "",
+																				"width": "",
+																				"color": "default",
+																				"version": 0
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-center-3": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 15,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"Amounts_Pane": {
+													"type": "PanelData",
+													"data": [],
+													"stamp": 16,
+													"options": {
+														"border": {},
+														"labelLength": "230px",
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": true,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"sameHeightAsSiblings": true,
+														"backgroundcolor": "default",
+														"labelsAlignment": "right",
+														"label": "_Amounts_Pane",
+														"hidden": false,
+														"leftImageURL": "",
+														"removeMargins": false,
+														"elementsAlignment": "left",
+														"version": 0
+													},
+													"*": {
+														"FieldsManager": {
+															"type": "FieldsManager",
+															"data": [],
+															"stamp": 17,
+															"options": {
+																"version": 0,
+																"controlsAssociation": {
+																	"Currency__": "LabelCurrency__",
+																	"LabelCurrency__": "Currency__",
+																	"Min__": "LabelMin__",
+																	"LabelMin__": "Min__",
+																	"Max__": "LabelMax__",
+																	"LabelMax__": "Max__",
+																	"OutOfAmountBehavior__": "LabelOutOfAmountBehavior__",
+																	"LabelOutOfAmountBehavior__": "OutOfAmountBehavior__",
+																	"ComputedRemaining__": "LabelComputedRemaining__",
+																	"LabelComputedRemaining__": "ComputedRemaining__",
+																	"ToApprove__": "LabelToApprove__",
+																	"LabelToApprove__": "ToApprove__",
+																	"Committed__": "LabelCommitted__",
+																	"LabelCommitted__": "Committed__",
+																	"Ordered__": "LabelOrdered__",
+																	"LabelOrdered__": "Ordered__",
+																	"InvoicedPO__": "LabelInvoicedPO__",
+																	"LabelInvoicedPO__": "InvoicedPO__",
+																	"InvoicedNonPO__": "LabelInvoicedNonPO__",
+																	"LabelInvoicedNonPO__": "InvoicedNonPO__"
+																}
+															},
+															"*": {
+																"Grid": {
+																	"type": "GridLayout",
+																	"data": [
+																		"fields"
+																	],
+																	"stamp": 18,
+																	"options": {
+																		"version": 0,
+																		"lines": 11,
+																		"columns": 2,
+																		"ctrlsPos": {
+																			"LabelCurrency__": {
+																				"line": 1,
+																				"column": 1
+																			},
+																			"Currency__": {
+																				"line": 1,
+																				"column": 2
+																			},
+																			"LabelMin__": {
+																				"line": 2,
+																				"column": 1
+																			},
+																			"Min__": {
+																				"line": 2,
+																				"column": 2
+																			},
+																			"LabelMax__": {
+																				"line": 3,
+																				"column": 1
+																			},
+																			"Max__": {
+																				"line": 3,
+																				"column": 2
+																			},
+																			"LabelOutOfAmountBehavior__": {
+																				"line": 4,
+																				"column": 1
+																			},
+																			"OutOfAmountBehavior__": {
+																				"line": 4,
+																				"column": 2
+																			},
+																			"LabelComputedRemaining__": {
+																				"line": 5,
+																				"column": 1
+																			},
+																			"ComputedRemaining__": {
+																				"line": 5,
+																				"column": 2
+																			},
+																			"LabelToApprove__": {
+																				"line": 6,
+																				"column": 1
+																			},
+																			"ToApprove__": {
+																				"line": 6,
+																				"column": 2
+																			},
+																			"LabelCommitted__": {
+																				"line": 7,
+																				"column": 1
+																			},
+																			"Committed__": {
+																				"line": 7,
+																				"column": 2
+																			},
+																			"LabelOrdered__": {
+																				"line": 8,
+																				"column": 1
+																			},
+																			"Ordered__": {
+																				"line": 8,
+																				"column": 2
+																			},
+																			"LabelInvoicedPO__": {
+																				"line": 9,
+																				"column": 1
+																			},
+																			"InvoicedPO__": {
+																				"line": 9,
+																				"column": 2
+																			},
+																			"LabelInvoicedNonPO__": {
+																				"line": 10,
+																				"column": 1
+																			},
+																			"InvoicedNonPO__": {
+																				"line": 10,
+																				"column": 2
+																			},
+																			"Spacer3__": {
+																				"line": 11,
+																				"column": 1
+																			}
+																		},
+																		"colspans": [
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[
+																				{
+																					"index": 0,
+																					"length": 2
+																				}
+																			]
+																		]
+																	},
+																	"*": {
+																		"LabelCurrency__": {
+																			"type": "Label",
+																			"data": [
+																				"Currency__"
+																			],
+																			"stamp": 20,
+																			"options": {
+																				"label": "_Currency",
+																				"version": 0
+																			}
+																		},
+																		"Currency__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"Currency__"
+																			],
+																			"stamp": 19,
+																			"options": {
+																				"label": "_Currency",
+																				"version": 1,
+																				"autoCompleteSearchMode": "startswith",
+																				"searchMode": "matches",
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"minNbLines": 1,
+																				"maxNbLines": 1,
+																				"fTSmaxRecords": "20",
+																				"browsable": true,
+																				"readonly": true
+																			}
+																		},
+																		"LabelMin__": {
+																			"type": "Label",
+																			"data": [
+																				"Min__"
+																			],
+																			"stamp": 22,
+																			"options": {
+																				"label": "_Min",
+																				"version": 0
+																			}
+																		},
+																		"Min__": {
+																			"type": "Decimal",
+																			"data": [
+																				"Min__"
+																			],
+																			"stamp": 21,
+																			"options": {
+																				"label": "_Min",
+																				"version": 2,
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"integer": false,
+																				"precision_internal": 5,
+																				"precision_current": 5,
+																				"activable": true,
+																				"width": 100,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"enableRoundedStyle": false,
+																				"forceRoundCurrencyPrecision": false,
+																				"enablePlusMinus": false,
+																				"precision_min": 2,
+																				"precision_max_display": 2
+																			}
+																		},
+																		"LabelMax__": {
+																			"type": "Label",
+																			"data": [
+																				"Max__"
+																			],
+																			"stamp": 24,
+																			"options": {
+																				"label": "_Max",
+																				"version": 0
+																			}
+																		},
+																		"Max__": {
+																			"type": "Decimal",
+																			"data": [
+																				"Max__"
+																			],
+																			"stamp": 23,
+																			"options": {
+																				"label": "_Max",
+																				"version": 2,
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"integer": false,
+																				"precision_internal": 5,
+																				"precision_current": 5,
+																				"activable": true,
+																				"width": 100,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"enableRoundedStyle": false,
+																				"forceRoundCurrencyPrecision": false,
+																				"enablePlusMinus": false,
+																				"precision_min": 2,
+																				"precision_max_display": 2
+																			}
+																		},
+																		"LabelOutOfAmountBehavior__": {
+																			"type": "Label",
+																			"data": [
+																				"OutOfAmountBehavior__"
+																			],
+																			"stamp": 26,
+																			"options": {
+																				"label": "_OutOfAmountBehavior",
+																				"version": 0
+																			}
+																		},
+																		"OutOfAmountBehavior__": {
+																			"type": "ComboBox",
+																			"data": [
+																				"OutOfAmountBehavior__"
+																			],
+																			"stamp": 25,
+																			"options": {
+																				"label": "_OutOfAmountBehavior",
+																				"possibleValues": {
+																					"0": "_OutOfAmountBehavior_Ignore",
+																					"1": "_OutOfAmountBehavior_Block"
+																				},
+																				"maxNbLinesToDisplay": 10,
+																				"version": 1,
+																				"keyValueMode": true,
+																				"possibleKeys": {
+																					"0": "Ignore",
+																					"1": "Block"
+																				},
+																				"activable": true,
+																				"width": "230",
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"DataSourceOrigin": "Standalone",
+																				"NoEmptyValue": false,
+																				"DisplayedColumns": null,
+																				"SavedColumn": null
+																			}
+																		},
+																		"LabelComputedRemaining__": {
+																			"type": "Label",
+																			"data": [
+																				"ComputedRemaining__"
+																			],
+																			"stamp": 28,
+																			"options": {
+																				"label": "_ComputedRemaining",
+																				"version": 0
+																			}
+																		},
+																		"ComputedRemaining__": {
+																			"type": "Decimal",
+																			"data": [
+																				"ComputedRemaining__"
+																			],
+																			"stamp": 27,
+																			"options": {
+																				"label": "_ComputedRemaining",
+																				"version": 2,
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"integer": false,
+																				"precision_internal": 5,
+																				"precision_current": 5,
+																				"activable": true,
+																				"width": "100",
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"enableRoundedStyle": false,
+																				"forceRoundCurrencyPrecision": false,
+																				"enablePlusMinus": false,
+																				"precision_min": 2,
+																				"precision_max_display": 2
+																			}
+																		},
+																		"LabelToApprove__": {
+																			"type": "Label",
+																			"data": [
+																				"ToApprove__"
+																			],
+																			"stamp": 30,
+																			"options": {
+																				"label": "_ToApprove",
+																				"version": 0
+																			}
+																		},
+																		"ToApprove__": {
+																			"type": "Decimal",
+																			"data": [
+																				"ToApprove__"
+																			],
+																			"stamp": 29,
+																			"options": {
+																				"label": "_ToApprove",
+																				"integer": false,
+																				"precision_internal": 5,
+																				"activable": true,
+																				"width": "100",
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"precision_current": 5,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"defaultValue": "0",
+																				"helpIconPosition": "Right",
+																				"enableRoundedStyle": false,
+																				"forceRoundCurrencyPrecision": false,
+																				"enablePlusMinus": false,
+																				"precision_min": 2,
+																				"precision_max_display": 2,
+																				"version": 0
+																			}
+																		},
+																		"LabelCommitted__": {
+																			"type": "Label",
+																			"data": [
+																				"Committed__"
+																			],
+																			"stamp": 32,
+																			"options": {
+																				"label": "_Committed",
+																				"version": 0
+																			}
+																		},
+																		"Committed__": {
+																			"type": "Decimal",
+																			"data": [
+																				"Committed__"
+																			],
+																			"stamp": 31,
+																			"options": {
+																				"label": "_Committed",
+																				"integer": false,
+																				"precision_internal": 5,
+																				"activable": true,
+																				"width": "100",
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"precision_current": 5,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"defaultValue": "0",
+																				"helpIconPosition": "Right",
+																				"enableRoundedStyle": false,
+																				"forceRoundCurrencyPrecision": false,
+																				"enablePlusMinus": false,
+																				"precision_min": 2,
+																				"precision_max_display": 2,
+																				"version": 0
+																			}
+																		},
+																		"LabelOrdered__": {
+																			"type": "Label",
+																			"data": [
+																				"Ordered__"
+																			],
+																			"stamp": 34,
+																			"options": {
+																				"label": "_Ordered",
+																				"version": 0
+																			}
+																		},
+																		"Ordered__": {
+																			"type": "Decimal",
+																			"data": [
+																				"Ordered__"
+																			],
+																			"stamp": 33,
+																			"options": {
+																				"label": "_Ordered",
+																				"version": 1,
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"integer": false,
+																				"precision_internal": 5,
+																				"activable": true,
+																				"width": "100",
+																				"precision_current": 5,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"defaultValue": "0",
+																				"helpIconPosition": "Right",
+																				"enableRoundedStyle": false,
+																				"forceRoundCurrencyPrecision": false,
+																				"enablePlusMinus": false,
+																				"precision_min": 2,
+																				"precision_max_display": 2
+																			}
+																		},
+																		"LabelInvoicedPO__": {
+																			"type": "Label",
+																			"data": [
+																				"InvoicedPO__"
+																			],
+																			"stamp": 36,
+																			"options": {
+																				"label": "_InvoicedPo",
+																				"version": 0
+																			}
+																		},
+																		"InvoicedPO__": {
+																			"type": "Decimal",
+																			"data": [
+																				"InvoicedPO__"
+																			],
+																			"stamp": 35,
+																			"options": {
+																				"label": "_InvoicedPo",
+																				"version": 1,
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"integer": false,
+																				"precision_internal": 5,
+																				"activable": true,
+																				"width": "100",
+																				"autocompletable": false,
+																				"precision_current": 5,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"defaultValue": "0",
+																				"helpIconPosition": "Right",
+																				"enableRoundedStyle": false,
+																				"forceRoundCurrencyPrecision": false,
+																				"enablePlusMinus": false,
+																				"precision_min": 2,
+																				"precision_max_display": 2
+																			}
+																		},
+																		"LabelInvoicedNonPO__": {
+																			"type": "Label",
+																			"data": [
+																				"InvoicedNonPO__"
+																			],
+																			"stamp": 38,
+																			"options": {
+																				"label": "_InvoicedNonPo",
+																				"version": 0
+																			}
+																		},
+																		"InvoicedNonPO__": {
+																			"type": "Decimal",
+																			"data": [
+																				"InvoicedNonPO__"
+																			],
+																			"stamp": 37,
+																			"options": {
+																				"label": "_InvoicedNonPo",
+																				"version": 1,
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"integer": false,
+																				"precision_internal": 5,
+																				"activable": true,
+																				"width": "100",
+																				"autocompletable": false,
+																				"precision_current": 5,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"defaultValue": "0",
+																				"helpIconPosition": "Right",
+																				"enableRoundedStyle": false,
+																				"forceRoundCurrencyPrecision": false,
+																				"enablePlusMinus": false,
+																				"precision_min": 2,
+																				"precision_max_display": 2
+																			}
+																		},
+																		"Spacer3__": {
+																			"type": "Spacer",
+																			"data": false,
+																			"stamp": 39,
+																			"options": {
+																				"label": "_Spacer3",
+																				"height": "",
+																				"width": "",
+																				"color": "default",
+																				"version": 0
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-center-4": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 40,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"Operation_Details_Pane": {
+													"type": "PanelData",
+													"data": [],
+													"stamp": 41,
+													"options": {
+														"border": {},
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": true,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"sameHeightAsSiblings": false,
+														"backgroundcolor": "default",
+														"labelsAlignment": "right",
+														"label": "_Operation_Details_Pane",
+														"hidden": false,
+														"leftImageURL": "",
+														"removeMargins": false,
+														"elementsAlignment": "left",
+														"labelLength": 0,
+														"version": 0
+													},
+													"*": {
+														"FieldsManager": {
+															"type": "FieldsManager",
+															"data": [],
+															"stamp": 42,
+															"options": {
+																"version": 0,
+																"controlsAssociation": {}
+															},
+															"*": {
+																"Grid": {
+																	"type": "GridLayout",
+																	"data": [
+																		"fields"
+																	],
+																	"stamp": 43,
+																	"options": {
+																		"version": 0,
+																		"lines": 1,
+																		"columns": 2,
+																		"ctrlsPos": {
+																			"OperationDetailsView__": {
+																				"line": 1,
+																				"column": 1
+																			}
+																		},
+																		"colspans": [
+																			[
+																				{
+																					"index": 0,
+																					"length": 2
+																				}
+																			]
+																		]
+																	},
+																	"*": {
+																		"OperationDetailsView__": {
+																			"type": "AdminList",
+																			"data": false,
+																			"stamp": 44,
+																			"options": {
+																				"label": "_OperationDetailsView",
+																				"openInReadOnlyMode": true,
+																				"width": "100%",
+																				"restrictToCurrentJobId": false,
+																				"showActions": false,
+																				"openInNewTab": true,
+																				"hideDisplayedFilters": false,
+																				"customizedPageSize": "20",
+																				"version": 0
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 45,
+					"options": {
+						"splitterType": "simple-h",
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 46,
+							"options": {
+								"label": "_Save",
+								"action": "savequit",
+								"submit": true,
+								"shortCut": "S",
+								"disabled": true,
+								"textSize": "S",
+								"textPosition": "text-right",
+								"textStyle": "default",
+								"textColor": "default",
+								"iconColor": "default",
+								"nextprocess": {
+									"processName": "AP - Application Settings__",
+									"attachmentsMode": "all",
+									"willBeChild": true,
+									"returnToOriginalUrl": false
+								},
+								"urlImageOverlay": "",
+								"style": 1,
+								"buttonLabel": "",
+								"isRounded": true,
+								"isOutline": false,
+								"url": "",
+								"position": null,
+								"version": 0
+							}
+						},
+						"Delete": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 47,
+							"options": {
+								"label": "_Delete",
+								"action": "delete",
+								"submit": true,
+								"disabled": true,
+								"textSize": "S",
+								"textPosition": "text-right",
+								"textStyle": "default",
+								"textColor": "default",
+								"iconColor": "default",
+								"nextprocess": {
+									"processName": "AP - Application Settings__",
+									"attachmentsMode": "all",
+									"willBeChild": true,
+									"returnToOriginalUrl": false
+								},
+								"urlImageOverlay": "",
+								"style": 1,
+								"buttonLabel": "",
+								"isRounded": true,
+								"isOutline": false,
+								"url": "",
+								"position": null,
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 48,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"shortCut": "Q",
+								"textSize": "S",
+								"textPosition": "text-right",
+								"textStyle": "default",
+								"textColor": "default",
+								"iconColor": "default",
+								"nextprocess": {
+									"processName": "AP - Application Settings__",
+									"attachmentsMode": "all",
+									"willBeChild": true,
+									"returnToOriginalUrl": false
+								},
+								"urlImageOverlay": "",
+								"style": 1,
+								"buttonLabel": "",
+								"isRounded": true,
+								"isOutline": true,
+								"url": "",
+								"position": null,
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <field deleted="0" format="" guid="LFDX132294" id="J5EQT400153E" label="_Committed_report" length="17" name="Committed__" originalProcessID="PAC20230406" precision="5" processid="I5EQT400153E" submitable="1" type="DECIMAL">
+    <properties>
+      <db>
+        <alias>AJ5EQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Committed__</fullname>
+        <defaultvalue>0</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:40</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Committed_report</Label>
+        <Alias>AJ5EQT400153E</Alias>
+        <DecimalPrecision vartype="INT">5</DecimalPrecision>
+        <DecimalPrecisionMaxDisplay>2</DecimalPrecisionMaxDisplay>
+        <DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="B22JG0000SG1" id="K5EQT400153E" label="_CompanyCode_report" length="50" name="CompanyCode__" originalProcessID="PAC20230406" precision="0" processid="I5EQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AK5EQT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/CompanyCode__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:40</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_CompanyCode_report</Label>
+        <Alias>AK5EQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>false</Editable>
+        <TableName>CT#BD8QT400153E</TableName>
+        <SortOrder>
+        </SortOrder>
+        <SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+        <DisplayedColumns>CompanyCode__|CompanyName__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>CompanyCode__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ExposedColumns>
+        </ExposedColumns>
+        <ProcessName>PurchasingCompanycodes__</ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <KeyAttribute>
+        </KeyAttribute>
+        <CustomFilter>
+        </CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="YDMIG0000SG1" id="L5EQT400153E" label="_ComputedRemaining_report" length="17" name="ComputedRemaining__" originalProcessID="PAC20230406" precision="5" processid="I5EQT400153E" submitable="1" type="DECIMAL">
+    <properties>
+      <db>
+        <alias>AL5EQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ComputedRemaining__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:40</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ComputedRemaining_report</Label>
+        <Alias>AL5EQT400153E</Alias>
+        <DecimalPrecision vartype="INT">5</DecimalPrecision>
+        <DecimalPrecisionMaxDisplay>2</DecimalPrecisionMaxDisplay>
+        <DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="MR0IG0000VLT" id="M5EQT400153E" label="_Currency_report" length="50" name="Currency__" originalProcessID="PAC20230406" precision="0" processid="I5EQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AM5EQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Currency__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:40</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Currency_report</Label>
+        <Alias>AM5EQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>false</Editable>
+        <TableName>Currencies</TableName>
+        <SortOrder>ASC</SortOrder>
+        <SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+        <DisplayedColumns>Code</DisplayedColumns>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>Code</SavedColumn>
+        <ExposedColumns>
+        </ExposedColumns>
+        <ProcessName>
+        </ProcessName>
+        <KeyColumnId>Code</KeyColumnId>
+        <KeyAttribute>Currency__</KeyAttribute>
+        <CustomFilter>
+        </CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="PHQG1000091" id="N5EQT400153E" label="_InvoicedNonPo_report" length="17" name="InvoicedNonPO__" originalProcessID="PAC20230406" precision="5" processid="I5EQT400153E" submitable="1" type="DECIMAL">
+    <properties>
+      <db>
+        <alias>AN5EQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/InvoicedNonPO__</fullname>
+        <defaultvalue>0</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:40</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_InvoicedNonPo_report</Label>
+        <Alias>AN5EQT400153E</Alias>
+        <DecimalPrecision vartype="INT">5</DecimalPrecision>
+        <DecimalPrecisionMaxDisplay>2</DecimalPrecisionMaxDisplay>
+        <DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="PNVR1011847" id="O5EQT400153E" label="_InvoicedPo_report" length="17" name="InvoicedPO__" originalProcessID="PAC20230406" precision="5" processid="I5EQT400153E" submitable="1" type="DECIMAL">
+    <properties>
+      <db>
+        <alias>AO5EQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/InvoicedPO__</fullname>
+        <defaultvalue>0</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:40</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_InvoicedPo_report</Label>
+        <Alias>AO5EQT400153E</Alias>
+        <DecimalPrecision vartype="INT">5</DecimalPrecision>
+        <DecimalPrecisionMaxDisplay>2</DecimalPrecisionMaxDisplay>
+        <DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="AYLN132293" id="P5EQT400153E" label="_Max_report" length="17" name="Max__" originalProcessID="PAC20230406" precision="5" processid="I5EQT400153E" submitable="1" type="DECIMAL">
+    <properties>
+      <db>
+        <alias>AP5EQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Max__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:40</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Max_report</Label>
+        <Alias>AP5EQT400153E</Alias>
+        <behavior>Default, ReportPreselectedForProcess</behavior>
+        <DecimalPrecision vartype="INT">5</DecimalPrecision>
+        <DecimalPrecisionMaxDisplay>2</DecimalPrecisionMaxDisplay>
+        <DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        <reportpreselectedorder>3</reportpreselectedorder>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="PHQG134808" id="Q5EQT400153E" label="_Ordered_report" length="17" name="Ordered__" originalProcessID="PAC20230406" precision="5" processid="I5EQT400153E" submitable="1" type="DECIMAL">
+    <properties>
+      <db>
+        <alias>AQ5EQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Ordered__</fullname>
+        <defaultvalue>0</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:40</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Ordered_report</Label>
+        <Alias>AQ5EQT400153E</Alias>
+        <DecimalPrecision vartype="INT">5</DecimalPrecision>
+        <DecimalPrecisionMaxDisplay>2</DecimalPrecisionMaxDisplay>
+        <DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="ADUIG0000SG1" id="R5EQT400153E" label="_OutOfAmountBehavior" length="50" name="OutOfAmountBehavior__" originalProcessID="PAC20221121" precision="0" processid="I5EQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AR5EQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/OutOfAmountBehavior__</fullname>
+        <defaultvalue>Ignore</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:40</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Type>webaccess.Process.Columns.WithPossibleValues</Type>
+        <Label>_OutOfAmountBehavior</Label>
+        <Alias>AR5EQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <TableName>
+        </TableName>
+        <DisplayedColumns>
+        </DisplayedColumns>
+        <DataSourceOrigin>Standalone</DataSourceOrigin>
+        <possibleKeys>Ignore
+Warn
+Block</possibleKeys>
+        <SavedColumn>
+        </SavedColumn>
+        <possibleValues>_OutOfAmountBehavior_Ignore
+_OutOfAmountBehavior_Warn
+_OutOfAmountBehavior_Block</possibleValues>
+        <ProcessName>
+        </ProcessName>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="H4ZHG0000VLT" id="S5EQT400153E" label="_ProjectNumber_report" length="50" name="ProjectNumber__" originalProcessID="PAC20230406" precision="0" processid="I5EQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AS5EQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ProjectNumber__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:40</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ProjectNumber_report</Label>
+        <Alias>AS5EQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="FIRC132295" id="T5EQT400153E" label="_ToApprove_report" length="17" name="ToApprove__" originalProcessID="PAC20230406" precision="5" processid="I5EQT400153E" submitable="1" type="DECIMAL">
+    <properties>
+      <db>
+        <alias>AT5EQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ToApprove__</fullname>
+        <defaultvalue>0</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:40</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ToApprove_report</Label>
+        <Alias>AT5EQT400153E</Alias>
+        <DecimalPrecision vartype="INT">5</DecimalPrecision>
+        <DecimalPrecisionMaxDisplay>2</DecimalPrecisionMaxDisplay>
+        <DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <type id="KOLHG0000M4O" name="CT">
+  </type>
+</process>

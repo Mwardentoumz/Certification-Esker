@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<mappingDef>
+	<tableName>PurchasingCompanycodes__</tableName>
+	<options>
+		<separator>,</separator>
+		<hasHeader>TRUE</hasHeader>
+		<escape>doubled</escape>
+		<textQualifier>"</textQualifier>
+		<hasLastDelimiter>FALSE</hasLastDelimiter>
+	</options>
+	<script>
+		<code>
+			function GetERP() { return "NAV"; }
+		</code>
+	</script>
+	<mappings>
+		<mapping key="true">
+			<fieldInTable>CompanyCode__</fieldInTable>
+			<fieldInFile>
+				<fieldNameInFile>Company_code__</fieldNameInFile>
+			</fieldInFile>
+        </mapping>
+		<mapping>
+			<fieldInTable>CompanyName__</fieldInTable>
+			<fieldInFile>
+				<fieldNameInFile>Company_name__</fieldNameInFile>
+			</fieldInFile>
+		</mapping>
+		<mapping>
+			<fieldInTable>Currency__</fieldInTable>
+			<fieldInFile>
+				<fieldNameInFile>Currency__</fieldNameInFile>
+			</fieldInFile>
+		</mapping>
+		<mapping>
+			<fieldInTable>CorporateDistanceUnit__</fieldInTable>
+			<fieldInFile>
+				<fieldNameInFile>CorporateDistanceUnit__</fieldNameInFile>
+			</fieldInFile>
+		</mapping>
+		<mapping>
+			<evalScript>GetERP</evalScript>
+			<fieldInTable>ERP__</fieldInTable>
+		</mapping>
+	</mappings>
+</mappingDef>

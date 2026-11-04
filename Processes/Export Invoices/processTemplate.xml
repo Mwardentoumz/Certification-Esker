@@ -1,0 +1,693 @@
+<process accountid="" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:07:10" deleted="0" eskerapplication="P2P" global="0" id="NoID" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="Export Invoices" needvalidation="1" ootofilter="" ootoversion="0" originalProcessID="CEJC667351" ownerid="" ownerpb="" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="" version="1" visibility="0">
+	<properties>
+		<dataConditions>
+			<listDataConditions>
+				&lt;dataCondition&gt;
+		&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+		&lt;filter&gt;msnex=*&lt;/filter&gt;
+		&lt;labelKey&gt;_AP disabled&lt;/labelKey&gt;
+		&lt;conditions&gt;
+			&lt;allowCondition&gt;
+				&lt;fieldName&gt;EnableAccountPayableGlobalSetting__&lt;/fieldName&gt;
+				&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+			&lt;/allowCondition&gt;
+		&lt;/conditions&gt;
+	&lt;/dataCondition&gt;
+			</listDataConditions>
+		</dataConditions>
+		<gdr>
+			<FinalizationScriptAllowRetry>true</FinalizationScriptAllowRetry>
+			<finalizationscriptIncludedScripts>Sys/Sys_Helpers_Date</finalizationscriptIncludedScripts>
+			<finalizationscriptIncludedScripts>Sys/Sys_Helpers_LDAPutil</finalizationscriptIncludedScripts>
+			<finalizationscriptIncludedScripts>Sys/SYS_EDI_FRB2B_FLOW10</finalizationscriptIncludedScripts>
+			<finalizationscriptIncludedScripts>Lib_V12.0.566.0</finalizationscriptIncludedScripts>
+			<finalizationscriptIncludedScripts>Lib_P2P_V12.0.566.0</finalizationscriptIncludedScripts>
+			<finalizationscriptIncludedScripts>Lib_FlexibleFormToXML_V12.0.566.0</finalizationscriptIncludedScripts>
+			<finalizationscriptIncludedScripts>Lib_FormDataConverter_V12.0.566.0</finalizationscriptIncludedScripts>
+			<finalizationscriptIncludedScripts>Lib_FormDataToXML_V12.0.566.0</finalizationscriptIncludedScripts>
+			<finalizationscriptIncludedScripts>Lib_FormDataToCSV_V12.0.566.0</finalizationscriptIncludedScripts>
+			<finalizationscriptIncludedScripts>Lib_FormDataToTRA_V12.0.566.0</finalizationscriptIncludedScripts>
+			<finalizationscriptIncludedScripts>Lib_FormDataToSAGE50_V12.0.566.0</finalizationscriptIncludedScripts>
+			<finalizationscriptIncludedScripts>Lib_FormDataToPaymentApproval_V12.0.566.0</finalizationscriptIncludedScripts>
+			<finalizationscriptIncludedScripts>Lib_FormDataToFlux10_1_V12.0.566.0</finalizationscriptIncludedScripts>
+			<finalizationscriptIncludedScripts>Sys/Sys_EDI_FRB2B_PDPConnector_Common</finalizationscriptIncludedScripts>
+			<finalizationscriptIncludedScripts>Sys/Sys_EDI_FRB2B_PDPConnector_Factory</finalizationscriptIncludedScripts>
+			<finalizationscriptIncludedScripts>Sys/SYS_FRB2B_AP_HELPERS</finalizationscriptIncludedScripts>
+			<FinalizationScript>
+				<!--finalizationscript.js--></FinalizationScript>
+			<ValidationScriptAllowRetry />
+			<ValidationScript>
+				<!--validationscript.js--></ValidationScript>
+			<AllowTagCoverPages>true</AllowTagCoverPages>
+			<AllowTagNewDocuments>true</AllowTagNewDocuments>
+			<AllowTagAttachments>true</AllowTagAttachments>
+			<ExtractionScriptAllowRetry />
+			<ExtractionScript>
+				<!--extractionscript.js--></ExtractionScript>
+			<AllowRemovePages>true</AllowRemovePages>
+			<AllowSwapPages>true</AllowSwapPages>
+			<PostProcessingScriptAllowRetry />
+			<PostProcessingScript>
+				<!--postprocessingscript.js--></PostProcessingScript>
+		</gdr>
+		<lg>
+			<!--*.xml-->
+		</lg>
+		<process>
+			<flowtype>processing</flowtype>
+			<ocrpreset>custom</ocrpreset>
+			<homepagelabel>_Export invoices for a specific ERP</homepagelabel>
+			<enableflexibleauditing />
+			<enableflexibleediting />
+			<enableflexibleteaching />
+			<upgradable>yes</upgradable>
+			<disableocr>no</disableocr>
+			<instanciable>1</instanciable>
+			<disableScriptModification>true</disableScriptModification>
+			<disableautolearning>true</disableautolearning>
+			<backgroundprocessingthreshold />
+			<EnablePreviewPrecomputation />
+			<enableUpgradableDesign>true</enableUpgradableDesign>
+			<archiveDuration>0</archiveDuration>
+			<ocrpagestoprocess>0</ocrpagestoprocess>
+			<ScriptEngineType>2</ScriptEngineType>
+			<displayWidth>1024</displayWidth>
+			<AllowUploadAttachment>0</AllowUploadAttachment>
+			<AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+			<UseCultureFormat>true</UseCultureFormat>
+			<AllowRetryExtractCD>true</AllowRetryExtractCD>
+			<TransportName>CustomData</TransportName>
+			<LayoutVersion>1.0</LayoutVersion>
+		</process>
+		<ui>
+			<CustomScriptDebug>false</CustomScriptDebug>
+			<customscriptIncludedScripts>Sys/Sys_Helpers_Date</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Parameters_P2P_V12.0.566.0</customscriptIncludedScripts>
+			<CustomScriptReadonly>true</CustomScriptReadonly>
+			<CustomScript>
+				<!--customscript.js--></CustomScript>
+			<restorationPanel>InvoicesToExport</restorationPanel>
+			<layout>
+				<!--layout.json--></layout>
+		</ui>
+	</properties>
+	<type id="NoID" name="CD" />
+	<field deleted="0" format="" guid="Z61NG0000VLT" id="NoID" label="_CompanyCode" length="600" name="CompanyCode__" originalProcessID="CEJC667351" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CompanyCode__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_CompanyCode</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder />
+				<SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+				<DisplayedColumns>CompanyCode__|CompanyName__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<UseTableForAutolearn>false</UseTableForAutolearn>
+				<SavedColumn>CompanyCode__</SavedColumn>
+				<SavedColumnId />
+				<ExposedColumns />
+				<ProcessName>PurchasingCompanycodes__</ProcessName>
+				<KeyColumnId />
+				<KeyAttribute />
+				<CustomFilter />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="UPJQ24677422" id="NoID" label="_CompletedDateTime" length="0" name="CompletedDateTime__" originalProcessID="CEJC667351" precision="0" processid="" submitable="1" type="DATETIME">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CompletedDateTime__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_CompletedDateTime</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PHQG667352" id="NoID" label="_Select the file format to use with your ERP" length="50" name="Converter__" originalProcessID="CEJC667351" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Converter__</fullname>
+				<defaultvalue>Generic CSV</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_Select the file format to use with your ERP</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<possibleKeys>TRA_BUSINESS
+TRA_EXPERT
+Flux_10_1
+Generic CSV
+Generic XML
+CSV_MSDynamicsAX
+CSV_MSDynamicsNAV
+CSV_OracleEBS
+CSV_OracleJDE
+CSV_OraclePeopleSoft
+CSV_SAGE50
+CSV_SAGE1000
+CSV_SAP</possibleKeys>
+				<possibleValues>_TRA_BUSINESS
+_TRA_EXPERT
+_Flux_10_1
+_Generic CSV
+_Generic XML
+_CSV_MSDynamicsAX
+_CSV_MSDynamicsNAV
+_CSV_OracleEBS
+_CSV_OracleJDE
+_CSV_OraclePeopleSoft
+_CSV_SAGE50
+_CSV_SAGE1000
+_CSV_SAP</possibleValues>
+			</field>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PHQG1000338" id="NoID" label="DateOfStartExport" length="0" name="DateOfStartExport__" originalProcessID="CEJC667351" precision="0" processid="" submitable="1" type="DATETIME">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/DateOfStartExport__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>DateOfStartExport</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="MSYH24677420" id="NoID" label="_ExportDateTime" length="0" name="ExportDateTime__" originalProcessID="CEJC667351" precision="0" processid="" submitable="1" type="DATETIME">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ExportDateTime__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ExportDateTime</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="HUME24684361" id="NoID" label="_ExportedBy" length="80" name="ExportedBy__" originalProcessID="CEJC667351" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ExportedBy__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ExportedBy</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="A71NG0000VLT" id="NoID" label="_ExportEndDate" length="0" name="ExportEndDate__" originalProcessID="CEJC667351" precision="0" processid="" submitable="1" type="DATE">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ExportEndDate__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ExportEndDate</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<help>
+				<helpData>{"helpText":"_ExportEndDateToolTip","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="B71NG0000VLT" id="NoID" label="_ExportStartDate" length="0" name="ExportStartDate__" originalProcessID="CEJC667351" precision="0" processid="" submitable="1" type="DATE">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ExportStartDate__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ExportStartDate</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<help>
+				<helpData>{"helpText":"_ExportStartDateToolTip","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="GAGI24677421" id="NoID" label="_ExportStatus" length="50" name="ExportStatus__" originalProcessID="CEJC667351" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ExportStatus__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_ExportStatus</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<possibleKeys>
+Pending
+InProgress
+Completed
+Error
+Cancelled</possibleKeys>
+				<possibleValues>
+Pending
+InProgress
+Completed
+Error
+Cancelled</possibleValues>
+			</field>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="WHMS1000112" id="NoID" label="InvoicesApprovedTempFile" length="50" name="InvoicesApprovedTempFile__" originalProcessID="CEJC667351" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/InvoicesApprovedTempFile__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>InvoicesApprovedTempFile</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="OWUX1000111" id="NoID" label="InvoicesToExportTempFile" length="50" name="InvoicesToExportTempFile__" originalProcessID="CEJC667351" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/InvoicesToExportTempFile__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>InvoicesToExportTempFile</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="COKS1000114" id="NoID" label="LastMsnEx" length="50" name="LastMsnEx__" originalProcessID="CEJC667351" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/LastMsnEx__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>LastMsnEx</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="GGBW667831" id="NoID" label="_NumberOfExportedApprovedInvoices" length="0" name="NumberOfExportedApprovedInvoices__" originalProcessID="CEJC667351" precision="0" processid="" submitable="1" type="INT">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/NumberOfExportedApprovedInvoices__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_NumberOfExportedApprovedInvoices</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="BZXT24677423" id="NoID" label="_NumberOfExportedInvoices" length="0" name="NumberOfExportedInvoices__" originalProcessID="CEJC667351" precision="0" processid="" submitable="1" type="INT">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/NumberOfExportedInvoices__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_NumberOfExportedInvoices</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="KLDK24706171" id="NoID" label="_NumberOfInvoicesInError" length="0" name="NumberOfInvoicesInError__" originalProcessID="CEJC667351" precision="0" processid="" submitable="1" type="INT">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/NumberOfInvoicesInError__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_NumberOfInvoicesInError</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PHQG24728459" id="NoID" label="_Payment release output format" length="50" name="Payment_release_output_format__" originalProcessID="CEJC667351" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Payment_release_output_format__</fullname>
+				<defaultvalue>Generic (CSV)</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_Payment release output format</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<possibleKeys />
+				<possibleValues>Generic (CSV)</possibleValues>
+			</field>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="BURI1000445" id="NoID" label="_SchedulingDate" length="0" name="SchedulingDate__" originalProcessID="CEJC667351" precision="0" processid="" submitable="1" type="DATE">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/SchedulingDate__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_SchedulingDate</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="SWTB1000446" id="NoID" label="_SchedulingHours" length="50" name="SchedulingHours__" originalProcessID="CEJC667351" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/SchedulingHours__</fullname>
+				<defaultvalue>00OClock</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_SchedulingHours</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<possibleKeys>00OClock
+01OClock
+02OClock
+03OClock
+04OClock
+05OClock
+06OClock
+07OClock
+08OClock
+09OClock
+10OClock
+11OClock
+12OClock
+13OClock
+14OClock
+15OClock
+16OClock
+17OClock
+18OClock
+19OClock
+20OClock
+21OClock
+22OClock
+23OClock</possibleKeys>
+				<possibleValues>00OClock
+01OClock
+02OClock
+03OClock
+04OClock
+05OClock
+06OClock
+07OClock
+08OClock
+09OClock
+10OClock
+11OClock
+12OClock
+13OClock
+14OClock
+15OClock
+16OClock
+17OClock
+18OClock
+19OClock
+20OClock
+21OClock
+22OClock
+23OClock</possibleValues>
+			</field>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="RECU1000447" id="NoID" label="_SchedulingMinutes" length="50" name="SchedulingMinutes__" originalProcessID="CEJC667351" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/SchedulingMinutes__</fullname>
+				<defaultvalue>00</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_SchedulingMinutes</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<possibleKeys />
+				<possibleValues>00
+10
+20
+30
+40
+50</possibleValues>
+			</field>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="UIDU1000444" id="NoID" label="_SchedulingOptions" length="50" name="SchedulingOptions__" originalProcessID="CEJC667351" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/SchedulingOptions__</fullname>
+				<defaultvalue>Execute now</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_SchedulingOptions</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<possibleKeys>Execute now
+Defer execution until</possibleKeys>
+				<possibleValues>Execute now
+Defer execution until</possibleValues>
+			</field>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="IMUC1003060" id="NoID" label="_Skip_Invoices_Already_Exported" length="0" name="SkipInvoicesAlreadyExported__" originalProcessID="CEJC667351" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/SkipInvoicesAlreadyExported__</fullname>
+				<defaultvalue>true</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_Skip_Invoices_Already_Exported</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="YKAB1000448" id="NoID" label="_Then_repeat" length="50" name="Then_repeat__" originalProcessID="CEJC667351" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Then_repeat__</fullname>
+				<defaultvalue>Never</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_Then_repeat</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<possibleKeys>Never
+Everyday
+Every_week
+Every_month</possibleKeys>
+				<possibleValues>Never
+Everyday
+Every_week
+Every_month</possibleValues>
+			</field>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+</process>

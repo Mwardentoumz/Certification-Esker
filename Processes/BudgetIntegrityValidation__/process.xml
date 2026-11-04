@@ -1,0 +1,646 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:10:06" deleted="0" eskerapplication="P2P" global="0" id="OREQT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="BudgetIntegrityValidation__" needvalidation="0" ootofilter="" ootoversion="0" originalProcessID="HUME135123" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="1" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="0" version="1" visibility="0">
+  <properties>
+    <dataConditions>
+      <listDataConditions>
+				&lt;dataCondition&gt;
+					&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+					&lt;filter&gt;msnex=*&lt;/filter&gt;
+					&lt;labelKey&gt;_Purchasing disabled&lt;/labelKey&gt;
+					&lt;conditions&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnablePurchasingGlobalSetting__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableStandardPurchasingGlobalSetting__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+					&lt;/conditions&gt;
+				&lt;/dataCondition&gt;</listDataConditions>
+    </dataConditions>
+    <gdr>
+      <FinalizationScriptAllowRetry>
+      </FinalizationScriptAllowRetry>
+      <FinalizationScript>"use strict";
+//# sourceMappingURL=finalizationscript.js.map</FinalizationScript>
+      <ValidationScriptAllowRetry>
+      </ValidationScriptAllowRetry>
+      <validationscriptIncludedScripts>Lib_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_Purchasing_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_P2P_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_Spending_Budget_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_Spending_Budget_Recovery_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Sys/Sys_Helpers</validationscriptIncludedScripts>
+      <ValidationScript>"use strict";
+/*globals Data, Log, Lib, Process, Query */
+const RecoveryHelper = {
+    /** Recovery for PAC */
+    Recover: function () {
+        const operationsId = [];
+        const budgetToCompute = [];
+        const when = new Date();
+        when.setTime(when.getTime() - 86400 * 3 * 1000); // Only check 3 days old records
+        const filter = "(&amp;(state&gt;100)(CompletionDateTime&gt;" + Sys.Helpers.Date.Date2DBDateTime(when) + "))";
+        this.PopulateBudgetToCompute(operationsId, "Purchase requisition V2", filter);
+        this.PopulateBudgetToCompute(operationsId, "Purchase order V2", filter);
+        this.PopulateBudgetToCompute(operationsId, "Goods receipt V2", filter);
+        this.PopulateBudgetToCompute(operationsId, "Vendor invoice", this.FindInvoicesInError());
+        //delete operation detail from failed purchase Requisition
+        for (let i = 0; i &lt; operationsId.length; i++) {
+            Lib.Spending.Budget.CleanOperationDetails(operationsId[i], budgetToCompute);
+        }
+        //recompute all impacted budget
+        for (let index in budgetToCompute) {
+            const budget = {};
+            budget[budgetToCompute[index]] = null;
+            const criticalSectionName = Lib.Spending.Budget.budgetHandler.GetCriticalSection(budget);
+            Log.Info("Try entering Budget critical section: " + criticalSectionName);
+            Process.PreventConcurrentAccess(criticalSectionName, () =&gt; {
+                Log.Info("Entered budget critical section");
+                Lib.Spending.Budget.ComputeBudgetFromOperationDetails(budgetToCompute[index]);
+            }, null, 60);
+        }
+        //delete operation detail from failed purchase Requisition
+        for (let i = 0; i &lt; operationsId.length; i++) {
+            Lib.Spending.Budget.DeleteOperationDetails(operationsId[i]);
+        }
+    },
+    FindInvoicesInError: function () {
+        const when = new Date();
+        when.setTime(when.getTime() - 86400 * 3 * 1000); // Only check 3 days old records
+        return "&amp;(State&gt;100)(ERPInvoiceNumber__=)(InvoiceStatus__!=Rejected)(CompletionDateTime&gt;" + Sys.Helpers.Date.Date2DBDateTime(when) + "))";
+    },
+    PopulateBudgetToCompute: function (operationsId, processName, filter) {
+        let xTransport;
+        let vars;
+        // Query for old PAC version
+        Log.Info("PopulateBudgetToCompute with PAC");
+        Query.Reset();
+        Query.SetOptionEx("Limit=-1");
+        Query.SetSpecificTable("CDNAME#" + processName);
+        Query.SetAttributesList("RUIDEX");
+        const when = new Date();
+        when.setTime(when.getTime() - 86400 * 3 * 1000); // Only check 3 days old records
+        Query.SetFilter("(&amp;(state&gt;100)(CompletionDateTime&gt;" + Sys.Helpers.Date.Date2DBDateTime(when) + "))");
+        if (Query.MoveFirst()) {
+            xTransport = Query.MoveNext();
+            while (xTransport) {
+                vars = xTransport.GetUninheritedVars();
+                const ruidEx = vars.GetValue_String("RUIDEX", 0);
+                operationsId.push(ruidEx);
+                Log.Info("Check RUIDEX " + ruidEx);
+                xTransport = Query.MoveNext();
+            }
+        }
+        else {
+            Log.Error(Query.GetLastErrorMessage());
+        }
+    }
+};
+const InvoicesRecoveryHelper = {
+    /** Recovery for AP */
+    RecoverInvoices: function () {
+        this.RecoverInvoicesPostedNotExported();
+    },
+    FindInvoices: function (filter) {
+        // [[invoicesRUIDEX, invoiceCompanyCode, deletedfromoperation][...]]
+        const invoices = [];
+        Query.Reset();
+        Query.SetSpecificTable("CDNAME#Vendor invoice");
+        Query.SetAttributesList("RUIDEX");
+        Query.SetOptionEx("Limit=-1");
+        Query.SetFilter(filter);
+        if (Query.MoveFirst()) {
+            let xTransport = Query.MoveNext();
+            let vars;
+            while (xTransport) {
+                vars = xTransport.GetUninheritedVars();
+                Log.Info("Found invoice :" + vars.GetValue_String("RUIDEX", 0) + " - " + vars.GetValue_String("CompanyCode__", 0));
+                invoices.push({
+                    ruidex: vars.GetValue_String("RUIDEX", 0),
+                });
+                xTransport = Query.MoveNext();
+            }
+        }
+        else {
+            Log.Error(Query.GetLastErrorMessage());
+        }
+        return invoices;
+    },
+    /**
+     * Find invoices posted but not exported by the VIP
+     */
+    FindInvoicesPostedNotExported: function () {
+        const when = new Date();
+        when.setTime(when.getTime() - 86400 * 3 * 1000); // Only check 3 days old records
+        return this.FindInvoices("(&amp;(BudgetExportStatus__!=success)(BudgetExportStatus__!=ignored)(ERPInvoiceNumber__!=)(CompletionDateTime&gt;" + Sys.Helpers.Date.Date2DBDateTime(when) + "))");
+    },
+    /**
+     * Recreate operations and compute budget for all invoices posted but not exported
+     */
+    RecoverInvoicesPostedNotExported: function () {
+        Log.Info("start RecoverInvoicesPostedNotExported");
+        // [[invoicesRUIDEX,invoiceCompanyCode][...]]
+        const invoices = this.FindInvoicesPostedNotExported();
+        /** Recover invoices */
+        for (let i = 0; i &lt; invoices.length; i++) {
+            Lib.Spending.Budget.RecreateOperationDetails(invoices[i].ruidex);
+        }
+    },
+    /**
+     * Get the concurrent access and call the callback with Invoices
+     */
+    ProcessConcurrentAccess: function (invoice, callback) {
+        const criticalSectionName = "PAC_Budget_" + Process.GetProcessID(Lib.P2P.GetPRProcessName()) + "_" + invoice.companyCode;
+        return Process.PreventConcurrentAccess(criticalSectionName, () =&gt; {
+            Log.Info("Entered budget critical section");
+            callback(invoice);
+        }, () =&gt; {
+            Log.Info("Entered budget recovery section");
+        }, 60);
+    }
+};
+if (Data.GetActionName() === "Approve" || (Data.GetActionName() === "" &amp;&amp; Lib.Spending.Budget.budgetHandler.IsEnabled())) {
+    Process.SetTimeOut(3600);
+    /** Budget recovery */
+    RecoveryHelper.Recover();
+    /** AP budget recovery */
+    InvoicesRecoveryHelper.RecoverInvoices();
+}
+//# sourceMappingURL=validationscript.js.map</ValidationScript>
+      <AllowTagCoverPages>true</AllowTagCoverPages>
+      <AllowTagNewDocuments>true</AllowTagNewDocuments>
+      <AllowTagAttachments>true</AllowTagAttachments>
+      <ExtractionScriptAllowRetry>
+      </ExtractionScriptAllowRetry>
+      <ExtractionScript>"use strict";
+//# sourceMappingURL=extractionscript.js.map</ExtractionScript>
+      <AllowRemovePages>true</AllowRemovePages>
+      <AllowSwapPages>true</AllowSwapPages>
+      <PostProcessingScriptAllowRetry>
+      </PostProcessingScriptAllowRetry>
+      <PostProcessingScript>"use strict";
+//# sourceMappingURL=postprocessingscript.js.map</PostProcessingScript>
+    </gdr>
+    <lg>
+      <process_da>{
+	"BudgetIntegrityValidation__": "Gendannelse af budgettransaktioner"
+}</process_da>
+      <process_de>{
+	"BudgetIntegrityValidation__": "Wiederherstellung von Budgetvorgängen"
+}</process_de>
+      <process_ja>{
+	"BudgetIntegrityValidation__": "予算の運用回復"
+}</process_ja>
+      <process_en>{
+	"BudgetIntegrityValidation__": "Budget Operation Recovery"
+}</process_en>
+      <process_es>{
+	"BudgetIntegrityValidation__": "Recuperación de operaciones presupuestarias"
+}</process_es>
+      <process_fr>{
+	"BudgetIntegrityValidation__": "Récupération des opérations budgétaires"
+}</process_fr>
+      <process_nl-NL>{
+	"BudgetIntegrityValidation__": "Recuperatie budgethandelingen"
+}</process_nl-NL>
+      <process_pl>{
+	"BudgetIntegrityValidation__": "Odzyskiwanie operacji budżetowej"
+}</process_pl>
+      <process_it>{
+	"BudgetIntegrityValidation__": "Recupero operazioni di budget"
+}</process_it>
+      <process_sk>{
+	"BudgetIntegrityValidation__": "Obnova prevádzky rozpočtu"
+}</process_sk>
+      <process_zh-CN>{
+	"BudgetIntegrityValidation__": "预算操作恢复"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"BudgetIntegrityValidation__": "Recuperação da operação orçamentária"
+}</process_pt-BR>
+    </lg>
+    <process>
+      <flowtype>processing</flowtype>
+      <ocrpreset>scan</ocrpreset>
+      <homepagelabel>BudgetIntegrityValidation__</homepagelabel>
+      <enableflexibleauditing>
+      </enableflexibleauditing>
+      <enableflexibleediting>
+      </enableflexibleediting>
+      <enableflexibleteaching>
+      </enableflexibleteaching>
+      <upgradable>yes</upgradable>
+      <disableocr>
+      </disableocr>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <disableautolearning>true</disableautolearning>
+      <backgroundprocessingthreshold>
+      </backgroundprocessingthreshold>
+      <EnablePreviewPrecomputation>
+      </EnablePreviewPrecomputation>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <archiveDuration>0</archiveDuration>
+      <ownhomepage>
+      </ownhomepage>
+      <ocrpagestoprocess>
+      </ocrpagestoprocess>
+      <ScriptEngineType>2</ScriptEngineType>
+      <displayWidth>
+      </displayWidth>
+      <AllowUploadAttachment>1</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>1</AllowUploadReferenceDocument>
+      <UseCultureFormat>true</UseCultureFormat>
+      <AllowRetryExtractCD>true</AllowRetryExtractCD>
+      <TransportName>CustomData</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+    </process>
+    <ui>
+      <restorationPanel>DataPanel</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 30,
+	"*": {
+		"GDRData": {
+			"type": "GDRData",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"version": 0
+			}
+		},
+		"OCRParams": {
+			"type": "OCRParams",
+			"data": [],
+			"stamp": 2,
+			"options": {
+				"version": 0
+			}
+		},
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 3,
+			"options": {
+				"splitterType": "complex",
+				"maxwidth": "",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 4,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 5,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 6,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-top": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 7,
+									"options": {
+										"autosize": true,
+										"version": 1,
+										"box": {
+											"top": 0,
+											"left": 0,
+											"width": 100,
+											"height": 17
+										},
+										"hidden": false
+									},
+									"*": {
+										"form-content-top-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 8,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"DocumentsPanel": {
+													"type": "PanelDocument",
+													"data": [],
+													"stamp": 9,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": false,
+														"hideTitleBar": false,
+														"label": "_Documents",
+														"version": 0
+													},
+													"*": {
+														"Document": {
+															"type": "Documents",
+															"data": [
+																"documentscontroldata"
+															],
+															"stamp": 10,
+															"options": {
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								},
+								"form-content-bottom": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 11,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": "17%",
+											"left": "0%",
+											"width": null,
+											"height": "83%"
+										},
+										"hidden": false
+									},
+									"*": {
+										"form-content-left": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 12,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "0%",
+													"width": "45%",
+													"height": null
+												},
+												"hidden": false
+											},
+											"*": {
+												"form-content-left-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 13,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"DataPanel": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 14,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_Document data",
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 15,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 16,
+																			"options": {
+																				"version": 0,
+																				"lines": 0,
+																				"columns": 2,
+																				"ctrlsPos": {},
+																				"colspans": []
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-2": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 17,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"SystemData": {
+															"type": "PanelSystemData",
+															"data": [],
+															"stamp": 18,
+															"options": {
+																"multicolumn": false,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"label": "_System data",
+																"version": 0
+															}
+														}
+													}
+												},
+												"form-content-left-3": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 19,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"NextProcess": {
+															"type": "PanelNextProcess",
+															"data": [],
+															"stamp": 20,
+															"options": {
+																"hidden": true,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"label": "_Next Process",
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-right": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 21,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "45%",
+													"width": "55%",
+													"height": null
+												},
+												"hidden": false
+											},
+											"*": {
+												"form-content-right-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 22,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"PreviewPanel": {
+															"type": "PanelPreview",
+															"data": [],
+															"stamp": 23,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"label": "_Document Preview",
+																"version": 0
+															},
+															"*": {
+																"Preview": {
+																	"type": "Preview",
+																	"data": [
+																		"previewdata"
+																	],
+																	"stamp": 24,
+																	"options": {
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 25,
+					"options": {
+						"splitterType": "simple-h",
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 26,
+							"options": {
+								"label": "_Save",
+								"action": "save",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Approve": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 27,
+							"options": {
+								"label": "_Approve",
+								"action": "approve",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Reject": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 28,
+							"options": {
+								"label": "_Reject",
+								"action": "reject",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Reprocess": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 29,
+							"options": {
+								"label": "_Reprocess",
+								"action": "reprocess",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 30,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <type id="GOLHG0000M4O" name="CD">
+  </type>
+</process>

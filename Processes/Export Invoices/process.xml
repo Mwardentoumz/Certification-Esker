@@ -1,0 +1,4751 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:07:10" deleted="0" eskerapplication="P2P" global="0" id="YLAQT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="Export Invoices" needvalidation="1" ootofilter="" ootoversion="0" originalProcessID="CEJC667351" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="0" version="1" visibility="0">
+  <properties>
+    <dataConditions>
+      <listDataConditions>
+				&lt;dataCondition&gt;
+		&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+		&lt;filter&gt;msnex=*&lt;/filter&gt;
+		&lt;labelKey&gt;_AP disabled&lt;/labelKey&gt;
+		&lt;conditions&gt;
+			&lt;allowCondition&gt;
+				&lt;fieldName&gt;EnableAccountPayableGlobalSetting__&lt;/fieldName&gt;
+				&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+			&lt;/allowCondition&gt;
+		&lt;/conditions&gt;
+	&lt;/dataCondition&gt;
+			</listDataConditions>
+    </dataConditions>
+    <gdr>
+      <FinalizationScriptAllowRetry>true</FinalizationScriptAllowRetry>
+      <finalizationscriptIncludedScripts>Sys/Sys_Helpers_Date</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Sys/Sys_Helpers_LDAPutil</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Sys/SYS_EDI_FRB2B_FLOW10</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Lib_V12.0.566.0</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Lib_P2P_V12.0.566.0</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Lib_FlexibleFormToXML_V12.0.566.0</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Lib_FormDataConverter_V12.0.566.0</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Lib_FormDataToXML_V12.0.566.0</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Lib_FormDataToCSV_V12.0.566.0</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Lib_FormDataToTRA_V12.0.566.0</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Lib_FormDataToSAGE50_V12.0.566.0</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Lib_FormDataToPaymentApproval_V12.0.566.0</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Lib_FormDataToFlux10_1_V12.0.566.0</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Sys/Sys_EDI_FRB2B_PDPConnector_Common</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Sys/Sys_EDI_FRB2B_PDPConnector_Factory</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Sys/SYS_FRB2B_AP_HELPERS</finalizationscriptIncludedScripts>
+      <FinalizationScript>"use strict";
+/**
+ * Check whether this Export Invoices instance was triggered by the EReporting Batch Export
+ * scheduler. The batch process sets a dedicated "SendToPA" external variable to "true".
+ */
+function isSendToPAEnabled() {
+    return Variable.GetValueAsString("SendToPA") === "true";
+}
+/**
+ * Determine the e-reporting typecode for this Export Invoices run.
+ * The EReporting Batch Export scheduler creates one child per company code per typecode and
+ * passes "ExportTypeCode" ("IN" for first send, "CO" for re-export of already-exported invoices).
+ * Manual exports have no parent and default to "IN".
+ */
+function getExportTypeCode() {
+    return Variable.GetValueAsString("ExportTypeCode") === "CO" ? "CO" : "IN";
+}
+let maxInvoicesPerRecall = 5000;
+const maxInvoicesPerFlush = 10;
+// Module-level File object for Flux 10.1 exports — safe because handleBars mode
+// processes all invoices in a single pass with no RecallScript cycles.
+let flux10ExportFile = null;
+const ruidExesToUpdateStr = Variable.GetValueAsString("RuidExesToUpdate") || "[]";
+const ruidExesToUpdate = JSON.parse(ruidExesToUpdateStr);
+Process.SetTimeOut(2 * 60 * 60);
+const date = new Date();
+const ERROR = -1;
+const NOT_FINISHED = 0;
+const ALL_INVOICE_PROCESSED = 1;
+/**
+* Determine the current export mode (all invoices, custom selection, differential export)
+* @return {string} A string containing the export mode
+**/
+function getExportMode() {
+    if (Variable.GetValueAsString("AncestorsRuid")) {
+        return "CustomSelectionFromAdminList";
+    }
+    return "NoRestrictions";
+}
+/**
+* Return the filter when a selection of invoices to export was done
+* @return {string} a string containing an LDAP filter based on selection
+**/
+function getQueryFilterForCustomSelectionFromAdminList() {
+    let filter = "";
+    const ancestorsRuid = Variable.GetValueAsString("AncestorsRuid");
+    if (ancestorsRuid) {
+        const list = ancestorsRuid.split("|");
+        if (list.length === 1) {
+            filter = "RUIDEX=" + ancestorsRuid;
+        }
+        else {
+            filter = `|(RUIDEX=${list.join(")(RUIDEX=")})`;
+        }
+    }
+    return filter;
+}
+/**
+* Build the filter of the query based on the invoice export mode and options
+**/
+function getQueryFilter() {
+    const filterElements = [];
+    if (getExportMode() === "CustomSelectionFromAdminList") {
+        filterElements.push(getQueryFilterForCustomSelectionFromAdminList());
+    }
+    else {
+        filterElements.push(Sys.Helpers.LdapUtil.FilterEqual("ERPPostingDate__", "*"));
+        const dateOfStartExport = Data.GetValue("DateOfStartExport__");
+        if (dateOfStartExport) {
+            filterElements.push(Sys.Helpers.LdapUtil.FilterStrictlyLesser("ERPPostingDate__", Sys.Helpers.Date.Date2DBDateTime(dateOfStartExport)));
+        }
+        if (Data.GetValue("SchedulingOptions__") === "Execute now" &amp;&amp; Data.GetValue("Then_repeat__") === "Never") {
+            const exportEndDate = Data.GetValue("ExportEndDate__");
+            if (exportEndDate &amp;&amp; exportEndDate &lt; dateOfStartExport) {
+                const index = filterElements.indexOf(Sys.Helpers.LdapUtil.FilterStrictlyLesser("ERPPostingDate__", Sys.Helpers.Date.Date2DBDateTime(dateOfStartExport)));
+                filterElements.splice(index, 1, Sys.Helpers.LdapUtil.FilterStrictlyLesser("ERPPostingDate__", Sys.Helpers.Date.Date2DBDateTime(exportEndDate)));
+            }
+            const exportStartDate = Data.GetValue("ExportStartDate__");
+            if (exportStartDate) {
+                filterElements.push(Sys.Helpers.LdapUtil.FilterStrictlyGreater("ERPPostingDate__", Sys.Helpers.Date.Date2DBDateTime(exportStartDate)));
+            }
+        }
+        const companyCode = Data.GetValue("CompanyCode__");
+        if (companyCode) {
+            filterElements.push(Sys.Helpers.LdapUtil.FilterEqual("CompanyCode__", companyCode));
+        }
+        if (Data.GetValue("Converter__") === "Flux_10_1") {
+            filterElements.push(Sys.Helpers.LdapUtil.FilterEqual("IsFlux10_1Compliant__", "1"));
+        }
+        if (Data.GetValue("SkipInvoicesAlreadyExported__")) {
+            if (getExportTypeCode() === "CO") {
+                // CO run: re-export already-exported invoices flagged as modified since last export.
+                filterElements.push(Sys.Helpers.LdapUtil.FilterExist("LastExportDate__"));
+                filterElements.push(Sys.Helpers.LdapUtil.FilterEqual("Flux10_1_ModifiedSinceLastExport__", "1"));
+            }
+            else {
+                filterElements.push(Sys.Helpers.LdapUtil.FilterNotEqual("LastExportDate__", "*"));
+                filterElements.push(Sys.Helpers.LdapUtil.FilterNotEqual("LastPaymentApprovalExportDate__", "*"));
+            }
+        }
+        else {
+            filterElements.push(Sys.Helpers.LdapUtil.FilterIn("InvoiceStatus__", ["Paid", "To pay", "Being paid"]));
+        }
+    }
+    const lastMsnEx = Data.GetValue("LastMsnEx__");
+    if (lastMsnEx) {
+        filterElements.push(Sys.Helpers.LdapUtil.FilterStrictlyGreater("msnex", lastMsnEx));
+    }
+    if (filterElements.length === 0) {
+        return "";
+    }
+    else if (filterElements.length === 1) {
+        return filterElements[0].toString();
+    }
+    return Sys.Helpers.LdapUtil.FilterAnd(...filterElements).toString();
+}
+function PaymentAuthorization(formdata) {
+    const status = formdata.GetValue("InvoiceStatus__");
+    if (status &amp;&amp; (status === "Being paid" || status === "To pay" || status === "Paid") &amp;&amp; Data.GetValue("Converter__") !== "Flux_10_1") {
+        return true;
+    }
+    return false;
+}
+let updateInvoiceAndPaymentAuthorization = {
+    UpdateInvoice: false,
+    UpdatePaymentAuthorization: false,
+    init: function (transport) {
+        this.UpdateInvoice = false;
+        this.UpdatePaymentAuthorization = false;
+        const hasLastExportDate = !!transport.GetUninheritedVars().GetValue_Date("LastExportDate__", 0);
+        const skipAlreadyExported = Data.GetValue("SkipInvoicesAlreadyExported__");
+        const modifiedSinceLastExport = transport.GetFormData().GetValue("Flux10_1_ModifiedSinceLastExport__") === "1";
+        if (!hasLastExportDate || !skipAlreadyExported || (getExportTypeCode() === "CO" &amp;&amp; modifiedSinceLastExport)) {
+            this.UpdateInvoice = true;
+        }
+        if (PaymentAuthorization(transport.GetFormData()) &amp;&amp; (!transport.GetUninheritedVars().GetValue_Date("LastPaymentApprovalExportDate__", 0) || !skipAlreadyExported)) {
+            this.UpdatePaymentAuthorization = true;
+        }
+        return true;
+    }
+};
+/**
+ * Add the content to a temporary file, creating it if it doesn't exist. The filename is stored in a field for later retrieval and attachment.
+ * In flux 10.1, use a file object
+ *
+ * @param converterName - converter name use for end of line symbol + file extension / format / header at creation
+ * @param fieldName - field used to get the fileName
+ * @param content - the content to append in the file
+ * @returns true if the content was successfully appended, false otherwise
+ */
+function appendInTempFile(converterName, fieldName, content) {
+    let result = true;
+    if (converterName === "Flux_10_1" &amp;&amp; fieldName === "InvoicesToExportTempFile__") {
+        // Flux 10.1 uses a File object so the same reference can be passed directly
+        // to sendEReportingFile() on the PDP connector.
+        if (!flux10ExportFile) {
+            Lib.FormDataConverter.SetActiveConverter(converterName);
+            flux10ExportFile = TemporaryFile.CreateFile(Lib.FormDataConverter.GetExtension(), Lib.FormDataConverter.GetEncoding());
+            Data.SetValue(fieldName, "flux10"); // sentinel so endOfExport cleanup still fires
+            result = TemporaryFile.Append(flux10ExportFile, Lib.FormDataConverter.GetHeader(), Lib.FormDataConverter.GetEOLFormat());
+        }
+        result = result &amp;&amp; TemporaryFile.Append(flux10ExportFile, content, Lib.FormDataConverter.GetEOLFormat());
+    }
+    else {
+        let tempFileName = Data.GetValue(fieldName);
+        if (!tempFileName) {
+            Lib.FormDataConverter.SetActiveConverter(converterName);
+            tempFileName = TemporaryFile.Create(Lib.FormDataConverter.GetExtension(), Lib.FormDataConverter.GetEncoding());
+            Data.SetValue(fieldName, tempFileName);
+            // Add header
+            result = TemporaryFile.Append(tempFileName, Lib.FormDataConverter.GetHeader(), Lib.FormDataConverter.GetEOLFormat());
+        }
+        result = result &amp;&amp; TemporaryFile.Append(tempFileName, content, Lib.FormDataConverter.GetEOLFormat());
+    }
+    if (!result) {
+        Log.Error("Failed to append data in file (filesize limit is 100MB) - adjust parameters");
+    }
+    return result;
+}
+/**
+ * Process a single invoice for export by converting its form data and tracking which fields need updating.
+ *
+ * For each eligible conversion (invoice and/or payment approval):
+ * - Converts the form data using the appropriate converter (if pushToBuffer is true)
+ * - Push data to the corresponding buffer (exported/exportedApproved) (if pushToBuffer is true)
+ * - Records the invoice ruidEx for later date update (LastExportDate__ / LastPaymentApprovalExportDate__)
+ * - Increments the corresponding export counter (exported/exportedApproved)
+ *
+ * @param transport - The transport containing the invoice to process
+ * @param formData - The form data of the invoice to convert
+ * @param counter - Counters tracking exported and skipped invoices (mutated in place)
+ * @param buffer - Buffers accumulating converted output strings (mutated in place)
+ * @param pushToBuffer - When false, counters and date updates are tracked but no conversion output is buffered (used in handleBars mode)
+ * @returns true if the invoice was processed, false otherwise
+ */
+function convertFormData(transport, formData, counter, buffer, pushToBuffer = true) {
+    if (updateInvoiceAndPaymentAuthorization.init(transport)) {
+        const fieldsToUpdate = [];
+        if (updateInvoiceAndPaymentAuthorization.UpdateInvoice &amp;&amp; Lib.FormDataConverter.SetActiveConverter(Data.GetValue("Converter__"))) {
+            if (pushToBuffer) {
+                buffer.exported.push(Lib.FormDataConverter.Convert(formData));
+            }
+            fieldsToUpdate.push("LastExportDate__");
+            counter.exported++;
+        }
+        if (updateInvoiceAndPaymentAuthorization.UpdatePaymentAuthorization &amp;&amp; Lib.FormDataConverter.SetActiveConverter("CSV_PaymentApproval")) {
+            if (pushToBuffer) {
+                buffer.exportedApproved.push(Lib.FormDataConverter.Convert(formData));
+            }
+            fieldsToUpdate.push("LastPaymentApprovalExportDate__");
+            counter.exportedApproved++;
+        }
+        if (fieldsToUpdate.length &gt; 0) {
+            ruidExesToUpdate.push({ ruidEx: transport.ruid, date: date, fieldsToUpdate: fieldsToUpdate, existingEReportingExportData: formData.GetValue("Flux10_1_EReportingExportData__") });
+        }
+        return true;
+    }
+    return false;
+}
+/**
+ * Try to convert file when needed. @see convertFormData for details on conversion and update logic.
+ * Flush buffer to temporary file when it reaches the max size defined by maxInvoicesPerFlush.
+ */
+function convertTransport(transport, counter, buffer, pushToBuffer = true) {
+    let success = true;
+    const ownerShipToken = "INVEXP_" + Process.GetProcessID();
+    transport.ruid = transport.GetUninheritedVars().GetValue_String("ruidex", 0);
+    const formData = transport.GetFormData();
+    // if ApproversList is null then another export is in progress
+    if (formData &amp;&amp; formData.GetTable("ApproversList__")) {
+        if (Sys.Helpers.GetOwnershipIfNeeded(transport, ownerShipToken)) {
+            if (!convertFormData(transport, formData, counter, buffer, pushToBuffer)) {
+                counter.skipped++;
+            }
+            transport.ReleaseAsyncOwnership(ownerShipToken);
+        }
+        else {
+            Log.Warn(`Invoice ${transport.ruid}: Unable to update form because it is currently used by another user.`);
+            counter.skipped++;
+        }
+    }
+    else {
+        Log.Warn(`Invoice ${transport.ruid}: Unable to get form data. Check that the attribute DataFile has been added in Query.SetAttributesList.`);
+        counter.skipped++;
+    }
+    // Flush if needed
+    if (buffer.exported.length === maxInvoicesPerFlush) {
+        success = success &amp;&amp; appendInTempFile(Data.GetValue("Converter__"), "InvoicesToExportTempFile__", buffer.exported.join(""));
+        buffer.exported = [];
+    }
+    if (buffer.exportedApproved.length === maxInvoicesPerFlush) {
+        success = success &amp;&amp; appendInTempFile("CSV_PaymentApproval", "InvoicesApprovedTempFile__", buffer.exportedApproved.join(""));
+        buffer.exportedApproved = [];
+    }
+    return success;
+}
+// Main function
+function queryAndConvert(nbInvoiceMax) {
+    Process.StateOnLastScriptFailure(200);
+    let lastMsnEx = "";
+    let success = true;
+    const counter = {
+        skipped: 0,
+        exported: 0,
+        exportedApproved: 0
+    };
+    const buffer = {
+        exported: [],
+        exportedApproved: []
+    };
+    let transport = null;
+    Query.Reset();
+    Query.SetSpecificTable("CDNAME#Vendor invoice");
+    const attributes = [
+        "DataFile", "ValidationURL", "ProcessID", "RuidEx", "msnex", "State",
+        "LastExportDate__", "LastPaymentApprovalExportDate__", "InvoiceStatus__", "ERPPostingDate__",
+        "CompanyCode__", "InvoiceNumber__", "InvoiceDate__", "EDIInvoiceType__", "InvoiceCurrency__",
+        "VendorNumber__", "VendorCountry__",
+        "InvoicePeriodStartDate__", "InvoicePeriodEndDate__",
+        "NetAmount__", "TaxAmount__", "LineItems__", "PaymentTerm__", "Comment__", "RelatedInvoice__", "RelatedInvoiceRuidEx__"
+    ];
+    if (Data.GetValue("Converter__") === "Flux_10_1") {
+        const flux10_attributes = [
+            "DueDate__", "Flux10_1_TaxDueDateTypeCode__", "Flux10_1_InvoiceNoteSubject__", "Flux10_1_InvoiceNoteContent__",
+            "EDIBusinessProcessType__", "Flux10_1_InvoiceDeliveryDate__", "Flux10_1_BuyerCompanyId__", "Flux10_1_BuyerCompanyIdSchemeId__",
+            "Flux10_1_SellerIdSchemeId__", "Flux10_1_SellerId__", "Flux10_1_SellerTaxRepresentativeId__", "Flux10_1_SellerTaxRepresentativeIdSchemeId__",
+            "Flux10_1_DeliveryCityName__", "Flux10_1_DeliveryCountryID__", "Flux10_1_DeliveryCountrySubEntity__",
+            "Flux10_1_DeliveryLocLine1__", "Flux10_1_DeliveryLocLine2__", "Flux10_1_DeliveryLocLine3__", "Flux10_1_PostalZone__",
+            "Flux10_1_SellerId", "Flux10_1_SellerIdSchemeId",
+            "Flux10_1_EReportingExportData__", "Flux10_1_ModifiedSinceLastExport__"
+        ];
+        Query.SetAttributesList([...attributes, ...flux10_attributes].join(","));
+    }
+    else {
+        Query.SetAttributesList(attributes.join(","));
+    }
+    Query.SetSortOrder("msnex ASC");
+    Query.SetOptionEx(`limit=${maxInvoicesPerRecall + 1}`);
+    Query.SetSearchInArchive(true);
+    const filter = getQueryFilter();
+    Query.SetFilter(filter);
+    try {
+        // Parse invoices and build attachement
+        if (Query.MoveFirst()) {
+            transport = Query.MoveNext();
+            const recordsData = [];
+            let minPostDate = new Date();
+            if (transport) {
+                const formData = transport.GetFormData();
+                minPostDate = formData.GetValue("ERPPostingDate__");
+            }
+            while (transport &amp;&amp; nbInvoiceMax &gt; 0) {
+                // When using handleBars, invoices data are stored in recordsData and converted in one shot at the end of the loop
+                if (Lib.FormDataConverter.IsUsingHandleBars()) {
+                    const VIPdata = Sys.EDI.FRB2B.Flow10.PDPInvoice.GetVIPDataFromRecord(transport);
+                    recordsData.push(VIPdata);
+                    const formData = transport.GetFormData();
+                    const currentRecordPostDate = formData.GetValue("ERPPostingDate__");
+                    minPostDate = currentRecordPostDate &lt; minPostDate ? currentRecordPostDate : minPostDate;
+                }
+                success = success &amp;&amp; convertTransport(transport, counter, buffer, !Lib.FormDataConverter.IsUsingHandleBars());
+                nbInvoiceMax--;
+                lastMsnEx = transport.GetUninheritedVars().GetValue_String("msnex", 0);
+                transport = Query.MoveNext();
+            }
+            if (Lib.FormDataConverter.IsUsingHandleBars()) {
+                if (!Data.GetValue("ExportStartDate__")) {
+                    Data.SetValue("ExportStartDate__", minPostDate);
+                }
+                if (!Data.GetValue("ExportEndDate__")) {
+                    Data.SetValue("ExportEndDate__", new Date());
+                }
+                if (recordsData.length &gt; 0) {
+                    buffer.exported.push(Lib.FormDataConverter.Convert(recordsData));
+                }
+                counter.exported = recordsData.length;
+            }
+        }
+        else {
+            Log.Error("Cannot read query result");
+            success = false;
+        }
+        // Flush the rest
+        if (buffer.exported.length &gt; 0) {
+            success = success &amp;&amp; appendInTempFile(Data.GetValue("Converter__"), "InvoicesToExportTempFile__", buffer.exported.join(""));
+        }
+        if (buffer.exportedApproved.length &gt; 0) {
+            success = success &amp;&amp; appendInTempFile("CSV_PaymentApproval", "InvoicesApprovedTempFile__", buffer.exportedApproved.join(""));
+        }
+        if (success) {
+            Data.SetValue("NumberOfInvoicesInError__", Data.GetValue("NumberOfInvoicesInError__") + counter.skipped);
+            Data.SetValue("NumberOfExportedInvoices__", Data.GetValue("NumberOfExportedInvoices__") + counter.exported);
+            Data.SetValue("NumberOfExportedApprovedInvoices__", Data.GetValue("NumberOfExportedApprovedInvoices__") + counter.exportedApproved);
+            Data.SetValue("LastMsnEx__", lastMsnEx);
+        }
+    }
+    catch (e) {
+        Log.Error("An exception occured : " + e);
+        success = false;
+    }
+    if (!success) {
+        return ERROR;
+    }
+    if (!transport) {
+        return ALL_INVOICE_PROCESSED;
+    }
+    return NOT_FINISHED;
+}
+function initialize() {
+    if (Data.GetActionName() !== "export_in_progress") {
+        Data.SetValue("NumberOfExportedInvoices__", 0);
+        Data.SetValue("NumberOfExportedApprovedInvoices__", 0);
+        Data.SetValue("NumberOfInvoicesInError__", 0);
+        Data.SetValue("DateOfStartExport__", date);
+        // Clear any previous PA configuration retry tracking from prior scheduled exports
+        // This ensures each new scheduled export starts fresh and doesn't attempt to retry
+        // old files that are no longer available (flux10ExportFile is recreated each run)
+        if (Transaction.Read("PDP Submission Failures") !== null) {
+            Log.Warn("Clearing previous PA configuration retry tracking from prior export - those submissions are considered failed");
+            Transaction.Delete("PDP Submission Failures");
+        }
+        // When triggered by the scheduler with SendToPA, set default values for automated e-reporting
+        if (isSendToPAEnabled()) {
+            // Force Flux 10.1 converter for e-reporting
+            if (!Data.GetValue("Converter__")) {
+                Data.SetValue("Converter__", "Flux_10_1");
+            }
+            // Skip already exported invoices by default for automated runs
+            if (Data.GetValue("SkipInvoicesAlreadyExported__") === undefined || Data.GetValue("SkipInvoicesAlreadyExported__") === null) {
+                Data.SetValue("SkipInvoicesAlreadyExported__", true);
+            }
+        }
+    }
+}
+function endOfExport(status) {
+    Data.SetValue("ExportStatus__", status);
+    Data.SetValue("CompletedDateTime__", new Date());
+    Process.AllowScriptRetries(false);
+    /** Clean technical fields */
+    Data.SetValue("InvoicesToExportTempFile__", "");
+    Data.SetValue("InvoicesApprovedTempFile__", "");
+    Data.SetValue("DateOfStartExport__", "");
+    Data.SetValue("LastMsnEx__", "");
+}
+function AddFooter(converter, fileName) {
+    Lib.FormDataConverter.SetActiveConverter(converter);
+    let appendResult;
+    if (flux10ExportFile &amp;&amp; converter === "Flux_10_1") {
+        appendResult = TemporaryFile.Append(flux10ExportFile, Lib.FormDataConverter.GetFooter(), Lib.FormDataConverter.GetEOLFormat());
+    }
+    else {
+        appendResult = TemporaryFile.Append(fileName, Lib.FormDataConverter.GetFooter(), Lib.FormDataConverter.GetEOLFormat());
+    }
+    if (!appendResult) {
+        Log.Error("Failed to append footer in file (filesize limit is 100MB) - adjust parameters");
+    }
+}
+/**
+* Get temporaries files and save them as attachments
+*/
+function attachFiles() {
+    const dateISO = date.toISOString().substr(0, 10);
+    if (Data.GetValue("NumberOfExportedInvoices__") &gt; 0) {
+        const attachName = `${Language.Translate("Posted invoices", false)} ${dateISO}`;
+        if (flux10ExportFile) {
+            // Use File-object overload so Attach.GetAttach can retrieve it if needed
+            AddFooter(Data.GetValue("Converter__"), "");
+            Attach.AttachTemporaryFile(flux10ExportFile, {
+                name: attachName,
+                attachAsConverted: false,
+                attachAsFirst: false
+            });
+        }
+        else {
+            const tempFileName = Data.GetValue("InvoicesToExportTempFile__");
+            AddFooter(Data.GetValue("Converter__"), tempFileName);
+            Attach.AttachTemporaryFile(tempFileName, attachName);
+        }
+    }
+    if (Data.GetValue("NumberOfExportedApprovedInvoices__") &gt; 0) {
+        const invoicesApprovedTempFileName = Data.GetValue("InvoicesApprovedTempFile__");
+        AddFooter("CSV_PaymentApproval", invoicesApprovedTempFileName);
+        const attachNameApprovedInvoices = `${Language.Translate("Approved invoices", false)} ${dateISO}`;
+        Attach.AttachTemporaryFile(invoicesApprovedTempFileName, attachNameApprovedInvoices);
+    }
+}
+/**
+ * Create a Sys_AP B2B E-Reporting child process for a single attachment (IN or CO file).
+ * Resolves the PA configuration for the company code and submits the file.
+ * Called after a successful export when the scheduler requested e-reporting submission (SendToPA=true).
+ */
+async function createB2BEReportingProcesses(flux10AttachIndex) {
+    Log.Info("Checking conditions to submit e-reporting file to PDP");
+    if (!isSendToPAEnabled()) {
+        Log.Info("SendToPA not enabled, skipping PDP submission");
+        return;
+    }
+    if (Data.GetValue("Converter__") !== "Flux_10_1") {
+        return;
+    }
+    if (Data.GetValue("NumberOfExportedInvoices__") === 0) {
+        Log.Info("No e-reporting invoices exported, skipping B2B E-Reporting submission");
+        return;
+    }
+    if (flux10AttachIndex &lt; 0) {
+        Log.Error("No e-reporting XML attachment available for B2B E-Reporting submission");
+        return;
+    }
+    const companyCode = Data.GetValue("CompanyCode__");
+    if (!companyCode) {
+        Log.Error("No company code set, cannot determine PA configuration for E-Reporting submission");
+        return;
+    }
+    const pdpConfiguration = await Sys.FRB2B.AP.Helpers.GetPDPConfigurationForCompanyCode(companyCode);
+    if (!pdpConfiguration) {
+        Log.Error(`No PA configuration found for company code ${companyCode}, cannot submit E-Reporting`);
+        return;
+    }
+    const directInputFile = Attach.GetInputFile(flux10AttachIndex);
+    if (directInputFile) {
+        Log.Info(`Creating B2B E-Reporting process for PA configuration: ${pdpConfiguration.Name}`);
+        const eReportingProcess = Process.CreateProcessInstance("Sys_AP B2B E-Reporting", false, false, false);
+        eReportingProcess.AddAttachEx(directInputFile);
+        eReportingProcess.GetExternalVars().AddValue_String("Configuration", pdpConfiguration.Name, true);
+        eReportingProcess.Process();
+        return;
+    }
+    const flux10Attach = Attach.GetAttach(flux10AttachIndex);
+    if (!flux10Attach) {
+        Log.Error("Could not retrieve e-reporting XML attachment at index " + flux10AttachIndex + ". Fallback approach failed.");
+        return;
+    }
+    Log.Info(`Creating B2B E-Reporting process for PA configuration: ${pdpConfiguration.Name}`);
+    const eReportingProcess = Process.CreateProcessInstance("Sys_AP B2B E-Reporting", false, false, false);
+    eReportingProcess.AddAttachEx(flux10Attach.GetInputFile() || flux10Attach);
+    eReportingProcess.GetExternalVars().AddValue_String("Configuration", pdpConfiguration.Name, true);
+    eReportingProcess.Process();
+}
+/**
+ * Safely parse the accumulated list of export process ruidex stored on a vendor invoice.
+ * Returns an empty list when the field is empty or contains invalid JSON.
+ */
+function getEReportingExportData(raw) {
+    let emptyResult = { exportProcesses: [] };
+    try {
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed === null || parsed === void 0 ? void 0 : parsed.exportProcesses) ? parsed : emptyResult;
+    }
+    catch (e) {
+        Log.Warn("Invalid Flux10_1_EReportingExportData__ content, resetting to empty");
+        return emptyResult;
+    }
+}
+/**
+ * Update all invoices exported
+ */
+function updateExportData() {
+    const isFlux10 = Data.GetValue("Converter__") === "Flux_10_1";
+    ruidExesToUpdate.forEach(ruidEx =&gt; {
+        const toUpdate = { fields: {} };
+        ruidEx.fieldsToUpdate.forEach(field =&gt; {
+            toUpdate.fields[field] = ruidEx.date;
+        });
+        // For any Flux 10.1 export (IN or CO): clear the re-export flag and append this
+        // Export Invoices process ruidex to the invoice's e-reporting export history.
+        if (isFlux10) {
+            toUpdate.fields["Flux10_1_ModifiedSinceLastExport__"] = false;
+            const exportData = getEReportingExportData(ruidEx.existingEReportingExportData);
+            exportData.exportProcesses.push(Data.GetValue("RuidEx"));
+            toUpdate.fields["Flux10_1_EReportingExportData__"] = JSON.stringify(exportData);
+        }
+        Process.UpdateProcessInstanceDataAsync(ruidEx.ruidEx, JSON.stringify(toUpdate));
+    });
+}
+async function processExportResult(res) {
+    if (res === NOT_FINISHED) {
+        Variable.SetValueAsString("RuidExesToUpdate", JSON.stringify(ruidExesToUpdate));
+        Process.RecallScript("export_in_progress");
+    }
+    else if (res === ALL_INVOICE_PROCESSED) {
+        // Capture the indexes before attachFiles() consumes the flux10 File objects.
+        // After AttachTemporaryFile runs, the File's internal path is cleared so we must
+        // use Attach.GetAttach(index) to retrieve a valid xAttach reference.
+        const nbAttachBefore = Attach.GetNbAttach();
+        const flux10AttachIndex = flux10ExportFile ? nbAttachBefore : -1;
+        attachFiles();
+        updateExportData();
+        endOfExport("Completed");
+        try {
+            await createB2BEReportingProcesses(flux10AttachIndex);
+        }
+        catch (err) {
+            Log.Error("Error creating B2B E-Reporting processes: " + err.message);
+        }
+    }
+    else {
+        Log.Error("Error during the export");
+        endOfExport("Error");
+    }
+}
+async function run() {
+    if (Data.GetValue("ExportStatus__") !== "Cancelled") {
+        initialize();
+        if (Process.GetScriptRetryCount() === 0 &amp;&amp; Data.GetValue("RecordAbortedCount") === 0) {
+            Lib.FormDataConverter.SetActiveConverter(Data.GetValue("Converter__"));
+            const res = queryAndConvert(maxInvoicesPerRecall);
+            await processExportResult(res);
+        }
+        else if (Process.GetScriptRetryCount() &gt; 0) {
+            Log.Error(`Script retry :${Process.GetScriptRetryCount()}. Set process in error`);
+            endOfExport("Error");
+        }
+        else {
+            Log.Error("This process was aborted during execution. Export may not be correct.");
+            endOfExport("Error");
+            Data.SetValue("State", 200);
+        }
+    }
+}
+Lib.P2P.HandleScriptError(run());
+//# sourceMappingURL=finalizationscript.js.map</FinalizationScript>
+      <ValidationScriptAllowRetry>
+      </ValidationScriptAllowRetry>
+      <ValidationScript>"use strict";
+function convertInServerTimezone(inDate) {
+    const browserDate = new Date();
+    const convertedUserDateToBrowserDate = new Date();
+    const userUtcOffsetVar = Variable.GetValueAsString("userUTCOffSet");
+    const timezoneOffsetInMs = browserDate.getTimezoneOffset() * 60000;
+    convertedUserDateToBrowserDate.setTime(inDate.getTime() - parseInt(userUtcOffsetVar, 10) - timezoneOffsetInMs);
+    return convertedUserDateToBrowserDate;
+}
+function getScheduleDT() {
+    // Compute date (in the user timezone)
+    const date = Data.GetValue("SchedulingDate__");
+    const hours = parseInt(Data.GetValue("SchedulingHours__").substr(0, 2), 10);
+    const minutes = parseInt(Data.GetValue("SchedulingMinutes__"), 10);
+    const scheduleDT = new Date(date.getFullYear(), date.getMonth(), date.getDate(), hours, minutes);
+    // Convert in server timezone
+    return convertInServerTimezone(scheduleDT);
+}
+function getHourTranslationKeyFromInt(hours) {
+    let s = hours + "";
+    if (s.length &lt; 2) {
+        s = "0" + s;
+    }
+    s = s + "OClock";
+    return s;
+}
+function getExpirationDateTime(bExecuteNow) {
+    // Warning: getScheduleDT is always returning the same hours/minutes date
+    // modifying Then_repeat__ to support "hourly" or "every 10 minutes" also requires to modify the getScheduleDT
+    let computedDate = bExecuteNow ? new Date() : getScheduleDT();
+    switch (Data.GetValue("Then_repeat__")) {
+        case "Everyday":
+            computedDate = new Date(computedDate.getFullYear(), computedDate.getMonth(), computedDate.getDate() + 1, computedDate.getHours(), intDivisionByTen(computedDate.getMinutes()));
+            break;
+        case "Every_week":
+            computedDate = new Date(computedDate.getFullYear(), computedDate.getMonth(), computedDate.getDate() + 7, computedDate.getHours(), intDivisionByTen(computedDate.getMinutes()));
+            break;
+        default:
+            computedDate = new Date(computedDate.getFullYear(), computedDate.getMonth() + 1, computedDate.getDate(), computedDate.getHours(), intDivisionByTen(computedDate.getMinutes()));
+            break;
+    }
+    return computedDate;
+}
+function intDivisionByTen(minutes) {
+    return Math.floor(minutes / 10) * 10;
+}
+function intDivisionByTenAsString(minutes) {
+    let newMinutes = intDivisionByTen(minutes) + "";
+    if (newMinutes.length === 1) {
+        newMinutes = "0" + newMinutes;
+    }
+    return newMinutes;
+}
+function varsSetValueFromValueType(fieldValue, fieldName, vars, overrideValue) {
+    let isValueSet = false;
+    switch (typeof fieldValue) {
+        case "number":
+            // If fieldValue is integer
+            if (!isNaN(fieldValue) &amp;&amp; Math.round(fieldValue) === fieldValue) {
+                vars.AddValue_Long(fieldName, fieldValue, overrideValue);
+                isValueSet = true;
+            }
+            else {
+                vars.AddValue_Double(fieldName, fieldValue, overrideValue);
+                isValueSet = true;
+            }
+            break;
+        case "boolean":
+            vars.AddValue_Long(fieldName, fieldValue ? 1 : 0, overrideValue);
+            isValueSet = true;
+            break;
+        case "object":
+            if (Object.prototype.toString.call(fieldValue) === "[object Date]") {
+                const newDate = new Date(fieldValue.getUTCFullYear(), fieldValue.getUTCMonth(), fieldValue.getUTCDate(), fieldValue.getUTCHours(), fieldValue.getUTCMinutes(), fieldValue.getUTCSeconds());
+                //http://webdoc:8080/eskerondemand/cv_ly/en/manager/startpage.htm#Processes/Working_with_dates.html
+                if (fieldName.match(/__$/)) {
+                    //Flexible fields must be set in UTC
+                    vars.AddValue_Date(fieldName, newDate, overrideValue);
+                }
+                else {
+                    //Transport fields must be set in server timezone
+                    vars.AddValue_Date(fieldName, fieldValue, overrideValue);
+                }
+                isValueSet = true;
+            }
+            break;
+        default:
+            vars.AddValue_String(fieldName, fieldValue, overrideValue);
+            isValueSet = true;
+            break;
+    }
+    return isValueSet;
+}
+function cloneProcessFields(vars, overrideFieldValues) {
+    const nbFields = Data.GetNbFields();
+    let fieldValue = null;
+    const cloneFields = [];
+    for (let i = 0; i &lt; nbFields; ++i) {
+        const fieldName = Data.GetFieldName(i);
+        Log.Info("[cloneProcessFields] FieldName: " + fieldName);
+        if (overrideFieldValues &amp;&amp; fieldName in overrideFieldValues) {
+            fieldValue = overrideFieldValues[fieldName];
+            cloneFields.push(fieldName);
+        }
+        else {
+            fieldValue = Data.GetValue(fieldName);
+        }
+        if (!varsSetValueFromValueType(fieldValue, fieldName, vars, true)) {
+            Log.Info(`Ignore to clone value ${fieldValue} for field : ${fieldName}`);
+        }
+    }
+    // All overriden fields are not retrieved in Data.GetNbFields() such as ValidityDateTime
+    for (const overrideField in overrideFieldValues) {
+        if (cloneFields.indexOf(overrideField) === -1 &amp;&amp;
+            !varsSetValueFromValueType(overrideFieldValues[overrideField], overrideField, vars, true)) {
+            Log.Info(`Ignore to clone value ${overrideFieldValues[overrideField]} for field : ${overrideField}`);
+        }
+    }
+}
+function createExportChild(overrideFieldValues) {
+    const nextScheduling = Process.CreateProcessInstance("Export Invoices", false, true, false);
+    const nextSchedulingVars = nextScheduling.GetUninheritedVars();
+    cloneProcessFields(nextSchedulingVars, overrideFieldValues);
+    nextScheduling.Process();
+    if (nextScheduling.GetLastError() !== 0) {
+        Log.Error("Next scheduled job creation failed : " + nextScheduling.GetLastErrorMessage());
+    }
+}
+function createExport() {
+    Data.SetValue("ExportStatus__", "InProgress");
+    Data.SetValue("ExportDateTime__", new Date());
+    if (Data.GetValue("Then_repeat__") !== "Never") {
+        const expirationDateTime = getExpirationDateTime(true);
+        const expirationDateTimeUserTimezone = Helpers.Date.InDocumentTimezone(expirationDateTime);
+        const overrideExportChildFieldValues = {
+            "ExpirationBehavior": 1,
+            "ExportDateTime__": expirationDateTime,
+            "ExpirationDateTime__": expirationDateTime,
+            "ValidityDateTime": expirationDateTime,
+            "SchedulingDate__": expirationDateTime,
+            "SchedulingHours__": getHourTranslationKeyFromInt(expirationDateTimeUserTimezone.getHours()),
+            "SchedulingMinutes__": intDivisionByTenAsString(expirationDateTimeUserTimezone.getMinutes()),
+            "SchedulingOptions__": "Defer execution until",
+            "ExportStatus__": "Pending"
+        };
+        createExportChild(overrideExportChildFieldValues);
+    }
+    Process.SetAutoValidateOnExpiration(false);
+    // No prevent approval, we will export files in finalization script
+}
+let curUser = Users.GetUser(Variable.GetValueAsString("CurrentUserId"));
+if (!curUser) {
+    curUser = Users.GetUser(Data.GetValue("OwnerId"));
+}
+const curUserVars = curUser.GetVars();
+Data.SetValue("ExportedBy__", `${curUserVars.GetValue_String("FirstName", 0)} ${curUserVars.GetValue_String("LastName", 0)}`);
+if (Data.GetActionType().toLowerCase() === "approve") {
+    if (Data.GetActionName().toLowerCase() === "export") {
+        if (Data.GetValue("SchedulingOptions__") === "Defer execution until") {
+            Data.SetValue("ExportStatus__", "Pending");
+            Process.SetAutoValidateOnExpiration(true);
+            const scheduleDT = getScheduleDT();
+            Data.SetValue("ExportDateTime__", scheduleDT);
+            Data.SetValue("ValidityDateTime", scheduleDT);
+            Process.PreventApproval();
+            Process.LeaveForm();
+        }
+        else {
+            createExport();
+        }
+    }
+    else if (Data.GetActionName().toLowerCase() === "cancel") {
+        Data.SetValue("ExportStatus__", "Cancelled");
+    }
+}
+if (Process.AutoValidatingOnExpiration() &amp;&amp; Data.GetValue("SchedulingOptions__") === "Defer execution until" &amp;&amp; Data.GetValue("Then_repeat__") !== "Never") {
+    const expirationDateTime = getExpirationDateTime();
+    const overrideExportChildFieldValues = {
+        "ExpirationBehavior": 1,
+        "ExportDateTime__": expirationDateTime,
+        "ExpirationDateTime__": expirationDateTime,
+        "ValidityDateTime": expirationDateTime,
+        "SchedulingDate__": expirationDateTime,
+        "ExportStatus__": "Pending"
+    };
+    createExportChild(overrideExportChildFieldValues);
+}
+// When triggered by EReporting Batch Export: auto-validate immediately on first run,
+// then proceed with the export on the auto-validation run.
+if (Variable.GetValueAsString("SendToPA") === "true") {
+    if (Process.AutoValidatingOnExpiration()) {
+        // Auto-validation fired: proceed with export
+        createExport();
+    }
+    else if (Data.GetActionType().toLowerCase() !== "approve") {
+        // Initial validation run: set up immediate auto-validation
+        Data.SetValue("ValidityDateTime", new Date());
+        Process.SetAutoValidateOnExpiration(true);
+    }
+}
+//# sourceMappingURL=validationscript.js.map</ValidationScript>
+      <AllowTagCoverPages>true</AllowTagCoverPages>
+      <AllowTagNewDocuments>true</AllowTagNewDocuments>
+      <AllowTagAttachments>true</AllowTagAttachments>
+      <ExtractionScriptAllowRetry>
+      </ExtractionScriptAllowRetry>
+      <ExtractionScript>
+      </ExtractionScript>
+      <AllowRemovePages>true</AllowRemovePages>
+      <AllowSwapPages>true</AllowSwapPages>
+      <PostProcessingScriptAllowRetry>
+      </PostProcessingScriptAllowRetry>
+      <PostProcessingScript>
+      </PostProcessingScript>
+    </gdr>
+    <lg>
+      <process_da>{
+	"_Cancel scheduled export": "Fjern planlagt",
+	"_CompanyCode": "Virksomhedskode",
+	"_CompletedDateTime": "Sluttidspunkt",
+	"_Converter": "Outputformat for faktura",
+	"_CSV_MSDynamicsAX": "MS Dynamics AX (CSV)",
+	"_CSV_MSDynamicsNAV": "MS Dynamics NAV (CSV)",
+	"_CSV_OracleEBS": "Oracle EBS (CSV)",
+	"_CSV_OracleJDE": "Oracle JDE (CSV)",
+	"_CSV_OraclePeopleSoft": "Oracle PeopleSoft (CSV)",
+	"_CSV_SAGE1000": "SAGE 1000 (CSV)",
+	"_CSV_SAGE50": "SAGE 50 (CSV)",
+	"_CSV_SAP": "SAP (CSV)",
+	"_CustomSelectionExportModeExplanation": "Du har valgt {0} faktura(er).",
+	"_DefaultExportModeExplanation": "Eksporten er som standard begrænset til fakturaer bogført eller godkendt siden din seneste eksport. Ryd afkrydsningsfeltet nedenfor for at eksportere alle bogførte eller godkendt fakturaer.",
+	"_ERP": "Outputindstillinger",
+	"_Export invoices for a specific ERP": "Eksportér leverandørfakturaer",
+	"_ExportDateTime": "Starttidspunkt",
+	"_ExportedBy": "Eksporteret af",
+	"_ExportedInformations": "Oplysninger",
+	"_ExportedInvoices": "Eksportfil",
+	"_ExportEndDate": "Slutdato for bogføring",
+	"_ExportEndDateToolTip": "Angiv, indtil hvilken bogføringsdato du vil eksportere fakturaer for.&lt;br&gt; Eksporten inkluderer som standard fakturaer bogført indtil kørslen.",
+	"_ExportStartDate": "Startdato for bogføring",
+	"_ExportStartDateToolTip": "Angiv, fra hvilken bogføringsdato du vil køre eksporten fra.&lt;br&gt; Eksporten kører som standard fra den sidste bogføringsdato siden dine forrige eksport.",
+	"_ExportStatus": "Status",
+	"_Flux_10_1": "E-rapport (XML)",
+	"_Generic CSV": "Generisk (CSV)",
+	"_Generic XML": "Generisk (XML)",
+	"_InvoicesToExport": "Fakturavalg",
+	"_NumberOfExportedApprovedInvoices": "Antal eksporterede betalingsfrigivelser",
+	"_NumberOfExportedInvoices": "Antal eksporterede fakturaer",
+	"_NumberOfInvoicesInError": "Antal fakturaer med fejl",
+	"_Payment release output format": "Outputformat for betalingsfrigivelse",
+	"_Scheduling": "Indstillinger for planlægning",
+	"_SchedulingDate": "Startdato",
+	"_SchedulingHours": "Time",
+	"_SchedulingMinutes": "Minut",
+	"_SchedulingOptions": "Kør eksport",
+	"_Select the file format to use with your ERP": "Outputformat for faktura",
+	"_Skip_Invoices_Already_Exported": "Spring fakturaer over, som allerede er blevet eksporteret",
+	"_SubTitleExportInvoices": "Brug de foruddefinerede indstillinger nedenfor til at konfigurere eksportindstillingerne for dine fakturaer",
+	"_The_date_is_in_the_past": "Startdatoen må ikke være før dags dato",
+	"_The_end_date_is_before_start_date": "Slutdatoen skal være efter startdatoen.",
+	"_The_end_date_is_in_the_future": "Slutdatoen må ikke være en fremtidig dato.",
+	"_The_start_date_is_after_end_date": "Startdatoen skal være før slutdatoen.",
+	"_The_start_date_is_in_the_future": "Startdatoen må ikke være en fremtidig dato.",
+	"_Then_repeat": "Hyppighed",
+	"_TitleExportedInvoices": "Eksportér oversigt",
+	"_TitleExportInvoices": "Eksportindstillinger",
+	"_TRA_BUSINESS": "Cegid Business Suite (TRA)",
+	"_TRA_EXPERT": "Cegid Expert (TRA)",
+	"00OClock": "Kl. 12",
+	"01OClock": "Kl. 1",
+	"02OClock": "Kl. 2",
+	"03OClock": "Kl. 3",
+	"04OClock": "Kl. 4",
+	"05OClock": "Kl. 5",
+	"06OClock": "Kl. 6",
+	"07OClock": "Kl. 7",
+	"08OClock": "Kl. 8",
+	"09OClock": "Kl. 9",
+	"10OClock": "Kl. 10",
+	"11OClock": "Kl. 11",
+	"12OClock": "Kl. 24",
+	"13OClock": "Kl. 13",
+	"14OClock": "Kl. 14",
+	"15OClock": "Kl. 15",
+	"16OClock": "Kl. 16",
+	"17OClock": "Kl. 17",
+	"18OClock": "Kl. 18",
+	"19OClock": "Kl. 19",
+	"20OClock": "Kl. 20",
+	"21OClock": "Kl. 21",
+	"22OClock": "Kl. 22",
+	"23OClock": "Kl. 23",
+	"Approved invoices": "Godkendte fakturaer",
+	"Cancelled": "Fjernet",
+	"Completed": "Afsluttet",
+	"Defer execution until": "Senere",
+	"Error": "Fejl",
+	"Every_month": "Månedligt",
+	"Every_week": "Ugentligt",
+	"Everyday": "Dagligt",
+	"Execute now": "Nu",
+	"Export Invoices": "Eksport af leverandørfaktura",
+	"Export now": "Eksportér",
+	"InProgress": "Igangværende",
+	"Never": "Én gang",
+	"Pending": "Afventer",
+	"Posted invoices": "Bogførte fakturaer",
+	"Schedule Export": "Gem",
+	"Update configuration": "Gem"
+}</process_da>
+      <process_de>{
+	"_Cancel scheduled export": "Zeitplanung abbrechen",
+	"_CompanyCode": "Buchungskreis",
+	"_CompletedDateTime": "Endzeit",
+	"_Converter": "Ausgabeformat der Rechnungen",
+	"_CSV_MSDynamicsAX": "MS Dynamics AX (CSV)",
+	"_CSV_MSDynamicsNAV": "MS Dynamics NAV (CSV)",
+	"_CSV_OracleEBS": "Oracle EBS (CSV)",
+	"_CSV_OracleJDE": "Oracle JDE (CSV)",
+	"_CSV_OraclePeopleSoft": "Oracle PeopleSoft (CSV)",
+	"_CSV_SAGE1000": "SAGE 1000 (CSV)",
+	"_CSV_SAGE50": "SAGE 50 (CSV)",
+	"_CSV_SAP": "SAP (CSV)",
+	"_CustomSelectionExportModeExplanation": "Sie haben {0} Rechnung(en) ausgewählt.",
+	"_DefaultExportModeExplanation": "Standardmäßig ist der Export auf die seit Ihrem letzten Export gebuchten oder genehmigten Rechnungen eingeschränkt.\nDeaktivieren Sie das folgende Kontrollkästchen, um alle gebuchten oder genehmigten Rechnungen zu exportieren.",
+	"_ERP": "Ausgabeoptionen",
+	"_Export invoices for a specific ERP": "Lieferantenrechnungen exportieren",
+	"_ExportDateTime": "Startzeit",
+	"_ExportedBy": "Exportiert von",
+	"_ExportedInformations": "Details",
+	"_ExportedInvoices": "Exportdatei",
+	"_ExportEndDate": "Enddatum der Buchung",
+	"_ExportEndDateToolTip": "Geben Sie das Rechnungsbuchungsdatum an, bis zu dem Sie exportieren möchten.&lt;br&gt; Standardmäßig enthält der Export Rechnungen, die bis zum Zeitpunkt des Rechnungslaufs gebucht wurden.",
+	"_ExportStartDate": "Startdatum der Buchung",
+	"_ExportStartDateToolTip": "Geben Sie das Rechnungsbuchungsdatum an, ab dem Sie exportieren möchten.&lt;br&gt;\nStandardmäßig erfasst der Export Daten ab dem ältesten Buchungsdatum seit Ihrem letzten Export.",
+	"_ExportStatus": "Status",
+	"_Flux_10_1": "E-Berichterstattung (XML)",
+	"_Generic CSV": "Generisch (CSV)",
+	"_Generic XML": "Generisch (XML)",
+	"_InvoicesToExport": "Rechnungsauswahl",
+	"_NumberOfExportedApprovedInvoices": "Anzahl exportierter Zahlungsfreigaben",
+	"_NumberOfExportedInvoices": "Anzahl exportierter Rechnungen",
+	"_NumberOfInvoicesInError": "Anzahl fehlerhafter Rechnungen",
+	"_Payment release output format": "Ausgabeformat der Zahlungsfreigaben",
+	"_Scheduling": "Zeitplanoptionen",
+	"_SchedulingDate": "Startdatum",
+	"_SchedulingHours": "Stunde",
+	"_SchedulingMinutes": "Minute",
+	"_SchedulingOptions": "Export ausführen",
+	"_Select the file format to use with your ERP": "Ausgabeformat der Rechnungen",
+	"_Skip_Invoices_Already_Exported": "Bereits exportierte Rechnungen auslassen",
+	"_SubTitleExportInvoices": "Verwenden Sie die folgenden vordefinierten Einstellungen, um die Exportoptionen Ihrer Rechnungen zu konfigurieren",
+	"_The_date_is_in_the_past": "Das Startdatum liegt vor dem heutigen Tag",
+	"_The_end_date_is_before_start_date": "Das Enddatum muss nach dem Startdatum liegen.",
+	"_The_end_date_is_in_the_future": "Das Enddatum darf nicht in der Zukunft liegen.",
+	"_The_start_date_is_after_end_date": "Das Startdatum muss vor dem Enddatum liegen.",
+	"_The_start_date_is_in_the_future": "Das Startdatum darf nicht in der Zukunft liegen.",
+	"_Then_repeat": "Frequenz",
+	"_TitleExportedInvoices": "Exportzusammenfassung",
+	"_TitleExportInvoices": "Exporteinstellungen",
+	"_TRA_BUSINESS": "Cegid Business Suite (TRA)",
+	"_TRA_EXPERT": "Cegid Expert (TRA)",
+	"00OClock": "00",
+	"01OClock": "1",
+	"02OClock": "2",
+	"03OClock": "3",
+	"04OClock": "4",
+	"05OClock": "5",
+	"06OClock": "6",
+	"07OClock": "7",
+	"08OClock": "8",
+	"09OClock": "9",
+	"10OClock": "10",
+	"11OClock": "11",
+	"12OClock": "12",
+	"13OClock": "13",
+	"14OClock": "14",
+	"15OClock": "15",
+	"16OClock": "16",
+	"17OClock": "17",
+	"18OClock": "18",
+	"19OClock": "19",
+	"20OClock": "20",
+	"21OClock": "21",
+	"22OClock": "22",
+	"23OClock": "23",
+	"Approved invoices": "Genehmigte Rechnungen",
+	"Cancelled": "Abgebrochen",
+	"Completed": "Abgeschlossen",
+	"Defer execution until": "Später",
+	"Error": "Fehlgeschlagen",
+	"Every_month": "Monatlich",
+	"Every_week": "Wöchentlich",
+	"Everyday": "Täglich",
+	"Execute now": "Jetzt ",
+	"Export Invoices": "Export von Lieferantenrechnungen",
+	"Export now": "Exportieren",
+	"InProgress": "In Bearbeitung",
+	"Never": "Einmalig",
+	"Pending": "Ausstehend",
+	"Posted invoices": "Gebuchte Rechnungen",
+	"Schedule Export": "Speichern",
+	"Update configuration": "Speichern"
+}</process_de>
+      <process_JA>{
+	"_Cancel scheduled export": "スケジュールなし",
+	"_CompanyCode": "会社コード",
+	"_CompletedDateTime": "終了時刻",
+	"_Converter": "請求書出力形式",
+	"_CSV_MSDynamicsAX": "MS Dynamics AX (CSV)",
+	"_CSV_MSDynamicsNAV": "MS Dynamics NAV (CSV)",
+	"_CSV_OracleEBS": "Oracle EBS (CSV)",
+	"_CSV_OracleJDE": "Oracle JDE (CSV)",
+	"_CSV_OraclePeopleSoft": "Oracle PeopleSoft (CSV)",
+	"_CSV_SAGE1000": "SAGE 1000 (CSV)",
+	"_CSV_SAGE50": "SAGE 50 (CSV)",
+	"_CSV_SAP": "SAP (CSV)",
+	"_CustomSelectionExportModeExplanation": "{0} 件の請求書を選択しました。",
+	"_DefaultExportModeExplanation": "通常、エクスポートは前回のエクスポート以降に登録または承認された請求書に限ります。次のチェックボックスをオフにすると、すべての登録済みまたは承認済み請求書をエクスポートします。",
+	"_ERP": "出力オプション",
+	"_Export invoices for a specific ERP": "請求書エクスポート",
+	"_ExportDateTime": "開始時刻",
+	"_ExportedBy": "エクスポート実行者",
+	"_ExportedInformations": "詳細",
+	"_ExportedInvoices": "ファイルのエクスポート",
+	"_ExportEndDate": "登録終了日",
+	"_ExportEndDateToolTip": "どの登録日までの請求書をエクスポートするかを指定します。&lt;br&gt;デフォルトでは、実行されるまでに登録された請求書がエクスポートに含まれます。",
+	"_ExportStartDate": "登録開始日",
+	"_ExportStartDateToolTip": "いつの請求書登録日からエクスポートを実施するかを指定します。&lt;br&gt;\nデフォルトでは、最後のエクスポートから最も古い登録日までエクスポートが実行されます。",
+	"_ExportStatus": "ステータス",
+	"_Flux_10_1": "電子レポート (XML)",
+	"_Generic CSV": "汎用 (CSV)",
+	"_Generic XML": "汎用 (XML)",
+	"_InvoicesToExport": "請求書選択",
+	"_NumberOfExportedApprovedInvoices": "エクスポートされた支払リリース数",
+	"_NumberOfExportedInvoices": "エクスポートされた請求書数",
+	"_NumberOfInvoicesInError": "エラーがある請求書数",
+	"_Payment release output format": "支払リリース出力形式",
+	"_Scheduling": "スケジュールオプション",
+	"_SchedulingDate": "開始日",
+	"_SchedulingHours": "時間",
+	"_SchedulingMinutes": "分",
+	"_SchedulingOptions": "エクスポートの実行",
+	"_Select the file format to use with your ERP": "請求書出力形式",
+	"_Skip_Invoices_Already_Exported": "既にエクスポートされた請求書をスキップ",
+	"_SubTitleExportInvoices": "次に定義する設定を使用して、請求書のエクスポートオプションを構成します",
+	"_The_date_is_in_the_past": "開始日を過去の日付にすることはできません",
+	"_The_end_date_is_before_start_date": "終了日は開始日より後の日付でなければなりません。",
+	"_The_end_date_is_in_the_future": "終了日を未来の日付にすることはできません。",
+	"_The_start_date_is_after_end_date": "開始日は終了日よりも前の日付でなければなりません。",
+	"_The_start_date_is_in_the_future": "開始日を未来の日付にすることはできません。",
+	"_Then_repeat": "頻度",
+	"_TitleExportedInvoices": "エクスポート概要",
+	"_TitleExportInvoices": "エクスポート設定",
+	"_TRA_BUSINESS": "セジッドビジネススイート（TRA）　",
+	"_TRA_EXPERT": "セジッドセキスパート（TRA）",
+	"00OClock": "12 AM",
+	"01OClock": "1 AM",
+	"02OClock": "2 AM",
+	"03OClock": "3 AM",
+	"04OClock": "4 AM",
+	"05OClock": "5 AM",
+	"06OClock": "6 AM",
+	"07OClock": "7 AM",
+	"08OClock": "8 AM",
+	"09OClock": "9 AM",
+	"10OClock": "10 AM",
+	"11OClock": "11 AM",
+	"12OClock": "12 PM",
+	"13OClock": "1 PM",
+	"14OClock": "2 PM",
+	"15OClock": "3 PM",
+	"16OClock": "4 PM",
+	"17OClock": "5 PM",
+	"18OClock": "6 PM",
+	"19OClock": "7 PM",
+	"20OClock": "8 PM",
+	"21OClock": "9 PM",
+	"22OClock": "10 PM",
+	"23OClock": "11 PM",
+	"Approved invoices": "承認済み請求書",
+	"Cancelled": "スケジュールなし",
+	"Completed": "完了",
+	"Defer execution until": "後で実行",
+	"Error": "失敗",
+	"Every_month": "毎月",
+	"Every_week": "毎週",
+	"Everyday": "毎日",
+	"Execute now": "今すぐ実行",
+	"Export Invoices": "仕入先請求書エクスポート",
+	"Export now": "エクスポート",
+	"InProgress": "実行中",
+	"Never": "1 回のみ",
+	"Pending": "保留中",
+	"Posted invoices": "登録済み請求書",
+	"Schedule Export": "保存",
+	"Update configuration": "保存"
+}</process_JA>
+      <process_en>{
+	"_Cancel scheduled export": "Unschedule",
+	"_CompanyCode": "Company code",
+	"_CompletedDateTime": "End time",
+	"_Converter": "Invoice output format",
+	"_CSV_MSDynamicsAX": "MS Dynamics AX (CSV)",
+	"_CSV_MSDynamicsNAV": "MS Dynamics NAV (CSV)",
+	"_CSV_OracleEBS": "Oracle EBS (CSV)",
+	"_CSV_OracleJDE": "Oracle JDE (CSV)",
+	"_CSV_OraclePeopleSoft": "Oracle PeopleSoft (CSV)",
+	"_CSV_SAGE1000": "SAGE 1000 (CSV)",
+	"_CSV_SAGE50": "SAGE 50 (CSV)",
+	"_CSV_SAP": "SAP (CSV)",
+	"_CustomSelectionExportModeExplanation": "You have selected {0} invoice(s).",
+	"_DefaultExportModeExplanation": "By default, the export is restricted to invoices posted or approved since your last export.\nClear the check box below to export all posted or approved invoices.",
+	"_ERP": "Output Options",
+	"_Export invoices for a specific ERP": "Export supplier invoices",
+	"_ExportDateTime": "Start time",
+	"_ExportedBy": "Exported by",
+	"_ExportedInformations": "Details",
+	"_ExportedInvoices": "Export file",
+	"_ExportEndDate": "Posting end date",
+	"_ExportEndDateToolTip": "Specify the invoice posting date up to which you want to export.&lt;br&gt;\nBy default, the export includes invoices posted up until it is run.",
+	"_ExportStartDate": "Posting start date",
+	"_ExportStartDateToolTip": "Specify the invoice posting date from which to run the export.&lt;br&gt;\nBy default, the export runs from the oldest posting date since your last export.",
+	"_ExportStatus": "Status",
+	"_Flux_10_1": "E-reporting (XML)",
+	"_Generic CSV": "Generic (CSV)",
+	"_Generic XML": "Generic (XML)",
+	"_InvoicesToExport": "Invoice Selection",
+	"_NumberOfExportedApprovedInvoices": "Number of exported payment releases",
+	"_NumberOfExportedInvoices": "Number of exported invoices",
+	"_NumberOfInvoicesInError": "Number of invoices in error",
+	"_Payment release output format": "Payment release output format",
+	"_Scheduling": "Schedule Options",
+	"_SchedulingDate": "Start date",
+	"_SchedulingHours": "Hour",
+	"_SchedulingMinutes": "Minute",
+	"_SchedulingOptions": "Run export",
+	"_Select the file format to use with your ERP": "Invoice output format",
+	"_Skip_Invoices_Already_Exported": "Skip already exported invoices",
+	"_SubTitleExportInvoices": "Use the predefined settings below to configure the export options of your invoices",
+	"_The_date_is_in_the_past": "The start date cannot be in the past",
+	"_The_end_date_is_before_start_date": "The end date must be after the start date.",
+	"_The_end_date_is_in_the_future": "The end date cannot be in the future.",
+	"_The_start_date_is_after_end_date": "The start date must be before the end date.",
+	"_The_start_date_is_in_the_future": "The start date cannot be in the future.",
+	"_Then_repeat": "Frequency",
+	"_TitleExportedInvoices": "Export Summary",
+	"_TitleExportInvoices": "Export Settings",
+	"_TRA_BUSINESS": "Cegid Business Suite (TRA)",
+	"_TRA_EXPERT": "Cegid Expert (TRA)",
+	"00OClock": "12 AM",
+	"01OClock": "1 AM",
+	"02OClock": "2 AM",
+	"03OClock": "3 AM",
+	"04OClock": "4 AM",
+	"05OClock": "5 AM",
+	"06OClock": "6 AM",
+	"07OClock": "7 AM",
+	"08OClock": "8 AM",
+	"09OClock": "9 AM",
+	"10OClock": "10 AM",
+	"11OClock": "11 AM",
+	"12OClock": "12 PM",
+	"13OClock": "1 PM",
+	"14OClock": "2 PM",
+	"15OClock": "3 PM",
+	"16OClock": "4 PM",
+	"17OClock": "5 PM",
+	"18OClock": "6 PM",
+	"19OClock": "7 PM",
+	"20OClock": "8 PM",
+	"21OClock": "9 PM",
+	"22OClock": "10 PM",
+	"23OClock": "11 PM",
+	"Approved invoices": "Approved invoices",
+	"Cancelled": "Unscheduled",
+	"Completed": "Completed",
+	"Defer execution until": "Later",
+	"Error": "Failed",
+	"Every_month": "Monthly",
+	"Every_week": "Weekly",
+	"Everyday": "Daily",
+	"Execute now": "Now",
+	"Export Invoices": "Supplier Invoice Export",
+	"Export now": "Export",
+	"InProgress": "In progress",
+	"Never": "One-shot",
+	"Pending": "Pending",
+	"Posted invoices": "Posted invoices",
+	"Schedule Export": "Save",
+	"Update configuration": "Save"
+}</process_en>
+      <process_es>{
+	"_Cancel scheduled export": "Cancelar programación",
+	"_CompanyCode": "Código de empresa",
+	"_CompletedDateTime": "Hora de finalización",
+	"_Converter": "Formato de salida de las facturas",
+	"_CSV_MSDynamicsAX": "MS Dynamics AX (CSV)",
+	"_CSV_MSDynamicsNAV": "MS Dynamics NAV (CSV)",
+	"_CSV_OracleEBS": "Oracle EBS (CSV)",
+	"_CSV_OracleJDE": "Oracle JDE (CSV)",
+	"_CSV_OraclePeopleSoft": "Oracle PeopleSoft (CSV)",
+	"_CSV_SAGE1000": "SAGE 1000 (CSV)",
+	"_CSV_SAGE50": "SAGE 50 (CSV)",
+	"_CSV_SAP": "SAP (CSV)",
+	"_CustomSelectionExportModeExplanation": "Ha seleccionado {0} factura(s).",
+	"_DefaultExportModeExplanation": "De forma predeterminada, la exportación está restringida a las facturas contabilizadas o aprobadas desde su última exportación.\nDesactive la siguiente casilla si desea exportar todas las facturas contabilizadas o aprobadas.",
+	"_ERP": "Opciones de salida",
+	"_Export invoices for a specific ERP": "Exportar facturas de proveedor",
+	"_ExportDateTime": "Hora de inicio",
+	"_ExportedBy": "Exportado por",
+	"_ExportedInformations": "Detalles",
+	"_ExportedInvoices": "Archivo de exportación",
+	"_ExportEndDate": "Fecha de fin de la contabilización",
+	"_ExportEndDateToolTip": "Especifique la fecha de contabilización de la factura hasta la que desea exportar.&lt;br&gt; Por defecto, la exportación incluye las facturas contabilizadas hasta su ejecución.    ",
+	"_ExportStartDate": "Fecha de inicio de la contabilización",
+	"_ExportStartDateToolTip": "Especifique la fecha de contabilización de la factura a partir de la cual desea ejecutar la exportación.&lt;br&gt; Por defecto, la exportación se ejecuta a partir de la fecha de contabilización más antigua desde su última exportación.",
+	"_ExportStatus": "Estado",
+	"_Flux_10_1": "Informes electrónicos (XML)",
+	"_Generic CSV": "Genérico (CSV)",
+	"_Generic XML": "Genérico (XML)",
+	"_InvoicesToExport": "Selección de facturas",
+	"_NumberOfExportedApprovedInvoices": "Número de liberaciones de pagos exportadas",
+	"_NumberOfExportedInvoices": "Número de facturas exportadas",
+	"_NumberOfInvoicesInError": "Número de facturas en error",
+	"_Payment release output format": "Formato de salida de las liberaciones de pagos",
+	"_Scheduling": "Opciones de programación",
+	"_SchedulingDate": "Fecha de inicio",
+	"_SchedulingHours": "Hora",
+	"_SchedulingMinutes": "Minuto",
+	"_SchedulingOptions": "Ejecutar exportación",
+	"_Select the file format to use with your ERP": "Formato de salida de las facturas",
+	"_Skip_Invoices_Already_Exported": "Omitir las facturas ya exportadas",
+	"_SubTitleExportInvoices": "Utilice los siguientes valores de configuración predefinida para configurar las opciones de exportación de sus facturas",
+	"_The_date_is_in_the_past": "La fecha inicial es anterior a la actual",
+	"_The_end_date_is_before_start_date": "La fecha de fin debe ser posterior a la fecha de inicio.",
+	"_The_end_date_is_in_the_future": "La fecha de fin no puede ser en el futuro.",
+	"_The_start_date_is_after_end_date": "La fecha de inicio debe ser anterior a la fecha de fin.",
+	"_The_start_date_is_in_the_future": "La fecha de inicio no puede ser en el futuro.",
+	"_Then_repeat": "Frecuencia",
+	"_TitleExportedInvoices": "Resumen de exportación",
+	"_TitleExportInvoices": "Configuración de exportación",
+	"_TRA_BUSINESS": "Cegid Business Suite (TRA)",
+	"_TRA_EXPERT": "Cegid Expert (TRA)",
+	"00OClock": "00",
+	"01OClock": "1",
+	"02OClock": "2",
+	"03OClock": "3",
+	"04OClock": "4",
+	"05OClock": "5",
+	"06OClock": "6",
+	"07OClock": "7",
+	"08OClock": "8",
+	"09OClock": "9",
+	"10OClock": "10",
+	"11OClock": "11",
+	"12OClock": "12",
+	"13OClock": "13",
+	"14OClock": "14",
+	"15OClock": "15",
+	"16OClock": "16",
+	"17OClock": "17",
+	"18OClock": "18",
+	"19OClock": "19",
+	"20OClock": "20",
+	"21OClock": "21",
+	"22OClock": "22",
+	"23OClock": "23",
+	"Approved invoices": "Facturas aprobadas",
+	"Cancelled": "Cancelado",
+	"Completed": "Terminado",
+	"Defer execution until": "Más tarde",
+	"Error": "Fallida",
+	"Every_month": "Mensual",
+	"Every_week": "Semanal",
+	"Everyday": "Diaria",
+	"Execute now": "Ahora",
+	"Export Invoices": "Exportación de facturas de proveedor",
+	"Export now": "Exportar",
+	"InProgress": "En proceso",
+	"Never": "Una sola vez",
+	"Pending": "Pendiente",
+	"Posted invoices": "Facturas contabilizadas",
+	"Schedule Export": "Guardar",
+	"Update configuration": "Guardar"
+}</process_es>
+      <process_fr>{
+	"_Cancel scheduled export": "Annuler la planification",
+	"_CompanyCode": "Code société",
+	"_CompletedDateTime": "Heure de fin",
+	"_Converter": "Format de sortie des factures",
+	"_CSV_MSDynamicsAX": "MS Dynamics AX (CSV)",
+	"_CSV_MSDynamicsNAV": "MS Dynamics NAV (CSV)",
+	"_CSV_OracleEBS": "Oracle EBS (CSV)",
+	"_CSV_OracleJDE": "Oracle JDE (CSV)",
+	"_CSV_OraclePeopleSoft": "Oracle PeopleSoft (CSV)",
+	"_CSV_SAGE1000": "SAGE 1000 (CSV)",
+	"_CSV_SAGE50": "SAGE 50 (CSV)",
+	"_CSV_SAP": "SAP (CSV)",
+	"_CustomSelectionExportModeExplanation": "Vous avez sélectionné {0} facture(s).",
+	"_DefaultExportModeExplanation": "Par défaut, l'exportation est limitée aux factures comptabilisées ou approuvées depuis votre dernière exportation.\nDécochez la case ci-dessous pour exporter l'ensemble des factures comptabilisées ou approuvées.",
+	"_ERP": "Options de sortie",
+	"_Export invoices for a specific ERP": "Exporter des factures fournisseurs",
+	"_ExportDateTime": "Heure de début",
+	"_ExportedBy": "Exporté par",
+	"_ExportedInformations": "Détails",
+	"_ExportedInvoices": "Fichier d'exportation",
+	"_ExportEndDate": "Date de fin de comptabilisation",
+	"_ExportEndDateToolTip": "Spécifiez la date limite de comptabilisation de facture à inclure dans l'exportation.&lt;br&gt;\nPar défaut, l'exportation inclut les factures comptabilisées jusqu'à son exécution.",
+	"_ExportStartDate": "Date de début de comptabilisation",
+	"_ExportStartDateToolTip": "Spécifiez la date de comptabilisation de facture à partir de laquelle vous souhaitez exécuter l'exportation.&lt;br&gt;\nPar défaut, elle est exécutée à partir de la date de comptabilisation la plus ancienne depuis votre dernière exportation.",
+	"_ExportStatus": "État",
+	"_Flux_10_1": "E-reporting (XML)",
+	"_Generic CSV": "Générique (CSV)",
+	"_Generic XML": "Générique (XML)",
+	"_InvoicesToExport": "Sélection des factures",
+	"_NumberOfExportedApprovedInvoices": "Nombre de bons à payer exportés",
+	"_NumberOfExportedInvoices": "Nombre de factures exportées",
+	"_NumberOfInvoicesInError": "Nombre de factures en erreur",
+	"_Payment release output format": "Format de sortie des bons à payer",
+	"_Scheduling": "Options de planification",
+	"_SchedulingDate": "Date de début",
+	"_SchedulingHours": "Heure",
+	"_SchedulingMinutes": "Minute",
+	"_SchedulingOptions": "Exécuter l'exportation",
+	"_Select the file format to use with your ERP": "Format de sortie des factures",
+	"_Skip_Invoices_Already_Exported": "Ignorer les factures déjà exportées",
+	"_SubTitleExportInvoices": "Utilisez les paramètres prédéfinis ci-dessous pour configurer les options d'exportation de vos factures",
+	"_The_date_is_in_the_past": "La date de début est antérieure à aujourd'hui",
+	"_The_end_date_is_before_start_date": "La date de fin doit être postérieure à la date de début.",
+	"_The_end_date_is_in_the_future": "La date de fin ne peut pas être dans le futur.",
+	"_The_start_date_is_after_end_date": "La date de début doit être antérieure à la date de fin. ",
+	"_The_start_date_is_in_the_future": "La date de début ne peut pas être dans le futur.",
+	"_Then_repeat": "Fréquence",
+	"_TitleExportedInvoices": "Résumé d'exportation",
+	"_TitleExportInvoices": "Paramètres d'exportation",
+	"_TRA_BUSINESS": "Cegid Business Suite (TRA)",
+	"_TRA_EXPERT": "Cegid Expert (TRA)",
+	"00OClock": "00",
+	"01OClock": "01",
+	"02OClock": "02",
+	"03OClock": "03",
+	"04OClock": "04",
+	"05OClock": "05",
+	"06OClock": "06",
+	"07OClock": "07",
+	"08OClock": "08",
+	"09OClock": "09",
+	"10OClock": "10",
+	"11OClock": "11",
+	"12OClock": "12",
+	"13OClock": "13",
+	"14OClock": "14",
+	"15OClock": "15",
+	"16OClock": "16",
+	"17OClock": "17",
+	"18OClock": "18",
+	"19OClock": "19",
+	"20OClock": "20",
+	"21OClock": "21",
+	"22OClock": "22",
+	"23OClock": "23",
+	"Approved invoices": "Factures approuvées",
+	"Cancelled": "Annulé",
+	"Completed": "Terminé",
+	"Defer execution until": "Plus tard",
+	"Error": "En échec",
+	"Every_month": "Mensuelle",
+	"Every_week": "Hebdomadaire",
+	"Everyday": "Quotidienne",
+	"Execute now": "Maintenant",
+	"Export Invoices": "Exportation de factures fournisseurs",
+	"Export now": "Exporter",
+	"InProgress": "En cours",
+	"Never": "Une seule fois",
+	"Pending": "En attente",
+	"Posted invoices": "Factures comptabilisées",
+	"Schedule Export": "Enregistrer",
+	"Update configuration": "Enregistrer"
+}</process_fr>
+      <process_nl-NL>{
+	"_Cancel scheduled export": "Planning opheffen",
+	"_CompanyCode": "Bedrijfscode",
+	"_CompletedDateTime": "Eindtijd",
+	"_Converter": "Output-formaat factuur",
+	"_CSV_MSDynamicsAX": "MS Dynamics AX (CSV)",
+	"_CSV_MSDynamicsNAV": "MS Dynamics NAV (CSV)",
+	"_CSV_OracleEBS": "Oracle EBS (CSV)",
+	"_CSV_OracleJDE": "Oracle JDE (CSV)",
+	"_CSV_OraclePeopleSoft": "Oracle PeopleSoft (CSV)",
+	"_CSV_SAGE1000": "SAGE 1000 (CSV)",
+	"_CSV_SAGE50": "SAGE 50 (CSV)",
+	"_CSV_SAP": "SAP (CSV)",
+	"_CustomSelectionExportModeExplanation": "U hebt {0} factuur/facturen geselecteerd.",
+	"_DefaultExportModeExplanation": "Standaard is de export beperkt tot facturen die zijn geboekt of goedgekeurd sinds uw laatste export. Vink het onderstaande vakje af om alle geboekte of goedgekeurde facturen te exporteren.",
+	"_ERP": "Opties voor output",
+	"_Export invoices for a specific ERP": "Leveranciers-facturen exporteren",
+	"_ExportDateTime": "Starttijd",
+	"_ExportedBy": "Geëxporteerd door",
+	"_ExportedInformations": "Details",
+	"_ExportedInvoices": "Exportbestand",
+	"_ExportEndDate": "Einddatum boeking",
+	"_ExportEndDateToolTip": "Geef de boekingsdatum voor facturen op tot wanneer u wilt exporteren.&lt;br&gt;\nStandaard omvat het rapport facturen die zijn geboekt totdat het rapport werd uitgevoerd.",
+	"_ExportStartDate": "Startdatum boeking",
+	"_ExportStartDateToolTip": "Geef de boekingsdatum voor facturen op vanaf wanneer u wilt exporteren.&lt;br&gt;\nStandaard wordt de export uitgevoerd vanaf de oudste boekingsdatum sinds uw laatste export.",
+	"_ExportStatus": "Status",
+	"_Flux_10_1": "E-rapportage (XML)",
+	"_Generic CSV": "Algemeen (CSV)",
+	"_Generic XML": "Algemeen (XML)",
+	"_InvoicesToExport": "Facturen selecteren",
+	"_NumberOfExportedApprovedInvoices": "Aantal geëxporteerde toestemmingen tot betaling",
+	"_NumberOfExportedInvoices": "Aantal geëxporteerde facturen",
+	"_NumberOfInvoicesInError": "Aantal facturen met fout",
+	"_Payment release output format": "Output-formaat toestemming betaling",
+	"_Scheduling": "Opties voor planning",
+	"_SchedulingDate": "Startdatum",
+	"_SchedulingHours": "Uur",
+	"_SchedulingMinutes": "Minuut",
+	"_SchedulingOptions": "Export uitvoeren",
+	"_Select the file format to use with your ERP": "Output-formaat factuur",
+	"_Skip_Invoices_Already_Exported": "Reeds geëxporteerde facturen overslaan",
+	"_SubTitleExportInvoices": "Gebruik de onderstaande vooraf gedefinieerde instellingen om de opties voor export van uw facturen te configureren",
+	"_The_date_is_in_the_past": "De startdatum kan niet in het verleden zijn",
+	"_The_end_date_is_before_start_date": "De einddatum moet na de startdatum zijn.",
+	"_The_end_date_is_in_the_future": "De einddatum kan niet in de toekomst zijn.",
+	"_The_start_date_is_after_end_date": "De startdatum moet voor de einddatum zijn.",
+	"_The_start_date_is_in_the_future": "De startdatum kan niet in de toekomst zijn.",
+	"_Then_repeat": "Frequentie",
+	"_TitleExportedInvoices": "Samenvatting export",
+	"_TitleExportInvoices": "Instellingen voor export",
+	"_TRA_BUSINESS": "Cegid Business Suite (TRA)",
+	"_TRA_EXPERT": "Cegid Expert (TRA)",
+	"00OClock": "0 uur",
+	"01OClock": "1 uur",
+	"02OClock": "2 uur",
+	"03OClock": "3 uur",
+	"04OClock": "4 uur",
+	"05OClock": "5 uur",
+	"06OClock": "6 uur",
+	"07OClock": "7 uur",
+	"08OClock": "8 uur",
+	"09OClock": "9 uur",
+	"10OClock": "10 uur",
+	"11OClock": "11 uur",
+	"12OClock": "12 uur",
+	"13OClock": "13 uur",
+	"14OClock": "14 uur",
+	"15OClock": "15 uur",
+	"16OClock": "16 uur",
+	"17OClock": "17 uur",
+	"18OClock": "18 uur",
+	"19OClock": "19 uur",
+	"20OClock": "20 uur",
+	"21OClock": "21 uur",
+	"22OClock": "22 uur",
+	"23OClock": "23 uur",
+	"Approved invoices": "Goedgekeurde facturen",
+	"Cancelled": "Planning opgeheven",
+	"Completed": "Voltooid",
+	"Defer execution until": "Later",
+	"Error": "Mislukt",
+	"Every_month": "Maandelijks",
+	"Every_week": "Wekelijks",
+	"Everyday": "Dagelijks",
+	"Execute now": "Nu",
+	"Export Invoices": "Leveranciersfactuur exporteren",
+	"Export now": "Exporteren",
+	"InProgress": "In uitvoering",
+	"Never": "Eenmalig",
+	"Pending": "In afwachting",
+	"Posted invoices": "Geboekte facturen",
+	"Schedule Export": "Opslaan",
+	"Update configuration": "Opslaan"
+}</process_nl-NL>
+      <process_pl>{
+	"_Cancel scheduled export": "Cofnij zaplanowanie",
+	"_CompanyCode": "Kod firmy",
+	"_CompletedDateTime": "Czas zakończenia",
+	"_Converter": "Format wyjściowy faktury",
+	"_CSV_MSDynamicsAX": "MS Dynamics AX (CSV)",
+	"_CSV_MSDynamicsNAV": "MS Dynamics NAV (CSV)",
+	"_CSV_OracleEBS": "Oracle EBS (CSV)",
+	"_CSV_OracleJDE": "Oracle JDE (CSV)",
+	"_CSV_OraclePeopleSoft": "Oracle PeopleSoft (CSV)",
+	"_CSV_SAGE1000": "SAGE 1000 (CSV)",
+	"_CSV_SAGE50": "SAGE 50 (CSV)",
+	"_CSV_SAP": "SAP (CSV)",
+	"_CustomSelectionExportModeExplanation": "Wybrano {0} faktur(y).",
+	"_DefaultExportModeExplanation": "Domyślnie eksport ogranicza się do faktur zaksięgowanych lub zatwierdzonych od ostatniego eksportu.\nWyczyść poniższe pole wyboru, aby wyeksportować wszystkie zaksięgowane lub zatwierdzone faktury.",
+	"_ERP": "Opcje wyjściowe",
+	"_Export invoices for a specific ERP": "Eksportuj faktury dostawcy",
+	"_ExportDateTime": "Czas rozpoczęcia",
+	"_ExportedBy": "Wyeksportowane przez",
+	"_ExportedInformations": "Szczegóły",
+	"_ExportedInvoices": "Plik eksportu",
+	"_ExportEndDate": "Data końcowa księgowania",
+	"_ExportEndDateToolTip": "Określ datę zaksięgowania faktury, na której mają się kończyć wyeksportowane dane.&lt;br&gt;\nDomyślnie eksport obejmuje faktury zaksięgowane do momentu jego uruchomienia.",
+	"_ExportStartDate": "Data początkowa księgowania",
+	"_ExportStartDateToolTip": "Określ datę zaksięgowania faktury, od której ma zostać uruchomiony eksport.&lt;br&gt;\nDomyślnie eksport jest uruchamiany od najstarszej daty zaksięgowania od ostatniego eksportu.",
+	"_ExportStatus": "Status",
+	"_Flux_10_1": "E-raportowanie (XML)",
+	"_Generic CSV": "Ogólny (CSV)",
+	"_Generic XML": "Ogólny (XML)",
+	"_InvoicesToExport": "Wybór faktur",
+	"_NumberOfExportedApprovedInvoices": "Liczba wyeksportowanych uwolnień płatności",
+	"_NumberOfExportedInvoices": "Liczba wyeksportowanych faktur",
+	"_NumberOfInvoicesInError": "Liczba faktur z błędami",
+	"_Payment release output format": "Format wyjściowy uwolnienia płatności",
+	"_Scheduling": "Opcje harmonogramu",
+	"_SchedulingDate": "Data początkowa",
+	"_SchedulingHours": "Godzina",
+	"_SchedulingMinutes": "Minuta",
+	"_SchedulingOptions": "Uruchom eksport",
+	"_Select the file format to use with your ERP": "Format wyjściowy faktury",
+	"_Skip_Invoices_Already_Exported": "Pomiń już wyeksportowane faktury",
+	"_SubTitleExportInvoices": "Skorzystaj z poniższych gotowych ustawień, aby skonfigurować opcje eksportu faktur",
+	"_The_date_is_in_the_past": "Data początkowa nie może być datą przeszłą",
+	"_The_end_date_is_before_start_date": "Data końcowa musi być późniejsza niż data początkowa.",
+	"_The_end_date_is_in_the_future": "Data końcowa nie może być datą przyszłą.",
+	"_The_start_date_is_after_end_date": "Data początkowa musi być wcześniejsza niż data końcowa.",
+	"_The_start_date_is_in_the_future": "Data początkowa nie może być datą przyszłą.",
+	"_Then_repeat": "Częstotliwość",
+	"_TitleExportedInvoices": "Podsumowanie eksportu",
+	"_TitleExportInvoices": "Ustawienia eksportu",
+	"_TRA_BUSINESS": "Cegid Business Suite (TRA)",
+	"_TRA_EXPERT": "Cegid Expert (TRA)",
+	"00OClock": "00:00",
+	"01OClock": "01:00",
+	"02OClock": "02:00",
+	"03OClock": "03:00",
+	"04OClock": "04:00",
+	"05OClock": "05:00",
+	"06OClock": "06:00",
+	"07OClock": "07:00",
+	"08OClock": "08:00",
+	"09OClock": "09:00",
+	"10OClock": "10:00",
+	"11OClock": "11:00",
+	"12OClock": "12:00",
+	"13OClock": "13:00",
+	"14OClock": "14:00",
+	"15OClock": "15:00",
+	"16OClock": "16:00",
+	"17OClock": "17:00",
+	"18OClock": "18:00",
+	"19OClock": "19:00",
+	"20OClock": "20:00",
+	"21OClock": "21:00",
+	"22OClock": "22:00",
+	"23OClock": "23:00",
+	"Approved invoices": "Zatwierdzone faktury",
+	"Cancelled": "Niezaplanowane",
+	"Completed": "Ukończone",
+	"Defer execution until": "Później",
+	"Error": "Niepowodzenie",
+	"Every_month": "Co miesiąc",
+	"Every_week": "Co tydzień",
+	"Everyday": "Codziennie",
+	"Execute now": "Teraz",
+	"Export Invoices": "Eksport faktur dostawcy",
+	"Export now": "Eksportuj",
+	"InProgress": "W toku",
+	"Never": "Jednorazowo",
+	"Pending": "Oczekiwanie",
+	"Posted invoices": "Zaksięgowane faktury",
+	"Schedule Export": "Zapisz",
+	"Update configuration": "Zapisz"
+}</process_pl>
+      <process_it>{
+	"_Cancel scheduled export": "Annulla programmazione",
+	"_CompanyCode": "Codice società",
+	"_CompletedDateTime": "Ora di fine",
+	"_Converter": "Formato output fatture",
+	"_CSV_MSDynamicsAX": "MS Dynamics AX (CSV)",
+	"_CSV_MSDynamicsNAV": "MS Dynamics NAV (CSV)",
+	"_CSV_OracleEBS": "Oracle EBS (CSV)",
+	"_CSV_OracleJDE": "Oracle JDE (CSV)",
+	"_CSV_OraclePeopleSoft": "Oracle PeopleSoft (CSV)",
+	"_CSV_SAGE1000": "SAGE 1000 (CSV)",
+	"_CSV_SAGE50": "SAGE 50 (CSV)",
+	"_CSV_SAP": "SAP (CSV)",
+	"_CustomSelectionExportModeExplanation": "La selezione include {0} fatture.",
+	"_DefaultExportModeExplanation": "Per impostazione predefinita l'esportazione è limitata alle fatture registrate o approvate dall'ultima esportazione.\nDeselezionare la casella di controllo seguente se si desidera esportare tutte le fatture registrate o approvate.",
+	"_ERP": "Opzioni di output",
+	"_Export invoices for a specific ERP": "Esporta fatture fornitore",
+	"_ExportDateTime": "Ora inizio",
+	"_ExportedBy": "Esportato da",
+	"_ExportedInformations": "Dettagli",
+	"_ExportedInvoices": "File di esportazione",
+	"_ExportEndDate": "Data fine registrazione",
+	"_ExportEndDateToolTip": "Specificare la data limite di registrazione delle fatture da includere nell'esportazione.&lt;br&gt;\nPer impostazione predefinita, l'esportazione include le fatture registrate fino al momento dell'esecuzione.",
+	"_ExportStartDate": "Data inizio registrazione",
+	"_ExportStartDateToolTip": "Specificare la data di registrazione delle fatture da cui eseguire l'esportazione.&lt;br&gt;\nPer impostazione predefinita, viene eseguita dalla data di registrazione più remota dopo l'ultima esportazione.",
+	"_ExportStatus": "Stato",
+	"_Flux_10_1": "E-reporting (XML)",
+	"_Generic CSV": "Generico (CSV)",
+	"_Generic XML": "Generico (XML)",
+	"_InvoicesToExport": "Selezione fatture",
+	"_NumberOfExportedApprovedInvoices": "Numero di rilasci pagamenti esportati",
+	"_NumberOfExportedInvoices": "Numero di fatture esportate",
+	"_NumberOfInvoicesInError": "Numero di fatture in errore",
+	"_Payment release output format": "Formato output rilasci pagamenti",
+	"_Scheduling": "Opzioni di pianificazione",
+	"_SchedulingDate": "Data di inizio",
+	"_SchedulingHours": "Ora",
+	"_SchedulingMinutes": "Minuto",
+	"_SchedulingOptions": "Esegui esportazione",
+	"_Select the file format to use with your ERP": "Formato output fatture",
+	"_Skip_Invoices_Already_Exported": "Ignora fatture già esportate",
+	"_SubTitleExportInvoices": "Utilizzare le seguenti impostazioni predefinite per configurare le opzioni di esportazione delle fatture",
+	"_The_date_is_in_the_past": "Data di inizio anteriore alla data del giorno",
+	"_The_end_date_is_before_start_date": "La data di fine deve essere posteriore alla data di inizio.",
+	"_The_end_date_is_in_the_future": "La data di fine non può essere posteriore ad oggi.",
+	"_The_start_date_is_after_end_date": "La data di inizio deve essere anteriore alla data di fine.",
+	"_The_start_date_is_in_the_future": "La data di inizio non può essere posteriore ad oggi.",
+	"_Then_repeat": "Frequenza",
+	"_TitleExportedInvoices": "Riepilogo esportazione",
+	"_TitleExportInvoices": "Impostazioni esportazione",
+	"_TRA_BUSINESS": "Cegid Business Suite (TRA)",
+	"_TRA_EXPERT": "Cegid Expert (TRA)",
+	"00OClock": "00",
+	"01OClock": "1",
+	"02OClock": "2",
+	"03OClock": "3",
+	"04OClock": "4",
+	"05OClock": "5",
+	"06OClock": "6",
+	"07OClock": "7",
+	"08OClock": "8",
+	"09OClock": "9",
+	"10OClock": "10",
+	"11OClock": "11",
+	"12OClock": "12",
+	"13OClock": "13",
+	"14OClock": "14",
+	"15OClock": "15",
+	"16OClock": "16",
+	"17OClock": "17",
+	"18OClock": "18",
+	"19OClock": "19",
+	"20OClock": "20",
+	"21OClock": "21",
+	"22OClock": "22",
+	"23OClock": "23",
+	"Approved invoices": "Fatture approvate",
+	"Cancelled": "Annullato",
+	"Completed": "Terminato",
+	"Defer execution until": "In seguito",
+	"Error": "Non riuscita",
+	"Every_month": "Mensile",
+	"Every_week": "Settimanale",
+	"Everyday": "Giornaliera",
+	"Execute now": "Adesso",
+	"Export Invoices": "Esportazione fatture fornitori",
+	"Export now": "Esporta",
+	"InProgress": "In corso",
+	"Never": "Una sola volta",
+	"Pending": "Da elaborare",
+	"Posted invoices": "Fatture registrate",
+	"Schedule Export": "Salva",
+	"Update configuration": "Salva"
+}</process_it>
+      <process_sk>{
+	"_Cancel scheduled export": "Zrušiť plán",
+	"_CompanyCode": "Kód spoločnosti",
+	"_CompletedDateTime": "Čas ukončenia",
+	"_Converter": "Formát výstupu faktúry",
+	"_CSV_MSDynamicsAX": "MS Dynamics AX (CSV)",
+	"_CSV_MSDynamicsNAV": "MS Dynamics NAV (CSV)",
+	"_CSV_OracleEBS": "Oracle EBS (CSV)",
+	"_CSV_OracleJDE": "Oracle JDE (CSV)",
+	"_CSV_OraclePeopleSoft": "Oracle PeopleSoft (CSV)",
+	"_CSV_SAGE1000": "SAGE 1000 (CSV)",
+	"_CSV_SAGE50": "SAGE 50 (CSV)",
+	"_CSV_SAP": "SAP (CSV)",
+	"_CustomSelectionExportModeExplanation": "Vybrali ste {0} faktúr(-y).",
+	"_DefaultExportModeExplanation": "Export je štandardne obmedzený na faktúry zaúčtované alebo schválené od posledného exportu.\nAk chcete exportovať všetky zaúčtované alebo schválené faktúry, zrušte začiarknutie políčka nižšie.",
+	"_ERP": "Možnosti výstupu",
+	"_Export invoices for a specific ERP": "Exportovať faktúry dodávateľov",
+	"_ExportDateTime": "Čas začiatku",
+	"_ExportedBy": "Exportoval(-a)",
+	"_ExportedInformations": "Podrobnosti",
+	"_ExportedInvoices": "Exportovať súbor",
+	"_ExportEndDate": "Dátum ukončenia zaúčtovania",
+	"_ExportEndDateToolTip": "Určite dátum zaúčtovania faktúry, do ktorého chcete exportovať.&lt;br&gt;\nŠtandardne export zahŕňa faktúry zaúčtované až do momentu spustenia exportu.",
+	"_ExportStartDate": "Dátum začatia zaúčtovania",
+	"_ExportStartDateToolTip": "Určite dátum zaúčtovania faktúry, od ktorého sa má export spustiť.&lt;br&gt;\nV predvolenom nastavení sa export spustí od najstaršieho dátumu zaúčtovania od posledného exportu.",
+	"_ExportStatus": "Stav",
+	"_Flux_10_1": "Elektronické výkazníctvo (XML)",
+	"_Generic CSV": "Všeobecné (CSV)",
+	"_Generic XML": "Všeobecné (XML)",
+	"_InvoicesToExport": "Výber faktúr",
+	"_NumberOfExportedApprovedInvoices": "Počet exportovaných uvoľnení platieb",
+	"_NumberOfExportedInvoices": "Počet exportovaných faktúr",
+	"_NumberOfInvoicesInError": "Počet faktúr s chybou",
+	"_Payment release output format": "Formát výstupu uvoľnenia platieb",
+	"_Scheduling": "Možnosti harmonogramu",
+	"_SchedulingDate": "Dátum začiatku",
+	"_SchedulingHours": "Hodina",
+	"_SchedulingMinutes": "Minúta",
+	"_SchedulingOptions": "Spustiť export",
+	"_Select the file format to use with your ERP": "Formát výstupu faktúry",
+	"_Skip_Invoices_Already_Exported": "Preskočiť už exportované faktúry",
+	"_SubTitleExportInvoices": "Pomocou preddefinovaných nastavení nižšie nakonfigurujte možnosti exportu faktúr",
+	"_The_date_is_in_the_past": "Dátum začiatku nemôže byť v minulosti",
+	"_The_end_date_is_before_start_date": "Dátum ukončenia musí byť po dátumu začiatku.",
+	"_The_end_date_is_in_the_future": "Dátum ukončenia nemôže byť v budúcnosti.",
+	"_The_start_date_is_after_end_date": "Dátum začiatku musí byť pred dátumom ukončenia.",
+	"_The_start_date_is_in_the_future": "Dátum začiatku nemôže byť v budúcnosti.",
+	"_Then_repeat": "Frekvencia",
+	"_TitleExportedInvoices": "Súhrn exportu",
+	"_TitleExportInvoices": "Nastavenia exportu",
+	"_TRA_BUSINESS": "Cegid Business Suite (TRA)",
+	"_TRA_EXPERT": "Cegid Expert (TRA)",
+	"00OClock": "12:00",
+	"01OClock": "1:00",
+	"02OClock": "2:00",
+	"03OClock": "3:00",
+	"04OClock": "4:00",
+	"05OClock": "5:00",
+	"06OClock": "6:00",
+	"07OClock": "7:00",
+	"08OClock": "8:00",
+	"09OClock": "9:00",
+	"10OClock": "10:00",
+	"11OClock": "11:00",
+	"12OClock": "12:00",
+	"13OClock": "13:00",
+	"14OClock": "14:00",
+	"15OClock": "15:00",
+	"16OClock": "16:00",
+	"17OClock": "17:00",
+	"18OClock": "18:00",
+	"19OClock": "19:00",
+	"20OClock": "20:00",
+	"21OClock": "21:00",
+	"22OClock": "22:00",
+	"23OClock": "23:00",
+	"Approved invoices": "Schválené faktúry",
+	"Cancelled": "Zrušený harmonogram",
+	"Completed": "Dokončené",
+	"Defer execution until": "Neskôr",
+	"Error": "Neúspešný",
+	"Every_month": "Mesačne",
+	"Every_week": "Týždenne",
+	"Everyday": "Denne",
+	"Execute now": "Teraz",
+	"Export Invoices": "Export faktúry dodávateľa",
+	"Export now": "Exportovať",
+	"InProgress": "Prebieha",
+	"Never": "Jednorazový",
+	"Pending": "Vybavuje sa",
+	"Posted invoices": "Zaúčtované faktúry",
+	"Schedule Export": "Uložiť",
+	"Update configuration": "Uložiť"
+}</process_sk>
+      <process_zh-CN>{
+	"_Cancel scheduled export": "取消计划",
+	"_CompanyCode": "公司代码",
+	"_CompletedDateTime": "结束时间",
+	"_Converter": "发票输出格式",
+	"_CSV_MSDynamicsAX": "MS Dynamics AX (CSV)",
+	"_CSV_MSDynamicsNAV": "MS Dynamics NAV (CSV)",
+	"_CSV_OracleEBS": "Oracle EBS (CSV)",
+	"_CSV_OracleJDE": "Oracle JDE (CSV)",
+	"_CSV_OraclePeopleSoft": "Oracle PeopleSoft (CSV)",
+	"_CSV_SAGE1000": "SAGE 1000 (CSV)",
+	"_CSV_SAGE50": "SAGE 50 (CSV)",
+	"_CSV_SAP": "SAP (CSV)",
+	"_CustomSelectionExportModeExplanation": "您已选择了 {0} 发票。",
+	"_DefaultExportModeExplanation": "默认情况下，仅限导出自您上次导出之后过账或批准的发票。清除下面的复选框，导出所有已过账或批准的发票。",
+	"_ERP": "输出选项",
+	"_Export invoices for a specific ERP": "导出供应商发票",
+	"_ExportDateTime": "开始时间",
+	"_ExportedBy": "导出者：",
+	"_ExportedInformations": "详情",
+	"_ExportedInvoices": "导出文件",
+	"_ExportEndDate": "过帐截止日期",
+	"_ExportEndDateToolTip": "指定要导出账单发票过帐日期的截止日期。&lt;br&gt;\n默认情况下，导出已过帐账单发票截止于导出运行时。",
+	"_ExportStartDate": "过账开始日期",
+	"_ExportStartDateToolTip": "指定要导出账单发票过帐日期的开始日期。&lt;br&gt;\n默认情况下，从上次导出后的最早过帐日期开始运行导出。",
+	"_ExportStatus": "状态",
+	"_Flux_10_1": "电子报告（XML）",
+	"_Generic CSV": "通用（CSV）",
+	"_Generic XML": "通用（XML）",
+	"_InvoicesToExport": "发票选择",
+	"_NumberOfExportedApprovedInvoices": "导出的付款数量",
+	"_NumberOfExportedInvoices": "导出的发票数量",
+	"_NumberOfInvoicesInError": "错误发票数量",
+	"_Payment release output format": "付款输出格式",
+	"_Scheduling": "计划选项",
+	"_SchedulingDate": "开始日期",
+	"_SchedulingHours": "小时",
+	"_SchedulingMinutes": "分钟",
+	"_SchedulingOptions": "运行导出",
+	"_Select the file format to use with your ERP": "发票输出格式",
+	"_Skip_Invoices_Already_Exported": "跳过已导出的发票",
+	"_SubTitleExportInvoices": "使用下方预定义设置以配置发票的导出选项",
+	"_The_date_is_in_the_past": "开始日期不能是过去的日期",
+	"_The_end_date_is_before_start_date": "结束日期必须晚于开始日期。",
+	"_The_end_date_is_in_the_future": "结束日期不能晚于当前日期。",
+	"_The_start_date_is_after_end_date": "开始日期必须早于结束日期。",
+	"_The_start_date_is_in_the_future": "开始日期不能晚于当前日期。",
+	"_Then_repeat": "频率",
+	"_TitleExportedInvoices": "导出摘要",
+	"_TitleExportInvoices": "导出设置",
+	"_TRA_BUSINESS": "Cegid Business Suite (TRA)",
+	"_TRA_EXPERT": "Cegid Expert (TRA)",
+	"00OClock": "12 AM",
+	"01OClock": "1 AM",
+	"02OClock": "2 AM",
+	"03OClock": "3 AM",
+	"04OClock": "4 AM",
+	"05OClock": "5 AM",
+	"06OClock": "6 AM",
+	"07OClock": "7 AM",
+	"08OClock": "8 AM",
+	"09OClock": "9 AM",
+	"10OClock": "10 AM",
+	"11OClock": "11 AM",
+	"12OClock": "12 PM",
+	"13OClock": "1 PM",
+	"14OClock": "2 PM",
+	"15OClock": "3 PM",
+	"16OClock": "4 PM",
+	"17OClock": "5 PM",
+	"18OClock": "6 PM",
+	"19OClock": "7 PM",
+	"20OClock": "8 PM",
+	"21OClock": "9 PM",
+	"22OClock": "10 PM",
+	"23OClock": "11 PM",
+	"Approved invoices": "批准的发票",
+	"Cancelled": "已取消计划",
+	"Completed": "已完成",
+	"Defer execution until": "稍后",
+	"Error": "失败",
+	"Every_month": "每月",
+	"Every_week": "每周",
+	"Everyday": "每天",
+	"Execute now": "现在",
+	"Export Invoices": "供应商发票导出",
+	"Export now": "导出",
+	"InProgress": "进行中",
+	"Never": "单次",
+	"Pending": "未决",
+	"Posted invoices": "已过账的发票",
+	"Schedule Export": "保存",
+	"Update configuration": "保存"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"_Cancel scheduled export": "Cancelar agendamento",
+	"_CompanyCode": "Código da empresa",
+	"_CompletedDateTime": "Hora de término",
+	"_Converter": "Formato de saída da fatura",
+	"_CSV_MSDynamicsAX": "MS Dynamics AX (CSV)",
+	"_CSV_MSDynamicsNAV": "MS Dynamics NAV (CSV)",
+	"_CSV_OracleEBS": "Oracle EBS (CSV)",
+	"_CSV_OracleJDE": "Oracle JDE (CSV)",
+	"_CSV_OraclePeopleSoft": "Oracle PeopleSoft (CSV)",
+	"_CSV_SAGE1000": "SAGE 1000 (CSV)",
+	"_CSV_SAGE50": "SAGE 50 (CSV)",
+	"_CSV_SAP": "SAP (CSV)",
+	"_CustomSelectionExportModeExplanation": "Você selecionou {0} fatura(s).",
+	"_DefaultExportModeExplanation": "Por padrão, a exportação é restrita às faturas lançadas ou aprovadas desde sua última exportação. Desmarque a caixa de seleção abaixo para exportar todas as faturas lançadas ou aprovadas.",
+	"_ERP": "Opções de saída",
+	"_Export invoices for a specific ERP": "Exportar faturas de fornecedor",
+	"_ExportDateTime": "Hora de início",
+	"_ExportedBy": "Exportado por",
+	"_ExportedInformations": "Detalhes",
+	"_ExportedInvoices": "Arquivo de exportação",
+	"_ExportEndDate": "Data final do lançamento",
+	"_ExportEndDateToolTip": "Especifique a data de lançamento da fatura até a qual deseja exportar.&lt;br&gt; Por padrão, a exportação inclui faturas lançadas até sua execução.",
+	"_ExportStartDate": "Data de início do lançamento",
+	"_ExportStartDateToolTip": "Especifique a data de lançamento da fatura a partir da qual a exportação será executada.&lt;br&gt; Por padrão, a exportação é executada a partir da data de lançamento mais antiga desde a última exportação.",
+	"_ExportStatus": "Status",
+	"_Flux_10_1": "Relatórios eletrônicos (XML)",
+	"_Generic CSV": "Genérico (CSV)",
+	"_Generic XML": "Genérico (XML)",
+	"_InvoicesToExport": "Seleção de fatura",
+	"_NumberOfExportedApprovedInvoices": "Número de liberações de pagamento exportadas",
+	"_NumberOfExportedInvoices": "Número de faturas exportadas",
+	"_NumberOfInvoicesInError": "Número de faturas com erro",
+	"_Payment release output format": "Formato de saída da liberação de pagamento",
+	"_Scheduling": "Opções de agendamento",
+	"_SchedulingDate": "Data de início",
+	"_SchedulingHours": "Hora",
+	"_SchedulingMinutes": "Minuto",
+	"_SchedulingOptions": "Executar exportação",
+	"_Select the file format to use with your ERP": "Formato de saída da fatura",
+	"_Skip_Invoices_Already_Exported": "Ignorar faturas já exportadas",
+	"_SubTitleExportInvoices": "Use as configurações predefinidas abaixo para configurar as opções de exportação de suas faturas",
+	"_The_date_is_in_the_past": "A data de início não pode estar no passado",
+	"_The_end_date_is_before_start_date": "A data de fim deve ser após a data de início.",
+	"_The_end_date_is_in_the_future": "A data de fim não pode estar no futuro.",
+	"_The_start_date_is_after_end_date": "A data de início deve ser anterior à data de fim.",
+	"_The_start_date_is_in_the_future": "A data de início não pode estar no futuro.",
+	"_Then_repeat": "Frequência",
+	"_TitleExportedInvoices": "Resumo de exportação",
+	"_TitleExportInvoices": "Configurações de exportação",
+	"_TRA_BUSINESS": "Cegid Business Suite (TRA)",
+	"_TRA_EXPERT": "Cegid Expert (TRA)",
+	"00OClock": "0 h",
+	"01OClock": "1 h",
+	"02OClock": "2 h",
+	"03OClock": "3 h",
+	"04OClock": "4 h",
+	"05OClock": "5 h",
+	"06OClock": "6 h",
+	"07OClock": "7 h",
+	"08OClock": "8 h",
+	"09OClock": "9 h",
+	"10OClock": "10 h",
+	"11OClock": "11 h",
+	"12OClock": "12 h",
+	"13OClock": "13 h",
+	"14OClock": "14 h",
+	"15OClock": "15 h",
+	"16OClock": "16 h",
+	"17OClock": "17 h",
+	"18OClock": "18 h",
+	"19OClock": "19 h",
+	"20OClock": "20 h",
+	"21OClock": "21 h",
+	"22OClock": "22 h",
+	"23OClock": "23 h",
+	"Approved invoices": "Faturas aprovadas",
+	"Cancelled": "Não agendado",
+	"Completed": "Concluído",
+	"Defer execution until": "Mais tarde",
+	"Error": "Com erro",
+	"Every_month": "Mensalmente",
+	"Every_week": "Semanalmente",
+	"Everyday": "Diariamente",
+	"Execute now": "Agora",
+	"Export Invoices": "Exportação de fatura de fornecedor",
+	"Export now": "Exportar",
+	"InProgress": "Em andamento",
+	"Never": "Único",
+	"Pending": "Pendente",
+	"Posted invoices": "Faturas lançadas",
+	"Schedule Export": "Salvar",
+	"Update configuration": "Salvar"
+}</process_pt-BR>
+    </lg>
+    <process>
+      <flowtype>processing</flowtype>
+      <ocrpreset>custom</ocrpreset>
+      <homepagelabel>_Export invoices for a specific ERP</homepagelabel>
+      <enableflexibleauditing>
+      </enableflexibleauditing>
+      <enableflexibleediting>
+      </enableflexibleediting>
+      <enableflexibleteaching>
+      </enableflexibleteaching>
+      <upgradable>yes</upgradable>
+      <disableocr>no</disableocr>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <disableautolearning>true</disableautolearning>
+      <backgroundprocessingthreshold>
+      </backgroundprocessingthreshold>
+      <EnablePreviewPrecomputation>
+      </EnablePreviewPrecomputation>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <archiveDuration>0</archiveDuration>
+      <ocrpagestoprocess>0</ocrpagestoprocess>
+      <ScriptEngineType>2</ScriptEngineType>
+      <displayWidth>1024</displayWidth>
+      <AllowUploadAttachment>0</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+      <UseCultureFormat>true</UseCultureFormat>
+      <AllowRetryExtractCD>true</AllowRetryExtractCD>
+      <TransportName>CustomData</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+    </process>
+    <ui>
+      <CustomScriptDebug>false</CustomScriptDebug>
+      <customscriptIncludedScripts>Sys/Sys_Helpers_Date</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Lib_Parameters_P2P_V12.0.566.0</customscriptIncludedScripts>
+      <CustomScriptReadonly>true</CustomScriptReadonly>
+      <CustomScript>"use strict";
+/** ***** **/
+/** DEBUG **/
+/** ***** **/
+const g_debug = false;
+/** **************** **/
+/** Global variables **/
+/** **************** **/
+const g_apParameters = Sys.Parameters.GetInstance("AP");
+function getNowInUserTimezone() {
+    const date = new Date();
+    const userUtcOffsetVar = Variable.GetValueAsString("userUTCOffSet");
+    const timezoneOffsetInMs = date.getTimezoneOffset() * 60000;
+    return new Date(date.getTime() + timezoneOffsetInMs + parseInt(userUtcOffsetVar, 10));
+}
+/**
+* Determine the current export mode (all invoices, custom selection, differential export
+* @return {string} A string containing the export mode
+**/
+function getExportMode() {
+    if (Variable.GetValueAsString("AncestorsRuid")) {
+        Controls.SkipInvoicesAlreadyExported__.SetValue(false);
+        return "_CustomSelectionFromAdminList";
+    }
+    return "_NoRestrictions";
+}
+function removeFlux10_1Fields() {
+    let isEReportingEnabled = "0";
+    if (this &amp;&amp; this.GetQueryValue()) {
+        let res = this.GetQueryValue();
+        // if one of the configurations has EnableInternationalEReporting__ checked, we consider that it is enabled
+        let enableInternationlEReporting;
+        for (let i = 0; i &lt; this.GetRecordsCount(); i++) {
+            enableInternationlEReporting = res.GetQueryValue("EnableInternationalEReporting__", i);
+            if (enableInternationlEReporting === "1") {
+                isEReportingEnabled = enableInternationlEReporting;
+                break;
+            }
+        }
+    }
+    if (isEReportingEnabled === "0" || getExportMode() === "_CustomSelectionFromAdminList") {
+        // remove Flux 10.1 output option as company codes of selected invoices are not necessarily the same
+        let converterValues = Controls.Converter__.GetAvailableValues();
+        converterValues = converterValues.filter(item =&gt; item !== "Flux_10_1=_Flux_10_1");
+        Controls.Converter__.SetAvailableValues(converterValues);
+    }
+}
+function setInvoicesToExportPaneLayout() {
+    if (getExportMode() === "_CustomSelectionFromAdminList") {
+        Controls.SkipInvoicesAlreadyExported__.Hide(true);
+        Controls.CompanyCode__.Hide(true);
+        const ancestors = Variable.GetValueAsString("AncestorsRuid").split("|");
+        Controls.InvoicesToExportExplanation__.SetText("_CustomSelectionExportModeExplanation", ancestors.length);
+        Controls.Scheduling.Hide(true);
+        Controls.SchedulingOptions__.SetReadOnly(true);
+        Controls.Then_repeat__.SetReadOnly(true);
+    }
+    else {
+        Controls.InvoicesToExportExplanation__.SetText("_DefaultExportModeExplanation");
+        Controls.InvoicesToExportExplanation__.Hide(false);
+    }
+}
+// Layout functions
+//Technical fields
+function hideTechnicalFields() {
+    Controls.InvoicesToExportTempFile__.Hide(!g_debug);
+    Controls.InvoicesApprovedTempFile__.Hide(!g_debug);
+    Controls.DateOfStartExport__.Hide(!g_debug);
+    Controls.LastMsnEx__.Hide(!g_debug);
+}
+// Configuration mode
+function configurationLayout() {
+    hideTechnicalFields();
+    Controls.ExportedInvoices.Hide(!g_debug);
+    Controls.ExportInformation.Hide(!g_debug);
+    Controls.ERP.Hide(false);
+    Controls.InvoicesToExport.Hide(false);
+    Controls.Scheduling.Hide(false);
+    Controls.TitleExportedInvoices__.Hide(!g_debug);
+    Controls.TitleExportInvoices__.Hide(false);
+    Controls.SubTitleExportInvoices__.Hide(false);
+    Controls.Export.Hide(false);
+    Controls.NumberOfExportedInvoices__.Hide(!g_debug);
+    Controls.NumberOfExportedApprovedInvoices__.Hide(!g_debug);
+    Controls.NumberOfInvoicesInError__.Hide(true);
+    Controls.Cancel.Hide(Controls.ExportStatus__.GetValue() !== "Pending");
+    if (Controls.SchedulingOptions__.GetValue() === "Execute now") {
+        Controls.SchedulingDate__.SetReadOnly(true);
+        Controls.SchedulingHours__.SetReadOnly(true);
+        Controls.SchedulingMinutes__.SetReadOnly(true);
+    }
+    else {
+        Controls.SchedulingDate__.SetReadOnly(false);
+        Controls.SchedulingHours__.SetReadOnly(false);
+        Controls.SchedulingMinutes__.SetReadOnly(false);
+    }
+    setInvoicesToExportPaneLayout();
+    updateSchedulingOptionsLayout();
+}
+// Result mode
+function exportLayout() {
+    hideTechnicalFields();
+    Controls.ExportedInvoices.Hide(false);
+    Controls.ExportInformation.Hide(false);
+    Controls.ERP.Hide(!g_debug);
+    Controls.InvoicesToExport.Hide(!g_debug);
+    Controls.Scheduling.Hide(!g_debug);
+    Controls.TitleExportedInvoices__.Hide(false);
+    Controls.TitleExportInvoices__.Hide(!g_debug);
+    Controls.SubTitleExportInvoices__.Hide(!g_debug);
+    Controls.Export.Hide(!g_debug);
+    Controls.NumberOfExportedInvoices__.Hide(false);
+    Controls.NumberOfExportedApprovedInvoices__.Hide(false);
+    if (Controls.NumberOfInvoicesInError__.GetValue() &gt; 0) {
+        Controls.NumberOfInvoicesInError__.Hide(false);
+    }
+    else {
+        Controls.NumberOfInvoicesInError__.Hide(true);
+    }
+    Controls.Cancel.Hide(true);
+}
+function SetErrorInThePast() {
+    const today = getNowInUserTimezone();
+    const SelectedDate = Controls.SchedulingDate__.GetValue();
+    if (SelectedDate) {
+        SelectedDate.setHours(parseInt(Controls.SchedulingHours__.GetValue().substr(0, 2), 10));
+        SelectedDate.setMinutes(parseInt(Controls.SchedulingMinutes__.GetValue(), 10));
+        if (today &lt; SelectedDate) {
+            Data.SetError("SchedulingDate__", "");
+        }
+        else {
+            Data.SetError("SchedulingDate__", "_The_date_is_in_the_past");
+        }
+    }
+}
+function SetErrorStartDateEndDate() {
+    const today = Sys.Helpers.Date.Date2DBDate(new Date());
+    const startDate = Sys.Helpers.Date.Date2DBDate(Controls.ExportStartDate__.GetValue());
+    const endDate = Sys.Helpers.Date.Date2DBDate(Controls.ExportEndDate__.GetValue());
+    Data.SetError("ExportStartDate__", "");
+    Data.SetError("ExportEndDate__", "");
+    if (startDate || endDate) {
+        if (today &lt; startDate) {
+            Data.SetError("ExportStartDate__", "_The_start_date_is_in_the_future");
+            if (endDate &amp;&amp; startDate &gt; endDate) {
+                Data.SetError("ExportEndDate__", "_The_end_date_is_before_start_date");
+            }
+        }
+        else if (startDate &amp;&amp; endDate &amp;&amp; startDate &gt; endDate) {
+            Data.SetError("ExportStartDate__", "_The_start_date_is_after_end_date");
+            Data.SetError("ExportEndDate__", "_The_end_date_is_before_start_date");
+        }
+        if (today &lt; endDate) {
+            Data.SetError("ExportEndDate__", "_The_end_date_is_in_the_future");
+        }
+    }
+}
+function SetErrorEmptyCompanyCodeForFlow10() {
+    const isFlux10 = Controls.Converter__.GetValue() === "Flux_10_1";
+    const companyCodeData = Data.GetValue("CompanyCode__");
+    if (isFlux10 &amp;&amp; !companyCodeData) {
+        Controls.CompanyCode__.SetError("This field is required!");
+    }
+}
+function intDivisionByTen(minutes) {
+    const newMinutes = Math.floor(parseInt(minutes, 10) / 10).toString();
+    // multiply by ten by adding 0 at end;
+    return newMinutes + "0";
+}
+function updateSchedulingOptionsLayout() {
+    if (Controls.SchedulingOptions__.GetValue() === "Execute now") {
+        Controls.SchedulingDate__.Hide(true);
+        Controls.SchedulingHours__.Hide(true);
+        Controls.SchedulingMinutes__.Hide(true);
+        Controls.SchedulingDate__.SetRequired(false);
+        Controls.SchedulingDate__.SetReadOnly(true);
+        Controls.SchedulingHours__.SetReadOnly(true);
+        Controls.SchedulingMinutes__.SetReadOnly(true);
+        Controls.Export.SetLabel("Export now");
+        if (Controls.Then_repeat__.GetValue() === "Never") {
+            Controls.ExportEndDate__.Hide(false);
+            Controls.ExportStartDate__.Hide(false);
+            Controls.ExportEndDate__.SetReadOnly(false);
+            Controls.ExportStartDate__.SetReadOnly(false);
+        }
+        else {
+            Controls.ExportEndDate__.Hide(true);
+            Controls.ExportStartDate__.Hide(true);
+            Controls.ExportEndDate__.SetReadOnly(true);
+            Controls.ExportStartDate__.SetReadOnly(true);
+        }
+    }
+    else {
+        let date = null;
+        if (Controls.ExportDateTime__.GetValue()) {
+            date = Controls.ExportDateTime__.GetValue();
+            Controls.SchedulingMinutes__.SetValue(intDivisionByTen(date.getMinutes()));
+        }
+        else if (!Controls.SchedulingDate__.GetValue()) {
+            date = getNowInUserTimezone();
+            // Add one hour
+            date = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours() + 1, date.getMinutes());
+            Controls.SchedulingMinutes__.SetValue("00");
+        }
+        if (date) {
+            Controls.SchedulingDate__.SetValue(date);
+            let Hours = date.getHours();
+            Hours = Hours + "";
+            if (Hours.length === 1) {
+                Hours = "0" + Hours;
+            }
+            Controls.SchedulingHours__.SetValue(Hours + "OClock");
+        }
+        Controls.ExportEndDate__.Hide(true);
+        Controls.ExportStartDate__.Hide(true);
+        Controls.SchedulingDate__.Hide(false);
+        Controls.SchedulingHours__.Hide(false);
+        Controls.SchedulingMinutes__.Hide(false);
+        Controls.ExportEndDate__.SetReadOnly(true);
+        Controls.ExportStartDate__.SetReadOnly(true);
+        Controls.SchedulingDate__.SetRequired(true);
+        Controls.SchedulingDate__.SetReadOnly(false);
+        Controls.SchedulingHours__.SetReadOnly(false);
+        Controls.SchedulingMinutes__.SetReadOnly(false);
+        if (Controls.ExportStatus__.GetValue() === "Pending") {
+            Controls.Export.SetLabel("Update configuration");
+        }
+        else {
+            Controls.Export.SetLabel("Schedule Export");
+        }
+    }
+}
+function OnConverterChange() {
+    let isFlux10 = Controls.Converter__.GetValue() === "Flux_10_1";
+    Controls.Payment_release_output_format__.Hide(isFlux10);
+    Controls.CompanyCode__.SetRequired(isFlux10);
+}
+Controls.SchedulingDate__.OnChange = SetErrorInThePast;
+Controls.SchedulingHours__.OnChange = SetErrorInThePast;
+Controls.SchedulingMinutes__.OnChange = SetErrorInThePast;
+Controls.SchedulingOptions__.OnChange = updateSchedulingOptionsLayout;
+Controls.Then_repeat__.OnChange = updateSchedulingOptionsLayout;
+Controls.ExportEndDate__.OnChange = SetErrorStartDateEndDate;
+Controls.ExportStartDate__.OnChange = SetErrorStartDateEndDate;
+Controls.Converter__.OnChange = OnConverterChange;
+Controls.Export.OnClick = function () {
+    SetErrorInThePast();
+    SetErrorStartDateEndDate();
+    SetErrorEmptyCompanyCodeForFlow10();
+    return !Process.ShowFirstError();
+};
+// RUN PART
+function run() {
+    Variable.SetValueAsString("CurrentUserId", User.loginId);
+    Variable.SetValueAsString("userUTCOffSet", User.utcOffset);
+    if (["Completed", "Error", "InProgress"].indexOf(Controls.ExportStatus__.GetValue()) !== -1) {
+        exportLayout();
+    }
+    else {
+        Query.DBQuery(removeFlux10_1Fields, "AP - Application Settings__", "EnableInternationalEReporting__", "", "", 50);
+        configurationLayout();
+    }
+}
+run();
+//# sourceMappingURL=customscript.js.map</CustomScript>
+      <restorationPanel>InvoicesToExport</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 97,
+	"*": {
+		"GDRData": {
+			"type": "GDRData",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"version": 0
+			}
+		},
+		"OCRParams": {
+			"type": "OCRParams",
+			"data": [],
+			"stamp": 2,
+			"options": {
+				"version": 0
+			}
+		},
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 3,
+			"options": {
+				"splitterType": "complex",
+				"maxwidth": 1024,
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 4,
+					"options": {
+						"maxwidth": 1024,
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 5,
+					"options": {
+						"maxwidth": 1024,
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 6,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-top": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 7,
+									"options": {
+										"autosize": true,
+										"version": 1,
+										"box": {
+											"top": 0,
+											"left": 0,
+											"width": 100,
+											"height": 15
+										},
+										"hidden": true
+									}
+								},
+								"form-content-bottom": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 8,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"width": null,
+											"height": "100%"
+										},
+										"hidden": false,
+										"hideSeparator": true
+									},
+									"*": {
+										"form-content-left": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 9,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "0%",
+													"width": "100%",
+													"height": null
+												},
+												"hidden": false
+											},
+											"*": {
+												"form-content-left-2": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 10,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"SystemData": {
+															"type": "PanelSystemData",
+															"data": [],
+															"stamp": 11,
+															"options": {
+																"multicolumn": false,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"label": "_System data",
+																"hidden": true,
+																"version": 0
+															}
+														}
+													}
+												},
+												"form-content-left-7": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 12,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"TitlePane": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 13,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": true,
+																"hideTitleBar": true,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": " ",
+																"leftImageURL": "",
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 14,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 15,
+																			"options": {
+																				"version": 0,
+																				"lines": 3,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"TitleExportInvoices__": {
+																						"line": 1,
+																						"column": 1
+																					},
+																					"SubTitleExportInvoices__": {
+																						"line": 2,
+																						"column": 1
+																					},
+																					"TitleExportedInvoices__": {
+																						"line": 3,
+																						"column": 1
+																					}
+																				},
+																				"colspans": [
+																					[
+																						{
+																							"index": 0,
+																							"length": 2
+																						}
+																					],
+																					[
+																						{
+																							"index": 0,
+																							"length": 2
+																						}
+																					],
+																					[
+																						{
+																							"index": 0,
+																							"length": 2
+																						}
+																					]
+																				]
+																			},
+																			"*": {
+																				"TitleExportInvoices__": {
+																					"type": "Text",
+																					"data": false,
+																					"stamp": 16,
+																					"options": {
+																						"label": "_TitleExportInvoices",
+																						"marge": 0,
+																						"textSize": "XXL",
+																						"textAlignment": "center",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"backgroundcolor": "default",
+																						"version": 0
+																					}
+																				},
+																				"SubTitleExportInvoices__": {
+																					"type": "Text",
+																					"data": false,
+																					"stamp": 17,
+																					"options": {
+																						"label": "_SubTitleExportInvoices",
+																						"marge": 0,
+																						"textSize": "M",
+																						"textAlignment": "center",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"backgroundcolor": "default",
+																						"version": 0
+																					}
+																				},
+																				"TitleExportedInvoices__": {
+																					"type": "Text",
+																					"data": false,
+																					"stamp": 18,
+																					"options": {
+																						"label": "_TitleExportedInvoices",
+																						"marge": 0,
+																						"textSize": "XXL",
+																						"textAlignment": "center",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"backgroundcolor": "default",
+																						"version": 0
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-9": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 19,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"InvoicesToExport": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 20,
+															"options": {
+																"border": {},
+																"labelLength": 400,
+																"iconURL": "AP_InvoicesToExport.png",
+																"TitleFontSize": "S",
+																"hideActionButtons": true,
+																"hideTitleBar": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_InvoicesToExport",
+																"leftImageURL": "",
+																"hidden": false,
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 21,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {
+																			"SkipInvoicesAlreadyExported__": "LabelSkipInvoicesAlreadyExported__",
+																			"LabelSkipInvoicesAlreadyExported__": "SkipInvoicesAlreadyExported__",
+																			"CompanyCode__": "LabelCompanyCode__",
+																			"LabelCompanyCode__": "CompanyCode__"
+																		}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 22,
+																			"options": {
+																				"version": 0,
+																				"lines": 3,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"InvoicesToExportExplanation__": {
+																						"line": 1,
+																						"column": 1
+																					},
+																					"LabelSkipInvoicesAlreadyExported__": {
+																						"line": 2,
+																						"column": 1
+																					},
+																					"SkipInvoicesAlreadyExported__": {
+																						"line": 2,
+																						"column": 2
+																					},
+																					"LabelCompanyCode__": {
+																						"line": 3,
+																						"column": 1
+																					},
+																					"CompanyCode__": {
+																						"line": 3,
+																						"column": 2
+																					}
+																				},
+																				"colspans": [
+																					[
+																						{
+																							"index": 0,
+																							"length": 2
+																						}
+																					],
+																					[],
+																					[]
+																				]
+																			},
+																			"*": {
+																				"InvoicesToExportExplanation__": {
+																					"type": "Text",
+																					"data": false,
+																					"stamp": 23,
+																					"options": {
+																						"label": "_DefaultExportModeExplanation",
+																						"marge": 0,
+																						"textSize": "S",
+																						"textAlignment": "center",
+																						"textStyle": "bold",
+																						"textColor": "default",
+																						"backgroundcolor": "default",
+																						"version": 0
+																					}
+																				},
+																				"LabelSkipInvoicesAlreadyExported__": {
+																					"type": "Label",
+																					"data": [
+																						"SkipInvoicesAlreadyExported__"
+																					],
+																					"stamp": 25,
+																					"options": {
+																						"label": "_Skip_Invoices_Already_Exported",
+																						"version": 0
+																					}
+																				},
+																				"SkipInvoicesAlreadyExported__": {
+																					"type": "CheckBox",
+																					"data": [
+																						"SkipInvoicesAlreadyExported__"
+																					],
+																					"stamp": 24,
+																					"options": {
+																						"label": "_Skip_Invoices_Already_Exported",
+																						"activable": true,
+																						"defaultValue": true,
+																						"version": 0
+																					}
+																				},
+																				"LabelCompanyCode__": {
+																					"type": "Label",
+																					"data": [
+																						"CompanyCode__"
+																					],
+																					"stamp": 27,
+																					"options": {
+																						"label": "_CompanyCode",
+																						"version": 0
+																					}
+																				},
+																				"CompanyCode__": {
+																					"type": "DatabaseComboBox",
+																					"data": [
+																						"CompanyCode__"
+																					],
+																					"stamp": 26,
+																					"options": {
+																						"label": "_CompanyCode",
+																						"version": 1,
+																						"autoCompleteSearchMode": "startswith",
+																						"searchMode": "matches",
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"minNbLines": 1,
+																						"maxNbLines": 1,
+																						"PreFillFTS": true,
+																						"fTSmaxRecords": "20",
+																						"browsable": true
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 28,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"ERP": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 29,
+															"options": {
+																"border": {},
+																"labelLength": 400,
+																"iconURL": "AP_ERP_Details.png",
+																"TitleFontSize": "S",
+																"hideActionButtons": true,
+																"hideTitleBar": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_ERP",
+																"leftImageURL": "",
+																"hidden": false,
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 30,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {
+																			"Converter__": "LabelConverter__",
+																			"LabelConverter__": "Converter__",
+																			"Payment_release_output_format__": "LabelPayment_release_output_format__",
+																			"LabelPayment_release_output_format__": "Payment_release_output_format__"
+																		}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 31,
+																			"options": {
+																				"version": 0,
+																				"lines": 4,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"Spacer_line1__": {
+																						"line": 1,
+																						"column": 1
+																					},
+																					"LabelConverter__": {
+																						"line": 2,
+																						"column": 1
+																					},
+																					"Converter__": {
+																						"line": 2,
+																						"column": 2
+																					},
+																					"LabelPayment_release_output_format__": {
+																						"line": 3,
+																						"column": 1
+																					},
+																					"Payment_release_output_format__": {
+																						"line": 3,
+																						"column": 2
+																					},
+																					"Spacer_line20__": {
+																						"line": 4,
+																						"column": 1
+																					}
+																				},
+																				"colspans": [
+																					[
+																						{
+																							"index": 0,
+																							"length": 2
+																						}
+																					],
+																					[],
+																					[],
+																					[
+																						{
+																							"index": 0,
+																							"length": 2
+																						}
+																					]
+																				]
+																			},
+																			"*": {
+																				"Spacer_line1__": {
+																					"type": "Spacer",
+																					"data": false,
+																					"stamp": 32,
+																					"options": {
+																						"label": "Spacer line",
+																						"height": "",
+																						"width": "",
+																						"color": "default",
+																						"version": 0
+																					}
+																				},
+																				"LabelConverter__": {
+																					"type": "Label",
+																					"data": [
+																						"Converter__"
+																					],
+																					"stamp": 34,
+																					"options": {
+																						"label": "_Select the file format to use with your ERP",
+																						"version": 0
+																					}
+																				},
+																				"Converter__": {
+																					"type": "ComboBox",
+																					"data": [
+																						"Converter__"
+																					],
+																					"stamp": 33,
+																					"options": {
+																						"label": "_Select the file format to use with your ERP",
+																						"possibleValues": {
+																							"0": "_TRA_BUSINESS",
+																							"1": "_TRA_EXPERT",
+																							"2": "_Flux_10_1",
+																							"3": "_Generic CSV",
+																							"4": "_Generic XML",
+																							"5": "_CSV_MSDynamicsAX",
+																							"6": "_CSV_MSDynamicsNAV",
+																							"7": "_CSV_OracleEBS",
+																							"8": "_CSV_OracleJDE",
+																							"9": "_CSV_OraclePeopleSoft",
+																							"10": "_CSV_SAGE50",
+																							"11": "_CSV_SAGE1000",
+																							"12": "_CSV_SAP"
+																						},
+																						"keyValueMode": true,
+																						"possibleKeys": {
+																							"0": "TRA_BUSINESS",
+																							"1": "TRA_EXPERT",
+																							"2": "Flux_10_1",
+																							"3": "Generic CSV",
+																							"4": "Generic XML",
+																							"5": "CSV_MSDynamicsAX",
+																							"6": "CSV_MSDynamicsNAV",
+																							"7": "CSV_OracleEBS",
+																							"8": "CSV_OracleJDE",
+																							"9": "CSV_OraclePeopleSoft",
+																							"10": "CSV_SAGE50",
+																							"11": "CSV_SAGE1000",
+																							"12": "CSV_SAP"
+																						},
+																						"activable": true,
+																						"width": 230,
+																						"version": 0
+																					}
+																				},
+																				"LabelPayment_release_output_format__": {
+																					"type": "Label",
+																					"data": [
+																						"Payment_release_output_format__"
+																					],
+																					"stamp": 36,
+																					"options": {
+																						"label": "_Payment release output format",
+																						"version": 0
+																					}
+																				},
+																				"Payment_release_output_format__": {
+																					"type": "ComboBox",
+																					"data": [
+																						"Payment_release_output_format__"
+																					],
+																					"stamp": 35,
+																					"options": {
+																						"label": "_Payment release output format",
+																						"possibleValues": {
+																							"0": "_Generic CSV"
+																						},
+																						"keyValueMode": true,
+																						"possibleKeys": {
+																							"0": "Generic CSV"
+																						},
+																						"activable": true,
+																						"width": 230,
+																						"version": 0
+																					}
+																				},
+																				"Spacer_line20__": {
+																					"type": "Spacer",
+																					"data": false,
+																					"stamp": 37,
+																					"options": {
+																						"label": "Spacer line",
+																						"height": "",
+																						"width": "",
+																						"color": "default",
+																						"version": 0
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-3": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 38,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"NextProcess": {
+															"type": "PanelNextProcess",
+															"data": [],
+															"stamp": 39,
+															"options": {
+																"hidden": true,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"label": "_Next Process",
+																"version": 0
+															}
+														}
+													}
+												},
+												"form-content-left-6": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 40,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"ExportedInvoices": {
+															"type": "PanelDocument",
+															"data": [],
+															"stamp": 41,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "AP_ExportedInvoices.png",
+																"TitleFontSize": "S",
+																"hideActionButtons": true,
+																"hideTitleBar": false,
+																"label": "_ExportedInvoices",
+																"hidden": false,
+																"version": 0
+															},
+															"*": {
+																"Document": {
+																	"type": "Documents",
+																	"data": [
+																		"documentscontroldata"
+																	],
+																	"stamp": 42,
+																	"options": {
+																		"previewButton": false,
+																		"downloadButton": true,
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-4": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 43,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"ExportInformation": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 44,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "AP_HeaderDataPanel.png",
+																"TitleFontSize": "S",
+																"hideActionButtons": true,
+																"hideTitleBar": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_ExportedInformations",
+																"leftImageURL": "",
+																"hidden": false,
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 45,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {
+																			"ExportedBy__": "LabelExportedBy__",
+																			"LabelExportedBy__": "ExportedBy__",
+																			"ExportDateTime__": "LabelExportDateTime__",
+																			"LabelExportDateTime__": "ExportDateTime__",
+																			"CompletedDateTime__": "LabelCompletedDateTime__",
+																			"LabelCompletedDateTime__": "CompletedDateTime__",
+																			"ExportStatus__": "LabelExportStatus__",
+																			"LabelExportStatus__": "ExportStatus__",
+																			"NumberOfExportedInvoices__": "LabelNumberOfExportedInvoices__",
+																			"LabelNumberOfExportedInvoices__": "NumberOfExportedInvoices__",
+																			"NumberOfInvoicesInError__": "LabelNumberOfInvoicesInError__",
+																			"LabelNumberOfInvoicesInError__": "NumberOfInvoicesInError__",
+																			"NumberOfExportedApprovedInvoices__": "LabelNumberOfExportedApprovedInvoices__",
+																			"LabelNumberOfExportedApprovedInvoices__": "NumberOfExportedApprovedInvoices__",
+																			"InvoicesToExportTempFile__": "LabelInvoicesToExportTempFile__",
+																			"LabelInvoicesToExportTempFile__": "InvoicesToExportTempFile__",
+																			"InvoicesApprovedTempFile__": "LabelInvoicesApprovedTempFile__",
+																			"LabelInvoicesApprovedTempFile__": "InvoicesApprovedTempFile__",
+																			"LastMsnEx__": "LabelLastMsnEx__",
+																			"LabelLastMsnEx__": "LastMsnEx__",
+																			"DateOfStartExport__": "LabelDateOfStartExport__",
+																			"LabelDateOfStartExport__": "DateOfStartExport__"
+																		}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 46,
+																			"options": {
+																				"version": 0,
+																				"lines": 11,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"LabelExportedBy__": {
+																						"line": 1,
+																						"column": 1
+																					},
+																					"ExportedBy__": {
+																						"line": 1,
+																						"column": 2
+																					},
+																					"LabelExportDateTime__": {
+																						"line": 2,
+																						"column": 1
+																					},
+																					"ExportDateTime__": {
+																						"line": 2,
+																						"column": 2
+																					},
+																					"LabelCompletedDateTime__": {
+																						"line": 3,
+																						"column": 1
+																					},
+																					"CompletedDateTime__": {
+																						"line": 3,
+																						"column": 2
+																					},
+																					"LabelExportStatus__": {
+																						"line": 4,
+																						"column": 1
+																					},
+																					"ExportStatus__": {
+																						"line": 4,
+																						"column": 2
+																					},
+																					"LabelNumberOfExportedInvoices__": {
+																						"line": 5,
+																						"column": 1
+																					},
+																					"NumberOfExportedInvoices__": {
+																						"line": 5,
+																						"column": 2
+																					},
+																					"LabelNumberOfInvoicesInError__": {
+																						"line": 6,
+																						"column": 1
+																					},
+																					"NumberOfInvoicesInError__": {
+																						"line": 6,
+																						"column": 2
+																					},
+																					"LabelNumberOfExportedApprovedInvoices__": {
+																						"line": 7,
+																						"column": 1
+																					},
+																					"NumberOfExportedApprovedInvoices__": {
+																						"line": 7,
+																						"column": 2
+																					},
+																					"LabelInvoicesToExportTempFile__": {
+																						"line": 8,
+																						"column": 1
+																					},
+																					"InvoicesToExportTempFile__": {
+																						"line": 8,
+																						"column": 2
+																					},
+																					"LabelInvoicesApprovedTempFile__": {
+																						"line": 9,
+																						"column": 1
+																					},
+																					"InvoicesApprovedTempFile__": {
+																						"line": 9,
+																						"column": 2
+																					},
+																					"LabelLastMsnEx__": {
+																						"line": 10,
+																						"column": 1
+																					},
+																					"LastMsnEx__": {
+																						"line": 10,
+																						"column": 2
+																					},
+																					"LabelDateOfStartExport__": {
+																						"line": 11,
+																						"column": 1
+																					},
+																					"DateOfStartExport__": {
+																						"line": 11,
+																						"column": 2
+																					}
+																				},
+																				"colspans": [
+																					[],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[]
+																				]
+																			},
+																			"*": {
+																				"LabelExportedBy__": {
+																					"type": "Label",
+																					"data": [
+																						"ExportedBy__"
+																					],
+																					"stamp": 48,
+																					"options": {
+																						"label": "_ExportedBy",
+																						"version": 0
+																					}
+																				},
+																				"ExportedBy__": {
+																					"type": "ShortText",
+																					"data": [
+																						"ExportedBy__"
+																					],
+																					"stamp": 47,
+																					"options": {
+																						"label": "_ExportedBy",
+																						"readonly": true,
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"activable": true,
+																						"width": 230,
+																						"browsable": false,
+																						"version": 0
+																					}
+																				},
+																				"LabelExportDateTime__": {
+																					"type": "Label",
+																					"data": [
+																						"ExportDateTime__"
+																					],
+																					"stamp": 50,
+																					"options": {
+																						"label": "_ExportDateTime",
+																						"version": 0
+																					}
+																				},
+																				"ExportDateTime__": {
+																					"type": "RealDateTime",
+																					"data": [
+																						"ExportDateTime__"
+																					],
+																					"stamp": 49,
+																					"options": {
+																						"label": "_ExportDateTime",
+																						"readonly": true,
+																						"displayLongFormat": false,
+																						"activable": true,
+																						"width": 230,
+																						"version": 0
+																					}
+																				},
+																				"LabelCompletedDateTime__": {
+																					"type": "Label",
+																					"data": [
+																						"CompletedDateTime__"
+																					],
+																					"stamp": 52,
+																					"options": {
+																						"label": "_CompletedDateTime",
+																						"version": 0
+																					}
+																				},
+																				"CompletedDateTime__": {
+																					"type": "RealDateTime",
+																					"data": [
+																						"CompletedDateTime__"
+																					],
+																					"stamp": 51,
+																					"options": {
+																						"label": "_CompletedDateTime",
+																						"readonly": true,
+																						"displayLongFormat": false,
+																						"activable": true,
+																						"width": 230,
+																						"version": 0
+																					}
+																				},
+																				"LabelExportStatus__": {
+																					"type": "Label",
+																					"data": [
+																						"ExportStatus__"
+																					],
+																					"stamp": 54,
+																					"options": {
+																						"label": "_ExportStatus",
+																						"version": 0
+																					}
+																				},
+																				"ExportStatus__": {
+																					"type": "ComboBox",
+																					"data": [
+																						"ExportStatus__"
+																					],
+																					"stamp": 53,
+																					"options": {
+																						"label": "_ExportStatus",
+																						"possibleValues": {
+																							"0": "",
+																							"1": "Pending",
+																							"2": "In progress",
+																							"3": "Completed",
+																							"4": "Error",
+																							"5": "Cancelled"
+																						},
+																						"keyValueMode": true,
+																						"possibleKeys": {
+																							"0": "",
+																							"1": "Pending",
+																							"2": "InProgress",
+																							"3": "Completed",
+																							"4": "Error",
+																							"5": "Cancelled"
+																						},
+																						"activable": true,
+																						"width": 230,
+																						"readonly": true,
+																						"version": 0
+																					}
+																				},
+																				"LabelNumberOfExportedInvoices__": {
+																					"type": "Label",
+																					"data": [
+																						"NumberOfExportedInvoices__"
+																					],
+																					"stamp": 56,
+																					"options": {
+																						"label": "_NumberOfExportedInvoices",
+																						"version": 0
+																					}
+																				},
+																				"NumberOfExportedInvoices__": {
+																					"type": "Integer",
+																					"data": [
+																						"NumberOfExportedInvoices__"
+																					],
+																					"stamp": 55,
+																					"options": {
+																						"label": "_NumberOfExportedInvoices",
+																						"version": 1,
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"integer": true,
+																						"precision_internal": 0,
+																						"activable": true,
+																						"width": 230,
+																						"browsable": false,
+																						"readonly": true
+																					}
+																				},
+																				"LabelNumberOfInvoicesInError__": {
+																					"type": "Label",
+																					"data": [
+																						"NumberOfInvoicesInError__"
+																					],
+																					"stamp": 58,
+																					"options": {
+																						"label": "_NumberOfInvoicesInError",
+																						"version": 0
+																					}
+																				},
+																				"NumberOfInvoicesInError__": {
+																					"type": "Integer",
+																					"data": [
+																						"NumberOfInvoicesInError__"
+																					],
+																					"stamp": 57,
+																					"options": {
+																						"label": "_NumberOfInvoicesInError",
+																						"version": 1,
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"integer": true,
+																						"precision_internal": 0,
+																						"activable": true,
+																						"width": 230,
+																						"readonly": true,
+																						"browsable": false,
+																						"autocompletable": false
+																					}
+																				},
+																				"LabelNumberOfExportedApprovedInvoices__": {
+																					"type": "Label",
+																					"data": [
+																						"NumberOfExportedApprovedInvoices__"
+																					],
+																					"stamp": 60,
+																					"options": {
+																						"label": "_NumberOfExportedApprovedInvoices",
+																						"version": 0
+																					}
+																				},
+																				"NumberOfExportedApprovedInvoices__": {
+																					"type": "Integer",
+																					"data": [
+																						"NumberOfExportedApprovedInvoices__"
+																					],
+																					"stamp": 59,
+																					"options": {
+																						"label": "_NumberOfExportedApprovedInvoices",
+																						"version": 1,
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"integer": true,
+																						"precision_internal": 0,
+																						"activable": true,
+																						"width": 230,
+																						"browsable": false,
+																						"readonly": true
+																					}
+																				},
+																				"LabelInvoicesToExportTempFile__": {
+																					"type": "Label",
+																					"data": [
+																						"InvoicesToExportTempFile__"
+																					],
+																					"stamp": 62,
+																					"options": {
+																						"label": "InvoicesToExportTempFile",
+																						"version": 0
+																					}
+																				},
+																				"InvoicesToExportTempFile__": {
+																					"type": "ShortText",
+																					"data": [
+																						"InvoicesToExportTempFile__"
+																					],
+																					"stamp": 61,
+																					"options": {
+																						"label": "InvoicesToExportTempFile",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"activable": true,
+																						"width": 230,
+																						"readonly": true,
+																						"browsable": false,
+																						"autocompletable": false,
+																						"version": 0
+																					}
+																				},
+																				"LabelInvoicesApprovedTempFile__": {
+																					"type": "Label",
+																					"data": [
+																						"InvoicesApprovedTempFile__"
+																					],
+																					"stamp": 64,
+																					"options": {
+																						"label": "InvoicesApprovedTempFile",
+																						"version": 0
+																					}
+																				},
+																				"InvoicesApprovedTempFile__": {
+																					"type": "ShortText",
+																					"data": [
+																						"InvoicesApprovedTempFile__"
+																					],
+																					"stamp": 63,
+																					"options": {
+																						"label": "InvoicesApprovedTempFile",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"activable": true,
+																						"width": 230,
+																						"readonly": true,
+																						"browsable": false,
+																						"autocompletable": false,
+																						"version": 0
+																					}
+																				},
+																				"LabelLastMsnEx__": {
+																					"type": "Label",
+																					"data": [
+																						"LastMsnEx__"
+																					],
+																					"stamp": 66,
+																					"options": {
+																						"label": "LastMsnEx",
+																						"version": 0
+																					}
+																				},
+																				"LastMsnEx__": {
+																					"type": "ShortText",
+																					"data": [
+																						"LastMsnEx__"
+																					],
+																					"stamp": 65,
+																					"options": {
+																						"label": "LastMsnEx",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"activable": true,
+																						"width": 230,
+																						"readonly": true,
+																						"browsable": false,
+																						"autocompletable": false,
+																						"version": 0
+																					}
+																				},
+																				"LabelDateOfStartExport__": {
+																					"type": "Label",
+																					"data": [
+																						"DateOfStartExport__"
+																					],
+																					"stamp": 68,
+																					"options": {
+																						"label": "DateOfStartExport",
+																						"version": 0
+																					}
+																				},
+																				"DateOfStartExport__": {
+																					"type": "RealDateTime",
+																					"data": [
+																						"DateOfStartExport__"
+																					],
+																					"stamp": 67,
+																					"options": {
+																						"label": "DateOfStartExport",
+																						"readonly": true,
+																						"displayLongFormat": false,
+																						"activable": true,
+																						"width": 230,
+																						"version": 0
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-5": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 69,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"Scheduling": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 70,
+															"options": {
+																"border": {},
+																"labelLength": 400,
+																"iconURL": "AP_Scheduling.png",
+																"TitleFontSize": "S",
+																"hideActionButtons": true,
+																"hideTitleBar": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_Scheduling",
+																"leftImageURL": "",
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 71,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {
+																			"SchedulingOptions__": "LabelSchedulingOptions__",
+																			"LabelSchedulingOptions__": "SchedulingOptions__",
+																			"SchedulingDate__": "LabelSchedulingDate__",
+																			"LabelSchedulingDate__": "SchedulingDate__",
+																			"SchedulingHours__": "LabelSchedulingHours__",
+																			"LabelSchedulingHours__": "SchedulingHours__",
+																			"SchedulingMinutes__": "LabelSchedulingMinutes__",
+																			"LabelSchedulingMinutes__": "SchedulingMinutes__",
+																			"Then_repeat__": "LabelThen_repeat__",
+																			"LabelThen_repeat__": "Then_repeat__",
+																			"ExportStartDate__": "LabelExportStartDate__",
+																			"LabelExportStartDate__": "ExportStartDate__",
+																			"ExportEndDate__": "LabelExportEndDate__",
+																			"LabelExportEndDate__": "ExportEndDate__"
+																		}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 72,
+																			"options": {
+																				"version": 0,
+																				"lines": 10,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"Spacer_line1__": {
+																						"line": 1,
+																						"column": 1
+																					},
+																					"LabelSchedulingOptions__": {
+																						"line": 2,
+																						"column": 1
+																					},
+																					"SchedulingOptions__": {
+																						"line": 2,
+																						"column": 2
+																					},
+																					"LabelSchedulingDate__": {
+																						"line": 3,
+																						"column": 1
+																					},
+																					"SchedulingDate__": {
+																						"line": 3,
+																						"column": 2
+																					},
+																					"LabelSchedulingHours__": {
+																						"line": 4,
+																						"column": 1
+																					},
+																					"SchedulingHours__": {
+																						"line": 4,
+																						"column": 2
+																					},
+																					"LabelSchedulingMinutes__": {
+																						"line": 5,
+																						"column": 1
+																					},
+																					"SchedulingMinutes__": {
+																						"line": 5,
+																						"column": 2
+																					},
+																					"Spacer_line2__": {
+																						"line": 6,
+																						"column": 1
+																					},
+																					"LabelThen_repeat__": {
+																						"line": 7,
+																						"column": 1
+																					},
+																					"Then_repeat__": {
+																						"line": 7,
+																						"column": 2
+																					},
+																					"LabelExportStartDate__": {
+																						"line": 8,
+																						"column": 1
+																					},
+																					"ExportStartDate__": {
+																						"line": 8,
+																						"column": 2
+																					},
+																					"LabelExportEndDate__": {
+																						"line": 9,
+																						"column": 1
+																					},
+																					"ExportEndDate__": {
+																						"line": 9,
+																						"column": 2
+																					},
+																					"Spacer_line3__": {
+																						"line": 10,
+																						"column": 1
+																					}
+																				},
+																				"colspans": [
+																					[
+																						{
+																							"index": 0,
+																							"length": 2
+																						}
+																					],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[
+																						{
+																							"index": 0,
+																							"length": 2
+																						}
+																					],
+																					[],
+																					[],
+																					[],
+																					[
+																						{
+																							"index": 0,
+																							"length": 2
+																						}
+																					]
+																				]
+																			},
+																			"*": {
+																				"Spacer_line1__": {
+																					"type": "Spacer",
+																					"data": false,
+																					"stamp": 73,
+																					"options": {
+																						"label": "Spacer line",
+																						"height": "",
+																						"width": "",
+																						"color": "default",
+																						"version": 0
+																					}
+																				},
+																				"LabelSchedulingOptions__": {
+																					"type": "Label",
+																					"data": [
+																						"SchedulingOptions__"
+																					],
+																					"stamp": 75,
+																					"options": {
+																						"label": "_SchedulingOptions",
+																						"version": 0
+																					}
+																				},
+																				"SchedulingOptions__": {
+																					"type": "RadioButton",
+																					"data": [
+																						"SchedulingOptions__"
+																					],
+																					"stamp": 74,
+																					"options": {
+																						"label": "_SchedulingOptions",
+																						"keys": [
+																							"Execute now",
+																							"Defer execution until"
+																						],
+																						"values": [
+																							"Execute now",
+																							"Defer execution until"
+																						],
+																						"activable": true,
+																						"version": 0
+																					}
+																				},
+																				"LabelSchedulingDate__": {
+																					"type": "Label",
+																					"data": [
+																						"SchedulingDate__"
+																					],
+																					"stamp": 77,
+																					"options": {
+																						"label": "_SchedulingDate",
+																						"version": 0
+																					}
+																				},
+																				"SchedulingDate__": {
+																					"type": "DateTime",
+																					"data": [
+																						"SchedulingDate__"
+																					],
+																					"stamp": 76,
+																					"options": {
+																						"label": "_SchedulingDate",
+																						"displayLongFormat": false,
+																						"activable": true,
+																						"width": "120",
+																						"version": 0
+																					}
+																				},
+																				"LabelSchedulingHours__": {
+																					"type": "Label",
+																					"data": [
+																						"SchedulingHours__"
+																					],
+																					"stamp": 79,
+																					"options": {
+																						"label": "_SchedulingHours",
+																						"version": 0
+																					}
+																				},
+																				"SchedulingHours__": {
+																					"type": "ComboBox",
+																					"data": [
+																						"SchedulingHours__"
+																					],
+																					"stamp": 78,
+																					"options": {
+																						"label": "_SchedulingHours",
+																						"possibleValues": {
+																							"0": "00OClock",
+																							"1": "01OClock",
+																							"2": "02OClock",
+																							"3": "03OClock",
+																							"4": "04OClock",
+																							"5": "05OClock",
+																							"6": "06OClock",
+																							"7": "07OClock",
+																							"8": "08OClock",
+																							"9": "09OClock",
+																							"10": "10OClock",
+																							"11": "11OClock",
+																							"12": "12OClock",
+																							"13": "13OClock",
+																							"14": "14OClock",
+																							"15": "15OClock",
+																							"16": "16OClock",
+																							"17": "17OClock",
+																							"18": "18OClock",
+																							"19": "19OClock",
+																							"20": "20OClock",
+																							"21": "21OClock",
+																							"22": "22OClock",
+																							"23": "23OClock"
+																						},
+																						"keyValueMode": true,
+																						"possibleKeys": {
+																							"0": "00OClock",
+																							"1": "01OClock",
+																							"2": "02OClock",
+																							"3": "03OClock",
+																							"4": "04OClock",
+																							"5": "05OClock",
+																							"6": "06OClock",
+																							"7": "07OClock",
+																							"8": "08OClock",
+																							"9": "09OClock",
+																							"10": "10OClock",
+																							"11": "11OClock",
+																							"12": "12OClock",
+																							"13": "13OClock",
+																							"14": "14OClock",
+																							"15": "15OClock",
+																							"16": "16OClock",
+																							"17": "17OClock",
+																							"18": "18OClock",
+																							"19": "19OClock",
+																							"20": "20OClock",
+																							"21": "21OClock",
+																							"22": "22OClock",
+																							"23": "23OClock"
+																						},
+																						"activable": true,
+																						"width": "70",
+																						"version": 0
+																					}
+																				},
+																				"LabelSchedulingMinutes__": {
+																					"type": "Label",
+																					"data": [
+																						"SchedulingMinutes__"
+																					],
+																					"stamp": 81,
+																					"options": {
+																						"label": "_SchedulingMinutes",
+																						"version": 0
+																					}
+																				},
+																				"SchedulingMinutes__": {
+																					"type": "ComboBox",
+																					"data": [
+																						"SchedulingMinutes__"
+																					],
+																					"stamp": 80,
+																					"options": {
+																						"label": "_SchedulingMinutes",
+																						"possibleValues": {
+																							"0": "00",
+																							"1": "10",
+																							"2": "20",
+																							"3": "30",
+																							"4": "40",
+																							"5": "50"
+																						},
+																						"keyValueMode": false,
+																						"possibleKeys": {},
+																						"activable": true,
+																						"width": "70",
+																						"version": 0
+																					}
+																				},
+																				"Spacer_line2__": {
+																					"type": "Spacer",
+																					"data": false,
+																					"stamp": 82,
+																					"options": {
+																						"label": "Spacer line",
+																						"height": "",
+																						"width": "",
+																						"color": "default",
+																						"version": 0
+																					}
+																				},
+																				"LabelThen_repeat__": {
+																					"type": "Label",
+																					"data": [
+																						"Then_repeat__"
+																					],
+																					"stamp": 84,
+																					"options": {
+																						"label": "_Then_repeat",
+																						"version": 0
+																					}
+																				},
+																				"Then_repeat__": {
+																					"type": "ComboBox",
+																					"data": [
+																						"Then_repeat__"
+																					],
+																					"stamp": 83,
+																					"options": {
+																						"label": "_Then_repeat",
+																						"possibleValues": {
+																							"0": "Never",
+																							"1": "Everyday",
+																							"2": "Every_week",
+																							"3": "Every_month"
+																						},
+																						"keyValueMode": true,
+																						"possibleKeys": {
+																							"0": "Never",
+																							"1": "Everyday",
+																							"2": "Every_week",
+																							"3": "Every_month"
+																						},
+																						"activable": true,
+																						"width": "120",
+																						"version": 0
+																					}
+																				},
+																				"LabelExportStartDate__": {
+																					"type": "Label",
+																					"data": [
+																						"ExportStartDate__"
+																					],
+																					"stamp": 86,
+																					"options": {
+																						"label": "_ExportStartDate",
+																						"version": 0
+																					}
+																				},
+																				"ExportStartDate__": {
+																					"type": "DateTime",
+																					"data": [
+																						"ExportStartDate__"
+																					],
+																					"stamp": 85,
+																					"options": {
+																						"label": "_ExportStartDate",
+																						"displayLongFormat": false,
+																						"showWeek": false,
+																						"hideButtonPanel": false,
+																						"showOtherMonths": false,
+																						"activable": true,
+																						"width": "120",
+																						"textAlignment": "left",
+																						"helpText": "_ExportStartDateToolTip",
+																						"helpURL": "2612",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"version": 0
+																					}
+																				},
+																				"LabelExportEndDate__": {
+																					"type": "Label",
+																					"data": [
+																						"ExportEndDate__"
+																					],
+																					"stamp": 88,
+																					"options": {
+																						"label": "_ExportEndDate",
+																						"version": 0
+																					}
+																				},
+																				"ExportEndDate__": {
+																					"type": "DateTime",
+																					"data": [
+																						"ExportEndDate__"
+																					],
+																					"stamp": 87,
+																					"options": {
+																						"label": "_ExportEndDate",
+																						"displayLongFormat": false,
+																						"showWeek": false,
+																						"hideButtonPanel": false,
+																						"showOtherMonths": false,
+																						"activable": true,
+																						"width": "120",
+																						"textAlignment": "left",
+																						"helpText": "_ExportEndDateToolTip",
+																						"helpURL": "2612",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"version": 0
+																					}
+																				},
+																				"Spacer_line3__": {
+																					"type": "Spacer",
+																					"data": false,
+																					"stamp": 89,
+																					"options": {
+																						"label": "Spacer line",
+																						"height": "",
+																						"width": "",
+																						"color": "default",
+																						"version": 0
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-right": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 90,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "45%",
+													"width": "55%",
+													"height": null
+												},
+												"hidden": true,
+												"hideSeparator": true
+											},
+											"*": {
+												"form-content-right-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 91,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"PreviewPanel": {
+															"type": "PanelPreview",
+															"data": [],
+															"stamp": 92,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"label": "_Document Preview",
+																"hidden": true,
+																"version": 0
+															},
+															"*": {
+																"Preview": {
+																	"type": "Preview",
+																	"data": [
+																		"previewdata"
+																	],
+																	"stamp": 93,
+																	"options": {
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 94,
+					"options": {
+						"splitterType": "simple-h",
+						"maxwidth": 1024,
+						"version": 0
+					},
+					"*": {
+						"Export": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 95,
+							"options": {
+								"label": "Export now",
+								"action": "approve",
+								"submit": true,
+								"nextprocess": {
+									"processName": "",
+									"attachmentsMode": "all",
+									"willBeChild": true
+								},
+								"url": "View.link?tabName=_Exports&amp;viewName=_AP_View_ExportedInvoices",
+								"style": 1,
+								"version": 0
+							}
+						},
+						"Cancel": {
+							"type": "SubmitButton",
+							"data": false,
+							"stamp": 96,
+							"options": {
+								"label": "_Cancel scheduled export",
+								"nextprocess": {
+									"processName": "Export Invoices",
+									"attachmentsMode": "all",
+									"willBeChild": true
+								},
+								"url": "",
+								"action": "approve",
+								"style": 3,
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 97,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"nextprocess": {
+									"processName": "",
+									"attachmentsMode": "all",
+									"willBeChild": true
+								},
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <field deleted="0" format="" guid="Z61NG0000VLT" id="ZLAQT400153E" label="_CompanyCode" length="600" name="CompanyCode__" originalProcessID="CEJC667351" precision="0" processid="YLAQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AZLAQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/CompanyCode__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:09</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_CompanyCode</Label>
+        <Alias>AZLAQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>false</Editable>
+        <TableName>CT#BD8QT400153E</TableName>
+        <SortOrder>
+        </SortOrder>
+        <SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+        <DisplayedColumns>CompanyCode__|CompanyName__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>CompanyCode__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ExposedColumns>
+        </ExposedColumns>
+        <ProcessName>PurchasingCompanycodes__</ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <KeyAttribute>
+        </KeyAttribute>
+        <CustomFilter>
+        </CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="UPJQ24677422" id="AMAQT400153E" label="_CompletedDateTime" length="0" name="CompletedDateTime__" originalProcessID="CEJC667351" precision="0" processid="YLAQT400153E" submitable="1" type="DATETIME">
+    <properties>
+      <db>
+        <alias>AAMAQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/CompletedDateTime__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:09</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_CompletedDateTime</Label>
+        <Alias>AAMAQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <ui>
+        <_type>Date</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="PHQG667352" id="BMAQT400153E" label="_Select the file format to use with your ERP" length="50" name="Converter__" originalProcessID="CEJC667351" precision="0" processid="YLAQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ABMAQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Converter__</fullname>
+        <defaultvalue>Generic CSV</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:09</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Type>webaccess.Process.Columns.WithPossibleValues</Type>
+        <Label>_Select the file format to use with your ERP</Label>
+        <Alias>ABMAQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <possibleKeys>TRA_BUSINESS
+TRA_EXPERT
+Flux_10_1
+Generic CSV
+Generic XML
+CSV_MSDynamicsAX
+CSV_MSDynamicsNAV
+CSV_OracleEBS
+CSV_OracleJDE
+CSV_OraclePeopleSoft
+CSV_SAGE50
+CSV_SAGE1000
+CSV_SAP</possibleKeys>
+        <possibleValues>_TRA_BUSINESS
+_TRA_EXPERT
+_Flux_10_1
+_Generic CSV
+_Generic XML
+_CSV_MSDynamicsAX
+_CSV_MSDynamicsNAV
+_CSV_OracleEBS
+_CSV_OracleJDE
+_CSV_OraclePeopleSoft
+_CSV_SAGE50
+_CSV_SAGE1000
+_CSV_SAP</possibleValues>
+      </field>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="PHQG1000338" id="CMAQT400153E" label="DateOfStartExport" length="0" name="DateOfStartExport__" originalProcessID="CEJC667351" precision="0" processid="YLAQT400153E" submitable="1" type="DATETIME">
+    <properties>
+      <db>
+        <alias>ACMAQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/DateOfStartExport__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:09</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>DateOfStartExport</Label>
+        <Alias>ACMAQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <ui>
+        <_type>Date</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="MSYH24677420" id="DMAQT400153E" label="_ExportDateTime" length="0" name="ExportDateTime__" originalProcessID="CEJC667351" precision="0" processid="YLAQT400153E" submitable="1" type="DATETIME">
+    <properties>
+      <db>
+        <alias>ADMAQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ExportDateTime__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:09</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ExportDateTime</Label>
+        <Alias>ADMAQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <ui>
+        <_type>Date</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="HUME24684361" id="EMAQT400153E" label="_ExportedBy" length="80" name="ExportedBy__" originalProcessID="CEJC667351" precision="0" processid="YLAQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AEMAQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ExportedBy__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:09</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ExportedBy</Label>
+        <Alias>AEMAQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="A71NG0000VLT" id="FMAQT400153E" label="_ExportEndDate" length="0" name="ExportEndDate__" originalProcessID="CEJC667351" precision="0" processid="YLAQT400153E" submitable="1" type="DATE">
+    <properties>
+      <db>
+        <alias>AFMAQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ExportEndDate__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:09</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ExportEndDate</Label>
+        <Alias>AFMAQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <help>
+        <helpData>{"helpText":"_ExportEndDateToolTip","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Date</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="B71NG0000VLT" id="GMAQT400153E" label="_ExportStartDate" length="0" name="ExportStartDate__" originalProcessID="CEJC667351" precision="0" processid="YLAQT400153E" submitable="1" type="DATE">
+    <properties>
+      <db>
+        <alias>AGMAQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ExportStartDate__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:09</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ExportStartDate</Label>
+        <Alias>AGMAQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <help>
+        <helpData>{"helpText":"_ExportStartDateToolTip","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Date</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="GAGI24677421" id="HMAQT400153E" label="_ExportStatus" length="50" name="ExportStatus__" originalProcessID="CEJC667351" precision="0" processid="YLAQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AHMAQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ExportStatus__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:09</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Type>webaccess.Process.Columns.WithPossibleValues</Type>
+        <Label>_ExportStatus</Label>
+        <Alias>AHMAQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <possibleKeys>
+Pending
+InProgress
+Completed
+Error
+Cancelled</possibleKeys>
+        <possibleValues>
+Pending
+InProgress
+Completed
+Error
+Cancelled</possibleValues>
+      </field>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="WHMS1000112" id="IMAQT400153E" label="InvoicesApprovedTempFile" length="50" name="InvoicesApprovedTempFile__" originalProcessID="CEJC667351" precision="0" processid="YLAQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AIMAQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/InvoicesApprovedTempFile__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:09</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>InvoicesApprovedTempFile</Label>
+        <Alias>AIMAQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="OWUX1000111" id="JMAQT400153E" label="InvoicesToExportTempFile" length="50" name="InvoicesToExportTempFile__" originalProcessID="CEJC667351" precision="0" processid="YLAQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AJMAQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/InvoicesToExportTempFile__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:09</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>InvoicesToExportTempFile</Label>
+        <Alias>AJMAQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="COKS1000114" id="KMAQT400153E" label="LastMsnEx" length="50" name="LastMsnEx__" originalProcessID="CEJC667351" precision="0" processid="YLAQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AKMAQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/LastMsnEx__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:09</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>LastMsnEx</Label>
+        <Alias>AKMAQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="GGBW667831" id="LMAQT400153E" label="_NumberOfExportedApprovedInvoices" length="0" name="NumberOfExportedApprovedInvoices__" originalProcessID="CEJC667351" precision="0" processid="YLAQT400153E" submitable="1" type="INT">
+    <properties>
+      <db>
+        <alias>ALMAQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/NumberOfExportedApprovedInvoices__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:09</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_NumberOfExportedApprovedInvoices</Label>
+        <Alias>ALMAQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="BZXT24677423" id="MMAQT400153E" label="_NumberOfExportedInvoices" length="0" name="NumberOfExportedInvoices__" originalProcessID="CEJC667351" precision="0" processid="YLAQT400153E" submitable="1" type="INT">
+    <properties>
+      <db>
+        <alias>AMMAQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/NumberOfExportedInvoices__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:09</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_NumberOfExportedInvoices</Label>
+        <Alias>AMMAQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="KLDK24706171" id="NMAQT400153E" label="_NumberOfInvoicesInError" length="0" name="NumberOfInvoicesInError__" originalProcessID="CEJC667351" precision="0" processid="YLAQT400153E" submitable="1" type="INT">
+    <properties>
+      <db>
+        <alias>ANMAQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/NumberOfInvoicesInError__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:09</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_NumberOfInvoicesInError</Label>
+        <Alias>ANMAQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="PHQG24728459" id="OMAQT400153E" label="_Payment release output format" length="50" name="Payment_release_output_format__" originalProcessID="CEJC667351" precision="0" processid="YLAQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AOMAQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Payment_release_output_format__</fullname>
+        <defaultvalue>Generic (CSV)</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:09</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Type>webaccess.Process.Columns.WithPossibleValues</Type>
+        <Label>_Payment release output format</Label>
+        <Alias>AOMAQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <possibleKeys>
+        </possibleKeys>
+        <possibleValues>Generic (CSV)</possibleValues>
+      </field>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="BURI1000445" id="PMAQT400153E" label="_SchedulingDate" length="0" name="SchedulingDate__" originalProcessID="CEJC667351" precision="0" processid="YLAQT400153E" submitable="1" type="DATE">
+    <properties>
+      <db>
+        <alias>APMAQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/SchedulingDate__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:09</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_SchedulingDate</Label>
+        <Alias>APMAQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>Date</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="SWTB1000446" id="QMAQT400153E" label="_SchedulingHours" length="50" name="SchedulingHours__" originalProcessID="CEJC667351" precision="0" processid="YLAQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AQMAQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/SchedulingHours__</fullname>
+        <defaultvalue>00OClock</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:09</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Type>webaccess.Process.Columns.WithPossibleValues</Type>
+        <Label>_SchedulingHours</Label>
+        <Alias>AQMAQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <possibleKeys>00OClock
+01OClock
+02OClock
+03OClock
+04OClock
+05OClock
+06OClock
+07OClock
+08OClock
+09OClock
+10OClock
+11OClock
+12OClock
+13OClock
+14OClock
+15OClock
+16OClock
+17OClock
+18OClock
+19OClock
+20OClock
+21OClock
+22OClock
+23OClock</possibleKeys>
+        <possibleValues>00OClock
+01OClock
+02OClock
+03OClock
+04OClock
+05OClock
+06OClock
+07OClock
+08OClock
+09OClock
+10OClock
+11OClock
+12OClock
+13OClock
+14OClock
+15OClock
+16OClock
+17OClock
+18OClock
+19OClock
+20OClock
+21OClock
+22OClock
+23OClock</possibleValues>
+      </field>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="RECU1000447" id="RMAQT400153E" label="_SchedulingMinutes" length="50" name="SchedulingMinutes__" originalProcessID="CEJC667351" precision="0" processid="YLAQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ARMAQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/SchedulingMinutes__</fullname>
+        <defaultvalue>00</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:09</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Type>webaccess.Process.Columns.WithPossibleValues</Type>
+        <Label>_SchedulingMinutes</Label>
+        <Alias>ARMAQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <possibleKeys>
+        </possibleKeys>
+        <possibleValues>00
+10
+20
+30
+40
+50</possibleValues>
+      </field>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="UIDU1000444" id="SMAQT400153E" label="_SchedulingOptions" length="50" name="SchedulingOptions__" originalProcessID="CEJC667351" precision="0" processid="YLAQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ASMAQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/SchedulingOptions__</fullname>
+        <defaultvalue>Execute now</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:09</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Type>webaccess.Process.Columns.WithPossibleValues</Type>
+        <Label>_SchedulingOptions</Label>
+        <Alias>ASMAQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <possibleKeys>Execute now
+Defer execution until</possibleKeys>
+        <possibleValues>Execute now
+Defer execution until</possibleValues>
+      </field>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="IMUC1003060" id="TMAQT400153E" label="_Skip_Invoices_Already_Exported" length="0" name="SkipInvoicesAlreadyExported__" originalProcessID="CEJC667351" precision="0" processid="YLAQT400153E" submitable="1" type="BOOL">
+    <properties>
+      <db>
+        <alias>ATMAQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/SkipInvoicesAlreadyExported__</fullname>
+        <defaultvalue>true</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:09</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Skip_Invoices_Already_Exported</Label>
+        <Alias>ATMAQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <ui>
+        <_type>Boolean</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="YKAB1000448" id="UMAQT400153E" label="_Then_repeat" length="50" name="Then_repeat__" originalProcessID="CEJC667351" precision="0" processid="YLAQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AUMAQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Then_repeat__</fullname>
+        <defaultvalue>Never</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:07:09</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Type>webaccess.Process.Columns.WithPossibleValues</Type>
+        <Label>_Then_repeat</Label>
+        <Alias>AUMAQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <possibleKeys>Never
+Everyday
+Every_week
+Every_month</possibleKeys>
+        <possibleValues>Never
+Everyday
+Every_week
+Every_month</possibleValues>
+      </field>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <type id="GOLHG0000M4O" name="CD">
+  </type>
+</process>

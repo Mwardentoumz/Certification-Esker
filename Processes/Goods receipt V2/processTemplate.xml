@@ -1,0 +1,2354 @@
+<process accountid="" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:08:41" deleted="0" eskerapplication="P2P" global="0" id="NoID" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="Goods receipt V2" needvalidation="0" ootofilter="" ootoversion="2" originalProcessID="PAC2134701" ownerid="" ownerpb="" public="1" pushnotification="0" reuseengine="1" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="" version="1" visibility="0">
+	<properties>
+		<dataConditions>
+			<listDataConditions>
+				&lt;dataCondition&gt;
+					&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+					&lt;filter&gt;msnex=*&lt;/filter&gt;
+					&lt;labelKey&gt;_Purchasing disabled&lt;/labelKey&gt;
+					&lt;conditions&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnablePurchasingGlobalSetting__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableStandardPurchasingGlobalSetting__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+					&lt;/conditions&gt;
+				&lt;/dataCondition&gt;</listDataConditions>
+		</dataConditions>
+		<dbIndex>
+			<AUTO_AQNCQT400153EA>&lt;Index&gt;&lt;Ref Name="AQNCQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AQNCQT400153EA>
+		</dbIndex>
+		<externalvariables>
+			<EnableSRO>1</EnableSRO>
+			<Configuration>Default</Configuration>
+		</externalvariables>
+		<gdr>
+			<FinalizationScriptAllowRetry />
+			<finalizationscriptIncludedScripts>Sys/Sys_Parameters</finalizationscriptIncludedScripts>
+			<finalizationscriptIncludedScripts>Lib_P2P_V12.0.566.0</finalizationscriptIncludedScripts>
+			<finalizationscriptIncludedScripts>Lib_Parameters_P2P_V12.0.566.0</finalizationscriptIncludedScripts>
+			<finalizationscriptIncludedScripts>Lib_ERP_V12.0.566.0</finalizationscriptIncludedScripts>
+			<finalizationscriptIncludedScripts>Lib_ERP_SAP_GoodReceipt_V12.0.566.0</finalizationscriptIncludedScripts>
+			<finalizationscriptIncludedScripts>Lib_ERP_EBS_GoodReceipt_V12.0.566.0</finalizationscriptIncludedScripts>
+			<finalizationscriptIncludedScripts>Lib_ERP_JDE_GoodReceipt_V12.0.566.0</finalizationscriptIncludedScripts>
+			<finalizationscriptIncludedScripts>Lib_ERP_NAV_GoodReceipt_V12.0.566.0</finalizationscriptIncludedScripts>
+			<finalizationscriptIncludedScripts>Lib_ERP_Universal_GoodReceipt_V12.0.566.0</finalizationscriptIncludedScripts>
+			<finalizationscriptIncludedScripts>Lib_ERP_Generic_GoodReceipt_V12.0.566.0</finalizationscriptIncludedScripts>
+			<finalizationscriptIncludedScripts>[Lib_Custom_Parameters]</finalizationscriptIncludedScripts>
+			<finalizationscriptIncludedScripts>[Lib_P2P_Custom_Parameters]</finalizationscriptIncludedScripts>
+			<finalizationscriptIncludedScripts>Lib_Purchasing_Demo_V12.0.566.0</finalizationscriptIncludedScripts>
+			<finalizationscriptIncludedScripts>Lib_AP_V12.0.566.0</finalizationscriptIncludedScripts>
+			<finalizationscriptIncludedScripts>Sys/Sys_FRB2B_AP</finalizationscriptIncludedScripts>
+			<FinalizationScript>
+				<!--finalizationscript.js--></FinalizationScript>
+			<ValidationScriptAllowRetry />
+			<validationscriptIncludedScripts>Lib_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_CommonDialog_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Parameters_P2P_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>[Lib_Custom_Parameters]</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>[Lib_P2P_Custom_Parameters]</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_ERP_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_ERP_SAP_GoodReceipt_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_ERP_EBS_GoodReceipt_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_ERP_JDE_GoodReceipt_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_ERP_NAV_GoodReceipt_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_ERP_Universal_GoodReceipt_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_ERP_Generic_GoodReceipt_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_ERP_SAP_PurchaseOrder_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_ERP_EBS_PurchaseOrder_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_ERP_JDE_PurchaseOrder_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_ERP_NAV_PurchaseOrder_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_ERP_Universal_PurchaseOrder_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_ERP_Generic_PurchaseOrder_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Purchasing_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Purchasing_CheckPO_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Purchasing_ReceivingItems_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Purchasing_Receiving_Server_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Purchasing_GRValidation_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_P2P_Inventory_Server_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_P2P_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Spending_Budget_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Spending_Budget_Updater_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Purchasing_GRBudget_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Purchasing_GRBudget_FullRecovery_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_Spending_Budget_Recovery_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Sys/Sys_Helpers_String</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Sys/Sys_Helpers_Database</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Sys/Sys_Helpers_Date</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Sys/Sys_Helpers_Data</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Sys/Sys_Helpers_String_SAP</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Sys/Sys_P2P_Accrual</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_P2P_EmailNotification_Server_V12.0.566.0</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>[Lib_P2P_Customization_Common]</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>[Lib_GR_Customization_Common]</validationscriptIncludedScripts>
+			<validationscriptIncludedScripts>Lib_AP_Scoring_V12.0.566.0</validationscriptIncludedScripts>
+			<ValidationScript>
+				<!--validationscript.js--></ValidationScript>
+			<AllowTagCoverPages>true</AllowTagCoverPages>
+			<AllowTagNewDocuments>true</AllowTagNewDocuments>
+			<AllowTagAttachments>true</AllowTagAttachments>
+			<ExtractionScriptAllowRetry />
+			<extractionscriptIncludedScripts>Lib_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_ERP_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_ERP_SAP_GoodReceipt_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_ERP_EBS_GoodReceipt_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_ERP_JDE_GoodReceipt_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_ERP_NAV_GoodReceipt_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_ERP_Universal_GoodReceipt_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_ERP_Generic_GoodReceipt_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_Purchasing_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_Purchasing_ReceivingItems_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_Parameters_P2P_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>[Lib_Custom_Parameters]</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>[Lib_P2P_Custom_Parameters]</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>Lib_P2P_V12.0.566.0</extractionscriptIncludedScripts>
+			<extractionscriptIncludedScripts>[Lib_P2P_Customization_Common]</extractionscriptIncludedScripts>
+			<ExtractionScript>
+				<!--extractionscript.js--></ExtractionScript>
+			<AllowRemovePages>true</AllowRemovePages>
+			<AllowSwapPages>true</AllowSwapPages>
+		</gdr>
+		<lg>
+			<!--*.xml-->
+		</lg>
+		<ocr>
+			<trade-off>accurate</trade-off>
+			<image-ocr-timeout />
+			<image-binarization>no</image-binarization>
+			<image-draft-fax>no</image-draft-fax>
+			<image-despeckle>no</image-despeckle>
+			<allowed-language>0</allowed-language>
+			<image-resolution-enhancement>auto</image-resolution-enhancement>
+			<pdf-processing>ocr-pdf-text-and-image</pdf-processing>
+			<ocr_engine>Nuance222</ocr_engine>
+			<ocrpagestoprocess />
+			<extractionAdditionalOptions />
+		</ocr>
+		<process>
+			<Tags>PAC GR</Tags>
+			<flowtype>processing</flowtype>
+			<ocrpreset>scan</ocrpreset>
+			<cacheableprocess>P2P - Global Application Settings__</cacheableprocess>
+			<cacheableprocess>P2P - UnitOfMeasure__</cacheableprocess>
+			<cacheableprocess>AP - Application Settings__</cacheableprocess>
+			<cacheableprocess>PurchasingCompanycodes__</cacheableprocess>
+			<EnablePrecomputedPngPreview>1</EnablePrecomputedPngPreview>
+			<homepagelabel>Goods receipt</homepagelabel>
+			<enableflexibleauditing />
+			<enableflexibleediting />
+			<enableflexibleteaching />
+			<enableflexiblewalkme>true</enableflexiblewalkme>
+			<upgradable>yes</upgradable>
+			<disableocr />
+			<instanciable>1</instanciable>
+			<disableScriptModification>true</disableScriptModification>
+			<disableautolearning>true</disableautolearning>
+			<backgroundprocessingthreshold />
+			<EnablePreviewPrecomputation />
+			<enableUpgradableDesign>true</enableUpgradableDesign>
+			<loadExtendedProperties>appInstances</loadExtendedProperties>
+			<enablerounddecimal>true</enablerounddecimal>
+			<pdfNormalizeFilter />
+			<archiveDuration>0</archiveDuration>
+			<ExternalLgFilePrefix>PA_DEMO</ExternalLgFilePrefix>
+			<ocrpagestoprocess />
+			<ScriptEngineType>2</ScriptEngineType>
+			<UseActionNameWithScriptApproval>true</UseActionNameWithScriptApproval>
+			<displayWidth>1700</displayWidth>
+			<AllowUploadAttachment>1</AllowUploadAttachment>
+			<AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+			<UseCultureFormat>true</UseCultureFormat>
+			<AllowRetryExtractCD>true</AllowRetryExtractCD>
+			<TransportName>CustomData</TransportName>
+			<LayoutVersion>1.0</LayoutVersion>
+			<printToProcess />
+		</process>
+		<ui>
+			<CustomScriptDebug>false</CustomScriptDebug>
+			<customscriptIncludedScripts>Lib_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_ERP_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_ERP_SAP_GoodReceipt_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_ERP_EBS_GoodReceipt_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_ERP_JDE_GoodReceipt_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_ERP_NAV_GoodReceipt_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_ERP_Universal_GoodReceipt_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_ERP_Generic_GoodReceipt_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Parameters_P2P_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[Lib_Custom_Parameters]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[Lib_P2P_Custom_Parameters]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_CommonDialog_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Decimal</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_GenericAPI_Client</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers_Synchronizer</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers_Banner</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers_Controls</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers_String</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers_Promise_Tools</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_P2P_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>LIB_P2P_Layout_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_P2P_Address_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_P2P_Inventory_Client_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_P2P_BulkActions_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Purchasing_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Purchasing_RelatedVIP_Client_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Purchasing_ReceivingItems_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Purchasing_Receiving_Client_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Purchasing_Browse_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Purchasing_RelatedVIP_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Purchasing_ReturnManagement_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Purchasing_ShipTo_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Purchasing_PO_ERP_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Purchasing_GR_FormTemplate_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Purchasing_GR_LineItems_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[Lib_GR_Customization_Client]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[Lib_GR_Customization_Common]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[Lib_P2P_Customization_Common]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_AP_Scoring_V12.0.566.0</customscriptIncludedScripts>
+			<CustomScriptReadonly>true</CustomScriptReadonly>
+			<CustomScript>
+				<!--customscript.js--></CustomScript>
+			<restorationPanel>GeneralInformation</restorationPanel>
+			<layout>
+				<!--layout.json--></layout>
+		</ui>
+	</properties>
+	<datatable deleted="0" guid="PAC2134708" id="NoID" label="_LineItems_report" name="LineItems__" originalProcessID="PAC2134701">
+		<properties>
+			<field>
+				<DisableAutolearn>1</DisableAutolearn>
+			</field>
+			<ui>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+		<field datatableid="" deleted="0" format="" guid="PHQG42294929" id="NoID" label="_BudgetID report" length="128" name="BudgetID__" originalProcessID="PAC2134701" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/BudgetID__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_BudgetID report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="L115FP000PA9" id="NoID" label="_ContractName_report" length="50" name="ContractName__" originalProcessID="PAC2134701" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ContractName__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ContractName_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="M115FP000PA9" id="NoID" label="_ContractNumber_report" length="50" name="ContractNumber__" originalProcessID="PAC2134701" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ContractNumber__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ContractNumber_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="QD6IG0000VLT" id="NoID" label="_ContractReferenceNumber_report" length="50" name="ContractReferenceNumber__" originalProcessID="PAC2134701" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ContractReferenceNumber__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ContractReferenceNumber_report</Label>
+					<Alias />
+					<Behavior>Default</Behavior>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="K115FP000PA9" id="NoID" label="_ContractRUIDEX_report" length="150" name="ContractRUIDEX__" originalProcessID="PAC2134701" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ContractRUIDEX__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ContractRUIDEX_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="PAC2134716" id="NoID" label="_CostCenter_report" length="50" name="CostCenter__" originalProcessID="PAC2134701" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/CostCenter__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_CostCenter_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="PAC2134715" id="NoID" label="_CostCenterId_report" length="50" name="CostCenterId__" originalProcessID="PAC2134701" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/CostCenterId__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_CostCenterId_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="RBF3FP000M4H" id="NoID" label="_CostType_report" length="50" name="CostType__" originalProcessID="PAC2134701" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/CostType__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+					<Label>_CostType_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<TableName />
+					<DisplayedColumns />
+					<DataSourceOrigin>Standalone</DataSourceOrigin>
+					<possibleKeys>
+OpEx
+CapEx</possibleKeys>
+					<SavedColumn />
+					<possibleValues>
+_OpEx
+_CapEx</possibleValues>
+					<ProcessName />
+				</field>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="S7Z4FP000PA9" id="NoID" label="_Currency_report" length="50" name="Currency__" originalProcessID="PAC2134701" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/Currency__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_Currency_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="PAC2134712" id="NoID" label="_DeliveryCompleted_report" length="0" name="DeliveryCompleted__" originalProcessID="PAC2134701" precision="0" submitable="1" type="BOOL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/DeliveryCompleted__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_DeliveryCompleted_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<ui>
+					<_type>Boolean</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="PAC2134718" id="NoID" label="_ItemDescription_report" length="32766" name="Description__" originalProcessID="PAC2134701" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/Description__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ItemDescription_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+				</gdr>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="PAC2135033" id="NoID" label="_ExchangeRate_Report" length="17" name="ExchangeRate__" originalProcessID="PAC2134701" precision="5" submitable="1" type="DECIMAL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ExchangeRate__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ExchangeRate_Report</Label>
+					<Alias />
+					<DecimalPrecision vartype="INT">5</DecimalPrecision>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="WTV4FP000PA9" id="NoID" label="_FreeDimension1_report" length="500" name="FreeDimension1__" originalProcessID="PAC2134701" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/FreeDimension1__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_FreeDimension1_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<Editable>false</Editable>
+					<TableName>CT#NOID</TableName>
+					<SortOrder>ASC</SortOrder>
+					<DisplayedColumns>Description__|CompanyCode__|Code__</DisplayedColumns>
+					<DisplayedColumnsIds />
+					<SavedColumn>Description__</SavedColumn>
+					<SavedColumnId />
+					<ExposedColumns />
+					<ProcessName>P2P - Free Dimension1__</ProcessName>
+					<KeyColumnId>Code__</KeyColumnId>
+					<KeyAttribute>FreeDimension1ID__</KeyAttribute>
+					<CustomFilter />
+				</field>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="DUB4FP000PA9" id="NoID" label="_FreeDimension1ID_report" length="500" name="FreeDimension1ID__" originalProcessID="PAC2134701" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/FreeDimension1ID__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_FreeDimension1ID_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<Editable>false</Editable>
+					<TableName>CT#NOID</TableName>
+					<SortOrder />
+					<DisplayedColumns>Code__|CompanyCode__|Description__</DisplayedColumns>
+					<DisplayedColumnsIds />
+					<SavedColumn>Code__</SavedColumn>
+					<SavedColumnId />
+					<ExposedColumns />
+					<ProcessName>P2P - Free Dimension1__</ProcessName>
+					<KeyColumnId />
+					<KeyAttribute />
+					<CustomFilter />
+				</field>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="PAC2134944" id="NoID" label="_Group_report" length="64" name="Group__" originalProcessID="PAC2134701" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/Group__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_Group_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="P454FP000M4H" id="NoID" label="_InternalOrder_report" length="50" name="InternalOrder__" originalProcessID="PAC2134701" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/InternalOrder__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_InternalOrder_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<Editable>false</Editable>
+					<TableName>CT#NOID</TableName>
+					<SortOrder>ASC</SortOrder>
+					<DisplayedColumns>InternalOrder__|Description__</DisplayedColumns>
+					<DisplayedColumnsIds />
+					<SavedColumn>InternalOrder__</SavedColumn>
+					<SavedColumnId />
+					<ExposedColumns />
+					<ProcessName>P2P - Internal order__</ProcessName>
+					<KeyColumnId />
+					<KeyAttribute />
+					<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+				</field>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="PXU4FP000PA9" id="NoID" label="_IsReplenishmentItem_report" length="0" name="IsReplenishmentItem__" originalProcessID="PAC2134701" precision="0" submitable="1" type="BOOL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/IsReplenishmentItem__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_IsReplenishmentItem_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Boolean</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="DN84FP000PA9" id="NoID" label="_ItemDeliveryAddressID_report" length="50" name="ItemDeliveryAddressID__" originalProcessID="PAC2134701" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ItemDeliveryAddressID__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ItemDeliveryAddressID_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="V793FP000M4H" id="NoID" label="_ItemOpenAmount_report" length="17" name="ItemOpenAmount__" originalProcessID="PAC2134701" precision="2" submitable="1" type="DECIMAL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ItemOpenAmount__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ItemOpenAmount_report</Label>
+					<Alias />
+					<DecimalPrecision vartype="INT">2</DecimalPrecision>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="W793FP000M4H" id="NoID" label="_ItemOrderedAmount_report" length="17" name="ItemOrderedAmount__" originalProcessID="PAC2134701" precision="2" submitable="1" type="DECIMAL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ItemOrderedAmount__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ItemOrderedAmount_report</Label>
+					<Alias />
+					<DecimalPrecision vartype="INT">2</DecimalPrecision>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="EN84FP000PA9" id="NoID" label="_ItemShipToAddress_report" length="32766" name="ItemShipToAddress__" originalProcessID="PAC2134701" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ItemShipToAddress__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ItemShipToAddress_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="CN84FP000PA9" id="NoID" label="_ItemShipToCompany_report" length="50" name="ItemShipToCompany__" originalProcessID="PAC2134701" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ItemShipToCompany__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ItemShipToCompany_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<Editable>true</Editable>
+					<TableName>CT#NOID</TableName>
+					<SortOrder />
+					<DisplayedColumns>ShipToCompany__|ShipToSub__|ShipToStreet__|ShipToCity__|ShipToZipCode__|ShipToRegion__|ShipToCountry__</DisplayedColumns>
+					<DisplayedColumnsIds />
+					<SavedColumn>ShipToCompany__</SavedColumn>
+					<SavedColumnId />
+					<ExposedColumns />
+					<ProcessName>PurchasingShipTo__</ProcessName>
+					<KeyColumnId>ID__</KeyColumnId>
+					<KeyAttribute>ItemDeliveryAddressID__</KeyAttribute>
+					<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+				</field>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="ALD3FP000M4H" id="NoID" label="_ItemType" length="50" name="ItemType__" originalProcessID="PAC2134701" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ItemType__</fullname>
+					<defaultvalue>QuantityBased</defaultvalue>
+				</db>
+				<extrainfo>
+					<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+					<Label>_ItemType</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<TableName />
+					<DataConditions>
+			&lt;dataCondition&gt;
+				&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+				&lt;filter&gt;msnex=*&lt;/filter&gt;
+				&lt;labelKey&gt;_Service based item enabled&lt;/labelKey&gt;
+				&lt;conditions&gt;
+					&lt;allowCondition&gt;
+						&lt;fieldName&gt;EnableServiceBasedItem__&lt;/fieldName&gt;
+						&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+					&lt;/allowCondition&gt;
+				&lt;/conditions&gt;
+				&lt;data&gt;
+					&lt;possibleKeys&gt;QuantityBased
+AmountBased
+ServiceBased&lt;/possibleKeys&gt;
+					&lt;possibleValues&gt;_QuantityBased
+_AmountBased
+_ServiceBased&lt;/possibleValues&gt;
+				&lt;/data&gt;
+			&lt;/dataCondition&gt;
+		</DataConditions>
+					<DisplayedColumns />
+					<DataSourceOrigin>Standalone</DataSourceOrigin>
+					<possibleKeys>QuantityBased
+AmountBased</possibleKeys>
+					<SavedColumn />
+					<possibleValues>_QuantityBased
+_AmountBased</possibleValues>
+					<ProcessName />
+				</field>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="WX62FP000FSX" id="NoID" label="_ItemUnit_report" length="3" name="ItemUnit__" originalProcessID="PAC2134701" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ItemUnit__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ItemUnit_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<Editable>true</Editable>
+					<required>false</required>
+					<TableName>CT#NOID</TableName>
+					<SortOrder>ASC</SortOrder>
+					<DisplayedColumns>UnitOfMeasure__|Description__</DisplayedColumns>
+					<DisplayedColumnsIds />
+					<SavedColumn>UnitOfMeasure__</SavedColumn>
+					<SavedColumnId />
+					<ProcessName>P2P - UnitOfMeasure__</ProcessName>
+					<KeyColumnId />
+					<KeyAttribute />
+					<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+				</field>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="VX62FP000FSX" id="NoID" label="_ItemUnitDescription_report" length="50" name="ItemUnitDescription__" originalProcessID="PAC2134701" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ItemUnitDescription__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ItemUnitDescription_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<Editable>true</Editable>
+					<TableName>CT#NOID</TableName>
+					<SortOrder>ASC</SortOrder>
+					<DisplayedColumns>Description__|UnitOfMeasure__</DisplayedColumns>
+					<DisplayedColumnsIds />
+					<SavedColumn>Description__</SavedColumn>
+					<SavedColumnId />
+					<ProcessName>P2P - UnitOfMeasure__</ProcessName>
+					<KeyColumnId />
+					<KeyAttribute />
+					<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+				</field>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="PAC2134707" id="NoID" label="_LineNumber_report" length="0" name="LineNumber__" originalProcessID="PAC2134701" precision="0" submitable="1" type="INT">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/LineNumber__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_LineNumber_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="PAC2134714" id="NoID" label="_ReceivedAmount" length="17" name="NetAmount__" originalProcessID="PAC2134701" precision="2" submitable="1" type="DECIMAL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/NetAmount__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ReceivedAmount</Label>
+					<Alias />
+					<DecimalPrecision vartype="INT">2</DecimalPrecision>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="H6QHG0000PA9" id="NoID" label="_NonDeductibleTaxRate_report" length="17" name="NonDeductibleTaxRate__" originalProcessID="PAC2134701" precision="3" submitable="1" type="DECIMAL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/NonDeductibleTaxRate__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_NonDeductibleTaxRate_report</Label>
+					<Alias />
+					<DecimalPrecision vartype="INT">3</DecimalPrecision>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="XKV4FP000PA9" id="NoID" label="_NotifyRequester_report" length="0" name="NotifyRequester__" originalProcessID="PAC2134701" precision="0" submitable="1" type="BOOL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/NotifyRequester__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_NotifyRequester_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Boolean</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="PAC2134706" id="NoID" label="_ItemNumber_report" length="50" name="Number__" originalProcessID="PAC2134701" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/Number__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ItemNumber_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="PAC2134710" id="NoID" label="_OpenQuantity_report" length="17" name="OpenQuantity__" originalProcessID="PAC2134701" precision="5" submitable="1" type="DECIMAL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/OpenQuantity__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_OpenQuantity_report</Label>
+					<Alias />
+					<DecimalPrecision vartype="INT">5</DecimalPrecision>
+					<DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+				</gdr>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="PAC2134709" id="NoID" label="_OrderedQuantity_report" length="17" name="OrderedQuantity__" originalProcessID="PAC2134701" precision="5" submitable="1" type="DECIMAL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/OrderedQuantity__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_OrderedQuantity_report</Label>
+					<Alias />
+					<DecimalPrecision vartype="INT">5</DecimalPrecision>
+					<DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+				</gdr>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="PAC2135032" id="NoID" label="_OrderNumber_report" length="50" name="OrderNumber__" originalProcessID="PAC2134701" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/OrderNumber__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_OrderNumber_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="SUZ000000YRL" id="NoID" label="_OriginalContractRUIDEX_report" length="500" name="OriginalContractRUIDEX__" originalProcessID="PAC2134701" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/OriginalContractRUIDEX__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_OriginalContractRUIDEX_report</Label>
+					<Alias />
+					<Behavior>Default</Behavior>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="PI93FP000M4H" id="NoID" label="_PercentageReceived_report" length="17" name="PercentageReceived__" originalProcessID="PAC2134701" precision="2" submitable="1" type="DECIMAL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/PercentageReceived__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_PercentageReceived_report</Label>
+					<Alias />
+					<DecimalPrecision vartype="INT">2</DecimalPrecision>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="XVF2FP000IYP" id="NoID" label="_POBudgetID_report" length="128" name="POBudgetID__" originalProcessID="PAC2134701" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/POBudgetID__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_POBudgetID_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="CJP3FP000M4H" id="NoID" label="_ProjectCode_report" length="50" name="ProjectCode__" originalProcessID="PAC2134701" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ProjectCode__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ProjectCode_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<Editable>true</Editable>
+					<TableName>CT#NOID</TableName>
+					<SortOrder />
+					<DisplayedColumns>ProjectCode__|Description__</DisplayedColumns>
+					<DisplayedColumnsIds />
+					<SavedColumn>ProjectCode__</SavedColumn>
+					<SavedColumnId />
+					<ExposedColumns />
+					<ProcessName>P2P - Project codes__</ProcessName>
+					<KeyColumnId />
+					<KeyAttribute />
+					<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+				</field>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="IJP3FP000M4H" id="NoID" label="_ProjectCodeDescription_report" length="50" name="ProjectCodeDescription__" originalProcessID="PAC2134701" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ProjectCodeDescription__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ProjectCodeDescription_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<Editable>true</Editable>
+					<TableName>CT#NOID</TableName>
+					<SortOrder />
+					<DisplayedColumns>Description__|ProjectCode__</DisplayedColumns>
+					<DisplayedColumnsIds />
+					<SavedColumn>Description__</SavedColumn>
+					<SavedColumnId />
+					<ExposedColumns />
+					<ProcessName>P2P - Project codes__</ProcessName>
+					<KeyColumnId />
+					<KeyAttribute />
+					<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+				</field>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="M9C8FP000VLT" id="NoID" label="_ProjectName_report" length="100" name="ProjectName__" originalProcessID="PAC2134701" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ProjectName__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ProjectName_report</Label>
+					<Alias />
+					<DataConditions>&lt;dataCondition&gt;
+			&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+			&lt;filter&gt;msnex=*&lt;/filter&gt;
+			&lt;labelKey&gt;_Project management enabled&lt;/labelKey&gt;
+			&lt;conditions&gt;
+				&lt;allowCondition&gt;
+					&lt;fieldName&gt;EnableProject__&lt;/fieldName&gt;
+					&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+				&lt;/allowCondition&gt;
+			&lt;/conditions&gt;
+			&lt;/dataCondition&gt;</DataConditions>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="N9C8FP000VLT" id="NoID" label="_ProjectNumber_report" length="50" name="ProjectNumber__" originalProcessID="PAC2134701" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ProjectNumber__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ProjectNumber_report</Label>
+					<Alias />
+					<DataConditions>&lt;dataCondition&gt;
+			&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+			&lt;filter&gt;msnex=*&lt;/filter&gt;
+			&lt;labelKey&gt;_Project management enabled&lt;/labelKey&gt;
+			&lt;conditions&gt;
+				&lt;allowCondition&gt;
+					&lt;fieldName&gt;EnableProject__&lt;/fieldName&gt;
+					&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+				&lt;/allowCondition&gt;
+			&lt;/conditions&gt;
+			&lt;/dataCondition&gt;</DataConditions>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="PAC2134711" id="NoID" label="_ReceivedQuantity_report" length="17" name="ReceivedQuantity__" originalProcessID="PAC2134701" precision="5" submitable="1" type="DECIMAL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ReceivedQuantity__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ReceivedQuantity_report</Label>
+					<Alias />
+					<DecimalPrecision vartype="INT">5</DecimalPrecision>
+					<DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+				</gdr>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="CFP1FP000FSX" id="NoID" label="_RecipientDN_report" length="80" name="RecipientDN__" originalProcessID="PAC2134701" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/RecipientDN__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_RecipientDN_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="DFP1FP000FSX" id="NoID" label="_RecipientName_report" length="50" name="RecipientName__" originalProcessID="PAC2134701" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/RecipientName__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_RecipientName_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="PAC242294CC7" id="NoID" label="_RequestedDeliveryDate_report" length="0" name="RequestedDeliveryDate__" originalProcessID="PAC2134701" precision="0" submitable="1" type="DATE">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/RequestedDeliveryDate__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_RequestedDeliveryDate_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>Date</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="PHQG42294B69" id="NoID" label="_RequesterDN_report" length="500" name="RequesterDN__" originalProcessID="PAC2134701" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/RequesterDN__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_RequesterDN_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="HUME42294B6A" id="NoID" label="_RequesterName_report" length="50" name="RequesterName__" originalProcessID="PAC2134701" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/RequesterName__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_RequesterName_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="PAC2135031" id="NoID" label="_RequisitionNumber_report" length="50" name="RequisitionNumber__" originalProcessID="PAC2134701" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/RequisitionNumber__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_RequisitionNumber_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="W5UIG0000SG1" id="NoID" label="_ReturnedQuantity_report" length="17" name="ReturnedQuantity__" originalProcessID="PAC2134701" precision="5" submitable="1" type="DECIMAL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/ReturnedQuantity__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_ReturnedQuantity_report</Label>
+					<Alias />
+					<DecimalPrecision vartype="INT">5</DecimalPrecision>
+					<DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="HSAIG0000SG1" id="NoID" label="_SupplierPartID_report" length="255" name="SupplierPartID__" originalProcessID="PAC2134701" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/SupplierPartID__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_SupplierPartID_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="PAC2134713" id="NoID" label="_UnitPrice_report" length="17" name="UnitPrice__" originalProcessID="PAC2134701" precision="5" submitable="1" type="DECIMAL">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/UnitPrice__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_UnitPrice_report</Label>
+					<Alias />
+					<DecimalPrecision vartype="INT">5</DecimalPrecision>
+					<DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<gdr>
+					<VarType>Area</VarType>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>Number</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="QXU4FP000PA9" id="NoID" label="_WarehouseID_report" length="50" name="WarehouseID__" originalProcessID="PAC2134701" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/WarehouseID__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_WarehouseID_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<Editable>false</Editable>
+					<TableName>CT#NOID</TableName>
+					<SortOrder />
+					<DisplayedColumns>WarehouseID__|Name__</DisplayedColumns>
+					<DisplayedColumnsIds />
+					<SavedColumn>WarehouseID__</SavedColumn>
+					<SavedColumnId />
+					<ExposedColumns />
+					<ProcessName>P2P - Warehouse__</ProcessName>
+					<KeyColumnId />
+					<KeyAttribute />
+					<CustomFilter />
+				</field>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="RXU4FP000PA9" id="NoID" label="_WarehouseName_report" length="50" name="WarehouseName__" originalProcessID="PAC2134701" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/WarehouseName__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_WarehouseName_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<Editable>false</Editable>
+					<TableName>CT#NOID</TableName>
+					<SortOrder />
+					<DisplayedColumns>Name__|WarehouseID__</DisplayedColumns>
+					<DisplayedColumnsIds />
+					<SavedColumn>Name__</SavedColumn>
+					<SavedColumnId />
+					<ExposedColumns />
+					<ProcessName>P2P - Warehouse__</ProcessName>
+					<KeyColumnId>WarehouseID__</KeyColumnId>
+					<KeyAttribute>WarehouseID__</KeyAttribute>
+					<CustomFilter />
+				</field>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="Q454FP000M4H" id="NoID" label="_WBSElement_report" length="50" name="WBSElement__" originalProcessID="PAC2134701" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/WBSElement__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_WBSElement_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<Editable>false</Editable>
+					<TableName>CT#NOID</TableName>
+					<SortOrder>ASC</SortOrder>
+					<DisplayedColumns>Description__</DisplayedColumns>
+					<DisplayedColumnsIds />
+					<SavedColumn>WBSElement__</SavedColumn>
+					<SavedColumnId />
+					<ExposedColumns />
+					<ProcessName>P2P - WBS Element__</ProcessName>
+					<KeyColumnId>WBSElementID__</KeyColumnId>
+					<KeyAttribute>WBSElementID__</KeyAttribute>
+					<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+				</field>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+		<field datatableid="" deleted="0" format="" guid="BHE4FP000M4H" id="NoID" label="_WBSElementID_report" length="50" name="WBSElementID__" originalProcessID="PAC2134701" precision="0" submitable="1" type="STR">
+			<properties>
+				<db>
+					<alias />
+					<noxml>1</noxml>
+					<fullname>/job/processfields/WBSElementID__</fullname>
+					<defaultvalue />
+				</db>
+				<extrainfo>
+					<Label>_WBSElementID_report</Label>
+					<Alias />
+					<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				</extrainfo>
+				<field>
+					<Editable>true</Editable>
+					<TableName>CT#NOID</TableName>
+					<SortOrder>ASC</SortOrder>
+					<DisplayedColumns>WBSElement__|Description__</DisplayedColumns>
+					<DisplayedColumnsIds />
+					<SavedColumn>WBSElement__</SavedColumn>
+					<SavedColumnId />
+					<ExposedColumns />
+					<ProcessName>P2P - WBS Element__</ProcessName>
+					<KeyColumnId />
+					<KeyAttribute />
+					<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+				</field>
+				<gdr>
+					<DisableAutolearn>1</DisableAutolearn>
+				</gdr>
+				<help>
+					<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+				</help>
+				<ui>
+					<_type>String</_type>
+					<automatic>true</automatic>
+				</ui>
+			</properties>
+		</field>
+	</datatable>
+	<type id="NoID" name="CD" />
+	<field deleted="0" format="" guid="AYQ5FP000PA9" id="NoID" label="_ASNNumber_report" length="50" name="ASNNumber__" originalProcessID="PAC2134701" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ASNNumber__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ASNNumber_report</Label>
+				<Alias />
+				<Group>Good_Receipt_Details</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="MVX300000VLT" id="NoID" label="_BRNumber_report" length="50" name="BRNumber__" originalProcessID="PAC2134701" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/BRNumber__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_BRNumber_report</Label>
+				<Alias />
+				<Group>Good_Receipt_Details</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PHQG42295290" id="NoID" label="_CancelComment report" length="32766" name="CancelComment__" originalProcessID="PAC2134701" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CancelComment__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_CancelComment report</Label>
+				<Alias />
+				<Group>Good_Receipt_Details</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PAC2134705" id="NoID" label="Comment" length="65535" name="Comment__" originalProcessID="PAC2134701" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<isLongText>true</isLongText>
+			</field>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PAC2135034" id="NoID" label="_CompanyCode_report" length="50" name="CompanyCode__" originalProcessID="PAC2134701" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CompanyCode__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_CompanyCode_report</Label>
+				<Alias />
+				<Group>Good_Receipt_Details</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PAC2134703" id="NoID" label="_DeliveryDate_report" length="0" name="DeliveryDate__" originalProcessID="PAC2134701" precision="0" processid="" submitable="1" type="DATE">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/DeliveryDate__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_DeliveryDate_report</Label>
+				<Alias />
+				<Group>Good_Receipt_Details</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<required>true</required>
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PAC2134704" id="NoID" label="_DeliveryNote_report" length="50" name="DeliveryNote__" originalProcessID="PAC2134701" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/DeliveryNote__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_DeliveryNote_report</Label>
+				<Alias />
+				<Group>Good_Receipt_Details</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PQS1FP000FSX" id="NoID" label="_ERP_report" length="50" name="ERP__" originalProcessID="PAC2134701" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ERP__</fullname>
+				<defaultvalue>SAP</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_ERP_report</Label>
+				<Alias />
+				<Group>Good_Receipt_Details</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<DisplayedColumns />
+				<DataSourceOrigin>Standalone</DataSourceOrigin>
+				<possibleKeys>SAP
+universal
+generic</possibleKeys>
+				<SavedColumn />
+				<possibleValues>_SAP
+_universal
+_GenericProcurement</possibleValues>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PAC2134256" id="NoID" label="_ERPError_report" length="3000" name="ERPError__" originalProcessID="PAC2134701" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ERPError__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ERPError_report</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PAC2134255" id="NoID" label="_GRNumber" length="50" name="GRNumber__" originalProcessID="PAC2134701" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/GRNumber__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_GRNumber</Label>
+				<Alias />
+				<Group>Good_Receipt_Details</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="KOQC3B9DACBC" id="NoID" label="_GRStatus_report" length="50" name="GRStatus__" originalProcessID="PAC2134701" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/GRStatus__</fullname>
+				<defaultvalue>To receive</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_GRStatus_report</Label>
+				<Alias />
+				<Group>Good_Receipt_Details</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<DisplayedColumns />
+				<DataSourceOrigin>Standalone</DataSourceOrigin>
+				<possibleKeys>
+To receive
+Received
+Canceled
+WaitingForERPAck</possibleKeys>
+				<SavedColumn />
+				<possibleValues>
+_Goods to receive
+_Goods received
+_Goods canceled
+_Goods waiting for ERP ack</possibleValues>
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PAC2134702" id="NoID" label="_OrderNumber_report" length="50" name="OrderNumber__" originalProcessID="PAC2134701" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/OrderNumber__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_OrderNumber_report</Label>
+				<Alias />
+				<Group>Good_Receipt_Details</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="ISOX00000PA9" id="NoID" label="_ScoringComment_report" length="32766" name="ScoringComment__" originalProcessID="PAC2134701" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ScoringComment__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ScoringComment_report</Label>
+				<Alias />
+				<Group>Good_Receipt_Details</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="HSOX00000PA9" id="NoID" label="_ScoringValue_report" length="0" name="ScoringValue__" originalProcessID="PAC2134701" precision="0" processid="" submitable="1" type="INT">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ScoringValue__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ScoringValue_report</Label>
+				<Alias />
+				<Group>Good_Receipt_Details</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="NA76FP000PA9" id="NoID" label="_TechnicalData_report" length="30000" name="TechnicalData__" originalProcessID="PAC2134701" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TechnicalData__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TechnicalData_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<DoNotShowInDM>1</DoNotShowInDM>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="MXWHG0000SG1" id="NoID" label="_VendorName report" length="50" name="VendorName__" originalProcessID="PAC2134701" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/VendorName__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_VendorName report</Label>
+				<Alias />
+				<Group>Good_Receipt_Details</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<DoNotShowInDM>0</DoNotShowInDM>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="NXWHG0000SG1" id="NoID" label="_VendorNumber report" length="50" name="VendorNumber__" originalProcessID="PAC2134701" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/VendorNumber__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_VendorNumber report</Label>
+				<Alias />
+				<Group>Good_Receipt_Details</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<DoNotShowInDM>0</DoNotShowInDM>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="RU2IG0000SG1" id="NoID" label="_WarehouseID_report" length="50" name="WarehouseID__" originalProcessID="PAC2134701" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/WarehouseID__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_WarehouseID_report</Label>
+				<Alias />
+				<Group>Good_Receipt_Details</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="QU2IG0000SG1" id="NoID" label="_WarehouseName_report" length="50" name="WarehouseName__" originalProcessID="PAC2134701" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/WarehouseName__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_WarehouseName_report</Label>
+				<Alias />
+				<Group>Good_Receipt_Details</Group>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+</process>

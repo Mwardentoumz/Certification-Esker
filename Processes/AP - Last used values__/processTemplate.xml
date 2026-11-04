@@ -1,0 +1,601 @@
+<process accountid="" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:06:00" deleted="0" eskerapplication="P2P" global="0" id="NoID" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="AP - Last used values__" needvalidation="1" ootofilter="" ootoversion="0" originalProcessID="YVQC45221" ownerid="" ownerpb="" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomTable" upgradable="1" userid="" version="1" visibility="0">
+	<properties>
+		<dataConditions>
+			<listDataConditions>
+				&lt;dataCondition&gt;
+					&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+					&lt;filter&gt;msnex=*&lt;/filter&gt;
+					&lt;labelKey&gt;_AP disabled&lt;/labelKey&gt;
+					&lt;conditions&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableAccountPayableGlobalSetting__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+					&lt;/conditions&gt;
+				&lt;/dataCondition&gt;
+			</listDataConditions>
+		</dataConditions>
+		<dbIndex>
+			<AUTO_AC79QT400153EA>&lt;Index&gt;&lt;Ref Name="AC79QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AC79QT400153EA>
+			<AUTO_AF79QT400153EA>&lt;Index&gt;&lt;Ref Name="AF79QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AF79QT400153EA>
+			<AUTO_AO69QT400153EA>&lt;Index&gt;&lt;Ref Name="AO69QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AO69QT400153EA>
+		</dbIndex>
+		<lg>
+			<!--*.xml-->
+		</lg>
+		<process>
+			<BUColumn>CompanyCode__</BUColumn>
+			<flowtype>processing</flowtype>
+			<homepagelabel>AP - Last used values</homepagelabel>
+			<upgradable>yes</upgradable>
+			<instanciable>1</instanciable>
+			<disableScriptModification>true</disableScriptModification>
+			<enableUpgradableDesign>true</enableUpgradableDesign>
+			<OverrideAllowedAttachmentExtensions>*</OverrideAllowedAttachmentExtensions>
+			<AllowUploadAttachment>0</AllowUploadAttachment>
+			<AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+			<shouldRollbackManualRecordEdits>true</shouldRollbackManualRecordEdits>
+			<UseCultureFormat>true</UseCultureFormat>
+			<TransportName>CustomTable</TransportName>
+			<LayoutVersion>1.0</LayoutVersion>
+		</process>
+		<ui>
+			<customscriptIncludedScripts>[LIB_P2P_CUSTOMIZATION_TABLES_CLIENT]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers</customscriptIncludedScripts>
+			<CustomScript>
+				<!--customscript.js--></CustomScript>
+			<restorationPanel>DataPanel</restorationPanel>
+			<layout>
+				<!--layout.json--></layout>
+		</ui>
+	</properties>
+	<type id="NoID" name="CT" />
+	<field deleted="0" format="" guid="AYLN103814" id="NoID" label="_PercentageAmount_report" length="17" name="AmountPercent__" originalProcessID="YVQC45221" precision="5" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/AmountPercent__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_PercentageAmount_report</Label>
+				<Alias />
+				<DecimalPrecision vartype="INT">5</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="WZCA86557834" id="NoID" label="_CompanyCode_report" length="50" name="CompanyCode__" originalProcessID="YVQC45221" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CompanyCode__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_CompanyCode_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>true</Editable>
+				<required>true</required>
+				<TableName>CT#NOID</TableName>
+				<SortOrder>ASC</SortOrder>
+				<DisplayedColumns>CompanyCode__|CompanyName__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<SavedColumn>CompanyCode__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>PurchasingCompanycodes__</ProcessName>
+				<CustomFilter />
+			</field>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="UOBA86557835" id="NoID" label="_CostCenter_report" length="20" name="CostCenter__" originalProcessID="YVQC45221" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CostCenter__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_CostCenter_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>true</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder>ASC</SortOrder>
+				<DisplayedColumns>CostCenter__|Description__|CompanyCode__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<SavedColumn>CostCenter__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>AP - Cost centers__</ProcessName>
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(!(CompanyCode__=*)))</CustomFilter>
+			</field>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="CD0100000001" id="NoID" label="_CustomDimension1_report" length="50" name="CustomDimension1__" originalProcessID="YVQC45221" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CustomDimension1__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_CustomDimension1_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>true</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder>ASC</SortOrder>
+				<DisplayedColumns>CustomDimension1__|Description__|CompanyCode__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<SavedColumn>CustomDimension1__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>P2P - Custom Dimension 1__</ProcessName>
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(!(CompanyCode__=*)))</CustomFilter>
+			</field>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="CD1000000010" id="NoID" label="_CustomDimension10_report" length="50" name="CustomDimension10__" originalProcessID="YVQC45221" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CustomDimension10__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_CustomDimension10_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>true</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder>ASC</SortOrder>
+				<DisplayedColumns>CustomDimension10__|Description__|CompanyCode__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<SavedColumn>CustomDimension10__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>P2P - Custom Dimension 10__</ProcessName>
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(!(CompanyCode__=*)))</CustomFilter>
+			</field>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="CD0200000002" id="NoID" label="_CustomDimension2_report" length="50" name="CustomDimension2__" originalProcessID="YVQC45221" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CustomDimension2__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_CustomDimension2_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>true</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder>ASC</SortOrder>
+				<DisplayedColumns>CustomDimension2__|Description__|CompanyCode__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<SavedColumn>CustomDimension2__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>P2P - Custom Dimension 2__</ProcessName>
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(!(CompanyCode__=*)))</CustomFilter>
+			</field>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="CD0300000003" id="NoID" label="_CustomDimension3_report" length="50" name="CustomDimension3__" originalProcessID="YVQC45221" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CustomDimension3__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_CustomDimension3_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>true</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder>ASC</SortOrder>
+				<DisplayedColumns>CustomDimension3__|Description__|CompanyCode__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<SavedColumn>CustomDimension3__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>P2P - Custom Dimension 3__</ProcessName>
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(!(CompanyCode__=*)))</CustomFilter>
+			</field>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="CD0400000004" id="NoID" label="_CustomDimension4_report" length="50" name="CustomDimension4__" originalProcessID="YVQC45221" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CustomDimension4__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_CustomDimension4_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>true</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder>ASC</SortOrder>
+				<DisplayedColumns>CustomDimension4__|Description__|CompanyCode__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<SavedColumn>CustomDimension4__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>P2P - Custom Dimension 4__</ProcessName>
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(!(CompanyCode__=*)))</CustomFilter>
+			</field>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="CD0500000005" id="NoID" label="_CustomDimension5_report" length="50" name="CustomDimension5__" originalProcessID="YVQC45221" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CustomDimension5__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_CustomDimension5_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>true</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder>ASC</SortOrder>
+				<DisplayedColumns>CustomDimension5__|Description__|CompanyCode__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<SavedColumn>CustomDimension5__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>P2P - Custom Dimension 5__</ProcessName>
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(!(CompanyCode__=*)))</CustomFilter>
+			</field>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="CD0600000006" id="NoID" label="_CustomDimension6_report" length="50" name="CustomDimension6__" originalProcessID="YVQC45221" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CustomDimension6__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_CustomDimension6_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>true</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder>ASC</SortOrder>
+				<DisplayedColumns>CustomDimension6__|Description__|CompanyCode__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<SavedColumn>CustomDimension6__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>P2P - Custom Dimension 6__</ProcessName>
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(!(CompanyCode__=*)))</CustomFilter>
+			</field>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="CD0700000007" id="NoID" label="_CustomDimension7_report" length="50" name="CustomDimension7__" originalProcessID="YVQC45221" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CustomDimension7__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_CustomDimension7_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>true</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder>ASC</SortOrder>
+				<DisplayedColumns>CustomDimension7__|Description__|CompanyCode__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<SavedColumn>CustomDimension7__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>P2P - Custom Dimension 7__</ProcessName>
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(!(CompanyCode__=*)))</CustomFilter>
+			</field>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="CD0800000008" id="NoID" label="_CustomDimension8_report" length="50" name="CustomDimension8__" originalProcessID="YVQC45221" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CustomDimension8__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_CustomDimension8_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>true</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder>ASC</SortOrder>
+				<DisplayedColumns>CustomDimension8__|Description__|CompanyCode__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<SavedColumn>CustomDimension8__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>P2P - Custom Dimension 8__</ProcessName>
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(!(CompanyCode__=*)))</CustomFilter>
+			</field>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="CD0900000009" id="NoID" label="_CustomDimension9_report" length="50" name="CustomDimension9__" originalProcessID="YVQC45221" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CustomDimension9__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_CustomDimension9_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>true</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder>ASC</SortOrder>
+				<DisplayedColumns>CustomDimension9__|Description__|CompanyCode__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<SavedColumn>CustomDimension9__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>P2P - Custom Dimension 9__</ProcessName>
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(!(CompanyCode__=*)))</CustomFilter>
+			</field>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="NW7100000VLT" id="NoID" label="_EnergyConsumptionUnit" length="50" name="EnergyConsumptionUnit__" originalProcessID="YVQC45221" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/EnergyConsumptionUnit__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_EnergyConsumptionUnit</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<required>false</required>
+			</field>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="DLJC86557836" id="NoID" label="_GLAccount_report" length="50" name="GLAccount__" originalProcessID="YVQC45221" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/GLAccount__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_GLAccount_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>true</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder>ASC</SortOrder>
+				<DisplayedColumns>Account__|Description__|CompanyCode__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<SavedColumn>Account__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>AP - G/L accounts__</ProcessName>
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(!(CompanyCode__=*)))</CustomFilter>
+			</field>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="POAM103544" id="NoID" label="_LineNumber_report" length="0" name="LineNumber__" originalProcessID="YVQC45221" precision="0" processid="" submitable="1" type="INT">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/LineNumber__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_LineNumber_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="XKFB86557837" id="NoID" label="_TaxCode_report" length="600" name="TaxCode__" originalProcessID="YVQC45221" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TaxCode__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_TaxCode_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>true</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder>ASC</SortOrder>
+				<DisplayedColumns>TaxCode__|Description__|TaxRate__|CompanyCode__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<SavedColumn>TaxCode__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>AP - Tax codes__</ProcessName>
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(!(CompanyCode__=*)))</CustomFilter>
+			</field>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="XKFB86557838" id="NoID" label="_Tax rate_report" length="115" name="TaxRate__" originalProcessID="YVQC45221" precision="3" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TaxRate__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Tax rate_report</Label>
+				<Alias />
+				<DecimalPrecision vartype="INT">3</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<required>false</required>
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="YWXX86558356" id="NoID" label="_VendorNumber_report" length="50" name="VendorNumber__" originalProcessID="YVQC45221" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/VendorNumber__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_VendorNumber_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>true</Editable>
+				<required>true</required>
+				<TableName>CT#NOID</TableName>
+				<SortOrder>ASC</SortOrder>
+				<DisplayedColumns>Number__|Name__|CompanyCode__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<SavedColumn>Number__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>AP - Vendors__</ProcessName>
+				<CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(!(CompanyCode__=*)))</CustomFilter>
+			</field>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+</process>

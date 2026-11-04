@@ -1,0 +1,1409 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:05:53" deleted="0" eskerapplication="P2P" global="0" id="D19QT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="AP - Purchase order - Headers__" needvalidation="1" ootofilter="" ootoversion="0" originalProcessID="PHQG1696" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomTable" upgradable="1" userid="0" version="1" visibility="0">
+  <properties>
+    <dataConditions>
+      <listDataConditions>
+				&lt;dataCondition&gt;
+					&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+					&lt;filter&gt;msnex=*&lt;/filter&gt;
+					&lt;labelKey&gt;_Purchasing or _AP disabled&lt;/labelKey&gt;
+					&lt;multipleConditionsLink&gt;or&lt;/multipleConditionsLink&gt;
+					&lt;conditions&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableAccountPayableGlobalSetting__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableStandardPurchasingGlobalSetting__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+					&lt;/conditions&gt;
+				&lt;/dataCondition&gt;</listDataConditions>
+    </dataConditions>
+    <dbIndex>
+      <AUTO_AF19QT400153EA>&lt;Index&gt;&lt;Ref Name="AF19QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AF19QT400153EA>
+      <AUTO_AN19QT400153EA>&lt;Index&gt;&lt;Ref Name="AN19QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AN19QT400153EA>
+      <AUTO_AP19QT400153EA>&lt;Index&gt;&lt;Ref Name="AP19QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AP19QT400153EA>
+      <AUTO_AR19QT400153EA>&lt;Index&gt;&lt;Ref Name="AR19QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AR19QT400153EA>
+    </dbIndex>
+    <lg>
+      <process_da>{
+	"_NoMoreInvoiceExpected": "Markér som lukket",
+	"_NoMoreInvoiceExpected_report__": "Markér som lukket",
+	"AP - Purchase order - Headers": "S2P – indkøbsordre – overskrift",
+	"Buyer": "Køber",
+	"Company code": "Virksomhedskode",
+	"Currency": "Valuta",
+	"Delivered amount": "Levereret beløb",
+	"Different invoicing party": "Anden faktureringspart",
+	"Invoiced amount": "Faktureret beløb",
+	"Is created in ERP": "Indkøbsordre oprettet i ERP",
+	"Is local PO_V2": "Indkøbsordre oprettet i modulet 'Indkøb'",
+	"Order date": "Ordredato",
+	"Order number": "Ordrenummer",
+	"Ordered amount": "Bestilt antal",
+	"Receiver": "Modtager",
+	"Vendor number": "Leverandørnummer"
+}</process_da>
+      <process_de>{
+	"_NoMoreInvoiceExpected": "Als geschlossen kennzeichnen",
+	"_NoMoreInvoiceExpected_report__": "Als geschlossen kennzeichnen",
+	"AP - Purchase order - Headers": "S2P - Bestellung - Kopfzeile",
+	"Buyer": "Einkäufer",
+	"Company code": "Buchungskreis",
+	"Currency": "Währung",
+	"Delivered amount": "Gelieferter Betrag",
+	"Different invoicing party": "Abweichender Rechnungssteller",
+	"Invoiced amount": "Rechnungsbetrag",
+	"Is created in ERP": "Bestellung im ERP erstellt",
+	"Is local PO_V2": "Bestellung im Modul 'Einkauf' erzeugt",
+	"Order date": "Bestelldatum",
+	"Order number": "Bestellnummer",
+	"Ordered amount": "Bestellbetrag",
+	"Receiver": "Empfänger",
+	"Vendor number": "Lieferantennummer"
+}</process_de>
+      <process_JA>{
+	"_NoMoreInvoiceExpected": "クローズとしてマーク",
+	"_NoMoreInvoiceExpected_report__": "クローズとしてマーク",
+	"AP - Purchase order - Headers": "S2P - 発注書 - ヘッダー",
+	"Buyer": "購入者",
+	"Company code": "会社コード",
+	"Currency": "通貨",
+	"Delivered amount": "納品金額",
+	"Different invoicing party": "別の請求者",
+	"Invoiced amount": "請求金額",
+	"Is created in ERP": "ERPで作成されたPO",
+	"Is local PO_V2": "「調達」モジュールで作成されたPO",
+	"Order date": "注文日",
+	"Order number": "注文番号",
+	"Ordered amount": "注文金額",
+	"Receiver": "受信者",
+	"Vendor number": "仕入先番号"
+}</process_JA>
+      <process_en>{
+	"_NoMoreInvoiceExpected": "Mark as closed",
+	"_NoMoreInvoiceExpected_report__": "Mark as closed",
+	"AP - Purchase order - Headers": "S2P - Purchase order - Header",
+	"Buyer": "Buyer",
+	"Company code": "Company code",
+	"Currency": "Currency",
+	"Delivered amount": "Delivered amount",
+	"Different invoicing party": "Different invoicing party",
+	"Invoiced amount": "Invoiced amount",
+	"Is created in ERP": "PO created in ERP",
+	"Is local PO_V2": "PO created in 'Procurement' module",
+	"Order date": "Order date",
+	"Order number": "Order number",
+	"Ordered amount": "Ordered amount",
+	"Receiver": "Recipient",
+	"Vendor number": "Supplier number"
+}</process_en>
+      <process_es>{
+	"_NoMoreInvoiceExpected": "Marcar como cerrado",
+	"_NoMoreInvoiceExpected_report__": "Marcar como cerrado",
+	"AP - Purchase order - Headers": "S2P - Pedido de compra - Encabezado",
+	"Buyer": "Comprador",
+	"Company code": "Código de empresa",
+	"Currency": "Divisa",
+	"Delivered amount": "Importe entregado",
+	"Different invoicing party": "Emisor de factura diferente",
+	"Invoiced amount": "Importe facturado",
+	"Is created in ERP": "Pedido creado en el ERP",
+	"Is local PO_V2": "Pedido creado en el módulo 'Compras'",
+	"Order date": "Fecha de pedido",
+	"Order number": "Número de pedido",
+	"Ordered amount": "Importe pedido",
+	"Receiver": "Destinatario",
+	"Vendor number": "Número de proveedor"
+}</process_es>
+      <process_fr>{
+	"_NoMoreInvoiceExpected": "Marquer comme soldée",
+	"_NoMoreInvoiceExpected_report__": "Marquer comme soldée",
+	"AP - Purchase order - Headers": "S2P - Commande fournisseur - En-tête",
+	"Buyer": "Acheteur",
+	"Company code": "Code société",
+	"Currency": "Devise",
+	"Delivered amount": "Montant livré",
+	"Different invoicing party": "Autre auteur de la facture",
+	"Invoiced amount": "Montant facturé",
+	"Is created in ERP": "Commande créée dans l'ERP",
+	"Is local PO_V2": "Commande créée dans le module 'Achats'",
+	"Order date": "Date de commande",
+	"Order number": "Numéro de commande",
+	"Ordered amount": "Montant commandé",
+	"Receiver": "Réceptionnaire",
+	"Vendor number": "Numéro du fournisseur"
+}</process_fr>
+      <process_nl-NL>{
+	"_NoMoreInvoiceExpected": "Markeer als gesloten",
+	"_NoMoreInvoiceExpected_report__": "Markeer als gesloten",
+	"AP - Purchase order - Headers": "S2P - Kooporder - Koptekst",
+	"Buyer": "Koper",
+	"Company code": "Bedrijfscode",
+	"Currency": "Valuta",
+	"Delivered amount": "Bedrag geleverd",
+	"Different invoicing party": "Verschillende partij facturering",
+	"Invoiced amount": "Gefactureerd bedrag",
+	"Is created in ERP": "PO aangemaakt in ERP",
+	"Is local PO_V2": "PO aangemaakt in module ‘Inkoop’",
+	"Order date": "Besteldatum",
+	"Order number": "Bestelnummer",
+	"Ordered amount": "Besteld bedrag",
+	"Receiver": "Ontvanger",
+	"Vendor number": "Nummer leverancier"
+}</process_nl-NL>
+      <process_pl>{
+	"_NoMoreInvoiceExpected": "Oznacz jako zamknięte",
+	"_NoMoreInvoiceExpected_report__": "Oznacz jako zamknięte",
+	"AP - Purchase order - Headers": "S2P – zamówienie zakupu – nagłówek",
+	"Buyer": "Kupujący",
+	"Company code": "Kod firmy",
+	"Currency": "Waluta",
+	"Delivered amount": "Dostarczona kwota",
+	"Different invoicing party": "Inny wystawca faktury",
+	"Invoiced amount": "Zafakturowana kwota",
+	"Is created in ERP": "ZZ utworzone w systemie ERP",
+	"Is local PO_V2": "ZZ utworzone w module Nabycie",
+	"Order date": "Data zamówienia",
+	"Order number": "Numer zamówienia",
+	"Ordered amount": "Zamówiona kwota",
+	"Receiver": "Odbiorca",
+	"Vendor number": "Numer dostawcy"
+}</process_pl>
+      <process_it>{
+	"_NoMoreInvoiceExpected": "Segna come chiuso",
+	"_NoMoreInvoiceExpected_report__": "Segna come chiuso",
+	"AP - Purchase order - Headers": "S2P - Ordine di acquisto - Intestazione",
+	"Buyer": "Compratore",
+	"Company code": "Codice società",
+	"Currency": "Valuta",
+	"Delivered amount": "Importo recapitato",
+	"Different invoicing party": "Emittente fattura differente",
+	"Invoiced amount": "Importo fatturato",
+	"Is created in ERP": "Ordine creato nell'ERP",
+	"Is local PO_V2": "Ordine creato nel modulo 'Acquisti'",
+	"Order date": "Data ordine",
+	"Order number": "Numero ordine",
+	"Ordered amount": "Importo ordinato",
+	"Receiver": "Destinatario",
+	"Vendor number": "Numero fornitore"
+}</process_it>
+      <process_sk>{
+	"_NoMoreInvoiceExpected": "Označiť ako uzavreté",
+	"_NoMoreInvoiceExpected_report__": "Označiť ako uzavreté",
+	"AP - Purchase order - Headers": "S2P – Objednávka – Hlavička",
+	"Buyer": "Kupujúci",
+	"Company code": "Kód spoločnosti",
+	"Currency": "Mena",
+	"Delivered amount": "Dodané množstvo",
+	"Different invoicing party": "Iná fakturačná strana",
+	"Invoiced amount": "Fakturovaná suma",
+	"Is created in ERP": "Objednávka vytvorená v ERP",
+	"Is local PO_V2": "Objednávka vytvorená v module 'Obstarávanie'",
+	"Order date": "Dátum objednávky",
+	"Order number": "Číslo objednávky",
+	"Ordered amount": "Objednaná suma",
+	"Receiver": "Príjemca",
+	"Vendor number": "Číslo dodávateľa"
+}</process_sk>
+      <process_zh-CN>{
+	"_NoMoreInvoiceExpected": "标记为关闭",
+	"_NoMoreInvoiceExpected_report__": "标记为关闭",
+	"AP - Purchase order - Headers": "寻源到付款 - 采购订单 - 标题",
+	"Buyer": "买家",
+	"Company code": "公司代码",
+	"Currency": "货币",
+	"Delivered amount": "交付金额",
+	"Different invoicing party": "不同开票方",
+	"Invoiced amount": "开票金额",
+	"Is created in ERP": "ERP中创建的订单",
+	"Is local PO_V2": "在“采购”模块中创建的采购订单",
+	"Order date": "订单日期",
+	"Order number": "订单号",
+	"Ordered amount": "订购金额",
+	"Receiver": "收货人",
+	"Vendor number": "供应商编号"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"_NoMoreInvoiceExpected": "Marcar como fechado",
+	"_NoMoreInvoiceExpected_report__": "Marcar como fechado",
+	"AP - Purchase order - Headers": "S2P - Pedido de compra - Cabeçalho",
+	"Buyer": "Comprador",
+	"Company code": "Código da empresa",
+	"Currency": "Moeda",
+	"Delivered amount": "Valor entregue",
+	"Different invoicing party": "Participante de faturamento diferente",
+	"Invoiced amount": "Valor faturado",
+	"Is created in ERP": "Pedido criado no ERP",
+	"Is local PO_V2": "Pedido criado no módulo 'Compras'",
+	"Order date": "Data do pedido",
+	"Order number": "Número de pedido",
+	"Ordered amount": "Valor pedido",
+	"Receiver": "Destinatário",
+	"Vendor number": "Número do fornecedor"
+}</process_pt-BR>
+    </lg>
+    <process>
+      <BUColumn>CompanyCode__</BUColumn>
+      <flowtype>processing</flowtype>
+      <homepagelabel>AP - Purchase order - Headers</homepagelabel>
+      <upgradable>yes</upgradable>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <OverrideAllowedAttachmentExtensions>*</OverrideAllowedAttachmentExtensions>
+      <AllowUploadAttachment>0</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+      <shouldRollbackManualRecordEdits>true</shouldRollbackManualRecordEdits>
+      <shouldShowManualEditsWarning>false</shouldShowManualEditsWarning>
+      <UseCultureFormat>true</UseCultureFormat>
+      <TransportName>CustomTable</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+    </process>
+    <ui>
+      <CustomScriptDebug>false</CustomScriptDebug>
+      <customscriptIncludedScripts>[LIB_P2P_CUSTOMIZATION_TABLES_CLIENT]</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Sys/Sys_Helpers</customscriptIncludedScripts>
+      <CustomScriptReadonly>false</CustomScriptReadonly>
+      <CustomScript>
+function Main()
+{
+	if (Data.GetValue("IsLocalPO__"))
+	{
+		Controls.DataPanel.SetReadOnly(true);
+	}
+
+	Sys.Helpers.TryCallFunction("Lib.P2P.Customization.Tables.Client.Common.OnHTMLScriptEnd");
+}
+
+Main();</CustomScript>
+      <restorationPanel>DataPanel</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 41,
+	"*": {
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"splitterType": "simple-v",
+				"processHelpId": "5099",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 2,
+					"options": {
+						"hidePanelsMenu": false,
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 3,
+					"options": {
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 4,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-center": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 5,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"width": "100%"
+										},
+										"hidden": false
+									},
+									"*": {
+										"form-content-center-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 6,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"DataPanel": {
+													"type": "PanelData",
+													"data": [],
+													"stamp": 7,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"label": "_Document data",
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": false,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"backgroundcolor": "default",
+														"labelsAlignment": "right",
+														"version": 0
+													},
+													"*": {
+														"FieldsManager": {
+															"type": "FieldsManager",
+															"data": [],
+															"stamp": 8,
+															"options": {
+																"version": 0,
+																"controlsAssociation": {
+																	"CompanyCode__": "LabelCompanyCode__",
+																	"LabelCompanyCode__": "CompanyCode__",
+																	"VendorNumber__": "LabelVendorNumber__",
+																	"LabelVendorNumber__": "VendorNumber__",
+																	"DifferentInvoicingParty__": "LabelDifferentInvoicingParty__",
+																	"LabelDifferentInvoicingParty__": "DifferentInvoicingParty__",
+																	"OrderNumber__": "LabelOrderNumber__",
+																	"LabelOrderNumber__": "OrderNumber__",
+																	"OrderDate__": "LabelOrderDate__",
+																	"LabelOrderDate__": "OrderDate__",
+																	"OrderedAmount__": "LabelOrderedAmount__",
+																	"LabelOrderedAmount__": "OrderedAmount__",
+																	"DeliveredAmount__": "LabelDeliveredAmount__",
+																	"LabelDeliveredAmount__": "DeliveredAmount__",
+																	"InvoicedAmount__": "LabelInvoicedAmount__",
+																	"LabelInvoicedAmount__": "InvoicedAmount__",
+																	"Currency__": "LabelCurrency__",
+																	"LabelCurrency__": "Currency__",
+																	"Buyer__": "LabelBuyer__",
+																	"LabelBuyer__": "Buyer__",
+																	"Receiver__": "LabelReceiver__",
+																	"LabelReceiver__": "Receiver__",
+																	"IsLocalPO__": "LabelIsLocalPO__",
+																	"LabelIsLocalPO__": "IsLocalPO__",
+																	"IsCreatedInERP__": "LabelIsCreatedInERP__",
+																	"LabelIsCreatedInERP__": "IsCreatedInERP__",
+																	"NoMoreInvoiceExpected__": "LabelNoMoreInvoiceExpected__",
+																	"LabelNoMoreInvoiceExpected__": "NoMoreInvoiceExpected__"
+																}
+															},
+															"*": {
+																"Grid": {
+																	"type": "GridLayout",
+																	"data": [
+																		"fields"
+																	],
+																	"stamp": 9,
+																	"options": {
+																		"version": 0,
+																		"lines": 14,
+																		"columns": 2,
+																		"ctrlsPos": {
+																			"LabelCompanyCode__": {
+																				"line": 1,
+																				"column": 1
+																			},
+																			"CompanyCode__": {
+																				"line": 1,
+																				"column": 2
+																			},
+																			"LabelVendorNumber__": {
+																				"line": 2,
+																				"column": 1
+																			},
+																			"VendorNumber__": {
+																				"line": 2,
+																				"column": 2
+																			},
+																			"LabelDifferentInvoicingParty__": {
+																				"line": 3,
+																				"column": 1
+																			},
+																			"DifferentInvoicingParty__": {
+																				"line": 3,
+																				"column": 2
+																			},
+																			"LabelOrderNumber__": {
+																				"line": 4,
+																				"column": 1
+																			},
+																			"OrderNumber__": {
+																				"line": 4,
+																				"column": 2
+																			},
+																			"LabelOrderDate__": {
+																				"line": 5,
+																				"column": 1
+																			},
+																			"OrderDate__": {
+																				"line": 5,
+																				"column": 2
+																			},
+																			"LabelOrderedAmount__": {
+																				"line": 6,
+																				"column": 1
+																			},
+																			"OrderedAmount__": {
+																				"line": 6,
+																				"column": 2
+																			},
+																			"LabelDeliveredAmount__": {
+																				"line": 7,
+																				"column": 1
+																			},
+																			"DeliveredAmount__": {
+																				"line": 7,
+																				"column": 2
+																			},
+																			"LabelInvoicedAmount__": {
+																				"line": 8,
+																				"column": 1
+																			},
+																			"InvoicedAmount__": {
+																				"line": 8,
+																				"column": 2
+																			},
+																			"LabelCurrency__": {
+																				"line": 9,
+																				"column": 1
+																			},
+																			"Currency__": {
+																				"line": 9,
+																				"column": 2
+																			},
+																			"LabelBuyer__": {
+																				"line": 10,
+																				"column": 1
+																			},
+																			"Buyer__": {
+																				"line": 10,
+																				"column": 2
+																			},
+																			"LabelReceiver__": {
+																				"line": 11,
+																				"column": 1
+																			},
+																			"Receiver__": {
+																				"line": 11,
+																				"column": 2
+																			},
+																			"LabelIsLocalPO__": {
+																				"line": 12,
+																				"column": 1
+																			},
+																			"IsLocalPO__": {
+																				"line": 12,
+																				"column": 2
+																			},
+																			"LabelIsCreatedInERP__": {
+																				"line": 13,
+																				"column": 1
+																			},
+																			"IsCreatedInERP__": {
+																				"line": 13,
+																				"column": 2
+																			},
+																			"LabelNoMoreInvoiceExpected__": {
+																				"line": 14,
+																				"column": 1
+																			},
+																			"NoMoreInvoiceExpected__": {
+																				"line": 14,
+																				"column": 2
+																			}
+																		},
+																		"colspans": [
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[]
+																		]
+																	},
+																	"*": {
+																		"LabelCompanyCode__": {
+																			"type": "Label",
+																			"data": [
+																				"CompanyCode__"
+																			],
+																			"stamp": 11,
+																			"options": {
+																				"label": "Company code",
+																				"version": 0
+																			}
+																		},
+																		"CompanyCode__": {
+																			"type": "ShortText",
+																			"data": [
+																				"CompanyCode__"
+																			],
+																			"stamp": 10,
+																			"options": {
+																				"label": "Company code",
+																				"activable": true,
+																				"width": "500",
+																				"length": 20,
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"helpURL": "5099",
+																				"helpText": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"version": 0
+																			}
+																		},
+																		"LabelVendorNumber__": {
+																			"type": "Label",
+																			"data": [
+																				"VendorNumber__"
+																			],
+																			"stamp": 13,
+																			"options": {
+																				"label": "Vendor number",
+																				"version": 0
+																			}
+																		},
+																		"VendorNumber__": {
+																			"type": "ShortText",
+																			"data": [
+																				"VendorNumber__"
+																			],
+																			"stamp": 12,
+																			"options": {
+																				"label": "Vendor number",
+																				"activable": true,
+																				"width": "500",
+																				"length": 50,
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 0
+																			}
+																		},
+																		"LabelDifferentInvoicingParty__": {
+																			"type": "Label",
+																			"data": [
+																				"DifferentInvoicingParty__"
+																			],
+																			"stamp": 15,
+																			"options": {
+																				"label": "Different invoicing party",
+																				"version": 0
+																			}
+																		},
+																		"DifferentInvoicingParty__": {
+																			"type": "ShortText",
+																			"data": [
+																				"DifferentInvoicingParty__"
+																			],
+																			"stamp": 14,
+																			"options": {
+																				"label": "Different invoicing party",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"activable": true,
+																				"width": "500",
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"browsable": false,
+																				"version": 0
+																			}
+																		},
+																		"LabelOrderNumber__": {
+																			"type": "Label",
+																			"data": [
+																				"OrderNumber__"
+																			],
+																			"stamp": 17,
+																			"options": {
+																				"label": "Order number",
+																				"version": 0
+																			}
+																		},
+																		"OrderNumber__": {
+																			"type": "ShortText",
+																			"data": [
+																				"OrderNumber__"
+																			],
+																			"stamp": 16,
+																			"options": {
+																				"label": "Order number",
+																				"activable": true,
+																				"width": "500",
+																				"length": 50,
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 0
+																			}
+																		},
+																		"LabelOrderDate__": {
+																			"type": "Label",
+																			"data": [
+																				"OrderDate__"
+																			],
+																			"stamp": 19,
+																			"options": {
+																				"label": "Order date",
+																				"version": 0
+																			}
+																		},
+																		"OrderDate__": {
+																			"type": "DateTime",
+																			"data": [
+																				"OrderDate__"
+																			],
+																			"stamp": 18,
+																			"options": {
+																				"label": "Order date",
+																				"activable": true,
+																				"width": "500",
+																				"displayLongFormat": false,
+																				"version": 0
+																			}
+																		},
+																		"LabelOrderedAmount__": {
+																			"type": "Label",
+																			"data": [
+																				"OrderedAmount__"
+																			],
+																			"stamp": 21,
+																			"options": {
+																				"label": "Ordered amount",
+																				"version": 0
+																			}
+																		},
+																		"OrderedAmount__": {
+																			"type": "Decimal",
+																			"data": [
+																				"OrderedAmount__"
+																			],
+																			"stamp": 20,
+																			"options": {
+																				"label": "Ordered amount",
+																				"integer": false,
+																				"precision_internal": 2,
+																				"activable": true,
+																				"width": "500",
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"precision_current": 2,
+																				"version": 0
+																			}
+																		},
+																		"LabelDeliveredAmount__": {
+																			"type": "Label",
+																			"data": [
+																				"DeliveredAmount__"
+																			],
+																			"stamp": 23,
+																			"options": {
+																				"label": "Delivered amount",
+																				"version": 0
+																			}
+																		},
+																		"DeliveredAmount__": {
+																			"type": "Decimal",
+																			"data": [
+																				"DeliveredAmount__"
+																			],
+																			"stamp": 22,
+																			"options": {
+																				"label": "Delivered amount",
+																				"integer": false,
+																				"precision_internal": 2,
+																				"activable": true,
+																				"width": "500",
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"precision_current": 2,
+																				"version": 0
+																			}
+																		},
+																		"LabelInvoicedAmount__": {
+																			"type": "Label",
+																			"data": [
+																				"InvoicedAmount__"
+																			],
+																			"stamp": 25,
+																			"options": {
+																				"label": "Invoiced amount",
+																				"version": 0
+																			}
+																		},
+																		"InvoicedAmount__": {
+																			"type": "Decimal",
+																			"data": [
+																				"InvoicedAmount__"
+																			],
+																			"stamp": 24,
+																			"options": {
+																				"label": "Invoiced amount",
+																				"integer": false,
+																				"precision_internal": 2,
+																				"activable": true,
+																				"width": "500",
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"precision_current": 2,
+																				"version": 0
+																			}
+																		},
+																		"LabelCurrency__": {
+																			"type": "Label",
+																			"data": [
+																				"Currency__"
+																			],
+																			"stamp": 27,
+																			"options": {
+																				"label": "Currency",
+																				"version": 0
+																			}
+																		},
+																		"Currency__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"Currency__"
+																			],
+																			"stamp": 26,
+																			"options": {
+																				"label": "Currency",
+																				"version": 1,
+																				"activable": true,
+																				"width": "500",
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"minNbLines": 1,
+																				"maxNbLines": 1,
+																				"PreFillFTS": true,
+																				"fTSmaxRecords": "20",
+																				"browsable": true
+																			}
+																		},
+																		"LabelBuyer__": {
+																			"type": "Label",
+																			"data": [
+																				"Buyer__"
+																			],
+																			"stamp": 29,
+																			"options": {
+																				"label": "Buyer",
+																				"version": 0
+																			}
+																		},
+																		"Buyer__": {
+																			"type": "ShortText",
+																			"data": [
+																				"Buyer__"
+																			],
+																			"stamp": 28,
+																			"options": {
+																				"label": "Buyer",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"activable": true,
+																				"width": "500",
+																				"browsable": false,
+																				"version": 0
+																			}
+																		},
+																		"LabelReceiver__": {
+																			"type": "Label",
+																			"data": [
+																				"Receiver__"
+																			],
+																			"stamp": 31,
+																			"options": {
+																				"label": "Receiver",
+																				"version": 0
+																			}
+																		},
+																		"Receiver__": {
+																			"type": "ShortText",
+																			"data": [
+																				"Receiver__"
+																			],
+																			"stamp": 30,
+																			"options": {
+																				"label": "Receiver",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"activable": true,
+																				"width": "500",
+																				"browsable": false,
+																				"version": 0
+																			}
+																		},
+																		"LabelIsLocalPO__": {
+																			"type": "Label",
+																			"data": [
+																				"IsLocalPO__"
+																			],
+																			"stamp": 33,
+																			"options": {
+																				"label": "Is local PO_V2",
+																				"version": 0
+																			}
+																		},
+																		"IsLocalPO__": {
+																			"type": "CheckBox",
+																			"data": [
+																				"IsLocalPO__"
+																			],
+																			"stamp": 32,
+																			"options": {
+																				"label": "Is local PO_V2",
+																				"activable": true,
+																				"width": 230,
+																				"version": 0
+																			}
+																		},
+																		"LabelIsCreatedInERP__": {
+																			"type": "Label",
+																			"data": [
+																				"IsCreatedInERP__"
+																			],
+																			"stamp": 35,
+																			"options": {
+																				"label": "Is created in ERP",
+																				"version": 0
+																			}
+																		},
+																		"IsCreatedInERP__": {
+																			"type": "CheckBox",
+																			"data": [
+																				"IsCreatedInERP__"
+																			],
+																			"stamp": 34,
+																			"options": {
+																				"label": "Is created in ERP",
+																				"activable": true,
+																				"width": 230,
+																				"version": 0
+																			}
+																		},
+																		"LabelNoMoreInvoiceExpected__": {
+																			"type": "Label",
+																			"data": [
+																				"NoMoreInvoiceExpected__"
+																			],
+																			"stamp": 37,
+																			"options": {
+																				"label": "_NoMoreInvoiceExpected",
+																				"version": 0
+																			}
+																		},
+																		"NoMoreInvoiceExpected__": {
+																			"type": "CheckBox",
+																			"data": [
+																				"NoMoreInvoiceExpected__"
+																			],
+																			"stamp": 36,
+																			"options": {
+																				"label": "_NoMoreInvoiceExpected",
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"version": 0
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 38,
+					"options": {
+						"splitterType": "simple-h",
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 39,
+							"options": {
+								"label": "_Save",
+								"action": "savequit",
+								"submit": true,
+								"shortCut": "S",
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 40,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"shortCut": "Q",
+								"version": 0
+							}
+						},
+						"Delete": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 41,
+							"options": {
+								"label": "_Delete",
+								"action": "delete",
+								"submit": true,
+								"disabled": true,
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <field deleted="0" format="" guid="KFNQ1001759" id="E19QT400153E" label="Buyer" length="80" name="Buyer__" originalProcessID="PHQG1696" precision="0" processid="D19QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AE19QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Buyer__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:53</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Buyer</Label>
+        <Alias>AE19QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="LFDX667514" id="F19QT400153E" label="Company code" length="50" name="CompanyCode__" originalProcessID="PHQG1696" precision="0" processid="D19QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AF19QT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/CompanyCode__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:53</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Company code</Label>
+        <Alias>AF19QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"5099","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="UMG2FP000IYP" id="G19QT400153E" label="Currency" length="50" name="Currency__" originalProcessID="PHQG1696" precision="0" processid="D19QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AG19QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Currency__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:53</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Currency</Label>
+        <Alias>AG19QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>true</Editable>
+        <TableName>CT#FF8QT400153E</TableName>
+        <SortOrder>ASC</SortOrder>
+        <DisplayedColumns>CurrencyFrom__|RatioFrom__|RatioTo__|Rate__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>CurrencyFrom__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ProcessName>P2P - Exchange rate__</ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <KeyAttribute>
+        </KeyAttribute>
+        <CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="EICS5866" id="H19QT400153E" label="Delivered amount" length="17" name="DeliveredAmount__" originalProcessID="PHQG1696" precision="2" processid="D19QT400153E" submitable="1" type="DECIMAL">
+    <properties>
+      <db>
+        <alias>AH19QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/DeliveredAmount__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:53</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Delivered amount</Label>
+        <Alias>AH19QT400153E</Alias>
+        <DecimalPrecision vartype="INT">2</DecimalPrecision>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="T0HU00000FSX" id="I19QT400153E" label="Different invoicing party" length="50" name="DifferentInvoicingParty__" originalProcessID="PHQG1696" precision="0" processid="D19QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AI19QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/DifferentInvoicingParty__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:53</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Different invoicing party</Label>
+        <Alias>AI19QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="RQHZ1701" id="J19QT400153E" label="Invoiced amount" length="17" name="InvoicedAmount__" originalProcessID="PHQG1696" precision="2" processid="D19QT400153E" submitable="1" type="DECIMAL">
+    <properties>
+      <db>
+        <alias>AJ19QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/InvoicedAmount__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:53</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Invoiced amount</Label>
+        <Alias>AJ19QT400153E</Alias>
+        <DecimalPrecision vartype="INT">2</DecimalPrecision>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="PHQG42295223" id="K19QT400153E" label="Is created in ERP" length="0" name="IsCreatedInERP__" originalProcessID="PHQG1696" precision="0" processid="D19QT400153E" submitable="1" type="BOOL">
+    <properties>
+      <db>
+        <alias>AK19QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/IsCreatedInERP__</fullname>
+        <defaultvalue>false</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:53</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Is created in ERP</Label>
+        <Alias>AK19QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <ui>
+        <_type>Boolean</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="AYLN42294F51" id="L19QT400153E" label="Is local PO_V2" length="0" name="IsLocalPO__" originalProcessID="PHQG1696" precision="0" processid="D19QT400153E" submitable="1" type="BOOL">
+    <properties>
+      <db>
+        <alias>AL19QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/IsLocalPO__</fullname>
+        <defaultvalue>false</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:53</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Is local PO_V2</Label>
+        <Alias>AL19QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <ui>
+        <_type>Boolean</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="L16V00000FSX" id="M19QT400153E" label="_NoMoreInvoiceExpected_report__" length="0" name="NoMoreInvoiceExpected__" originalProcessID="PHQG1696" precision="0" processid="D19QT400153E" submitable="1" type="BOOL">
+    <properties>
+      <db>
+        <alias>AM19QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/NoMoreInvoiceExpected__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:53</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_NoMoreInvoiceExpected_report__</Label>
+        <Alias>AM19QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>Boolean</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="GYMG1699" id="N19QT400153E" label="Order date" length="0" name="OrderDate__" originalProcessID="PHQG1696" precision="0" processid="D19QT400153E" submitable="1" type="DATE">
+    <properties>
+      <db>
+        <alias>AN19QT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/OrderDate__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:53</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Order date</Label>
+        <Alias>AN19QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>Date</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="CFXM1700" id="O19QT400153E" label="Ordered amount" length="17" name="OrderedAmount__" originalProcessID="PHQG1696" precision="2" processid="D19QT400153E" submitable="1" type="DECIMAL">
+    <properties>
+      <db>
+        <alias>AO19QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/OrderedAmount__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:53</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Ordered amount</Label>
+        <Alias>AO19QT400153E</Alias>
+        <DecimalPrecision vartype="INT">2</DecimalPrecision>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="IYFP1698" id="P19QT400153E" label="Order number" length="50" name="OrderNumber__" originalProcessID="PHQG1696" precision="0" processid="D19QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AP19QT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/OrderNumber__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:53</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Order number</Label>
+        <Alias>AP19QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="FFPA86676166" id="Q19QT400153E" label="Receiver" length="80" name="Receiver__" originalProcessID="PHQG1696" precision="0" processid="D19QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AQ19QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Receiver__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:53</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Receiver</Label>
+        <Alias>AQ19QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="JHBW1697" id="R19QT400153E" label="Vendor number" length="50" name="VendorNumber__" originalProcessID="PHQG1696" precision="0" processid="D19QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AR19QT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/VendorNumber__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:53</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Vendor number</Label>
+        <Alias>AR19QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <type id="KOLHG0000M4O" name="CT">
+  </type>
+</process>

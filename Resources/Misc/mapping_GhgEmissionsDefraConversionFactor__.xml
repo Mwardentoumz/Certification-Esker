@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mappingDef>
+	<options>
+		<separator>,</separator>
+		<escape></escape>
+		<hasHeader>true</hasHeader>
+		<comment></comment>
+		<textQualifier>"</textQualifier>
+		<hasLastDelimiter>false</hasLastDelimiter>
+	</options>
+	<script>
+		<code><![CDATA[
+			function GetCategory()
+			{ // sample Business travel- air > Flights > Long-haul, to/from UK > Premium economy class
+			 	var levels = ["Level 1", "Level 2", "Level 3", "Level 4"];
+				var catVal = "";
+
+				for (var i = 0; i < levels.length; i++) {
+					var levelValue = window.external.GetCsvColumnValue(levels[i]);
+					if (levelValue)
+					{
+						if (catVal !== "")
+						{
+							catVal += " > ";
+						}
+						catVal += levelValue;
+					}
+				}
+
+				return catVal;
+			}
+
+			function Convert6Decimals()
+			{
+				var num = Number(window.external.GetCsvColumnValue("GHG Conversion Factor 2023"));
+    			return num.toFixed(6);
+			}
+			]]>
+		</code>
+	</script>
+	<tableName>S2P - GHG Emissions - Defra Conversion Factor__</tableName>
+	<mappings>
+		<mapping key="true">
+			<fieldInTable>ElementIdentifier__</fieldInTable>
+			<fieldInFile>
+				<fieldNameInFile>ID</fieldNameInFile>
+			</fieldInFile>
+		</mapping>
+		<mapping>
+			<fieldInTable>Scope__</fieldInTable>
+			<fieldInFile>
+				<fieldNameInFile>Scope</fieldNameInFile>
+			</fieldInFile>
+		</mapping>
+		<mapping>
+			<evalScript>GetCategory</evalScript>
+			<fieldInTable>Category__</fieldInTable>
+		</mapping>
+		<mapping>
+			<fieldInTable>ColumnText__</fieldInTable>
+			<fieldInFile>
+				<fieldNameInFile>Column Text</fieldNameInFile>
+			</fieldInFile>
+		</mapping>
+		<mapping>
+			<fieldInTable>UnitOfMeasure__</fieldInTable>
+			<fieldInFile>
+				<fieldNameInFile>UOM</fieldNameInFile>
+			</fieldInFile>
+		</mapping>
+		<mapping>
+			<fieldInTable>GHGPerUnit__</fieldInTable>
+			<fieldInFile>
+				<fieldNameInFile>GHG/Unit</fieldNameInFile>
+			</fieldInFile>
+		</mapping>
+		<mapping>
+			<evalScript>Convert6Decimals</evalScript>
+			<fieldInTable>GHGConversionFactor__</fieldInTable>
+		</mapping>
+	</mappings>
+</mappingDef>

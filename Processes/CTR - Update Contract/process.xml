@@ -1,0 +1,755 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:09:39" deleted="0" eskerapplication="P2P" global="0" id="A4EQT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="CTR - Update Contract" needvalidation="0" ootofilter="" ootoversion="1" originalProcessID="L484FP000M4H" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="0" version="1" visibility="0">
+  <properties>
+    <dataConditions>
+      <listDataConditions>
+				&lt;dataCondition&gt;
+					&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+					&lt;filter&gt;msnex=*&lt;/filter&gt;
+					&lt;labelKey&gt;_Contracts disabled&lt;/labelKey&gt;
+					&lt;conditions&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableContractGlobalSetting__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+					&lt;/conditions&gt;
+				&lt;/dataCondition&gt;
+			</listDataConditions>
+    </dataConditions>
+    <gdr>
+      <FinalizationScriptAllowRetry>
+      </FinalizationScriptAllowRetry>
+      <FinalizationScript>
+      </FinalizationScript>
+      <ValidationScriptAllowRetry>
+      </ValidationScriptAllowRetry>
+      <ValidationScript>
+      </ValidationScript>
+      <AllowTagCoverPages>true</AllowTagCoverPages>
+      <AllowTagNewDocuments>true</AllowTagNewDocuments>
+      <AllowTagAttachments>true</AllowTagAttachments>
+      <ExtractionScriptAllowRetry>
+      </ExtractionScriptAllowRetry>
+      <extractionscriptIncludedScripts>Lib_V12.0.566.0</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>Lib_Contract_V12.0.566.0</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>Lib_P2P_V12.0.566.0</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>Sys/Sys_Helpers_String</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>Sys/Sys_Helpers_CSVReader</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>Sys/Sys_Helpers_Date</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>Lib_P2P_EmailNotification_Server_V12.0.566.0</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>[Lib_Contract_Management_Customization_Server]</extractionscriptIncludedScripts>
+      <ExtractionScript>"use strict";
+var ExtractionScript;
+(function (ExtractionScript) {
+    // TODO replace by language.translate
+    const COLUMNS = {
+        MSNEX: 0,
+        NAME__: 1,
+        REFERENCENUMBER__: 2,
+        CONTRACTSTATUS__: 3,
+        EFFECTIVEDATE__: 4,
+        ENDDATE__: 5,
+        TACITRENEWAL__: 6,
+        DONOTNOTIFYONNOTIFICATIONDATEREACHED__: 7,
+        NOTIFICATIONDATE__: 8,
+        INITIALLYEXPECTEDENDDATE__: 9,
+        OWNERID: 10,
+        CREATOROWNERID: 11,
+        ORIGINALOWNERID: 12,
+        CREATEONBEHALF: 13,
+        OWNERLOGIN__: 14,
+        REQUESTERLOGIN__: 15,
+        SEND: 16
+    };
+    let contracts = [];
+    let usersToNotify = new Set();
+    function ReadCSV() {
+        Log.Info("ReadCSV: START");
+        const csvReader = Sys.Helpers.CSVReader.CreateInstance(0, "V2");
+        csvReader.ReturnSeparator = "\n";
+        csvReader.GuessSeparator(); // Warning: it reads the first line
+        Log.Info("Guessed separator: " + csvReader.SplitSeparator);
+        let count = 0;
+        while (csvReader.GetNextLine()) {
+            try {
+                count++;
+                const parsedLine = csvReader.GetCurrentLineArray();
+                Log.Info(`Contract ${count}: ${parsedLine}`);
+                const endDate = new Date(parsedLine[COLUMNS.ENDDATE__]);
+                const effectiveDate = new Date(parsedLine[COLUMNS.EFFECTIVEDATE__]);
+                const tacitRenewal = Sys.Helpers.String.ToBoolean(parsedLine[COLUMNS.TACITRENEWAL__]);
+                const notifDateEnabled = !Sys.Helpers.String.ToBoolean(parsedLine[COLUMNS.DONOTNOTIFYONNOTIFICATIONDATEREACHED__]);
+                const notifDate = new Date(parsedLine[COLUMNS.NOTIFICATIONDATE__]);
+                const initiallyExpectedEndDate = !Sys.Helpers.IsEmpty(parsedLine[COLUMNS.INITIALLYEXPECTEDENDDATE__]) ? new Date(parsedLine[COLUMNS.INITIALLYEXPECTEDENDDATE__]) : null;
+                const contract = {
+                    RuidEx: GetRuidEX(parsedLine[COLUMNS.MSNEX]),
+                    Name: parsedLine[COLUMNS.NAME__],
+                    OwnerId: parsedLine[COLUMNS.OWNERID],
+                    Status: parsedLine[COLUMNS.CONTRACTSTATUS__],
+                    EffectiveDate: effectiveDate,
+                    EndDate: endDate,
+                    TacitRenewal: tacitRenewal,
+                    NotificationDateEnabled: notifDateEnabled,
+                    NotificationDate: notifDate,
+                    InitiallyExpectedEndDate: initiallyExpectedEndDate,
+                    Notifiable: true,
+                    UsersToNotify: [],
+                    ContractOwnerLogin: parsedLine[COLUMNS.OWNERLOGIN__],
+                    RequesterLogin: parsedLine[COLUMNS.REQUESTERLOGIN__]
+                };
+                if (contract.ContractOwnerLogin) {
+                    contract.UsersToNotify.push(contract.ContractOwnerLogin);
+                }
+                Sys.Helpers.TryCallFunction("Lib.Contract.Management.Customization.Server.AddUsersToNotifyOnContractExpiryOrRenewal", parsedLine, contract.UsersToNotify);
+                // Clean user list
+                contract.UsersToNotify = contract.UsersToNotify
+                    .filter(userId =&gt; Sys.Helpers.IsString(userId) &amp;&amp; userId.trim() !== "")
+                    .map(userId =&gt; userId.trim().toLowerCase());
+                contracts.push(contract);
+            }
+            catch (e) {
+                Log.Error(`Error parsing CSV file. Ligne ${count}\n${e}`);
+            }
+        }
+        Log.Info(`ReadCSV: END. ${count} contract(s) found.`);
+    }
+    function GetRuidEX(msnEx) {
+        const processID = Process.GetProcessID("P2P - Contract");
+        return `CD#${processID}.${msnEx}`;
+    }
+    function ManageContracts() {
+        Log.Info("ManageContracts: START");
+        for (const contract of contracts) {
+            const effectiveDate = contract.EffectiveDate ? Sys.Helpers.Date.NormalizeToEskerDate(contract.EffectiveDate) : null;
+            const endDate = contract.EndDate ? Sys.Helpers.Date.NormalizeToEskerDate(contract.EndDate) : null;
+            const isEffectiveDateReached = contract.Status === Lib.Contract.Status.ApprovedPendingActivation &amp;&amp; !Sys.Helpers.Date.IsDateInFuture(effectiveDate);
+            const isExpired = contract.Status === Lib.Contract.Status.Active &amp;&amp; Sys.Helpers.Date.IsDateInPast(endDate);
+            const canNotifyExpiration = contract.NotificationDateEnabled &amp;&amp; Sys.Helpers.Date.IsToday(contract.NotificationDate);
+            if (isEffectiveDateReached || isExpired) {
+                if (contract.Status === Lib.Contract.Status.ApprovedPendingActivation) {
+                    Log.Info(`Contract effectiveDate passed for contract: ${contract.Name}' , call UpdateContract.`);
+                }
+                else {
+                    Log.Info(`Contract endDate passed for contract: ${contract.Name}' , call UpdateContract.`);
+                }
+                const ctrTransport = Process.GetUpdatableTransportAsProcessAdmin(contract.RuidEx);
+                //ResumeWithActionAsync works with record in state = 100 where ResumeWithAction does not. TODO : ResumeWithAction should work with record in state 100
+                ctrTransport.ResumeWithActionAsync("UpdateContract");
+                contract.Notifiable = false;
+            }
+            else if (canNotifyExpiration) {
+                // notif
+                Log.Info(`New contract close to end or renewal: '${contract.Name}'. ${contract.OwnerId} will be notified`);
+                for (const userId of contract.UsersToNotify) {
+                    usersToNotify.add(userId);
+                }
+            }
+            else {
+                Log.Info(`Contract close to end or renewal '${contract.Name}'. ${contract.OwnerId} but already notified`);
+            }
+        }
+        Log.Info("ManageContracts: END.");
+    }
+    async function SendNotifs() {
+        const contractNotifiable = contracts.filter(c =&gt; c.Notifiable !== false);
+        const groupedContractToNotify = {};
+        function groupContractByUserToNotify(userID, contract) {
+            if (usersToNotify.has(userID)) {
+                if (groupedContractToNotify[userID]) {
+                    groupedContractToNotify[userID].push(contract);
+                }
+                else {
+                    groupedContractToNotify[userID] = [contract];
+                }
+            }
+        }
+        for (const contract of contractNotifiable) {
+            const uniqueUsersToNotify = new Set(contract.UsersToNotify); // to avoid duplicate user IDs
+            for (const userId of uniqueUsersToNotify) {
+                groupContractByUserToNotify(userId, contract);
+            }
+        }
+        for (const userId in groupedContractToNotify) {
+            if (groupedContractToNotify.hasOwnProperty(userId)) {
+                groupedContractToNotify[userId].sort((a, b) =&gt; Sys.Helpers.Date.CompareDate(a.EndDate, b.EndDate));
+                let contractsCloseToEnd = 0;
+                let contractsCloseToRenewal = 0;
+                for (const contract of groupedContractToNotify[userId]) {
+                    if (contract.TacitRenewal &amp;&amp; !Sys.Helpers.IsEmpty(contract.InitiallyExpectedEndDate)) {
+                        contractsCloseToRenewal++;
+                    }
+                    else {
+                        contractsCloseToEnd++;
+                    }
+                }
+                Log.Info(`Send notif to ${userId} for ${contractsCloseToEnd} contracts close to end and ${contractsCloseToRenewal} contracts close to renewals.`);
+                const user = Users.GetUser(userId);
+                let userEmail;
+                let userIdToNotify;
+                if (user) {
+                    userIdToNotify = userId;
+                    userEmail = user.GetValue("EmailAddress");
+                }
+                else {
+                    const adminUser = await Lib.P2P.GetAccountAdminUser();
+                    if (adminUser) {
+                        Log.Info(`Send notif to (ADMIN) ${adminUser.login} as ${userId} is not found`);
+                        userIdToNotify = adminUser.login;
+                        userEmail = adminUser.emailaddress;
+                    }
+                }
+                if (Sys.Helpers.IsEmpty(userEmail)) {
+                    Log.Error("No email address to notify user.");
+                    return;
+                }
+                let baseUrl = Data.GetValue("ValidationUrl");
+                baseUrl = baseUrl.substr(0, baseUrl.lastIndexOf("/"));
+                const customTags = {
+                    ViewUrl_CloseToEnd: Lib.P2P.GetURLFromSSO(baseUrl + "/View.link?tabName=_My documents-P2P%20Contract&amp;viewName=_P2P_Views%20-%20My%20Contracts%20expiring%20soon", user),
+                    ViewUrl_CloseToRenewal: Lib.P2P.GetURLFromSSO(baseUrl + "/View.link?tabName=_My documents-P2P%20Contract&amp;viewName=_P2P_Views%20-%20My%20Contracts%20upcoming%20renewals", user)
+                };
+                if (contractsCloseToEnd &gt; 0) {
+                    if (contractsCloseToEnd &gt; 1) {
+                        customTags.SeveralContractsCloseToEnd = "true";
+                        customTags.NumberOfContractsCloseToEnd = contractsCloseToEnd.toString();
+                    }
+                    else {
+                        customTags.OneContractCloseToEnd = "true";
+                    }
+                }
+                if (contractsCloseToRenewal &gt; 0) {
+                    if (contractsCloseToRenewal &gt; 1) {
+                        customTags.SeveralContractsCloseToRenewal = "true";
+                        customTags.NumberOfContractsCloseToRenewal = contractsCloseToRenewal.toString();
+                    }
+                    else {
+                        customTags.OneContractCloseToRenewal = "true";
+                    }
+                }
+                try {
+                    SendEmailNotification(userIdToNotify, null, "Contract_Email_NotifReminder.htm", null, customTags);
+                }
+                catch (e) {
+                    Log.Error("Cannot send the notification. Details: " + e);
+                }
+            }
+        }
+    }
+    function SendEmailNotification(userID, subject, template, backupUserAsCC, tags) {
+        const options = {
+            userId: userID,
+            subject: subject,
+            template: template,
+            customTags: tags,
+            fromName: "_EskerContract",
+            backupUserAsCC: !!backupUserAsCC
+        };
+        try {
+            Lib.P2P.EmailNotification.SendEmailNotification(options);
+        }
+        catch (e) {
+            Log.Error("Cannot send the notification. Details: " + e);
+        }
+    }
+    async function Start() {
+        contracts = [];
+        usersToNotify = new Set();
+        ReadCSV();
+        ManageContracts();
+        await SendNotifs();
+    }
+    ExtractionScript.Start = Start;
+    if (typeof _ENV_TEST_ENABLED === "undefined") {
+        Lib.P2P.HandleScriptError(Start());
+    }
+})(ExtractionScript || (ExtractionScript = {}));
+//# sourceMappingURL=extractionscript.js.map</ExtractionScript>
+      <ExtractionScriptRunOnOCRFailed>
+      </ExtractionScriptRunOnOCRFailed>
+      <AllowRemovePages>true</AllowRemovePages>
+      <AllowSwapPages>true</AllowSwapPages>
+      <PostProcessingScriptAllowRetry>
+      </PostProcessingScriptAllowRetry>
+      <PostProcessingScript>
+      </PostProcessingScript>
+    </gdr>
+    <lg>
+      <process_da>{
+	"_EskerContract": "Kontraktstyring med Esker",
+	"CTR - Update Contract": "Kontraktstyring - statusopdateringer og påmindelser om udløb/fornyelse"
+}</process_da>
+      <process_de>{
+	"_EskerContract": "Esker Vertragsmanagement",
+	"CTR - Update Contract": "Vertragsmanagement - Statusaktualisierungen &amp; Ablauf-/Erneuerungserinnerungen"
+}</process_de>
+      <process_JA>{
+	"_EskerContract": "Esker契約管理",
+	"CTR - Update Contract": "契約管理 - ステータス更新と満了/更新リマインダー"
+}</process_JA>
+      <process_en>{
+	"_EskerContract": "Esker Contract Management",
+	"CTR - Update Contract": "Contract Management - Status Updates &amp; Expiration/Renewal Reminders"
+}</process_en>
+      <process_ES>{
+	"_EskerContract": "Esker Gestión de contratos",
+	"CTR - Update Contract": "Gestión de contratos - Actualizaciones de estado y Recordatorios de vencimiento/renovación"
+}</process_ES>
+      <process_fr>{
+	"_EskerContract": "Esker Gestion des contrats",
+	"CTR - Update Contract": "Gestion des contrats - Mises à jour d'état &amp; Rappels d'expiration/de reconduction"
+}</process_fr>
+      <process_nl-NL>{
+	"_EskerContract": "Esker Contractenbeheer",
+	"CTR - Update Contract": "Contractenbeheer - statusupdates en herinneringen vervaldatum/vernieuwen"
+}</process_nl-NL>
+      <process_pl>{
+	"_EskerContract": "Esker Contract Management",
+	"CTR - Update Contract": "Zarządzanie kontraktami – aktualizacje statusu i przypomnienia o wygasaniu/odnowieniu"
+}</process_pl>
+      <process_it>{
+	"_EskerContract": "Esker Gestione contratti",
+	"CTR - Update Contract": "Gestione contratti - Aggiornamenti stato &amp; Promemoria scadenze/rinnovi"
+}</process_it>
+      <process_sk>{
+	"_EskerContract": "Riadenie zmlúv Esker",
+	"CTR - Update Contract": "Riadenie zmlúv – aktualizácie stavu a pripomienky o uplynutí platnosti/obnovení"
+}</process_sk>
+      <process_zh-CN>{
+	"_EskerContract": "Esker 合同管理",
+	"CTR - Update Contract": "合同管理 - 状态更新与到期/续约提醒"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"_EskerContract": "Esker Gerenciamento de contratos",
+	"CTR - Update Contract": "Gerenciamento de contratos - Atualizações de status e lembretes de vencimento/renovação"
+}</process_pt-BR>
+    </lg>
+    <process>
+      <flowtype>processing</flowtype>
+      <ocrpreset>scan</ocrpreset>
+      <homepagelabel>CTR - Update Contract</homepagelabel>
+      <enableflexibleauditing>
+      </enableflexibleauditing>
+      <enableflexibleediting>
+      </enableflexibleediting>
+      <enableflexibleteaching>
+      </enableflexibleteaching>
+      <disableocr>
+      </disableocr>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <disableautolearning>true</disableautolearning>
+      <backgroundprocessingthreshold>
+      </backgroundprocessingthreshold>
+      <EnablePreviewPrecomputation>
+      </EnablePreviewPrecomputation>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <enablerounddecimal>true</enablerounddecimal>
+      <pdfNormalizeFilter>
+      </pdfNormalizeFilter>
+      <archiveDuration>0</archiveDuration>
+      <ocrpagestoprocess>0</ocrpagestoprocess>
+      <ScriptEngineType>2</ScriptEngineType>
+      <UseActionNameWithScriptApproval>true</UseActionNameWithScriptApproval>
+      <displayWidth>
+      </displayWidth>
+      <AllowUploadAttachment>1</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>1</AllowUploadReferenceDocument>
+      <UseCultureFormat>true</UseCultureFormat>
+      <AllowRetryExtractCD>true</AllowRetryExtractCD>
+      <TransportName>CustomData</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+      <printToProcess>
+      </printToProcess>
+    </process>
+    <ui>
+      <restorationPanel>DataPanel</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 30,
+	"*": {
+		"GDRData": {
+			"type": "GDRData",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"version": 0
+			}
+		},
+		"OCRParams": {
+			"type": "OCRParams",
+			"data": [],
+			"stamp": 2,
+			"options": {
+				"version": 0
+			}
+		},
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 3,
+			"options": {
+				"splitterType": "complex",
+				"maxwidth": "",
+				"backColor": "text-backgroundcolor-default",
+				"style": null,
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 4,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 5,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 6,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-top": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 7,
+									"options": {
+										"autosize": true,
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"height": "25%"
+										},
+										"hidden": false
+									},
+									"*": {
+										"form-content-top-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 8,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"DocumentsPanel": {
+													"type": "PanelDocument",
+													"data": [],
+													"stamp": 9,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": false,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"label": "_Documents",
+														"version": 0
+													},
+													"*": {
+														"Document": {
+															"type": "Documents",
+															"data": [
+																"documentscontroldata"
+															],
+															"stamp": 10,
+															"options": {
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								},
+								"form-content-bottom": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 11,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": 25,
+											"left": 0,
+											"width": 100,
+											"height": 75
+										},
+										"hidden": false
+									},
+									"*": {
+										"form-content-left": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 12,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "0%",
+													"width": "45%"
+												},
+												"hidden": false
+											},
+											"*": {
+												"form-content-left-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 13,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"DataPanel": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 14,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_Document data",
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 15,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 16,
+																			"options": {
+																				"version": 0,
+																				"lines": 0,
+																				"columns": 2,
+																				"ctrlsPos": {},
+																				"colspans": []
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-2": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 17,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"SystemData": {
+															"type": "PanelSystemData",
+															"data": [],
+															"stamp": 18,
+															"options": {
+																"multicolumn": false,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"label": "_System data",
+																"version": 0
+															}
+														}
+													}
+												},
+												"form-content-left-3": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 19,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"NextProcess": {
+															"type": "PanelNextProcess",
+															"data": [],
+															"stamp": 20,
+															"options": {
+																"hidden": true,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"label": "_Next Process",
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-right": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 21,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": 0,
+													"left": 45,
+													"width": 55,
+													"height": 99
+												},
+												"hidden": false
+											},
+											"*": {
+												"form-content-right-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 22,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"PreviewPanel": {
+															"type": "PanelPreview",
+															"data": [],
+															"stamp": 23,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"label": "_Document Preview",
+																"version": 0
+															},
+															"*": {
+																"Preview": {
+																	"type": "Preview",
+																	"data": [
+																		"previewdata"
+																	],
+																	"stamp": 24,
+																	"options": {
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 25,
+					"options": {
+						"splitterType": "simple-h",
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 26,
+							"options": {
+								"label": "_Save",
+								"action": "save",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Approve": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 27,
+							"options": {
+								"label": "_Approve",
+								"action": "approve",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Reject": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 28,
+							"options": {
+								"label": "_Reject",
+								"action": "reject",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Reprocess": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 29,
+							"options": {
+								"label": "_Reprocess",
+								"action": "reprocess",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 30,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <type id="GOLHG0000M4O" name="CD">
+  </type>
+</process>

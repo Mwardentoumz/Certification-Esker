@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mappingDef>
+	<options>
+		<separator>;</separator>
+		<escape></escape>
+		<hasHeader>true</hasHeader>
+		<comment></comment>
+		<textQualifier>"</textQualifier>
+		<hasLastDelimiter>false</hasLastDelimiter>
+	</options>
+	<script>
+		<code><![CDATA[
+			function ConvertScientificNumber()
+			{
+				var num = Number(window.external.GetCsvColumnValue("Total poste non décomposé").replace(",","."));
+    			return num.toFixed(6);
+			}
+
+			function GetUnit()
+			{
+				var unitVal = window.external.GetCsvColumnValue("Unité français");
+				if (unitVal.indexOf("kgCO2e/") === -1)
+				{
+					return unitVal;
+				}
+				else
+				{
+					return unitVal.substring(unitVal.indexOf("/")+1);
+				}
+			}
+
+			function GetLocalization()
+			{
+				var columns = ["Sous-localisation géographique français", "Sous-localisation géographique anglais", "Sous-localisation géographique espagnol", "Localisation géographique"];
+
+				for (var i = 0; i < columns.length; i++)
+				{
+					var column = window.external.GetCsvColumnValue(columns[i]);
+					if (column && column != "")
+					{
+						return column;
+					}
+				}
+
+				return "";
+			}
+			]]>
+		</code>
+	</script>
+	<tableName>S2P - GHG Emissions - Ademe Conversion Factor__</tableName>
+	<mappings>
+		<mapping>
+			<fieldInTable>AttributeName__</fieldInTable>
+			<fieldInFile>
+				<fieldNameInFile>Nom attribut français</fieldNameInFile>
+			</fieldInFile>
+		</mapping>
+		<mapping>
+			<fieldInTable>BaseName__</fieldInTable>
+			<fieldInFile>
+				<fieldNameInFile>Nom base français</fieldNameInFile>
+			</fieldInFile>
+		</mapping>
+		<mapping>
+			<fieldInTable>CategoryCode__</fieldInTable>
+			<fieldInFile>
+				<fieldNameInFile>Code de la catégorie</fieldNameInFile>
+			</fieldInFile>
+		</mapping>
+		<mapping>
+			<evalScript>ConvertScientificNumber</evalScript>
+			<fieldInTable>GHGConversionFactor__</fieldInTable>
+		</mapping>
+		<mapping key="true">
+			<fieldInTable>ElementIdentifier__</fieldInTable>
+			<fieldInFile>
+				<fieldNameInFile>Identifiant de l'élément</fieldNameInFile>
+			</fieldInFile>
+		</mapping>
+		<mapping>
+			<fieldInTable>ElementStatus__</fieldInTable>
+			<fieldInFile>
+				<fieldNameInFile>Statut de l'élément</fieldNameInFile>
+			</fieldInFile>
+		</mapping>
+		<mapping>
+			<fieldInTable>ElementType__</fieldInTable>
+			<fieldInFile>
+				<fieldNameInFile>Type de l'élément</fieldNameInFile>
+			</fieldInFile>
+		</mapping>
+		<mapping>
+			<fieldInTable>LineType__</fieldInTable>
+			<fieldInFile>
+				<fieldNameInFile>Type Ligne</fieldNameInFile>
+			</fieldInFile>
+		</mapping>
+		<mapping>
+			<evalScript>GetUnit</evalScript>
+			<fieldInTable>UnitOfMeasure__</fieldInTable>
+		</mapping>
+		<mapping>
+			<evalScript>GetLocalization</evalScript>
+			<fieldInTable>GeographicalLocalization__</fieldInTable>
+		</mapping>
+	</mappings>
+</mappingDef>

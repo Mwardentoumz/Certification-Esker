@@ -1,0 +1,4228 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:10:50" deleted="0" eskerapplication="P2P-PAC" global="0" id="FPFQT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="Customer Contract" needvalidation="0" ootofilter="" ootoversion="0" originalProcessID="PCON132681" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="0" version="1" visibility="1">
+  <properties>
+    <dataConditions>
+      <listDataConditions>
+				&lt;dataCondition&gt;
+					&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+					&lt;filter&gt;msnex=*&lt;/filter&gt;
+					&lt;labelKey&gt;_Contracts disabled&lt;/labelKey&gt;
+					&lt;multipleConditionsLink&gt;and&lt;/multipleConditionsLink&gt;
+					&lt;conditions&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableContractGlobalSetting__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableContractPublication__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+					&lt;/conditions&gt;
+				&lt;/dataCondition&gt;
+				</listDataConditions>
+    </dataConditions>
+    <dbIndex>
+      <AUTO_AHPFQT400153EA>&lt;Index&gt;&lt;Ref Name="AHPFQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AHPFQT400153EA>
+      <AUTO_AIPFQT400153EA>&lt;Index&gt;&lt;Ref Name="AIPFQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AIPFQT400153EA>
+      <AUTO_AJPFQT400153EA>&lt;Index&gt;&lt;Ref Name="AJPFQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AJPFQT400153EA>
+      <AUTO_AVPFQT400153EA>&lt;Index&gt;&lt;Ref Name="AVPFQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AVPFQT400153EA>
+    </dbIndex>
+    <gdr>
+      <ValidationScriptAllowRetry>
+      </ValidationScriptAllowRetry>
+      <validationscriptIncludedScripts>Sys/Sys_Parameters</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_CommonDialog_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>LIB_P2P_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_Parameters_P2P_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_CustomerContract_Publication_Server_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_Contract_Publication_Server_V12.0.566.0</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>[Lib_Custom_Parameters]</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>[Lib_P2P_Custom_Parameters]</validationscriptIncludedScripts>
+      <ValidationScript>"use strict";
+var ValidationScript;
+(function (ValidationScript) {
+    const currentActionName = Data.GetActionName();
+    const currentActionType = Data.GetActionType();
+    function Run() {
+        Log.Info(`-- CustomerContract Validation Script -- Name: '${currentActionName ? currentActionName : "&lt;empty&gt;"}', Action: '${currentActionType ? currentActionType : "&lt;empty&gt;"}'`);
+        Lib.CommonDialog.NextAlert.Reset();
+        switch (currentActionName) {
+            case "Synchronize":
+                Lib.CustomerContract.Publication.SynchronizeWithP2PContract();
+                break;
+            case "UploadContract":
+            case "Document":
+                Lib.CustomerContract.Publication.ReviseP2PContractDocument();
+                break;
+            case "Submit__":
+                Lib.CustomerContract.Publication.PublishP2PContract();
+                break;
+            default:
+                {
+                    Log.Info(`Unhandled action: '${currentActionName}'`);
+                    Process.PreventApproval();
+                }
+        }
+        return;
+    }
+    ValidationScript.Run = Run;
+    if (typeof _ENV_TEST_ENABLED === "undefined") {
+        Lib.P2P.HandleScriptError(Run());
+    }
+})(ValidationScript || (ValidationScript = {}));
+//# sourceMappingURL=validationscript.js.map</ValidationScript>
+      <AllowTagCoverPages>true</AllowTagCoverPages>
+      <AllowTagNewDocuments>true</AllowTagNewDocuments>
+      <AllowTagAttachments>true</AllowTagAttachments>
+      <ExtractionScriptAllowRetry>
+      </ExtractionScriptAllowRetry>
+      <extractionscriptIncludedScripts>Lib_V12.0.566.0</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>Lib_P2P_V12.0.566.0</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>Lib_P2P_CompanyCodesValue_V12.0.566.0</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>Lib_Contract_Publication_Server_V12.0.566.0</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>Lib_CustomerContract_Publication_Server_V12.0.566.0</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>Lib_Parameters_P2P_V12.0.566.0</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>[Lib_Custom_Parameters]</extractionscriptIncludedScripts>
+      <extractionscriptIncludedScripts>[Lib_P2P_Custom_Parameters]</extractionscriptIncludedScripts>
+      <ExtractionScript>"use strict";
+// Load Parameter in extractionScript to avoid access issue from HTML customerScript.
+var ExtractionScript;
+(function (ExtractionScript) {
+    function Run() {
+        const companyCodeBeforeSynchronization = Data.GetValue("CompanyCode");
+        const companyCode = Data.GetValue("CompanyCode__");
+        if (companyCode) {
+            Lib.P2P.CompanyCodesValue
+                .QueryValues(companyCode, { asAdmin: true })
+                .Then(function (CCValues) {
+                if (Object.keys(CCValues).length &gt; 0) {
+                    Lib.P2P.ChangeConfiguration(CCValues.DefaultConfiguration__);
+                    Variable.SetValueAsString("CustomerCompany", CCValues.CompanyName__);
+                }
+                else {
+                    Log.Error("The requested company code is not in the company code table.");
+                }
+            })
+                .Then(() =&gt; {
+                // Must be done when the configuration is loaded
+                Lib.P2P.InitValidityDateTime("PAC");
+                Lib.P2P.InitArchiveDuration("PAC", "ContractArchiveDurationPortalInMonths");
+            });
+        }
+    }
+    ExtractionScript.Run = Run;
+    function GetReferenceDocumentIndex() {
+        const nbAttach = Attach.GetNbAttach();
+        // Parse attachments, and compute total size
+        for (let i = 0; i &lt; nbAttach; i++) {
+            if (Attach.IsProcessedDocument(i))
+                return i;
+        }
+        return 0;
+    }
+    function attachOriginalDocxIfNeeded() {
+        const DOCX_EXTENSION = ".docx";
+        const PDF_EXTENSION = ".pdf";
+        if (Attach.GetNbAttach() === 0) {
+            return;
+        }
+        const refDocIdx = GetReferenceDocumentIndex();
+        const inputFile = Attach.GetInputFile(refDocIdx);
+        if ((inputFile === null || inputFile === void 0 ? void 0 : inputFile.GetExtension().toLowerCase()) === DOCX_EXTENSION) {
+            const originalDocxName = Attach.GetName(refDocIdx);
+            const mainDocumentBaseName = originalDocxName.toLowerCase().endsWith(DOCX_EXTENSION)
+                ? originalDocxName.slice(0, -DOCX_EXTENSION.length)
+                : originalDocxName;
+            Attach.SetValue(refDocIdx, "AttachOutputName", mainDocumentBaseName);
+            Attach.SetValue(refDocIdx, "AttachOutputFormat", PDF_EXTENSION);
+            Log.Info(`DOCX document detected, attaching original file '${originalDocxName}' as attachment`);
+            Attach.AttachTemporaryFile(inputFile, originalDocxName);
+        }
+    }
+    if (typeof _ENV_TEST_ENABLED === "undefined") {
+        attachOriginalDocxIfNeeded();
+        Run();
+    }
+})(ExtractionScript || (ExtractionScript = {}));
+//# sourceMappingURL=extractionscript.js.map</ExtractionScript>
+      <AllowRemovePages>true</AllowRemovePages>
+      <AllowSwapPages>true</AllowSwapPages>
+    </gdr>
+    <lg>
+      <process_da>{
+	"_Action": "Handling",
+	"_Approved": "Godkendt",
+	"_Approved date": "Godkendelsesdato",
+	"_Approved date report": "Godkendelsesdato",
+	"_Approved report": "Godkendt",
+	"_ApprovedDate": "Godkendelsesdato",
+	"_ApprovedDate_report": "Godkendelsesdato",
+	"_Banner": "Titel",
+	"_Cannot take validator ownership message": "Den tidligere sendte kontrakt bliver behandlet af kunden. Prøv igen senere.",
+	"_Cannot take validator ownership title": "Kunne ikke erstatte kontrakt",
+	"_ChooseFile_replace": "Den nye kontrakt vil erstatte det nuværende dokument og opdatere alle tilknyttede felter. Opdateringen kan tage et par minutter og vil foregå i baggrunden.",
+	"_ChooseFile_upload": "Kontraktfelter vil blive opdateret baseret på det nye dokument. Opdateringen kan tage et par minutter og vil foregå i baggrunden.",
+	"_Comment": "Kommentar til kunde",
+	"_Comment:": "Kommentar:",
+	"_Comment_report": "Kommentar til kunde",
+	"_Company code": "Virksomhedskode",
+	"_Company code_report": "Virksomhedskode",
+	"_Contract": "Kundekontrakt",
+	"_Contract Details": "Oplysninger",
+	"_Contract status": "Kontraktstatus",
+	"_Contract status_report": "Kontraktstatus",
+	"_Contract_Active": "Aktiv",
+	"_Contract_ApprovedPendingActivation": "Afventer aktivering",
+	"_Contract_ApprovedPendingEnvelopeDesign": "Afventer afsendelse til digital underskrift",
+	"_Contract_ApprovedPendingSignature": "Afventer digital underskrift",
+	"_Contract_Deleted": "Annulleret",
+	"_Contract_Deprecated": "Forældet",
+	"_Contract_Draft": "Til gennemgang",
+	"_Contract_Expired": "Udløbet",
+	"_Contract_New": "Ny afsendelse",
+	"_Contract_Rejected": "Afvist",
+	"_Contract_Revoked": "Opsagt",
+	"_Contract_SignatureRejected": "Afvist i forbindelse med digital underskrift",
+	"_Contract_ToValidate": "Til gennemgang",
+	"_ContractName": "Kontraktnavn",
+	"_ContractNumber": "Customer contract number",
+	"_ContractNumber_report": "Kundekontraktnummer",
+	"_ContractSubmissionDateTime": "Dato for indsendelse af kontrakt",
+	"_ContractSubmissionDateTime_report": "Dato for indsendelse af kontrakt",
+	"_ContractType": "Kontrakttype",
+	"_ContractType_report": "Kontrakttype",
+	"_ContractTypeID": "Kontrakttype-id",
+	"_ContractTypeID_report": "Kontrakttype-id",
+	"_ConversationContractSubmissionFromPortal": "Kontrakt sendt",
+	"_ConversationContractSubmissionFromPortalWithComment": "Kommentar til sendt kontrakt: {0}",
+	"_ConversationContractUploadDocumentFromPortal": "Ny kontrakt overført: {1}\nKommentar: {0}",
+	"_ConversationContractUploadDocumentFromPortalWithBackup": "Ny kontrakt overført: {1}\nForrige: {2}\nKommentar: {0}",
+	"_ConversationContractViewed": "Kontrakt set",
+	"_Description": "Beskrivelse",
+	"_Description_report": "Beskrivelse",
+	"_End date": "Slutdato",
+	"_End date_report": "Slutdato",
+	"_Enter your comment...": "Indtast en kommentar...",
+	"_EventHistory": "Samtale med {0}",
+	"_ExitFormDocumentProcessingMessage": "Kontraktoplysningerne er ved at blive opdateret Prøv igen senere.",
+	"_ExitFormDocumentProcessingTitle": "Igangværende kontraktopdatering",
+	"_ImportContract_replace": "Erstat kontrakt",
+	"_ImportContract_upload": "Overfør kontrakt",
+	"_Initial end date": "Oprindelig slutdato",
+	"_Initial end date_report": "Oprindelig slutdato",
+	"_Initial start date": "Oprindelig startdato",
+	"_Initial start date_report": "Oprindelig startdato",
+	"_Initially expected end date": "Slutdato før opsigelse",
+	"_Initially expected end date_report": "Slutdato før opsigelse",
+	"_Invalid contract status message": "Kunden sendte kontrakten til intern godkendelse, mens du redigerede den. Du kan ikke længere overføre dokumenter. Formularen er ved at blive opdateret. Åbn den igen senere.",
+	"_Invalid contract status title": "Kunne ikke overføre kontrakt",
+	"_Name": "Navn",
+	"_Name_report": "Kontraktnavn",
+	"_Next occurence will be from {0} to {1}": "Næste gyldighedsperiode: Fra {0} til {1}",
+	"_OK_replace": "Erstat",
+	"_OK_upload": "Overfør",
+	"_OwnerLogin": "Kontraktejer-id",
+	"_OwnerLogin_report": "Kontraktejer-id",
+	"_OwnerNiceName": "Ejer",
+	"_OwnerNiceName_report": "Kontraktejer",
+	"_Quit": "Afslut",
+	"_Reference number": "Referencenummer",
+	"_Reference number_report": "Referencenummer",
+	"_Renewal terms": "Fornyelsesperiode (måneder)",
+	"_Renewal terms_report": "Fornyelsesperiode (måneder)",
+	"_ReplacedContractDocumentName": "Leverandørrevision {1} ({2}) - {0}{3}",
+	"_RequesterLogin": "Kontraktforfatter-id",
+	"_RequesterLogin_report": "Kontraktforfatter-id",
+	"_RequesterNiceName": "Forfatter",
+	"_RequesterNiceName_report": "Kontraktforfatters navn",
+	"_RevisedContractDocumentName": "Leverandørrevision (seneste) - {0}{3}",
+	"_Start date": "Startdato",
+	"_Start date_report": "Startdato",
+	"_Submit": "Send",
+	"_Tacit renewal": "Automatisk fornyelse",
+	"_Tacit renewal_report": "Automatisk fornyelse",
+	"_UploadContract": "Overfør",
+	"_UploadContract (replace existing)": "Erstat",
+	"_Validity": "Periode",
+	"Customer Contract": "Kundekontrakt"
+}</process_da>
+      <process_de>{
+	"_Action": "Aktion",
+	"_Approved": "Genehmigt",
+	"_Approved date": "Genehmigungsdatum",
+	"_Approved date report": "Genehmigungsdatum",
+	"_Approved report": "Genehmigt",
+	"_ApprovedDate": "Genehmigungsdatum",
+	"_ApprovedDate_report": "Genehmigungsdatum",
+	"_Banner": "Titel",
+	"_Cannot take validator ownership message": "Der zuvor übermittelte Vertrag wird vom Kunden bearbeitet. Versuchen Sie es später noch einmal.",
+	"_Cannot take validator ownership title": "Vertrag kann nicht ersetzt werden",
+	"_ChooseFile_replace": "Der neue Vertrag ersetzt das vorhandene Dokument und aktualisiert alle zugehörigen Felder. Dieser Vorgang kann einige Minuten dauern und wird im Hintergrund ausgeführt.",
+	"_ChooseFile_upload": "Die Vertragsfelder werden auf der Grundlage des neuen Dokuments aktualisiert. Dieser Vorgang kann einige Minuten dauern und wird im Hintergrund ausgeführt.",
+	"_Comment": "Kommentar für Kunden",
+	"_Comment:": "Kommentar:",
+	"_Comment_report": "Kommentar für Kunden",
+	"_Company code": "Buchungskreis",
+	"_Company code_report": "Buchungskreis",
+	"_Contract": "Kundenvertrag",
+	"_Contract Details": "Details",
+	"_Contract status": "Vertragsstatus",
+	"_Contract status_report": "Vertragsstatus",
+	"_Contract_Active": "Aktiv",
+	"_Contract_ApprovedPendingActivation": "Aktivierung ausstehend",
+	"_Contract_ApprovedPendingEnvelopeDesign": "Übermittlung zur E-Signatur ausstehend",
+	"_Contract_ApprovedPendingSignature": "E-Signatur ausstehend",
+	"_Contract_Deleted": "Gelöscht",
+	"_Contract_Deprecated": "Obsolet",
+	"_Contract_Draft": "Wird geprüft",
+	"_Contract_Expired": "Abgelaufen",
+	"_Contract_New": "Neue Einreichung",
+	"_Contract_Rejected": "Abgelehnt",
+	"_Contract_Revoked": "Gekündigt",
+	"_Contract_SignatureRejected": "Abgelehnt während der elektronischen Signatur",
+	"_Contract_ToValidate": "Wird geprüft",
+	"_ContractName": "Vertragsname",
+	"_ContractNumber": "Kundenvertragsnummer",
+	"_ContractNumber_report": "Kundenvertragsnummer",
+	"_ContractSubmissionDateTime": "Einreichungsdatum des Vertrags",
+	"_ContractSubmissionDateTime_report": "Einreichungsdatum des Vertrags",
+	"_ContractType": "Vertragsart",
+	"_ContractType_report": "Vertragsart",
+	"_ContractTypeID": "Vertragsart-ID",
+	"_ContractTypeID_report": "Vertragsart-ID",
+	"_ConversationContractSubmissionFromPortal": "Vertrag übermittelt",
+	"_ConversationContractSubmissionFromPortalWithComment": "Vertrag übermittelt Kommentar: {0}",
+	"_ConversationContractUploadDocumentFromPortal": "Neuer Vertrag hochgeladen: {1}\nKommentar: {0}",
+	"_ConversationContractUploadDocumentFromPortalWithBackup": "Neuer Vertrag hochgeladen: {1}\nVorheriger: {2}\nKommentar: {0}",
+	"_ConversationContractViewed": "Vertrag angesehen",
+	"_Description": "Beschreibung",
+	"_Description_report": "Beschreibung",
+	"_End date": "Enddatum",
+	"_End date_report": "Enddatum",
+	"_Enter your comment...": "Kommentar eingeben...",
+	"_EventHistory": "Unterhaltung mit {0}",
+	"_ExitFormDocumentProcessingMessage": "Die Vertragsinformationen werden aktualisiert. Bitte versuchen Sie es später erneut.",
+	"_ExitFormDocumentProcessingTitle": "Vertrag wird aktualisiert",
+	"_ImportContract_replace": "Vertrag ersetzen",
+	"_ImportContract_upload": "Vertrag hochladen",
+	"_Initial end date": "Ursprüngliches Enddatum",
+	"_Initial end date_report": "Ursprüngliches Enddatum",
+	"_Initial start date": "Ursprüngliches Startdatum",
+	"_Initial start date_report": "Ursprüngliches Startdatum",
+	"_Initially expected end date": "Enddatum vor Kündigung",
+	"_Initially expected end date_report": "Enddatum vor Kündigung",
+	"_Invalid contract status message": "Der Kunde hat den Vertrag zur internen Genehmigung übermittelt, während Sie ihn bearbeitet haben. Sie können keine Dokumente mehr hochladen. Das Formular wird gerade aktualisiert, bitte öffnen Sie es später erneut.",
+	"_Invalid contract status title": "Vertrag kann nicht hochgeladen werden",
+	"_Name": "Name",
+	"_Name_report": "Vertragsname",
+	"_Next occurence will be from {0} to {1}": "Nächster Gültigkeitszeitraum: vom {0} bis {1}",
+	"_OK_replace": "Ersetzen",
+	"_OK_upload": "Hochladen",
+	"_OwnerLogin": "ID des Vertragseigentümers",
+	"_OwnerLogin_report": "ID des Vertragseigentümers",
+	"_OwnerNiceName": "Besitzer",
+	"_OwnerNiceName_report": "Vertragsinhaber",
+	"_Quit": "Verlassen",
+	"_Reference number": "Referenznummer",
+	"_Reference number_report": "Referenznummer",
+	"_Renewal terms": "Verlängerungslaufzeit (Monate)",
+	"_Renewal terms_report": "Verlängerungslaufzeit (Monate)",
+	"_ReplacedContractDocumentName": "Lieferantenversion {1} ({2}) - {0}{3}",
+	"_RequesterLogin": "ID des Vertragserstellers",
+	"_RequesterLogin_report": "ID des Vertragserstellers",
+	"_RequesterNiceName": "Autor",
+	"_RequesterNiceName_report": "Name des Vertragserstellers",
+	"_RevisedContractDocumentName": "Lieferantenversion (letzte) - {0}{3}",
+	"_Start date": "Startdatum",
+	"_Start date_report": "Startdatum",
+	"_Submit": "Einreichen",
+	"_Tacit renewal": "Stillschweigende Verlängerung",
+	"_Tacit renewal_report": "Stillschweigende Verlängerung",
+	"_UploadContract": "Hochladen",
+	"_UploadContract (replace existing)": "Ersetzen",
+	"_Validity": "Vertragslaufzeit",
+	"Customer Contract": "Kundenvertrag"
+}</process_de>
+      <process_ja>{
+	"_Action": "アクション",
+	"_Approved": "承認済み",
+	"_Approved date": "承認日",
+	"_Approved date report": "承認日",
+	"_Approved report": "承認済み",
+	"_ApprovedDate": "承認日",
+	"_ApprovedDate_report": "承認日",
+	"_Banner": "タイトル",
+	"_Cannot take validator ownership message": "以前に送信された契約は、顧客が処理中です。 後でもう一度お試しください。",
+	"_Cannot take validator ownership title": "契約を置換できません",
+	"_ChooseFile_replace": "新しい契約により、現在の文書は置き換えられ、関連するすべてのフィールドは更新されます。\nこの更新はバックグラウンドで処理され、数分かかることがあります。",
+	"_ChooseFile_upload": "契約フィールドは、新しい文書に基づいて更新されます。\nこの更新はバックグラウンドで処理され、数分かかることがあります。",
+	"_Comment": "顧客宛のコメント",
+	"_Comment:": "コメント:",
+	"_Comment_report": "顧客宛のコメント",
+	"_Company code": "会社コード",
+	"_Company code_report": "会社コード",
+	"_Contract": "顧客契約",
+	"_Contract Details": "詳細",
+	"_Contract status": "契約ステータス",
+	"_Contract status_report": "契約ステータス",
+	"_Contract_Active": "アクティブ",
+	"_Contract_ApprovedPendingActivation": "保留中のアクティブ化",
+	"_Contract_ApprovedPendingEnvelopeDesign": "電子署名のための送信を保留中",
+	"_Contract_ApprovedPendingSignature": "保留中の電子署名",
+	"_Contract_Deleted": "キャンセル済み",
+	"_Contract_Deprecated": "廃止",
+	"_Contract_Draft": "レビュー中",
+	"_Contract_Expired": "期限切れ",
+	"_Contract_New": "新しい送信",
+	"_Contract_Rejected": "拒否",
+	"_Contract_Revoked": "満了",
+	"_Contract_SignatureRejected": "電子署名中に却下",
+	"_Contract_ToValidate": "レビュー中",
+	"_ContractName": "契約者名",
+	"_ContractNumber": "顧客契約番号",
+	"_ContractNumber_report": "顧客契約番号",
+	"_ContractSubmissionDateTime": "契約提出日",
+	"_ContractSubmissionDateTime_report": "契約提出日",
+	"_ContractType": "契約タイプ",
+	"_ContractType_report": "契約タイプ",
+	"_ContractTypeID": "契約タイプID",
+	"_ContractTypeID_report": "契約タイプID",
+	"_ConversationContractSubmissionFromPortal": "契約は送信されました",
+	"_ConversationContractSubmissionFromPortalWithComment": "契約は送信されました\nコメント: {0} 件",
+	"_ConversationContractUploadDocumentFromPortal": "新規契約がアップロードされました: {1}\nコメント: {0}",
+	"_ConversationContractUploadDocumentFromPortalWithBackup": "新規契約がアップロードされました: {1}\n前の契約: {2}\nコメント: {0}",
+	"_ConversationContractViewed": "契約は閲覧されました",
+	"_Description": "説明",
+	"_Description_report": "説明",
+	"_End date": "終了日",
+	"_End date_report": "終了日",
+	"_Enter your comment...": "コメントを入力...",
+	"_EventHistory": "{0}との会話",
+	"_ExitFormDocumentProcessingMessage": "契約情報は現在更新中です。後で再度お試しください。",
+	"_ExitFormDocumentProcessingTitle": "契約更新中",
+	"_ImportContract_replace": "契約の置換",
+	"_ImportContract_upload": "契約をアップロード",
+	"_Initial end date": "当初の終了日",
+	"_Initial end date_report": "当初の終了日",
+	"_Initial start date": "当初の開始日",
+	"_Initial start date_report": "当初の開始日",
+	"_Initially expected end date": "終了前の最終日",
+	"_Initially expected end date_report": "終了前の最終日",
+	"_Invalid contract status message": "契約の編集中に、顧客が内部承認のためにその契約を送信しました。 そのため、ドキュメントをアップロードすることはできません。\nフォームが更新されています。後ほど再度開いてください。",
+	"_Invalid contract status title": "契約をアップロードできません",
+	"_Name": "名前:",
+	"_Name_report": "契約者名",
+	"_Next occurence will be from {0} to {1}": "次の有効期限: {0} から {1} まで",
+	"_OK_replace": "置換",
+	"_OK_upload": "アップロード",
+	"_OwnerLogin": "契約者 ID",
+	"_OwnerLogin_report": "契約者 ID",
+	"_OwnerNiceName": "所有者",
+	"_OwnerNiceName_report": "契約所有者",
+	"_Quit": "終了",
+	"_Reference number": "参照番号",
+	"_Reference number_report": "参照番号",
+	"_Renewal terms": "更新期間 (月数)",
+	"_Renewal terms_report": "更新期間 (月数)",
+	"_ReplacedContractDocumentName": "サプライヤーによる修正 {1} ({2}) - {0}{3}",
+	"_RequesterLogin": "契約作成者ID",
+	"_RequesterLogin_report": "契約作成者ID",
+	"_RequesterNiceName": "作成者",
+	"_RequesterNiceName_report": "契約作成者名",
+	"_RevisedContractDocumentName": "サプライヤーによる修正 (最新) - {0}{3}",
+	"_Start date": "開始日",
+	"_Start date_report": "開始日",
+	"_Submit": "送信",
+	"_Tacit renewal": "自動更新",
+	"_Tacit renewal_report": "自動更新",
+	"_UploadContract": "アップロード",
+	"_UploadContract (replace existing)": "置換",
+	"_Validity": "契約期間",
+	"Customer Contract": "顧客契約"
+}</process_ja>
+      <process_en>{
+	"_Action": "Action",
+	"_Approved": "Approved",
+	"_Approved date": "Approval date",
+	"_Approved date report": "Approval date",
+	"_Approved report": "Approved",
+	"_ApprovedDate": "Approval date",
+	"_ApprovedDate_report": "Approval date",
+	"_Banner": "Title",
+	"_Cannot take validator ownership message": "The contract previously submitted is being processed by the customer. Try again later.",
+	"_Cannot take validator ownership title": "Unable to replace contract",
+	"_ChooseFile_replace": "The new contract will replace the current document and update all related fields.\nThe update may take a few minutes and will be processed in the background.",
+	"_ChooseFile_upload": "Contract fields will be updated based on the new document.\nThe update may take a few minutes and will be processed in the background.",
+	"_Comment": "Comment for customer",
+	"_Comment:": "Comment:",
+	"_Comment_report": "Comment for customer",
+	"_Company code": "Company code",
+	"_Company code_report": "Company code",
+	"_Contract": "Customer Contract",
+	"_Contract Details": "Details",
+	"_Contract status": "Contract status",
+	"_Contract status_report": "Contract status",
+	"_Contract_Active": "Active",
+	"_Contract_ApprovedPendingActivation": "Pending activation",
+	"_Contract_ApprovedPendingEnvelopeDesign": "Pending submission for e-signature",
+	"_Contract_ApprovedPendingSignature": "Pending e-signature",
+	"_Contract_Deleted": "Canceled",
+	"_Contract_Deprecated": "Obsolete",
+	"_Contract_Draft": "In review",
+	"_Contract_Expired": "Expired",
+	"_Contract_New": "New submission",
+	"_Contract_Rejected": "Rejected",
+	"_Contract_Revoked": "Terminated",
+	"_Contract_SignatureRejected": "Rejected during e-signature",
+	"_Contract_ToValidate": "In review",
+	"_ContractName": "Contract name",
+	"_ContractNumber": "Customer contract number",
+	"_ContractNumber_report": "Customer contract number",
+	"_ContractSubmissionDateTime": "Contract submission date",
+	"_ContractSubmissionDateTime_report": "Contract submission date",
+	"_ContractType": "Contract type",
+	"_ContractType_report": "Contract type",
+	"_ContractTypeID": "Contract type ID",
+	"_ContractTypeID_report": "Contract type ID",
+	"_ConversationContractSubmissionFromPortal": "Contract submitted",
+	"_ConversationContractSubmissionFromPortalWithComment": "Contract submitted\nComment: {0}",
+	"_ConversationContractUploadDocumentFromPortal": "New contract uploaded: {1}\nComment: {0}",
+	"_ConversationContractUploadDocumentFromPortalWithBackup": "New contract uploaded: {1}\nPrevious: {2}\nComment: {0}",
+	"_ConversationContractViewed": "Contract viewed",
+	"_Description": "Description",
+	"_Description_report": "Description",
+	"_End date": "End date",
+	"_End date_report": "End date",
+	"_Enter your comment...": "Enter a comment...",
+	"_EventHistory": "Conversation with {0}",
+	"_ExitFormDocumentProcessingMessage": "The contract information is currently being updated. Please try again later.",
+	"_ExitFormDocumentProcessingTitle": "Contract update in progress",
+	"_ImportContract_replace": "Replace contract",
+	"_ImportContract_upload": "Upload contract",
+	"_Initial end date": "Initial end date",
+	"_Initial end date_report": "Initial end date",
+	"_Initial start date": "Initial start date",
+	"_Initial start date_report": "Initial start date",
+	"_Initially expected end date": "End date before termination",
+	"_Initially expected end date_report": "End date before termination",
+	"_Invalid contract status message": "The customer submitted the contract for internal approval while you were editing it. You can no longer upload documents.\nThe form is being updated, please reopen it later.",
+	"_Invalid contract status title": "Unable to upload contract",
+	"_Name": "Name",
+	"_Name_report": "Contract name",
+	"_Next occurence will be from {0} to {1}": "Next validity period: from {0} to {1}",
+	"_OK_replace": "Replace",
+	"_OK_upload": "Upload",
+	"_OwnerLogin": "Contract owner ID",
+	"_OwnerLogin_report": "Contract owner ID",
+	"_OwnerNiceName": "Owner",
+	"_OwnerNiceName_report": "Contract owner",
+	"_Quit": "Quit",
+	"_Reference number": "Reference number",
+	"_Reference number_report": "Reference number",
+	"_Renewal terms": "Renewal term (months)",
+	"_Renewal terms_report": "Renewal term (months)",
+	"_ReplacedContractDocumentName": "Supplier revision {1} ({2}) - {0}{3}",
+	"_RequesterLogin": "Contract author ID",
+	"_RequesterLogin_report": "Contract author ID",
+	"_RequesterNiceName": "Author",
+	"_RequesterNiceName_report": "Contract author name",
+	"_RevisedContractDocumentName": "Supplier revision (latest) - {0}{3}",
+	"_Start date": "Start date",
+	"_Start date_report": "Start date",
+	"_Submit": "Submit",
+	"_Tacit renewal": "Auto-renewal",
+	"_Tacit renewal_report": "Auto-renewal",
+	"_UploadContract": "Upload",
+	"_UploadContract (replace existing)": "Replace",
+	"_Validity": "Term",
+	"Customer Contract": "Customer contract"
+}</process_en>
+      <process_es>{
+	"_Action": "Acción",
+	"_Approved": "Aprobado",
+	"_Approved date": "Fecha de aprobación",
+	"_Approved date report": "Fecha de aprobación",
+	"_Approved report": "Aprobado",
+	"_ApprovedDate": "Fecha de aprobación",
+	"_ApprovedDate_report": "Fecha de aprobación",
+	"_Banner": "Título",
+	"_Cannot take validator ownership message": "El contrato que envió previamente está siendo procesado por el cliente. Vuelva a intentarlo más tarde.",
+	"_Cannot take validator ownership title": "No se pudo sustituir el contrato",
+	"_ChooseFile_replace": "El nuevo contrato sustituirá al documento actual y actualizará todos los campos relacionados.\nLa actualización puede tardar unos minutos y se procesará en segundo plano.",
+	"_ChooseFile_upload": "Los campos del contrato se actualizarán en función del nuevo documento.\nLa actualización puede tardar unos minutos y se procesará en segundo plano.",
+	"_Comment": "Comentario para el cliente",
+	"_Comment:": "Comentario:",
+	"_Comment_report": "Comentario para el cliente",
+	"_Company code": "Código de empresa",
+	"_Company code_report": "Código de empresa",
+	"_Contract": "Contrato de cliente",
+	"_Contract Details": "Detalles",
+	"_Contract status": "Estado del contrato",
+	"_Contract status_report": "Estado del contrato",
+	"_Contract_Active": "Activo",
+	"_Contract_ApprovedPendingActivation": "Pendiente de activación",
+	"_Contract_ApprovedPendingEnvelopeDesign": "En espera de envíio para firma electrónica",
+	"_Contract_ApprovedPendingSignature": "En espera de firma electrónica",
+	"_Contract_Deleted": "Cancelado",
+	"_Contract_Deprecated": "Obsoleto",
+	"_Contract_Draft": "En revisión",
+	"_Contract_Expired": "Vencido",
+	"_Contract_New": "Nuevo envío",
+	"_Contract_Rejected": "Rechazado",
+	"_Contract_Revoked": "Rescindido",
+	"_Contract_SignatureRejected": "Rechazado durante la firma electrónica",
+	"_Contract_ToValidate": "En revisión",
+	"_ContractName": "Nombre del contrato",
+	"_ContractNumber": "Número de contrato del cliente",
+	"_ContractNumber_report": "Número de contrato del cliente",
+	"_ContractSubmissionDateTime": "Fecha de envío del contrato",
+	"_ContractSubmissionDateTime_report": "Fecha de envío del contrato",
+	"_ContractType": "Tipo de contrato",
+	"_ContractType_report": "Tipo de contrato",
+	"_ContractTypeID": "ID de tipo de contrato",
+	"_ContractTypeID_report": "ID de tipo de contrato",
+	"_ConversationContractSubmissionFromPortal": "Contrato enviado",
+	"_ConversationContractSubmissionFromPortalWithComment": "Contrato enviado\nComentario: {0}",
+	"_ConversationContractUploadDocumentFromPortal": "Nuevo contrato cargado: {1}\nComentario: {0}",
+	"_ConversationContractUploadDocumentFromPortalWithBackup": "Nuevo contrato importado: {1}\nAnterior: {2}\nComentario: {0}",
+	"_ConversationContractViewed": "Contrato visto",
+	"_Description": "Descripción",
+	"_Description_report": "Descripción",
+	"_End date": "Fecha de fin",
+	"_End date_report": "Fecha de fin",
+	"_Enter your comment...": "Escribir un comentario...",
+	"_EventHistory": "Conversación con {0}",
+	"_ExitFormDocumentProcessingMessage": "La información del contrato se está actualizando. Vuelva a intentarlo más tarde.",
+	"_ExitFormDocumentProcessingTitle": "Actualización del contrato en curso",
+	"_ImportContract_replace": "Sustituir contrato",
+	"_ImportContract_upload": "Cargar contrato",
+	"_Initial end date": "Fecha de fin inicial",
+	"_Initial end date_report": "Fecha de fin inicial",
+	"_Initial start date": "Fecha de inicio inicial",
+	"_Initial start date_report": "Fecha de inicio inicial",
+	"_Initially expected end date": "Fecha de fin antes de la rescisión",
+	"_Initially expected end date_report": "Fecha de fin antes de la rescisión",
+	"_Invalid contract status message": "El cliente ha enviado el contrato para su aprobación interna mientras usted lo estaba editando. Ya no puede importar documentos.\nEl formulario se está actualizando, vuelva a abrirlo más tarde.",
+	"_Invalid contract status title": "No se pudo importar el contrato",
+	"_Name": "Nombre",
+	"_Name_report": "Nombre del contrato",
+	"_Next occurence will be from {0} to {1}": "Próximo período de validez: del {0} al {1}",
+	"_OK_replace": "Sustituir",
+	"_OK_upload": "Cargar",
+	"_OwnerLogin": "ID del propietario del contrato",
+	"_OwnerLogin_report": "ID del propietario del contrato",
+	"_OwnerNiceName": "Propietario",
+	"_OwnerNiceName_report": "Propietario del contrato",
+	"_Quit": "Salir",
+	"_Reference number": "Nº de referencia",
+	"_Reference number_report": "Nº de referencia",
+	"_Renewal terms": "Período de renovación (meses)",
+	"_Renewal terms_report": "Período de renovación (meses)",
+	"_ReplacedContractDocumentName": "Revisión del proveedor {1} ({2}) - {0}{3}",
+	"_RequesterLogin": "ID del autor del contrato",
+	"_RequesterLogin_report": "ID del autor del contrato",
+	"_RequesterNiceName": "Autor",
+	"_RequesterNiceName_report": "Nombre del autor del contrato",
+	"_RevisedContractDocumentName": "Revisión del proveedor (más reciente) - {0}{3}",
+	"_Start date": "Fecha de inicio",
+	"_Start date_report": "Fecha de inicio",
+	"_Submit": "Enviar",
+	"_Tacit renewal": "Renovación tácita",
+	"_Tacit renewal_report": "Renovación tácita",
+	"_UploadContract": "Cargar",
+	"_UploadContract (replace existing)": "Sustituir",
+	"_Validity": "Validez",
+	"Customer Contract": "Contrato de cliente"
+}</process_es>
+      <process_fr>{
+	"_Action": "Action",
+	"_Approved": "Approuvé",
+	"_Approved date": "Date d'approbation",
+	"_Approved date report": "Date d'approbation",
+	"_Approved report": "Approuvé",
+	"_ApprovedDate": "Date d'approbation",
+	"_ApprovedDate_report": "Date d'approbation",
+	"_Banner": "Titre",
+	"_Cannot take validator ownership message": "Le contrat précédemment soumis est en cours de traitement par le client. Veuillez réessayer plus tard.",
+	"_Cannot take validator ownership title": "Échec du remplacement",
+	"_ChooseFile_replace": "Le nouveau contrat remplacera le document actuel et mettra à jour tous les champs associés.\nLa mise à jour peut prendre quelques minutes et sera traitée en arrière-plan.",
+	"_ChooseFile_upload": "Les champs du contrat seront mis à jour sur la base du nouveau document.\nLa mise à jour peut prendre quelques minutes et sera traitée en arrière-plan.",
+	"_Comment": "Commentaire pour le client",
+	"_Comment:": "Commentaire :",
+	"_Comment_report": "Commentaire pour le client",
+	"_Company code": "Code société",
+	"_Company code_report": "Code société",
+	"_Contract": "Contrat client",
+	"_Contract Details": "Détails",
+	"_Contract status": "État du contrat",
+	"_Contract status_report": "État du contrat",
+	"_Contract_Active": "Actif",
+	"_Contract_ApprovedPendingActivation": "En attente d'activation",
+	"_Contract_ApprovedPendingEnvelopeDesign": "En attente d'envoi pour e-signature",
+	"_Contract_ApprovedPendingSignature": "En attente d'e-signature",
+	"_Contract_Deleted": "Annulé",
+	"_Contract_Deprecated": "Obsolète",
+	"_Contract_Draft": "En cours de révision",
+	"_Contract_Expired": "Expiré",
+	"_Contract_New": "Nouvelle soumission",
+	"_Contract_Rejected": "Rejeté",
+	"_Contract_Revoked": "Résilié",
+	"_Contract_SignatureRejected": "Rejeté lors de l'e-signature",
+	"_Contract_ToValidate": "En cours de révision",
+	"_ContractName": "Nom du contrat",
+	"_ContractNumber": "Numéro de contrat du client",
+	"_ContractNumber_report": "Numéro de contrat du client",
+	"_ContractSubmissionDateTime": "Date de soumission du contrat",
+	"_ContractSubmissionDateTime_report": "Date de soumission du contrat",
+	"_ContractType": "Type de contrat",
+	"_ContractType_report": "Type de contrat",
+	"_ContractTypeID": "ID du type de contrat",
+	"_ContractTypeID_report": "ID du type de contrat",
+	"_ConversationContractSubmissionFromPortal": "Contrat soumis",
+	"_ConversationContractSubmissionFromPortalWithComment": "Contrat soumis\nCommentaire : {0}",
+	"_ConversationContractUploadDocumentFromPortal": "Nouveau contrat importé : {1}\nCommentaire : {0}",
+	"_ConversationContractUploadDocumentFromPortalWithBackup": "Nouveau contrat importé : {1}\nPrécédent : {2}\nCommentaire : {0}",
+	"_ConversationContractViewed": "Contrat consulté",
+	"_Description": "Description",
+	"_Description_report": "Description",
+	"_End date": "Date de fin",
+	"_End date_report": "Date de fin",
+	"_Enter your comment...": "Saisir un commentaire...",
+	"_EventHistory": "Conversation avec {0}",
+	"_ExitFormDocumentProcessingMessage": "Une mise à jour des informations du contrat est en cours. Veuillez réessayer plus tard.",
+	"_ExitFormDocumentProcessingTitle": "Contrat en cours de mise à jour",
+	"_ImportContract_replace": "Remplacer le contrat",
+	"_ImportContract_upload": "Importer le contrat",
+	"_Initial end date": "Date de fin initiale",
+	"_Initial end date_report": "Date de fin initiale",
+	"_Initial start date": "Date de début initiale",
+	"_Initial start date_report": "Date de début initiale",
+	"_Initially expected end date": "Date de fin avant résiliation",
+	"_Initially expected end date_report": "Date de fin avant résiliation",
+	"_Invalid contract status message": "Le client a soumis le contrat à l'approbation interne pendant que vous étiez en train de le modifier. Vous ne pouvez plus importer de documents.\nLe formulaire est en cours de mise à jour, veuillez le rouvrir plus tard.",
+	"_Invalid contract status title": "Échec d'importation",
+	"_Name": "Nom",
+	"_Name_report": "Nom du contrat",
+	"_Next occurence will be from {0} to {1}": "Prochaine période de validité : du {0} au {1}",
+	"_OK_replace": "Remplacer",
+	"_OK_upload": "Importer",
+	"_OwnerLogin": "ID du propriétaire du contrat",
+	"_OwnerLogin_report": "ID du propriétaire du contrat",
+	"_OwnerNiceName": "Propriétaire",
+	"_OwnerNiceName_report": "Propriétaire du contrat",
+	"_Quit": "Quitter",
+	"_Reference number": "N° référence",
+	"_Reference number_report": "N° référence",
+	"_Renewal terms": "Durée de reconduction (mois)",
+	"_Renewal terms_report": "Durée de reconduction (mois)",
+	"_ReplacedContractDocumentName": "Révision fournisseur {1} ({2}) - {0}{3}",
+	"_RequesterLogin": "ID de l'auteur du contrat",
+	"_RequesterLogin_report": "ID de l'auteur du contrat",
+	"_RequesterNiceName": "Auteur",
+	"_RequesterNiceName_report": "Nom de l'auteur du contrat",
+	"_RevisedContractDocumentName": "Révision fournisseur (plus récente) - {0}{3}",
+	"_Start date": "Date de début",
+	"_Start date_report": "Date de début",
+	"_Submit": "Soumettre",
+	"_Tacit renewal": "Tacite reconduction",
+	"_Tacit renewal_report": "Tacite reconduction",
+	"_UploadContract": "Importer",
+	"_UploadContract (replace existing)": "Remplacer",
+	"_Validity": "Durée",
+	"Customer Contract": "Contrat client"
+}</process_fr>
+      <process_nl-NL>{
+	"_Action": "Actie",
+	"_Approved": "Goedgekeurd",
+	"_Approved date": "Datum goedkeuring",
+	"_Approved date report": "Datum goedkeuring",
+	"_Approved report": "Goedgekeurd",
+	"_ApprovedDate": "Datum goedkeuring",
+	"_ApprovedDate_report": "Datum goedkeuring",
+	"_Banner": "Titel",
+	"_Cannot take validator ownership message": "Het eerder ingediende contract wordt verwerkt door de klant. Probeer het later opnieuw.",
+	"_Cannot take validator ownership title": "Kan contract niet vervangen",
+	"_ChooseFile_replace": "Het nieuwe contract zal het huidige document vervangen and alle gerelateerde velden bijwerken. Deze actie kan enkele minuten in beslag nemen en wordt op de achtergrond verwerkt.",
+	"_ChooseFile_upload": "Contractvelden zullen worden bijgewerkt op basis van het nieuwe document. Deze actie kan enkele minuten in beslag nemen en wordt op de achtergrond verwerkt.",
+	"_Comment": "Opmerking voor klant",
+	"_Comment:": "Opmerking:",
+	"_Comment_report": "Opmerking voor klant",
+	"_Company code": "Bedrijfscode",
+	"_Company code_report": "Bedrijfscode",
+	"_Contract": "Klantencontract",
+	"_Contract Details": "Details",
+	"_Contract status": "Status contract",
+	"_Contract status_report": "Status contract",
+	"_Contract_Active": "Actief",
+	"_Contract_ApprovedPendingActivation": "In afwachting van activering",
+	"_Contract_ApprovedPendingEnvelopeDesign": "In afwachting van indiening voor elektronische handtekening",
+	"_Contract_ApprovedPendingSignature": "In afwachting van electronische handtekening",
+	"_Contract_Deleted": "Geannuleerd",
+	"_Contract_Deprecated": "Obsolete",
+	"_Contract_Draft": "Onder beoordeling",
+	"_Contract_Expired": "Verlopen",
+	"_Contract_New": "Nieuwe indiening",
+	"_Contract_Rejected": "Geweigerd",
+	"_Contract_Revoked": "Beëindigd",
+	"_Contract_SignatureRejected": "Geweigerd tijdens elektronische handtekening",
+	"_Contract_ToValidate": "Onder beoordeling",
+	"_ContractName": "Naam contract",
+	"_ContractNumber": "Contractnummer klant",
+	"_ContractNumber_report": "Contractnummer klant",
+	"_ContractSubmissionDateTime": "Datum indiening contract",
+	"_ContractSubmissionDateTime_report": "Datum indiening contract",
+	"_ContractType": "Type contract",
+	"_ContractType_report": "Type contract",
+	"_ContractTypeID": "ID type contract",
+	"_ContractTypeID_report": "ID type contract",
+	"_ConversationContractSubmissionFromPortal": "Contract ingediend",
+	"_ConversationContractSubmissionFromPortalWithComment": "Contract ingediend Commentaar: {0}",
+	"_ConversationContractUploadDocumentFromPortal": "Nieuw contract geüpload: {1}\nCommentaar: {0}",
+	"_ConversationContractUploadDocumentFromPortalWithBackup": "Nieuw contract geüpload: {1}\nVorige: {2}\nOpmerking: {0}",
+	"_ConversationContractViewed": "Contract bekeken",
+	"_Description": "Beschrijving",
+	"_Description_report": "Beschrijving",
+	"_End date": "Einddatum",
+	"_End date_report": "Einddatum",
+	"_Enter your comment...": "Voer een opmerking in...",
+	"_EventHistory": "Gesprek met {0}",
+	"_ExitFormDocumentProcessingMessage": "De contractinformatie wordt momenteel bijgewerkt. Gelieve het later nogmaals te proberen.",
+	"_ExitFormDocumentProcessingTitle": "Bezig met updaten van contract",
+	"_ImportContract_replace": "Vervang contract ",
+	"_ImportContract_upload": "Contract uploaden",
+	"_Initial end date": "Initiële einddatum",
+	"_Initial end date_report": "Initiële einddatum",
+	"_Initial start date": "Initiële startdatum",
+	"_Initial start date_report": "Initiële startdatum",
+	"_Initially expected end date": "Originele einddatum",
+	"_Initially expected end date_report": "Originele einddatum",
+	"_Invalid contract status message": "De klant heeft het contract ingediend voor interne goedkeuring terwijl u het bijwerkte. Kan geen documenten meer uploaden. Het formulier wordt bijgewerkt, gelieve het later opnieuw te openen.",
+	"_Invalid contract status title": "Kan contract niet uploaden",
+	"_Name": "Naam",
+	"_Name_report": "Naam contract",
+	"_Next occurence will be from {0} to {1}": "Volgende geldigheidsduur: van {0} tot {1}",
+	"_OK_replace": "Vervangen",
+	"_OK_upload": "Upload",
+	"_OwnerLogin": "ID eigenaar contract",
+	"_OwnerLogin_report": "ID eigenaar contract",
+	"_OwnerNiceName": "Eigenaar",
+	"_OwnerNiceName_report": "Eigenaar contract",
+	"_Quit": "Afsluiten",
+	"_Reference number": "Referentienummer",
+	"_Reference number_report": "Referentienummer",
+	"_Renewal terms": "Termijn vernieuwing (maanden)",
+	"_Renewal terms_report": "Termijn vernieuwing (maanden)",
+	"_ReplacedContractDocumentName": "Leveranciers revisie {1} ({2}) - {0}{3}",
+	"_RequesterLogin": "ID auteur contract",
+	"_RequesterLogin_report": "ID auteur contract",
+	"_RequesterNiceName": "Auteur",
+	"_RequesterNiceName_report": "Naam auteur contract",
+	"_RevisedContractDocumentName": "Leveranciers revisie (laatste) - {0}{3}",
+	"_Start date": "Startdatum",
+	"_Start date_report": "Startdatum",
+	"_Submit": "Verzenden",
+	"_Tacit renewal": "Stilzwijgende vernieuwing",
+	"_Tacit renewal_report": "Stilzwijgende vernieuwing",
+	"_UploadContract": "Upload",
+	"_UploadContract (replace existing)": "Vervangen",
+	"_Validity": "Termijn contract",
+	"Customer Contract": "Klantencontract"
+}</process_nl-NL>
+      <process_pl>{
+	"_Action": "Działanie",
+	"_Approved": "Zatwierdzono",
+	"_Approved date": "Data zatwierdzenia",
+	"_Approved date report": "Data zatwierdzenia",
+	"_Approved report": "Zatwierdzono",
+	"_ApprovedDate": "Data zatwierdzenia",
+	"_ApprovedDate_report": "Data zatwierdzenia",
+	"_Banner": "Tytuł",
+	"_Cannot take validator ownership message": "Klient przetwarza poprzednio przesłany kontrakt. Spróbuj ponownie później.",
+	"_Cannot take validator ownership title": "Nie można zamienić kontraktu",
+	"_ChooseFile_replace": "Nowy kontrakt zastąpi bieżący dokument i spowoduje aktualizację wszystkich powiązanych pól.\nAktualizacja może potrwać kilka minut i zostanie wykonana w tle.",
+	"_ChooseFile_upload": "Pola kontraktu zostaną zaktualizowane na podstawie nowego dokumentu.\nAktualizacja może potrwać kilka minut i zostanie wykonana w tle.",
+	"_Comment": "Komentarz dla klienta",
+	"_Comment:": "Komentarz:",
+	"_Comment_report": "Komentarz dla klienta",
+	"_Company code": "Kod firmy",
+	"_Company code_report": "Kod firmy",
+	"_Contract": "Kontrakt z klientem",
+	"_Contract Details": "Szczegóły",
+	"_Contract status": "Status kontraktu",
+	"_Contract status_report": "Status kontraktu",
+	"_Contract_Active": "Aktywny",
+	"_Contract_ApprovedPendingActivation": "Oczekiwanie na aktywację",
+	"_Contract_ApprovedPendingEnvelopeDesign": "Oczekiwanie na przesłanie do e-podpisu",
+	"_Contract_ApprovedPendingSignature": "Oczekiwanie na e-podpis",
+	"_Contract_Deleted": "Anulowany",
+	"_Contract_Deprecated": "Nieaktualny",
+	"_Contract_Draft": "W trakcie sprawdzania",
+	"_Contract_Expired": "Wygasły",
+	"_Contract_New": "Nowe przesłanie",
+	"_Contract_Rejected": "Odrzucony",
+	"_Contract_Revoked": "Rozwiązany",
+	"_Contract_SignatureRejected": "Odrzucony na etapie e-podpisu",
+	"_Contract_ToValidate": "W trakcie sprawdzania",
+	"_ContractName": "Nazwa kontraktu",
+	"_ContractNumber": "Numer kontraktu z klientem",
+	"_ContractNumber_report": "Numer kontraktu z klientem",
+	"_ContractSubmissionDateTime": "Data przesłania kontraktu",
+	"_ContractSubmissionDateTime_report": "Data przesłania kontraktu",
+	"_ContractType": "Typ kontraktu",
+	"_ContractType_report": "Typ kontraktu",
+	"_ContractTypeID": "Id. typu kontraktu",
+	"_ContractTypeID_report": "Id. typu kontraktu",
+	"_ConversationContractSubmissionFromPortal": "Przesłano kontrakt",
+	"_ConversationContractSubmissionFromPortalWithComment": "Przesłano kontrakt\nKomentarz: {0}",
+	"_ConversationContractUploadDocumentFromPortal": "Przekazano nowy kontrakt: {1}\nKomentarz: {0}",
+	"_ConversationContractUploadDocumentFromPortalWithBackup": "Przekazano nowy kontrakt: {1}\nPoprzedni: {2}\nKomentarz: {0}",
+	"_ConversationContractViewed": "Wyświetlono kontrakt",
+	"_Description": "Opis",
+	"_Description_report": "Opis",
+	"_End date": "Data końcowa",
+	"_End date_report": "Data końcowa",
+	"_Enter your comment...": "Wprowadź komentarz...",
+	"_EventHistory": "Rozmowa z: {0}",
+	"_ExitFormDocumentProcessingMessage": "Obecnie trwa aktualizowanie informacji o kontrakcie. Spróbuj ponownie później.",
+	"_ExitFormDocumentProcessingTitle": "Aktualizacja kontraktu w toku",
+	"_ImportContract_replace": "Zamień kontrakt",
+	"_ImportContract_upload": "Prześlij kontrakt",
+	"_Initial end date": "Pierwotna data końcowa",
+	"_Initial end date_report": "Pierwotna data końcowa",
+	"_Initial start date": "Pierwotna data początkowa",
+	"_Initial start date_report": "Pierwotna data początkowa",
+	"_Initially expected end date": "Data końcowa przez rozwiązaniem",
+	"_Initially expected end date_report": "Data końcowa przez rozwiązaniem",
+	"_Invalid contract status message": "Klient przesłał kontrakt do zatwierdzenia wewnętrznego podczas Twoich czynności edycyjnych. Już nie możesz przesłać dokumentów.\nTrwa aktualizowanie formularza, otwórz go ponownie później.",
+	"_Invalid contract status title": "Nie można przesłać kontraktu",
+	"_Name": "Nazwa",
+	"_Name_report": "Nazwa kontraktu",
+	"_Next occurence will be from {0} to {1}": "Następny okres ważności: od {0} do {1}",
+	"_OK_replace": "Zastąp",
+	"_OK_upload": "Prześlij",
+	"_OwnerLogin": "Id. właściciela kontraktu",
+	"_OwnerLogin_report": "Id. właściciela kontraktu",
+	"_OwnerNiceName": "Właściciel",
+	"_OwnerNiceName_report": "Właściciel kontraktu",
+	"_Quit": "Wyjdź",
+	"_Reference number": "Numer referencyjny",
+	"_Reference number_report": "Numer referencyjny",
+	"_Renewal terms": "Termin odnowienia (miesiące)",
+	"_Renewal terms_report": "Termin odnowienia (miesiące)",
+	"_ReplacedContractDocumentName": "Wersja dostawcy {1} ({2}) – {0}{3}",
+	"_RequesterLogin": "Id. autora kontraktu",
+	"_RequesterLogin_report": "Id. autora kontraktu",
+	"_RequesterNiceName": "Autor",
+	"_RequesterNiceName_report": "Nazwisko autora kontraktu",
+	"_RevisedContractDocumentName": "Wersja dostawcy (najnowsza) – {0}{3}",
+	"_Start date": "Data początkowa",
+	"_Start date_report": "Data początkowa",
+	"_Submit": "Prześlij",
+	"_Tacit renewal": "Autoodnowienie",
+	"_Tacit renewal_report": "Autoodnowienie",
+	"_UploadContract": "Prześlij",
+	"_UploadContract (replace existing)": "Zastąp",
+	"_Validity": "Termin",
+	"Customer Contract": "Kontrakt z klientem"
+}</process_pl>
+      <process_it>{
+	"_Action": "Azione",
+	"_Approved": "Approvato",
+	"_Approved date": "Data approvazione",
+	"_Approved date report": "Data approvazione",
+	"_Approved report": "Approvato",
+	"_ApprovedDate": "Data approvazione",
+	"_ApprovedDate_report": "Data approvazione",
+	"_Banner": "Titolo",
+	"_Cannot take validator ownership message": "Il contratto inviato precedentemente è in elaborazione dal cliente. Riprovare più tardi.",
+	"_Cannot take validator ownership title": "Impossibile sostituire il contratto",
+	"_ChooseFile_replace": "Il nuovo contratto sostituirà l'attuale documento e aggiornerà tutti i campi associati.\nL'aggiornamento può richiedere alcuni minuti e sarà elaborato in background.",
+	"_ChooseFile_upload": "I campi del contratto verranno aggiornati in base al nuovo documento.\nL'aggiornamento può richiedere alcuni minuti e sarà elaborato in background.",
+	"_Comment": "Commento per il cliente",
+	"_Comment:": "Commento:",
+	"_Comment_report": "Commento per il cliente",
+	"_Company code": "Codice società",
+	"_Company code_report": "Codice società",
+	"_Contract": "Contratto cliente",
+	"_Contract Details": "Dettagli",
+	"_Contract status": "Stato contratto",
+	"_Contract status_report": "Stato contratto",
+	"_Contract_Active": "Attivo",
+	"_Contract_ApprovedPendingActivation": "In attesa di attivazione",
+	"_Contract_ApprovedPendingEnvelopeDesign": "In attesa di invio per e-signature",
+	"_Contract_ApprovedPendingSignature": "In attesa di e-signature",
+	"_Contract_Deleted": "Annullato",
+	"_Contract_Deprecated": "Obsoleto",
+	"_Contract_Draft": "In revisione",
+	"_Contract_Expired": "Scaduto",
+	"_Contract_New": "Nuovo invio",
+	"_Contract_Rejected": "Rifiutato",
+	"_Contract_Revoked": "Disdetto",
+	"_Contract_SignatureRejected": "Rifiutato durante l'e-signature",
+	"_Contract_ToValidate": "In revisione",
+	"_ContractName": "Nome contratto",
+	"_ContractNumber": "Numero contratto cliente",
+	"_ContractNumber_report": "Numero contratto cliente",
+	"_ContractSubmissionDateTime": "Data presentazione contratto",
+	"_ContractSubmissionDateTime_report": "Data presentazione contratto",
+	"_ContractType": "Tipo contratto",
+	"_ContractType_report": "Tipo contratto",
+	"_ContractTypeID": "ID tipo contratto",
+	"_ContractTypeID_report": "ID tipo contratto",
+	"_ConversationContractSubmissionFromPortal": "Contratto inviato{0}",
+	"_ConversationContractSubmissionFromPortalWithComment": "Contratto inviato\nCommento: {0}",
+	"_ConversationContractUploadDocumentFromPortal": "Nuovo contratto caricato: {1}\nCommento: {0}",
+	"_ConversationContractUploadDocumentFromPortalWithBackup": "Nuovo contratto caricato: {1}\nPrecedente: {2}\nCommento: {0}",
+	"_ConversationContractViewed": "Contratto visualizzato",
+	"_Description": "Descrizione",
+	"_Description_report": "Descrizione",
+	"_End date": "Data di fine",
+	"_End date_report": "Data di fine",
+	"_Enter your comment...": "Immetti un commento...",
+	"_EventHistory": "Conversazione con {0}",
+	"_ExitFormDocumentProcessingMessage": "È in corso un aggiornamento delle informazioni del contratto. Riprovare più tardi.",
+	"_ExitFormDocumentProcessingTitle": "Contratto in aggiornamento",
+	"_ImportContract_replace": "Sostituisci contratto",
+	"_ImportContract_upload": "Carica contratto",
+	"_Initial end date": "Data di fine originale",
+	"_Initial end date_report": "Data di fine originale",
+	"_Initial start date": "Data di inizio originale",
+	"_Initial start date_report": "Data di inizio originale",
+	"_Initially expected end date": "Data di fine prima della disdetta",
+	"_Initially expected end date_report": "Data di fine prima della disdetta",
+	"_Invalid contract status message": "Il cliente ha inviato il contratto per l'approvazione interna durante la modifica. Non è più possibile caricare documenti.\nIl modulo è in aggiornamento, riaprirlo più tardi.",
+	"_Invalid contract status title": "Impossibile caricare il contratto",
+	"_Name": "Nome",
+	"_Name_report": "Nome contratto",
+	"_Next occurence will be from {0} to {1}": "Prossimo periodo di validità: dal {0} al {1}",
+	"_OK_replace": "Sostituisci",
+	"_OK_upload": "Carica",
+	"_OwnerLogin": "ID proprietario contratto",
+	"_OwnerLogin_report": "ID proprietario contratto",
+	"_OwnerNiceName": "Proprietario",
+	"_OwnerNiceName_report": "Proprietario contratto",
+	"_Quit": "Esci",
+	"_Reference number": "N. di riferimento",
+	"_Reference number_report": "N. di riferimento",
+	"_Renewal terms": "Periodo di rinnovo (mesi)",
+	"_Renewal terms_report": "Periodo di rinnovo (mesi)",
+	"_ReplacedContractDocumentName": "Revisione fornitore {1} ({2}) - {0}{3}",
+	"_RequesterLogin": "ID autore contratto",
+	"_RequesterLogin_report": "ID autore contratto",
+	"_RequesterNiceName": "Autore",
+	"_RequesterNiceName_report": "Nome autore contratto",
+	"_RevisedContractDocumentName": "Revisione fornitore (più recente) - {0}{3}",
+	"_Start date": "Data di inizio",
+	"_Start date_report": "Data di inizio",
+	"_Submit": "Invia",
+	"_Tacit renewal": "Rinnovo tacito",
+	"_Tacit renewal_report": "Rinnovo tacito",
+	"_UploadContract": "Carica",
+	"_UploadContract (replace existing)": "Sostituisci",
+	"_Validity": "Durata",
+	"Customer Contract": "Contratto cliente"
+}</process_it>
+      <process_sk>{
+	"_Action": "Akcia",
+	"_Approved": "Schválené",
+	"_Approved date": "Dátum schválenia",
+	"_Approved date report": "Dátum schválenia",
+	"_Approved report": "Schválené",
+	"_ApprovedDate": "Dátum schválenia",
+	"_ApprovedDate_report": "Dátum schválenia",
+	"_Banner": "Názov",
+	"_Cannot take validator ownership message": "Predtým odoslaná zmluva je spracovávaná zákazníkom. Skúste to neskôr.",
+	"_Cannot take validator ownership title": "Zmluvu nie je možné nahradiť",
+	"_ChooseFile_replace": "Nová zmluva nahradí aktuálny dokument a aktualizuje všetky súvisiace polia. Aktualizácia môže trvať niekoľko minút a bude spracovaná na pozadí.",
+	"_ChooseFile_upload": "Polia zmluvy budú aktualizované na základe nového dokumentu. Aktualizácia môže trvať niekoľko minút a bude spracovaná na pozadí.",
+	"_Comment": "Poznámka pre zákazníka",
+	"_Comment:": "Poznámka:",
+	"_Comment_report": "Poznámka pre zákazníka",
+	"_Company code": "Kód spoločnosti",
+	"_Company code_report": "Kód spoločnosti",
+	"_Contract": "Zákaznícka zmluva",
+	"_Contract Details": "Podrobnosti",
+	"_Contract status": "Status zmluvy",
+	"_Contract status_report": "Status zmluvy",
+	"_Contract_Active": "Aktívny",
+	"_Contract_ApprovedPendingActivation": "Prebieha aktivácia",
+	"_Contract_ApprovedPendingEnvelopeDesign": "Čakajúce na odoslanie na elektronický podpis",
+	"_Contract_ApprovedPendingSignature": "Čakajúce na elektronický podpis",
+	"_Contract_Deleted": "Zrušený",
+	"_Contract_Deprecated": "Neaktuálny",
+	"_Contract_Draft": "Prebieha kontrola",
+	"_Contract_Expired": "Platnosť uplynula",
+	"_Contract_New": "Nové odoslanie",
+	"_Contract_Rejected": "Odmietnuté",
+	"_Contract_Revoked": "Ukončený",
+	"_Contract_SignatureRejected": "Odmietnutý počas elektronického podpisu",
+	"_Contract_ToValidate": "Prebieha kontrola",
+	"_ContractName": "Názov zmluvy",
+	"_ContractNumber": "Číslo zákazníckej zmluvy",
+	"_ContractNumber_report": "Číslo zákazníckej zmluvy",
+	"_ContractSubmissionDateTime": "Dátum predloženia zmluvy",
+	"_ContractSubmissionDateTime_report": "Dátum predloženia zmluvy",
+	"_ContractType": "Typ zmluvy",
+	"_ContractType_report": "Typ zmluvy",
+	"_ContractTypeID": "ID typu zmluvy",
+	"_ContractTypeID_report": "ID typu zmluvy",
+	"_ConversationContractSubmissionFromPortal": "Zmluva odoslaná",
+	"_ConversationContractSubmissionFromPortalWithComment": "Zmluva odoslaná\nPoznámka: {0}",
+	"_ConversationContractUploadDocumentFromPortal": "Nová zmluva nahratá: {1}\nPoznámka: {0}",
+	"_ConversationContractUploadDocumentFromPortalWithBackup": "Nová zmluva nahratá: {1}\nPredchádzajúca: {2}\nPoznámka: {0}",
+	"_ConversationContractViewed": "Zmluva zobrazená",
+	"_Description": "Popis",
+	"_Description_report": "Popis",
+	"_End date": "Dátum ukončenia",
+	"_End date_report": "Dátum ukončenia",
+	"_Enter your comment...": "Vložiť komentár...",
+	"_EventHistory": "Konverzácia s {0}",
+	"_ExitFormDocumentProcessingMessage": "Informácie o zmluve sa momentálne aktualizujú. Skúste neskôr prosím.",
+	"_ExitFormDocumentProcessingTitle": "Aktualizácia zmluvy prebieha",
+	"_ImportContract_replace": "Nahradiť zmluvu",
+	"_ImportContract_upload": "Nahrať zmluvu",
+	"_Initial end date": "Pôvodný dátum ukončenia",
+	"_Initial end date_report": "Pôvodný dátum ukončenia",
+	"_Initial start date": "Pôvodný dátum začiatku",
+	"_Initial start date_report": "Pôvodný dátum začiatku",
+	"_Initially expected end date": "Dátum ukončenia pred vypovedaním",
+	"_Initially expected end date_report": "Dátum ukončenia pred vypovedaním",
+	"_Invalid contract status message": "Zákazník odoslal zmluvu na interné schválenie, kým ste ju upravovali. Dokumenty už nemôžete nahrať.\nFormulár sa aktualizuje, otvorte ho neskôr.",
+	"_Invalid contract status title": "Zmluvu nie je možné nahrať",
+	"_Name": "Názov",
+	"_Name_report": "Názov zmluvy",
+	"_Next occurence will be from {0} to {1}": "Ďalšie obdobie platnosti: od {0} do {1}",
+	"_OK_replace": "Vymeňte",
+	"_OK_upload": "Nahrať",
+	"_OwnerLogin": "ID vlastníka zmluvy",
+	"_OwnerLogin_report": "ID vlastníka zmluvy",
+	"_OwnerNiceName": "Vlastník",
+	"_OwnerNiceName_report": "Vlastník zmluvy",
+	"_Quit": "Ukončiť",
+	"_Reference number": "Referenčné číslo",
+	"_Reference number_report": "Referenčné číslo",
+	"_Renewal terms": "Doba obnovenia (mesiace)",
+	"_Renewal terms_report": "Doba obnovenia (mesiace)",
+	"_ReplacedContractDocumentName": "Revízia dodávateľa {1} ({2}) – {0}{3}",
+	"_RequesterLogin": "ID autora zmluvy",
+	"_RequesterLogin_report": "ID autora zmluvy",
+	"_RequesterNiceName": "Autor",
+	"_RequesterNiceName_report": "Meno autora zmluvy",
+	"_RevisedContractDocumentName": "Revízia dodávateľa (najnovšia) – {0}{3}",
+	"_Start date": "Dátum začiatku",
+	"_Start date_report": "Dátum začiatku",
+	"_Submit": "Odoslať",
+	"_Tacit renewal": "Automatické obnovenie",
+	"_Tacit renewal_report": "Automatické obnovenie",
+	"_UploadContract": "Nahrať",
+	"_UploadContract (replace existing)": "Vymeňte",
+	"_Validity": "Doba platnosti",
+	"Customer Contract": "Zákaznícka zmluva"
+}</process_sk>
+      <process_zh-CN>{
+	"_Action": "操作",
+	"_Approved": "已批准",
+	"_Approved date": "审批日期",
+	"_Approved date report": "审批日期",
+	"_Approved report": "已批准",
+	"_ApprovedDate": "审批日期",
+	"_ApprovedDate_report": "审批日期",
+	"_Banner": "标题",
+	"_Cannot take validator ownership message": "客户正在处理先前提交的合同。请稍后再试。",
+	"_Cannot take validator ownership title": "无法更换合同",
+	"_ChooseFile_replace": "新合同将替换当前文档并更新全部相关字段。\n更新可能需要几分钟，将在后台处理。",
+	"_ChooseFile_upload": "合同字段将根据新文档进行更新。\n更新可能需要几分钟，将在后台处理。",
+	"_Comment": "客户说明",
+	"_Comment:": "说明：",
+	"_Comment_report": "客户说明",
+	"_Company code": "公司代码",
+	"_Company code_report": "公司代码",
+	"_Contract": "客户合同",
+	"_Contract Details": "详细信息",
+	"_Contract status": "合同状态",
+	"_Contract status_report": "合同状态",
+	"_Contract_Active": "当前有效",
+	"_Contract_ApprovedPendingActivation": "待生效",
+	"_Contract_ApprovedPendingEnvelopeDesign": "等待提交至电子签名",
+	"_Contract_ApprovedPendingSignature": "待电子签名",
+	"_Contract_Deleted": "已取消",
+	"_Contract_Deprecated": "已弃用",
+	"_Contract_Draft": "正在审核",
+	"_Contract_Expired": "已过期",
+	"_Contract_New": "新提交",
+	"_Contract_Rejected": "已拒绝",
+	"_Contract_Revoked": "终止",
+	"_Contract_SignatureRejected": "电子签名时被拒绝",
+	"_Contract_ToValidate": "正在审核",
+	"_ContractName": "合同名称",
+	"_ContractNumber": "客户合同编号",
+	"_ContractNumber_report": "客户合同编号",
+	"_ContractSubmissionDateTime": "合同提交日期",
+	"_ContractSubmissionDateTime_report": "合同提交日期",
+	"_ContractType": "合同类型",
+	"_ContractType_report": "合同类型",
+	"_ContractTypeID": "合同类型 ID",
+	"_ContractTypeID_report": "合同类型 ID",
+	"_ConversationContractSubmissionFromPortal": "合同已提交",
+	"_ConversationContractSubmissionFromPortalWithComment": "合同已提交\n说明：{0}",
+	"_ConversationContractUploadDocumentFromPortal": "新合同已上传：{1}\n说明：{0}",
+	"_ConversationContractUploadDocumentFromPortalWithBackup": "上传了新合同：{1}\n先前：{2}\n说明：{0}",
+	"_ConversationContractViewed": "合同已查看",
+	"_Description": "说明",
+	"_Description_report": "说明",
+	"_End date": "结束日期",
+	"_End date_report": "结束日期",
+	"_Enter your comment...": "请输入评价...",
+	"_EventHistory": "与{0}的对话",
+	"_ExitFormDocumentProcessingMessage": "正在更新合同信息，请稍后再试。",
+	"_ExitFormDocumentProcessingTitle": "正在更新合同",
+	"_ImportContract_replace": "替换合同",
+	"_ImportContract_upload": "上传合同",
+	"_Initial end date": "初始结束日期",
+	"_Initial end date_report": "初始结束日期",
+	"_Initial start date": "初始开始日期",
+	"_Initial start date_report": "初始开始日期",
+	"_Initially expected end date": "终止前的结束日期",
+	"_Initially expected end date_report": "终止前的结束日期",
+	"_Invalid contract status message": "客户在您编辑合同时将其提交给了内部批准。无法再上传文档。\n正在更新表格，请稍后重新打开。",
+	"_Invalid contract status title": "无法上传合同",
+	"_Name": "姓名",
+	"_Name_report": "合同名称",
+	"_Next occurence will be from {0} to {1}": "下一个有效期：由 {0} 至 {1}",
+	"_OK_replace": "替换",
+	"_OK_upload": "上传",
+	"_OwnerLogin": "合同负责人 ID",
+	"_OwnerLogin_report": "合同负责人 ID",
+	"_OwnerNiceName": "所有者",
+	"_OwnerNiceName_report": "合同负责人",
+	"_Quit": "退出",
+	"_Reference number": "参考编号",
+	"_Reference number_report": "参考编号",
+	"_Renewal terms": "延长期限",
+	"_Renewal terms_report": "延长期限",
+	"_ReplacedContractDocumentName": "供应商修订 {1} ({2}) - {0}{3}",
+	"_RequesterLogin": "合同作者 ID",
+	"_RequesterLogin_report": "合同作者 ID",
+	"_RequesterNiceName": "发起人",
+	"_RequesterNiceName_report": "合同作者名称",
+	"_RevisedContractDocumentName": "供应商修订（最新）- {0}{3}",
+	"_Start date": "开始日期",
+	"_Start date_report": "开始日期",
+	"_Submit": "提交",
+	"_Tacit renewal": "默认续订（不另行通知）",
+	"_Tacit renewal_report": "默认续订（不另行通知）",
+	"_UploadContract": "上传",
+	"_UploadContract (replace existing)": "替换",
+	"_Validity": "合同期限",
+	"Customer Contract": "客户合同"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"_Action": "Ação",
+	"_Approved": "Aprovado",
+	"_Approved date": "Data de aprovação",
+	"_Approved date report": "Data de aprovação",
+	"_Approved report": "Aprovado",
+	"_ApprovedDate": "Data de aprovação",
+	"_ApprovedDate_report": "Data de aprovação",
+	"_Banner": "Título",
+	"_Cannot take validator ownership message": "O contrato enviado anteriormente está sendo processado pelo cliente. Tente novamente mais tarde.",
+	"_Cannot take validator ownership title": "Não é possível substituir o contrato",
+	"_ChooseFile_replace": "O novo contrato substituirá o documento atual e atualizará todos os campos relacionados. Esta atualização pode demorar alguns minutos e será processada em segundo plano.",
+	"_ChooseFile_upload": "Os campos do contrato serão atualizados com base no novo documento. Esta atualização pode demorar alguns minutos e será processada em segundo plano.",
+	"_Comment": "Comentário para o cliente",
+	"_Comment:": "Comentário:",
+	"_Comment_report": "Comentário para o cliente",
+	"_Company code": "Código da empresa",
+	"_Company code_report": "Código da empresa",
+	"_Contract": "Contrato do cliente",
+	"_Contract Details": "Detalhes",
+	"_Contract status": "Status do contrato",
+	"_Contract status_report": "Status do contrato",
+	"_Contract_Active": "Ativo",
+	"_Contract_ApprovedPendingActivation": "Ativação pendente",
+	"_Contract_ApprovedPendingEnvelopeDesign": "Envio pendente para assinatura eletrônica",
+	"_Contract_ApprovedPendingSignature": "Assinatura eletrônica pendente",
+	"_Contract_Deleted": "Cancelado",
+	"_Contract_Deprecated": "Obsoleto",
+	"_Contract_Draft": "Em revisão",
+	"_Contract_Expired": "Caducado",
+	"_Contract_New": "Novo envio",
+	"_Contract_Rejected": "Rejeitadas",
+	"_Contract_Revoked": "Rescindido",
+	"_Contract_SignatureRejected": "Rejeitado durante assinatura eletrônica",
+	"_Contract_ToValidate": "Em revisão",
+	"_ContractName": "Nome do contrato",
+	"_ContractNumber": "Número do contrato do cliente",
+	"_ContractNumber_report": "Número do contrato do cliente",
+	"_ContractSubmissionDateTime": "Data de submissão do contrato",
+	"_ContractSubmissionDateTime_report": "Data de submissão do contrato",
+	"_ContractType": "Tipo de contrato",
+	"_ContractType_report": "Tipo de contrato",
+	"_ContractTypeID": "ID do tipo do contrato",
+	"_ContractTypeID_report": "ID do tipo do contrato",
+	"_ConversationContractSubmissionFromPortal": "Contrato submetido",
+	"_ConversationContractSubmissionFromPortalWithComment": "Contrato submetido Comentário: {0}",
+	"_ConversationContractUploadDocumentFromPortal": "Novo contrato carregado: {1}\nComentário: {0}",
+	"_ConversationContractUploadDocumentFromPortalWithBackup": "Novo contrato carregado: {1} Anterior: {2} Comentário: {0}",
+	"_ConversationContractViewed": "Contrato visualizado",
+	"_Description": "Descrição",
+	"_Description_report": "Descrição",
+	"_End date": "Data de conclusão",
+	"_End date_report": "Data de conclusão",
+	"_Enter your comment...": "Digite um comentário...",
+	"_EventHistory": "Conversa com {0}",
+	"_ExitFormDocumentProcessingMessage": "A informação do contrato está sendo atualizada. Por favor, tente novamente mais tarde.",
+	"_ExitFormDocumentProcessingTitle": "Atualização do contrato em andamento",
+	"_ImportContract_replace": "Substituir contrato",
+	"_ImportContract_upload": "Carregar contrato",
+	"_Initial end date": "Data de fim inicial",
+	"_Initial end date_report": "Data de fim inicial",
+	"_Initial start date": "Data de início inicial",
+	"_Initial start date_report": "Data de início inicial",
+	"_Initially expected end date": "Data de término antes da rescisão",
+	"_Initially expected end date_report": "Data de término antes da rescisão",
+	"_Invalid contract status message": "O cliente enviou o contrato para aprovação interna enquanto você o editava. Você não pode mais carregar documentos. O formulário está sendo atualizado, reabra-o mais tarde.",
+	"_Invalid contract status title": "Não foi possível carregar o contrato",
+	"_Name": "Nome",
+	"_Name_report": "Nome do contrato",
+	"_Next occurence will be from {0} to {1}": "Próximo período de validade: de {0} a {1}",
+	"_OK_replace": "Substituir",
+	"_OK_upload": "Carregar",
+	"_OwnerLogin": "ID do proprietário do contrato",
+	"_OwnerLogin_report": "ID do proprietário do contrato",
+	"_OwnerNiceName": "Proprietário",
+	"_OwnerNiceName_report": "Proprietário do contrato",
+	"_Quit": "Sair",
+	"_Reference number": "Número de referência",
+	"_Reference number_report": "Número de referência",
+	"_Renewal terms": "Prazo de renovação (meses)",
+	"_Renewal terms_report": "Prazo de renovação (meses)",
+	"_ReplacedContractDocumentName": "Revisão do fornecedor {1} ({2}) - {0}{3}",
+	"_RequesterLogin": "ID do autor do contrato",
+	"_RequesterLogin_report": "ID do autor do contrato",
+	"_RequesterNiceName": "Autor",
+	"_RequesterNiceName_report": "Nome do autor do contrato",
+	"_RevisedContractDocumentName": "Revisão do fornecedor (mais recente) - {0}{3}",
+	"_Start date": "Data de início",
+	"_Start date_report": "Data de início",
+	"_Submit": "Enviar",
+	"_Tacit renewal": "Renovação tácita",
+	"_Tacit renewal_report": "Renovação tácita",
+	"_UploadContract": "Carregar",
+	"_UploadContract (replace existing)": "Substituir",
+	"_Validity": "Prazo",
+	"Customer Contract": "Contrato do cliente"
+}</process_pt-BR>
+    </lg>
+    <ocr>
+      <trade-off>accurate</trade-off>
+      <image-ocr-timeout>
+      </image-ocr-timeout>
+      <image-binarization>no</image-binarization>
+      <image-draft-fax>no</image-draft-fax>
+      <image-despeckle>no</image-despeckle>
+      <allowed-language>0</allowed-language>
+      <image-resolution-enhancement>auto</image-resolution-enhancement>
+      <ocr_engine>Nuance222</ocr_engine>
+      <ocrpagestoprocess>
+      </ocrpagestoprocess>
+      <extractionAdditionalOptions>
+      </extractionAdditionalOptions>
+    </ocr>
+    <process>
+      <Tags>PAC CO</Tags>
+      <flowtype>processing</flowtype>
+      <ocrpreset>scan</ocrpreset>
+      <EnableCatchNetworkError>
+      </EnableCatchNetworkError>
+      <panelLabelWidth>
+      </panelLabelWidth>
+      <homepagelabel>Customer Contract</homepagelabel>
+      <enableflexibleauditing>
+      </enableflexibleauditing>
+      <enableflexibleediting>
+      </enableflexibleediting>
+      <enableflexibleteaching>
+      </enableflexibleteaching>
+      <enableInternalConversation>
+      </enableInternalConversation>
+      <upgradable>yes</upgradable>
+      <disableocr>
+      </disableocr>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <disableautolearning>true</disableautolearning>
+      <backgroundprocessingthreshold>
+      </backgroundprocessingthreshold>
+      <EnablePreviewPrecomputation>
+      </EnablePreviewPrecomputation>
+      <defaultConversionParam>DOCX|AttachOutputFormat:PDF</defaultConversionParam>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <MaxAttachments>1</MaxAttachments>
+      <keepUserDataWhenChangingDocument>true</keepUserDataWhenChangingDocument>
+      <pdfNormalizeFilter>
+      </pdfNormalizeFilter>
+      <archiveDuration>0</archiveDuration>
+      <OverrideAllowedDocumentExtensions>PDF,TIF,TXT,JPG,JPEG,EDI,DOCX</OverrideAllowedDocumentExtensions>
+      <ocrpagestoprocess>0</ocrpagestoprocess>
+      <ScriptEngineType>2</ScriptEngineType>
+      <displayWidth>
+      </displayWidth>
+      <AllowUploadAttachment>0</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+      <UseCultureFormat>true</UseCultureFormat>
+      <DoNotUseProcessState>1</DoNotUseProcessState>
+      <AllowRetryExtractCD>true</AllowRetryExtractCD>
+      <TransportName>CustomData</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+      <printToProcess>
+      </printToProcess>
+    </process>
+    <ui>
+      <CustomScriptDebug>false</CustomScriptDebug>
+      <customscriptIncludedScripts>Lib_P2P_V12.0.566.0</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Lib_P2P_DataHandler_V12.0.566.0</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Lib_CommonDialog_V12.0.566.0</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Lib_Contract_V12.0.566.0</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Lib_Contract_Conversation_V12.0.566.0</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Lib_CustomerContract_Client_V12.0.566.0</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Lib_P2P_EmailNotification_V12.0.566.0</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Lib_CustomerContract_FormTemplate_Client_V12.0.566.0</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Sys/Sys_Helpers_Banner</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Sys/Sys_Helpers_Data</customscriptIncludedScripts>
+      <CustomScriptReadonly>true</CustomScriptReadonly>
+      <CustomScript>"use strict";
+var CustomScript;
+(function (CustomScript) {
+    const contractHandler = new Lib.Contract.Handler(new Lib.P2P.DataHandler());
+    const uploadDialog = {
+        fill_CB: function (dialog) {
+            dialog.AddDescription("ctrlDesc").SetText(HasNoAttachment() ? "_ChooseFile_upload" : "_ChooseFile_replace");
+            dialog.AddSeparator();
+            const commentCtrl = dialog.AddMultilineText("comment", "_Comment", 500);
+            commentCtrl.SetLineCount(5);
+            dialog.RequireControl(commentCtrl);
+            const g_CommentPlaceHolder = Language.Translate("_Enter your comment...");
+            commentCtrl.SetPlaceholder(g_CommentPlaceHolder);
+            dialog.AddSeparator();
+            let ctrlFileUploader = dialog.AddFileUploader("ctrlFiles", "");
+            ctrlFileUploader.SetAllowedExtensions(["pdf", "docx"]);
+            // @ts-ignore
+            ctrlFileUploader.SetAllowUploadingOnlyOneFile(true);
+            const commitButton = dialog.GetControl("ButtonOk");
+            commitButton.SetText(Language.Translate(HasNoAttachment() ? "_OK_upload" : "_OK_replace"));
+        },
+        commit_CB: function (dialog) {
+            const files = dialog.GetControl("ctrlFiles").GetUploadedFiles();
+            const nbAttach = Attach.GetNbAttach();
+            for (let i = nbAttach - 1; i &gt;= 0; i--) {
+                Attach.RemoveAttach(i);
+            }
+            if (files &amp;&amp; files.length === 1) {
+                Attach.AddAttach(files[0], { asReference: true });
+            }
+            Data.SetValue("Comment__", dialog.GetControl("comment").GetValue());
+        },
+        cancel_CB: function () {
+        },
+        validate_CB: function (dialog) {
+            // validate there is at least one and max only one file
+            const files = dialog.GetControl("ctrlFiles").GetUploadedFiles();
+            if (files &amp;&amp; files.length === 1) {
+                // Save then reprocess so the newly uploaded contract is picked up by the workflow				
+                ProcessInstance.Resubmit("Document");
+                return true;
+            }
+            else {
+                Log.Error("No files submitted.");
+                return false;
+            }
+        },
+        Show: function () {
+            Popup.Dialog(HasNoAttachment() ? "_ImportContract_upload" : "_ImportContract_replace", null, this.fill_CB, this.commit_CB, this.validate_CB, null, this.cancel_CB);
+        }
+    };
+    function HasNoAttachment() {
+        return Attach.GetNbAttach() === 0;
+    }
+    function InitBanner() {
+        const banner = Sys.Helpers.Banner;
+        banner.SetMainTitle("_Contract");
+        banner.SetStatusCombo(Controls.ContractStatus__);
+        banner.SetSubTitleAligned(true);
+        banner.SetCentered(false);
+        banner.SetStatusCombo(Controls.ContractStatus__);
+        banner.SetHTMLBanner(Controls.HTMLBanner__);
+        banner.SetSubTitle();
+    }
+    function InitLayout() {
+        Controls.RenewalTerms__.Hide(!Controls.TacitRenewal__.IsChecked());
+        Lib.CustomerContract.FormTemplate.SetupFormTemplateManager();
+    }
+    function InitData() {
+        contractHandler.SetNextOccuranceDesc();
+    }
+    function InitControls() {
+        const CheckErrorAndSave = () =&gt; {
+            // Can't save without a CompanyCode or ProjectName
+            const requiredFields = ["ReferenceNumber__", "Name__", "StartDate__", "EndDate__"];
+            let showError = false;
+            for (const field of requiredFields) {
+                if (Sys.Helpers.IsEmpty(Controls[field].GetValue())) {
+                    Controls[field].SetError("This field is required!");
+                    Controls[field].ShowErrorMessage();
+                    showError = true;
+                }
+            }
+            if (HasNoAttachment()) {
+                Controls.DocumentsPanel.SetError("");
+                showError = true;
+            }
+            showError || (showError = !Lib.CustomerContract.IsStartEndDateValid("StartDate__", "EndDate__"));
+            if (showError) {
+                Process.ShowFirstError();
+            }
+            else {
+                return true;
+            }
+            return false; // prevent the default click action
+        };
+        Controls.Submit__.OnClick = CheckErrorAndSave;
+    }
+    function InitUploadContractButton() {
+        Controls.UploadContract__.SetText(HasNoAttachment() ? "_UploadContract" : "_UploadContract (replace existing)");
+        Controls.UploadContract__.OnClick = () =&gt; {
+            uploadDialog.Show();
+        };
+    }
+    function InitEventHistoryPane() {
+        if (!Data.GetValue("CompanyCode__")) {
+            Controls.EventHistory.Hide(true);
+            return;
+        }
+        const customerCompany = Variable.GetValueAsString("CustomerCompany");
+        if (customerCompany) {
+            Controls.EventHistory.SetLabel(Language.Translate("_EventHistory", false, customerCompany));
+        }
+        Controls.ConversationUI__.SetOptions({
+            allowAttachments: true,
+            mergeAllOptions: true,
+            emailTemplate: "Event_MissedContractItem.htm",
+            emailCustomTags: {
+                ReferenceNumber__: Data.GetValue("ReferenceNumber__")
+            }
+        });
+        // TODO - move it in a dedicated function in Lib_CustomerContract_Publication (or other) ?
+        if (Sys.Helpers.Data.IsFalse(Variable.GetValueAsString("P2PContractSubmittedFromPortal"))) {
+            Controls.ConversationUI__.AddItem({
+                Message: Language.Translate("_ConversationContractViewed"),
+                Type: Lib.Contract.Conversation.ConversationTypes.Viewed,
+            }, { ignoreIfExists: true });
+        }
+    }
+    const nextAlertBehaviors = {
+        ActionErrorPopup: {
+            IsShowable() {
+                return !!Data.GetActionName();
+            }
+        }
+    };
+    function AnyNextAlertToShow() {
+        const nextAlert = Lib.CommonDialog.NextAlert.GetNextAlert();
+        if (nextAlert) {
+            const behavior = nextAlertBehaviors &amp;&amp; nextAlert.behaviorName &amp;&amp; (nextAlert.behaviorName in nextAlertBehaviors) ? nextAlertBehaviors[nextAlert.behaviorName] : {};
+            return !Sys.Helpers.IsFunction(behavior.IsShowable) || behavior.IsShowable();
+        }
+        return false;
+    }
+    async function Run() {
+        var _a;
+        try {
+            Sys.Helpers.EnableSmartSilentChange();
+            ProcessInstance.SetSilentChange(true);
+            InitBanner();
+            InitLayout();
+            InitControls();
+            InitEventHistoryPane();
+            InitUploadContractButton();
+            Controls.Quit__.OnClick = () =&gt; { ProcessInstance.Quit("Unsaved", true); };
+            Controls.DocumentsPanel.Hide(Attach.GetNbAttach() &lt;= 1);
+            Controls.DocumentsPanel.SetNumberOfNonRemovableAttachments(2);
+            if (ProcessInstance.state) // Check if the document is in draft and not saved yet
+             {
+                let showNextAlert = true;
+                const backFromAction = !!Data.GetActionName();
+                if (!backFromAction || !AnyNextAlertToShow()) {
+                    // The following will check if the form has pending fields notifs, or if it is being processed by conncont or chatgpt.
+                    Lib.CustomerContract.TmpData.isProcessed = (ProcessInstance.state &lt; 70 &amp;&amp; ProcessInstance.isReadOnly);
+                    (_a = Lib.CustomerContract.TmpData).isProcessed || (_a.isProcessed = (await ProcessInstance.CheckResumeWithActionPending()).hasResumeActionPending);
+                    if (Lib.CustomerContract.TmpData.isProcessed) {
+                        Popup.Alert("_ExitFormDocumentProcessingMessage", false, null, "_ExitFormDocumentProcessingTitle");
+                        showNextAlert = false;
+                    }
+                }
+                if (showNextAlert) {
+                    Lib.CommonDialog.NextAlert.Show(nextAlertBehaviors);
+                }
+            }
+        }
+        catch (reason) {
+            Log.Error("GlobalError : " + reason);
+        }
+        finally {
+            ProcessInstance.SetSilentChange(false);
+        }
+    }
+    CustomScript.Run = Run;
+    if (typeof _ENV_TEST_ENABLED === "undefined") {
+        Run();
+    }
+})(CustomScript || (CustomScript = {}));
+//# sourceMappingURL=customscript.js.map</CustomScript>
+      <restorationPanel>ContractDetails</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 93,
+	"*": {
+		"GDRData": {
+			"type": "GDRData",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"version": 0
+			}
+		},
+		"OCRParams": {
+			"type": "OCRParams",
+			"data": [],
+			"stamp": 2,
+			"options": {
+				"version": 0
+			}
+		},
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 3,
+			"options": {
+				"splitterType": "complex",
+				"maxwidth": "",
+				"backColor": "text-backgroundcolor-color7",
+				"style": "FlexibleFormLight",
+				"footerStyle": "default",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 4,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 5,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 6,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-top": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 7,
+									"options": {
+										"autosize": true,
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"width": null,
+											"height": "0%"
+										},
+										"hidden": true
+									}
+								},
+								"form-content-bottom": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 8,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"width": null,
+											"height": "100%"
+										},
+										"hidden": false,
+										"hideSeparator": true
+									},
+									"*": {
+										"form-content-left": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 9,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "0%",
+													"width": "44%",
+													"height": null
+												},
+												"hidden": false,
+												"hideSeparator": true
+											},
+											"*": {
+												"form-content-left-3": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 10,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"NextProcess": {
+															"type": "PanelNextProcess",
+															"data": [],
+															"stamp": 11,
+															"options": {
+																"hidden": true,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"label": "_Next Process",
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"version": 0
+															}
+														}
+													}
+												},
+												"form-content-left-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 12,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"DocumentsPanel": {
+															"type": "PanelDocument",
+															"data": [],
+															"stamp": 13,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "L",
+																"hideActionButtons": true,
+																"hideTitleBar": false,
+																"label": "_Documents",
+																"hidden": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"version": 0
+															},
+															"*": {
+																"Document": {
+																	"type": "Documents",
+																	"data": [
+																		"documentscontroldata"
+																	],
+																	"stamp": 14,
+																	"options": {
+																		"downloadButton": true,
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-2": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 15,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"PreviewPanel": {
+															"type": "PanelPreview",
+															"data": [],
+															"stamp": 16,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"label": "_Document Preview",
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"version": 0
+															},
+															"*": {
+																"Preview": {
+																	"type": "Preview",
+																	"data": [
+																		"previewdata"
+																	],
+																	"stamp": 17,
+																	"options": {
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-right": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 18,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "44%",
+													"width": "56%",
+													"height": null
+												},
+												"stickypanel": "TopPaneWarning",
+												"hidden": false
+											},
+											"*": {
+												"form-content-right-2": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 19,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"Banner": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 20,
+															"options": {
+																"border": {},
+																"iconURL": "",
+																"TitleFontSize": "L",
+																"hideActionButtons": false,
+																"hideTitleBar": true,
+																"backgroundcolor": "color7",
+																"labelsAlignment": "right",
+																"label": "_Banner",
+																"leftImageURL": "",
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"removeMargins": false,
+																"elementsAlignment": "left",
+																"labelLength": 0,
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 21,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 22,
+																			"options": {
+																				"version": 0,
+																				"lines": 1,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"HTMLBanner__": {
+																						"line": 1,
+																						"column": 1
+																					}
+																				},
+																				"colspans": [
+																					[
+																						{
+																							"index": 0,
+																							"length": 2
+																						}
+																					]
+																				]
+																			},
+																			"*": {
+																				"HTMLBanner__": {
+																					"type": "HTML",
+																					"data": false,
+																					"stamp": 23,
+																					"options": {
+																						"label": "",
+																						"width": 683,
+																						"htmlContent": "Customer contract",
+																						"css": "@ span {line-height: 44px;}@ ",
+																						"version": 0
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-right-3": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 24,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"Action": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 25,
+															"options": {
+																"border": {},
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": true,
+																"hideTitleBar": true,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_Action",
+																"leftImageURL": "",
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"removeMargins": true,
+																"elementsAlignment": "left",
+																"labelLength": 0,
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 26,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "HorizontalLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 27,
+																			"options": {
+																				"displayAsFlex": true,
+																				"version": 0,
+																				"lines": 4,
+																				"ctrlsPos": {
+																					"Spacer3__": {
+																						"line": 1,
+																						"column": 1
+																					},
+																					"UploadContract__": {
+																						"line": 2,
+																						"column": 1
+																					},
+																					"Submit__": {
+																						"line": 3,
+																						"column": 1
+																					},
+																					"Quit__": {
+																						"line": 4,
+																						"column": 1
+																					}
+																				},
+																				"colspans": [
+																					[
+																						{
+																							"index": 0,
+																							"length": 2
+																						}
+																					],
+																					[
+																						{
+																							"index": 0,
+																							"length": 2
+																						}
+																					],
+																					[
+																						{
+																							"index": 0,
+																							"length": 2
+																						}
+																					],
+																					[
+																						{
+																							"index": 0,
+																							"length": 2
+																						}
+																					]
+																				]
+																			},
+																			"*": {
+																				"Spacer3__": {
+																					"type": "Spacer",
+																					"data": false,
+																					"stamp": 28,
+																					"options": {
+																						"label": "_Spacer3",
+																						"height": "10px",
+																						"width": "100%",
+																						"color": "default",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				},
+																				"UploadContract__": {
+																					"type": "FormButton",
+																					"data": false,
+																					"stamp": 29,
+																					"options": {
+																						"label": "_UploadContract",
+																						"buttonLabel": "_UploadContract",
+																						"textSize": "MS",
+																						"textPosition": "text-below",
+																						"textStyle": "default",
+																						"textColor": "color1",
+																						"iconColor": "color1",
+																						"nextprocess": {
+																							"processName": "Customer Contract",
+																							"attachmentsMode": "all",
+																							"willBeChild": true,
+																							"returnToOriginalUrl": false
+																						},
+																						"urlImageOverlay": "",
+																						"urlImage": "",
+																						"awesomeClasses": "esk-ifont-contract-replace-circle fa-4x",
+																						"style": 5,
+																						"isRounded": false,
+																						"isOutline": false,
+																						"width": "150px",
+																						"action": "none",
+																						"url": "",
+																						"version": 0
+																					}
+																				},
+																				"Submit__": {
+																					"type": "FormButton",
+																					"data": false,
+																					"stamp": 30,
+																					"options": {
+																						"label": "_Button",
+																						"buttonLabel": "_Submit",
+																						"style": 5,
+																						"textPosition": "text-below",
+																						"textSize": "MS",
+																						"textStyle": "default",
+																						"textColor": "color1",
+																						"iconColor": "color1",
+																						"nextprocess": {
+																							"processName": "Customer Contract",
+																							"attachmentsMode": "all",
+																							"willBeChild": true,
+																							"returnToOriginalUrl": false
+																						},
+																						"urlImageOverlay": "",
+																						"urlImage": "",
+																						"awesomeClasses": "esk-ifont-approve-check-circle fa-4x",
+																						"isRounded": false,
+																						"isOutline": false,
+																						"width": "100px",
+																						"action": "approve",
+																						"url": "",
+																						"version": 0
+																					}
+																				},
+																				"Quit__": {
+																					"type": "FormButton",
+																					"data": false,
+																					"stamp": 31,
+																					"options": {
+																						"label": "_Button",
+																						"buttonLabel": "_Quit",
+																						"urlImage": "",
+																						"style": 5,
+																						"width": "100px",
+																						"textPosition": "text-below",
+																						"textSize": "MS",
+																						"textStyle": "default",
+																						"textColor": "color1",
+																						"iconColor": "color1",
+																						"urlImageOverlay": "",
+																						"nextprocess": {
+																							"processName": "Customer Contract",
+																							"attachmentsMode": "all",
+																							"willBeChild": true,
+																							"returnToOriginalUrl": false
+																						},
+																						"awesomeClasses": "esk-ifont-quit-circle fa-4x",
+																						"url": "",
+																						"isRounded": false,
+																						"isOutline": false,
+																						"version": 0
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-right-4": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 32,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"ContractDetails": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 33,
+															"options": {
+																"border": {},
+																"labelLength": "150px",
+																"iconURL": "",
+																"TitleFontSize": "L",
+																"hideActionButtons": true,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_Contract Details",
+																"leftImageURL": "",
+																"removeMargins": false,
+																"elementsAlignment": "left",
+																"sameHeightAsSiblings": true,
+																"hidden": false,
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 34,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {
+																			"CompanyCode__": "LabelCompanyCode__",
+																			"LabelCompanyCode__": "CompanyCode__",
+																			"ContractStatus__": "LabelContractStatus__",
+																			"LabelContractStatus__": "ContractStatus__",
+																			"ReferenceNumber__": "LabelReferenceNumber__",
+																			"LabelReferenceNumber__": "ReferenceNumber__",
+																			"ContractNumber__": "LabelContractNumber__",
+																			"LabelContractNumber__": "ContractNumber__",
+																			"Name__": "LabelName__",
+																			"LabelName__": "Name__",
+																			"Description__": "LabelDescription__",
+																			"LabelDescription__": "Description__",
+																			"Comment__": "LabelComment__",
+																			"LabelComment__": "Comment__",
+																			"OwnerLogin__": "LabelOwnerLogin__",
+																			"LabelOwnerLogin__": "OwnerLogin__",
+																			"OwnerNiceName__": "LabelOwnerNiceName__",
+																			"LabelOwnerNiceName__": "OwnerNiceName__",
+																			"RequesterLogin__": "LabelRequesterLogin__",
+																			"LabelRequesterLogin__": "RequesterLogin__",
+																			"RequesterNiceName__": "LabelRequesterNiceName__",
+																			"LabelRequesterNiceName__": "RequesterNiceName__",
+																			"ApprovedDate__": "LabelApprovedDate__",
+																			"LabelApprovedDate__": "ApprovedDate__",
+																			"ContractTypeID__": "LabelContractTypeID__",
+																			"LabelContractTypeID__": "ContractTypeID__",
+																			"ContractType__": "LabelContractType__",
+																			"LabelContractType__": "ContractType__"
+																		}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 35,
+																			"options": {
+																				"version": 0,
+																				"lines": 15,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"LabelCompanyCode__": {
+																						"line": 1,
+																						"column": 1
+																					},
+																					"CompanyCode__": {
+																						"line": 1,
+																						"column": 2
+																					},
+																					"LabelContractStatus__": {
+																						"line": 2,
+																						"column": 1
+																					},
+																					"ContractStatus__": {
+																						"line": 2,
+																						"column": 2
+																					},
+																					"LabelReferenceNumber__": {
+																						"line": 3,
+																						"column": 1
+																					},
+																					"ReferenceNumber__": {
+																						"line": 3,
+																						"column": 2
+																					},
+																					"LabelContractNumber__": {
+																						"line": 4,
+																						"column": 1
+																					},
+																					"ContractNumber__": {
+																						"line": 4,
+																						"column": 2
+																					},
+																					"LabelName__": {
+																						"line": 5,
+																						"column": 1
+																					},
+																					"Name__": {
+																						"line": 5,
+																						"column": 2
+																					},
+																					"LabelDescription__": {
+																						"line": 6,
+																						"column": 1
+																					},
+																					"Description__": {
+																						"line": 6,
+																						"column": 2
+																					},
+																					"LabelComment__": {
+																						"line": 7,
+																						"column": 1
+																					},
+																					"Comment__": {
+																						"line": 7,
+																						"column": 2
+																					},
+																					"Spacer4__": {
+																						"line": 8,
+																						"column": 1
+																					},
+																					"LabelOwnerLogin__": {
+																						"line": 9,
+																						"column": 1
+																					},
+																					"OwnerLogin__": {
+																						"line": 9,
+																						"column": 2
+																					},
+																					"LabelOwnerNiceName__": {
+																						"line": 10,
+																						"column": 1
+																					},
+																					"OwnerNiceName__": {
+																						"line": 10,
+																						"column": 2
+																					},
+																					"LabelRequesterLogin__": {
+																						"line": 11,
+																						"column": 1
+																					},
+																					"RequesterLogin__": {
+																						"line": 11,
+																						"column": 2
+																					},
+																					"LabelRequesterNiceName__": {
+																						"line": 12,
+																						"column": 1
+																					},
+																					"RequesterNiceName__": {
+																						"line": 12,
+																						"column": 2
+																					},
+																					"LabelApprovedDate__": {
+																						"line": 13,
+																						"column": 1
+																					},
+																					"ApprovedDate__": {
+																						"line": 13,
+																						"column": 2
+																					},
+																					"LabelContractTypeID__": {
+																						"line": 14,
+																						"column": 1
+																					},
+																					"ContractTypeID__": {
+																						"line": 14,
+																						"column": 2
+																					},
+																					"LabelContractType__": {
+																						"line": 15,
+																						"column": 1
+																					},
+																					"ContractType__": {
+																						"line": 15,
+																						"column": 2
+																					}
+																				},
+																				"colspans": [
+																					[],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[
+																						{
+																							"index": 0,
+																							"length": 2
+																						}
+																					],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[]
+																				]
+																			},
+																			"*": {
+																				"LabelCompanyCode__": {
+																					"type": "Label",
+																					"data": [
+																						"CompanyCode__"
+																					],
+																					"stamp": 37,
+																					"options": {
+																						"label": "_Company code",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				},
+																				"CompanyCode__": {
+																					"type": "DatabaseComboBox",
+																					"data": [
+																						"CompanyCode__"
+																					],
+																					"stamp": 36,
+																					"options": {
+																						"label": "_Company code",
+																						"version": 1,
+																						"activable": true,
+																						"width": "230",
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"hidden": true,
+																						"readonly": true,
+																						"PreFillFTS": true,
+																						"fTSmaxRecords": "20",
+																						"browsable": true,
+																						"autoCompleteSearchMode": "startswith",
+																						"searchMode": "matches"
+																					}
+																				},
+																				"LabelContractStatus__": {
+																					"type": "Label",
+																					"data": [
+																						"ContractStatus__"
+																					],
+																					"stamp": 39,
+																					"options": {
+																						"label": "_Contract status",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				},
+																				"ContractStatus__": {
+																					"type": "ComboBox",
+																					"data": [
+																						"ContractStatus__"
+																					],
+																					"stamp": 38,
+																					"options": {
+																						"label": "_Contract status",
+																						"possibleValues": {
+																							"0": "_Contract_Draft",
+																							"1": "_Contract_ToValidate",
+																							"2": "_Contract_ApprovedPendingEnvelopeDesign",
+																							"3": "_Contract_ApprovedPendingSignature",
+																							"4": "_Contract_ApprovedPendingActivation",
+																							"5": "_Contract_Active",
+																							"6": "_Contract_Revoked",
+																							"7": "_Contract_Deleted",
+																							"8": "_Contract_Expired",
+																							"9": "_Contract_Deprecated",
+																							"10": "_Contract_Rejected",
+																							"11": "_Contract_SignatureRejected"
+																						},
+																						"version": 1,
+																						"keyValueMode": true,
+																						"possibleKeys": {
+																							"0": "Draft",
+																							"1": "ToValidate",
+																							"2": "ApprovedPendingEnvelopeDesign",
+																							"3": "ApprovedPendingSignature",
+																							"4": "ApprovedPendingActivation",
+																							"5": "Active",
+																							"6": "Revoked",
+																							"7": "Deleted",
+																							"8": "Expired",
+																							"9": "Deprecated",
+																							"10": "Rejected",
+																							"11": "SignatureRejected"
+																						},
+																						"activable": true,
+																						"width": 230,
+																						"hidden": true,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"DataSourceOrigin": "Standalone",
+																						"DisplayedColumns": null,
+																						"maxNbLinesToDisplay": 10,
+																						"helpIconPosition": "Right",
+																						"SavedColumn": null,
+																						"NoEmptyValue": false,
+																						"readonly": true
+																					}
+																				},
+																				"LabelReferenceNumber__": {
+																					"type": "Label",
+																					"data": [
+																						"ReferenceNumber__"
+																					],
+																					"stamp": 41,
+																					"options": {
+																						"label": "_Reference number",
+																						"version": 0
+																					}
+																				},
+																				"ReferenceNumber__": {
+																					"type": "ShortText",
+																					"data": [
+																						"ReferenceNumber__"
+																					],
+																					"stamp": 40,
+																					"options": {
+																						"label": "_Reference number",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"browsable": false,
+																						"helpIconPosition": "Right",
+																						"version": 0
+																					}
+																				},
+																				"LabelContractNumber__": {
+																					"type": "Label",
+																					"data": [
+																						"ContractNumber__"
+																					],
+																					"stamp": 43,
+																					"options": {
+																						"label": "_ContractNumber",
+																						"hidden": false,
+																						"version": 0
+																					}
+																				},
+																				"ContractNumber__": {
+																					"type": "ShortText",
+																					"data": [
+																						"ContractNumber__"
+																					],
+																					"stamp": 42,
+																					"options": {
+																						"label": "_ContractNumber",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"hidden": false,
+																						"browsable": false,
+																						"autocompletable": false
+																					}
+																				},
+																				"LabelName__": {
+																					"type": "Label",
+																					"data": [
+																						"Name__"
+																					],
+																					"stamp": 45,
+																					"options": {
+																						"label": "_ContractName",
+																						"version": 0
+																					}
+																				},
+																				"Name__": {
+																					"type": "ShortText",
+																					"data": [
+																						"Name__"
+																					],
+																					"stamp": 44,
+																					"options": {
+																						"label": "_ContractName",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"browsable": false,
+																						"helpIconPosition": "Right",
+																						"version": 0
+																					}
+																				},
+																				"LabelDescription__": {
+																					"type": "Label",
+																					"data": [
+																						"Description__"
+																					],
+																					"stamp": 47,
+																					"options": {
+																						"label": "_Description",
+																						"version": 0
+																					}
+																				},
+																				"Description__": {
+																					"type": "LongText",
+																					"data": [
+																						"Description__"
+																					],
+																					"stamp": 46,
+																					"options": {
+																						"label": "_Description",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"activable": true,
+																						"width": 300,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"browsable": false,
+																						"minNbLines": 3,
+																						"helpIconPosition": "Right",
+																						"version": 1
+																					}
+																				},
+																				"LabelComment__": {
+																					"type": "Label",
+																					"data": [
+																						"Comment__"
+																					],
+																					"stamp": 49,
+																					"options": {
+																						"label": "_Comment",
+																						"version": 0
+																					}
+																				},
+																				"Comment__": {
+																					"type": "LongText",
+																					"data": [
+																						"Comment__"
+																					],
+																					"stamp": 48,
+																					"options": {
+																						"label": "_Comment",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"activable": true,
+																						"width": 300,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"browsable": false,
+																						"minNbLines": 3,
+																						"helpIconPosition": "Right",
+																						"version": 1
+																					}
+																				},
+																				"Spacer4__": {
+																					"type": "Spacer",
+																					"data": false,
+																					"stamp": 50,
+																					"options": {
+																						"label": "_Spacer4",
+																						"height": "",
+																						"width": "",
+																						"color": "default",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				},
+																				"LabelOwnerLogin__": {
+																					"type": "Label",
+																					"data": [
+																						"OwnerLogin__"
+																					],
+																					"stamp": 52,
+																					"options": {
+																						"label": "_OwnerLogin",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				},
+																				"OwnerLogin__": {
+																					"type": "ShortText",
+																					"data": [
+																						"OwnerLogin__"
+																					],
+																					"stamp": 51,
+																					"options": {
+																						"label": "_OwnerLogin",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"hidden": true,
+																						"readonly": true,
+																						"browsable": false,
+																						"autocompletable": false
+																					}
+																				},
+																				"LabelOwnerNiceName__": {
+																					"type": "Label",
+																					"data": [
+																						"OwnerNiceName__"
+																					],
+																					"stamp": 54,
+																					"options": {
+																						"label": "_OwnerNiceName",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				},
+																				"OwnerNiceName__": {
+																					"type": "DatabaseComboBox",
+																					"data": [
+																						"OwnerNiceName__"
+																					],
+																					"stamp": 53,
+																					"options": {
+																						"label": "_OwnerNiceName",
+																						"version": 1,
+																						"autoCompleteSearchMode": "startswith",
+																						"searchMode": "contains",
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"minNbLines": 1,
+																						"maxNbLines": 1,
+																						"PreFillFTS": true,
+																						"fTSmaxRecords": "20",
+																						"hidden": true,
+																						"readonly": true,
+																						"browsable": true,
+																						"autocompletable": false,
+																						"RestrictSearch": true
+																					}
+																				},
+																				"LabelRequesterLogin__": {
+																					"type": "Label",
+																					"data": [
+																						"RequesterLogin__"
+																					],
+																					"stamp": 56,
+																					"options": {
+																						"label": "_RequesterLogin",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				},
+																				"RequesterLogin__": {
+																					"type": "ShortText",
+																					"data": [
+																						"RequesterLogin__"
+																					],
+																					"stamp": 55,
+																					"options": {
+																						"label": "_RequesterLogin",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"browsable": false,
+																						"hidden": true,
+																						"readonly": true,
+																						"autocompletable": false
+																					}
+																				},
+																				"LabelRequesterNiceName__": {
+																					"type": "Label",
+																					"data": [
+																						"RequesterNiceName__"
+																					],
+																					"stamp": 58,
+																					"options": {
+																						"label": "_RequesterNiceName",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				},
+																				"RequesterNiceName__": {
+																					"type": "ShortText",
+																					"data": [
+																						"RequesterNiceName__"
+																					],
+																					"stamp": 57,
+																					"options": {
+																						"label": "_RequesterNiceName",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"readonly": true,
+																						"browsable": false,
+																						"hidden": true,
+																						"autocompletable": false
+																					}
+																				},
+																				"LabelApprovedDate__": {
+																					"type": "Label",
+																					"data": [
+																						"ApprovedDate__"
+																					],
+																					"stamp": 60,
+																					"options": {
+																						"label": "_ApprovedDate",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				},
+																				"ApprovedDate__": {
+																					"type": "RealDateTime",
+																					"data": [
+																						"ApprovedDate__"
+																					],
+																					"stamp": 59,
+																					"options": {
+																						"label": "_ApprovedDate",
+																						"readonly": true,
+																						"displayLongFormat": false,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				},
+																				"LabelContractTypeID__": {
+																					"type": "Label",
+																					"data": [
+																						"ContractTypeID__"
+																					],
+																					"stamp": 62,
+																					"options": {
+																						"label": "_ContractTypeID",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				},
+																				"ContractTypeID__": {
+																					"type": "DatabaseComboBox",
+																					"data": [
+																						"ContractTypeID__"
+																					],
+																					"stamp": 61,
+																					"options": {
+																						"label": "_ContractTypeID",
+																						"version": 1,
+																						"autoCompleteSearchMode": "startswith",
+																						"searchMode": "matches",
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"minNbLines": 1,
+																						"maxNbLines": 1,
+																						"fTSmaxRecords": "20",
+																						"browsable": false,
+																						"hidden": true,
+																						"readonly": true,
+																						"autocompletable": false
+																					}
+																				},
+																				"LabelContractType__": {
+																					"type": "Label",
+																					"data": [
+																						"ContractType__"
+																					],
+																					"stamp": 64,
+																					"options": {
+																						"label": "_ContractType",
+																						"version": 0
+																					}
+																				},
+																				"ContractType__": {
+																					"type": "DatabaseComboBox",
+																					"data": [
+																						"ContractType__"
+																					],
+																					"stamp": 63,
+																					"options": {
+																						"label": "_ContractType",
+																						"version": 1,
+																						"autoCompleteSearchMode": "contains",
+																						"searchMode": "contains",
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"minNbLines": 1,
+																						"maxNbLines": 1,
+																						"PreFillFTS": true,
+																						"RestrictSearch": true,
+																						"fTSmaxRecords": "20",
+																						"browsable": false,
+																						"readonly": true
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														},
+														"Validity": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 65,
+															"options": {
+																"border": {},
+																"labelLength": "150px",
+																"iconURL": "",
+																"TitleFontSize": "L",
+																"hideActionButtons": true,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": true,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_Validity",
+																"hidden": false,
+																"leftImageURL": "",
+																"removeMargins": false,
+																"elementsAlignment": "left",
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 66,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {
+																			"TacitRenewal__": "LabelTacitRenewal__",
+																			"LabelTacitRenewal__": "TacitRenewal__",
+																			"StartDate__": "LabelStartDate__",
+																			"LabelStartDate__": "StartDate__",
+																			"EndDate__": "LabelEndDate__",
+																			"LabelEndDate__": "EndDate__",
+																			"InitialStartDate__": "LabelInitialStartDate__",
+																			"LabelInitialStartDate__": "InitialStartDate__",
+																			"InitialEndDate__": "LabelInitialEndDate__",
+																			"LabelInitialEndDate__": "InitialEndDate__",
+																			"InitiallyExpectedEndDate__": "LabelInitiallyExpectedEndDate__",
+																			"LabelInitiallyExpectedEndDate__": "InitiallyExpectedEndDate__",
+																			"RenewalTerms__": "LabelRenewalTerms__",
+																			"LabelRenewalTerms__": "RenewalTerms__"
+																		}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 67,
+																			"options": {
+																				"version": 0,
+																				"lines": 11,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"LabelTacitRenewal__": {
+																						"line": 1,
+																						"column": 1
+																					},
+																					"TacitRenewal__": {
+																						"line": 1,
+																						"column": 2
+																					},
+																					"Spacer2__": {
+																						"line": 2,
+																						"column": 1
+																					},
+																					"LabelStartDate__": {
+																						"line": 3,
+																						"column": 1
+																					},
+																					"StartDate__": {
+																						"line": 3,
+																						"column": 2
+																					},
+																					"LabelEndDate__": {
+																						"line": 4,
+																						"column": 1
+																					},
+																					"EndDate__": {
+																						"line": 4,
+																						"column": 2
+																					},
+																					"Spacer3__": {
+																						"line": 5,
+																						"column": 1
+																					},
+																					"LabelInitialStartDate__": {
+																						"line": 6,
+																						"column": 1
+																					},
+																					"InitialStartDate__": {
+																						"line": 6,
+																						"column": 2
+																					},
+																					"LabelInitialEndDate__": {
+																						"line": 7,
+																						"column": 1
+																					},
+																					"InitialEndDate__": {
+																						"line": 7,
+																						"column": 2
+																					},
+																					"LabelInitiallyExpectedEndDate__": {
+																						"line": 8,
+																						"column": 1
+																					},
+																					"InitiallyExpectedEndDate__": {
+																						"line": 8,
+																						"column": 2
+																					},
+																					"LabelRenewalTerms__": {
+																						"line": 9,
+																						"column": 1
+																					},
+																					"RenewalTerms__": {
+																						"line": 9,
+																						"column": 2
+																					},
+																					"Spacer__": {
+																						"line": 10,
+																						"column": 1
+																					},
+																					"NextOccurrenceDesc__": {
+																						"line": 11,
+																						"column": 1
+																					}
+																				},
+																				"colspans": [
+																					[],
+																					[
+																						{
+																							"index": 0,
+																							"length": 2
+																						}
+																					],
+																					[],
+																					[],
+																					[
+																						{
+																							"index": 0,
+																							"length": 2
+																						}
+																					],
+																					[],
+																					[],
+																					[],
+																					[],
+																					[
+																						{
+																							"index": 0,
+																							"length": 2
+																						}
+																					],
+																					[
+																						{
+																							"index": 0,
+																							"length": 2
+																						}
+																					]
+																				]
+																			},
+																			"*": {
+																				"LabelTacitRenewal__": {
+																					"type": "Label",
+																					"data": [
+																						"TacitRenewal__"
+																					],
+																					"stamp": 69,
+																					"options": {
+																						"label": "_Tacit renewal",
+																						"version": 0
+																					}
+																				},
+																				"TacitRenewal__": {
+																					"type": "CheckBox",
+																					"data": [
+																						"TacitRenewal__"
+																					],
+																					"stamp": 68,
+																					"options": {
+																						"label": "_Tacit renewal",
+																						"activable": true,
+																						"width": "20",
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"possibleValues": {},
+																						"possibleKeys": {},
+																						"readonly": true,
+																						"version": 0
+																					}
+																				},
+																				"Spacer2__": {
+																					"type": "Spacer",
+																					"data": false,
+																					"stamp": 70,
+																					"options": {
+																						"label": "_Spacer2",
+																						"height": "",
+																						"width": "",
+																						"color": "default",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				},
+																				"LabelStartDate__": {
+																					"type": "Label",
+																					"data": [
+																						"StartDate__"
+																					],
+																					"stamp": 72,
+																					"options": {
+																						"label": "_Start date",
+																						"version": 0
+																					}
+																				},
+																				"StartDate__": {
+																					"type": "DateTime",
+																					"data": [
+																						"StartDate__"
+																					],
+																					"stamp": 71,
+																					"options": {
+																						"label": "_Start date",
+																						"displayLongFormat": false,
+																						"activable": true,
+																						"width": "85",
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"autocompletable": false,
+																						"showWeek": false,
+																						"hideButtonPanel": false,
+																						"showOtherMonths": false,
+																						"version": 0
+																					}
+																				},
+																				"LabelEndDate__": {
+																					"type": "Label",
+																					"data": [
+																						"EndDate__"
+																					],
+																					"stamp": 74,
+																					"options": {
+																						"label": "_End date",
+																						"version": 0
+																					}
+																				},
+																				"EndDate__": {
+																					"type": "DateTime",
+																					"data": [
+																						"EndDate__"
+																					],
+																					"stamp": 73,
+																					"options": {
+																						"label": "_End date",
+																						"displayLongFormat": false,
+																						"activable": true,
+																						"width": "85",
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"autocompletable": false,
+																						"showWeek": false,
+																						"hideButtonPanel": false,
+																						"showOtherMonths": false,
+																						"version": 0
+																					}
+																				},
+																				"Spacer3__": {
+																					"type": "Spacer",
+																					"data": false,
+																					"stamp": 75,
+																					"options": {
+																						"label": "_Spacer3",
+																						"height": "",
+																						"width": "",
+																						"color": "default",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				},
+																				"LabelInitialStartDate__": {
+																					"type": "Label",
+																					"data": [
+																						"InitialStartDate__"
+																					],
+																					"stamp": 77,
+																					"options": {
+																						"label": "_Initial start date",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				},
+																				"InitialStartDate__": {
+																					"type": "DateTime",
+																					"data": [
+																						"InitialStartDate__"
+																					],
+																					"stamp": 76,
+																					"options": {
+																						"label": "_Initial start date",
+																						"displayLongFormat": false,
+																						"activable": true,
+																						"width": "85",
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"readonly": true,
+																						"autocompletable": false,
+																						"hidden": true,
+																						"showWeek": false,
+																						"hideButtonPanel": false,
+																						"showOtherMonths": false,
+																						"version": 0
+																					}
+																				},
+																				"LabelInitialEndDate__": {
+																					"type": "Label",
+																					"data": [
+																						"InitialEndDate__"
+																					],
+																					"stamp": 79,
+																					"options": {
+																						"label": "_Initial end date",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				},
+																				"InitialEndDate__": {
+																					"type": "DateTime",
+																					"data": [
+																						"InitialEndDate__"
+																					],
+																					"stamp": 78,
+																					"options": {
+																						"label": "_Initial end date",
+																						"displayLongFormat": false,
+																						"activable": true,
+																						"width": "85",
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"hidden": true,
+																						"readonly": true,
+																						"autocompletable": false,
+																						"showWeek": false,
+																						"hideButtonPanel": false,
+																						"showOtherMonths": false,
+																						"version": 0
+																					}
+																				},
+																				"LabelInitiallyExpectedEndDate__": {
+																					"type": "Label",
+																					"data": [
+																						"InitiallyExpectedEndDate__"
+																					],
+																					"stamp": 81,
+																					"options": {
+																						"label": "_Initially expected end date",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				},
+																				"InitiallyExpectedEndDate__": {
+																					"type": "DateTime",
+																					"data": [
+																						"InitiallyExpectedEndDate__"
+																					],
+																					"stamp": 80,
+																					"options": {
+																						"label": "_Initially expected end date",
+																						"displayLongFormat": false,
+																						"activable": true,
+																						"width": 230,
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"helpIconPosition": "Right",
+																						"hidden": true,
+																						"readonly": false,
+																						"showWeek": false,
+																						"hideButtonPanel": false,
+																						"showOtherMonths": false,
+																						"version": 0
+																					}
+																				},
+																				"LabelRenewalTerms__": {
+																					"type": "Label",
+																					"data": [
+																						"RenewalTerms__"
+																					],
+																					"stamp": 83,
+																					"options": {
+																						"label": "_Renewal terms",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				},
+																				"RenewalTerms__": {
+																					"type": "Integer",
+																					"data": [
+																						"RenewalTerms__"
+																					],
+																					"stamp": 82,
+																					"options": {
+																						"label": "_Renewal terms",
+																						"version": 2,
+																						"textSize": "S",
+																						"textAlignment": "center",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"integer": true,
+																						"precision_internal": 0,
+																						"precision_current": 0,
+																						"activable": true,
+																						"width": "40",
+																						"helpText": "",
+																						"helpURL": "",
+																						"helpFormat": "HTML Format",
+																						"browsable": false,
+																						"helpIconPosition": "Right",
+																						"enablePlusMinus": true,
+																						"hidden": true,
+																						"autocompletable": false,
+																						"readonly": true
+																					}
+																				},
+																				"Spacer__": {
+																					"type": "Spacer",
+																					"data": false,
+																					"stamp": 84,
+																					"options": {
+																						"label": "_Spacer",
+																						"height": "",
+																						"width": "",
+																						"color": "default",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				},
+																				"NextOccurrenceDesc__": {
+																					"type": "Text",
+																					"data": false,
+																					"stamp": 85,
+																					"options": {
+																						"label": "",
+																						"marge": 0,
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "italic",
+																						"textColor": "default",
+																						"backgroundcolor": "default",
+																						"iconClass": "",
+																						"hidden": true,
+																						"version": 0
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-right-5": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 86,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"SystemData": {
+															"type": "PanelSystemData",
+															"data": [],
+															"stamp": 87,
+															"options": {
+																"multicolumn": false,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"label": "_System data",
+																"hidden": true,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"version": 0
+															}
+														}
+													}
+												},
+												"form-content-right-6": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 88,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"EventHistory": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 89,
+															"options": {
+																"border": {},
+																"labelLength": "200",
+																"iconURL": "",
+																"TitleFontSize": "L",
+																"hideActionButtons": true,
+																"hideTitleBar": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_Events",
+																"leftImageURL": "",
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 90,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 91,
+																			"options": {
+																				"version": 0,
+																				"lines": 1,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"ConversationUI__": {
+																						"line": 1,
+																						"column": 1
+																					}
+																				},
+																				"colspans": [
+																					[
+																						{
+																							"index": 0,
+																							"length": 2
+																						}
+																					]
+																				]
+																			},
+																			"*": {
+																				"ConversationUI__": {
+																					"type": "ConversationUI",
+																					"data": false,
+																					"stamp": 92,
+																					"options": {
+																						"label": "_ConversationUI",
+																						"activable": true,
+																						"tableName": "Conversation__",
+																						"volatile": true,
+																						"width": "100%",
+																						"conversationOptions": {
+																							"allowAttachments": true
+																						},
+																						"version": 0
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 93,
+					"options": {
+						"splitterType": "simple-h",
+						"maxwidth": "",
+						"version": 0
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <field deleted="0" format="" guid="RPV4FP00PCON" id="GPFQT400153E" label="_ApprovedDate_report" length="0" name="ApprovedDate__" originalProcessID="PCON132681" precision="0" processid="FPFQT400153E" submitable="1" type="DATETIME">
+    <properties>
+      <db>
+        <alias>AGPFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ApprovedDate__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:49</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ApprovedDate_report</Label>
+        <Alias>AGPFQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Date</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="V7UT200UIBN" id="NPFQT400153E" label="_Comment_report" length="32766" name="Comment__" originalProcessID="PCON132681" precision="0" processid="FPFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ANPFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Comment__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:49</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Comment_report</Label>
+        <Alias>ANPFQT400153E</Alias>
+        <behavior>Default</behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        <reportpreselectedorder>3</reportpreselectedorder>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="S7UT0000PCON" id="HPFQT400153E" label="_Company code_report" length="50" name="CompanyCode__" originalProcessID="PCON132681" precision="0" processid="FPFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AHPFQT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/CompanyCode__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:49</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Company code_report</Label>
+        <Alias>AHPFQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>false</Editable>
+        <required>false</required>
+        <TableName>CT#BD8QT400153E</TableName>
+        <SortOrder>
+        </SortOrder>
+        <DisplayedColumns>CompanyCode__|CompanyName__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>CompanyCode__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ProcessName>PurchasingCompanycodes__</ProcessName>
+        <CustomFilter>
+        </CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="GD6IG000PCON" id="IPFQT400153E" label="_ContractNumber_report" length="50" name="ContractNumber__" originalProcessID="PCON132681" precision="0" processid="FPFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AIPFQT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ContractNumber__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:49</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ContractNumber_report</Label>
+        <Alias>AIPFQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="J8UT0000PCON" id="JPFQT400153E" label="_Contract status_report" length="50" name="ContractStatus__" originalProcessID="PCON132681" precision="0" processid="FPFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AJPFQT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ContractStatus__</fullname>
+        <defaultvalue>Draft</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:49</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Type>webaccess.Process.Columns.WithPossibleValues</Type>
+        <Label>_Contract status_report</Label>
+        <Alias>AJPFQT400153E</Alias>
+        <Behavior>Default</Behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <TableName>
+        </TableName>
+        <DisplayedColumns>
+        </DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <DataSourceOrigin>Standalone</DataSourceOrigin>
+        <possibleKeys>Draft
+ToValidate
+ApprovedPendingEnvelopeDesign
+ApprovedPendingSignature
+ApprovedPendingActivation
+Active
+Revoked
+Deleted
+Expired
+Deprecated
+Rejected</possibleKeys>
+        <SavedColumn>
+        </SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <possibleValues>_Contract_Draft
+_Contract_ToValidate
+_Contract_ApprovedPendingEnvelopeDesign
+_Contract_ApprovedPendingSignature
+_Contract_ApprovedPendingActivation
+_Contract_Active
+_Contract_Revoked
+_Contract_Deleted
+_Contract_Expired
+_Contract_Deprecated
+_Contract_Rejected</possibleValues>
+        <ProcessName>
+        </ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <lazyTranslatable>
+        </lazyTranslatable>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="N37IG000PCON" id="LPFQT400153E" label="_ContractTypeID_report" length="50" name="ContractTypeID__" originalProcessID="PCON132681" precision="0" processid="FPFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ALPFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ContractTypeID__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:49</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ContractTypeID_report</Label>
+        <Alias>ALPFQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>false</Editable>
+        <TableName>CT#P4EQT400153E</TableName>
+        <SortOrder>
+        </SortOrder>
+        <SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+        <DisplayedColumns>ID__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>ID__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ExposedColumns>
+        </ExposedColumns>
+        <ProcessName>P2P - Contract type__</ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <KeyAttribute>
+        </KeyAttribute>
+        <CustomFilter>
+        </CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="J3LIG000PCON" id="KPFQT400153E" label="_ContractType_report" length="100" name="ContractType__" originalProcessID="PCON132681" precision="0" processid="FPFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AKPFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ContractType__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:49</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ContractType_report</Label>
+        <Alias>AKPFQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>false</Editable>
+        <TableName>CT#P4EQT400153E</TableName>
+        <SortOrder>ASC</SortOrder>
+        <SearchInArchiveServerSide>false</SearchInArchiveServerSide>
+        <DisplayedColumns>Name__|Description__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>Name__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ExposedColumns>ContractTypeID__=ID__</ExposedColumns>
+        <ProcessName>P2P - Contract type__</ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <KeyAttribute>
+        </KeyAttribute>
+        <CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="V7UT0000PCON" id="MPFQT400153E" label="_Description_report" length="32766" name="Description__" originalProcessID="PCON132681" precision="0" processid="FPFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AMPFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Description__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:49</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Description_report</Label>
+        <Alias>AMPFQT400153E</Alias>
+        <behavior>Default</behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        <reportpreselectedorder>3</reportpreselectedorder>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="F8UT0000PCON" id="OPFQT400153E" label="_End date_report" length="0" name="EndDate__" originalProcessID="PCON132681" precision="0" processid="FPFQT400153E" submitable="1" type="DATE">
+    <properties>
+      <db>
+        <alias>AOPFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/EndDate__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:49</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_End date_report</Label>
+        <Alias>AOPFQT400153E</Alias>
+        <behavior>Default, ReportPreselectedForProcess</behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        <reportpreselectedorder>8</reportpreselectedorder>
+      </extrainfo>
+      <field>
+        <required>false</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Date</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="I304FP00PCON" id="PPFQT400153E" label="_Initial end date_report" length="0" name="InitialEndDate__" originalProcessID="PCON132681" precision="0" processid="FPFQT400153E" submitable="1" type="DATE">
+    <properties>
+      <db>
+        <alias>APPFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/InitialEndDate__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:49</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Initial end date_report</Label>
+        <Alias>APPFQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Date</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="DWS3FP00PCON" id="RPFQT400153E" label="_Initially expected end date_report" length="0" name="InitiallyExpectedEndDate__" originalProcessID="PCON132681" precision="0" processid="FPFQT400153E" submitable="1" type="DATE">
+    <properties>
+      <db>
+        <alias>ARPFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/InitiallyExpectedEndDate__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:49</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Initially expected end date_report</Label>
+        <Alias>ARPFQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Date</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="H304FP00PCON" id="QPFQT400153E" label="_Initial start date_report" length="0" name="InitialStartDate__" originalProcessID="PCON132681" precision="0" processid="FPFQT400153E" submitable="1" type="DATE">
+    <properties>
+      <db>
+        <alias>AQPFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/InitialStartDate__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:49</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Initial start date_report</Label>
+        <Alias>AQPFQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Date</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="U7UT0000PCON" id="SPFQT400153E" label="_Name_report" length="50" name="Name__" originalProcessID="PCON132681" precision="0" processid="FPFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ASPFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Name__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:49</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Name_report</Label>
+        <Alias>ASPFQT400153E</Alias>
+        <behavior>Default</behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        <reportpreselectedorder>2</reportpreselectedorder>
+      </extrainfo>
+      <field>
+        <required>false</required>
+        <lazyTranslatable>
+        </lazyTranslatable>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="ZPA3FP00PCON" id="TPFQT400153E" label="_OwnerLogin_report" length="50" name="OwnerLogin__" originalProcessID="PCON132681" precision="0" processid="FPFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ATPFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/OwnerLogin__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:49</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_OwnerLogin_report</Label>
+        <Alias>ATPFQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="IS85FP00PCON" id="UPFQT400153E" label="_OwnerNiceName_report" length="50" name="OwnerNiceName__" originalProcessID="PCON132681" precision="0" processid="FPFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AUPFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/OwnerNiceName__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:49</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_OwnerNiceName_report</Label>
+        <Alias>AUPFQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>false</Editable>
+        <required>false</required>
+        <TableName>ODUSER</TableName>
+        <SortOrder>ASC</SortOrder>
+        <DisplayedColumns>DisplayName|Login|EmailAddress</DisplayedColumns>
+        <SavedColumn>DisplayName</SavedColumn>
+        <ExposedColumns>OwnerLogin__=Login</ExposedColumns>
+        <ProcessName>
+        </ProcessName>
+        <CustomFilter>(&amp;(|(ACCOUNTLOCKED=0)(!(ACCOUNTLOCKED=*)))(Customer=0)(Vendor=0)(|(PortalUser!=1)(PortalUser!=*)))</CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="T7UT0000PCON" id="VPFQT400153E" label="_Reference number_report" length="50" name="ReferenceNumber__" originalProcessID="PCON132681" precision="0" processid="FPFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AVPFQT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ReferenceNumber__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:49</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Reference number_report</Label>
+        <Alias>AVPFQT400153E</Alias>
+        <behavior>Default</behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        <reportpreselectedorder>1</reportpreselectedorder>
+      </extrainfo>
+      <field>
+        <required>false</required>
+        <lazyTranslatable>
+        </lazyTranslatable>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="I8UT0000PCON" id="WPFQT400153E" label="_Renewal terms_report" length="0" name="RenewalTerms__" originalProcessID="PCON132681" precision="0" processid="FPFQT400153E" submitable="1" type="INT">
+    <properties>
+      <db>
+        <alias>AWPFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/RenewalTerms__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:49</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Renewal terms_report</Label>
+        <Alias>AWPFQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="UXT4FP00PCON" id="XPFQT400153E" label="_RequesterLogin_report" length="50" name="RequesterLogin__" originalProcessID="PCON132681" precision="0" processid="FPFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AXPFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/RequesterLogin__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:49</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_RequesterLogin_report</Label>
+        <Alias>AXPFQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="VXT4FP00PCON" id="YPFQT400153E" label="_RequesterNiceName_report" length="50" name="RequesterNiceName__" originalProcessID="PCON132681" precision="0" processid="FPFQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AYPFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/RequesterNiceName__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:49</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_RequesterNiceName_report</Label>
+        <Alias>AYPFQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="E8UT0000PCON" id="ZPFQT400153E" label="_Start date_report" length="0" name="StartDate__" originalProcessID="PCON132681" precision="0" processid="FPFQT400153E" submitable="1" type="DATE">
+    <properties>
+      <db>
+        <alias>AZPFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/StartDate__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:49</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Start date_report</Label>
+        <Alias>AZPFQT400153E</Alias>
+        <behavior>Default, ReportPreselectedForProcess</behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        <reportpreselectedorder>7</reportpreselectedorder>
+      </extrainfo>
+      <field>
+        <required>false</required>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Date</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="H8UT0000PCON" id="AQFQT400153E" label="_Tacit renewal_report" length="0" name="TacitRenewal__" originalProcessID="PCON132681" precision="0" processid="FPFQT400153E" submitable="1" type="BOOL">
+    <properties>
+      <db>
+        <alias>AAQFQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/TacitRenewal__</fullname>
+        <defaultvalue>false</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:49</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Tacit renewal_report</Label>
+        <Alias>AAQFQT400153E</Alias>
+        <behavior>Default, ReportPreselectedForProcess</behavior>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+        <reportpreselectedorder>9</reportpreselectedorder>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Boolean</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <datatable deleted="1" guid="YJGR13PCON" id="BQFQT400153E" label="Conversation" name="Conversation__" originalProcessID="PCON132681">
+    <properties>
+      <field>
+        <DisableAutolearn>1</DisableAutolearn>
+      </field>
+      <ui>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </datatable>
+  <type id="GOLHG0000M4O" name="CD">
+  </type>
+</process>

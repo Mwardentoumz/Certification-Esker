@@ -1,0 +1,601 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:00:38" deleted="0" eskerapplication="DD" global="0" id="MMZKT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="0" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="DD - End Of Validity Notifier" needvalidation="0" ootofilter="" ootoversion="1" originalProcessID="H2X010000IYP" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="0" version="1" visibility="1">
+  <properties>
+    <gdr>
+      <FinalizationScriptAllowRetry>true</FinalizationScriptAllowRetry>
+      <finalizationscriptIncludedScripts>Sys/Sys_EmailNotification</finalizationscriptIncludedScripts>
+      <finalizationscriptIncludedScripts>Sys/Sys_Helpers_Date</finalizationscriptIncludedScripts>
+      <FinalizationScript>"use strict";
+var Notifier;
+(function (Notifier) {
+    function sendEmail(dest, customTags) {
+        const template = "DD_ValidityNotifier_XX.htm";
+        const userID = Data.GetValue("OwnerId");
+        const userAdmin = Users.GetUserAsProcessAdmin(userID);
+        const destEmail = dest.GetValue("EmailAddress");
+        customTags.AccountLogo__ = userAdmin.GetLogoPath();
+        const email = Sys.EmailNotification.CreateEmailWithUser(userAdmin, destEmail, null, template, customTags, true);
+        if (email) {
+            const destLanguage = dest.GetVars().GetValue_String("Language", 0);
+            Sys.EmailNotification.AddSender(email, "notification@eskerondemand.com", Language.TranslateInto("Esker Accounts payable", destLanguage, false));
+            Sys.EmailNotification.SendEmail(email);
+        }
+        else {
+            Log.Error(`Cannot send email to '${destEmail}'`);
+        }
+    }
+    Notifier.sendEmail = sendEmail;
+    function GetDocumentTypesToNotify() {
+        const documentTypes = [];
+        const ASQuery = Process.CreateQueryAsProcessAdmin();
+        ASQuery.SetSpecificTable("DD - Application Settings__");
+        ASQuery.SetAttributesList("Document_Type__");
+        ASQuery.SetFilter("(EndOfValidityNotification__=true)");
+        ASQuery.SetSearchInArchive(true);
+        if (!ASQuery.MoveFirst()) {
+            Log.Warn(`Query on 'DD - Application Settings__' failed`);
+            return documentTypes;
+        }
+        let transport = ASQuery.MoveNext();
+        while (transport) {
+            const docType = transport.GetUninheritedVars().GetValue_String("Document_Type__", 0);
+            documentTypes.push(docType);
+            transport = ASQuery.MoveNext();
+        }
+        return documentTypes;
+    }
+    Notifier.GetDocumentTypesToNotify = GetDocumentTypesToNotify;
+    function SendNotificationIfNeeded(docType, horizonDate) {
+        Log.Info(`... Notifying for SDA configuration '${docType}' ...`);
+        const SFQuery = Process.CreateQueryAsProcessAdmin();
+        SFQuery.SetSpecificTable("CDNAME#DD - SenderForm");
+        SFQuery.SetAttributesList("NotificationRecipient__,EndOfValidity__,Subject,State");
+        SFQuery.SetFilter(`&amp;(Document_Type__=${docType})(State=100)`);
+        SFQuery.SetSortOrder("NotificationRecipient__ DESC, EndOfValidity__ DESC, SubmitDateTime DESC");
+        SFQuery.SetSearchInArchive(true);
+        if (!SFQuery.MoveFirst()) {
+            Log.Warn(`Query on 'DD - SenderForm' failed for type '${docType}'`);
+            return;
+        }
+        let currentRecipient;
+        let expiredDocToNotifyCount = 0;
+        let transport = SFQuery.MoveNext();
+        while (transport) {
+            const vars = transport.GetUninheritedVars();
+            const recipientFullDN = vars.GetValue_String("NotificationRecipient__", 0);
+            const endOfValidity = vars.GetValue_String("EndOfValidity__", 0);
+            // A document without an end of validity date never expires: skip it
+            if (Sys.Helpers.IsEmpty(endOfValidity)) {
+                currentRecipient = recipientFullDN;
+                transport = SFQuery.MoveNext();
+                continue;
+            }
+            // We only notify for the most recent document of each type (if it expired)
+            if (endOfValidity &gt;= horizonDate) {
+                // We have a valid document for this type of document and recipient
+                // No need to notify recipient
+                currentRecipient = recipientFullDN;
+            }
+            // Check if we already processed a document for this type and recipient or if we already found a non-expired version.
+            // The sort order of the query is important for this algorithm to work properly
+            if (recipientFullDN !== currentRecipient) {
+                const recipient = Users.GetUser(recipientFullDN);
+                if (recipient) {
+                    const endOfValidityDate = vars.GetValue_Date("EndOfValidity__", 0);
+                    // Workaround timezone issues when formatting date in recipient timezone
+                    endOfValidityDate.setHours(13);
+                    const customTags = {
+                        endOfValidity: recipient.GetFormattedDate(endOfValidityDate, {
+                            dateFormat: "ShortDate",
+                            timeFormat: "None"
+                        }),
+                        documentName: vars.GetValue_String("Subject", 0),
+                        documentType: docType,
+                        portalURL: recipient.GetPortalURL()
+                    };
+                    sendEmail(recipient, customTags);
+                }
+                else {
+                    Log.Warn("User not found: " + recipientFullDN);
+                }
+                ++expiredDocToNotifyCount;
+                currentRecipient = recipientFullDN;
+            }
+            transport = SFQuery.MoveNext();
+        }
+        Log.Info(`Found ${expiredDocToNotifyCount} expired documents of type '${docType}'`);
+    }
+    Notifier.SendNotificationIfNeeded = SendNotificationIfNeeded;
+})(Notifier || (Notifier = {}));
+function run() {
+    const horizonDate = new Date();
+    horizonDate.setDate(horizonDate.getDate() + 15);
+    const horizonDateDBString = Sys.Helpers.Date.Date2DBDate(horizonDate);
+    const documentTypes = Notifier.GetDocumentTypesToNotify();
+    if (documentTypes.length) {
+        documentTypes.forEach(docType =&gt; Notifier.SendNotificationIfNeeded(docType, horizonDateDBString));
+    }
+    else {
+        Log.Info("No notifiable SDA configuration was found");
+    }
+}
+run();
+//# sourceMappingURL=finalizationscript.js.map</FinalizationScript>
+      <AllowTagCoverPages>true</AllowTagCoverPages>
+      <AllowTagNewDocuments>true</AllowTagNewDocuments>
+      <AllowTagAttachments>true</AllowTagAttachments>
+      <AllowRemovePages>true</AllowRemovePages>
+      <AllowSwapPages>true</AllowSwapPages>
+    </gdr>
+    <lg>
+      <process_da>{
+	"DD - End Of Validity Notifier": "Udløbsnotifikation",
+	"Esker Accounts payable": "Esker kreditorer"
+}</process_da>
+      <process_DE>{
+	"DD - End Of Validity Notifier": "Benachrichtigung über das Ende der Gültigkeit",
+	"Esker Accounts payable": "Esker Lieferantenrechnungen"
+}</process_DE>
+      <process_JA>{
+	"DD - End Of Validity Notifier": "有効期間終了の通知機能",
+	"Esker Accounts payable": "Esker 買掛金"
+}</process_JA>
+      <process_en>{
+	"DD - End Of Validity Notifier": "End of validity notifier",
+	"Esker Accounts payable": "Esker Accounts Payable"
+}</process_en>
+      <process_ES>{
+	"DD - End Of Validity Notifier": "Notificación de fin de validez",
+	"Esker Accounts payable": "Esker Facturas de proveedor"
+}</process_ES>
+      <process_fr>{
+	"DD - End Of Validity Notifier": "Notification de fin de validité",
+	"Esker Accounts payable": "Esker Factures fournisseurs"
+}</process_fr>
+      <process_nl-NL>{
+	"DD - End Of Validity Notifier": "Melding van einde geldigheid",
+	"Esker Accounts payable": "Esker Crediteuren"
+}</process_nl-NL>
+      <process_pl>{
+	"DD - End Of Validity Notifier": "Powiadomienie o końcu ważności",
+	"Esker Accounts payable": "Esker Accounts Payable"
+}</process_pl>
+      <process_IT>{
+	"DD - End Of Validity Notifier": "Notifica di fine validità",
+	"Esker Accounts payable": "Esker Fatture fornitore"
+}</process_IT>
+      <process_sk>{
+	"DD - End Of Validity Notifier": "Oznámenie o konci platnosti",
+	"Esker Accounts payable": "Záväzky Esker"
+}</process_sk>
+      <process_ZH-CN>{
+	"DD - End Of Validity Notifier": "有效期结束通知程序",
+	"Esker Accounts payable": "Esker 应付帐款"
+}</process_ZH-CN>
+      <process_PT-BR>{
+	"DD - End Of Validity Notifier": "Notificação de fim de validade",
+	"Esker Accounts payable": "Esker Contas a pagar"
+}</process_PT-BR>
+      <process_sv>{
+	"DD - End Of Validity Notifier": "Slut på validitetsavisering",
+	"Esker Accounts payable": "Esker kundreskontra"
+}</process_sv>
+    </lg>
+    <ocr>
+      <trade-off>accurate</trade-off>
+      <image-binarization>no</image-binarization>
+      <image-draft-fax>no</image-draft-fax>
+      <image-despeckle>no</image-despeckle>
+      <allowed-language>0</allowed-language>
+      <image-resolution-enhancement>auto</image-resolution-enhancement>
+      <pdf-processing>no-ocr</pdf-processing>
+      <ocr_engine>Nuance190</ocr_engine>
+      <ocrpagestoprocess>0</ocrpagestoprocess>
+    </ocr>
+    <process>
+      <flowtype>processing</flowtype>
+      <ocrpreset>scan</ocrpreset>
+      <homepagelabel>End Of Validity Notifier</homepagelabel>
+      <instanciable>1</instanciable>
+      <EnablePreviewPrecomputation>false</EnablePreviewPrecomputation>
+      <enablerounddecimal>true</enablerounddecimal>
+      <archiveDuration>0</archiveDuration>
+      <ocrpagestoprocess>0</ocrpagestoprocess>
+      <ScriptEngineType>2</ScriptEngineType>
+      <AllowUploadAttachment>1</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>1</AllowUploadReferenceDocument>
+      <AllowRetryExtractCD>true</AllowRetryExtractCD>
+      <TransportName>CustomData</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+    </process>
+    <ui>
+      <layout>{
+	"data": [],
+	"stamps": 30,
+	"*": {
+		"GDRData": {
+			"type": "GDRData",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"version": 0
+			}
+		},
+		"OCRParams": {
+			"type": "OCRParams",
+			"data": [],
+			"stamp": 2,
+			"options": {
+				"version": 0
+			}
+		},
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 3,
+			"options": {
+				"splitterType": "complex",
+				"maxwidth": "",
+				"backColor": "text-backgroundcolor-default",
+				"style": null,
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 4,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 5,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 6,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-top": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 7,
+									"options": {
+										"autosize": true,
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"height": "25%"
+										},
+										"hidden": false
+									},
+									"*": {
+										"form-content-top-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 8,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"DocumentsPanel": {
+													"type": "PanelDocument",
+													"data": [],
+													"stamp": 9,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": false,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"label": "_Documents",
+														"version": 0
+													},
+													"*": {
+														"Document": {
+															"type": "Documents",
+															"data": [
+																"documentscontroldata"
+															],
+															"stamp": 10,
+															"options": {
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								},
+								"form-content-bottom": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 11,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": 25,
+											"left": 0,
+											"width": 100,
+											"height": 75
+										},
+										"hidden": false
+									},
+									"*": {
+										"form-content-left": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 12,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "0%",
+													"width": "45%"
+												},
+												"hidden": false
+											},
+											"*": {
+												"form-content-left-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 13,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"DataPanel": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 14,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_Document data",
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 15,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 16,
+																			"options": {
+																				"version": 0,
+																				"lines": 0,
+																				"columns": 2,
+																				"ctrlsPos": {},
+																				"colspans": []
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-2": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 17,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"SystemData": {
+															"type": "PanelSystemData",
+															"data": [],
+															"stamp": 18,
+															"options": {
+																"multicolumn": false,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"label": "_System data",
+																"version": 0
+															}
+														}
+													}
+												},
+												"form-content-left-3": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 19,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"NextProcess": {
+															"type": "PanelNextProcess",
+															"data": [],
+															"stamp": 20,
+															"options": {
+																"hidden": true,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"label": "_Next Process",
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-right": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 21,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": 0,
+													"left": 45,
+													"width": 55,
+													"height": 99
+												},
+												"hidden": false
+											},
+											"*": {
+												"form-content-right-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 22,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"PreviewPanel": {
+															"type": "PanelPreview",
+															"data": [],
+															"stamp": 23,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"label": "_Document Preview",
+																"version": 0
+															},
+															"*": {
+																"Preview": {
+																	"type": "Preview",
+																	"data": [
+																		"previewdata"
+																	],
+																	"stamp": 24,
+																	"options": {
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 25,
+					"options": {
+						"splitterType": "simple-h",
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 26,
+							"options": {
+								"label": "_Save",
+								"action": "save",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Approve": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 27,
+							"options": {
+								"label": "_Approve",
+								"action": "approve",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Reject": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 28,
+							"options": {
+								"label": "_Reject",
+								"action": "reject",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Reprocess": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 29,
+							"options": {
+								"label": "_Reprocess",
+								"action": "reprocess",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 30,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <type id="GOLHG0000M4O" name="CD">
+  </type>
+</process>

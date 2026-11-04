@@ -1,0 +1,489 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:05:45" deleted="0" eskerapplication="P2P" global="0" id="BU8QT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="AP - Supplier due__" needvalidation="1" ootofilter="" ootoversion="0" originalProcessID="KRCO18295" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomTable" upgradable="1" userid="0" version="1" visibility="0">
+  <properties>
+    <dbIndex>
+      <AUTO_ACU8QT400153EA>&lt;Index&gt;&lt;Ref Name="ACU8QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_ACU8QT400153EA>
+      <AUTO_ADU8QT400153EA>&lt;Index&gt;&lt;Ref Name="ADU8QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_ADU8QT400153EA>
+    </dbIndex>
+    <lg>
+      <process_da>{
+	"AP - Supplier due": "S2P – momstyper",
+	"Code": "Afgiftskode",
+	"Company code": "Virksomhedskode",
+	"Description": "Beskrivelse"
+}</process_da>
+      <process_de>{
+	"AP - Supplier due": "S2P - Mehrwertsteuerarten",
+	"Code": "Steuerkennzeichen",
+	"Company code": "Buchungskreis",
+	"Description": "Beschreibung"
+}</process_de>
+      <process_JA>{
+	"AP - Supplier due": "S2P - 付加価値税種別",
+	"Code": "税コード",
+	"Company code": "会社コード",
+	"Description": "説明"
+}</process_JA>
+      <process_en>{
+	"AP - Supplier due": "S2P - VAT types",
+	"Code": "Tax code",
+	"Company code": "Company code",
+	"Description": "Description"
+}</process_en>
+      <process_es>{
+	"AP - Supplier due": "S2P - Tipos de IVA",
+	"Code": "Código de impuesto",
+	"Company code": "Código de empresa",
+	"Description": "Descripción"
+}</process_es>
+      <process_fr>{
+	"AP - Supplier due": "S2P - Types de TVA",
+	"Code": "Code",
+	"Company code": "Code société",
+	"Description": "Description"
+}</process_fr>
+      <process_nl-NL>{
+	"AP - Supplier due": "S2P - Btw-types",
+	"Code": "Belastingcode",
+	"Company code": "Bedrijfscode",
+	"Description": "Beschrijving"
+}</process_nl-NL>
+      <process_pl>{
+	"AP - Supplier due": "S2P – typy VAT",
+	"Code": "Kod podatku",
+	"Company code": "Kod firmy",
+	"Description": "Opis"
+}</process_pl>
+      <process_it>{
+	"AP - Supplier due": "S2P - Tipi di IVA",
+	"Code": "Codice IVA",
+	"Company code": "Codice società",
+	"Description": "Descrizione"
+}</process_it>
+      <process_sk>{
+	"AP - Supplier due": "S2P – Typy DPH",
+	"Code": "Kód dane",
+	"Company code": "Kód spoločnosti",
+	"Description": "Popis"
+}</process_sk>
+      <process_zh-CN>{
+	"AP - Supplier due": "寻源到付款 - VAT 类型",
+	"Code": "税码",
+	"Company code": "公司代码",
+	"Description": "说明"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"AP - Supplier due": "S2P - Tipos de IVA",
+	"Code": "Código de imposto",
+	"Company code": "Código da empresa",
+	"Description": "Descrição"
+}</process_pt-BR>
+    </lg>
+    <process>
+      <BUColumn>CompanyCode__</BUColumn>
+      <flowtype>processing</flowtype>
+      <homepagelabel>AP - Supplier due</homepagelabel>
+      <upgradable>yes</upgradable>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <OverrideAllowedAttachmentExtensions>*</OverrideAllowedAttachmentExtensions>
+      <AllowUploadAttachment>0</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+      <shouldRollbackManualRecordEdits>true</shouldRollbackManualRecordEdits>
+      <UseCultureFormat>true</UseCultureFormat>
+      <TransportName>CustomTable</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+    </process>
+    <ui>
+      <customscriptIncludedScripts>[LIB_P2P_CUSTOMIZATION_TABLES_CLIENT]</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Sys/Sys_Helpers</customscriptIncludedScripts>
+      <CustomScript>"use strict";
+var CustomScript;
+(function (CustomScript) {
+    function Start() {
+        Sys.Helpers.TryCallFunction("Lib.P2P.Customization.Tables.Client.Common.OnHTMLScriptEnd");
+    }
+    Start();
+})(CustomScript || (CustomScript = {}));
+//# sourceMappingURL=customscript.js.map</CustomScript>
+      <restorationPanel>DataPanel</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 19,
+	"*": {
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"splitterType": "simple-v",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 2,
+					"options": {
+						"hidePanelsMenu": false,
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 3,
+					"options": {
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 4,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-center": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 5,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"width": "100%"
+										},
+										"hidden": false
+									},
+									"*": {
+										"form-content-center-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 6,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"DataPanel": {
+													"type": "PanelData",
+													"data": [],
+													"stamp": 7,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": false,
+														"hideTitleBar": false,
+														"backgroundcolor": "default",
+														"labelsAlignment": "right",
+														"label": "_Document data",
+														"version": 0
+													},
+													"*": {
+														"FieldsManager": {
+															"type": "FieldsManager",
+															"data": [],
+															"stamp": 8,
+															"options": {
+																"version": 0,
+																"controlsAssociation": {
+																	"CompanyCode__": "LabelCompanyCode__",
+																	"LabelCompanyCode__": "CompanyCode__",
+																	"Code__": "LabelCode__",
+																	"LabelCode__": "Code__",
+																	"Description__": "LabelDescription__",
+																	"LabelDescription__": "Description__"
+																}
+															},
+															"*": {
+																"Grid": {
+																	"type": "GridLayout",
+																	"data": [
+																		"fields"
+																	],
+																	"stamp": 9,
+																	"options": {
+																		"version": 0,
+																		"lines": 3,
+																		"columns": 2,
+																		"ctrlsPos": {
+																			"LabelCompanyCode__": {
+																				"line": 1,
+																				"column": 1
+																			},
+																			"CompanyCode__": {
+																				"line": 1,
+																				"column": 2
+																			},
+																			"LabelCode__": {
+																				"line": 2,
+																				"column": 1
+																			},
+																			"Code__": {
+																				"line": 2,
+																				"column": 2
+																			},
+																			"LabelDescription__": {
+																				"line": 3,
+																				"column": 1
+																			},
+																			"Description__": {
+																				"line": 3,
+																				"column": 2
+																			}
+																		},
+																		"colspans": [
+																			[],
+																			[],
+																			[]
+																		]
+																	},
+																	"*": {
+																		"LabelCompanyCode__": {
+																			"type": "Label",
+																			"data": [
+																				"CompanyCode__"
+																			],
+																			"stamp": 11,
+																			"options": {
+																				"label": "Company code",
+																				"version": 0
+																			}
+																		},
+																		"CompanyCode__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"CompanyCode__"
+																			],
+																			"stamp": 10,
+																			"options": {
+																				"label": "Company code",
+																				"browsable": true,
+																				"activable": true,
+																				"width": "500",
+																				"PreFillFTS": true,
+																				"fTSmaxRecords": "20",
+																				"version": 0
+																			}
+																		},
+																		"LabelCode__": {
+																			"type": "Label",
+																			"data": [
+																				"Code__"
+																			],
+																			"stamp": 13,
+																			"options": {
+																				"label": "Code",
+																				"version": 0
+																			}
+																		},
+																		"Code__": {
+																			"type": "ShortText",
+																			"data": [
+																				"Code__"
+																			],
+																			"stamp": 12,
+																			"options": {
+																				"label": "Code",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"activable": true,
+																				"width": 500,
+																				"browsable": false,
+																				"version": 0
+																			}
+																		},
+																		"LabelDescription__": {
+																			"type": "Label",
+																			"data": [
+																				"Description__"
+																			],
+																			"stamp": 15,
+																			"options": {
+																				"label": "Description",
+																				"version": 0
+																			}
+																		},
+																		"Description__": {
+																			"type": "ShortText",
+																			"data": [
+																				"Description__"
+																			],
+																			"stamp": 14,
+																			"options": {
+																				"label": "Description",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"activable": true,
+																				"width": "500",
+																				"browsable": false,
+																				"version": 0
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 16,
+					"options": {
+						"splitterType": "simple-h",
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 17,
+							"options": {
+								"label": "_Save",
+								"action": "savequit",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 18,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"version": 0
+							}
+						},
+						"Delete": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 19,
+							"options": {
+								"label": "_Delete",
+								"action": "delete",
+								"submit": true,
+								"disabled": true,
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <field deleted="0" format="" guid="AYLN18298" id="CU8QT400153E" label="Code" length="50" name="Code__" originalProcessID="KRCO18295" precision="0" processid="BU8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ACU8QT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Code__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:44</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Code</Label>
+        <Alias>ACU8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="FIRC18406" id="DU8QT400153E" label="Company code" length="50" name="CompanyCode__" originalProcessID="KRCO18295" precision="0" processid="BU8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ADU8QT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/CompanyCode__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:44</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Company code</Label>
+        <Alias>ADU8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>true</Editable>
+        <required>false</required>
+        <TableName>CT#BD8QT400153E</TableName>
+        <SortOrder>
+        </SortOrder>
+        <DisplayedColumns>CompanyCode__|CompanyName__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <SavedColumn>CompanyCode__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ProcessName>PurchasingCompanycodes__</ProcessName>
+        <CustomFilter>
+        </CustomFilter>
+      </field>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="ZSMH18296" id="EU8QT400153E" label="Description" length="50" name="Description__" originalProcessID="KRCO18295" precision="0" processid="BU8QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AEU8QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Description__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:05:44</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>Description</Label>
+        <Alias>AEU8QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <type id="KOLHG0000M4O" name="CT">
+  </type>
+</process>

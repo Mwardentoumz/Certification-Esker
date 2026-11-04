@@ -1,0 +1,1162 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:06:35" deleted="0" eskerapplication="P2P" global="0" id="OZ9QT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="Project Contract Linker" needvalidation="1" ootofilter="" ootoversion="2" originalProcessID="U967FP000VLT" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="1" reuseengine="0" sprintversion="5.366.0" transportname="CustomData" upgradable="1" userid="0" version="1" visibility="0">
+  <properties>
+    <dataConditions>
+      <listDataConditions>&lt;dataCondition&gt;
+					&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+					&lt;filter&gt;msnex=*&lt;/filter&gt;
+					&lt;labelKey&gt;_Project disabled&lt;/labelKey&gt;
+					&lt;multipleConditionsLink&gt;and&lt;/multipleConditionsLink&gt;
+					&lt;conditions&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableProject__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableContractGlobalSetting__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+					&lt;/conditions&gt;
+				&lt;/dataCondition&gt;</listDataConditions>
+    </dataConditions>
+    <gdr>
+      <FinalizationScriptAllowRetry>
+      </FinalizationScriptAllowRetry>
+      <FinalizationScript>
+      </FinalizationScript>
+      <ValidationScriptAllowRetry>
+      </ValidationScriptAllowRetry>
+      <validationscriptIncludedScripts>Sys/Sys_GenericAPI_Server</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Sys/Sys_Helpers_LdapUtil</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Sys/Sys_Helpers_Promise</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Sys/Sys_Helpers_String</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Sys/Sys_Helpers_Date</validationscriptIncludedScripts>
+      <validationscriptIncludedScripts>Lib_Project_V12.0.566.0</validationscriptIncludedScripts>
+      <ValidationScript>"use strict";
+/* eslint-disable dot-notation */
+/* eslint-disable class-methods-use-this,guard-for-in,no-case-declarations */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+var ValidationScript;
+(function (ValidationScript) {
+    class SkipActionError extends Error {
+        constructor(resultData, message) {
+            super(message);
+            this.resultData = resultData;
+            Object.setPrototypeOf(this, SkipActionError.prototype);
+        }
+    }
+    ValidationScript.SkipActionError = SkipActionError;
+    class Main {
+        constructor() {
+            this.projectNumber = Data.GetValue("ProjectNumber__");
+            this.contractNumber = Data.GetValue("ContractNumber__");
+            this.actions = {
+                Create: {
+                    actionFn: () =&gt; this.ActionCreate()
+                },
+                Delete: {
+                    actionFn: () =&gt; this.ActionDelete()
+                }
+            };
+        }
+        PreventConcurrentAccess(callback) {
+            Log.Info("[Main.PreventConcurrentAccess] call");
+            let resultPromise;
+            Process.PreventConcurrentAccess(`ProjectContractLink-${this.projectNumber}-${this.contractNumber}`, () =&gt; {
+                // Promises are synchronous here
+                resultPromise = callback();
+            });
+            if (!resultPromise) {
+                Log.Error("[Main.PreventConcurrentAccess] cannot prevent concurrent access");
+                resultPromise = Sys.Helpers.Promise.Reject(new SkipActionError({ error: "PREVENT_CONCURRENT_ACCESS_ERROR" }));
+            }
+            return resultPromise;
+        }
+        QueryLink() {
+            if (!this.lastQueryLinkPromise) {
+                Log.Info("[Main.QueryLink] requesting...");
+                this.lastQueryLinkPromise = Sys.GenericAPI
+                    .PromisedQuery({
+                    table: "Project Contract Link__",
+                    attributes: ["*"],
+                    filter: Sys.Helpers.LdapUtil.FilterAnd(Sys.Helpers.LdapUtil.FilterEqual("ProjectNumber__", this.projectNumber), Sys.Helpers.LdapUtil.FilterEqual("ContractNumber__", this.contractNumber)),
+                    additionalOptions: {
+                        recordBuilder: record =&gt; record // returns xRecord
+                    }
+                })
+                    .Then(queryResult =&gt; {
+                    Log.Info(`[Main.QueryLink] link found: ${!!(queryResult === null || queryResult === void 0 ? void 0 : queryResult.length)}`);
+                    return queryResult;
+                })
+                    .Catch(reason =&gt; this.OnCatch("Main.QueryLink", reason));
+            }
+            return this.lastQueryLinkPromise;
+        }
+        CheckUniqueLink() {
+            Log.Info("[Main.CheckUniqueLink] call");
+            return this.QueryLink()
+                .Then(queryResult =&gt; {
+                const unique = (queryResult === null || queryResult === void 0 ? void 0 : queryResult.length) === 0;
+                Log.Info(`[Main.CheckUniqueLink] unique: ${unique}`);
+                if (!unique) {
+                    throw new SkipActionError({ error: "ALREADY_LINKED" });
+                }
+            })
+                .Catch(reason =&gt; this.OnCatch("Main.CheckUniqueLink", reason));
+        }
+        QueryProject() {
+            if (!this.lastQueryProjectPromise) {
+                Log.Info("[Main.QueryProject] requesting...");
+                this.lastQueryProjectPromise = Sys.GenericAPI
+                    .PromisedQuery({
+                    table: "CDNAME#Project",
+                    attributes: ["*"],
+                    filter: Sys.Helpers.LdapUtil.FilterEqual("ProjectNumber__", this.projectNumber),
+                    maxRecords: 1
+                })
+                    .Then(queryResult =&gt; {
+                    Log.Info(`[Main.QueryProject] project found: ${!!(queryResult === null || queryResult === void 0 ? void 0 : queryResult.length)}`);
+                    return queryResult;
+                })
+                    .Catch(reason =&gt; this.OnCatch("Main.QueryProject", reason));
+            }
+            return this.lastQueryProjectPromise;
+        }
+        QueryContract() {
+            if (!this.lastQueryContractPromise) {
+                Log.Info("[Main.QueryContract] requesting...");
+                this.lastQueryContractPromise = Sys.GenericAPI
+                    .PromisedQuery({
+                    table: "CDNAME#P2P - Contract",
+                    attributes: ["*"],
+                    filter: Sys.Helpers.LdapUtil.FilterEqual("ContractNumber__", this.contractNumber),
+                    maxRecords: 1,
+                    additionalOptions: {
+                        searchInArchive: true
+                    }
+                })
+                    .Then(queryResult =&gt; {
+                    Log.Info(`[Main.QueryContract] contract found: ${!!(queryResult === null || queryResult === void 0 ? void 0 : queryResult.length)}`);
+                    return queryResult;
+                })
+                    .Catch(reason =&gt; this.OnCatch("Main.QueryContract", reason));
+            }
+            return this.lastQueryContractPromise;
+        }
+        CheckAuthorizedUser() {
+            Log.Info("[Main.CheckAuthorizedUser] call");
+            // A user can create/delete a link between project and contract if he has at least the read access to both documents
+            const projectPromise = this.QueryProject();
+            const contractPromise = this.QueryContract();
+            return Sys.Helpers.Promise.All([projectPromise, contractPromise])
+                .Then(([projectQueryResult, contractQueryResult]) =&gt; {
+                const authorized = (projectQueryResult === null || projectQueryResult === void 0 ? void 0 : projectQueryResult.length) &gt;= 1 &amp;&amp; (contractQueryResult === null || contractQueryResult === void 0 ? void 0 : contractQueryResult.length) &gt;= 1; // use '&gt;=' rather than '===' (VLA/sharding)
+                Log.Info(`[Main.CheckAuthorizedUser] authorized: ${authorized}`);
+                if (!authorized) {
+                    throw new SkipActionError({ error: "UNAUTHORIZED_USER" });
+                }
+            })
+                .Catch(reason =&gt; this.OnCatch("Main.CheckAuthorizedUser", reason));
+        }
+        CheckProjectStatus() {
+            Log.Info("[Main.CheckProjectStatus] call");
+            return this.QueryProject()
+                .Then(queryResult =&gt; {
+                const project = queryResult[0];
+                const validStatus = ["Draft", "InProgress"].indexOf(project.Status__) !== -1;
+                Log.Info(`[Main.CheckProjectStatus] valid status: ${validStatus}`);
+                if (!validStatus) {
+                    throw new SkipActionError({ error: "INVALID_DOC" });
+                }
+            })
+                .Catch(reason =&gt; this.OnCatch("Main.CheckProjectStatus", reason));
+        }
+        CreateLink() {
+            Log.Info("[Main.CreateLink] call");
+            return Sys.Helpers.Promise.Resolve()
+                .Then(() =&gt; {
+                const link = Process.CreateTableRecord("Project Contract Link__");
+                const linkVars = link.GetVars();
+                linkVars.AddValue_String("ProjectNumber__", this.projectNumber, true);
+                linkVars.AddValue_String("ContractNumber__", this.contractNumber, true);
+                link.Commit();
+                if (link.GetLastError() === 0) {
+                    Log.Info("[Main.CreateLink] link created successfully");
+                    this.SetResultJSON({
+                        error: false,
+                        linkLongId: linkVars.GetValue_String("LongId", 0)
+                    });
+                }
+                else {
+                    Log.Error(`[Main.CreateLink] cannot create link. Error: ${link.GetLastErrorMessage()}`);
+                    throw new SkipActionError({
+                        error: "CREATE_LINK_ERROR",
+                        message: link.GetLastErrorMessage()
+                    });
+                }
+            })
+                .Catch(reason =&gt; this.OnCatch("Main.CreateLink", reason));
+        }
+        DeleteLink() {
+            Log.Info("[Main.DeleteLink] call");
+            return this.QueryLink()
+                .Then(queryResult =&gt; {
+                if (queryResult &amp;&amp; queryResult.length) {
+                    const link = queryResult[0];
+                    const result = link.Delete();
+                    if (result === 0) {
+                        Log.Info("[Main.DeleteLink] link deleted successfully");
+                        this.SetResultJSON({
+                            error: false
+                        });
+                    }
+                    else {
+                        Log.Error(`[Main.DeleteLink] cannot delete link. Error: ${link.GetLastErrorMessage()}`);
+                        throw new SkipActionError({
+                            error: "DELETE_LINK_ERROR",
+                            message: link.GetLastErrorMessage()
+                        });
+                    }
+                }
+                else {
+                    Log.Info("[Main.DeleteLink] no link to delete");
+                    this.SetResultJSON({
+                        error: false
+                    });
+                }
+            })
+                .Catch(reason =&gt; this.OnCatch("Main.DeleteLink", reason));
+        }
+        ActionCreate() {
+            Log.Info("[Main.ActionCreate] call");
+            return this.CheckAuthorizedUser()
+                .Then(() =&gt; this.CheckProjectStatus())
+                .Then(() =&gt; {
+                return this.PreventConcurrentAccess(() =&gt; {
+                    return this.CheckUniqueLink()
+                        .Then(() =&gt; this.CreateLink());
+                });
+                //Set State to 100 (Without this, the process goes to state 50 client side and state 70 server side)
+            }).Then(() =&gt; Data.SetValue("State", 100))
+                .Catch((reason) =&gt; this.SetResultJSON(reason.resultData));
+        }
+        ActionDelete() {
+            Log.Info("[Main.ActionDelete] call");
+            return this.CheckAuthorizedUser()
+                .Then(() =&gt; this.CheckProjectStatus())
+                .Then(() =&gt; this.DeleteLink())
+                //Set State to 100 (Without this, the process goes to state 50 client side and state 70 server side)
+                .Then(() =&gt; Data.SetValue("State", 100))
+                .Catch((reason) =&gt; this.SetResultJSON(reason.resultData));
+        }
+        SetResultJSON(resultData) {
+            Data.SetValue("ResultJSON__", JSON.stringify(resultData));
+        }
+        OnCatch(caller, reason) {
+            if (!(reason instanceof SkipActionError)) {
+                Log.Error(`[${caller}] unexpected error: ${reason}`);
+                reason = new SkipActionError({
+                    error: "UNEXPECTED_ERROR",
+                    message: reason
+                });
+            }
+            throw reason;
+        }
+        Start() {
+            let actionName = Data.GetActionName();
+            const actionType = Data.GetActionType();
+            Log.Info(`ActionName: "${actionName}" ActionType: "${actionType}"`);
+            const actionByField = Data.GetValue("Action__");
+            if (actionByField) {
+                actionName = actionByField;
+            }
+            else if (!actionName) {
+                actionName = "Create";
+            }
+            Data.SetValue("Action__", actionName);
+            Log.Info(`Action to execute: ${actionName}, for project: ${this.projectNumber}, contract: ${this.contractNumber}`);
+            const action = this.actions[actionName];
+            if (action) {
+                return action.actionFn();
+            }
+            // ELSE
+            Log.Warn("Unknown action");
+            this.SetResultJSON({ error: "UNKNOWN_ACTION" });
+            return Sys.Helpers.Promise.Resolve({ error: "UNKNOWN_ACTION" });
+        }
+    }
+    ValidationScript.Main = Main;
+    if (typeof _ENV_TEST_ENABLED === "undefined") {
+        const main = new Main();
+        main.Start();
+    }
+})(ValidationScript || (ValidationScript = {}));
+//# sourceMappingURL=validationscript.js.map</ValidationScript>
+      <AllowTagCoverPages>true</AllowTagCoverPages>
+      <AllowTagNewDocuments>true</AllowTagNewDocuments>
+      <AllowTagAttachments>true</AllowTagAttachments>
+      <ExtractionScriptAllowRetry>
+      </ExtractionScriptAllowRetry>
+      <ExtractionScript>
+      </ExtractionScript>
+      <ExtractionScriptRunOnOCRFailed>
+      </ExtractionScriptRunOnOCRFailed>
+      <AllowRemovePages>true</AllowRemovePages>
+      <AllowSwapPages>true</AllowSwapPages>
+      <PostProcessingScriptAllowRetry>
+      </PostProcessingScriptAllowRetry>
+      <PostProcessingScript>
+      </PostProcessingScript>
+    </gdr>
+    <lg>
+      <process_da>{
+	"_Action": "Handling",
+	"_Action_report": "Handling",
+	"_ContractNumber": "Kontraktnummer",
+	"_ContractNumber_report": "Kontraktnummer",
+	"_Project Contract Linker": "Tilknytning af kontrakt til projekt",
+	"_ProjectNumber": "Projektnummer",
+	"_ProjectNumber_report": "Projektnummer",
+	"_ResultJSON": "Resultat (JSON-format)",
+	"_ResultJSON_report": "Resultat (JSON-format)",
+	"Project Contract Linker": "Tilknytning af kontrakt til projekt"
+}</process_da>
+      <process_de>{
+	"_Action": "Aktion",
+	"_Action_report": "Aktion",
+	"_ContractNumber": "Vertragsnummer",
+	"_ContractNumber_report": "Vertragsnummer",
+	"_Project Contract Linker": "Projektvertrag-Verbinder",
+	"_ProjectNumber": "Projektnummer",
+	"_ProjectNumber_report": "Projektnummer",
+	"_ResultJSON": "Ergebnis (JSON-Format)",
+	"_ResultJSON_report": "Ergebnis (JSON-Format)",
+	"Project Contract Linker": "Vertrag mit Projekt verknüpft"
+}</process_de>
+      <process_ja>{
+	"_Action": "アクション",
+	"_Action_report": "アクション",
+	"_ContractNumber": "契約番号",
+	"_ContractNumber_report": "契約番号",
+	"_Project Contract Linker": "プロジェクト契約のリンカー",
+	"_ProjectNumber": "プロジェクト番号",
+	"_ProjectNumber_report": "プロジェクト番号",
+	"_ResultJSON": "結果 (JSON形式)",
+	"_ResultJSON_report": "結果 (JSON形式)",
+	"Project Contract Linker": "プロジェクトにリンクする契約"
+}</process_ja>
+      <process_en>{
+	"_Action": "Action",
+	"_Action_report": "Action",
+	"_ContractNumber": "Contract number",
+	"_ContractNumber_report": "Contract number",
+	"_Project Contract Linker": "Contract linking to project",
+	"_ProjectNumber": "Project number",
+	"_ProjectNumber_report": "Project number",
+	"_ResultJSON": "Result (JSON format)",
+	"_ResultJSON_report": "Result (JSON format)",
+	"Project Contract Linker": "Contract linking to project"
+}</process_en>
+      <process_es>{
+	"_Action": "Acción",
+	"_Action_report": "Acción",
+	"_ContractNumber": "Número de contrato",
+	"_ContractNumber_report": "Número de contrato",
+	"_Project Contract Linker": "Vinculación del contrato al proyecto",
+	"_ProjectNumber": "Número del proyecto ",
+	"_ProjectNumber_report": "Número del proyecto",
+	"_ResultJSON": "Resultado (formato JSON)",
+	"_ResultJSON_report": "Resultado (formato JSON)",
+	"Project Contract Linker": "Vinculación del contrato al proyecto"
+}</process_es>
+      <process_fr>{
+	"_Action": "Action",
+	"_Action_report": "Action",
+	"_ContractNumber": "Numéro de contrat",
+	"_ContractNumber_report": "Numéro de contrat",
+	"_Project Contract Linker": "Association contrat/projet",
+	"_ProjectNumber": "Numéro de projet",
+	"_ProjectNumber_report": "Numéro de projet",
+	"_ResultJSON": "Résultat (format JSON)",
+	"_ResultJSON_report": "Résultat (format JSON)",
+	"Project Contract Linker": "Association contrat/projet"
+}</process_fr>
+      <process_nl-NL>{
+	"_Action": "Actie",
+	"_Action_report": "Actie",
+	"_ContractNumber": "Contractnummer",
+	"_ContractNumber_report": "Contractnummer",
+	"_Project Contract Linker": "Koppeling project contract",
+	"_ProjectNumber": "Projectnummer",
+	"_ProjectNumber_report": "Projectnummer",
+	"_ResultJSON": "Resultaat (JSON-indeling)",
+	"_ResultJSON_report": "Resultaat (JSON-indeling)",
+	"Project Contract Linker": "Contract koppelen met project"
+}</process_nl-NL>
+      <process_pl>{
+	"_Action": "Działanie",
+	"_Action_report": "Działanie",
+	"_ContractNumber": "Numer kontraktu",
+	"_ContractNumber_report": "Numer kontraktu",
+	"_Project Contract Linker": "Kontrakt połączony z projektem",
+	"_ProjectNumber": "Numer projektu",
+	"_ProjectNumber_report": "Numer projektu",
+	"_ResultJSON": "Wynik (format JSON)",
+	"_ResultJSON_report": "Wynik (format JSON)",
+	"Project Contract Linker": "Kontrakt połączony z projektem"
+}</process_pl>
+      <process_it>{
+	"_Action": "Azione",
+	"_Action_report": "Azione",
+	"_ContractNumber": "Numero contratto",
+	"_ContractNumber_report": "Numero contratto",
+	"_Project Contract Linker": "Collegamento contratto/progetto",
+	"_ProjectNumber": "Numero progetto",
+	"_ProjectNumber_report": "Numero progetto",
+	"_ResultJSON": "Risultato (formato JSON)",
+	"_ResultJSON_report": "Risultato (formato JSON)",
+	"Project Contract Linker": "Collegamento contratto/progetto"
+}</process_it>
+      <process_sk>{
+	"_Action": "Akcia",
+	"_Action_report": "Akcia",
+	"_ContractNumber": "Číslo zmluvy",
+	"_ContractNumber_report": "Číslo zmluvy",
+	"_Project Contract Linker": "Zmluva spojená s projektom",
+	"_ProjectNumber": "Číslo projektu",
+	"_ProjectNumber_report": "Číslo projektu",
+	"_ResultJSON": "Výsledok (formát JSON)",
+	"_ResultJSON_report": "Výsledok (formát JSON)",
+	"Project Contract Linker": "Zmluva spojená s projektom"
+}</process_sk>
+      <process_zh-CN>{
+	"_Action": "操作",
+	"_Action_report": "操作",
+	"_ContractNumber": "合同编号",
+	"_ContractNumber_report": "合同编号",
+	"_Project Contract Linker": "项目合同链接器",
+	"_ProjectNumber": "项目编号",
+	"_ProjectNumber_report": "项目编号",
+	"_ResultJSON": "结果（JSON 格式）",
+	"_ResultJSON_report": "结果（JSON 格式）",
+	"Project Contract Linker": "合同链接到项目"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"_Action": "Ação",
+	"_Action_report": "Ação",
+	"_ContractNumber": "Número de contrato",
+	"_ContractNumber_report": "Número de contrato",
+	"_Project Contract Linker": "Vinculador de contrato de projeto",
+	"_ProjectNumber": "Número do projeto",
+	"_ProjectNumber_report": "Número do projeto",
+	"_ResultJSON": "Resultado (formato JSON)",
+	"_ResultJSON_report": "Resultado (formato JSON)",
+	"Project Contract Linker": "Vinculação do contrato ao projeto"
+}</process_pt-BR>
+    </lg>
+    <process>
+      <flowtype>processing</flowtype>
+      <ocrpreset>scan</ocrpreset>
+      <EnableNegativeNumbersBetweenBrackets>true</EnableNegativeNumbersBetweenBrackets>
+      <homepagelabel>Project Contract Linker</homepagelabel>
+      <enableflexibleauditing>
+      </enableflexibleauditing>
+      <enableflexibleediting>
+      </enableflexibleediting>
+      <enableflexibleteaching>
+      </enableflexibleteaching>
+      <disableocr>
+      </disableocr>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <disableautolearning>true</disableautolearning>
+      <backgroundprocessingthreshold>
+      </backgroundprocessingthreshold>
+      <EnablePreviewPrecomputation>
+      </EnablePreviewPrecomputation>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <enablerounddecimal>true</enablerounddecimal>
+      <pdfNormalizeFilter>
+      </pdfNormalizeFilter>
+      <archiveDuration>0</archiveDuration>
+      <ocrpagestoprocess>0</ocrpagestoprocess>
+      <ScriptEngineType>2</ScriptEngineType>
+      <UseActionNameWithScriptApproval>true</UseActionNameWithScriptApproval>
+      <displayWidth>
+      </displayWidth>
+      <AllowUploadAttachment>1</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>1</AllowUploadReferenceDocument>
+      <RemovePointWhenCastingIntToString>true</RemovePointWhenCastingIntToString>
+      <UseCultureFormat>true</UseCultureFormat>
+      <AllowRetryExtractCD>true</AllowRetryExtractCD>
+      <TransportName>CustomData</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+      <printToProcess>
+      </printToProcess>
+    </process>
+    <ui>
+      <restorationPanel>DataPanel</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 38,
+	"*": {
+		"GDRData": {
+			"type": "GDRData",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"version": 0
+			}
+		},
+		"OCRParams": {
+			"type": "OCRParams",
+			"data": [],
+			"stamp": 2,
+			"options": {
+				"version": 0
+			}
+		},
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 3,
+			"options": {
+				"splitterType": "complex",
+				"style": "FlexibleFormLight",
+				"maxwidth": "",
+				"backColor": "text-backgroundcolor-default",
+				"footerStyle": "default",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 4,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 5,
+					"options": {
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 6,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-top": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 7,
+									"options": {
+										"autosize": true,
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"height": "25%"
+										},
+										"hidden": true,
+										"hideSeparator": true
+									},
+									"*": {
+										"form-content-top-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 8,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"DocumentsPanel": {
+													"type": "PanelDocument",
+													"data": [],
+													"stamp": 9,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": false,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"sameHeightAsSiblings": false,
+														"label": "_Documents",
+														"version": 0
+													},
+													"*": {
+														"Document": {
+															"type": "Documents",
+															"data": [
+																"documentscontroldata"
+															],
+															"stamp": 10,
+															"options": {
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								},
+								"form-content-bottom": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 11,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": "25%",
+											"left": "0%",
+											"height": "75%"
+										},
+										"hidden": false,
+										"hideSeparator": true
+									},
+									"*": {
+										"form-content-left": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 12,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "0%",
+													"width": "45%"
+												},
+												"hidden": false,
+												"hideSeparator": true
+											},
+											"*": {
+												"form-content-left-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 13,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"DataPanel": {
+															"type": "PanelData",
+															"data": [],
+															"stamp": 14,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"backgroundcolor": "default",
+																"labelsAlignment": "right",
+																"label": "_Document data",
+																"version": 0
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"data": [],
+																	"stamp": 15,
+																	"options": {
+																		"version": 0,
+																		"controlsAssociation": {
+																			"Action__": "LabelAction__",
+																			"LabelAction__": "Action__",
+																			"ProjectNumber__": "LabelProjectNumber__",
+																			"LabelProjectNumber__": "ProjectNumber__",
+																			"ContractNumber__": "LabelContractNumber__",
+																			"LabelContractNumber__": "ContractNumber__",
+																			"ResultJSON__": "LabelResultJSON__",
+																			"LabelResultJSON__": "ResultJSON__"
+																		}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"data": [
+																				"fields"
+																			],
+																			"stamp": 16,
+																			"options": {
+																				"version": 0,
+																				"lines": 4,
+																				"columns": 2,
+																				"ctrlsPos": {
+																					"LabelAction__": {
+																						"line": 1,
+																						"column": 1
+																					},
+																					"Action__": {
+																						"line": 1,
+																						"column": 2
+																					},
+																					"LabelProjectNumber__": {
+																						"line": 2,
+																						"column": 1
+																					},
+																					"ProjectNumber__": {
+																						"line": 2,
+																						"column": 2
+																					},
+																					"LabelContractNumber__": {
+																						"line": 3,
+																						"column": 1
+																					},
+																					"ContractNumber__": {
+																						"line": 3,
+																						"column": 2
+																					},
+																					"LabelResultJSON__": {
+																						"line": 4,
+																						"column": 1
+																					},
+																					"ResultJSON__": {
+																						"line": 4,
+																						"column": 2
+																					}
+																				},
+																				"colspans": [
+																					[],
+																					[],
+																					[],
+																					[]
+																				]
+																			},
+																			"*": {
+																				"LabelAction__": {
+																					"type": "Label",
+																					"data": [
+																						"Action__"
+																					],
+																					"stamp": 18,
+																					"options": {
+																						"label": "_Action",
+																						"version": 0
+																					}
+																				},
+																				"Action__": {
+																					"type": "ShortText",
+																					"data": [
+																						"Action__"
+																					],
+																					"stamp": 17,
+																					"options": {
+																						"label": "_Action",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230
+																					}
+																				},
+																				"LabelProjectNumber__": {
+																					"type": "Label",
+																					"data": [
+																						"ProjectNumber__"
+																					],
+																					"stamp": 20,
+																					"options": {
+																						"label": "_ProjectNumber",
+																						"version": 0
+																					}
+																				},
+																				"ProjectNumber__": {
+																					"type": "ShortText",
+																					"data": [
+																						"ProjectNumber__"
+																					],
+																					"stamp": 19,
+																					"options": {
+																						"label": "_ProjectNumber",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230
+																					}
+																				},
+																				"LabelContractNumber__": {
+																					"type": "Label",
+																					"data": [
+																						"ContractNumber__"
+																					],
+																					"stamp": 22,
+																					"options": {
+																						"label": "_ContractNumber",
+																						"version": 0
+																					}
+																				},
+																				"ContractNumber__": {
+																					"type": "ShortText",
+																					"data": [
+																						"ContractNumber__"
+																					],
+																					"stamp": 21,
+																					"options": {
+																						"label": "_ContractNumber",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"activable": true,
+																						"width": 230
+																					}
+																				},
+																				"LabelResultJSON__": {
+																					"type": "Label",
+																					"data": [
+																						"ResultJSON__"
+																					],
+																					"stamp": 24,
+																					"options": {
+																						"label": "_ResultJSON",
+																						"version": 0
+																					}
+																				},
+																				"ResultJSON__": {
+																					"type": "LongText",
+																					"data": [
+																						"ResultJSON__"
+																					],
+																					"stamp": 23,
+																					"options": {
+																						"label": "_ResultJSON",
+																						"textSize": "S",
+																						"textAlignment": "left",
+																						"textStyle": "default",
+																						"textColor": "default",
+																						"version": 1,
+																						"minNbLines": 3,
+																						"activable": true,
+																						"width": 230
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-2": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 25,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"SystemData": {
+															"type": "PanelSystemData",
+															"data": [],
+															"stamp": 26,
+															"options": {
+																"multicolumn": false,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_System data",
+																"hidden": true,
+																"version": 0
+															}
+														}
+													}
+												},
+												"form-content-left-3": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 27,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"NextProcess": {
+															"type": "PanelNextProcess",
+															"data": [],
+															"stamp": 28,
+															"options": {
+																"hidden": true,
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_Next Process",
+																"version": 0
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-right": {
+											"type": "FlexibleFormSplitter",
+											"data": [],
+											"stamp": 29,
+											"options": {
+												"version": 1,
+												"box": {
+													"top": "0%",
+													"left": "45%",
+													"width": "55%"
+												},
+												"hidden": true
+											},
+											"*": {
+												"form-content-right-1": {
+													"type": "FlexibleFormLine",
+													"data": [],
+													"stamp": 30,
+													"options": {
+														"version": 0
+													},
+													"*": {
+														"PreviewPanel": {
+															"type": "PanelPreview",
+															"data": [],
+															"stamp": 31,
+															"options": {
+																"border": {},
+																"labelLength": 0,
+																"iconURL": "",
+																"TitleFontSize": "S",
+																"hideActionButtons": false,
+																"hideTitleBar": false,
+																"hideTitle": false,
+																"sameHeightAsSiblings": false,
+																"label": "_Document Preview",
+																"version": 0
+															},
+															"*": {
+																"Preview": {
+																	"type": "Preview",
+																	"data": [
+																		"previewdata"
+																	],
+																	"stamp": 32,
+																	"options": {
+																		"version": 0
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 33,
+					"options": {
+						"splitterType": "simple-h",
+						"maxwidth": "",
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 34,
+							"options": {
+								"label": "_Save",
+								"action": "save",
+								"submit": true,
+								"textSize": "S",
+								"version": 0
+							}
+						},
+						"Approve": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 35,
+							"options": {
+								"label": "_Approve",
+								"action": "approve",
+								"submit": true,
+								"textSize": "S",
+								"version": 0
+							}
+						},
+						"Reject": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 36,
+							"options": {
+								"label": "_Reject",
+								"action": "reject",
+								"submit": true,
+								"textSize": "S",
+								"version": 0
+							}
+						},
+						"Reprocess": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 37,
+							"options": {
+								"label": "_Reprocess",
+								"action": "reprocess",
+								"submit": true,
+								"textSize": "S",
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 38,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"textSize": "S",
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <field deleted="0" format="" guid="W967FP000VLT" id="PZ9QT400153E" label="_Action_report" length="50" name="Action__" originalProcessID="U967FP000VLT" precision="0" processid="OZ9QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>APZ9QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Action__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:34</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Action_report</Label>
+        <Alias>APZ9QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="Y967FP000VLT" id="QZ9QT400153E" label="_ContractNumber_report" length="50" name="ContractNumber__" originalProcessID="U967FP000VLT" precision="0" processid="OZ9QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AQZ9QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ContractNumber__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:34</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ContractNumber_report</Label>
+        <Alias>AQZ9QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="X967FP000VLT" id="RZ9QT400153E" label="_ProjectNumber_report" length="50" name="ProjectNumber__" originalProcessID="U967FP000VLT" precision="0" processid="OZ9QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ARZ9QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ProjectNumber__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:34</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ProjectNumber_report</Label>
+        <Alias>ARZ9QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="Z967FP000VLT" id="SZ9QT400153E" label="_ResultJSON_report" length="32766" name="ResultJSON__" originalProcessID="U967FP000VLT" precision="0" processid="OZ9QT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ASZ9QT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ResultJSON__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:06:34</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ResultJSON_report</Label>
+        <Alias>ASZ9QT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <type id="GOLHG0000M4O" name="CD">
+  </type>
+</process>

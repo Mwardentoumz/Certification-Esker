@@ -1,0 +1,2523 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:10:26" deleted="0" eskerapplication="P2P" global="0" id="J6FQT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="P2P - Inventory movements__" needvalidation="0" ootofilter="" ootoversion="1" originalProcessID="ZOL4FP000PA9" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomTable" upgradable="1" userid="0" version="1" visibility="0">
+  <properties>
+    <dataConditions>
+      <listDataConditions>&lt;dataCondition&gt;
+					&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+					&lt;filter&gt;msnex=*&lt;/filter&gt;
+					&lt;labelKey&gt;_Purchasing disabled&lt;/labelKey&gt;
+					&lt;multipleConditionsLink&gt;and&lt;/multipleConditionsLink&gt;
+					&lt;conditions&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnablePurchasingGlobalSetting__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableInventoryManagement__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+					&lt;/conditions&gt;
+				&lt;/dataCondition&gt;</listDataConditions>
+    </dataConditions>
+    <dbIndex>
+      <AUTO_AK6FQT400153EA>&lt;Index&gt;&lt;Ref Name="AK6FQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AK6FQT400153EA>
+      <AUTO_AM6FQT400153EA>&lt;Index&gt;&lt;Ref Name="AM6FQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AM6FQT400153EA>
+      <AUTO_AU6FQT400153EA>&lt;Index&gt;&lt;Ref Name="AU6FQT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AU6FQT400153EA>
+    </dbIndex>
+    <lg>
+      <process_da>{
+	"_CompanyCode": "Virksomhedskode",
+	"_CompanyCode_report": "Virksomhedskode",
+	"_ItemNumber": "Materiale-id",
+	"_ItemNumber_report": "Materiale-id",
+	"_LineNumber": "Linjenummer",
+	"_LineNumber_report": "Linjenummer",
+	"_MovementDateTime": "Bevægelsesdato",
+	"_MovementDateTime_report": "Bevægelsesdato",
+	"_MovementOrigin": "Bevægelsesoprindelse",
+	"_MovementOrigin_report": "Bevægelsesoprindelse",
+	"_MovementType": "Bevægelsestype",
+	"_MovementType_report": "Bevægelsestype",
+	"_MovementUnitPrice": "Stykpris",
+	"_MovementUnitPrice_report": "Stykpris",
+	"_MovementValue": "Mængde",
+	"_MovementValue_report": "Mængde",
+	"_Replenishment": "Genopfyldning",
+	"_Stocktaking": "Lageropgørelse",
+	"_StocktakingBalancing": "Justering af lageropgørelse",
+	"_Transfert": "Lageroverførsel",
+	"_UnitOfMeasure": "Måleenhed",
+	"_UnitOfMeasure_report": "Måleenhed",
+	"_WarehouseID": "Lager-id",
+	"_WarehouseID_report": "Lager-id",
+	"_Withdraw": "Fjernelse",
+	"P2P - Inventory movements": "S2P – lagerbevægelser",
+	"P2P - Inventory movements__": "S2P – lagerbevægelser",
+	"_AvailableStock": "Tilgængelighed på lager",
+	"_AvailableStock_report": "Tilgængelighed på lager",
+	"_Base": "Volumengebyr",
+	"_ColumnBase": "Basispris for niveau",
+	"_ColumnLabel": "Niveau",
+	"_ColumnMaxThreshold": " ",
+	"_ColumnRangeText": "Mængder",
+	"_ColumnThreshold": " ",
+	"_ColumnUnitPrice_OveragePricing": "Stykpris ved overforbrug",
+	"_ColumnUnitPrice_TieredPricing": "Stykpris",
+	"_ColumnUnitPrice_VolumePricing": "Stykpris",
+	"_Currency": "Valuta",
+	"_Currency_report": "Valuta",
+	"_CurrentStock": "Aktuel lagerbeholdning",
+	"_CurrentStock_report": "Aktuel lagerbeholdning",
+	"_DefaultReplenishmentVendorName": "Foretrukket leverandørnavn",
+	"_DefaultReplenishmentVendorName_report": "Foretrukket leverandørnavn",
+	"_DefaultReplenishmentVendorNumber": "Foretrukket leverandørnummer",
+	"_DefaultReplenishmentVendorNumber_report": "Foretrukket leverandørnummer",
+	"_EnergyConsumptionKgCO2e": "GHG-emissioner (kg CO2e)",
+	"_EnergyConsumptionKgCO2e_report": "GHG-emissioner (kg CO2e)",
+	"_ExpectedStockLevel": "Tilsigtet lagerbeholdning",
+	"_ExpectedStockLevel_report": "Tilsigtet lagerbeholdning",
+	"_ExpirationDate": "Tilgængelig indtil",
+	"_ExpirationDate_report": "Tilgængelig indtil",
+	"_IncomingStock": "Indgående lager",
+	"_IncomingStock_report": "Indgående lager",
+	"_InventoryMovementsChart": "Historik for lagerbeholdning efter lager",
+	"_InventoryMovementsTitle": "Historik for lagerbeholdning efter lager",
+	"_LeadTime": "Leveringstid (dage)",
+	"_LeadTime_report": "Leveringstid (dage)",
+	"_LineLabel_OveragePricing": "{0}",
+	"_LineLabel_TieredPricing": "{0}",
+	"_LineLabel_VolumePricing": "{0}",
+	"_Locked": "Låst for redigering",
+	"_Locked_report": "Låst for redigering",
+	"_MinimumThreshold": "Grænse for genbestilling",
+	"_MinimumThreshold_report": "Grænse for genbestilling",
+	"_MinimumThresholdUOM": "Måleenhed",
+	"_MinimumThresholdUOM_report": "Måleenhed",
+	"_PriceConditionData": "Volumenpriser",
+	"_PunchoutSiteName": "Navn på PunchOut-side",
+	"_PunchoutSiteName_report": "Navn på PunchOut-side",
+	"_range_text_first_line_OveragePricing": "Mindre end",
+	"_range_text_first_line_TieredPricing": "Mindre end eller lig med",
+	"_range_text_first_line_VolumePricing": "Mindre end",
+	"_range_text_last_line_OveragePricing": "Større end eller lig med {0}",
+	"_range_text_last_line_TieredPricing": "Større end {0}",
+	"_range_text_last_line_VolumePricing": "Større end eller lig med {0}",
+	"_range_text_mid_line_OveragePricing": "Større end eller lig med {0} og mindre end",
+	"_range_text_mid_line_TieredPricing": "Større end {0} og mindre end eller lig med",
+	"_range_text_mid_line_VolumePricing": "Større end eller lig med {0} og mindre end",
+	"_range_text_unique_line_OveragePricing": "Alle mængder",
+	"_range_text_unique_line_TieredPricing": "Alle mængder",
+	"_range_text_unique_line_VolumePricing": "Alle mængder",
+	"_ReservedStock": "Reserveret lagerbeholdning",
+	"_ReservedStock_report": "Reserveret lagerbeholdning",
+	"_StocktakingDateTime": "Seneste lageropgørelsesdato",
+	"_StocktakingDateTime_report": "Seneste lageropgørelsesdato",
+	"_SupplierPartAuxID": "Sekundær reference hos leverandør",
+	"_SupplierPartAuxID_report": "Sekundær reference hos leverandør",
+	"_SupplierPartID": "Leverandørreference",
+	"_SupplierPartID_report": "Leverandørreference",
+	"_TextModelDescription_OveragePricing": "Der er anvendt en basispris baseret på det niveau, der er nået med varemængden. Den mængde, der overskrider niveauets nedre grænse, faktureres baseret på den tilsvarende stykpris ved overforbrug.",
+	"_TextModelDescription_TieredPricing": "Flere stykpriser anvendes baseret på alle de niveauer, der nås gennem varemængden.",
+	"_TextModelDescription_VolumePricing": "Der anvendes en enkelt stykpris afhængigt af den samlede mængde varer.",
+	"_Threshold": "Minimumsmængde",
+	"_UnitPrice": "Pris",
+	"_UnitPrice_report": "Stykpris",
+	"_ValidityDate": "Tilgængelige fra",
+	"_ValidityDate_report": "Tilgængelige fra",
+	"_VendorNumber": "Leverandørnummer",
+	"_VendorNumber_report": "Leverandørnummer",
+	"_VendorType": "Kildetype",
+	"_VendorType_report": "Kildetype",
+	"_VendorTypeVendor": "Leverandør",
+	"_VendorTypeWarehouse": "Lager",
+	"_WarehouseNumber": "Lager-id",
+	"_WarehouseNumber_report": "Lager-id",
+	"P2P - VendorItems": "S2P – vareegenskaber",
+	"P2P - VendorItems__": "S2P – vareegenskaber"
+}</process_da>
+      <process_de>{
+	"_CompanyCode": "Buchungskreis",
+	"_CompanyCode_report": "Buchungskreis",
+	"_ItemNumber": "Artikelkennung",
+	"_ItemNumber_report": "Artikelkennung",
+	"_LineNumber": "Zeilennummer",
+	"_LineNumber_report": "Zeilennummer",
+	"_MovementDateTime": "Bewegungsdatum",
+	"_MovementDateTime_report": "Bewegungsdatum",
+	"_MovementOrigin": "Ursprung der Bewegung",
+	"_MovementOrigin_report": "Ursprung der Bewegung",
+	"_MovementType": "Bewegungsart",
+	"_MovementType_report": "Bewegungsart",
+	"_MovementUnitPrice": "Einzelpreis",
+	"_MovementUnitPrice_report": "Einzelpreis",
+	"_MovementValue": "Menge",
+	"_MovementValue_report": "Menge",
+	"_Replenishment": "Nachschub",
+	"_Stocktaking": "Inventur",
+	"_StocktakingBalancing": "Bestandsaufnahme-Anpassung",
+	"_Transfert": "Bestandsumlagerung",
+	"_UnitOfMeasure": "Maßeinheit",
+	"_UnitOfMeasure_report": "Maßeinheit",
+	"_WarehouseID": "Lagerkennung",
+	"_WarehouseID_report": "Lagerkennung",
+	"_Withdraw": "Entnahme",
+	"P2P - Inventory movements": "S2P - Bestandsbewegungen",
+	"P2P - Inventory movements__": "S2P - Bestandsbewegungen",
+	"_AvailableStock": "Verfügbarer Bestand",
+	"_AvailableStock_report": "Verfügbarer Bestand",
+	"_Base": "Staffelgebühr",
+	"_ColumnBase": "Stufengrundpreis",
+	"_ColumnLabel": "Stufe",
+	"_ColumnMaxThreshold": " ",
+	"_ColumnRangeText": "Mengen",
+	"_ColumnThreshold": " ",
+	"_ColumnUnitPrice_OveragePricing": "Überschusseinzelpreis",
+	"_ColumnUnitPrice_TieredPricing": "Einzelpreis",
+	"_ColumnUnitPrice_VolumePricing": "Einzelpreis",
+	"_Currency": "Währung",
+	"_Currency_report": "Währung",
+	"_CurrentStock": "Aktueller Bestand",
+	"_CurrentStock_report": "Aktueller Bestand",
+	"_DefaultReplenishmentVendorName": "Name des bevorzugten Lieferanten",
+	"_DefaultReplenishmentVendorName_report": "Name des bevorzugten Lieferanten",
+	"_DefaultReplenishmentVendorNumber": "Lieferantennummer des bevorzugten Lieferanten",
+	"_DefaultReplenishmentVendorNumber_report": "Lieferantennummer des bevorzugten Lieferanten",
+	"_EnergyConsumptionKgCO2e": "Treibhausgasemissionen (kg CO2e)",
+	"_EnergyConsumptionKgCO2e_report": "Treibhausgasemissionen (kg CO2e)",
+	"_ExpectedStockLevel": "Sollbestand",
+	"_ExpectedStockLevel_report": "Sollbestand",
+	"_ExpirationDate": "Verfügbar bis",
+	"_ExpirationDate_report": "Verfügbar bis",
+	"_IncomingStock": "Lagerzugang",
+	"_IncomingStock_report": "Lagerzugang",
+	"_InventoryMovementsChart": "Bestandsverlauf nach Lagerort",
+	"_InventoryMovementsTitle": "Bestandsverlauf nach Lagerort",
+	"_LeadTime": "Beschaffungszeit (Tage)",
+	"_LeadTime_report": "Beschaffungszeit (Tage)",
+	"_LineLabel_OveragePricing": "{0}",
+	"_LineLabel_TieredPricing": "{0}",
+	"_LineLabel_VolumePricing": "{0}",
+	"_Locked": "Nicht bearbeitbar",
+	"_Locked_report": "Nicht bearbeitbar",
+	"_MinimumThreshold": "Bestellpunkt",
+	"_MinimumThreshold_report": "Bestellpunkt",
+	"_MinimumThresholdUOM": "Maßeinheit",
+	"_MinimumThresholdUOM_report": "Maßeinheit",
+	"_PriceConditionData": "Volumenabhängige Preisgestaltung",
+	"_PunchoutSiteName": "Name der PunchOut-Site",
+	"_PunchoutSiteName_report": "Name der PunchOut-Site",
+	"_range_text_first_line_OveragePricing": "Kleiner als",
+	"_range_text_first_line_TieredPricing": "Kleiner als oder gleich",
+	"_range_text_first_line_VolumePricing": "Kleiner als",
+	"_range_text_last_line_OveragePricing": "Größer oder gleich {0}",
+	"_range_text_last_line_TieredPricing": "Größer {0}",
+	"_range_text_last_line_VolumePricing": "Größer oder gleich {0}",
+	"_range_text_mid_line_OveragePricing": "Größer oder gleich {0} und kleiner als",
+	"_range_text_mid_line_TieredPricing": "Größer {0} und kleiner als oder gleich",
+	"_range_text_mid_line_VolumePricing": "Größer oder gleich {0} und kleiner als",
+	"_range_text_unique_line_OveragePricing": "Alle Mengen",
+	"_range_text_unique_line_TieredPricing": "Alle Mengen",
+	"_range_text_unique_line_VolumePricing": "Alle Mengen",
+	"_ReservedStock": "Reservierter Bestand",
+	"_ReservedStock_report": "Reservierter Bestand",
+	"_StocktakingDateTime": "Datum der letzten Inventur",
+	"_StocktakingDateTime_report": "Datum der letzten Inventur",
+	"_SupplierPartAuxID": "Zusätzliche Lieferantenreferenz",
+	"_SupplierPartAuxID_report": "Zusätzliche Lieferantenreferenz",
+	"_SupplierPartID": "Lieferantenreferenz",
+	"_SupplierPartID_report": "Lieferantenreferenz",
+	"_TextModelDescription_OveragePricing": "Ein Basispreis wird entsprechend der durch die Artikelmenge erreichten Staffel angewendet. Für die Menge, die die Staffeluntergrenze übersteigt, wird der entsprechende Überschuss-Stückpreis berechnet.",
+	"_TextModelDescription_TieredPricing": "Es werden mehrere Stückpreise angewendet, je nachdem, welche Staffel durch die Artikelmenge erreicht worden ist.",
+	"_TextModelDescription_VolumePricing": "Abhängig von der Gesamtmenge des Artikels wird ein Einzelpreis pro Stück angewendet.",
+	"_Threshold": "Mindestmenge",
+	"_UnitPrice": "Preis",
+	"_UnitPrice_report": "Einzelpreis",
+	"_ValidityDate": "Verfügbar von",
+	"_ValidityDate_report": "Verfügbar von",
+	"_VendorNumber": "Lieferantennummer",
+	"_VendorNumber_report": "Lieferantennummer",
+	"_VendorType": "Herkunftsart",
+	"_VendorType_report": "Herkunftsart",
+	"_VendorTypeVendor": "Lieferant",
+	"_VendorTypeWarehouse": "Lager",
+	"_WarehouseNumber": "Lagerkennung",
+	"_WarehouseNumber_report": "Lagerkennung",
+	"P2P - VendorItems": "S2P - Artikeleigenschaften",
+	"P2P - VendorItems__": "S2P - Artikeleigenschaften"
+}</process_de>
+      <process_ja>{
+	"_CompanyCode": "会社コード",
+	"_CompanyCode_report": "会社コード",
+	"_ItemNumber": "アイテムID",
+	"_ItemNumber_report": "アイテムID",
+	"_LineNumber": "明細番号",
+	"_LineNumber_report": "明細番号",
+	"_MovementDateTime": "移動日",
+	"_MovementDateTime_report": "移動日",
+	"_MovementOrigin": "移動元",
+	"_MovementOrigin_report": "移動元",
+	"_MovementType": "移動のタイプ",
+	"_MovementType_report": "移動のタイプ",
+	"_MovementUnitPrice": "単価",
+	"_MovementUnitPrice_report": "単価",
+	"_MovementValue": "数量",
+	"_MovementValue_report": "数量",
+	"_Replenishment": "補充",
+	"_Stocktaking": "棚卸し",
+	"_StocktakingBalancing": "棚卸しの調整",
+	"_Transfert": "在庫移動",
+	"_UnitOfMeasure": "計量単位",
+	"_UnitOfMeasure_report": "計量単位",
+	"_WarehouseID": "倉庫ID",
+	"_WarehouseID_report": "倉庫ID",
+	"_Withdraw": "撤去",
+	"P2P - Inventory movements": "S2P - 在庫移動",
+	"P2P - Inventory movements__": "S2P - 在庫移動",
+	"_AvailableStock": "在庫",
+	"_AvailableStock_report": "在庫",
+	"_Base": "追加料金",
+	"_ColumnBase": "ティアの基本価格",
+	"_ColumnLabel": "ティア",
+	"_ColumnMaxThreshold": " ",
+	"_ColumnRangeText": "数量",
+	"_ColumnThreshold": " ",
+	"_ColumnUnitPrice_OveragePricing": "過剰な単価",
+	"_ColumnUnitPrice_TieredPricing": "単価",
+	"_ColumnUnitPrice_VolumePricing": "単価",
+	"_Currency": "通貨",
+	"_Currency_report": "通貨",
+	"_CurrentStock": "現在の在庫",
+	"_CurrentStock_report": "現在の在庫",
+	"_DefaultReplenishmentVendorName": "優先される仕入先名",
+	"_DefaultReplenishmentVendorName_report": "優先される仕入先名",
+	"_DefaultReplenishmentVendorNumber": "優先される仕入先番号",
+	"_DefaultReplenishmentVendorNumber_report": "優先される仕入先番号",
+	"_EnergyConsumptionKgCO2e": "GHG排出量 (kg CO2e)",
+	"_EnergyConsumptionKgCO2e_report": "GHG排出量 (kg CO2e)",
+	"_ExpectedStockLevel": "目標在庫レベル",
+	"_ExpectedStockLevel_report": "目標在庫レベル",
+	"_ExpirationDate": "有効期限",
+	"_ExpirationDate_report": "有効期限",
+	"_IncomingStock": "入庫予定の在庫",
+	"_IncomingStock_report": "入庫予定の在庫",
+	"_InventoryMovementsChart": "倉庫ごとの在庫レベル履歴",
+	"_InventoryMovementsTitle": "倉庫ごとの在庫レベル履歴",
+	"_LeadTime": "リードタイム（日数）",
+	"_LeadTime_report": "リードタイム（日数）",
+	"_LineLabel_OveragePricing": "{0}",
+	"_LineLabel_TieredPricing": "{0}",
+	"_LineLabel_VolumePricing": "{0}",
+	"_Locked": "変更防止のためロック済み",
+	"_Locked_report": "変更防止のためロック済み",
+	"_MinimumThreshold": "再発注ポイント",
+	"_MinimumThreshold_report": "再発注ポイント",
+	"_MinimumThresholdUOM": "計量単位",
+	"_MinimumThresholdUOM_report": "計量単位",
+	"_PriceConditionData": "数量割引",
+	"_PunchoutSiteName": "PunchOutサイト名",
+	"_PunchoutSiteName_report": "PunchOutサイト名",
+	"_range_text_first_line_OveragePricing": "&lt;",
+	"_range_text_first_line_TieredPricing": "≦",
+	"_range_text_first_line_VolumePricing": "&lt;",
+	"_range_text_last_line_OveragePricing": "{0} ≦ ",
+	"_range_text_last_line_TieredPricing": "{0} &lt;",
+	"_range_text_last_line_VolumePricing": "{0} ≦ ",
+	"_range_text_mid_line_OveragePricing": "≧ {0} &gt;",
+	"_range_text_mid_line_TieredPricing": "&gt; {0} ≧",
+	"_range_text_mid_line_VolumePricing": "≧ {0} &gt;",
+	"_range_text_unique_line_OveragePricing": "すべての数量",
+	"_range_text_unique_line_TieredPricing": "すべての数量",
+	"_range_text_unique_line_VolumePricing": "すべての数量",
+	"_ReservedStock": "取り置き在庫",
+	"_ReservedStock_report": "取り置き在庫",
+	"_StocktakingDateTime": "最終棚卸し日",
+	"_StocktakingDateTime_report": "最終棚卸し日",
+	"_SupplierPartAuxID": "仕入先補助参照",
+	"_SupplierPartAuxID_report": "仕入先補助参照",
+	"_SupplierPartID": "仕入先参照",
+	"_SupplierPartID_report": "仕入先参照",
+	"_TextModelDescription_OveragePricing": "基本価格は、品目数量が到達する階層に応じて適用されます。階層下限を超える数量は、対応する超過単価が請求されます。",
+	"_TextModelDescription_TieredPricing": "品目数量が到達するすべての階層を元に、複数の単価が適用されます。",
+	"_TextModelDescription_VolumePricing": "品目の合計数量により、単一の単価が適用されます。",
+	"_Threshold": "最小数量",
+	"_UnitPrice": "価格",
+	"_UnitPrice_report": "単価",
+	"_ValidityDate": "利用開始日",
+	"_ValidityDate_report": "利用開始日",
+	"_VendorNumber": "仕入先番号",
+	"_VendorNumber_report": "仕入先番号",
+	"_VendorType": "ソースタイプ",
+	"_VendorType_report": "ソースタイプ",
+	"_VendorTypeVendor": "仕入先",
+	"_VendorTypeWarehouse": "倉庫",
+	"_WarehouseNumber": "倉庫ID",
+	"_WarehouseNumber_report": "倉庫ID",
+	"P2P - VendorItems": "S2P - 品目の属性",
+	"P2P - VendorItems__": "S2P - 品目の属性"
+}</process_ja>
+      <process_en>{
+	"_CompanyCode": "Company code",
+	"_CompanyCode_report": "Company code",
+	"_ItemNumber": "Item ID",
+	"_ItemNumber_report": "Item ID",
+	"_LineNumber": "Line number",
+	"_LineNumber_report": "Line number",
+	"_MovementDateTime": "Movement date",
+	"_MovementDateTime_report": "Movement date",
+	"_MovementOrigin": "Movement origin",
+	"_MovementOrigin_report": "Movement origin",
+	"_MovementType": "Movement type",
+	"_MovementType_report": "Movement type",
+	"_MovementUnitPrice": "Unit price",
+	"_MovementUnitPrice_report": "Unit price",
+	"_MovementValue": "Quantity",
+	"_MovementValue_report": "Quantity",
+	"_Replenishment": "Replenishment",
+	"_Stocktaking": "Stocktaking",
+	"_StocktakingBalancing": "Stocktaking adjustment",
+	"_Transfert": "Stock transfer",
+	"_UnitOfMeasure": "Unit of measure",
+	"_UnitOfMeasure_report": "Unit of measure",
+	"_WarehouseID": "Warehouse ID",
+	"_WarehouseID_report": "Warehouse ID",
+	"_Withdraw": "Removal",
+	"P2P - Inventory movements": "S2P - Stock movements",
+	"P2P - Inventory movements__": "S2P - Stock movements",
+	"_AvailableStock": "Available stock",
+	"_AvailableStock_report": "Available stock",
+	"_Base": "Bracket fee",
+	"_ColumnBase": "Tier base price",
+	"_ColumnLabel": "Tier",
+	"_ColumnMaxThreshold": " ",
+	"_ColumnRangeText": "Quantities",
+	"_ColumnThreshold": " ",
+	"_ColumnUnitPrice_OveragePricing": "Overage unit price",
+	"_ColumnUnitPrice_TieredPricing": "Unit price",
+	"_ColumnUnitPrice_VolumePricing": "Unit price",
+	"_Currency": "Currency",
+	"_Currency_report": "Currency",
+	"_CurrentStock": "Current stock",
+	"_CurrentStock_report": "Current stock",
+	"_DefaultReplenishmentVendorName": "Preferred supplier name",
+	"_DefaultReplenishmentVendorName_report": "Preferred supplier name",
+	"_DefaultReplenishmentVendorNumber": "Preferred supplier number",
+	"_DefaultReplenishmentVendorNumber_report": "Preferred supplier number",
+	"_EnergyConsumptionKgCO2e": "GHG emissions (kg CO2e)",
+	"_EnergyConsumptionKgCO2e_report": "GHG emissions (kg CO2e)",
+	"_ExpectedStockLevel": "Target stock level",
+	"_ExpectedStockLevel_report": "Target stock level",
+	"_ExpirationDate": "Available until",
+	"_ExpirationDate_report": "Available until",
+	"_IncomingStock": "Incoming stock",
+	"_IncomingStock_report": "Incoming stock",
+	"_InventoryMovementsChart": "Stock level history by warehouse",
+	"_InventoryMovementsTitle": "Stock level history by warehouse",
+	"_LeadTime": "Lead time (days)",
+	"_LeadTime_report": "Lead time (days)",
+	"_LineLabel_OveragePricing": "{0}",
+	"_LineLabel_TieredPricing": "{0}",
+	"_LineLabel_VolumePricing": "{0}",
+	"_Locked": "Locked for modification",
+	"_Locked_report": "Locked for modification",
+	"_MinimumThreshold": "Reorder point",
+	"_MinimumThreshold_report": "Reorder point",
+	"_MinimumThresholdUOM": "Unit of measure",
+	"_MinimumThresholdUOM_report": "Unit of measure",
+	"_PriceConditionData": "Volume Pricing",
+	"_PunchoutSiteName": "PunchOut site name",
+	"_PunchoutSiteName_report": "PunchOut site name",
+	"_range_text_first_line_OveragePricing": "Less than",
+	"_range_text_first_line_TieredPricing": "Less than or equal to",
+	"_range_text_first_line_VolumePricing": "Less than",
+	"_range_text_last_line_OveragePricing": "Greater than or equal to {0}",
+	"_range_text_last_line_TieredPricing": "Greater than {0}",
+	"_range_text_last_line_VolumePricing": "Greater than or equal to {0}",
+	"_range_text_mid_line_OveragePricing": "Greater than or equal to {0} and less than",
+	"_range_text_mid_line_TieredPricing": "Greater than {0} and less than or equal to",
+	"_range_text_mid_line_VolumePricing": "Greater than or equal to {0} and less than",
+	"_range_text_unique_line_OveragePricing": "All quantities",
+	"_range_text_unique_line_TieredPricing": "All quantities",
+	"_range_text_unique_line_VolumePricing": "All quantities",
+	"_ReservedStock": "Reserved stock",
+	"_ReservedStock_report": "Reserved stock",
+	"_StocktakingDateTime": "Last stocktaking date",
+	"_StocktakingDateTime_report": "Last stocktaking date",
+	"_SupplierPartAuxID": "Supplier auxiliary reference",
+	"_SupplierPartAuxID_report": "Supplier auxiliary reference",
+	"_SupplierPartID": "Supplier reference",
+	"_SupplierPartID_report": "Supplier reference",
+	"_TextModelDescription_OveragePricing": "A base price is applied according to the tier reached by the item quantity.\nThe quantity exceeding the tier lower bound is charged the corresponding overage unit price.",
+	"_TextModelDescription_TieredPricing": "Several unit prices are applied based on all the tiers that are reached by the item quantity.",
+	"_TextModelDescription_VolumePricing": "A single unit price is applied depending on the item total quantity.",
+	"_Threshold": "Minimum quantity",
+	"_UnitPrice": "Price",
+	"_UnitPrice_report": "Unit price",
+	"_ValidityDate": "Available from",
+	"_ValidityDate_report": "Available from",
+	"_VendorNumber": "Supplier number",
+	"_VendorNumber_report": "Supplier number",
+	"_VendorType": "Source type",
+	"_VendorType_report": "Source type",
+	"_VendorTypeVendor": "Supplier",
+	"_VendorTypeWarehouse": "Warehouse",
+	"_WarehouseNumber": "Warehouse ID",
+	"_WarehouseNumber_report": "Warehouse ID",
+	"P2P - VendorItems": "S2P - Item properties",
+	"P2P - VendorItems__": "S2P - Item properties"
+}</process_en>
+      <process_es>{
+	"_CompanyCode": "Código de empresa",
+	"_CompanyCode_report": "Código de empresa",
+	"_ItemNumber": "Identificador del artículo",
+	"_ItemNumber_report": "Identificador del artículo",
+	"_LineNumber": "Número de línea",
+	"_LineNumber_report": "Número de línea",
+	"_MovementDateTime": "Fecha del movimiento",
+	"_MovementDateTime_report": "Fecha del movimiento",
+	"_MovementOrigin": "Origen del movimiento",
+	"_MovementOrigin_report": "Origen del movimiento",
+	"_MovementType": "Tipo de movimiento",
+	"_MovementType_report": "Tipo de movimiento",
+	"_MovementUnitPrice": "Precio por unidad",
+	"_MovementUnitPrice_report": "Precio por unidad",
+	"_MovementValue": "Cantidad",
+	"_MovementValue_report": "Cantidad",
+	"_Replenishment": "Reposición",
+	"_Stocktaking": "Inventario",
+	"_StocktakingBalancing": "Ajuste del inventario",
+	"_Transfert": "Transferencia de stock",
+	"_UnitOfMeasure": "Unidad de medida",
+	"_UnitOfMeasure_report": "Unidad de medida",
+	"_WarehouseID": "Identificador de almacén",
+	"_WarehouseID_report": "Identificador de almacén",
+	"_Withdraw": "Salida",
+	"P2P - Inventory movements": "S2P - Movimientos de stock",
+	"P2P - Inventory movements__": "S2P - Movimientos de stock",
+	"_AvailableStock": "Stock disponible",
+	"_AvailableStock_report": "Stock disponible",
+	"_Base": "Tarifa por escalones",
+	"_ColumnBase": "Precio de base del nivel",
+	"_ColumnLabel": "Nivel",
+	"_ColumnMaxThreshold": " ",
+	"_ColumnRangeText": "Cantidades",
+	"_ColumnThreshold": " ",
+	"_ColumnUnitPrice_OveragePricing": "Precio por unidad suplementario",
+	"_ColumnUnitPrice_TieredPricing": "Precio por unidad",
+	"_ColumnUnitPrice_VolumePricing": "Precio por unidad",
+	"_Currency": "Divisa",
+	"_Currency_report": "Divisa",
+	"_CurrentStock": "Stock actual",
+	"_CurrentStock_report": "Stock actual",
+	"_DefaultReplenishmentVendorName": "Nombre del proveedor preferente",
+	"_DefaultReplenishmentVendorName_report": "Nombre del proveedor preferente",
+	"_DefaultReplenishmentVendorNumber": "Número de proveedor preferente",
+	"_DefaultReplenishmentVendorNumber_report": "Número de proveedor preferente",
+	"_EnergyConsumptionKgCO2e": "Emisiones de GEI (kg CO2e)",
+	"_EnergyConsumptionKgCO2e_report": "Emisiones de GEI (kg CO2e)",
+	"_ExpectedStockLevel": "Nivel de stock de destino",
+	"_ExpectedStockLevel_report": "Nivel de stock de destino",
+	"_ExpirationDate": "Disponible hasta el",
+	"_ExpirationDate_report": "Disponible hasta el",
+	"_IncomingStock": "Stock entrante",
+	"_IncomingStock_report": "Stock entrante",
+	"_InventoryMovementsChart": "Historial del nivel de stock por almacén",
+	"_InventoryMovementsTitle": "Historial del nivel de stock por almacén",
+	"_LeadTime": "Tiempo de aprovisionamiento (días)",
+	"_LeadTime_report": "Tiempo de aprovisionamiento (días)",
+	"_LineLabel_OveragePricing": "{0}",
+	"_LineLabel_TieredPricing": "{0}",
+	"_LineLabel_VolumePricing": "{0}",
+	"_Locked": "No editable",
+	"_Locked_report": "No editable",
+	"_MinimumThreshold": "Punto de pedido",
+	"_MinimumThreshold_report": "Punto de pedido",
+	"_MinimumThresholdUOM": "Unidad de medida",
+	"_MinimumThresholdUOM_report": "Unidad de medida",
+	"_PriceConditionData": "Precios por volumen",
+	"_PunchoutSiteName": "Nombre del sitio PunchOut",
+	"_PunchoutSiteName_report": "Nombre del sitio PunchOut",
+	"_range_text_first_line_OveragePricing": "Menos de",
+	"_range_text_first_line_TieredPricing": "Menos de o igual a",
+	"_range_text_first_line_VolumePricing": "Menos de",
+	"_range_text_last_line_OveragePricing": "Mayor o igual que {0}",
+	"_range_text_last_line_TieredPricing": "Mayor que {0}",
+	"_range_text_last_line_VolumePricing": "Mayor o igual que {0}",
+	"_range_text_mid_line_OveragePricing": "Mayor o igual que {0} y menor que",
+	"_range_text_mid_line_TieredPricing": "Mayor que {0} y menor o igual que",
+	"_range_text_mid_line_VolumePricing": "Mayor o igual que {0} y menor que",
+	"_range_text_unique_line_OveragePricing": "Cualquier cantidad",
+	"_range_text_unique_line_TieredPricing": "Cualquier cantidad",
+	"_range_text_unique_line_VolumePricing": "Cualquier cantidad",
+	"_ReservedStock": "Stock reservado",
+	"_ReservedStock_report": "Stock reservado",
+	"_StocktakingDateTime": "Fecha del último inventario",
+	"_StocktakingDateTime_report": "Fecha del último inventario",
+	"_SupplierPartAuxID": "Referencia auxiliar del proveedor",
+	"_SupplierPartAuxID_report": "Referencia auxiliar del proveedor",
+	"_SupplierPartID": "Referencia del proveedor",
+	"_SupplierPartID_report": "Referencia del proveedor",
+	"_TextModelDescription_OveragePricing": "Se aplica un precio base en función del nivel alcanzado por la cantidad de artículos.\nA la cantidad que excede el límite inferior del nivel se le aplica el precio por unidad suplementario correspondiente.",
+	"_TextModelDescription_TieredPricing": "Se aplican varios precios por unidad en función de todos los niveles alcanzados por la cantidad de artículos.",
+	"_TextModelDescription_VolumePricing": "Se aplica un único precio por unidad en función de la cantidad total del artículo.",
+	"_Threshold": "Cantidad mínima",
+	"_UnitPrice": "Precio",
+	"_UnitPrice_report": "Precio por unidad",
+	"_ValidityDate": "Disponible desde el",
+	"_ValidityDate_report": "Disponible desde el",
+	"_VendorNumber": "Número de proveedor",
+	"_VendorNumber_report": "Número de proveedor",
+	"_VendorType": "Tipo de origen",
+	"_VendorType_report": "Tipo de origen",
+	"_VendorTypeVendor": "Proveedor",
+	"_VendorTypeWarehouse": "Almacén",
+	"_WarehouseNumber": "Identificador de almacén",
+	"_WarehouseNumber_report": "Identificador de almacén",
+	"P2P - VendorItems": "S2P - Propiedades del artículo",
+	"P2P - VendorItems__": "S2P - Propiedades del artículo"
+}</process_es>
+      <process_fr>{
+	"_CompanyCode": "Code société",
+	"_CompanyCode_report": "Code société",
+	"_ItemNumber": "ID de l'article",
+	"_ItemNumber_report": "ID de l'article",
+	"_LineNumber": "Numéro de ligne",
+	"_LineNumber_report": "Numéro de ligne",
+	"_MovementDateTime": "Date du mouvement",
+	"_MovementDateTime_report": "Date du mouvement",
+	"_MovementOrigin": "Origine du mouvement",
+	"_MovementOrigin_report": "Origine du mouvement",
+	"_MovementType": "Type de mouvement",
+	"_MovementType_report": "Type de mouvement",
+	"_MovementUnitPrice": "Prix unitaire",
+	"_MovementUnitPrice_report": "Prix unitaire",
+	"_MovementValue": "Quantité",
+	"_MovementValue_report": "Quantité",
+	"_Replenishment": "Réapprovisionnement",
+	"_Stocktaking": "Inventaire",
+	"_StocktakingBalancing": "Ajustement inventaire",
+	"_Transfert": "Transfert de stock",
+	"_UnitOfMeasure": "Unité de mesure",
+	"_UnitOfMeasure_report": "Unité de mesure",
+	"_WarehouseID": "Identifiant de l'entrepôt",
+	"_WarehouseID_report": "Identifiant de l'entrepôt",
+	"_Withdraw": "Sortie",
+	"P2P - Inventory movements": "S2P - Mouvements de stock",
+	"P2P - Inventory movements__": "S2P - Mouvements de stock",
+	"_AvailableStock": "Stock disponible",
+	"_AvailableStock_report": "Stock disponible",
+	"_Base": "Frais de palier",
+	"_ColumnBase": "Prix de base du palier",
+	"_ColumnLabel": "Palier",
+	"_ColumnMaxThreshold": " ",
+	"_ColumnRangeText": "Quantités",
+	"_ColumnThreshold": " ",
+	"_ColumnUnitPrice_OveragePricing": "Prix unitaire de dépassement",
+	"_ColumnUnitPrice_TieredPricing": "Prix unitaire",
+	"_ColumnUnitPrice_VolumePricing": "Prix unitaire",
+	"_Currency": "Devise",
+	"_Currency_report": "Devise",
+	"_CurrentStock": "Stock actuel",
+	"_CurrentStock_report": "Stock actuel",
+	"_DefaultReplenishmentVendorName": "Nom du fournisseur préféré",
+	"_DefaultReplenishmentVendorName_report": "Nom du fournisseur préféré",
+	"_DefaultReplenishmentVendorNumber": "Numéro du fournisseur préféré",
+	"_DefaultReplenishmentVendorNumber_report": "Numéro du fournisseur préféré",
+	"_EnergyConsumptionKgCO2e": "Émissions de GES (kg CO2e)",
+	"_EnergyConsumptionKgCO2e_report": "Émissions de GES (kg CO2e)",
+	"_ExpectedStockLevel": "Niveau de stock cible",
+	"_ExpectedStockLevel_report": "Niveau de stock cible",
+	"_ExpirationDate": "Disponible jusqu'au",
+	"_ExpirationDate_report": "Disponible jusqu'au",
+	"_IncomingStock": "Stock entrant",
+	"_IncomingStock_report": "Stock entrant",
+	"_InventoryMovementsChart": "Historique du niveau de stock par entrepôt",
+	"_InventoryMovementsTitle": "Historique du niveau de stock par entrepôt",
+	"_LeadTime": "Délai d'approvisionnement (jours)",
+	"_LeadTime_report": "Délai d'approvisionnement (jours)",
+	"_LineLabel_OveragePricing": "{0}",
+	"_LineLabel_TieredPricing": "{0}",
+	"_LineLabel_VolumePricing": "{0}",
+	"_Locked": "Non modifiable",
+	"_Locked_report": "Non modifiable",
+	"_MinimumThreshold": "Point de commande",
+	"_MinimumThreshold_report": "Point de commande",
+	"_MinimumThresholdUOM": "Unité de mesure",
+	"_MinimumThresholdUOM_report": "Unité de mesure",
+	"_PriceConditionData": "Tarification au volume",
+	"_PunchoutSiteName": "Nom du site PunchOut",
+	"_PunchoutSiteName_report": "Nom du site PunchOut",
+	"_range_text_first_line_OveragePricing": "Inférieure à",
+	"_range_text_first_line_TieredPricing": "Inférieure ou égale à",
+	"_range_text_first_line_VolumePricing": "Inférieure à",
+	"_range_text_last_line_OveragePricing": "Supérieure ou égale à {0}",
+	"_range_text_last_line_TieredPricing": "Supérieure à {0}",
+	"_range_text_last_line_VolumePricing": "Supérieure ou égale à {0}",
+	"_range_text_mid_line_OveragePricing": "Supérieure ou égale à {0} et inférieure à",
+	"_range_text_mid_line_TieredPricing": "Supérieure à {0} et inférieure ou égale à",
+	"_range_text_mid_line_VolumePricing": "Supérieure ou égale à {0} et inférieure à",
+	"_range_text_unique_line_OveragePricing": "Toutes les quantités",
+	"_range_text_unique_line_TieredPricing": "Toutes les quantités",
+	"_range_text_unique_line_VolumePricing": "Toutes les quantités",
+	"_ReservedStock": "Stock réservé",
+	"_ReservedStock_report": "Stock réservé",
+	"_StocktakingDateTime": "Date du dernier inventaire",
+	"_StocktakingDateTime_report": "Date du dernier inventaire",
+	"_SupplierPartAuxID": "Référence fournisseur auxiliaire",
+	"_SupplierPartAuxID_report": "Référence fournisseur auxiliaire",
+	"_SupplierPartID": "Référence fournisseur",
+	"_SupplierPartID_report": "Référence fournisseur",
+	"_TextModelDescription_OveragePricing": "Un prix de base est appliqué en fonction du palier atteint par la quantité de l'article.\nLa quantité dépassant la limite inférieure du palier est facturée selon le prix unitaire de dépassement.",
+	"_TextModelDescription_TieredPricing": "Plusieurs prix unitaires sont appliqués selon tous les paliers qui sont franchis par la quantité de l'article.",
+	"_TextModelDescription_VolumePricing": "Un seul prix unitaire est appliqué selon la quantité totale de l'article.",
+	"_Threshold": "Quantité minimum",
+	"_UnitPrice": "Prix",
+	"_UnitPrice_report": "Prix unitaire",
+	"_ValidityDate": "Disponible à partir du",
+	"_ValidityDate_report": "Disponible à partir du",
+	"_VendorNumber": "Numéro de fournisseur",
+	"_VendorNumber_report": "Numéro de fournisseur",
+	"_VendorType": "Type de source",
+	"_VendorType_report": "Type de source",
+	"_VendorTypeVendor": "Fournisseur",
+	"_VendorTypeWarehouse": "Entrepôt",
+	"_WarehouseNumber": "Identifiant de l'entrepôt",
+	"_WarehouseNumber_report": "Identifiant de l'entrepôt",
+	"P2P - VendorItems": "S2P - Propriétés de l'article",
+	"P2P - VendorItems__": "S2P - Propriétés de l'article"
+}</process_fr>
+      <process_nl-NL>{
+	"_CompanyCode": "Bedrijfscode",
+	"_CompanyCode_report": "Bedrijfscode",
+	"_ItemNumber": "Item-ID",
+	"_ItemNumber_report": "Item-ID",
+	"_LineNumber": "Regelnummer",
+	"_LineNumber_report": "Regelnummer",
+	"_MovementDateTime": "Datum beweging",
+	"_MovementDateTime_report": "Datum beweging",
+	"_MovementOrigin": "Oorsprong beweging",
+	"_MovementOrigin_report": "Oorsprong beweging",
+	"_MovementType": "Type beweging",
+	"_MovementType_report": "Type beweging",
+	"_MovementUnitPrice": "Eenheidsprijs",
+	"_MovementUnitPrice_report": "Eenheidsprijs",
+	"_MovementValue": "Hoeveelheid",
+	"_MovementValue_report": "Hoeveelheid",
+	"_Replenishment": "Aanvulling",
+	"_Stocktaking": "Inventarisatie",
+	"_StocktakingBalancing": "Aanpassing inventarisatie",
+	"_Transfert": "Voorraadoverdracht",
+	"_UnitOfMeasure": "Maateenheid",
+	"_UnitOfMeasure_report": "Maateenheid",
+	"_WarehouseID": "Magazijn-ID",
+	"_WarehouseID_report": "Magazijn-ID",
+	"_Withdraw": "Verwijderen",
+	"P2P - Inventory movements": "S2P - Voorraadbewegingen",
+	"P2P - Inventory movements__": "S2P - Voorraadbewegingen",
+	"_AvailableStock": "Beschikbare voorraad",
+	"_AvailableStock_report": "Beschikbare voorraad",
+	"_Base": "Extra kosten",
+	"_ColumnBase": "Basisprijs deel",
+	"_ColumnLabel": "Deel",
+	"_ColumnMaxThreshold": " ",
+	"_ColumnRangeText": "Hoeveelheden",
+	"_ColumnThreshold": " ",
+	"_ColumnUnitPrice_OveragePricing": "Eenheidsprijs surplus",
+	"_ColumnUnitPrice_TieredPricing": "Eenheidsprijs",
+	"_ColumnUnitPrice_VolumePricing": "Eenheidsprijs",
+	"_Currency": "Valuta",
+	"_Currency_report": "Valuta",
+	"_CurrentStock": "Huidige voorraad",
+	"_CurrentStock_report": "Huidige voorraad",
+	"_DefaultReplenishmentVendorName": "Gewenste leveranciersnaam",
+	"_DefaultReplenishmentVendorName_report": "Gewenste leveranciersnaam",
+	"_DefaultReplenishmentVendorNumber": "Gewenst leveranciersnummer",
+	"_DefaultReplenishmentVendorNumber_report": "Gewenst leveranciersnummer",
+	"_EnergyConsumptionKgCO2e": "BKG-emissies (kg CO2e)",
+	"_EnergyConsumptionKgCO2e_report": "BKG-emissies (kg CO2e)",
+	"_ExpectedStockLevel": "Gewenst voorraadniveau",
+	"_ExpectedStockLevel_report": "Gewenst voorraadniveau",
+	"_ExpirationDate": "Beschikbaar tot",
+	"_ExpirationDate_report": "Beschikbaar tot",
+	"_IncomingStock": "Inkomende voorraad",
+	"_IncomingStock_report": "Inkomende voorraad",
+	"_InventoryMovementsChart": "Geschiedenis voorraadniveau per magazijn",
+	"_InventoryMovementsTitle": "Geschiedenis voorraadniveau per magazijn",
+	"_LeadTime": "Leveringstermijn (dagen)",
+	"_LeadTime_report": "Leveringstermijn (dagen)",
+	"_LineLabel_OveragePricing": "{0}",
+	"_LineLabel_TieredPricing": "{0}",
+	"_LineLabel_VolumePricing": "{0}",
+	"_Locked": "Vergrendelen voor wijziging",
+	"_Locked_report": "Vergrendeld voor wijziging",
+	"_MinimumThreshold": "Punt van herbevoorrading",
+	"_MinimumThreshold_report": "Punt van herbevoorrading",
+	"_MinimumThresholdUOM": "Maateenheid",
+	"_MinimumThresholdUOM_report": "Maateenheid",
+	"_PriceConditionData": "Volumeprijzen",
+	"_PunchoutSiteName": "Naam PunchOut-site",
+	"_PunchoutSiteName_report": "Naam PunchOut-site",
+	"_range_text_first_line_OveragePricing": "Kleiner dan",
+	"_range_text_first_line_TieredPricing": "Kleiner dan of gelijk aan",
+	"_range_text_first_line_VolumePricing": "Kleiner dan",
+	"_range_text_last_line_OveragePricing": "Groter dan of gelijk aan {0}",
+	"_range_text_last_line_TieredPricing": "Groter dan {0}",
+	"_range_text_last_line_VolumePricing": "Groter dan of gelijk aan {0}",
+	"_range_text_mid_line_OveragePricing": "Groter dan of gelijk aan {0} en kleiner dan",
+	"_range_text_mid_line_TieredPricing": "Groter dan {0} en kleiner dan of gelijk aan",
+	"_range_text_mid_line_VolumePricing": "Groter dan of gelijk aan {0} en kleiner dan",
+	"_range_text_unique_line_OveragePricing": "Alle hoeveelheden",
+	"_range_text_unique_line_TieredPricing": "Alle hoeveelheden",
+	"_range_text_unique_line_VolumePricing": "Alle hoeveelheden",
+	"_ReservedStock": "Gereserveerde voorraad",
+	"_ReservedStock_report": "Gereserveerde voorraad",
+	"_StocktakingDateTime": "Datum laatste inventarisatie",
+	"_StocktakingDateTime_report": "Datum laatste inventarisatie",
+	"_SupplierPartAuxID": "Extra referentie leverancier",
+	"_SupplierPartAuxID_report": "Extra referentie leverancier",
+	"_SupplierPartID": "Referentie leverancier",
+	"_SupplierPartID_report": "Referentie leverancier",
+	"_TextModelDescription_OveragePricing": "Een basisprijs wordt toegepast op basis van de laag dat is bereikt door de itemhoeveelheid. De hoeveelheid die de lagere laag overschrijdt, wordt aangerekend op basis van de overeenkomstige eenheidsprijs surplus.",
+	"_TextModelDescription_TieredPricing": "Diverse eenheidsprijzen worden toegepast op basis van alle lagen die zijn bereikt door de itemhoeveelheid.",
+	"_TextModelDescription_VolumePricing": "Een enkele eenheidsprijs wordt toegepast afhankelijk van de totale itemhoeveelheid.",
+	"_Threshold": "Minimale hoeveelheid",
+	"_UnitPrice": "Prijs",
+	"_UnitPrice_report": "Eenheidsprijs",
+	"_ValidityDate": "Beschikbaar vanaf",
+	"_ValidityDate_report": "Beschikbaar vanaf",
+	"_VendorNumber": "Nummer leverancier",
+	"_VendorNumber_report": "Nummer leverancier",
+	"_VendorType": "Type bron",
+	"_VendorType_report": "Type bron",
+	"_VendorTypeVendor": "Leverancier",
+	"_VendorTypeWarehouse": "Magazijn",
+	"_WarehouseNumber": "Magazijn-ID",
+	"_WarehouseNumber_report": "Magazijn-ID",
+	"P2P - VendorItems": "S2P - Itemeigenschappen",
+	"P2P - VendorItems__": "S2P - Itemeigenschappen"
+}</process_nl-NL>
+      <process_pl>{
+	"_CompanyCode": "Kod firmy",
+	"_CompanyCode_report": "Kod firmy",
+	"_ItemNumber": "Id. pozycji",
+	"_ItemNumber_report": "Id. pozycji",
+	"_LineNumber": "Numer wiersza",
+	"_LineNumber_report": "Numer wiersza",
+	"_MovementDateTime": "Data przesunięcia",
+	"_MovementDateTime_report": "Data przesunięcia",
+	"_MovementOrigin": "Źródło przesunięcia",
+	"_MovementOrigin_report": "Źródło przesunięcia",
+	"_MovementType": "Typ przesunięcia",
+	"_MovementType_report": "Typ przesunięcia",
+	"_MovementUnitPrice": "Cena jednostkowa",
+	"_MovementUnitPrice_report": "Cena jednostkowa",
+	"_MovementValue": "Ilość",
+	"_MovementValue_report": "Ilość",
+	"_Replenishment": "Uzupełnienie",
+	"_Stocktaking": "Inwentaryzacja",
+	"_StocktakingBalancing": "Korekta inwentaryzacyjna",
+	"_Transfert": "Przesunięcie magazynowe",
+	"_UnitOfMeasure": "Jednostka miary",
+	"_UnitOfMeasure_report": "Jednostka miary",
+	"_WarehouseID": "Id. magazynu",
+	"_WarehouseID_report": "Id. magazynu",
+	"_Withdraw": "Usunięcie",
+	"P2P - Inventory movements": "S2P – przesunięcia zapasów",
+	"P2P - Inventory movements__": "S2P – przesunięcia zapasów",
+	"_AvailableStock": "Dostępne zapasy",
+	"_AvailableStock_report": "Dostępne zapasy",
+	"_Base": "Opłata przedziałowa",
+	"_ColumnBase": "Cena podstawowa poziomu",
+	"_ColumnLabel": "Poziom",
+	"_ColumnMaxThreshold": "",
+	"_ColumnRangeText": "Ilości",
+	"_ColumnThreshold": "",
+	"_ColumnUnitPrice_OveragePricing": "Cena jednostkowa za nadwyżkę",
+	"_ColumnUnitPrice_TieredPricing": "Cena jednostkowa",
+	"_ColumnUnitPrice_VolumePricing": "Cena jednostkowa",
+	"_Currency": "Waluta",
+	"_Currency_report": "Waluta",
+	"_CurrentStock": "Zapas bieżący",
+	"_CurrentStock_report": "Zapas bieżący",
+	"_DefaultReplenishmentVendorName": "Nazwa preferowanego dostawcy",
+	"_DefaultReplenishmentVendorName_report": "Nazwa preferowanego dostawcy",
+	"_DefaultReplenishmentVendorNumber": "Numer preferowanego dostawcy",
+	"_DefaultReplenishmentVendorNumber_report": "Numer preferowanego dostawcy",
+	"_EnergyConsumptionKgCO2e": "Emisje GHG (kg CO2e)",
+	"_EnergyConsumptionKgCO2e_report": "Emisje GHG (kg CO2e)",
+	"_ExpectedStockLevel": "Docelowy poziom zapasów",
+	"_ExpectedStockLevel_report": "Docelowy poziom zapasów",
+	"_ExpirationDate": "Dostępne do",
+	"_ExpirationDate_report": "Dostępne do",
+	"_IncomingStock": "Przyjęcie do zapasów",
+	"_IncomingStock_report": "Przyjęcie do zapasów",
+	"_InventoryMovementsChart": "Historia poziomu zapasów według magazynu",
+	"_InventoryMovementsTitle": "Historia poziomu zapasów według magazynu",
+	"_LeadTime": "Czas realizacji (dni)",
+	"_LeadTime_report": "Czas realizacji (dni)",
+	"_LineLabel_OveragePricing": "{0}",
+	"_LineLabel_TieredPricing": "{0}",
+	"_LineLabel_VolumePricing": "{0}",
+	"_Locked": "Zablokowane do modyfikacji",
+	"_Locked_report": "Zablokowane do modyfikacji",
+	"_MinimumThreshold": "Punkt ponownego zamawiania",
+	"_MinimumThreshold_report": "Punkt ponownego zamawiania",
+	"_MinimumThresholdUOM": "Jednostka miary",
+	"_MinimumThresholdUOM_report": "Jednostka miary",
+	"_PriceConditionData": "Ustalanie cen na podstawie ilości",
+	"_PunchoutSiteName": "Nazwa witryny PunchOut",
+	"_PunchoutSiteName_report": "Nazwa witryny PunchOut",
+	"_range_text_first_line_OveragePricing": "Mniejsze niż",
+	"_range_text_first_line_TieredPricing": "Mniejsze lub równe",
+	"_range_text_first_line_VolumePricing": "Mniejsze niż",
+	"_range_text_last_line_OveragePricing": "Większe lub równe {0}",
+	"_range_text_last_line_TieredPricing": "Większe niż {0}",
+	"_range_text_last_line_VolumePricing": "Większe lub równe {0}",
+	"_range_text_mid_line_OveragePricing": "Większe lub równe {0} i mniejsze niż",
+	"_range_text_mid_line_TieredPricing": "Większe niż {0} i mniejsze lub równe",
+	"_range_text_mid_line_VolumePricing": "Większe lub równe {0} i mniejsze niż",
+	"_range_text_unique_line_OveragePricing": "Wszystkie ilości",
+	"_range_text_unique_line_TieredPricing": "Wszystkie ilości",
+	"_range_text_unique_line_VolumePricing": "Wszystkie ilości",
+	"_ReservedStock": "Zapasy zarezerwowane",
+	"_ReservedStock_report": "Zapasy zarezerwowane",
+	"_StocktakingDateTime": "Data ostatniej inwentaryzacji",
+	"_StocktakingDateTime_report": "Data ostatniej inwentaryzacji",
+	"_SupplierPartAuxID": "Pomocniczy kod referencyjny dostawcy",
+	"_SupplierPartAuxID_report": "Pomocniczy kod referencyjny dostawcy",
+	"_SupplierPartID": "Kod referencyjny dostawcy",
+	"_SupplierPartID_report": "Kod referencyjny dostawcy",
+	"_TextModelDescription_OveragePricing": "Stosowana jest pewna cena podstawowa zgodnie z poziomem osiągniętym przez ilość pozycji. Od ilości przekraczającej dolną granicę poziomu pobierana jest odpowiednia cena jednostkowa za nadwyżkę.",
+	"_TextModelDescription_TieredPricing": "Stosowanych jest kilka cen jednostkowych zgodnie ze wszystkimi poziomami osiągniętymi przez ilość pozycji.",
+	"_TextModelDescription_VolumePricing": "Stosowana jest jedna cena jednostkowa zgodnie z łączną ilością pozycji.",
+	"_Threshold": "Ilość minimalna",
+	"_UnitPrice": "Cena",
+	"_UnitPrice_report": "Cena jednostkowa",
+	"_ValidityDate": "Dostępne od",
+	"_ValidityDate_report": "Dostępne od",
+	"_VendorNumber": "Numer dostawcy",
+	"_VendorNumber_report": "Numer dostawcy",
+	"_VendorType": "Typ źródła",
+	"_VendorType_report": "Typ źródła",
+	"_VendorTypeVendor": "Dostawca",
+	"_VendorTypeWarehouse": "Magazyn",
+	"_WarehouseNumber": "Id. magazynu",
+	"_WarehouseNumber_report": "Id. magazynu",
+	"P2P - VendorItems": "S2P – właściwości pozycji",
+	"P2P - VendorItems__": "S2P – właściwości pozycji"
+}</process_pl>
+      <process_it>{
+	"_CompanyCode": "Codice società",
+	"_CompanyCode_report": "Codice società",
+	"_ItemNumber": "ID articolo",
+	"_ItemNumber_report": "ID articolo",
+	"_LineNumber": "Numero di riga",
+	"_LineNumber_report": "Numero di riga",
+	"_MovementDateTime": "Data movimento",
+	"_MovementDateTime_report": "Data movimento",
+	"_MovementOrigin": "Origine movimento",
+	"_MovementOrigin_report": "Origine movimento",
+	"_MovementType": "Tipo movimento",
+	"_MovementType_report": "Tipo movimento",
+	"_MovementUnitPrice": "Prezzo unitario",
+	"_MovementUnitPrice_report": "Prezzo unitario",
+	"_MovementValue": "Quantità",
+	"_MovementValue_report": "Quantità",
+	"_Replenishment": "Rifornimento",
+	"_Stocktaking": "Inventario",
+	"_StocktakingBalancing": "Rettifica inventario",
+	"_Transfert": "Trasferimento di stock",
+	"_UnitOfMeasure": "Unità di misura",
+	"_UnitOfMeasure_report": "Unità di misura",
+	"_WarehouseID": "ID magazzino",
+	"_WarehouseID_report": "ID magazzino",
+	"_Withdraw": "Uscita",
+	"P2P - Inventory movements": "S2P - Movimenti stock",
+	"P2P - Inventory movements__": "S2P - Movimenti stock",
+	"_AvailableStock": "Stock disponibile",
+	"_AvailableStock_report": "Stock disponibile",
+	"_Base": "Tariffa di scaglione",
+	"_ColumnBase": "Prezzo base scaglione",
+	"_ColumnLabel": "Scaglione",
+	"_ColumnMaxThreshold": " ",
+	"_ColumnRangeText": "Quantità",
+	"_ColumnThreshold": " ",
+	"_ColumnUnitPrice_OveragePricing": "Prezzo unitario aggiuntivo",
+	"_ColumnUnitPrice_TieredPricing": "Prezzo unitario",
+	"_ColumnUnitPrice_VolumePricing": "Prezzo unitario",
+	"_Currency": "Valuta",
+	"_Currency_report": "Valuta",
+	"_CurrentStock": "Stock attuale",
+	"_CurrentStock_report": "Stock attuale",
+	"_DefaultReplenishmentVendorName": "Nome del fornitore preferito",
+	"_DefaultReplenishmentVendorName_report": "Nome del fornitore preferito",
+	"_DefaultReplenishmentVendorNumber": "Numero del fornitore preferito",
+	"_DefaultReplenishmentVendorNumber_report": "Numero del fornitore preferito",
+	"_EnergyConsumptionKgCO2e": "Emissioni GES (kg CO2e)",
+	"_EnergyConsumptionKgCO2e_report": "Emissioni GES (kg CO2e)",
+	"_ExpectedStockLevel": "Stock previsto",
+	"_ExpectedStockLevel_report": "Stock previsto",
+	"_ExpirationDate": "Disponibile fino al",
+	"_ExpirationDate_report": "Disponibile fino al",
+	"_IncomingStock": "Stock in entrata",
+	"_IncomingStock_report": "Stock in entrata",
+	"_InventoryMovementsChart": "Andamento stock per magazzino",
+	"_InventoryMovementsTitle": "Andamento stock per magazzino",
+	"_LeadTime": "Tempo di approvvigionamento (giorni)",
+	"_LeadTime_report": "Tempo di approvvigionamento (giorni)",
+	"_LineLabel_OveragePricing": "{0}",
+	"_LineLabel_TieredPricing": "{0}",
+	"_LineLabel_VolumePricing": "{0}",
+	"_Locked": "Non modificabile",
+	"_Locked_report": "Non modificabile",
+	"_MinimumThreshold": "Punto di riordino",
+	"_MinimumThreshold_report": "Punto di riordino",
+	"_MinimumThresholdUOM": "Unità di misura",
+	"_MinimumThresholdUOM_report": "Unità di misura",
+	"_PriceConditionData": "Prezzi basati sui volumi",
+	"_PunchoutSiteName": "Nome del sito PunchOut",
+	"_PunchoutSiteName_report": "Nome del sito PunchOut",
+	"_range_text_first_line_OveragePricing": "Inferiore a",
+	"_range_text_first_line_TieredPricing": "Inferiore o uguale a",
+	"_range_text_first_line_VolumePricing": "Inferiore a",
+	"_range_text_last_line_OveragePricing": "Superiore o uguale a {0}",
+	"_range_text_last_line_TieredPricing": "Superiore a {0}",
+	"_range_text_last_line_VolumePricing": "Superiore o uguale a {0}",
+	"_range_text_mid_line_OveragePricing": "Superiore o uguale a {0} e inferiore a",
+	"_range_text_mid_line_TieredPricing": "Superiore a {0} e inferiore o uguale a",
+	"_range_text_mid_line_VolumePricing": "Superiore o uguale a {0} e inferiore a",
+	"_range_text_unique_line_OveragePricing": "Tutte le quantità",
+	"_range_text_unique_line_TieredPricing": "Tutte le quantità",
+	"_range_text_unique_line_VolumePricing": "Tutte le quantità",
+	"_ReservedStock": "Stock impegnato",
+	"_ReservedStock_report": "Stock impegnato",
+	"_StocktakingDateTime": "Data ultimo inventario",
+	"_StocktakingDateTime_report": "Data ultimo inventario",
+	"_SupplierPartAuxID": "Riferimento ausiliario fornitore",
+	"_SupplierPartAuxID_report": "Riferimento ausiliario fornitore",
+	"_SupplierPartID": "Riferimento fornitore",
+	"_SupplierPartID_report": "Riferimento fornitore",
+	"_TextModelDescription_OveragePricing": "Si applica un prezzo base secondo lo scaglione raggiunto dalla quantità dell'articolo.\nLa quantità che supera il limite inferiore dello scaglione è fatturata in base al prezzo unitario aggiuntivo.",
+	"_TextModelDescription_TieredPricing": "Si applicano diversi prezzi unitari in base a tutti gli scaglioni che corrispondono alla quantità dell'articolo.",
+	"_TextModelDescription_VolumePricing": "Si applica un unico prezzo unitario in base alla quantità totale dell'articolo.",
+	"_Threshold": "Quantità minima",
+	"_UnitPrice": "Prezzo",
+	"_UnitPrice_report": "Prezzo unitario",
+	"_ValidityDate": "Disponibile dal",
+	"_ValidityDate_report": "Disponibile dal",
+	"_VendorNumber": "Numero fornitore",
+	"_VendorNumber_report": "Numero fornitore",
+	"_VendorType": "Tipo di provenienza",
+	"_VendorType_report": "Tipo di provenienza",
+	"_VendorTypeVendor": "Fornitore",
+	"_VendorTypeWarehouse": "Magazzino",
+	"_WarehouseNumber": "ID magazzino",
+	"_WarehouseNumber_report": "ID magazzino",
+	"P2P - VendorItems": "S2P - Proprietà articolo",
+	"P2P - VendorItems__": "S2P - Proprietà articolo"
+}</process_it>
+      <process_sk>{
+	"_CompanyCode": "Kód spoločnosti",
+	"_CompanyCode_report": "Kód spoločnosti",
+	"_ItemNumber": "ID položky",
+	"_ItemNumber_report": "ID položky",
+	"_LineNumber": "Číslo riadku",
+	"_LineNumber_report": "Číslo riadku",
+	"_MovementDateTime": "Dátum pohybu",
+	"_MovementDateTime_report": "Dátum pohybu",
+	"_MovementOrigin": "Pôvod pohybu",
+	"_MovementOrigin_report": "Pôvod pohybu",
+	"_MovementType": "Typ pohybu",
+	"_MovementType_report": "Typ pohybu",
+	"_MovementUnitPrice": "Jednotková cena",
+	"_MovementUnitPrice_report": "Jednotková cena",
+	"_MovementValue": "Množstvo",
+	"_MovementValue_report": "Množstvo",
+	"_Replenishment": "Doplnenie",
+	"_Stocktaking": "Inventarizácia",
+	"_StocktakingBalancing": "Úprava zásob",
+	"_Transfert": "Presun zásob",
+	"_UnitOfMeasure": "Merná jednotka",
+	"_UnitOfMeasure_report": "Merná jednotka",
+	"_WarehouseID": "ID skladu",
+	"_WarehouseID_report": "ID skladu",
+	"_Withdraw": "Vyradenie",
+	"P2P - Inventory movements": "S2P – pohyby zásob",
+	"P2P - Inventory movements__": "S2P – pohyby zásob",
+	"_AvailableStock": "Dostupné zásoby",
+	"_AvailableStock_report": "Dostupné zásoby",
+	"_Base": "Odstupňovaný poplatok",
+	"_ColumnBase": "Základná cena úrovne",
+	"_ColumnLabel": "Úroveň",
+	"_ColumnMaxThreshold": "",
+	"_ColumnRangeText": "Množstvo",
+	"_ColumnThreshold": "",
+	"_ColumnUnitPrice_OveragePricing": "Jednotková cena za nadlimitnú spotrebu",
+	"_ColumnUnitPrice_TieredPricing": "Jednotková cena",
+	"_ColumnUnitPrice_VolumePricing": "Jednotková cena",
+	"_Currency": "Mena",
+	"_Currency_report": "Mena",
+	"_CurrentStock": "Aktuálne zásoby",
+	"_CurrentStock_report": "Aktuálne zásoby",
+	"_DefaultReplenishmentVendorName": "Názov preferovaného dodávateľa",
+	"_DefaultReplenishmentVendorName_report": "Názov preferovaného dodávateľa",
+	"_DefaultReplenishmentVendorNumber": "Číslo preferovaného dodávateľa",
+	"_DefaultReplenishmentVendorNumber_report": "Číslo preferovaného dodávateľa",
+	"_EnergyConsumptionKgCO2e": "Emisie SP (kg CO2e)",
+	"_EnergyConsumptionKgCO2e_report": "Emisie SP (kg CO2e)",
+	"_ExpectedStockLevel": "Cieľová úroveň zásob",
+	"_ExpectedStockLevel_report": "Cieľová úroveň zásob",
+	"_ExpirationDate": "Dostupné do",
+	"_ExpirationDate_report": "Dostupné do",
+	"_IncomingStock": "Prichádzajúce zásoby",
+	"_IncomingStock_report": "Prichádzajúce zásoby",
+	"_InventoryMovementsChart": "História stavu zásob podľa skladu",
+	"_InventoryMovementsTitle": "História stavu zásob podľa skladu",
+	"_LeadTime": "Priebežná doba (dni)",
+	"_LeadTime_report": "Priebežná doba (dni)",
+	"_LineLabel_OveragePricing": "{0}",
+	"_LineLabel_TieredPricing": "{0}",
+	"_LineLabel_VolumePricing": "{0}",
+	"_Locked": "Zablokované na úpravu",
+	"_Locked_report": "Zablokované na úpravu",
+	"_MinimumThreshold": "Objednávacia hladina",
+	"_MinimumThreshold_report": "Objednávacia hladina",
+	"_MinimumThresholdUOM": "Merná jednotka",
+	"_MinimumThresholdUOM_report": "Merná jednotka",
+	"_PriceConditionData": "Objemové ceny",
+	"_PunchoutSiteName": "Názov stránky PunchOut",
+	"_PunchoutSiteName_report": "Názov stránky PunchOut",
+	"_range_text_first_line_OveragePricing": "Menej ako",
+	"_range_text_first_line_TieredPricing": "Menej ako alebo rovná sa",
+	"_range_text_first_line_VolumePricing": "Menej ako",
+	"_range_text_last_line_OveragePricing": "Väčšie ako alebo rovná sa {0}",
+	"_range_text_last_line_TieredPricing": "Väčšie ako {0}",
+	"_range_text_last_line_VolumePricing": "Väčšie ako alebo rovná sa {0}",
+	"_range_text_mid_line_OveragePricing": "Väčšie ako alebo rovná sa {0} a menšie ako",
+	"_range_text_mid_line_TieredPricing": "Väčšie ako {0} a menšie ako alebo rovná sa",
+	"_range_text_mid_line_VolumePricing": "Väčšie ako alebo rovná sa {0} a menšie ako",
+	"_range_text_unique_line_OveragePricing": "Všetky množstvá",
+	"_range_text_unique_line_TieredPricing": "Všetky množstvá",
+	"_range_text_unique_line_VolumePricing": "Všetky množstvá",
+	"_ReservedStock": "Rezervované zásoby",
+	"_ReservedStock_report": "Rezervované zásoby",
+	"_StocktakingDateTime": "Dátum poslednej inventúry",
+	"_StocktakingDateTime_report": "Dátum poslednej inventúry",
+	"_SupplierPartAuxID": "Pomocná referencia dodávateľa",
+	"_SupplierPartAuxID_report": "Pomocná referencia dodávateľa",
+	"_SupplierPartID": "Referencia dodávateľa",
+	"_SupplierPartID_report": "Referencia dodávateľa",
+	"_TextModelDescription_OveragePricing": "Základná cena sa uplatňuje podľa úrovne dosiahnutej množstvom položky. Za množstvo presahujúce dolnú hranicu úrovne sa účtuje príslušná jednotková cena za nadlimitnú spotrebu.",
+	"_TextModelDescription_TieredPricing": "Na základe všetkých úrovní dosiahnutých množstvom položky sa uplatňuje niekoľko jednotkových cien.",
+	"_TextModelDescription_VolumePricing": "V závislosti od celkového množstva položky sa uplatňuje jedna jednotková cena.",
+	"_Threshold": "Minimálne množstvo",
+	"_UnitPrice": "Cena",
+	"_UnitPrice_report": "Jednotková cena",
+	"_ValidityDate": "Dostupné od",
+	"_ValidityDate_report": "Dostupné od",
+	"_VendorNumber": "Číslo dodávateľa",
+	"_VendorNumber_report": "Číslo dodávateľa",
+	"_VendorType": "Typ zdroja",
+	"_VendorType_report": "Typ zdroja",
+	"_VendorTypeVendor": "Dodávateľ",
+	"_VendorTypeWarehouse": "Sklad",
+	"_WarehouseNumber": "ID skladu",
+	"_WarehouseNumber_report": "ID skladu",
+	"P2P - VendorItems": "S2P – Vlastnosti položky",
+	"P2P - VendorItems__": "S2P – Vlastnosti položky"
+}</process_sk>
+      <process_zh-cn>{
+	"_CompanyCode": "公司代码",
+	"_CompanyCode_report": "公司代码",
+	"_ItemNumber": "物品 ID",
+	"_ItemNumber_report": "物品 ID",
+	"_LineNumber": "行数",
+	"_LineNumber_report": "行数",
+	"_MovementDateTime": "移动日期",
+	"_MovementDateTime_report": "移动日期",
+	"_MovementOrigin": "移动来源",
+	"_MovementOrigin_report": "移动来源",
+	"_MovementType": "移动类型",
+	"_MovementType_report": "移动类型",
+	"_MovementUnitPrice": "单价",
+	"_MovementUnitPrice_report": "单价",
+	"_MovementValue": "数量",
+	"_MovementValue_report": "数量",
+	"_Replenishment": "补货",
+	"_Stocktaking": "盘点",
+	"_StocktakingBalancing": "盘点调整",
+	"_Transfert": "库存转移",
+	"_UnitOfMeasure": "度量单位",
+	"_UnitOfMeasure_report": "度量单位",
+	"_WarehouseID": "仓库标识",
+	"_WarehouseID_report": "仓库标识",
+	"_Withdraw": "移除",
+	"P2P - Inventory movements": "寻源到付款 - 库存移动",
+	"P2P - Inventory movements__": "寻源到付款 - 库存移动",
+	"_AvailableStock": "现有库存",
+	"_AvailableStock_report": "现有库存",
+	"_Base": "额外费用",
+	"_ColumnBase": "分层基价",
+	"_ColumnLabel": "分层",
+	"_ColumnMaxThreshold": " ",
+	"_ColumnRangeText": "数量",
+	"_ColumnThreshold": " ",
+	"_ColumnUnitPrice_OveragePricing": "超额单价",
+	"_ColumnUnitPrice_TieredPricing": "单价",
+	"_ColumnUnitPrice_VolumePricing": "单价",
+	"_Currency": "货币",
+	"_Currency_report": "货币",
+	"_CurrentStock": "当前库存",
+	"_CurrentStock_report": "当前库存",
+	"_DefaultReplenishmentVendorName": "首选供应商名称",
+	"_DefaultReplenishmentVendorName_report": "首选供应商名称",
+	"_DefaultReplenishmentVendorNumber": "首选供应商编号",
+	"_DefaultReplenishmentVendorNumber_report": "首选供应商编号",
+	"_EnergyConsumptionKgCO2e": "温室气体排放（kg CO2e）",
+	"_EnergyConsumptionKgCO2e_report": "温室气体排放（kg CO2e）",
+	"_ExpectedStockLevel": "目标库存水平",
+	"_ExpectedStockLevel_report": "目标库存水平",
+	"_ExpirationDate": "最后可用日期",
+	"_ExpirationDate_report": "最后可用日期",
+	"_IncomingStock": "入库库存",
+	"_IncomingStock_report": "入库库存",
+	"_InventoryMovementsChart": "库存水平历史（按仓库）",
+	"_InventoryMovementsTitle": "库存水平历史（按仓库）",
+	"_LeadTime": "提前期（天）",
+	"_LeadTime_report": "提前期（天）",
+	"_LineLabel_OveragePricing": "{0}",
+	"_LineLabel_TieredPricing": "{0}",
+	"_LineLabel_VolumePricing": "{0}",
+	"_Locked": "不允许修改行项目",
+	"_Locked_report": "不允许修改行项目",
+	"_MinimumThreshold": "再订购点",
+	"_MinimumThreshold_report": "再订购点",
+	"_MinimumThresholdUOM": "度量单位",
+	"_MinimumThresholdUOM_report": "度量单位",
+	"_PriceConditionData": "按量定价",
+	"_PunchoutSiteName": "PunchOut网站名称",
+	"_PunchoutSiteName_report": "PunchOut网站名称",
+	"_range_text_first_line_OveragePricing": "小于",
+	"_range_text_first_line_TieredPricing": "小于或等于",
+	"_range_text_first_line_VolumePricing": "小于",
+	"_range_text_last_line_OveragePricing": "大于或等于 {0}",
+	"_range_text_last_line_TieredPricing": "大于 {0}",
+	"_range_text_last_line_VolumePricing": "大于或等于 {0}",
+	"_range_text_mid_line_OveragePricing": "大于或等于 {0} 且小于",
+	"_range_text_mid_line_TieredPricing": "大于 {0} 且小于或等于",
+	"_range_text_mid_line_VolumePricing": "大于或等于 {0} 且小于",
+	"_range_text_unique_line_OveragePricing": "全部数量",
+	"_range_text_unique_line_TieredPricing": "全部数量",
+	"_range_text_unique_line_VolumePricing": "全部数量",
+	"_ReservedStock": "预留库存",
+	"_ReservedStock_report": "预留库存",
+	"_StocktakingDateTime": "最后盘点日期",
+	"_StocktakingDateTime_report": "最后盘点日期",
+	"_SupplierPartAuxID": "供应商辅助参考编号",
+	"_SupplierPartAuxID_report": "供应商辅助参考编号",
+	"_SupplierPartID": "供应商参考编号",
+	"_SupplierPartID_report": "供应商参考编号",
+	"_TextModelDescription_OveragePricing": "应用的基本价格根据物料数量所达到的等级决定。\n超过等级下限的数量，按相应的超额单价收费。\n\n",
+	"_TextModelDescription_TieredPricing": "根据物料数量所达到的全部级别，应用了多个单价。",
+	"_TextModelDescription_VolumePricing": "根据物料总量，应用了一个单价。",
+	"_Threshold": "最低数量",
+	"_UnitPrice": "价格",
+	"_UnitPrice_report": "单价",
+	"_ValidityDate": "最早可用日期",
+	"_ValidityDate_report": "最早可用日期",
+	"_VendorNumber": "供应商编号",
+	"_VendorNumber_report": "供应商号",
+	"_VendorType": "来源类型",
+	"_VendorType_report": "来源类型",
+	"_VendorTypeVendor": "供应商",
+	"_VendorTypeWarehouse": "仓库",
+	"_WarehouseNumber": "仓库标识",
+	"_WarehouseNumber_report": "仓库标识",
+	"P2P - VendorItems": "寻源到付款 - 项目属性",
+	"P2P - VendorItems__": "寻源到付款 - 项目属性"
+}</process_zh-cn>
+      <process_pt-br>{
+	"_CompanyCode": "Código da empresa",
+	"_CompanyCode_report": "Código da empresa",
+	"_ItemNumber": "ID do item",
+	"_ItemNumber_report": "ID do item",
+	"_MovementDateTime": "Data do movimento",
+	"_MovementDateTime_report": "Data do movimento",
+	"_MovementOrigin": "Origem do movimento",
+	"_MovementOrigin_report": "Origem do movimento",
+	"_MovementType": "Tipo de movimento",
+	"_MovementType_report": "Tipo de movimento",
+	"_MovementUnitPrice": "Preço unitário",
+	"_MovementUnitPrice_report": "Preço unitário",
+	"_MovementValue": "Quantidade",
+	"_MovementValue_report": "Quantidade",
+	"_Replenishment": "Reposição",
+	"_Stocktaking": "Inventariação",
+	"_StocktakingBalancing": "Ajuste de inventário",
+	"_Transfert": "Transferência de estoque",
+	"_UnitOfMeasure": "Unidade de medida",
+	"_UnitOfMeasure_report": "Unidade de medida",
+	"_WarehouseID": "ID de armazém",
+	"_WarehouseID_report": "ID de armazém",
+	"_Withdraw": "Remoção",
+	"P2P - Inventory movements": "S2P - Movimentos de estoque",
+	"P2P - Inventory movements__": "S2P - Movimentos de estoque",
+	"_AvailableStock": "Estoque disponível",
+	"_AvailableStock_report": "Estoque disponível",
+	"_Base": "Taxa por escalões",
+	"_ColumnBase": "Preço base do nível",
+	"_ColumnLabel": "Nível",
+	"_ColumnMaxThreshold": " ",
+	"_ColumnRangeText": "Quantidades",
+	"_ColumnThreshold": " ",
+	"_ColumnUnitPrice_OveragePricing": "Preço unitário excedente",
+	"_ColumnUnitPrice_TieredPricing": "Preço unitário",
+	"_ColumnUnitPrice_VolumePricing": "Preço unitário",
+	"_Currency": "Moeda",
+	"_Currency_report": "Moeda",
+	"_CurrentStock": "Estoque atual",
+	"_CurrentStock_report": "Estoque atual",
+	"_DefaultReplenishmentVendorName": "Nome preferido do fornecedor",
+	"_DefaultReplenishmentVendorName_report": "Nome preferido do fornecedor",
+	"_DefaultReplenishmentVendorNumber": "Número preferido do fornecedor",
+	"_DefaultReplenishmentVendorNumber_report": "Número preferido do fornecedor",
+	"_EnergyConsumptionKgCO2e": "Emissões de GEE (kg CO2e)",
+	"_EnergyConsumptionKgCO2e_report": "Emissões de GEE (kg CO2e)",
+	"_ExpectedStockLevel": "Nível objetivo de estoque",
+	"_ExpectedStockLevel_report": "Nível objetivo de estoque",
+	"_ExpirationDate": "Disponível até",
+	"_ExpirationDate_report": "Disponível até",
+	"_IncomingStock": "Estoque de entrada",
+	"_IncomingStock_report": "Estoque de entrada",
+	"_InventoryMovementsChart": "Histórico de nível de estoque por armazém",
+	"_InventoryMovementsTitle": "Histórico de nível de estoque por armazém",
+	"_LeadTime": "Tempo de suprimento (dias)",
+	"_LeadTime_report": "Tempo de suprimento (dias)",
+	"_LineLabel_OveragePricing": "{0}",
+	"_LineLabel_TieredPricing": "{0}",
+	"_LineLabel_VolumePricing": "{0}",
+	"_Locked": "Bloquear para modificação",
+	"_Locked_report": "Bloqueado para modificação",
+	"_MinimumThreshold": "Ponto de novo pedido",
+	"_MinimumThreshold_report": "Ponto de novo pedido",
+	"_MinimumThresholdUOM": "Unidade de medida",
+	"_MinimumThresholdUOM_report": "Unidade de medida",
+	"_PriceConditionData": "Preço de volume",
+	"_PunchoutSiteName": "Nome do site PunchOut",
+	"_PunchoutSiteName_report": "Nome do site PunchOut",
+	"_range_text_first_line_OveragePricing": "Menor que",
+	"_range_text_first_line_TieredPricing": "Menor ou igual a",
+	"_range_text_first_line_VolumePricing": "Menor que",
+	"_range_text_last_line_OveragePricing": "Maior ou igual a {0}",
+	"_range_text_last_line_TieredPricing": "Maior que {0}",
+	"_range_text_last_line_VolumePricing": "Maior ou igual a {0}",
+	"_range_text_mid_line_OveragePricing": "Maior ou igual a {0} e menor que",
+	"_range_text_mid_line_TieredPricing": "Maior que {0} e menor ou igual a",
+	"_range_text_mid_line_VolumePricing": "Maior ou igual a {0} e menor que",
+	"_range_text_unique_line_OveragePricing": "Todas as quantidades",
+	"_range_text_unique_line_TieredPricing": "Todas as quantidades",
+	"_range_text_unique_line_VolumePricing": "Todas as quantidades",
+	"_ReservedStock": "Estoque reservado",
+	"_ReservedStock_report": "Estoque reservado",
+	"_StocktakingDateTime": "Última data de inventariação",
+	"_StocktakingDateTime_report": "Última data de inventariação",
+	"_SupplierPartAuxID": "Referência auxiliar do fornecedor",
+	"_SupplierPartAuxID_report": "Referência auxiliar do fornecedor",
+	"_SupplierPartID": "Referência de fornecedor",
+	"_SupplierPartID_report": "Referência de fornecedor",
+	"_TextModelDescription_OveragePricing": "Um preço base é aplicado de acordo com o nível alcançado pela quantidade do item. A quantidade que excede o limite inferior do nível é cobrado o preço unitário excedente correspondente.",
+	"_TextModelDescription_TieredPricing": "Vários preços unitários são aplicados com base em todos os níveis alcançados pela quantidade do item.",
+	"_TextModelDescription_VolumePricing": "Um único preço unitário é aplicado dependendo da quantidade total do item.",
+	"_Threshold": "Quantidade mínima",
+	"_UnitPrice": "Preço",
+	"_UnitPrice_report": "Preço unitário",
+	"_ValidityDate": "Disponível a partir de",
+	"_ValidityDate_report": "Disponível a partir de",
+	"_VendorNumber": "Número do fornecedor",
+	"_VendorNumber_report": "Número do fornecedor",
+	"_VendorType": "Tipo de origem",
+	"_VendorType_report": "Tipo de origem",
+	"_VendorTypeVendor": "Fornecedor",
+	"_VendorTypeWarehouse": "Armazém",
+	"_WarehouseNumber": "ID de armazém",
+	"_WarehouseNumber_report": "ID de armazém",
+	"P2P - VendorItems": "S2P - Propriedades do item",
+	"P2P - VendorItems__": "S2P - Propriedades do item"
+}</process_pt-br>
+    </lg>
+    <process>
+      <BUColumn>CompanyCode__</BUColumn>
+      <flowtype>processing</flowtype>
+      <EnableNegativeNumbersBetweenBrackets>true</EnableNegativeNumbersBetweenBrackets>
+      <homepagelabel>P2P - Inventory movements</homepagelabel>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <enablerounddecimal>true</enablerounddecimal>
+      <OverrideAllowedAttachmentExtensions>*</OverrideAllowedAttachmentExtensions>
+      <UseActionNameWithScriptApproval>true</UseActionNameWithScriptApproval>
+      <AllowUploadAttachment>0</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+      <shouldRollbackManualRecordEdits>true</shouldRollbackManualRecordEdits>
+      <shouldShowManualEditsWarning>false</shouldShowManualEditsWarning>
+      <UseCultureFormat>true</UseCultureFormat>
+      <TransportName>CustomTable</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+    </process>
+    <ui>
+      <customscriptIncludedScripts>[LIB_P2P_CUSTOMIZATION_TABLES_CLIENT]</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Sys/Sys_Helpers</customscriptIncludedScripts>
+      <CustomScript>"use strict";
+var CustomScript;
+(function (CustomScript) {
+    function Start() {
+        Sys.Helpers.TryCallFunction("Lib.P2P.Customization.Tables.Client.Common.OnHTMLScriptEnd");
+    }
+    Start();
+})(CustomScript || (CustomScript = {}));
+//# sourceMappingURL=customscript.js.map</CustomScript>
+      <restorationPanel>DataPanel</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 35,
+	"*": {
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"splitterType": "simple-v",
+				"backColor": "text-backgroundcolor-default",
+				"style": null,
+				"footerStyle": "default",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 2,
+					"options": {
+						"hidePanelsMenu": false,
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 3,
+					"options": {
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 4,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-center": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 5,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"width": "100%"
+										},
+										"hidden": false,
+										"hideSeparator": true
+									},
+									"*": {
+										"form-content-center-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 6,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"DataPanel": {
+													"type": "PanelData",
+													"data": [],
+													"stamp": 7,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": false,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"sameHeightAsSiblings": false,
+														"backgroundcolor": "default",
+														"labelsAlignment": "right",
+														"label": "_Document data",
+														"version": 0
+													},
+													"*": {
+														"FieldsManager": {
+															"type": "FieldsManager",
+															"data": [],
+															"stamp": 8,
+															"options": {
+																"version": 0,
+																"controlsAssociation": {
+																	"CompanyCode__": "LabelCompanyCode__",
+																	"LabelCompanyCode__": "CompanyCode__",
+																	"ItemNumber__": "LabelItemNumber__",
+																	"LabelItemNumber__": "ItemNumber__",
+																	"WarehouseID__": "LabelWarehouseID__",
+																	"LabelWarehouseID__": "WarehouseID__",
+																	"MovementValue__": "LabelMovementValue__",
+																	"LabelMovementValue__": "MovementValue__",
+																	"MovementUnitPrice__": "LabelMovementUnitPrice__",
+																	"LabelMovementUnitPrice__": "MovementUnitPrice__",
+																	"Currency__": "LabelCurrency__",
+																	"LabelCurrency__": "Currency__",
+																	"MovementDateTime__": "LabelMovementDateTime__",
+																	"LabelMovementDateTime__": "MovementDateTime__",
+																	"UnitOfMeasure__": "LabelUnitOfMeasure__",
+																	"LabelUnitOfMeasure__": "UnitOfMeasure__",
+																	"MovementOrigin__": "LabelMovementOrigin__",
+																	"LabelMovementOrigin__": "MovementOrigin__",
+																	"MovementType__": "LabelMovementType__",
+																	"LabelMovementType__": "MovementType__",
+																	"LineNumber__": "LabelLineNumber__",
+																	"LabelLineNumber__": "LineNumber__"
+																}
+															},
+															"*": {
+																"Grid": {
+																	"type": "GridLayout",
+																	"data": [
+																		"fields"
+																	],
+																	"stamp": 9,
+																	"options": {
+																		"version": 0,
+																		"lines": 11,
+																		"columns": 2,
+																		"ctrlsPos": {
+																			"LabelCompanyCode__": {
+																				"line": 1,
+																				"column": 1
+																			},
+																			"CompanyCode__": {
+																				"line": 1,
+																				"column": 2
+																			},
+																			"LabelItemNumber__": {
+																				"line": 2,
+																				"column": 1
+																			},
+																			"ItemNumber__": {
+																				"line": 2,
+																				"column": 2
+																			},
+																			"LabelWarehouseID__": {
+																				"line": 3,
+																				"column": 1
+																			},
+																			"WarehouseID__": {
+																				"line": 3,
+																				"column": 2
+																			},
+																			"LabelMovementValue__": {
+																				"line": 4,
+																				"column": 1
+																			},
+																			"MovementValue__": {
+																				"line": 4,
+																				"column": 2
+																			},
+																			"LabelMovementUnitPrice__": {
+																				"line": 5,
+																				"column": 1
+																			},
+																			"MovementUnitPrice__": {
+																				"line": 5,
+																				"column": 2
+																			},
+																			"LabelCurrency__": {
+																				"line": 6,
+																				"column": 1
+																			},
+																			"Currency__": {
+																				"line": 6,
+																				"column": 2
+																			},
+																			"LabelMovementDateTime__": {
+																				"line": 7,
+																				"column": 1
+																			},
+																			"MovementDateTime__": {
+																				"line": 7,
+																				"column": 2
+																			},
+																			"LabelUnitOfMeasure__": {
+																				"line": 8,
+																				"column": 1
+																			},
+																			"UnitOfMeasure__": {
+																				"line": 8,
+																				"column": 2
+																			},
+																			"LabelMovementOrigin__": {
+																				"line": 9,
+																				"column": 1
+																			},
+																			"MovementOrigin__": {
+																				"line": 9,
+																				"column": 2
+																			},
+																			"LabelMovementType__": {
+																				"line": 10,
+																				"column": 1
+																			},
+																			"MovementType__": {
+																				"line": 10,
+																				"column": 2
+																			},
+																			"LabelLineNumber__": {
+																				"line": 11,
+																				"column": 1
+																			},
+																			"LineNumber__": {
+																				"line": 11,
+																				"column": 2
+																			}
+																		},
+																		"colspans": [
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[]
+																		]
+																	},
+																	"*": {
+																		"LabelCompanyCode__": {
+																			"type": "Label",
+																			"data": [
+																				"CompanyCode__"
+																			],
+																			"stamp": 11,
+																			"options": {
+																				"label": "_CompanyCode",
+																				"version": 0
+																			}
+																		},
+																		"CompanyCode__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"CompanyCode__"
+																			],
+																			"stamp": 10,
+																			"options": {
+																				"label": "_CompanyCode",
+																				"version": 1,
+																				"autoCompleteSearchMode": "contains",
+																				"searchMode": "contains",
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"minNbLines": 1,
+																				"maxNbLines": 1,
+																				"PreFillFTS": true,
+																				"RestrictSearch": true,
+																				"fTSmaxRecords": "20",
+																				"browsable": true
+																			}
+																		},
+																		"LabelItemNumber__": {
+																			"type": "Label",
+																			"data": [
+																				"ItemNumber__"
+																			],
+																			"stamp": 13,
+																			"options": {
+																				"label": "_ItemNumber",
+																				"version": 0
+																			}
+																		},
+																		"ItemNumber__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"ItemNumber__"
+																			],
+																			"stamp": 12,
+																			"options": {
+																				"label": "_ItemNumber",
+																				"version": 1,
+																				"autoCompleteSearchMode": "contains",
+																				"searchMode": "contains",
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"minNbLines": 1,
+																				"maxNbLines": 1,
+																				"fTSmaxRecords": "20",
+																				"browsable": true,
+																				"PreFillFTS": true,
+																				"RestrictSearch": true
+																			}
+																		},
+																		"LabelWarehouseID__": {
+																			"type": "Label",
+																			"data": [
+																				"WarehouseID__"
+																			],
+																			"stamp": 15,
+																			"options": {
+																				"label": "_WarehouseID",
+																				"version": 0
+																			}
+																		},
+																		"WarehouseID__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"WarehouseID__"
+																			],
+																			"stamp": 14,
+																			"options": {
+																				"label": "_WarehouseID",
+																				"version": 1,
+																				"autoCompleteSearchMode": "startswith",
+																				"searchMode": "matches",
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"minNbLines": 1,
+																				"maxNbLines": 1,
+																				"fTSmaxRecords": "20",
+																				"browsable": true,
+																				"PreFillFTS": true
+																			}
+																		},
+																		"LabelMovementValue__": {
+																			"type": "Label",
+																			"data": [
+																				"MovementValue__"
+																			],
+																			"stamp": 17,
+																			"options": {
+																				"label": "_MovementValue",
+																				"version": 0
+																			}
+																		},
+																		"MovementValue__": {
+																			"type": "Decimal",
+																			"data": [
+																				"MovementValue__"
+																			],
+																			"stamp": 16,
+																			"options": {
+																				"label": "_MovementValue",
+																				"version": 2,
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"integer": false,
+																				"precision_internal": 2,
+																				"precision_current": 2,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"enablePlusMinus": false,
+																				"enableRoundedStyle": false,
+																				"forceRoundCurrencyPrecision": false
+																			}
+																		},
+																		"LabelMovementUnitPrice__": {
+																			"type": "Label",
+																			"data": [
+																				"MovementUnitPrice__"
+																			],
+																			"stamp": 19,
+																			"options": {
+																				"label": "_MovementUnitPrice",
+																				"version": 0
+																			}
+																		},
+																		"MovementUnitPrice__": {
+																			"type": "Decimal",
+																			"data": [
+																				"MovementUnitPrice__"
+																			],
+																			"stamp": 18,
+																			"options": {
+																				"label": "_MovementUnitPrice",
+																				"version": 2,
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"integer": false,
+																				"precision_internal": 5,
+																				"precision_current": 5,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"enableRoundedStyle": false,
+																				"precision_min": 2,
+																				"forceRoundCurrencyPrecision": false,
+																				"enablePlusMinus": false
+																			}
+																		},
+																		"LabelCurrency__": {
+																			"type": "Label",
+																			"data": [
+																				"Currency__"
+																			],
+																			"stamp": 21,
+																			"options": {
+																				"label": "_Currency",
+																				"version": 0
+																			}
+																		},
+																		"Currency__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"Currency__"
+																			],
+																			"stamp": 20,
+																			"options": {
+																				"label": "_Currency",
+																				"version": 1,
+																				"autoCompleteSearchMode": "contains",
+																				"searchMode": "contains",
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"minNbLines": 1,
+																				"maxNbLines": 1,
+																				"PreFillFTS": true,
+																				"fTSmaxRecords": "20",
+																				"browsable": true
+																			}
+																		},
+																		"LabelMovementDateTime__": {
+																			"type": "Label",
+																			"data": [
+																				"MovementDateTime__"
+																			],
+																			"stamp": 23,
+																			"options": {
+																				"label": "_MovementDateTime",
+																				"version": 0
+																			}
+																		},
+																		"MovementDateTime__": {
+																			"type": "RealDateTime",
+																			"data": [
+																				"MovementDateTime__"
+																			],
+																			"stamp": 22,
+																			"options": {
+																				"label": "_MovementDateTime",
+																				"readonly": true,
+																				"displayLongFormat": false,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"version": 0
+																			}
+																		},
+																		"LabelUnitOfMeasure__": {
+																			"type": "Label",
+																			"data": [
+																				"UnitOfMeasure__"
+																			],
+																			"stamp": 25,
+																			"options": {
+																				"label": "_UnitOfMeasure",
+																				"version": 0
+																			}
+																		},
+																		"UnitOfMeasure__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"UnitOfMeasure__"
+																			],
+																			"stamp": 24,
+																			"options": {
+																				"label": "_UnitOfMeasure",
+																				"version": 1,
+																				"autoCompleteSearchMode": "startswith",
+																				"searchMode": "matches",
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"minNbLines": 1,
+																				"maxNbLines": 1,
+																				"fTSmaxRecords": "20",
+																				"browsable": true
+																			}
+																		},
+																		"LabelMovementOrigin__": {
+																			"type": "Label",
+																			"data": [
+																				"MovementOrigin__"
+																			],
+																			"stamp": 27,
+																			"options": {
+																				"label": "_MovementOrigin",
+																				"version": 0
+																			}
+																		},
+																		"MovementOrigin__": {
+																			"type": "ShortText",
+																			"data": [
+																				"MovementOrigin__"
+																			],
+																			"stamp": 26,
+																			"options": {
+																				"label": "_MovementOrigin",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 1,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"browsable": false
+																			}
+																		},
+																		"LabelMovementType__": {
+																			"type": "Label",
+																			"data": [
+																				"MovementType__"
+																			],
+																			"stamp": 29,
+																			"options": {
+																				"label": "_MovementType",
+																				"version": 0
+																			}
+																		},
+																		"MovementType__": {
+																			"type": "ComboBox",
+																			"data": [
+																				"MovementType__"
+																			],
+																			"stamp": 28,
+																			"options": {
+																				"label": "_MovementType",
+																				"possibleValues": {
+																					"0": "",
+																					"1": "_Withdraw",
+																					"2": "_Stocktaking",
+																					"3": "_Replenishment",
+																					"4": "_Transfert",
+																					"5": "_StocktakingBalancing"
+																				},
+																				"maxNbLinesToDisplay": 10,
+																				"version": 1,
+																				"keyValueMode": true,
+																				"possibleKeys": {
+																					"0": 0,
+																					"1": "Withdraw",
+																					"2": "Stocktaking",
+																					"3": "Replenishment",
+																					"4": "Transfert",
+																					"5": "StocktakingBalancing"
+																				},
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"DataSourceOrigin": "Standalone",
+																				"DisplayedColumns": ""
+																			}
+																		},
+																		"LabelLineNumber__": {
+																			"type": "Label",
+																			"data": [
+																				"LineNumber__"
+																			],
+																			"stamp": 31,
+																			"options": {
+																				"label": "_LineNumber",
+																				"version": 0
+																			}
+																		},
+																		"LineNumber__": {
+																			"type": "ShortText",
+																			"data": [
+																				"LineNumber__"
+																			],
+																			"stamp": 30,
+																			"options": {
+																				"label": "_LineNumber",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 1,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"browsable": false,
+																				"autocompletable": false
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 32,
+					"options": {
+						"splitterType": "simple-h",
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 33,
+							"options": {
+								"label": "_Save",
+								"action": "savequit",
+								"submit": true,
+								"shortCut": "S",
+								"textSize": "S",
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 34,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"shortCut": "Q",
+								"textSize": "S",
+								"version": 0
+							}
+						},
+						"Delete": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 35,
+							"options": {
+								"label": "_Delete",
+								"action": "delete",
+								"submit": true,
+								"disabled": true,
+								"textSize": "S",
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <field deleted="0" format="" guid="FW45FP000PA9" id="K6FQT400153E" label="_CompanyCode" length="50" name="CompanyCode__" originalProcessID="ZOL4FP000PA9" precision="0" processid="J6FQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AK6FQT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/CompanyCode__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:25</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_CompanyCode</Label>
+        <Alias>AK6FQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>false</Editable>
+        <TableName>CT#BD8QT400153E</TableName>
+        <SortOrder>
+        </SortOrder>
+        <DisplayedColumns>CompanyCode__|CompanyName__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>CompanyCode__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ExposedColumns>
+        </ExposedColumns>
+        <ProcessName>PurchasingCompanycodes__</ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <KeyAttribute>
+        </KeyAttribute>
+        <CustomFilter>
+        </CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="ZP3IG0000SG1" id="L6FQT400153E" label="_Currency" length="50" name="Currency__" originalProcessID="ZOL4FP000PA9" precision="0" processid="J6FQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AL6FQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Currency__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:25</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Currency</Label>
+        <Alias>AL6FQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>false</Editable>
+        <TableName>CT#FF8QT400153E</TableName>
+        <SortOrder>ASC</SortOrder>
+        <DisplayedColumns>CurrencyFrom__|RatioFrom__|RatioTo__|Rate__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>CurrencyFrom__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ExposedColumns>
+        </ExposedColumns>
+        <ProcessName>P2P - Exchange rate__</ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <KeyAttribute>
+        </KeyAttribute>
+        <CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="LMG4FP000PA9" id="M6FQT400153E" label="_ItemNumber" length="50" name="ItemNumber__" originalProcessID="IPL4FP000PA9" precision="0" processid="J6FQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AM6FQT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ItemNumber__</fullname>
+        <jointable>P2P - CatalogItems__</jointable>
+        <jointableid>CT#OMBQT400153E</jointableid>
+        <defaultvalue>
+        </defaultvalue>
+        <joincondition>(&amp;(source.ItemNumber__=dest.ItemNumber__)(source.CompanyCode__=dest.CompanyCode__))</joincondition>
+        <RecordLastWrite>2026-11-04 11:10:25</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_ItemNumber</Label>
+        <Alias>AM6FQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>false</Editable>
+        <TableName>CT#OMBQT400153E</TableName>
+        <SortOrder>
+        </SortOrder>
+        <DisplayedColumns>Description__|CompanyCode__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>ItemNumber__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ExposedColumns>
+        </ExposedColumns>
+        <ProcessName>P2P - CatalogItems__</ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <KeyAttribute>
+        </KeyAttribute>
+        <CustomFilter>
+        </CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="SK05FP000PA9" id="N6FQT400153E" label="_LineNumber_report" length="50" name="LineNumber__" originalProcessID="ZOL4FP000PA9" precision="0" processid="J6FQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AN6FQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/LineNumber__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:25</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_LineNumber_report</Label>
+        <Alias>AN6FQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="UOL4FP000PA9" id="O6FQT400153E" label="_MovementDateTime_report" length="0" name="MovementDateTime__" originalProcessID="ZOL4FP000PA9" precision="0" processid="J6FQT400153E" submitable="1" type="DATETIME">
+    <properties>
+      <db>
+        <alias>AO6FQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/MovementDateTime__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:25</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_MovementDateTime_report</Label>
+        <Alias>AO6FQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Date</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="WOL4FP000PA9" id="P6FQT400153E" label="_MovementOrigin_report" length="50" name="MovementOrigin__" originalProcessID="ZOL4FP000PA9" precision="0" processid="J6FQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AP6FQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/MovementOrigin__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:25</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_MovementOrigin_report</Label>
+        <Alias>AP6FQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="YOL4FP000PA9" id="Q6FQT400153E" label="_MovementType" length="50" name="MovementType__" originalProcessID="ZOL4FP000PA9" precision="0" processid="J6FQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AQ6FQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/MovementType__</fullname>
+        <defaultvalue>0</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:25</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Type>webaccess.Process.Columns.WithPossibleValues</Type>
+        <Label>_MovementType</Label>
+        <Alias>AQ6FQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <TableName>
+        </TableName>
+        <DisplayedColumns>
+        </DisplayedColumns>
+        <DataSourceOrigin>Standalone</DataSourceOrigin>
+        <possibleKeys>0
+Withdraw
+Stocktaking
+Replenishment
+Transfert
+StocktakingBalancing</possibleKeys>
+        <SavedColumn>
+        </SavedColumn>
+        <possibleValues>
+_Withdraw
+_Stocktaking
+_Replenishment
+_Transfert
+_StocktakingBalancing</possibleValues>
+        <ProcessName>
+        </ProcessName>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="Q69IG0000SG1" id="R6FQT400153E" label="_MovementUnitPrice_report" length="17" name="MovementUnitPrice__" originalProcessID="ZOL4FP000PA9" precision="5" processid="J6FQT400153E" submitable="1" type="DECIMAL">
+    <properties>
+      <db>
+        <alias>AR6FQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/MovementUnitPrice__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:25</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_MovementUnitPrice_report</Label>
+        <Alias>AR6FQT400153E</Alias>
+        <DecimalPrecision vartype="INT">5</DecimalPrecision>
+        <DecimalPrecisionMinDisplay>2</DecimalPrecisionMinDisplay>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="TOL4FP000PA9" id="S6FQT400153E" label="_MovementValue_report" length="17" name="MovementValue__" originalProcessID="ZOL4FP000PA9" precision="2" processid="J6FQT400153E" submitable="1" type="DECIMAL">
+    <properties>
+      <db>
+        <alias>AS6FQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/MovementValue__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:25</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_MovementValue_report</Label>
+        <Alias>AS6FQT400153E</Alias>
+        <DecimalPrecision vartype="INT">2</DecimalPrecision>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="VOL4FP000PA9" id="T6FQT400153E" label="_UnitOfMeasure" length="50" name="UnitOfMeasure__" originalProcessID="ZOL4FP000PA9" precision="0" processid="J6FQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AT6FQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/UnitOfMeasure__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:10:25</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_UnitOfMeasure</Label>
+        <Alias>AT6FQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>false</Editable>
+        <TableName>CT#DGBQT400153E</TableName>
+        <SortOrder>
+        </SortOrder>
+        <DisplayedColumns>CompanyCode__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>UnitOfMeasure__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ExposedColumns>
+        </ExposedColumns>
+        <ProcessName>P2P - UnitOfMeasure__</ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <KeyAttribute>
+        </KeyAttribute>
+        <CustomFilter>
+        </CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="KPL4FP000PA9" id="U6FQT400153E" label="_WarehouseID_report" length="50" name="WarehouseID__" originalProcessID="IPL4FP000PA9" precision="0" processid="J6FQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AU6FQT400153E</alias>
+        <index vartype="INT">1</index>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/WarehouseID__</fullname>
+        <jointable>P2P - Warehouse__</jointable>
+        <jointableid>CT#RO8QT400153E</jointableid>
+        <defaultvalue>
+        </defaultvalue>
+        <joincondition>(&amp;(source.CompanyCode__=dest.CompanyCode__)(source.WarehouseID__=dest.WarehouseID__))</joincondition>
+        <RecordLastWrite>2026-11-04 11:10:25</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_WarehouseID_report</Label>
+        <Alias>AU6FQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>false</Editable>
+        <TableName>CT#RO8QT400153E</TableName>
+        <SortOrder>
+        </SortOrder>
+        <DisplayedColumns>WarehouseID__|Name__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>WarehouseID__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ExposedColumns>
+        </ExposedColumns>
+        <ProcessName>P2P - Warehouse__</ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <KeyAttribute>
+        </KeyAttribute>
+        <CustomFilter>
+        </CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <type id="KOLHG0000M4O" name="CT">
+  </type>
+</process>

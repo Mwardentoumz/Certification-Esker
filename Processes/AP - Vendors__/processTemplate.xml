@@ -1,0 +1,935 @@
+<process accountid="" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:05:50" deleted="0" eskerapplication="P2P" global="0" id="NoID" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="AP - Vendors__" needvalidation="1" ootofilter="" ootoversion="0" originalProcessID="PSSO86557124" ownerid="" ownerpb="" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomTable" upgradable="1" userid="" version="1" visibility="0">
+	<properties>
+		<dbIndex>
+			<Join>&lt;Index Join="1"&gt;
+				&lt;Ref Name="CompanyCode__" Option="ASC"/&gt;
+				&lt;Ref Name="Number__" Option="ASC"/&gt;
+				&lt;/Index&gt;</Join>
+			<AUTO_AAY8QT400153EA>&lt;Index&gt;&lt;Ref Name="AAY8QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AAY8QT400153EA>
+			<AUTO_ABY8QT400153EA>&lt;Index&gt;&lt;Ref Name="ABY8QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_ABY8QT400153EA>
+			<AUTO_AGY8QT400153EA>&lt;Index&gt;&lt;Ref Name="AGY8QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AGY8QT400153EA>
+			<AUTO_AHY8QT400153EA>&lt;Index&gt;&lt;Ref Name="AHY8QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AHY8QT400153EA>
+			<AUTO_AKY8QT400153EA>&lt;Index&gt;&lt;Ref Name="AKY8QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AKY8QT400153EA>
+			<AUTO_ALY8QT400153EA>&lt;Index&gt;&lt;Ref Name="ALY8QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_ALY8QT400153EA>
+			<AUTO_AMY8QT400153EA>&lt;Index&gt;&lt;Ref Name="AMY8QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AMY8QT400153EA>
+			<AUTO_AOY8QT400153EA>&lt;Index&gt;&lt;Ref Name="AOY8QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AOY8QT400153EA>
+			<AUTO_ASY8QT400153EA>&lt;Index&gt;&lt;Ref Name="ASY8QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_ASY8QT400153EA>
+			<AUTO_ATX8QT400153EA>&lt;Index&gt;&lt;Ref Name="ATX8QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_ATX8QT400153EA>
+			<AUTO_ATY8QT400153EA>&lt;Index&gt;&lt;Ref Name="ATY8QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_ATY8QT400153EA>
+			<AUTO_AUX8QT400153EA>&lt;Index&gt;&lt;Ref Name="AUX8QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AUX8QT400153EA>
+			<AUTO_AVX8QT400153EA>&lt;Index&gt;&lt;Ref Name="AVX8QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AVX8QT400153EA>
+			<AUTO_AWY8QT400153EA>&lt;Index&gt;&lt;Ref Name="AWY8QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AWY8QT400153EA>
+			<AUTO_AYX8QT400153EA>&lt;Index&gt;&lt;Ref Name="AYX8QT400153E" Option="ASC"/&gt;&lt;/Index&gt;</AUTO_AYX8QT400153EA>
+		</dbIndex>
+		<lg>
+			<!--*.xml-->
+		</lg>
+		<openInProcess>
+			<process>{name: "Vendor_Company_Extended_Properties__", withMessage:true, multiple:false, filter:"(&amp;(|(CompanyCode__=)(!(CompanyCode__=*))(CompanyCode__=%[CompanyCode__]))(VendorNumber__=%[Number__]))"}</process>
+		</openInProcess>
+		<process>
+			<BUColumn>CompanyCode__</BUColumn>
+			<flowtype>processing</flowtype>
+			<homepagelabel>AP - Vendors</homepagelabel>
+			<upgradable>yes</upgradable>
+			<instanciable>1</instanciable>
+			<disableScriptModification>true</disableScriptModification>
+			<enableUpgradableDesign>true</enableUpgradableDesign>
+			<OverrideAllowedAttachmentExtensions>*</OverrideAllowedAttachmentExtensions>
+			<AllowUploadAttachment>0</AllowUploadAttachment>
+			<AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+			<shouldRollbackManualRecordEdits>true</shouldRollbackManualRecordEdits>
+			<shouldShowManualEditsWarning>false</shouldShowManualEditsWarning>
+			<UseCultureFormat>true</UseCultureFormat>
+			<TransportName>CustomTable</TransportName>
+			<LayoutVersion>1.0</LayoutVersion>
+		</process>
+		<ui>
+			<CustomScriptDebug>false</CustomScriptDebug>
+			<customscriptIncludedScripts>Lib_P2P_Address_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_Purchasing_Vendor_Client_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_P2P_UNSPSC_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_P2P_UNSPSC_Client_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_P2P_UNSPSC_Vendor_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_P2P_UNSPSC_Vendor_Client_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Lib_P2P_UNSPSC_RecordManager_Client_V12.0.566.0</customscriptIncludedScripts>
+			<customscriptIncludedScripts>[LIB_P2P_CUSTOMIZATION_TABLES_CLIENT]</customscriptIncludedScripts>
+			<customscriptIncludedScripts>Sys/Sys_Helpers</customscriptIncludedScripts>
+			<CustomScriptReadonly>true</CustomScriptReadonly>
+			<CustomScript>
+				<!--customscript.js--></CustomScript>
+			<restorationPanel>DataPanel</restorationPanel>
+			<layout>
+				<!--layout.json--></layout>
+		</ui>
+	</properties>
+	<type id="NoID" name="CT" />
+	<field deleted="0" format="" guid="WGVD86557128" id="NoID" label="City" length="35" name="City__" originalProcessID="PSSO86557124" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/City__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>City</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<required>false</required>
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="AYLN667511" id="NoID" label="Company code" length="50" name="CompanyCode__" originalProcessID="PSSO86557124" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/CompanyCode__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>Company code</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>true</Editable>
+				<required>false</required>
+				<TableName>CT#NOID</TableName>
+				<SortOrder />
+				<DisplayedColumns>CompanyCode__|CompanyName__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<SavedColumn>CompanyCode__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>PurchasingCompanycodes__</ProcessName>
+				<CustomFilter />
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"5107","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PKEKG0000SG1" id="NoID" label="_ComplianceRiskIdentifier_report" length="50" name="ComplianceRiskIdentifier__" originalProcessID="PSSO86557124" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ComplianceRiskIdentifier__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_ComplianceRiskIdentifier_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="NIZF86557131" id="NoID" label="_Country code" length="3" name="Country__" originalProcessID="PSSO86557124" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Country__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Country code</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<required>false</required>
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="UFHV18289" id="NoID" label="Currency" length="5" name="Currency__" originalProcessID="PSSO86557124" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Currency__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>Currency</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="L2T000001536" id="NoID" label="_DisableUNSPSCThirdPartySynchronization_report" length="0" name="DisableUNSPSCThirdPartySynchronization__" originalProcessID="PSSO86557124" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/DisableUNSPSCThirdPartySynchronization__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_DisableUNSPSCThirdPartySynchronization_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="A9AW00000M4H" id="NoID" label="_DUNSNumber_report" length="9" name="DUNSNumber__" originalProcessID="PSSO86557124" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/DUNSNumber__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_DUNSNumber_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<required>false</required>
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="HMPS86561955" id="NoID" label="Email" length="80" name="Email__" originalProcessID="PSSO86557124" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Email__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>Email</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<required>false</required>
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="XIBC86557133" id="NoID" label="Fax number" length="32" name="FaxNumber__" originalProcessID="PSSO86557124" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/FaxNumber__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>Fax number</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<required>false</required>
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="VAOZ18287" id="NoID" label="General account" length="50" name="GeneralAccount__" originalProcessID="PSSO86557124" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/GeneralAccount__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>General account</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="W6G200000YRL" id="NoID" label="_GHGEmissionFactor_report" length="17" name="GHGEmissionFactor__" originalProcessID="PSSO86557124" precision="6" processid="" submitable="1" type="DECIMAL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/GHGEmissionFactor__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_GHGEmissionFactor_report</Label>
+				<Alias />
+				<DecimalPrecision vartype="INT">6</DecimalPrecision>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Number</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="L74C00001535" id="NoID" label="_LastLifeCycleStatusChangeDate_report" length="0" name="LastLifeCycleStatusChangeDate__" originalProcessID="PSSO86557124" precision="0" processid="" submitable="1" type="DATE">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/LastLifeCycleStatusChangeDate__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_LastLifeCycleStatusChangeDate_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+				<DoNotShowInDM>1</DoNotShowInDM>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>Date</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="HHV200001535" id="NoID" label="_LifeCycleComment_report" length="32766" name="LifeCycleComment__" originalProcessID="PSSO86557124" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/LifeCycleComment__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_LifeCycleComment_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="GHV200001535" id="NoID" label="_LifeCycleStatus_report" length="50" name="LifeCycleStatusCode__" originalProcessID="PSSO86557124" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/LifeCycleStatusCode__</fullname>
+				<defaultvalue>ACTIVE</defaultvalue>
+			</db>
+			<extrainfo>
+				<Type>webaccess.Process.Columns.WithPossibleValues</Type>
+				<Label>_LifeCycleStatus_report</Label>
+				<Alias />
+				<Behavior>Default</Behavior>
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<TableName />
+				<DisplayedColumns />
+				<DisplayedColumnsIds />
+				<DataSourceOrigin>Standalone</DataSourceOrigin>
+				<possibleKeys>ACTIVE
+BLOCKED
+DISABLED</possibleKeys>
+				<SavedColumn />
+				<SavedColumnId />
+				<possibleValues>_Active
+_Blocked
+_Disabled</possibleValues>
+				<ProcessName />
+				<KeyColumnId />
+				<lazyTranslatable />
+			</field>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"_LifeCycleStatusCode_Help","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="URQF86557126" id="NoID" label="Name" length="50" name="Name__" originalProcessID="PSSO86557124" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Name__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>Name</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<required>false</required>
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="WRZN86557125" id="NoID" label="Number" length="50" name="Number__" originalProcessID="PSSO86557124" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Number__</fullname>
+				<jointable>Vendor_company_extended_properties__</jointable>
+				<jointableid>CT#SV8QT400153E</jointableid>
+				<defaultvalue />
+				<joincondition>(&amp;(source.Number__=dest.VendorNumber__)(|(source.CompanyCode__=dest.CompanyCode__)(dest.CompanyCode__=)(dest.CompanyCode__!=*)))</joincondition>
+			</db>
+			<extrainfo>
+				<Label>Number</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<required>false</required>
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="XOMS18290" id="NoID" label="Parafiscal tax" length="0" name="ParafiscalTax__" originalProcessID="PSSO86557124" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ParafiscalTax__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>Parafiscal tax</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="YYZP86561684" id="NoID" label="Payment terms" length="50" name="PaymentTermCode__" originalProcessID="PSSO86557124" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/PaymentTermCode__</fullname>
+				<jointable>AP - Payment terms__</jointable>
+				<jointableid>CT#QR8QT400153E</jointableid>
+				<defaultvalue />
+				<joincondition>(&amp;(source.PaymentTermCode__=dest.PaymentTermCode__)(source.CompanyCode__=dest.CompanyCode__))</joincondition>
+			</db>
+			<extrainfo>
+				<Label>Payment terms</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>true</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder>ASC</SortOrder>
+				<DisplayedColumns>PaymentTermCode__|Description__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<SavedColumn>PaymentTermCode__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>AP - Payment terms__</ProcessName>
+				<CustomFilter>(CompanyCode__=%[CompanyCode__])</CustomFilter>
+			</field>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="ABGP86557132" id="NoID" label="Phone number" length="32" name="PhoneNumber__" originalProcessID="PSSO86557124" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/PhoneNumber__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>Phone number</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<required>false</required>
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="QCXE86557129" id="NoID" label="Postal code" length="10" name="PostalCode__" originalProcessID="PSSO86557124" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/PostalCode__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>Postal code</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<required>false</required>
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PHQG42294874" id="NoID" label="PostOfficeBox" length="20" name="PostOfficeBox__" originalProcessID="PSSO86557124" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/PostOfficeBox__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>PostOfficeBox</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="JWQV86560120" id="NoID" label="Preferred invoice type" length="50" name="PreferredInvoiceType__" originalProcessID="PSSO86557124" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/PreferredInvoiceType__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>Preferred invoice type</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<required>false</required>
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="CEYN86557130" id="NoID" label="Region" length="50" name="Region__" originalProcessID="PSSO86557124" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Region__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>Region</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<required>false</required>
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="O98C77100SG1" id="NoID" label="_ShowAlerts" length="0" name="ShowAlerts__" originalProcessID="PSSO86557124" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ShowAlerts__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_ShowAlerts</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<required>false</required>
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="BWMJG0000M4C" id="NoID" label="_ShowComplianceAlerts" length="0" name="ShowComplianceAlerts__" originalProcessID="PSSO86557124" precision="0" processid="" submitable="1" type="BOOL">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/ShowComplianceAlerts__</fullname>
+				<defaultvalue>false</defaultvalue>
+			</db>
+			<extrainfo>
+				<Label>_ShowComplianceAlerts</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>Boolean</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="OZ7KG0000VLT" id="NoID" label="_Siret" length="20" name="Siret__" originalProcessID="PSSO86557124" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Siret__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Siret</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<required>false</required>
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="XTBL86557127" id="NoID" label="Street" length="50" name="Street__" originalProcessID="PSSO86557124" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Street__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>Street</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<required>false</required>
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="NZK2FP000IYP" id="NoID" label="_Sub report" length="50" name="Sub__" originalProcessID="PSSO86557124" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/Sub__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>_Sub report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="PHQG18297" id="NoID" label="Supplier due" length="50" name="SupplierDue__" originalProcessID="PSSO86557124" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/SupplierDue__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>Supplier due</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>false</Editable>
+				<TableName>CT#NOID</TableName>
+				<SortOrder />
+				<DisplayedColumns>Code__|CompanyCode__|Description__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<SavedColumn>Code__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>AP - Supplier due__</ProcessName>
+				<CustomFilter>CompanyCode__=%[CompanyCode__]</CustomFilter>
+			</field>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="MMLZ18288" id="NoID" label="Tax system" length="10" name="TaxSystem__" originalProcessID="PSSO86557124" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/TaxSystem__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>Tax system</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="EGIO86557134" id="NoID" label="VAT number" length="20" name="VATNumber__" originalProcessID="PSSO86557124" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<index vartype="INT">1</index>
+				<noxml>1</noxml>
+				<fullname>/job/processfields/VATNumber__</fullname>
+				<defaultvalue />
+			</db>
+			<extrainfo>
+				<Label>VAT number</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<required>false</required>
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+			</gdr>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+	<field deleted="0" format="" guid="VCAP00000001" id="NoID" label="_VendorCategory_report" length="100" name="VendorCategory__" originalProcessID="PSSO86557124" precision="0" processid="" submitable="1" type="STR">
+		<properties>
+			<db>
+				<alias />
+				<noxml>1</noxml>
+				<fullname>/job/processfields/VendorCategory__</fullname>
+				<jointable>P2P - Vendor Category__</jointable>
+				<defaultvalue />
+				<joincondition>(&amp;(source.VendorCategory__=dest.Code__))</joincondition>
+			</db>
+			<extrainfo>
+				<Label>_VendorCategory_report</Label>
+				<Alias />
+				<ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+			</extrainfo>
+			<field>
+				<Editable>true</Editable>
+				<SortOrder>ASC</SortOrder>
+				<DisplayedColumns>Code__</DisplayedColumns>
+				<DisplayedColumnsIds />
+				<SavedColumn>Code__</SavedColumn>
+				<SavedColumnId />
+				<ProcessName>P2P - Vendor Category__</ProcessName>
+				<CustomFilter />
+			</field>
+			<gdr>
+				<VarType>Area</VarType>
+				<DisableAutolearn>1</DisableAutolearn>
+			</gdr>
+			<help>
+				<data />
+			</help>
+			<ui>
+				<_type>String</_type>
+				<automatic>true</automatic>
+			</ui>
+		</properties>
+	</field>
+</process>

@@ -1,0 +1,4561 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="20093069" allowrepairprocess="0" builtin="0" builtinversion="0" carriesapplicationversion="0" creationdatetime="2026-11-04 11:09:18" deleted="0" eskerapplication="P2P" global="0" id="CLDQT400153E" keepcustomization="0" keepcustompositions="0" keepfieldsonly="1" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="P2P - Expense type__" needvalidation="0" ootofilter="" ootoversion="1" originalProcessID="IYY1FP000FSX" ownerid="cn=.su@20093069,ou=DEV,ou=demoprocess_thivolet,ou=05324291,ou=ESK,s=eoo" ownerpb="OnDemand AddressBook" public="1" pushnotification="0" reuseengine="0" sprintversion="5.366.0" transportname="CustomTable" upgradable="1" userid="0" version="1" visibility="0">
+  <properties>
+    <dataConditions>
+      <listDataConditions>
+				&lt;dataCondition&gt;
+					&lt;tableName&gt;P2P - Global Application Settings__&lt;/tableName&gt;
+					&lt;filter&gt;msnex=*&lt;/filter&gt;
+					&lt;labelKey&gt;_Expense claims disabled&lt;/labelKey&gt;
+					&lt;conditions&gt;
+						&lt;allowCondition&gt;
+							&lt;fieldName&gt;EnableExpenseClaimsGlobalSetting__&lt;/fieldName&gt;
+							&lt;fieldValue&gt;1&lt;/fieldValue&gt;
+						&lt;/allowCondition&gt;
+					&lt;/conditions&gt;
+				&lt;/dataCondition&gt;
+			</listDataConditions>
+    </dataConditions>
+    <dbIndex>
+      <IndexCompCodeExpType>&lt;Index Option="Unique"&gt;&lt;Ref Name="CompanyCode__" Option="ASC"/&gt;&lt;Ref Name="Name__" Option="ASC"/&gt;&lt;/Index&gt;</IndexCompCodeExpType>
+    </dbIndex>
+    <lg>
+      <process_da>{
+	"_AddTaxField": "Tilføj",
+	"_Analytics": "Regnskabsdata",
+	"_Billable": "Kan faktureres",
+	"_Billable_report": "Kan faktureres",
+	"_CommentTemplate": "Kommentarskabelon",
+	"_CommentTemplate_report": "Kommentarskabelon",
+	"_CompanyCode": "Virksomhedskode",
+	"_CompanyCode_report": "Virksomhedskode",
+	"_CostCenter": "Omkostningssted",
+	"_CostCenter_report": "Omkostningssted",
+	"_Default G/L account": "Standard finanskonto",
+	"_Default G/L account_report": "Standard finanskonto",
+	"_FuelType": "Forbrugstype",
+	"_FuelType_report": "Forbrugstype",
+	"_GeneralPanel": "Generelt",
+	"_HelperInputCommentTemplate": "Giver mulighed for at udfylde feltet 'Kommentar' på forhånd med statiske instrukser for at hjælpe brugere med at indtaste de relevante oplysninger.",
+	"_HelperInputTaxRate": "Vælg denne indstilling for at gøre de tilsvarende 'Afsatsbeløb'-felter tilgængelige for manuel udfyldelse på udgiftsformularen.",
+	"_Hidden": "Skjult felt",
+	"_InputTaxRate": "Vis felter 'Afgiftsbeløb'",
+	"_Itemizable": "Specifikation af udgifter",
+	"_ItemizationDisabled": "Ikke tilladt",
+	"_ItemizationOptional": "Tilladt",
+	"_Optional": "Valgfrit felt",
+	"_Receipt": "Kvittering",
+	"_Receipt_report": "Kvittering",
+	"_ReiceptOptional": "Valgfrit",
+	"_ReiceptRequired": "Obligatorisk",
+	"_Remove a tax": "Fjern afgiftskode",
+	"_RemoveTaxField": "Fjern",
+	"_Required": "Obligatoriske felter",
+	"_Specific properties": "Indstillinger for udgiftsformular",
+	"_Tax": "Afgiftsbeløb",
+	"_TaxCode": "Afgiftsbeløb",
+	"_TaxCode1_report": "Afgiftskode 1",
+	"_TaxCode2_report": "Afgiftskode 2",
+	"_TaxCode3_report": "Afgiftskode 3",
+	"_TaxCode4_report": "Afgiftskode 4",
+	"_TaxCode5_report": "Afgiftskode 5",
+	"_TaxCodeWithRate": "Afgiftskode ({0}%)",
+	"_TaxRate": "Afgiftssats",
+	"_TaxRate1_report": "Afgiftssats 1",
+	"_TaxRate2_report": "Afgiftssats 2",
+	"_TaxRate3_report": "Afgiftssats 3",
+	"_TaxRate4_report": "Afgiftssats 4",
+	"_TaxRate5_report": "Afgiftssats 5",
+	"_TypeDescription": "Beskrivelse",
+	"_TypeDescription_report": "Beskrivelse",
+	"_TypeName": "Udgiftstype",
+	"_TypeName_report": "Udgiftstype",
+	"_VAT": "Afgifter",
+	"_VATAddRemoveButtons": "Afgiftsknapper",
+	"_Vendor": "Leverandør",
+	"_Visible": "Synligt felt",
+	"P2P - Expense type": "S2P – udgiftstyper",
+	"P2P - Expense type__": "S2P – udgiftstyper",
+	"_Date": "Udgiftsdato",
+	"_Date_report": "Udgiftsdato",
+	"_Distance": "Antal kørte kilometer",
+	"_Fuel/Gas": "Brændstof/EV-ladning",
+	"_Hotel": "Hotel",
+	"_Restaurant": "Forplejning",
+	"_Standard": "Standard",
+	"_Template": "Skabelon til udgiftsformular",
+	"_Template_report": "Skabelon til udgiftsformular",
+	"_TotalAmount": "Samlet beløb",
+	"_TotalAmount_report": "Samlet beløb",
+	"_TotalAmountCurrency": "Valuta",
+	"_TotalAmountCurrency_report": "Valuta",
+	"_ContractName": "Kontraktnavn",
+	"_ContractName_report": "Kontraktnavn",
+	"_ContractNumber": "Kontraktnummer",
+	"_ContractNumber_report": "Kontraktnummer",
+	"_ContractReferenceNumber": "Kontraktref.",
+	"_ContractReferenceNumber_report": "Kontraktref.",
+	"_ContractRUIDEX": "Udvidet id for kontrakt",
+	"_ContractRUIDEX_report": "Udvidet id for kontrakt",
+	"_ContractSpendingID": "Id for kontraktforbrug",
+	"_ContractSpendingID_report": "Id for kontraktforbrug",
+	"_CostCenterDescription": "Beskrivelse af omkostningssted",
+	"_CostCenterDescription_report": "Beskrivelse af omkostningssted",
+	"_DefaultCurrency": "Foreslået prisvaluta",
+	"_DefaultCurrency_report": "Foreslået prisvaluta",
+	"_DefaultPublicPrice": "Foreslået pris",
+	"_DefaultPublicPrice_report": "Foreslået pris",
+	"_FreeDimension1": "Brugerdefineret dimension 1",
+	"_FreeDimension1_report": "Brugerdefineret dimension 1",
+	"_FreeDimension1ID": "Brugerdefineret dimension 1 (id)",
+	"_FreeDimension1ID_report": "Brugerdefineret dimension 1 (id)",
+	"_InternalOrder": "Intern ordre",
+	"_InternalOrder_report": "Intern ordre",
+	"_IsReplenishmentItem": "Opfyldningsvare",
+	"_IsReplenishmentItem_report": "Opfyldningsvare",
+	"_ItemDeliveryAddressID": "Id for leveringsadresse",
+	"_ItemDeliveryAddressID_report": "Id for leveringsadresse",
+	"_ItemShipToAddress": "Leveringsadresse",
+	"_ItemShipToAddress_report": "Leveringsadresse",
+	"_ItemShipToCompany": "Modtagervirksomhed",
+	"_ItemShipToCompany_report": "Modtagervirksomhed",
+	"_NonDeductibleTaxRate": "Ikke-fradragsberettiget afgift",
+	"_NonDeductibleTaxRate_report": "Ikke-fradragsberettiget afgift",
+	"_OriginalContractRUIDEX": "Udvidet id for kontrakt (original version)",
+	"_OriginalContractRUIDEX_report": "Udvidet id for kontrakt (original version)",
+	"_PreviousContractSpendingID": "Tidligere id for kontraktforbrug",
+	"_PreviousContractSpendingID_report": "Tidligere id for kontraktforbrug",
+	"_ProfitCenter": "Profitcenter",
+	"_ProfitCenter_report": "Profitcenter",
+	"_ProjectCode": "Projektkode",
+	"_ProjectCode_report": "Projektkode",
+	"_ProjectCodeDescription": "Projektbeskrivelse",
+	"_ProjectCodeDescription_report": "Projektbeskrivelse",
+	"_ProjectName": "Projektnavn",
+	"_ProjectName_report": "Projektnavn",
+	"_ProjectNumber": "Projektnummer",
+	"_ProjectNumber_report": "Projektnummer",
+	"_PublicPrice": "Standardpris",
+	"_PublicPrice_report": "Standardpris",
+	"_VendorRegistrationID_report": "Id for leverandørregistrering",
+	"_WarehouseID": "Lager-id",
+	"_WarehouseID_report": "Lager-id",
+	"_WarehouseName": "Lagernavn",
+	"_WarehouseName_report": "Lagernavn",
+	"_WBSElement": "WBS-element",
+	"_WBSElement_report": "WBS-element",
+	"_WBSElementID": "WBS-element (id)",
+	"_WBSElementID_report": "WBS-element (id)"
+}</process_da>
+      <process_DE>{
+	"_AddTaxField": "Hinzufügen",
+	"_Analytics": "Buchungsdaten",
+	"_Billable": "Fakturierbar",
+	"_Billable_report": "Fakturierbar",
+	"_CommentTemplate": "Kommentarvorlage",
+	"_CommentTemplate_report": "Kommentarvorlage",
+	"_CompanyCode": "Buchungskreis",
+	"_CompanyCode_report": "Buchungskreis",
+	"_CostCenter": "Kostenstelle",
+	"_CostCenter_report": "Kostenstelle",
+	"_Default G/L account": "Standard-Sachkonto",
+	"_Default G/L account_report": "Standard-Sachkonto",
+	"_FuelType": "Verbrauchsart",
+	"_FuelType_report": "Verbrauchsart",
+	"_GeneralPanel": "Allgemein",
+	"_HelperInputCommentTemplate": "Ermöglicht die Anzeige von statischen Anweisungen im Feld 'Kommentar', um Benutzer bei der Eingabe der erforderlichen Informationen zu unterstützen.",
+	"_HelperInputTaxRate": "Wählen Sie diese Option, um die entsprechenden Steuerbetrag-Felder im Ausgabenformular zur manuellen Eingabe verfügbar zu machen.",
+	"_Hidden": "Augeblendetes Feld",
+	"_InputTaxRate": "Steuerbetrag-Felder anzeigen",
+	"_Itemizable": "Kostenaufschlüsselung",
+	"_ItemizationDisabled": "Nicht zulässig",
+	"_ItemizationOptional": "Zulässig",
+	"_Optional": "Optionales Feld",
+	"_Receipt": "Beleg",
+	"_Receipt_report": "Beleg",
+	"_ReiceptOptional": "Optional",
+	"_ReiceptRequired": "Erforderlich",
+	"_Remove a tax": "Steuerkennzeichen entfernen",
+	"_RemoveTaxField": "Entfernen",
+	"_Required": "Erforderliches Feld",
+	"_Specific properties": "Ausgabenformular-Optionen",
+	"_Tax": "Steuerkennzeichen",
+	"_TaxCode": "Steuerkennzeichen",
+	"_TaxCode1_report": "Steuerkennzeichen 1",
+	"_TaxCode2_report": "Steuerkennzeichen 2",
+	"_TaxCode3_report": "Steuerkennzeichen 3",
+	"_TaxCode4_report": "Steuerkennzeichen 4",
+	"_TaxCode5_report": "Steuerkennzeichen 5",
+	"_TaxCodeWithRate": "Steuerkennzeichen ({0}%)",
+	"_TaxRate": "Steuersatz",
+	"_TaxRate1_report": "Steuersatz 1",
+	"_TaxRate2_report": "Steuersatz 2",
+	"_TaxRate3_report": "Steuersatz 3",
+	"_TaxRate4_report": "Steuersatz 4",
+	"_TaxRate5_report": "Steuersatz 5",
+	"_TypeDescription": "Zweck",
+	"_TypeDescription_report": "Zweck",
+	"_TypeName": "Ausgabenart",
+	"_TypeName_report": "Ausgabenart",
+	"_VAT": "Steuern",
+	"_VATAddRemoveButtons": "Schaltflächen für Steuerinformationen",
+	"_Vendor": "Lieferant",
+	"_Visible": "Angezeigtes Feld",
+	"P2P - Expense type": "S2P - Ausgabenarten",
+	"P2P - Expense type__": "S2P - Ausgabenarten",
+	"_Date": "Datum der Ausgabe",
+	"_Date_report": "Datum der Ausgabe",
+	"_Distance": "Kilometer",
+	"_Fuel/Gas": "Kraftstoff/EV-Ladung",
+	"_Hotel": "Unterkunft",
+	"_Restaurant": "Bewirtung",
+	"_Standard": "Standard",
+	"_Template": "Ausgabenformularvorlage",
+	"_Template_report": "Ausgabenformularvorlage",
+	"_TotalAmount": "Gesamtbetrag",
+	"_TotalAmount_report": "Gesamtbetrag",
+	"_TotalAmountCurrency": "Währung",
+	"_TotalAmountCurrency_report": "Währung",
+	"_ContractName": "Vertragsname",
+	"_ContractName_report": "Vertragsname",
+	"_ContractNumber": "Vertragsnummer",
+	"_ContractNumber_report": "Vertragsnummer",
+	"_ContractReferenceNumber": "Vertragsreferenz",
+	"_ContractReferenceNumber_report": "Vertragsreferenz",
+	"_ContractRUIDEX": "Erweiterte Vertrags-ID",
+	"_ContractRUIDEX_report": "Erweiterte Vertrags-ID",
+	"_ContractSpendingID": "Vertragsausgaben-ID",
+	"_ContractSpendingID_report": "Vertragsausgaben-ID",
+	"_CostCenterDescription": "Kostenstellenbeschreibung",
+	"_CostCenterDescription_report": "Kostenstellenbeschreibung",
+	"_DefaultCurrency": "Währung des vorgeschlagenen Preises",
+	"_DefaultCurrency_report": "Währung des vorgeschlagenen Preises",
+	"_DefaultPublicPrice": "Vorgeschlagener Preis",
+	"_DefaultPublicPrice_report": "Vorgeschlagener Preis",
+	"_FreeDimension1": "Benutzerdefinierte Dimension 1",
+	"_FreeDimension1_report": "Benutzerdefinierte Dimension 1",
+	"_FreeDimension1ID": "Benutzerdefinierte Dimension 1 (ID)",
+	"_FreeDimension1ID_report": "Benutzerdefinierte Dimension 1 (ID)",
+	"_InternalOrder": "Innenauftrag",
+	"_InternalOrder_report": "Innenauftrag",
+	"_IsReplenishmentItem": "Nachschubartikel",
+	"_IsReplenishmentItem_report": "Nachschubartikel",
+	"_ItemDeliveryAddressID": "ID der Lieferadresse",
+	"_ItemDeliveryAddressID_report": "ID der Lieferadresse",
+	"_ItemShipToAddress": "Lieferadresse",
+	"_ItemShipToAddress_report": "Lieferadresse",
+	"_ItemShipToCompany": "Empfängerfirma",
+	"_ItemShipToCompany_report": "Empfängerfirma",
+	"_NonDeductibleTaxRate": "Nicht abzugsfähiger Steuersatz",
+	"_NonDeductibleTaxRate_report": "Nicht abzugsfähiger Steuersatz",
+	"_OriginalContractRUIDEX": "Erweiterte Vertrags-ID (ursprüngliche Version)",
+	"_OriginalContractRUIDEX_report": "Erweiterte Vertrags-ID (ursprüngliche Version)",
+	"_PreviousContractSpendingID": "Vorherige Vertragsausgaben-ID",
+	"_PreviousContractSpendingID_report": "Vorherige Vertragsausgaben-ID",
+	"_ProfitCenter": "Profit-Center",
+	"_ProfitCenter_report": "Profit-Center",
+	"_ProjectCode": "Projektcode",
+	"_ProjectCode_report": "Projektcode",
+	"_ProjectCodeDescription": "Projektbeschreibung",
+	"_ProjectCodeDescription_report": "Projektbeschreibung",
+	"_ProjectName": "Projektname",
+	"_ProjectName_report": "Projektname",
+	"_ProjectNumber": "Projektnummer",
+	"_ProjectNumber_report": "Projektnummer",
+	"_PublicPrice": "Standardpreis",
+	"_PublicPrice_report": "Standardpreis",
+	"_VendorRegistrationID_report": "Lieferantenregistrierungs-ID",
+	"_WarehouseID": "Lagerkennung",
+	"_WarehouseID_report": "Lagerkennung",
+	"_WarehouseName": "Lagerort",
+	"_WarehouseName_report": "Lagerort",
+	"_WBSElement": "PSP-Element",
+	"_WBSElement_report": "PSP-Element",
+	"_WBSElementID": "PSP-Element (ID)",
+	"_WBSElementID_report": "PSP-Element (ID)"
+}</process_DE>
+      <process_ja>{
+	"_AddTaxField": "追加",
+	"_Analytics": "会計データ",
+	"_Billable": "請求可能",
+	"_Billable_report": "請求可能",
+	"_CommentTemplate": "コメントテンプレート",
+	"_CommentTemplate_report": "コメントテンプレート",
+	"_CompanyCode": "会社コード",
+	"_CompanyCode_report": "会社コード",
+	"_CostCenter": "コストセンター",
+	"_CostCenter_report": "コストセンター",
+	"_Default G/L account": "デフォルトの勘定科目",
+	"_Default G/L account_report": "デフォルトの勘定科目",
+	"_FuelType": "消費種別",
+	"_FuelType_report": "消費種別",
+	"_GeneralPanel": "全般",
+	"_HelperInputCommentTemplate": "必要な情報をユーザーが入力しやすくするために、定型文の指示をあらかじめコメントフィールドに入力できます。",
+	"_HelperInputTaxRate": "このオプションを選択すると、対応する「税額」フィールドが費用フォームに手入力できるようになります。",
+	"_Hidden": "非表示フィールド",
+	"_InputTaxRate": "「税額」フィールドを表示",
+	"_Itemizable": "費用の項目分類化",
+	"_ItemizationDisabled": "不許可",
+	"_ItemizationOptional": "許可",
+	"_Optional": "オプションフィールド",
+	"_Receipt": "領収書",
+	"_Receipt_report": "領収書",
+	"_ReiceptOptional": "オプション",
+	"_ReiceptRequired": "必須",
+	"_Remove a tax": "税コードを削除",
+	"_RemoveTaxField": "削除",
+	"_Required": "必須フィールド",
+	"_Specific properties": "費用フォームオプション",
+	"_Tax": "税コード",
+	"_TaxCode": "税コード",
+	"_TaxCode1_report": "税コード 1",
+	"_TaxCode2_report": "税コード 2",
+	"_TaxCode3_report": "税コード 3",
+	"_TaxCode4_report": "税コード 4",
+	"_TaxCode5_report": "税コード 5",
+	"_TaxCodeWithRate": "税コード ({0}%)",
+	"_TaxRate": "税率",
+	"_TaxRate1_report": "税率 1",
+	"_TaxRate2_report": "税率 2",
+	"_TaxRate3_report": "税率 3",
+	"_TaxRate4_report": "税率 4",
+	"_TaxRate5_report": "税率 5",
+	"_TypeDescription": "説明",
+	"_TypeDescription_report": "説明",
+	"_TypeName": "費用種別",
+	"_TypeName_report": "費用種別",
+	"_VAT": "税金",
+	"_VATAddRemoveButtons": "税金ボタン",
+	"_Vendor": "仕入先",
+	"_Visible": "表示フィールド",
+	"P2P - Expense type": "S2P - 費用種別",
+	"P2P - Expense type__": "S2P - 費用種別",
+	"_Date": "費用使用日",
+	"_Date_report": "費用使用日",
+	"_Distance": "マイレージ",
+	"_Fuel/Gas": "燃料/EV充電",
+	"_Hotel": "宿泊",
+	"_Restaurant": "食事",
+	"_Standard": "標準",
+	"_Template": "費用フォームのテンプレート",
+	"_Template_report": "費用フォームのテンプレート",
+	"_TotalAmount": "合計金額",
+	"_TotalAmount_report": "合計金額",
+	"_TotalAmountCurrency": "通貨",
+	"_TotalAmountCurrency_report": "通貨",
+	"_ContractName": "契約者名",
+	"_ContractName_report": "契約者名",
+	"_ContractNumber": "契約番号",
+	"_ContractNumber_report": "契約番号",
+	"_ContractReferenceNumber": "契約参照",
+	"_ContractReferenceNumber_report": "契約参照",
+	"_ContractRUIDEX": "契約延長ID",
+	"_ContractRUIDEX_report": "契約延長ID",
+	"_ContractSpendingID": "契約支出ID",
+	"_ContractSpendingID_report": "契約支出ID",
+	"_CostCenterDescription": "コストセンター説明",
+	"_CostCenterDescription_report": "コストセンター説明",
+	"_DefaultCurrency": "希望価格の通貨",
+	"_DefaultCurrency_report": "推奨価格の通貨",
+	"_DefaultPublicPrice": "希望価格",
+	"_DefaultPublicPrice_report": "希望価格",
+	"_FreeDimension1": "カスタムサイズ 1",
+	"_FreeDimension1_report": "カスタムサイズ 1",
+	"_FreeDimension1ID": "カスタムサイズ 1 (ID)",
+	"_FreeDimension1ID_report": "カスタムサイズ 1 (ID)",
+	"_InternalOrder": "内部注文",
+	"_InternalOrder_report": "内部注文",
+	"_IsReplenishmentItem": "補充品目",
+	"_IsReplenishmentItem_report": "補充品目",
+	"_ItemDeliveryAddressID": "交付地址ID",
+	"_ItemDeliveryAddressID_report": "交付地址ID",
+	"_ItemShipToAddress": "交付地址",
+	"_ItemShipToAddress_report": "交付地址",
+	"_ItemShipToCompany": "受領会社",
+	"_ItemShipToCompany_report": "受領会社",
+	"_NonDeductibleTaxRate": "控除対象外の税率",
+	"_NonDeductibleTaxRate_report": "控除対象外の税率",
+	"_OriginalContractRUIDEX": "契約拡張ID (オリジナルバージョン)",
+	"_OriginalContractRUIDEX_report": "契約拡張ID (オリジナルバージョン)",
+	"_PreviousContractSpendingID": "以前の契約支出ID",
+	"_PreviousContractSpendingID_report": "以前の契約支出ID",
+	"_ProfitCenter": "プロフィットセンター",
+	"_ProfitCenter_report": "プロフィットセンター",
+	"_ProjectCode": "プロジェクトコード",
+	"_ProjectCode_report": "プロジェクトコード",
+	"_ProjectCodeDescription": "プロジェクトの説明",
+	"_ProjectCodeDescription_report": "プロジェクトの説明",
+	"_ProjectName": "プロジェクト名",
+	"_ProjectName_report": "プロジェクト名",
+	"_ProjectNumber": "プロジェクト番号",
+	"_ProjectNumber_report": "プロジェクト番号",
+	"_PublicPrice": "標準価格",
+	"_PublicPrice_report": "標準価格",
+	"_VendorRegistrationID_report": "仕入先登録ID",
+	"_WarehouseID": "倉庫ID",
+	"_WarehouseID_report": "倉庫ID",
+	"_WarehouseName": "倉庫名",
+	"_WarehouseName_report": "倉庫名",
+	"_WBSElement": "WBS 要素",
+	"_WBSElement_report": "WBS 要素",
+	"_WBSElementID": "WBS 要素（ID）",
+	"_WBSElementID_report": "WBS 要素（ID）"
+}</process_ja>
+      <process_en>{
+	"_AddTaxField": "Add",
+	"_Analytics": "Accounting Data",
+	"_Billable": "Billable",
+	"_Billable_report": "Billable",
+	"_CommentTemplate": "Comment template",
+	"_CommentTemplate_report": "Comment template",
+	"_CompanyCode": "Company code",
+	"_CompanyCode_report": "Company code",
+	"_CostCenter": "Cost center",
+	"_CostCenter_report": "Cost center",
+	"_Default G/L account": "Default G/L account",
+	"_Default G/L account_report": "Default G/L account",
+	"_FuelType": "Consumption type",
+	"_FuelType_report": "Consumption type",
+	"_GeneralPanel": "General",
+	"_HelperInputCommentTemplate": "Allows prefilling the 'Comment' field with static instructions to help users enter the required information.",
+	"_HelperInputTaxRate": "Select this option to make the corresponding 'Tax amount' fields available for manual entry on the expense form.",
+	"_Hidden": "Hidden field",
+	"_InputTaxRate": "Display 'Tax amount' fields",
+	"_Itemizable": "Expense itemization",
+	"_ItemizationDisabled": "Not allowed",
+	"_ItemizationOptional": "Allowed",
+	"_Optional": "Optional field",
+	"_Receipt": "Receipt",
+	"_Receipt_report": "Receipt",
+	"_ReiceptOptional": "Optional",
+	"_ReiceptRequired": "Required",
+	"_Remove a tax": "Remove Tax Code",
+	"_RemoveTaxField": "Remove",
+	"_Required": "Required field",
+	"_Specific properties": "Expense Form Options",
+	"_Tax": "Tax code",
+	"_TaxCode": "Tax code",
+	"_TaxCode1_report": "Tax code 1",
+	"_TaxCode2_report": "Tax code 2",
+	"_TaxCode3_report": "Tax code 3",
+	"_TaxCode4_report": "Tax code 4",
+	"_TaxCode5_report": "Tax code 5",
+	"_TaxCodeWithRate": "Tax code ({0}%)",
+	"_TaxRate": "Tax rate",
+	"_TaxRate1_report": "Tax rate 1",
+	"_TaxRate2_report": "Tax rate 2",
+	"_TaxRate3_report": "Tax rate 3",
+	"_TaxRate4_report": "Tax rate 4",
+	"_TaxRate5_report": "Tax rate 5",
+	"_TypeDescription": "Description",
+	"_TypeDescription_report": "Description",
+	"_TypeName": "Expense type",
+	"_TypeName_report": "Expense type",
+	"_VAT": "Taxes",
+	"_VATAddRemoveButtons": "Taxes Buttons",
+	"_Vendor": "Supplier",
+	"_Visible": "Visible field",
+	"P2P - Expense type": "S2P - Expense types",
+	"P2P - Expense type__": "S2P - Expense types",
+	"_Date": "Expense date",
+	"_Date_report": "Expense date",
+	"_Distance": "Mileage",
+	"_Fuel/Gas": "Fuel/EV charging",
+	"_Hotel": "Accommodation",
+	"_Restaurant": "Meals",
+	"_Standard": "Standard",
+	"_Template": "Expense form template",
+	"_Template_report": "Expense form template",
+	"_TotalAmount": "Total amount",
+	"_TotalAmount_report": "Total amount",
+	"_TotalAmountCurrency": "Currency",
+	"_TotalAmountCurrency_report": "Currency",
+	"_ContractName": "Contract name",
+	"_ContractName_report": "Contract name",
+	"_ContractNumber": "Contract number",
+	"_ContractNumber_report": "Contract number",
+	"_ContractReferenceNumber": "Contract ref.",
+	"_ContractReferenceNumber_report": "Contract ref.",
+	"_ContractRUIDEX": "Contract extended ID",
+	"_ContractRUIDEX_report": "Contract extended ID",
+	"_ContractSpendingID": "Contract spend ID",
+	"_ContractSpendingID_report": "Contract spend ID",
+	"_CostCenterDescription": "Cost center description",
+	"_CostCenterDescription_report": "Cost center description",
+	"_DefaultCurrency": "Suggested price currency",
+	"_DefaultCurrency_report": "Suggested price currency",
+	"_DefaultPublicPrice": "Suggested price",
+	"_DefaultPublicPrice_report": "Suggested price",
+	"_FreeDimension1": "Custom dimension 1",
+	"_FreeDimension1_report": "Custom dimension 1",
+	"_FreeDimension1ID": "Custom dimension 1 (ID)",
+	"_FreeDimension1ID_report": "Custom dimension 1 (ID)",
+	"_InternalOrder": "Internal order",
+	"_InternalOrder_report": "Internal order",
+	"_IsReplenishmentItem": "Replenishment item",
+	"_IsReplenishmentItem_report": "Replenishment item",
+	"_ItemDeliveryAddressID": "Delivery address ID",
+	"_ItemDeliveryAddressID_report": "Delivery address ID",
+	"_ItemShipToAddress": "Delivery address",
+	"_ItemShipToAddress_report": "Delivery address",
+	"_ItemShipToCompany": "Recipient company",
+	"_ItemShipToCompany_report": "Recipient company",
+	"_NonDeductibleTaxRate": "Non-deductible tax rate",
+	"_NonDeductibleTaxRate_report": "Non-deductible tax rate",
+	"_OriginalContractRUIDEX": "Contract extended ID (original version)",
+	"_OriginalContractRUIDEX_report": "Contract extended ID (original version)",
+	"_PreviousContractSpendingID": "Previous contract spend ID",
+	"_PreviousContractSpendingID_report": "Previous contract spend ID",
+	"_ProfitCenter": "Profit center",
+	"_ProfitCenter_report": "Profit center",
+	"_ProjectCode": "Project code",
+	"_ProjectCode_report": "Project code",
+	"_ProjectCodeDescription": "Project description",
+	"_ProjectCodeDescription_report": "Project description",
+	"_ProjectName": "Project name",
+	"_ProjectName_report": "Project name",
+	"_ProjectNumber": "Project number",
+	"_ProjectNumber_report": "Project number",
+	"_PublicPrice": "Standard price",
+	"_PublicPrice_report": "Standard price",
+	"_VendorRegistrationID_report": "Supplier registration ID",
+	"_WarehouseID": "Warehouse ID",
+	"_WarehouseID_report": "Warehouse ID",
+	"_WarehouseName": "Warehouse name",
+	"_WarehouseName_report": "Warehouse name",
+	"_WBSElement": "WBS element",
+	"_WBSElement_report": "WBS element",
+	"_WBSElementID": "WBS element (ID)",
+	"_WBSElementID_report": "WBS element (ID)"
+}</process_en>
+      <process_ES>{
+	"_AddTaxField": "Agregar",
+	"_Analytics": "Datos contables",
+	"_Billable": "Facturable",
+	"_Billable_report": "Facturable",
+	"_CommentTemplate": "Modelo de comentario",
+	"_CommentTemplate_report": "Modelo de comentario",
+	"_CompanyCode": "Código de empresa",
+	"_CompanyCode_report": "Código de empresa",
+	"_CostCenter": "Centro de costes",
+	"_CostCenter_report": "Centro de costes",
+	"_Default G/L account": "Cuenta de mayor predeterminada",
+	"_Default G/L account_report": "Cuenta de mayor predeterminada",
+	"_FuelType": "Tipo de consumo",
+	"_FuelType_report": "Tipo de consumo",
+	"_GeneralPanel": "General",
+	"_HelperInputCommentTemplate": "Permite mostrar instrucciones estáticas en el campo 'Comentario' para ayudar a los usuarios a especificar la información requerida.",
+	"_HelperInputTaxRate": "Seleccione esta opción para mostrar los campos 'Importe de impuesto' correspondientes en el formulario de gasto y permitir la entrada manual.",
+	"_Hidden": "Campo oculto",
+	"_InputTaxRate": "Mostrar campos 'Importe de impuesto'",
+	"_Itemizable": "Desglose de gastos",
+	"_ItemizationDisabled": "No autorizado",
+	"_ItemizationOptional": "Autorizado",
+	"_Optional": "Campo opcional",
+	"_Receipt": "Recibo",
+	"_Receipt_report": "Recibo",
+	"_ReiceptOptional": "Opcional",
+	"_ReiceptRequired": "Obligatorio",
+	"_Remove a tax": "Eliminar código de impuesto",
+	"_RemoveTaxField": "Eliminar",
+	"_Required": "Campo requerido",
+	"_Specific properties": "Opciones de formulario de gasto",
+	"_Tax": "Código de impuesto",
+	"_TaxCode": "Código de impuesto",
+	"_TaxCode1_report": "Código de impuesto 1",
+	"_TaxCode2_report": "Código de impuesto 2",
+	"_TaxCode3_report": "Código de impuesto 3",
+	"_TaxCode4_report": "Código de impuesto 4",
+	"_TaxCode5_report": "Código de impuesto 5",
+	"_TaxCodeWithRate": "Código de impuesto ({0}%)",
+	"_TaxRate": "Tipo impositivo",
+	"_TaxRate1_report": "Tipo impositivo 1",
+	"_TaxRate2_report": "Tipo impositivo 2",
+	"_TaxRate3_report": "Tipo impositivo 3",
+	"_TaxRate4_report": "Tipo impositivo 4",
+	"_TaxRate5_report": "Tipo impositivo 5",
+	"_TypeDescription": "Descripción",
+	"_TypeDescription_report": "Descripción",
+	"_TypeName": "Tipo de gasto",
+	"_TypeName_report": "Tipo de gasto",
+	"_VAT": "Impuestos",
+	"_VATAddRemoveButtons": "Botones asociados a Impuestos",
+	"_Vendor": "Proveedor",
+	"_Visible": "Campo mostrado",
+	"P2P - Expense type": "S2P - Tipos de gastos",
+	"P2P - Expense type__": "S2P - Tipos de gastos",
+	"_Date": "Fecha del gasto",
+	"_Date_report": "Fecha del gasto",
+	"_Distance": "Kilometraje",
+	"_Fuel/Gas": "Combustible/carga de vehículo eléctrico",
+	"_Hotel": "Alojamiento",
+	"_Restaurant": "Alimentación",
+	"_Standard": "Estándar",
+	"_Template": "Plantilla del formulario de gasto",
+	"_Template_report": "Plantilla del formulario de gasto",
+	"_TotalAmount": "Importe total",
+	"_TotalAmount_report": "Importe total",
+	"_TotalAmountCurrency": "Divisa",
+	"_TotalAmountCurrency_report": "Divisa",
+	"_ContractName": "Nombre del contrato",
+	"_ContractName_report": "Nombre del contrato",
+	"_ContractNumber": "Número de contrato",
+	"_ContractNumber_report": "Número de contrato",
+	"_ContractReferenceNumber": "Ref. del contrato",
+	"_ContractReferenceNumber_report": "Ref. del contrato",
+	"_ContractRUIDEX": "Id. largo del contrato",
+	"_ContractRUIDEX_report": "Id. largo del contrato",
+	"_ContractSpendingID": "ID de los gastos en contrato",
+	"_ContractSpendingID_report": "ID de los gastos en contrato",
+	"_CostCenterDescription": "Descripción del centro de costes",
+	"_CostCenterDescription_report": "Descripción del centro de costes",
+	"_DefaultCurrency": "Divisa del precio sugerido",
+	"_DefaultCurrency_report": "Divisa del precio sugerido",
+	"_DefaultPublicPrice": "Precio sugerido",
+	"_DefaultPublicPrice_report": "Precio sugerido",
+	"_FreeDimension1": "Dimensión personalizada 1",
+	"_FreeDimension1_report": "Dimensión personalizada 1",
+	"_FreeDimension1ID": "Dimensión personalizada 1 (ID)",
+	"_FreeDimension1ID_report": "Dimensión personalizada 1 (ID)",
+	"_InternalOrder": "Pedido interno",
+	"_InternalOrder_report": "Pedido interno",
+	"_IsReplenishmentItem": "Artículo de reposición",
+	"_IsReplenishmentItem_report": "Artículo de reposición",
+	"_ItemDeliveryAddressID": "ID de dirección de entrega",
+	"_ItemDeliveryAddressID_report": "ID de dirección de entrega",
+	"_ItemShipToAddress": "Dirección de entrega",
+	"_ItemShipToAddress_report": "Dirección de entrega",
+	"_ItemShipToCompany": "Empresa destinataria",
+	"_ItemShipToCompany_report": "Empresa destinataria",
+	"_NonDeductibleTaxRate": "Tipo impositivo no deducible",
+	"_NonDeductibleTaxRate_report": "Tipo impositivo no deducible",
+	"_OriginalContractRUIDEX": "Id. extendido del contrato (versión original)",
+	"_OriginalContractRUIDEX_report": "Id. extendido del contrato (versión original)",
+	"_PreviousContractSpendingID": "ID de los gastos en contrato anterior",
+	"_PreviousContractSpendingID_report": "ID de los gastos en contrato anterior",
+	"_ProfitCenter": "Centro de beneficio",
+	"_ProfitCenter_report": "Centro de beneficio",
+	"_ProjectCode": "Código proyecto",
+	"_ProjectCode_report": "Código proyecto",
+	"_ProjectCodeDescription": "Descripción del proyecto",
+	"_ProjectCodeDescription_report": "Descripción del proyecto",
+	"_ProjectName": "Nombre del proyecto",
+	"_ProjectName_report": "Nombre de proyecto",
+	"_ProjectNumber": "Número del proyecto ",
+	"_ProjectNumber_report": "Número del proyecto",
+	"_PublicPrice": "Precio de venta al público",
+	"_PublicPrice_report": "Precio de venta al público",
+	"_VendorRegistrationID_report": "ID de la solicitud de registro",
+	"_WarehouseID": "Identificador de almacén",
+	"_WarehouseID_report": "Identificador de almacén",
+	"_WarehouseName": "Nombre del almacén",
+	"_WarehouseName_report": "Nombre del almacén",
+	"_WBSElement": "Elemento PEP",
+	"_WBSElement_report": "Elemento PEP",
+	"_WBSElementID": "Elemento PEP (ID)",
+	"_WBSElementID_report": "Elemento PEP (ID)"
+}</process_ES>
+      <process_FR>{
+	"_AddTaxField": "Ajouter",
+	"_Analytics": "Données comptables",
+	"_Billable": "Facturable",
+	"_Billable_report": "Facturable",
+	"_CommentTemplate": "Modèle de commentaire",
+	"_CommentTemplate_report": "Modèle de commentaire",
+	"_CompanyCode": "Code société",
+	"_CompanyCode_report": "Code société",
+	"_CostCenter": "Centre de coût",
+	"_CostCenter_report": "Centre de coût",
+	"_Default G/L account": "Compte général par défaut",
+	"_Default G/L account_report": "Compte général par défaut",
+	"_FuelType": "Type de consommation",
+	"_FuelType_report": "Type de consommation",
+	"_GeneralPanel": "Général",
+	"_HelperInputCommentTemplate": "Permet de préremplir le champ 'Commentaire' avec des instructions statiques pour aider les utilisateurs à saisir les informations requises.",
+	"_HelperInputTaxRate": "Sélectionnez cette option pour permettre la saisie manuelle des champs 'Montant TVA' correspondants sur le formulaire de dépense.",
+	"_Hidden": "Champ masqué",
+	"_InputTaxRate": "Afficher les champs 'Montant TVA'",
+	"_Itemizable": "Ventilation de la dépense",
+	"_ItemizationDisabled": "Non autorisée",
+	"_ItemizationOptional": "Autorisée",
+	"_Optional": "Champ facultatif",
+	"_Receipt": "Justificatif",
+	"_Receipt_report": "Justificatif",
+	"_ReiceptOptional": "Optionnel",
+	"_ReiceptRequired": "Obligatoire",
+	"_Remove a tax": "Supprimer code TVA",
+	"_RemoveTaxField": "Supprimer",
+	"_Required": "Champ requis",
+	"_Specific properties": "Options du formulaire de dépense",
+	"_Tax": "Code TVA",
+	"_TaxCode": "Code TVA",
+	"_TaxCode1_report": "Code TVA 1",
+	"_TaxCode2_report": "Code TVA 2",
+	"_TaxCode3_report": "Code TVA 3",
+	"_TaxCode4_report": "Code TVA 4",
+	"_TaxCode5_report": "Code TVA 5",
+	"_TaxCodeWithRate": "Code TVA ({0}%)",
+	"_TaxRate": "Taux de TVA",
+	"_TaxRate1_report": "Taux de TVA 1",
+	"_TaxRate2_report": "Taux de TVA 2",
+	"_TaxRate3_report": "Taux de TVA 3",
+	"_TaxRate4_report": "Taux de TVA 4",
+	"_TaxRate5_report": "Taux de TVA 5",
+	"_TypeDescription": "Description",
+	"_TypeDescription_report": "Description",
+	"_TypeName": "Type de dépense",
+	"_TypeName_report": "Type de dépense",
+	"_VAT": "Taxes",
+	"_VATAddRemoveButtons": "Boutons associés aux taxes",
+	"_Vendor": "Fournisseur",
+	"_Visible": "Champ affiché",
+	"P2P - Expense type": "S2P - Types de dépenses",
+	"P2P - Expense type__": "S2P - Types de dépenses",
+	"_Date": "Date de la dépense",
+	"_Date_report": "Date de la dépense",
+	"_Distance": "Kilométrage",
+	"_Fuel/Gas": "Carburant/Recharge de véhicule électrique",
+	"_Hotel": "Hébergement",
+	"_Restaurant": "Repas",
+	"_Standard": "Standard",
+	"_Template": "Modèle du formulaire de dépense",
+	"_Template_report": "Modèle du formulaire de dépense",
+	"_TotalAmount": "Montant total",
+	"_TotalAmount_report": "Montant total",
+	"_TotalAmountCurrency": "Devise",
+	"_TotalAmountCurrency_report": "Devise",
+	"_ContractName": "Nom du contrat",
+	"_ContractName_report": "Nom du contrat",
+	"_ContractNumber": "Numéro de contrat",
+	"_ContractNumber_report": "Numéro de contrat",
+	"_ContractReferenceNumber": "Réf. du contrat",
+	"_ContractReferenceNumber_report": "Réf. du contrat",
+	"_ContractRUIDEX": "Identifiant long du contrat",
+	"_ContractRUIDEX_report": "Identifiant long du contrat",
+	"_ContractSpendingID": "ID des dépenses sur contrat",
+	"_ContractSpendingID_report": "ID des dépenses sur contrat",
+	"_CostCenterDescription": "Description du centre de coût",
+	"_CostCenterDescription_report": "Description du centre de coût",
+	"_DefaultCurrency": "Devise du prix conseillé",
+	"_DefaultCurrency_report": "Devise du prix conseillé",
+	"_DefaultPublicPrice": "Prix conseillé",
+	"_DefaultPublicPrice_report": "Prix conseillé",
+	"_FreeDimension1": "Axe analytique personnalisé 1",
+	"_FreeDimension1_report": "Axe analytique personnalisé 1",
+	"_FreeDimension1ID": "Axe analytique personnalisé 1 (ID)",
+	"_FreeDimension1ID_report": "Axe analytique personnalisé 1 (ID)",
+	"_InternalOrder": "Ordre interne",
+	"_InternalOrder_report": "Ordre interne",
+	"_IsReplenishmentItem": "Article de réapprovisionnement",
+	"_IsReplenishmentItem_report": "Article de réapprovisionnement",
+	"_ItemDeliveryAddressID": "Identifiant de l'adresse de livraison",
+	"_ItemDeliveryAddressID_report": "Identifiant de l'adresse de livraison",
+	"_ItemShipToAddress": "Adresse de livraison",
+	"_ItemShipToAddress_report": "Adresse de livraison",
+	"_ItemShipToCompany": "Société destinataire",
+	"_ItemShipToCompany_report": "Société destinataire",
+	"_NonDeductibleTaxRate": "Taux de TVA non déductible",
+	"_NonDeductibleTaxRate_report": "Taux de TVA non déductible",
+	"_OriginalContractRUIDEX": "Identifiant long du contrat (version originale)",
+	"_OriginalContractRUIDEX_report": "Identifiant long du contrat (version originale)",
+	"_PreviousContractSpendingID": "Ancien ID des dépenses sur contrat",
+	"_PreviousContractSpendingID_report": "Ancien ID des dépenses sur contrat",
+	"_ProfitCenter": "Centre de profit",
+	"_ProfitCenter_report": "Centre de profit",
+	"_ProjectCode": "Code projet",
+	"_ProjectCode_report": "Code projet",
+	"_ProjectCodeDescription": "Description du projet",
+	"_ProjectCodeDescription_report": "Description du projet",
+	"_ProjectName": "Nom du projet",
+	"_ProjectName_report": "Nom du projet",
+	"_ProjectNumber": "Numéro de projet",
+	"_ProjectNumber_report": "Numéro de projet",
+	"_PublicPrice": "Prix standard",
+	"_PublicPrice_report": "Prix standard",
+	"_VendorRegistrationID_report": "ID de la demande d'enregistrement",
+	"_WarehouseID": "Identifiant de l'entrepôt",
+	"_WarehouseID_report": "Identifiant de l'entrepôt",
+	"_WarehouseName": "Nom de l'entrepôt",
+	"_WarehouseName_report": "Nom de l'entrepôt",
+	"_WBSElement": "Élément d'OTP",
+	"_WBSElement_report": "Élément d'OTP",
+	"_WBSElementID": "Élément d'OTP (ID)",
+	"_WBSElementID_report": "Élément d'OTP (ID)"
+}</process_FR>
+      <process_nl-NL>{
+	"_AddTaxField": "Toevoegen",
+	"_Analytics": "Boekhoudgegevens",
+	"_Billable": "Te factureren",
+	"_Billable_report": "Te factureren",
+	"_CommentTemplate": "Template opmerking",
+	"_CommentTemplate_report": "Template opmerking",
+	"_CompanyCode": "Bedrijfscode",
+	"_CompanyCode_report": "Bedrijfscode",
+	"_CostCenter": "Kostenplaats",
+	"_CostCenter_report": "Kostenplaats",
+	"_Default G/L account": "Standaard grootboekrekening",
+	"_Default G/L account_report": "Standaard grootboekrekening",
+	"_FuelType": "Type verbruik",
+	"_FuelType_report": "Type verbruik",
+	"_GeneralPanel": "Algemeen",
+	"_HelperInputCommentTemplate": "Hiermee kan het veld ‘Opmerking’ vooraf worden ingevuld met statische instructies om gebruikers te helpen de vereiste informatie in te voeren.",
+	"_HelperInputTaxRate": "Selecteer deze optie zodat de overeenkomstige velden ‘Bedrag BTW’ beschikbaar zijn voor handmatige invoer op het uitgavenformulier.",
+	"_Hidden": "Verborgen veld",
+	"_InputTaxRate": "Velden ‘Bedrag BTW’ weergeven",
+	"_Itemizable": "Uitsplitsing uitgaven",
+	"_ItemizationDisabled": "Niet toegestaan",
+	"_ItemizationOptional": "Toegestaan",
+	"_Optional": "Optioneel veld",
+	"_Receipt": "Ontvangstbewijs",
+	"_Receipt_report": "Ontvangstbewijs",
+	"_ReiceptOptional": "Optie",
+	"_ReiceptRequired": "Vereist",
+	"_Remove a tax": "Belastingcode verwijderen",
+	"_RemoveTaxField": "Verwijderen",
+	"_Required": "Verplicht veld",
+	"_Specific properties": "Opties uitgavenformulier",
+	"_Tax": "Belastingcode",
+	"_TaxCode": "Belastingcode",
+	"_TaxCode1_report": "Belastingcode 1",
+	"_TaxCode2_report": "Belastingcode 2",
+	"_TaxCode3_report": "Belastingcode 3",
+	"_TaxCode4_report": "Belastingcode 4",
+	"_TaxCode5_report": "Belastingcode 5",
+	"_TaxCodeWithRate": "Belastingcode ({0}%)",
+	"_TaxRate": "Belastingpercentage",
+	"_TaxRate1_report": "Belastingpercentage 1",
+	"_TaxRate2_report": "Belastingpercentage 2",
+	"_TaxRate3_report": "Belastingpercentage 3",
+	"_TaxRate4_report": "Belastingpercentage 4",
+	"_TaxRate5_report": "Belastingpercentage 5",
+	"_TypeDescription": "Beschrijving",
+	"_TypeDescription_report": "Beschrijving",
+	"_TypeName": "Type uitgaven",
+	"_TypeName_report": "Type uitgaven",
+	"_VAT": "Belastingen",
+	"_VATAddRemoveButtons": "Knoppen belastingen",
+	"_Vendor": "Leverancier",
+	"_Visible": "Zichtbaar veld",
+	"P2P - Expense type": "S2P - Types uitgaven",
+	"P2P - Expense type__": "S2P - Types uitgaven",
+	"_Date": "Datum uitgave",
+	"_Date_report": "Datum uitgave",
+	"_Distance": "Kilometerstand",
+	"_Fuel/Gas": "Brandstof/EV-opladen",
+	"_Hotel": "Accommodatie",
+	"_Restaurant": "Maaltijden",
+	"_Standard": "Standaard",
+	"_Template": "Template uitgavenformulier",
+	"_Template_report": "Template uitgavenformulier",
+	"_TotalAmount": "Totaalbedrag",
+	"_TotalAmount_report": "Totaalbedrag",
+	"_TotalAmountCurrency": "Valuta",
+	"_TotalAmountCurrency_report": "Valuta",
+	"_ContractName": "Naam contract",
+	"_ContractName_report": "Naam contract",
+	"_ContractNumber": "Contractnummer",
+	"_ContractNumber_report": "Contractnummer",
+	"_ContractReferenceNumber": "Contractref.",
+	"_ContractReferenceNumber_report": "Contractref.",
+	"_ContractRUIDEX": "Uitgebreide contract-ID",
+	"_ContractRUIDEX_report": "Uitgebreide contract-ID",
+	"_ContractSpendingID": "ID uitgaven contract",
+	"_ContractSpendingID_report": "ID uitgaven contract",
+	"_CostCenterDescription": "Beschrijving kostenplaats",
+	"_CostCenterDescription_report": "Beschrijving kostenplaats",
+	"_DefaultCurrency": "Voorgestelde valuta prijs",
+	"_DefaultCurrency_report": "Voorgestelde valuta prijs",
+	"_DefaultPublicPrice": "Voorgestelde prijs",
+	"_DefaultPublicPrice_report": "Voorgestelde prijs",
+	"_FreeDimension1": "Aangepaste dimensie 1",
+	"_FreeDimension1_report": "Aangepaste dimensie 1",
+	"_FreeDimension1ID": "Aangepaste dimensie 1 (ID)",
+	"_FreeDimension1ID_report": "Aangepaste dimensie 1 (ID)",
+	"_InternalOrder": "Interne order",
+	"_InternalOrder_report": "Interne order",
+	"_IsReplenishmentItem": "Item bevoorrading",
+	"_IsReplenishmentItem_report": "Item bevoorrading",
+	"_ItemDeliveryAddressID": "Leveringsadres-ID",
+	"_ItemDeliveryAddressID_report": "Leveringsadres-ID",
+	"_ItemShipToAddress": "Leveringsadres",
+	"_ItemShipToAddress_report": "Leveringsadres",
+	"_ItemShipToCompany": "Bedrijf ontvanger",
+	"_ItemShipToCompany_report": "Bedrijf ontvanger",
+	"_NonDeductibleTaxRate": "Niet-aftrekbaar belastingpercentage",
+	"_NonDeductibleTaxRate_report": "Niet-aftrekbaar belastingpercentage",
+	"_OriginalContractRUIDEX": "Uitgebreide contract-ID (originele versie)",
+	"_OriginalContractRUIDEX_report": "Uitgebreide contract-ID (originele versie)",
+	"_PreviousContractSpendingID": "Vorige ID uitgaven contract",
+	"_PreviousContractSpendingID_report": "Vorige ID uitgaven contract",
+	"_ProfitCenter": "Winstcentrum",
+	"_ProfitCenter_report": "Winstcentrum",
+	"_ProjectCode": "Projectcode",
+	"_ProjectCode_report": "Projectcode",
+	"_ProjectCodeDescription": "Projectbeschrijving",
+	"_ProjectCodeDescription_report": "Projectbeschrijving",
+	"_ProjectName": "Projectnaam",
+	"_ProjectName_report": "Projectnaam",
+	"_ProjectNumber": "Projectnummer",
+	"_ProjectNumber_report": "Projectnummer",
+	"_PublicPrice": "Standaardprijs",
+	"_PublicPrice_report": "Standaardprijs",
+	"_VendorRegistrationID_report": "ID registratie leverancier",
+	"_WarehouseID": "Magazijn-ID",
+	"_WarehouseID_report": "Magazijn-ID",
+	"_WarehouseName": "Naam magazijn",
+	"_WarehouseName_report": "Naam magazijn",
+	"_WBSElement": "WBS-element",
+	"_WBSElement_report": "WBS-element",
+	"_WBSElementID": "WBS-element (ID)",
+	"_WBSElementID_report": "WBS-element (ID)"
+}</process_nl-NL>
+      <process_pl>{
+	"_AddTaxField": "Dodaj",
+	"_Analytics": "Dane rachunkowe",
+	"_Billable": "Do zafakturowania",
+	"_Billable_report": "Do zafakturowania",
+	"_CommentTemplate": "Szablon komentarza",
+	"_CommentTemplate_report": "Szablon komentarza",
+	"_CompanyCode": "Kod firmy",
+	"_CompanyCode_report": "Kod firmy",
+	"_CostCenter": "Centrum kosztów",
+	"_CostCenter_report": "Centrum kosztów",
+	"_Default G/L account": "Domyślne konto KG",
+	"_Default G/L account_report": "Domyślne konto KG",
+	"_FuelType": "Typ zużycia",
+	"_FuelType_report": "Typ zużycia",
+	"_GeneralPanel": "Ogólne",
+	"_HelperInputCommentTemplate": "Umożliwia wstępne wypełnienie pola „Komentarz” statycznymi instrukcjami, które pomagają użytkownikom wprowadzić wymagane informacje.",
+	"_HelperInputTaxRate": "Wybierz tę opcję, aby udostępnić w formularzu wydatków odpowiednie pola „Kwota podatku” do ręcznego wprowadzenia wartości.",
+	"_Hidden": "Pole ukryte",
+	"_InputTaxRate": "Wyświetl pola „Kwota podatku”",
+	"_Itemizable": "Wykaz pozycji wydatków",
+	"_ItemizationDisabled": "Niedozwolone",
+	"_ItemizationOptional": "Dozwolone",
+	"_Optional": "Pole opcjonalne",
+	"_Receipt": "Rachunek",
+	"_Receipt_report": "Rachunek",
+	"_ReiceptOptional": "Opcjonalne",
+	"_ReiceptRequired": "Wymagane",
+	"_Remove a tax": "Usuń kod podatku",
+	"_RemoveTaxField": "Usuń",
+	"_Required": "Pole wymagane",
+	"_Specific properties": "Opcje formularza wydatków",
+	"_Tax": "Kod podatku",
+	"_TaxCode": "Kod podatku",
+	"_TaxCode1_report": "Kod podatku 1",
+	"_TaxCode2_report": "Kod podatku 2",
+	"_TaxCode3_report": "Kod podatku 3",
+	"_TaxCode4_report": "Kod podatku 4",
+	"_TaxCode5_report": "Kod podatku 5",
+	"_TaxCodeWithRate": "Kod podatku ({0}%)",
+	"_TaxRate": "Stawka podatku",
+	"_TaxRate1_report": "Stawka podatku 1",
+	"_TaxRate2_report": "Stawka podatku 2",
+	"_TaxRate3_report": "Stawka podatku 3",
+	"_TaxRate4_report": "Stawka podatku 4",
+	"_TaxRate5_report": "Stawka podatku 5",
+	"_TypeDescription": "Opis",
+	"_TypeDescription_report": "Opis",
+	"_TypeName": "Typ wydatku",
+	"_TypeName_report": "Typ wydatku",
+	"_VAT": "Podatki",
+	"_VATAddRemoveButtons": "Przyciski podatków",
+	"_Vendor": "Dostawca",
+	"_Visible": "Pole widoczne",
+	"P2P - Expense type": "S2P – typy wydatków",
+	"P2P - Expense type__": "S2P – typy wydatków",
+	"_Date": "Data wydatku",
+	"_Date_report": "Data wydatku",
+	"_Distance": "Przebyta odległość",
+	"_Fuel/Gas": "Paliwo / ładowanie sam. elektr.",
+	"_Hotel": "Zakwaterowanie",
+	"_Restaurant": "Posiłki",
+	"_Standard": "Standard",
+	"_Template": "Szablon formularza wydatków",
+	"_Template_report": "Szablon formularza wydatków",
+	"_TotalAmount": "Kwota łączna",
+	"_TotalAmount_report": "Kwota łączna",
+	"_TotalAmountCurrency": "Waluta",
+	"_TotalAmountCurrency_report": "Waluta",
+	"_ContractName": "Nazwa kontraktu",
+	"_ContractName_report": "Nazwa kontraktu",
+	"_ContractNumber": "Numer kontraktu",
+	"_ContractNumber_report": "Numer kontraktu",
+	"_ContractReferenceNumber": "Ref. kontraktu",
+	"_ContractReferenceNumber_report": "Ref. kontraktu",
+	"_ContractRUIDEX": "Rozszerzony id. kontraktu",
+	"_ContractRUIDEX_report": "Rozszerzony id. kontraktu",
+	"_ContractSpendingID": "Id. wydatków w ramach kontraktu",
+	"_ContractSpendingID_report": "Id. wydatków w ramach kontraktu",
+	"_CostCenterDescription": "Opis centrum kosztów",
+	"_CostCenterDescription_report": "Opis centrum kosztów",
+	"_DefaultCurrency": "Sugerowana waluta ceny",
+	"_DefaultCurrency_report": "Sugerowana waluta ceny",
+	"_DefaultPublicPrice": "Sugerowana cena",
+	"_DefaultPublicPrice_report": "Sugerowana cena",
+	"_FreeDimension1": "Wymiar niestandardowy 1",
+	"_FreeDimension1_report": "Wymiar niestandardowy 1",
+	"_FreeDimension1ID": "Wymiar niestandardowy 1 (id.)",
+	"_FreeDimension1ID_report": "Wymiar niestandardowy 1 (id.)",
+	"_InternalOrder": "Zamówienie wewnętrzne",
+	"_InternalOrder_report": "Zamówienie wewnętrzne",
+	"_IsReplenishmentItem": "Pozycja uzupełnienia",
+	"_IsReplenishmentItem_report": "Pozycja uzupełnienia",
+	"_ItemDeliveryAddressID": "Id. adresu dostawy",
+	"_ItemDeliveryAddressID_report": "Id. adresu dostawy",
+	"_ItemShipToAddress": "Adres dostawy",
+	"_ItemShipToAddress_report": "Adres dostawy",
+	"_ItemShipToCompany": "Firma odbiorcy",
+	"_ItemShipToCompany_report": "Firma odbiorcy",
+	"_NonDeductibleTaxRate": "Stawka podatku niepodlegającego odliczeniu",
+	"_NonDeductibleTaxRate_report": "Stawka podatku niepodlegającego odliczeniu",
+	"_OriginalContractRUIDEX": "Rozszerzony id. kontraktu (wersja oryginalna)",
+	"_OriginalContractRUIDEX_report": "Rozszerzony id. kontraktu (wersja oryginalna)",
+	"_PreviousContractSpendingID": "Poprzedni id. wydatków w ramach kontraktu",
+	"_PreviousContractSpendingID_report": "Poprzedni id. wydatków w ramach kontraktu",
+	"_ProfitCenter": "Centrum zysków",
+	"_ProfitCenter_report": "Centrum zysków",
+	"_ProjectCode": "Kod projektu",
+	"_ProjectCode_report": "Kod projektu",
+	"_ProjectCodeDescription": "Opis projektu",
+	"_ProjectCodeDescription_report": "Opis projektu",
+	"_ProjectName": "Nazwa projektu",
+	"_ProjectName_report": "Nazwa projektu",
+	"_ProjectNumber": "Numer projektu",
+	"_ProjectNumber_report": "Numer projektu",
+	"_PublicPrice": "Cena standardowa",
+	"_PublicPrice_report": "Cena standardowa",
+	"_VendorRegistrationID_report": "Id. rejestracji dostawcy",
+	"_WarehouseID": "Id. magazynu",
+	"_WarehouseID_report": "Id. magazynu",
+	"_WarehouseName": "Nazwa magazynu",
+	"_WarehouseName_report": "Nazwa magazynu",
+	"_WBSElement": "Element WBS",
+	"_WBSElement_report": "Element WBS",
+	"_WBSElementID": "Element WBS (id.)",
+	"_WBSElementID_report": "Element WBS (id.)"
+}</process_pl>
+      <process_IT>{
+	"_AddTaxField": "Aggiungi",
+	"_Analytics": "Dati contabili",
+	"_Billable": "Fatturabile",
+	"_Billable_report": "Fatturabile",
+	"_CommentTemplate": "Modello di commento",
+	"_CommentTemplate_report": "Modello di commento",
+	"_CompanyCode": "Codice società",
+	"_CompanyCode_report": "Codice società",
+	"_CostCenter": "Centro di costo",
+	"_CostCenter_report": "Centro di costo",
+	"_Default G/L account": "Conto generale predefinito",
+	"_Default G/L account_report": "Conto generale predefinito",
+	"_FuelType": "Tipo di consumo",
+	"_FuelType_report": "Tipo di consumo",
+	"_GeneralPanel": "Generale",
+	"_HelperInputCommentTemplate": "Permette la visualizzazione di istruzioni statiche nel campo 'Commento' per facilitare l'immissione delle informazioni richieste.",
+	"_HelperInputTaxRate": "Selezionare questa opzione per rendere disponibili per l'inserimento manuale sul modulo spesa i campi 'Importo imposte' corrispondenti.",
+	"_Hidden": "Campo nascosto",
+	"_InputTaxRate": "Mostra campi 'Importo imposte'",
+	"_Itemizable": "Dettagli spesa",
+	"_ItemizationDisabled": "Non consentiti",
+	"_ItemizationOptional": "Consentiti",
+	"_Optional": "Campo facoltativo",
+	"_Receipt": "Ricevuta",
+	"_Receipt_report": "Ricevuta",
+	"_ReiceptOptional": "Facoltativa",
+	"_ReiceptRequired": "Obbligatoria",
+	"_Remove a tax": "Rimuovi codice IVA",
+	"_RemoveTaxField": "Rimuovi",
+	"_Required": "Campo obbligatorio",
+	"_Specific properties": "Opzioni modulo spesa",
+	"_Tax": "Codice IVA",
+	"_TaxCode": "Codice IVA",
+	"_TaxCode1_report": "Codice IVA 1",
+	"_TaxCode2_report": "Codice IVA 2",
+	"_TaxCode3_report": "Codice IVA 3",
+	"_TaxCode4_report": "Codice IVA 4",
+	"_TaxCode5_report": "Codice IVA 5",
+	"_TaxCodeWithRate": "Codice IVA ({0}%)",
+	"_TaxRate": "Aliquota fiscale",
+	"_TaxRate1_report": "Aliquota fiscale 1",
+	"_TaxRate2_report": "Aliquota fiscale 2",
+	"_TaxRate3_report": "Aliquota fiscale 3",
+	"_TaxRate4_report": "Aliquota fiscale 4",
+	"_TaxRate5_report": "Aliquota fiscale 5",
+	"_TypeDescription": "Descrizione",
+	"_TypeDescription_report": "Descrizione",
+	"_TypeName": "Tipo di spesa",
+	"_TypeName_report": "Tipo di spesa",
+	"_VAT": "Imposte",
+	"_VATAddRemoveButtons": "Pulsanti associati a Imposte",
+	"_Vendor": "Fornitore",
+	"_Visible": "Campo visualizzato",
+	"P2P - Expense type": "S2P - Tipi di spese",
+	"P2P - Expense type__": "S2P - Tipi di spese",
+	"_Date": "Data spesa",
+	"_Date_report": "Data spesa",
+	"_Distance": "Chilometraggio",
+	"_Fuel/Gas": "Carburante/Ricarica di veicolo elettrico",
+	"_Hotel": "Alloggio",
+	"_Restaurant": "Pasto",
+	"_Standard": "Standard",
+	"_Template": "Modello del modulo spesa",
+	"_Template_report": "Modello del modulo spesa",
+	"_TotalAmount": "Importo totale",
+	"_TotalAmount_report": "Importo totale",
+	"_TotalAmountCurrency": "Valuta",
+	"_TotalAmountCurrency_report": "Valuta",
+	"_ContractName": "Nome contratto",
+	"_ContractName_report": "Nome contratto",
+	"_ContractNumber": "Numero contratto",
+	"_ContractNumber_report": "Numero contratto",
+	"_ContractReferenceNumber": "Rif. contratto",
+	"_ContractReferenceNumber_report": "Rif. contratto",
+	"_ContractRUIDEX": "ID esteso contratto",
+	"_ContractRUIDEX_report": "ID esteso contratto",
+	"_ContractSpendingID": "ID spesa contratto",
+	"_ContractSpendingID_report": "ID spesa contratto",
+	"_CostCenterDescription": "Descrizione del centro di costo",
+	"_CostCenterDescription_report": "Descrizione del centro di costo",
+	"_DefaultCurrency": "Valuta del prezzo consigliato",
+	"_DefaultCurrency_report": "Valuta del prezzo consigliato",
+	"_DefaultPublicPrice": "Prezzo consigliato",
+	"_DefaultPublicPrice_report": "Prezzo consigliato",
+	"_FreeDimension1": "Dimensione personalizzata 1",
+	"_FreeDimension1_report": "Dimensione personalizzata 1",
+	"_FreeDimension1ID": "Dimensione personalizzata 1 (ID)",
+	"_FreeDimension1ID_report": "Dimensione personalizzata 1 (ID)",
+	"_InternalOrder": "Ordine interno",
+	"_InternalOrder_report": "Ordine interno",
+	"_IsReplenishmentItem": "Articolo di rifornimento",
+	"_IsReplenishmentItem_report": "Articolo di rifornimento",
+	"_ItemDeliveryAddressID": "ID indirizzo di spedizione",
+	"_ItemDeliveryAddressID_report": "ID indirizzo di spedizione",
+	"_ItemShipToAddress": "Indirizzo di spedizione",
+	"_ItemShipToAddress_report": "Indirizzo di spedizione",
+	"_ItemShipToCompany": "Società destinataria",
+	"_ItemShipToCompany_report": "Società destinataria",
+	"_NonDeductibleTaxRate": "Aliquota fiscale non deducibile",
+	"_NonDeductibleTaxRate_report": "Aliquota fiscale non deducibile",
+	"_OriginalContractRUIDEX": "ID esteso contratto (versione originale)",
+	"_OriginalContractRUIDEX_report": "ID esteso contratto (versione originale)",
+	"_PreviousContractSpendingID": "ID spesa contratto precedente",
+	"_PreviousContractSpendingID_report": "ID spesa contratto precedente",
+	"_ProfitCenter": "Centro di profitto",
+	"_ProfitCenter_report": "Centro di profitto",
+	"_ProjectCode": "Codice progetto",
+	"_ProjectCode_report": "Codice progetto",
+	"_ProjectCodeDescription": "Descrizione progetto",
+	"_ProjectCodeDescription_report": "Descrizione progetto",
+	"_ProjectName": "Nome progetto",
+	"_ProjectName_report": "Nome progetto",
+	"_ProjectNumber": "Numero progetto",
+	"_ProjectNumber_report": "Numero progetto",
+	"_PublicPrice": "Prezzo standard",
+	"_PublicPrice_report": "Prezzo standard",
+	"_VendorRegistrationID_report": "ID richiesta di registrazione",
+	"_WarehouseID": "ID magazzino",
+	"_WarehouseID_report": "ID magazzino",
+	"_WarehouseName": "Nome magazzino",
+	"_WarehouseName_report": "Nome magazzino",
+	"_WBSElement": "Elemento WBS",
+	"_WBSElement_report": "Elemento WBS",
+	"_WBSElementID": "Elemento WBS (ID)",
+	"_WBSElementID_report": "Elemento WBS (ID)"
+}</process_IT>
+      <process_sk>{
+	"_AddTaxField": "Pridať",
+	"_Analytics": "Účtovné údaje",
+	"_Billable": "Zúčtovateľný",
+	"_Billable_report": "Zúčtovateľný",
+	"_CommentTemplate": "Šablóna komentára",
+	"_CommentTemplate_report": "Šablóna komentára",
+	"_CompanyCode": "Kód spoločnosti",
+	"_CompanyCode_report": "Kód spoločnosti",
+	"_CostCenter": "Nákladové stredisko",
+	"_CostCenter_report": "Nákladové stredisko",
+	"_Default G/L account": "Predvolený účet hlavnej knihy",
+	"_Default G/L account_report": "Predvolený účet hlavnej knihy",
+	"_FuelType": "Typ spotreby",
+	"_FuelType_report": "Typ spotreby",
+	"_GeneralPanel": "Všeobecné",
+	"_HelperInputCommentTemplate": "Umožňuje predvyplniť pole 'Poznámka' statickými pokynmi, ktoré pomáhajú používateľom zadávať požadované informácie.",
+	"_HelperInputTaxRate": "Túto možnosť vyberte, ak chcete, aby boli príslušné polia 'Výška dane' k dispozícii na ručné zadávanie vo formulári výdavkov.",
+	"_Hidden": "Skryté pole",
+	"_InputTaxRate": "Zobraziť polia 'Výška dane'",
+	"_Itemizable": "Rozpis výdavkov",
+	"_ItemizationDisabled": "Nepovolený",
+	"_ItemizationOptional": "Povolený",
+	"_Optional": "Voliteľné pole",
+	"_Receipt": "Potvrdenka",
+	"_Receipt_report": "Potvrdenka",
+	"_ReiceptOptional": "Voliteľné",
+	"_ReiceptRequired": "Povinné",
+	"_Remove a tax": "Odstrániť daňový kód",
+	"_RemoveTaxField": "Odstrániť",
+	"_Required": "Povinné pole",
+	"_Specific properties": "Možnosti formulára výdavkov",
+	"_Tax": "Kód dane",
+	"_TaxCode": "Kód dane",
+	"_TaxCode1_report": "Kód dane 1",
+	"_TaxCode2_report": "Kód dane 2",
+	"_TaxCode3_report": "Kód dane 3",
+	"_TaxCode4_report": "Kód dane 4",
+	"_TaxCode5_report": "Kód dane 5",
+	"_TaxCodeWithRate": "Kód dane ({0}%)",
+	"_TaxRate": "Sadzba dane",
+	"_TaxRate1_report": "Sadzba dane 1",
+	"_TaxRate2_report": "Sadzba dane 2",
+	"_TaxRate3_report": "Sadzba dane 3",
+	"_TaxRate4_report": "Sadzba dane 4",
+	"_TaxRate5_report": "Sadzba dane 5",
+	"_TypeDescription": "Popis",
+	"_TypeDescription_report": "Popis",
+	"_TypeName": "Typ výdavku",
+	"_TypeName_report": "Typ výdavku",
+	"_VAT": "Dane",
+	"_VATAddRemoveButtons": "Tlačidlá daní",
+	"_Vendor": "Dodávateľ",
+	"_Visible": "Viditeľné pole",
+	"P2P - Expense type": "S2P – Typy výdavkov",
+	"P2P - Expense type__": "S2P – Typy výdavkov",
+	"_Date": "Dátum výdavku",
+	"_Date_report": "Dátum výdavku",
+	"_Distance": "Najazdené kilometre",
+	"_Fuel/Gas": "Palivo/nabíjanie EV",
+	"_Hotel": "Ubytovanie",
+	"_Restaurant": "Strava",
+	"_Standard": "Štandardná",
+	"_Template": "Šablóna formulára výdavkov",
+	"_Template_report": "Šablóna formulára výdavkov",
+	"_TotalAmount": "Celková suma",
+	"_TotalAmount_report": "Celková suma",
+	"_TotalAmountCurrency": "Mena",
+	"_TotalAmountCurrency_report": "Mena",
+	"_ContractName": "Názov zmluvy",
+	"_ContractName_report": "Názov zmluvy",
+	"_ContractNumber": "Číslo zmluvy",
+	"_ContractNumber_report": "Číslo zmluvy",
+	"_ContractReferenceNumber": "Ref. č. zmluvy",
+	"_ContractReferenceNumber_report": "Ref. č. zmluvy",
+	"_ContractRUIDEX": "Rozšírené ID zmluvy",
+	"_ContractRUIDEX_report": "Rozšírené ID zmluvy",
+	"_ContractSpendingID": "ID výdavkov na zmluvu",
+	"_ContractSpendingID_report": "ID výdavkov na zmluvu",
+	"_CostCenterDescription": "Popis nákladového strediska",
+	"_CostCenterDescription_report": "Popis nákladového strediska",
+	"_DefaultCurrency": "Navrhovaná mena ceny",
+	"_DefaultCurrency_report": "Navrhovaná mena ceny",
+	"_DefaultPublicPrice": "Navrhovaná cena",
+	"_DefaultPublicPrice_report": "Navrhovaná cena",
+	"_FreeDimension1": "Vlastný rozmer 1",
+	"_FreeDimension1_report": "Vlastný rozmer 1",
+	"_FreeDimension1ID": "Vlastný rozmer 1 (ID)",
+	"_FreeDimension1ID_report": "Vlastný rozmer 1 (ID)",
+	"_InternalOrder": "Interná zákazka",
+	"_InternalOrder_report": "Interná zákazka",
+	"_IsReplenishmentItem": "Položka na doplnenie",
+	"_IsReplenishmentItem_report": "Položka na doplnenie",
+	"_ItemDeliveryAddressID": "ID adresy doručenia",
+	"_ItemDeliveryAddressID_report": "ID adresy doručenia",
+	"_ItemShipToAddress": "Adresa doručenia",
+	"_ItemShipToAddress_report": "Adresa doručenia",
+	"_ItemShipToCompany": "Spoločnosť príjemcu",
+	"_ItemShipToCompany_report": "Spoločnosť príjemcu",
+	"_NonDeductibleTaxRate": "Neodpočítateľná daňová sadzba",
+	"_NonDeductibleTaxRate_report": "Neodpočítateľná daňová sadzba",
+	"_OriginalContractRUIDEX": "Rozšírené ID zmluvy (pôvodná verzia)",
+	"_OriginalContractRUIDEX_report": "Rozšírené ID zmluvy (pôvodná verzia)",
+	"_PreviousContractSpendingID": "Predchádzajúce ID výdavkov na zmluvu",
+	"_PreviousContractSpendingID_report": "Predchádzajúce ID výdavkov na zmluvu",
+	"_ProfitCenter": "Ziskové stredisko",
+	"_ProfitCenter_report": "Ziskové stredisko",
+	"_ProjectCode": "Kód projektu",
+	"_ProjectCode_report": "Kód projektu",
+	"_ProjectCodeDescription": "Popis projektu",
+	"_ProjectCodeDescription_report": "Popis projektu",
+	"_ProjectName": "Názov projektu",
+	"_ProjectName_report": "Názov projektu",
+	"_ProjectNumber": "Číslo projektu",
+	"_ProjectNumber_report": "Číslo projektu",
+	"_PublicPrice": "Štandardná cena",
+	"_PublicPrice_report": "Štandardná cena",
+	"_VendorRegistrationID_report": "Registračné ID dodávateľa",
+	"_WarehouseID": "ID skladu",
+	"_WarehouseID_report": "ID skladu",
+	"_WarehouseName": "Názov skladu",
+	"_WarehouseName_report": "Názov skladu",
+	"_WBSElement": "Prvok WBS",
+	"_WBSElement_report": "Prvok WBS",
+	"_WBSElementID": "Prvok WBS (ID)",
+	"_WBSElementID_report": "Prvok WBS (ID)"
+}</process_sk>
+      <process_zh-CN>{
+	"_AddTaxField": "添加",
+	"_Analytics": "会计数据",
+	"_Billable": "可开账单",
+	"_Billable_report": "可开账单",
+	"_CommentTemplate": "附言模板",
+	"_CommentTemplate_report": "附言模板",
+	"_CompanyCode": "公司代码",
+	"_CompanyCode_report": "公司代码",
+	"_CostCenter": "成本中心",
+	"_CostCenter_report": "成本中心",
+	"_Default G/L account": "默认总账科目",
+	"_Default G/L account_report": "默认总账科目",
+	"_FuelType": "消耗类型",
+	"_FuelType_report": "消耗类型",
+	"_GeneralPanel": "通用",
+	"_HelperInputCommentTemplate": "允许用填写指示预填附言字段，以帮助用户输入所需信息。",
+	"_HelperInputTaxRate": "选中该选项可以手动输入费用表单中相应的“税额”字段。",
+	"_Hidden": "隐藏字段",
+	"_InputTaxRate": "显示“税额”字段",
+	"_Itemizable": "支出明细",
+	"_ItemizationDisabled": "不允许",
+	"_ItemizationOptional": "允许",
+	"_Optional": "可选字段",
+	"_Receipt": "收据",
+	"_Receipt_report": "收据",
+	"_ReiceptOptional": "可选",
+	"_ReiceptRequired": "必需",
+	"_Remove a tax": "删除税码",
+	"_RemoveTaxField": "移除",
+	"_Required": "必填字段",
+	"_Specific properties": "费用表单选项",
+	"_Tax": "税码",
+	"_TaxCode": "税码",
+	"_TaxCode1_report": "税码1",
+	"_TaxCode2_report": "税码2",
+	"_TaxCode3_report": "税码3",
+	"_TaxCode4_report": "税码4",
+	"_TaxCode5_report": "税码5",
+	"_TaxCodeWithRate": "税额（{0}%）",
+	"_TaxRate": "税率",
+	"_TaxRate1_report": "税率1",
+	"_TaxRate2_report": "税率2",
+	"_TaxRate3_report": "税率3",
+	"_TaxRate4_report": "税率4",
+	"_TaxRate5_report": "税率5",
+	"_TypeDescription": "说明/描述",
+	"_TypeDescription_report": "说明/描述",
+	"_TypeName": "费用类型",
+	"_TypeName_report": "费用类型",
+	"_VAT": "税",
+	"_VATAddRemoveButtons": "税务相关按钮",
+	"_Vendor": "供应商",
+	"P2P - Expense type": "寻源到付款 - 费用类别",
+	"P2P - Expense type__": "寻源到付款 - 费用类别",
+	"_Date": "费用日期",
+	"_Date_report": "费用日期",
+	"_Distance": "里程",
+	"_Fuel/Gas": "燃油或电动车充电",
+	"_Hotel": "住宿",
+	"_Restaurant": "餐饮",
+	"_Standard": "标准",
+	"_Template": "费用表单模板",
+	"_Template_report": "费用表单模板",
+	"_TotalAmount": "总额",
+	"_TotalAmount_report": "总额",
+	"_TotalAmountCurrency": "货币",
+	"_TotalAmountCurrency_report": "货币",
+	"_ContractName": "合同名称",
+	"_ContractName_report": "合同名称",
+	"_ContractNumber": "合同编号",
+	"_ContractNumber_report": "合同编号",
+	"_ContractReferenceNumber": "合同参考编号",
+	"_ContractReferenceNumber_report": "合同参考编号",
+	"_ContractRUIDEX": "合同扩展 ID",
+	"_ContractRUIDEX_report": "合同扩展 ID",
+	"_ContractSpendingID": "合同采购额 ID",
+	"_ContractSpendingID_report": "合同采购额 ID",
+	"_CostCenterDescription": "成本中心描述",
+	"_CostCenterDescription_report": "成本中心描述",
+	"_DefaultCurrency": "建议价格货币",
+	"_DefaultCurrency_report": "建议价格货币",
+	"_DefaultPublicPrice": "建议价格",
+	"_DefaultPublicPrice_report": "建议价格",
+	"_FreeDimension1": "自定义范围 1",
+	"_FreeDimension1_report": "自定义范围 1",
+	"_FreeDimension1ID": "自定义范围 1（ID）",
+	"_FreeDimension1ID_report": "自定义范围 1（ID）",
+	"_InternalOrder": "内部订单",
+	"_InternalOrder_report": "内部订单",
+	"_IsReplenishmentItem": "补货项目",
+	"_IsReplenishmentItem_report": "补货项目",
+	"_ItemDeliveryAddressID": "交付地址ID",
+	"_ItemDeliveryAddressID_report": "交付地址ID",
+	"_ItemShipToAddress": "交付地址",
+	"_ItemShipToAddress_report": "交付地址",
+	"_ItemShipToCompany": "收件人公司",
+	"_ItemShipToCompany_report": "收件人公司",
+	"_NonDeductibleTaxRate": "不可扣除税率",
+	"_NonDeductibleTaxRate_report": "不可扣除税率",
+	"_OriginalContractRUIDEX": "合同扩展 ID（原始版本）",
+	"_OriginalContractRUIDEX_report": "合同扩展 ID（原始版本）",
+	"_PreviousContractSpendingID": "前版合同购额 ID",
+	"_PreviousContractSpendingID_report": "前版合同购额 ID",
+	"_ProfitCenter": "利润中心",
+	"_ProfitCenter_report": "利润中心",
+	"_ProjectCode": "项目代码",
+	"_ProjectCode_report": "项目代码",
+	"_ProjectCodeDescription": "项目说明",
+	"_ProjectCodeDescription_report": "项目说明",
+	"_ProjectName": "项目名称",
+	"_ProjectName_report": "项目名称",
+	"_ProjectNumber": "项目编号",
+	"_ProjectNumber_report": "项目编号",
+	"_PublicPrice": "标准价格",
+	"_PublicPrice_report": "标准价格",
+	"_VendorRegistrationID_report": "供应商注册 ID",
+	"_WarehouseID": "仓库标识",
+	"_WarehouseID_report": "仓库标识",
+	"_WarehouseName": "仓库名称",
+	"_WarehouseName_report": "仓库名称",
+	"_WBSElement": "WBS 要素",
+	"_WBSElement_report": "WBS 要素",
+	"_WBSElementID": "WBS 要素（ID）",
+	"_WBSElementID_report": "WBS 要素（ID）"
+}</process_zh-CN>
+      <process_pt-BR>{
+	"_AddTaxField": "Adicionar",
+	"_Analytics": "Dados contábeis",
+	"_Billable": "Faturável",
+	"_Billable_report": "Faturável",
+	"_CommentTemplate": "Modelo de comentário",
+	"_CommentTemplate_report": "Modelo de comentário",
+	"_CompanyCode": "Código da empresa",
+	"_CompanyCode_report": "Código da empresa",
+	"_CostCenter": "Centro de custo",
+	"_CostCenter_report": "Centro de custo",
+	"_Default G/L account": "Conta do Razão padrão",
+	"_Default G/L account_report": "Conta do Razão padrão",
+	"_FuelType": "Tipo de consumo",
+	"_FuelType_report": "Tipo de consumo",
+	"_GeneralPanel": "Geral",
+	"_HelperInputCommentTemplate": "Permite pré-preencher o campo 'Comentário' com instruções estáticas para ajudar os usuários a inserir as informações necessárias.",
+	"_HelperInputTaxRate": "Selecione esta opção para disponibilizar os campos correspondentes 'Valor do imposto' para entrada manual no formulário de despesas.",
+	"_Hidden": "Campo oculto",
+	"_InputTaxRate": "Exibir campos 'Valor do imposto'",
+	"_Itemizable": "Especificação de despesas",
+	"_ItemizationDisabled": "Não permitido",
+	"_ItemizationOptional": "Permitido",
+	"_Optional": "Campo opcional",
+	"_Receipt": "Recibo",
+	"_Receipt_report": "Recibo",
+	"_ReiceptOptional": "Opcional",
+	"_ReiceptRequired": "Obrigatório",
+	"_Remove a tax": "Remover código tributário",
+	"_RemoveTaxField": "Remover",
+	"_Required": "Campo obrigatório",
+	"_Specific properties": "Opções de formulário de despesa",
+	"_Tax": "Código de imposto",
+	"_TaxCode": "Código de imposto",
+	"_TaxCode1_report": "Código de imposto 1",
+	"_TaxCode2_report": "Código de imposto 2",
+	"_TaxCode3_report": "Código de imposto 3",
+	"_TaxCode4_report": "Código de imposto 4",
+	"_TaxCode5_report": "Código de imposto 5",
+	"_TaxCodeWithRate": "Código de imposto ({0}%)",
+	"_TaxRate": "Taxa de imposto",
+	"_TaxRate1_report": "Taxa de imposto 1",
+	"_TaxRate2_report": "Taxa de imposto 2",
+	"_TaxRate3_report": "Taxa de imposto 3",
+	"_TaxRate4_report": "Taxa de imposto 4",
+	"_TaxRate5_report": "Taxa de imposto 5",
+	"_TypeDescription": "Descrição",
+	"_TypeDescription_report": "Descrição",
+	"_TypeName": "Tipo de despesa",
+	"_TypeName_report": "Tipo de despesa",
+	"_VAT": "Impostos",
+	"_VATAddRemoveButtons": "Botões Impostos",
+	"_Vendor": "Fornecedor",
+	"_Visible": "Campo visível",
+	"P2P - Expense type": "S2P - Tipos de despesas",
+	"P2P - Expense type__": "S2P - Tipos de despesas",
+	"_Date": "Data da despesa",
+	"_Date_report": "Data da despesa",
+	"_Distance": "Quilometragem",
+	"_Fuel/Gas": "Combustível/recarga de veículo elétrico",
+	"_Hotel": "Alojamento",
+	"_Restaurant": "Refeições",
+	"_Standard": "Padrão",
+	"_Template": "Modelo do formulário de despesa",
+	"_Template_report": "Modelo do formulário de despesa",
+	"_TotalAmount": "Valor total",
+	"_TotalAmount_report": "Valor total",
+	"_TotalAmountCurrency": "Moeda",
+	"_TotalAmountCurrency_report": "Moeda",
+	"_ContractName": "Nome do contrato",
+	"_ContractName_report": "Nome do contrato",
+	"_ContractNumber": "Número de contrato",
+	"_ContractNumber_report": "Número de contrato",
+	"_ContractReferenceNumber": "Ref. do contrato",
+	"_ContractReferenceNumber_report": "Ref. do contrato",
+	"_ContractRUIDEX": "ID estendido do contrato",
+	"_ContractRUIDEX_report": "ID estendido do contrato",
+	"_ContractSpendingID": "ID de despesa do contrato",
+	"_ContractSpendingID_report": "ID de despesa do contrato",
+	"_CostCenterDescription": "Descrição do centro de custo",
+	"_CostCenterDescription_report": "Descrição do centro de custo",
+	"_DefaultCurrency": "Moeda do preço sugerido",
+	"_DefaultCurrency_report": "Moeda do preço sugerido",
+	"_DefaultPublicPrice": "Preço sugerido",
+	"_DefaultPublicPrice_report": "Preço sugerido",
+	"_FreeDimension1": "Dimensão personalizada 1",
+	"_FreeDimension1_report": "Dimensão personalizada 1",
+	"_FreeDimension1ID": "Dimensão personalizada 1 (ID)",
+	"_FreeDimension1ID_report": "Dimensão personalizada 1 (ID)",
+	"_InternalOrder": "Pedido interno",
+	"_InternalOrder_report": "Pedido interno",
+	"_IsReplenishmentItem": "Item de reposição",
+	"_IsReplenishmentItem_report": "Item de reposição",
+	"_ItemDeliveryAddressID": "ID do endereço de entrega",
+	"_ItemDeliveryAddressID_report": "ID do endereço de entrega",
+	"_ItemShipToAddress": "Endereço de entrega",
+	"_ItemShipToAddress_report": "Endereço de entrega",
+	"_ItemShipToCompany": "Empresa receptora",
+	"_ItemShipToCompany_report": "Empresa receptora",
+	"_NonDeductibleTaxRate": "Taxa de imposto não dedutível",
+	"_NonDeductibleTaxRate_report": "Taxa de imposto não dedutível",
+	"_OriginalContractRUIDEX": "ID estendida do contrato (versão original)",
+	"_OriginalContractRUIDEX_report": "ID estendida do contrato (versão original)",
+	"_PreviousContractSpendingID": "ID de despesa do contrato anterior",
+	"_PreviousContractSpendingID_report": "ID de despesa do contrato anterior",
+	"_ProfitCenter": "Centro de lucro",
+	"_ProfitCenter_report": "Centro de lucro",
+	"_ProjectCode": "Código do projeto",
+	"_ProjectCode_report": "Código do projeto",
+	"_ProjectCodeDescription": "Descrição do projeto",
+	"_ProjectCodeDescription_report": "Descrição do projeto",
+	"_ProjectName": "Nome do projeto",
+	"_ProjectName_report": "Nome do projeto",
+	"_ProjectNumber": "Número do projeto",
+	"_ProjectNumber_report": "Número do projeto",
+	"_PublicPrice": "Preço padrão",
+	"_PublicPrice_report": "Preço padrão",
+	"_VendorRegistrationID_report": "ID de registro de fornecedor",
+	"_WarehouseID": "ID de armazém",
+	"_WarehouseID_report": "ID de armazém",
+	"_WarehouseName": "Nome do armazém",
+	"_WarehouseName_report": "Nome do armazém",
+	"_WBSElement": "Elemento WBS",
+	"_WBSElement_report": "Elemento WBS",
+	"_WBSElementID": "Elemento WBS (ID)",
+	"_WBSElementID_report": "Elemento WBS (ID)"
+}</process_pt-BR>
+    </lg>
+    <process>
+      <flowtype>processing</flowtype>
+      <homepagelabel>P2P - Expense type</homepagelabel>
+      <instanciable>1</instanciable>
+      <disableScriptModification>true</disableScriptModification>
+      <enableUpgradableDesign>true</enableUpgradableDesign>
+      <enablerounddecimal>true</enablerounddecimal>
+      <OverrideAllowedAttachmentExtensions>*</OverrideAllowedAttachmentExtensions>
+      <UseActionNameWithScriptApproval>true</UseActionNameWithScriptApproval>
+      <AllowUploadAttachment>0</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>0</AllowUploadReferenceDocument>
+      <shouldRollbackManualRecordEdits>true</shouldRollbackManualRecordEdits>
+      <UseCultureFormat>true</UseCultureFormat>
+      <TransportName>CustomTable</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+    </process>
+    <ui>
+      <customscriptIncludedScripts>Lib_Parameters_P2P_V12.0.566.0</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Sys/Sys_Helpers</customscriptIncludedScripts>
+      <customscriptIncludedScripts>Lib_Expense_LayoutManager_V12.0.566.0</customscriptIncludedScripts>
+      <CustomScriptReadonly>true</CustomScriptReadonly>
+      <CustomScript>"use strict";
+var P2P;
+(function (P2P) {
+    var Expense;
+    (function (Expense) {
+        var ExpenseType;
+        (function (ExpenseType) {
+            var CustomScript;
+            (function (CustomScript) {
+                /* Expense HTML page script */
+                /** **************** **/
+                /** Global variables **/
+                /** **************** **/
+                var layout = {
+                    panes: ["GeneralPanel", "SpecificProperties", "Analytics", "VAT"].map((name) =&gt; { return Controls[name]; }),
+                    taxCodes: ["TaxCode1__", "TaxCode2__", "TaxCode3__", "TaxCode4__", "TaxCode5__"].map((name) =&gt; { return Controls[name]; }),
+                    taxRates: ["TaxRate1__", "TaxRate2__", "TaxRate3__", "TaxRate4__", "TaxRate5__"].map((name) =&gt; { return Controls[name]; }),
+                    actionButtons: ["PreSave", "Save", "DeleteExpense", "Close"].map((name) =&gt; { return Controls[name]; }),
+                    inputTaxRate: Controls["InputTaxRate__"]
+                };
+                var fieldsVisible = layout.taxCodes.length;
+                async function InitLayout() {
+                    // Hide every tax rate field
+                    layout.taxRates.forEach((field, index) =&gt; {
+                        field.Hide(true);
+                        if (!Sys.Helpers.IsEmpty(field.GetValue())) {
+                            layout.taxCodes[index].SetLabel(Language.Translate("_TaxCodeWithRate", false, field.GetValue().toFixed(2)));
+                        }
+                    });
+                    // Set "OnSelectItem" for each TaxCode field
+                    layout.taxCodes.forEach((field, index) =&gt; {
+                        field.OnSelectItem = function (item) {
+                            field.SetLabel(Language.Translate("_TaxCodeWithRate", false, parseFloat(item.GetValue("TaxRate__") || 0).toFixed(2)));
+                            layout.taxRates[index].SetValue(item.GetValue("TaxRate__"));
+                        };
+                        field.OnChange = function () {
+                            if (Sys.Helpers.IsEmpty(field.GetValue())) {
+                                field.SetLabel(Language.Translate("_TaxCode"));
+                                layout.taxRates[index].SetValue(null);
+                            }
+                        };
+                        if (index &gt; 0 &amp;&amp; !field.GetValue()) {
+                            field.Hide(true);
+                            fieldsVisible--;
+                        }
+                    });
+                    // Hide save button (real one)
+                    Controls.Save.Hide(true);
+                    var initTaxField = function (indexFieldToInit, indexFieldSrc = -1) {
+                        layout.taxCodes[indexFieldToInit].SetValue(indexFieldSrc &gt;= 0 ? layout.taxCodes[indexFieldSrc].GetValue() : "");
+                        layout.taxRates[indexFieldToInit].SetValue(indexFieldSrc &gt;= 0 ? layout.taxRates[indexFieldSrc].GetValue() : "");
+                        layout.taxCodes[indexFieldToInit].SetLabel(indexFieldSrc &gt;= 0 ? Language.Translate("_TaxCodeWithRate", false, layout.taxRates[indexFieldToInit].GetValue().toFixed(2)) : Language.Translate("_TaxCode"));
+                    };
+                    // Set pre save button onclick action (unreal one)
+                    Controls.PreSave.OnClick = function () {
+                        for (var i = 0; i &lt; layout.taxCodes.length; i++) {
+                            if (layout.inputTaxRate.GetValue()) {
+                                for (var j = i + 1; j &lt; layout.taxCodes.length &amp;&amp; !layout.taxCodes[i].GetValue(); j++) {
+                                    if (layout.taxCodes[j].GetValue()) {
+                                        initTaxField(i, j);
+                                        initTaxField(j);
+                                    }
+                                }
+                            }
+                            else if (i &gt; 0) {
+                                initTaxField(i);
+                            }
+                        }
+                        Controls.Save.Click();
+                    };
+                    // Init layout depending the input tax rate (false/true)
+                    if (!layout.inputTaxRate.GetValue()) {
+                        layout.taxCodes.forEach(function (field, index) {
+                            if (index &gt; 0) {
+                                field.Hide(true);
+                            }
+                        });
+                        Controls.VATAddRemoveButtons.Hide(true);
+                    }
+                    // Disable the button or not corresponding the fields displayed
+                    if (fieldsVisible === 1) {
+                        Controls.Remove__.SetDisabled(true);
+                    }
+                    else if (fieldsVisible === layout.taxCodes.length) {
+                        Controls.Add__.SetDisabled(true);
+                    }
+                    // Set OnChange behavior on the input tax rate field
+                    layout.inputTaxRate.OnChange = function () {
+                        layout.taxCodes.forEach(function (field, index) {
+                            if (index &gt; 0 &amp;&amp; index &lt; fieldsVisible) {
+                                field.Hide(!layout.inputTaxRate.GetValue());
+                            }
+                        });
+                        Controls.VATAddRemoveButtons.Hide(!!!layout.inputTaxRate.GetValue());
+                    };
+                    // Set the remove button onclick action
+                    Controls.Remove__.OnClick = function () {
+                        var $fillRemoveField = function (dialog, tabId) {
+                            if (!tabId) {
+                                var ctrlText = "";
+                                for (var i = 0; i &lt; fieldsVisible; i++) {
+                                    if (layout.taxCodes[i].IsVisible() &amp;&amp; layout.taxCodes[i].GetValue()) {
+                                        if (ctrlText) {
+                                            ctrlText += "\n";
+                                        }
+                                        ctrlText += i + "=" + layout.taxCodes[i].GetValue() + " (" + layout.taxRates[i].GetValue().toFixed(2) + "%)";
+                                    }
+                                }
+                                var ctrlField = dialog.AddComboBox("ctrlField", "_Tax");
+                                ctrlField.SetText(ctrlText);
+                            }
+                        };
+                        var $commitRemoveField = function (dialog) {
+                            if (fieldsVisible &gt; 1 &amp;&amp; dialog.GetControl("ctrlField").GetValue()) {
+                                var fieldIndex = parseInt(dialog.GetControl("ctrlField").GetValue(), 10);
+                                var ctrl = layout.taxCodes[fieldIndex];
+                                ctrl.SetValue("");
+                                ctrl.SetLabel(Language.Translate("_TaxCode"));
+                                layout.taxRates[fieldIndex].SetValue("");
+                                for (var i = fieldIndex; i &lt; layout.taxCodes.length; i++) {
+                                    if (!layout.taxCodes[i].GetValue() &amp;&amp; i + 1 &lt; layout.taxCodes.length) {
+                                        if (layout.taxCodes[i + 1].GetValue()) {
+                                            initTaxField(i, i + 1);
+                                            initTaxField(i + 1);
+                                        }
+                                        else {
+                                            initTaxField(i);
+                                        }
+                                    }
+                                }
+                                fieldsVisible--;
+                                if (fieldsVisible === 1) {
+                                    Controls.Remove__.SetDisabled(true);
+                                }
+                                else if (fieldsVisible === layout.taxCodes.length - 1) {
+                                    Controls.Add__.SetDisabled(false);
+                                }
+                                layout.taxCodes[fieldsVisible].Hide();
+                                initTaxField(fieldsVisible);
+                            }
+                        };
+                        Popup.Dialog("_Remove a tax", null, $fillRemoveField, $commitRemoveField); //, null, $handleEventAddField);
+                    };
+                    // Set the add button onclick action
+                    Controls.Add__.OnClick = function () {
+                        if (fieldsVisible &lt; layout.taxCodes.length) {
+                            layout.taxCodes[fieldsVisible++].Hide(false);
+                        }
+                        if (fieldsVisible === 2) {
+                            Controls.Remove__.SetDisabled(false);
+                        }
+                        else if (fieldsVisible === layout.taxCodes.length) {
+                            Controls.Add__.SetDisabled(true);
+                        }
+                    };
+                    await (async function InitTemplateFeature() {
+                        await Sys.Helpers.TryCallFunction("Lib.Expense.Customization.Common.OnLoadLayoutManagerTemplates");
+                        const templateOptions = Object.values(Lib.Expense.LayoutManager.templates)
+                            .map(template =&gt; `${template.name}=${template.label || ("_" + template.name)}`);
+                        Controls.Template__.SetAvailableValues(templateOptions);
+                        // By default all behavior fields are hidden
+                        Lib.Expense.LayoutManager.GetBehaviorFieldNames()
+                            .forEach(fieldName =&gt; Controls[fieldName].Hide(true));
+                        let RefreshLayout = options =&gt; {
+                            options = options || {};
+                            let template = Lib.Expense.LayoutManager.GetTemplate();
+                            Sys.Helpers.Object.ForEach(template.fields, (field) =&gt; {
+                                if (field.overloadBehavior) {
+                                    let ctrl = Controls[field.overloadBehavior.fieldName];
+                                    ctrl.Hide(false);
+                                    if (!options.noDefaultValue &amp;&amp; !field.overloadBehavior.keepValueWhenChangingTemplate) {
+                                        ctrl.SetValue(field.overloadBehavior.defaultValue);
+                                    }
+                                }
+                            });
+                            Lib.Expense.LayoutManager.GetBehaviorFieldNames(Lib.Expense.LayoutManager.FieldSelector.Ignored)
+                                .forEach(fieldName =&gt; Controls[fieldName].Hide(true));
+                        };
+                        Controls.Template__.OnChange = RefreshLayout;
+                        RefreshLayout({
+                            noDefaultValue: !!Data.GetValue("RuidEx")
+                        });
+                    })();
+                    //For version before release which upgrade to release one
+                    // Itemizable__ was hidden in layout.json before complete release
+                    Controls.Itemizable__.Hide(false);
+                }
+                async function main() {
+                    try {
+                        Controls.Save.Wait(true);
+                        await InitLayout();
+                    }
+                    finally {
+                        Controls.Save.Wait(false);
+                    }
+                }
+                main();
+            })(CustomScript = ExpenseType.CustomScript || (ExpenseType.CustomScript = {}));
+        })(ExpenseType = Expense.ExpenseType || (Expense.ExpenseType = {}));
+    })(Expense = P2P.Expense || (P2P.Expense = {}));
+})(P2P || (P2P = {}));
+//# sourceMappingURL=customscript.js.map</CustomScript>
+      <restorationPanel>DataPanel</restorationPanel>
+      <layout>{
+	"data": [],
+	"stamps": 92,
+	"*": {
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"data": [],
+			"stamp": 1,
+			"options": {
+				"splitterType": "simple-v",
+				"backColor": "text-backgroundcolor-default",
+				"style": null,
+				"processHelpId": "5013",
+				"version": 0
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"data": [],
+					"stamp": 2,
+					"options": {
+						"hidePanelsMenu": false,
+						"version": 0
+					}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"data": [],
+					"stamp": 3,
+					"options": {
+						"version": 0
+					},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"data": [],
+							"stamp": 4,
+							"options": {
+								"version": 0
+							},
+							"*": {
+								"form-content-center": {
+									"type": "FlexibleFormSplitter",
+									"data": [],
+									"stamp": 5,
+									"options": {
+										"version": 1,
+										"box": {
+											"top": "0%",
+											"left": "0%",
+											"width": "100%"
+										},
+										"hidden": false,
+										"hideSeparator": true
+									},
+									"*": {
+										"form-content-center-1": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 6,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"DataPanel": {
+													"type": "PanelData",
+													"data": [],
+													"stamp": 7,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": false,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"backgroundcolor": "default",
+														"labelsAlignment": "right",
+														"label": "_Document data",
+														"hidden": true,
+														"sameHeightAsSiblings": false,
+														"labelsPosition": "left",
+														"version": 0
+													},
+													"*": {
+														"FieldsManager": {
+															"type": "FieldsManager",
+															"data": [],
+															"stamp": 8,
+															"options": {
+																"version": 0,
+																"controlsAssociation": {}
+															},
+															"*": {
+																"Grid": {
+																	"type": "GridLayout",
+																	"data": [
+																		"fields"
+																	],
+																	"stamp": 9,
+																	"options": {
+																		"version": 0,
+																		"lines": 0,
+																		"columns": 2,
+																		"ctrlsPos": {},
+																		"colspans": []
+																	}
+																}
+															}
+														}
+													}
+												},
+												"GeneralPanel": {
+													"type": "PanelData",
+													"data": [],
+													"stamp": 10,
+													"options": {
+														"border": {},
+														"labelLength": "200",
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": true,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"backgroundcolor": "default",
+														"labelsAlignment": "right",
+														"label": "_GeneralPanel",
+														"leftImageURL": "",
+														"removeMargins": false,
+														"elementsAlignment": "left",
+														"sameHeightAsSiblings": false,
+														"labelsPosition": "left",
+														"version": 0
+													},
+													"*": {
+														"FieldsManager": {
+															"type": "FieldsManager",
+															"data": [],
+															"stamp": 11,
+															"options": {
+																"version": 0,
+																"controlsAssociation": {
+																	"CompanyCode__": "LabelCompanyCode__",
+																	"LabelCompanyCode__": "CompanyCode__",
+																	"Name__": "LabelName__",
+																	"LabelName__": "Name__",
+																	"Description__": "LabelDescription__",
+																	"LabelDescription__": "Description__",
+																	"Itemizable__": "LabelItemizable__",
+																	"LabelItemizable__": "Itemizable__"
+																}
+															},
+															"*": {
+																"Grid": {
+																	"type": "GridLayout",
+																	"data": [
+																		"fields"
+																	],
+																	"stamp": 12,
+																	"options": {
+																		"version": 0,
+																		"lines": 5,
+																		"columns": 2,
+																		"ctrlsPos": {
+																			"LabelCompanyCode__": {
+																				"line": 1,
+																				"column": 1
+																			},
+																			"CompanyCode__": {
+																				"line": 1,
+																				"column": 2
+																			},
+																			"LabelName__": {
+																				"line": 2,
+																				"column": 1
+																			},
+																			"Name__": {
+																				"line": 2,
+																				"column": 2
+																			},
+																			"LabelDescription__": {
+																				"line": 3,
+																				"column": 1
+																			},
+																			"Description__": {
+																				"line": 3,
+																				"column": 2
+																			},
+																			"LabelItemizable__": {
+																				"line": 4,
+																				"column": 1
+																			},
+																			"Itemizable__": {
+																				"line": 4,
+																				"column": 2
+																			},
+																			"Spacer_line__": {
+																				"line": 5,
+																				"column": 1
+																			}
+																		},
+																		"colspans": [
+																			[],
+																			[],
+																			[],
+																			[],
+																			[
+																				{
+																					"index": 0,
+																					"length": 2
+																				}
+																			]
+																		]
+																	},
+																	"*": {
+																		"LabelCompanyCode__": {
+																			"type": "Label",
+																			"data": [
+																				"CompanyCode__"
+																			],
+																			"stamp": 14,
+																			"options": {
+																				"label": "_CompanyCode",
+																				"version": 0
+																			}
+																		},
+																		"CompanyCode__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"CompanyCode__"
+																			],
+																			"stamp": 13,
+																			"options": {
+																				"label": "_CompanyCode",
+																				"version": 1,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"minNbLines": 1,
+																				"maxNbLines": 1,
+																				"PreFillFTS": true,
+																				"fTSmaxRecords": "20",
+																				"browsable": true,
+																				"autoCompleteSearchMode": "startswith",
+																				"searchMode": "matches"
+																			}
+																		},
+																		"LabelName__": {
+																			"type": "Label",
+																			"data": [
+																				"Name__"
+																			],
+																			"stamp": 16,
+																			"options": {
+																				"label": "_TypeName",
+																				"version": 0
+																			}
+																		},
+																		"Name__": {
+																			"type": "ShortText",
+																			"data": [
+																				"Name__"
+																			],
+																			"stamp": 15,
+																			"options": {
+																				"label": "_TypeName",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 1,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"browsable": false
+																			}
+																		},
+																		"LabelDescription__": {
+																			"type": "Label",
+																			"data": [
+																				"Description__"
+																			],
+																			"stamp": 18,
+																			"options": {
+																				"label": "_TypeDescription",
+																				"version": 0
+																			}
+																		},
+																		"Description__": {
+																			"type": "ShortText",
+																			"data": [
+																				"Description__"
+																			],
+																			"stamp": 17,
+																			"options": {
+																				"label": "_TypeDescription",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 1,
+																				"activable": true,
+																				"width": "300",
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"browsable": false,
+																				"autocompletable": false,
+																				"length": 120
+																			}
+																		},
+																		"LabelItemizable__": {
+																			"type": "Label",
+																			"data": [
+																				"Itemizable__"
+																			],
+																			"stamp": 20,
+																			"options": {
+																				"label": "_Itemizable",
+																				"hidden": false,
+																				"version": 0
+																			}
+																		},
+																		"Itemizable__": {
+																			"type": "ComboBox",
+																			"data": [
+																				"Itemizable__"
+																			],
+																			"stamp": 19,
+																			"options": {
+																				"label": "_Itemizable",
+																				"possibleValues": {
+																					"0": "_ItemizationDisabled",
+																					"1": "_ItemizationOptional"
+																				},
+																				"keyValueMode": true,
+																				"possibleKeys": {
+																					"0": "Disabled",
+																					"1": "Optional"
+																				},
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"hidden": false,
+																				"version": 0
+																			}
+																		},
+																		"Spacer_line__": {
+																			"type": "Spacer",
+																			"data": false,
+																			"stamp": 21,
+																			"options": {
+																				"label": "Spacer line",
+																				"height": "",
+																				"width": "",
+																				"color": "default",
+																				"version": 0
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-center-2": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 22,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"SpecificPropertiesPanel": {
+													"type": "PanelData",
+													"data": [],
+													"stamp": 23,
+													"options": {
+														"border": {},
+														"labelLength": "200",
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": true,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"backgroundcolor": "default",
+														"labelsAlignment": "right",
+														"label": "_Specific properties",
+														"leftImageURL": "",
+														"removeMargins": false,
+														"elementsAlignment": "left",
+														"sameHeightAsSiblings": false,
+														"labelsPosition": "left",
+														"version": 0
+													},
+													"*": {
+														"FieldsManager": {
+															"type": "FieldsManager",
+															"data": [],
+															"stamp": 24,
+															"options": {
+																"version": 0,
+																"controlsAssociation": {
+																	"Template__": "LabelTemplate__",
+																	"LabelTemplate__": "Template__",
+																	"FuelTypeBehaviour__": "LabelFuelTypeBehaviour__",
+																	"LabelFuelTypeBehaviour__": "FuelTypeBehaviour__",
+																	"ReceiptBehaviour__": "LabelReceiptBehaviour__",
+																	"LabelReceiptBehaviour__": "ReceiptBehaviour__",
+																	"VendorFieldBehaviour__": "LabelVendorFieldBehaviour__",
+																	"LabelVendorFieldBehaviour__": "VendorFieldBehaviour__",
+																	"CostCenterFieldBehaviour__": "LabelCostCenterFieldBehaviour__",
+																	"LabelCostCenterFieldBehaviour__": "CostCenterFieldBehaviour__",
+																	"ProjectCodeFieldBehaviour__": "LabelProjectCodeFieldBehaviour__",
+																	"LabelProjectCodeFieldBehaviour__": "ProjectCodeFieldBehaviour__",
+																	"BillableFieldBehaviour__": "LabelBillableFieldBehaviour__",
+																	"LabelBillableFieldBehaviour__": "BillableFieldBehaviour__",
+																	"CommentTemplate__": "LabelCommentTemplate__",
+																	"LabelCommentTemplate__": "CommentTemplate__"
+																}
+															},
+															"*": {
+																"Grid": {
+																	"type": "GridLayout",
+																	"data": [
+																		"fields"
+																	],
+																	"stamp": 25,
+																	"options": {
+																		"version": 0,
+																		"lines": 8,
+																		"columns": 2,
+																		"ctrlsPos": {
+																			"LabelTemplate__": {
+																				"line": 1,
+																				"column": 1
+																			},
+																			"Template__": {
+																				"line": 1,
+																				"column": 2
+																			},
+																			"LabelFuelTypeBehaviour__": {
+																				"line": 2,
+																				"column": 1
+																			},
+																			"FuelTypeBehaviour__": {
+																				"line": 2,
+																				"column": 2
+																			},
+																			"LabelReceiptBehaviour__": {
+																				"line": 3,
+																				"column": 1
+																			},
+																			"ReceiptBehaviour__": {
+																				"line": 3,
+																				"column": 2
+																			},
+																			"LabelVendorFieldBehaviour__": {
+																				"line": 4,
+																				"column": 1
+																			},
+																			"VendorFieldBehaviour__": {
+																				"line": 4,
+																				"column": 2
+																			},
+																			"LabelCostCenterFieldBehaviour__": {
+																				"line": 5,
+																				"column": 1
+																			},
+																			"CostCenterFieldBehaviour__": {
+																				"line": 5,
+																				"column": 2
+																			},
+																			"LabelProjectCodeFieldBehaviour__": {
+																				"line": 6,
+																				"column": 1
+																			},
+																			"ProjectCodeFieldBehaviour__": {
+																				"line": 6,
+																				"column": 2
+																			},
+																			"LabelBillableFieldBehaviour__": {
+																				"line": 7,
+																				"column": 1
+																			},
+																			"BillableFieldBehaviour__": {
+																				"line": 7,
+																				"column": 2
+																			},
+																			"LabelCommentTemplate__": {
+																				"line": 8,
+																				"column": 1
+																			},
+																			"CommentTemplate__": {
+																				"line": 8,
+																				"column": 2
+																			}
+																		},
+																		"colspans": [
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[]
+																		]
+																	},
+																	"*": {
+																		"LabelTemplate__": {
+																			"type": "Label",
+																			"data": [
+																				"Template__"
+																			],
+																			"stamp": 27,
+																			"options": {
+																				"label": "_Template",
+																				"version": 0
+																			}
+																		},
+																		"Template__": {
+																			"type": "ComboBox",
+																			"data": [
+																				"Template__"
+																			],
+																			"stamp": 26,
+																			"options": {
+																				"label": "_Template",
+																				"possibleValues": {
+																					"0": "_Standard",
+																					"1": "_Distance",
+																					"2": "_Restaurant",
+																					"3": "_Hotel",
+																					"4": "_Fuel/Gas"
+																				},
+																				"version": 1,
+																				"keyValueMode": true,
+																				"possibleKeys": {
+																					"0": "Standard",
+																					"1": "Distance",
+																					"2": "Restaurant",
+																					"3": "Hotel",
+																					"4": "Fuel/Gas"
+																				},
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"DataSourceOrigin": "Standalone",
+																				"DisplayedColumns": "",
+																				"maxNbLinesToDisplay": 10
+																			}
+																		},
+																		"LabelFuelTypeBehaviour__": {
+																			"type": "Label",
+																			"data": [
+																				"FuelTypeBehaviour__"
+																			],
+																			"stamp": 29,
+																			"options": {
+																				"label": "_FuelType",
+																				"version": 0
+																			}
+																		},
+																		"FuelTypeBehaviour__": {
+																			"type": "ComboBox",
+																			"data": [
+																				"FuelTypeBehaviour__"
+																			],
+																			"stamp": 28,
+																			"options": {
+																				"label": "_FuelType",
+																				"possibleValues": {
+																					"0": "_Hidden",
+																					"1": "_Optional"
+																				},
+																				"version": 1,
+																				"keyValueMode": true,
+																				"possibleKeys": {
+																					"0": "Hidden",
+																					"1": "Optional"
+																				},
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"DataSourceOrigin": "Standalone",
+																				"DisplayedColumns": "",
+																				"maxNbLinesToDisplay": 10
+																			}
+																		},
+																		"LabelReceiptBehaviour__": {
+																			"type": "Label",
+																			"data": [
+																				"ReceiptBehaviour__"
+																			],
+																			"stamp": 31,
+																			"options": {
+																				"label": "_Receipt",
+																				"version": 0
+																			}
+																		},
+																		"ReceiptBehaviour__": {
+																			"type": "ComboBox",
+																			"data": [
+																				"ReceiptBehaviour__"
+																			],
+																			"stamp": 30,
+																			"options": {
+																				"label": "_Receipt",
+																				"possibleValues": {
+																					"0": "_ReiceptOptional",
+																					"1": "_ReiceptRequired"
+																				},
+																				"version": 1,
+																				"keyValueMode": true,
+																				"possibleKeys": {
+																					"0": "Optional",
+																					"1": "Required"
+																				},
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"DataSourceOrigin": "Standalone",
+																				"DisplayedColumns": "",
+																				"maxNbLinesToDisplay": 10
+																			}
+																		},
+																		"LabelVendorFieldBehaviour__": {
+																			"type": "Label",
+																			"data": [
+																				"VendorFieldBehaviour__"
+																			],
+																			"stamp": 33,
+																			"options": {
+																				"label": "_Vendor",
+																				"version": 0
+																			}
+																		},
+																		"VendorFieldBehaviour__": {
+																			"type": "ComboBox",
+																			"data": [
+																				"VendorFieldBehaviour__"
+																			],
+																			"stamp": 32,
+																			"options": {
+																				"label": "_Vendor",
+																				"possibleValues": {
+																					"0": "_Hidden",
+																					"1": "_Optional",
+																					"2": "_Required"
+																				},
+																				"version": 1,
+																				"keyValueMode": true,
+																				"possibleKeys": {
+																					"0": "Hidden",
+																					"1": "Optional",
+																					"2": "Required"
+																				},
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"DataSourceOrigin": "Standalone",
+																				"DisplayedColumns": "",
+																				"maxNbLinesToDisplay": 10
+																			}
+																		},
+																		"LabelCostCenterFieldBehaviour__": {
+																			"type": "Label",
+																			"data": [
+																				"CostCenterFieldBehaviour__"
+																			],
+																			"stamp": 35,
+																			"options": {
+																				"label": "_CostCenterDescription",
+																				"version": 0
+																			}
+																		},
+																		"CostCenterFieldBehaviour__": {
+																			"type": "ComboBox",
+																			"data": [
+																				"CostCenterFieldBehaviour__"
+																			],
+																			"stamp": 34,
+																			"options": {
+																				"label": "_CostCenterDescription",
+																				"possibleValues": {
+																					"0": "_Hidden",
+																					"1": "_Visible"
+																				},
+																				"version": 1,
+																				"keyValueMode": true,
+																				"possibleKeys": {
+																					"0": "Hidden",
+																					"1": "Required"
+																				},
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"DataSourceOrigin": "Standalone",
+																				"DisplayedColumns": "",
+																				"maxNbLinesToDisplay": 10,
+																				"helpIconPosition": "Right"
+																			}
+																		},
+																		"LabelProjectCodeFieldBehaviour__": {
+																			"type": "Label",
+																			"data": [
+																				"ProjectCodeFieldBehaviour__"
+																			],
+																			"stamp": 37,
+																			"options": {
+																				"label": "_ProjectCodeDescription",
+																				"version": 0
+																			}
+																		},
+																		"ProjectCodeFieldBehaviour__": {
+																			"type": "ComboBox",
+																			"data": [
+																				"ProjectCodeFieldBehaviour__"
+																			],
+																			"stamp": 36,
+																			"options": {
+																				"label": "_ProjectCodeDescription",
+																				"possibleValues": {
+																					"0": "_Hidden",
+																					"1": "_Optional",
+																					"2": "_Required"
+																				},
+																				"maxNbLinesToDisplay": 10,
+																				"version": 1,
+																				"keyValueMode": true,
+																				"possibleKeys": {
+																					"0": "Hidden",
+																					"1": "Optional",
+																					"2": "Required"
+																				},
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"helpIconPosition": "Right",
+																				"DataSourceOrigin": "Standalone",
+																				"DisplayedColumns": ""
+																			}
+																		},
+																		"LabelBillableFieldBehaviour__": {
+																			"type": "Label",
+																			"data": [
+																				"BillableFieldBehaviour__"
+																			],
+																			"stamp": 39,
+																			"options": {
+																				"label": "_Billable",
+																				"version": 0
+																			}
+																		},
+																		"BillableFieldBehaviour__": {
+																			"type": "ComboBox",
+																			"data": [
+																				"BillableFieldBehaviour__"
+																			],
+																			"stamp": 38,
+																			"options": {
+																				"label": "_Billable",
+																				"possibleValues": {
+																					"0": "_Hidden",
+																					"1": "_Visible"
+																				},
+																				"version": 1,
+																				"keyValueMode": true,
+																				"possibleKeys": {
+																					"0": "Hidden",
+																					"1": "Required"
+																				},
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"DataSourceOrigin": "Standalone",
+																				"DisplayedColumns": "",
+																				"maxNbLinesToDisplay": 10
+																			}
+																		},
+																		"LabelCommentTemplate__": {
+																			"type": "Label",
+																			"data": [
+																				"CommentTemplate__"
+																			],
+																			"stamp": 41,
+																			"options": {
+																				"label": "_CommentTemplate",
+																				"version": 0
+																			}
+																		},
+																		"CommentTemplate__": {
+																			"type": "LongText",
+																			"data": [
+																				"CommentTemplate__"
+																			],
+																			"stamp": 40,
+																			"options": {
+																				"label": "_CommentTemplate",
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"version": 1,
+																				"minNbLines": 3,
+																				"activable": true,
+																				"width": "300",
+																				"helpText": "_HelperInputCommentTemplate",
+																				"helpURL": "4013",
+																				"helpFormat": "HTML Format",
+																				"browsable": false
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"Analytics": {
+													"type": "PanelData",
+													"data": [],
+													"stamp": 42,
+													"options": {
+														"border": {},
+														"labelLength": "200",
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": true,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"backgroundcolor": "default",
+														"labelsAlignment": "right",
+														"label": "_Analytics",
+														"leftImageURL": "",
+														"removeMargins": false,
+														"elementsAlignment": "left",
+														"sameHeightAsSiblings": false,
+														"labelsPosition": "left",
+														"version": 0
+													},
+													"*": {
+														"FieldsManager": {
+															"type": "FieldsManager",
+															"data": [],
+															"stamp": 43,
+															"options": {
+																"version": 0,
+																"controlsAssociation": {
+																	"DefaultGLAccount__": "LabelDefaultGLAccount__",
+																	"LabelDefaultGLAccount__": "DefaultGLAccount__"
+																}
+															},
+															"*": {
+																"Grid": {
+																	"type": "GridLayout",
+																	"data": [
+																		"fields"
+																	],
+																	"stamp": 44,
+																	"options": {
+																		"version": 0,
+																		"lines": 2,
+																		"columns": 2,
+																		"ctrlsPos": {
+																			"LabelDefaultGLAccount__": {
+																				"line": 1,
+																				"column": 1
+																			},
+																			"DefaultGLAccount__": {
+																				"line": 1,
+																				"column": 2
+																			},
+																			"Spacer_line2__": {
+																				"line": 2,
+																				"column": 1
+																			}
+																		},
+																		"colspans": [
+																			[],
+																			[
+																				{
+																					"index": 0,
+																					"length": 2
+																				}
+																			]
+																		]
+																	},
+																	"*": {
+																		"LabelDefaultGLAccount__": {
+																			"type": "Label",
+																			"data": [
+																				"DefaultGLAccount__"
+																			],
+																			"stamp": 46,
+																			"options": {
+																				"label": "_Default G/L account",
+																				"version": 0
+																			}
+																		},
+																		"DefaultGLAccount__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"DefaultGLAccount__"
+																			],
+																			"stamp": 45,
+																			"options": {
+																				"label": "_Default G/L account",
+																				"version": 1,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"minNbLines": 1,
+																				"maxNbLines": 1,
+																				"length": 30,
+																				"PreFillFTS": true,
+																				"fTSmaxRecords": "20",
+																				"browsable": true,
+																				"autoCompleteSearchMode": "startswith",
+																				"searchMode": "matches"
+																			}
+																		},
+																		"Spacer_line2__": {
+																			"type": "Spacer",
+																			"data": false,
+																			"stamp": 47,
+																			"options": {
+																				"label": "Spacer line2",
+																				"height": "",
+																				"width": "",
+																				"color": "default",
+																				"version": 0
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-center-6": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 48,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"VAT": {
+													"type": "PanelData",
+													"data": [],
+													"stamp": 49,
+													"options": {
+														"border": {},
+														"labelLength": "200",
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": true,
+														"hideTitleBar": false,
+														"hideTitle": false,
+														"backgroundcolor": "default",
+														"labelsAlignment": "right",
+														"label": "_VAT",
+														"leftImageURL": "",
+														"removeMargins": false,
+														"elementsAlignment": "left",
+														"sameHeightAsSiblings": false,
+														"labelsPosition": "left",
+														"version": 0
+													},
+													"*": {
+														"FieldsManager": {
+															"type": "FieldsManager",
+															"data": [],
+															"stamp": 50,
+															"options": {
+																"version": 0,
+																"controlsAssociation": {
+																	"InputTaxRate__": "LabelInputTaxRate__",
+																	"LabelInputTaxRate__": "InputTaxRate__",
+																	"TaxCode1__": "LabelTaxCode1__",
+																	"LabelTaxCode1__": "TaxCode1__",
+																	"TaxRate1__": "LabelTaxRate1__",
+																	"LabelTaxRate1__": "TaxRate1__",
+																	"TaxCode2__": "LabelTaxCode2__",
+																	"LabelTaxCode2__": "TaxCode2__",
+																	"TaxRate2__": "LabelTaxRate2__",
+																	"LabelTaxRate2__": "TaxRate2__",
+																	"TaxCode3__": "LabelTaxCode3__",
+																	"LabelTaxCode3__": "TaxCode3__",
+																	"TaxRate3__": "LabelTaxRate3__",
+																	"LabelTaxRate3__": "TaxRate3__",
+																	"TaxCode4__": "LabelTaxCode4__",
+																	"LabelTaxCode4__": "TaxCode4__",
+																	"TaxRate4__": "LabelTaxRate4__",
+																	"LabelTaxRate4__": "TaxRate4__",
+																	"TaxCode5__": "LabelTaxCode5__",
+																	"LabelTaxCode5__": "TaxCode5__",
+																	"TaxRate5__": "LabelTaxRate5__",
+																	"LabelTaxRate5__": "TaxRate5__"
+																}
+															},
+															"*": {
+																"Grid": {
+																	"type": "GridLayout",
+																	"data": [
+																		"fields"
+																	],
+																	"stamp": 51,
+																	"options": {
+																		"version": 0,
+																		"lines": 12,
+																		"columns": 2,
+																		"ctrlsPos": {
+																			"LabelInputTaxRate__": {
+																				"line": 1,
+																				"column": 1
+																			},
+																			"InputTaxRate__": {
+																				"line": 1,
+																				"column": 2
+																			},
+																			"HelperInputTaxRate__": {
+																				"line": 2,
+																				"column": 1
+																			},
+																			"LabelTaxCode1__": {
+																				"line": 3,
+																				"column": 1
+																			},
+																			"TaxCode1__": {
+																				"line": 3,
+																				"column": 2
+																			},
+																			"LabelTaxRate1__": {
+																				"line": 4,
+																				"column": 1
+																			},
+																			"TaxRate1__": {
+																				"line": 4,
+																				"column": 2
+																			},
+																			"LabelTaxCode2__": {
+																				"line": 5,
+																				"column": 1
+																			},
+																			"TaxCode2__": {
+																				"line": 5,
+																				"column": 2
+																			},
+																			"LabelTaxRate2__": {
+																				"line": 6,
+																				"column": 1
+																			},
+																			"TaxRate2__": {
+																				"line": 6,
+																				"column": 2
+																			},
+																			"LabelTaxCode3__": {
+																				"line": 7,
+																				"column": 1
+																			},
+																			"TaxCode3__": {
+																				"line": 7,
+																				"column": 2
+																			},
+																			"LabelTaxRate3__": {
+																				"line": 8,
+																				"column": 1
+																			},
+																			"TaxRate3__": {
+																				"line": 8,
+																				"column": 2
+																			},
+																			"LabelTaxCode4__": {
+																				"line": 9,
+																				"column": 1
+																			},
+																			"TaxCode4__": {
+																				"line": 9,
+																				"column": 2
+																			},
+																			"LabelTaxRate4__": {
+																				"line": 10,
+																				"column": 1
+																			},
+																			"TaxRate4__": {
+																				"line": 10,
+																				"column": 2
+																			},
+																			"LabelTaxCode5__": {
+																				"line": 11,
+																				"column": 1
+																			},
+																			"TaxCode5__": {
+																				"line": 11,
+																				"column": 2
+																			},
+																			"LabelTaxRate5__": {
+																				"line": 12,
+																				"column": 1
+																			},
+																			"TaxRate5__": {
+																				"line": 12,
+																				"column": 2
+																			}
+																		},
+																		"colspans": [
+																			[],
+																			[
+																				{
+																					"index": 0,
+																					"length": 2
+																				}
+																			],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[],
+																			[]
+																		]
+																	},
+																	"*": {
+																		"LabelInputTaxRate__": {
+																			"type": "Label",
+																			"data": [
+																				"InputTaxRate__"
+																			],
+																			"stamp": 53,
+																			"options": {
+																				"label": "_InputTaxRate",
+																				"version": 0
+																			}
+																		},
+																		"InputTaxRate__": {
+																			"type": "CheckBox",
+																			"data": [
+																				"InputTaxRate__"
+																			],
+																			"stamp": 52,
+																			"options": {
+																				"label": "_InputTaxRate",
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "_HelperInputTaxRate",
+																				"helpURL": "4012",
+																				"helpFormat": "HTML Format",
+																				"version": 0
+																			}
+																		},
+																		"HelperInputTaxRate__": {
+																			"type": "Text",
+																			"data": false,
+																			"stamp": 54,
+																			"options": {
+																				"label": "",
+																				"marge": 0,
+																				"textSize": "S",
+																				"textAlignment": "left",
+																				"textStyle": "default",
+																				"textColor": "color1",
+																				"backgroundcolor": "default",
+																				"image_url": "",
+																				"iconClass": "",
+																				"version": 0
+																			}
+																		},
+																		"LabelTaxCode1__": {
+																			"type": "Label",
+																			"data": [
+																				"TaxCode1__"
+																			],
+																			"stamp": 56,
+																			"options": {
+																				"label": "_TaxCode",
+																				"version": 0
+																			}
+																		},
+																		"TaxCode1__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"TaxCode1__"
+																			],
+																			"stamp": 55,
+																			"options": {
+																				"label": "_TaxCode",
+																				"version": 1,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"minNbLines": 1,
+																				"maxNbLines": 1,
+																				"PreFillFTS": true,
+																				"fTSmaxRecords": "20",
+																				"browsable": true,
+																				"autoCompleteSearchMode": "startswith",
+																				"searchMode": "matches"
+																			}
+																		},
+																		"LabelTaxRate1__": {
+																			"type": "Label",
+																			"data": [
+																				"TaxRate1__"
+																			],
+																			"stamp": 58,
+																			"options": {
+																				"label": "_TaxRate",
+																				"version": 0
+																			}
+																		},
+																		"TaxRate1__": {
+																			"type": "Decimal",
+																			"data": [
+																				"TaxRate1__"
+																			],
+																			"stamp": 57,
+																			"options": {
+																				"label": "_TaxRate",
+																				"version": 2,
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"integer": false,
+																				"precision_internal": 2,
+																				"precision_current": 2,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"readonly": true
+																			}
+																		},
+																		"LabelTaxCode2__": {
+																			"type": "Label",
+																			"data": [
+																				"TaxCode2__"
+																			],
+																			"stamp": 60,
+																			"options": {
+																				"label": "_TaxCode",
+																				"version": 0
+																			}
+																		},
+																		"TaxCode2__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"TaxCode2__"
+																			],
+																			"stamp": 59,
+																			"options": {
+																				"label": "_TaxCode",
+																				"version": 1,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"minNbLines": 1,
+																				"maxNbLines": 1,
+																				"PreFillFTS": true,
+																				"fTSmaxRecords": "20",
+																				"browsable": true,
+																				"autoCompleteSearchMode": "startswith",
+																				"searchMode": "matches"
+																			}
+																		},
+																		"LabelTaxRate2__": {
+																			"type": "Label",
+																			"data": [
+																				"TaxRate2__"
+																			],
+																			"stamp": 62,
+																			"options": {
+																				"label": "_TaxRate",
+																				"version": 0
+																			}
+																		},
+																		"TaxRate2__": {
+																			"type": "Decimal",
+																			"data": [
+																				"TaxRate2__"
+																			],
+																			"stamp": 61,
+																			"options": {
+																				"label": "_TaxRate",
+																				"version": 2,
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"integer": false,
+																				"precision_internal": 2,
+																				"precision_current": 2,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"readonly": true
+																			}
+																		},
+																		"LabelTaxCode3__": {
+																			"type": "Label",
+																			"data": [
+																				"TaxCode3__"
+																			],
+																			"stamp": 64,
+																			"options": {
+																				"label": "_TaxCode",
+																				"version": 0
+																			}
+																		},
+																		"TaxCode3__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"TaxCode3__"
+																			],
+																			"stamp": 63,
+																			"options": {
+																				"label": "_TaxCode",
+																				"version": 1,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"minNbLines": 1,
+																				"maxNbLines": 1,
+																				"PreFillFTS": true,
+																				"fTSmaxRecords": "20",
+																				"browsable": true,
+																				"autoCompleteSearchMode": "startswith",
+																				"searchMode": "matches"
+																			}
+																		},
+																		"LabelTaxRate3__": {
+																			"type": "Label",
+																			"data": [
+																				"TaxRate3__"
+																			],
+																			"stamp": 66,
+																			"options": {
+																				"label": "_TaxRate",
+																				"version": 0
+																			}
+																		},
+																		"TaxRate3__": {
+																			"type": "Decimal",
+																			"data": [
+																				"TaxRate3__"
+																			],
+																			"stamp": 65,
+																			"options": {
+																				"label": "_TaxRate",
+																				"version": 2,
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"integer": false,
+																				"precision_internal": 2,
+																				"precision_current": 2,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"readonly": true
+																			}
+																		},
+																		"LabelTaxCode4__": {
+																			"type": "Label",
+																			"data": [
+																				"TaxCode4__"
+																			],
+																			"stamp": 68,
+																			"options": {
+																				"label": "_TaxCode",
+																				"version": 0
+																			}
+																		},
+																		"TaxCode4__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"TaxCode4__"
+																			],
+																			"stamp": 67,
+																			"options": {
+																				"label": "_TaxCode",
+																				"version": 1,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"minNbLines": 1,
+																				"maxNbLines": 1,
+																				"PreFillFTS": true,
+																				"fTSmaxRecords": "20",
+																				"browsable": true,
+																				"autoCompleteSearchMode": "startswith",
+																				"searchMode": "matches"
+																			}
+																		},
+																		"LabelTaxRate4__": {
+																			"type": "Label",
+																			"data": [
+																				"TaxRate4__"
+																			],
+																			"stamp": 70,
+																			"options": {
+																				"label": "_TaxRate",
+																				"version": 0
+																			}
+																		},
+																		"TaxRate4__": {
+																			"type": "Decimal",
+																			"data": [
+																				"TaxRate4__"
+																			],
+																			"stamp": 69,
+																			"options": {
+																				"label": "_TaxRate",
+																				"version": 2,
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"integer": false,
+																				"precision_internal": 2,
+																				"precision_current": 2,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"readonly": true
+																			}
+																		},
+																		"LabelTaxCode5__": {
+																			"type": "Label",
+																			"data": [
+																				"TaxCode5__"
+																			],
+																			"stamp": 72,
+																			"options": {
+																				"label": "_TaxCode",
+																				"version": 0
+																			}
+																		},
+																		"TaxCode5__": {
+																			"type": "DatabaseComboBox",
+																			"data": [
+																				"TaxCode5__"
+																			],
+																			"stamp": 71,
+																			"options": {
+																				"label": "_TaxCode",
+																				"version": 1,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"minNbLines": 1,
+																				"maxNbLines": 1,
+																				"PreFillFTS": true,
+																				"fTSmaxRecords": "20",
+																				"browsable": true,
+																				"autoCompleteSearchMode": "startswith",
+																				"searchMode": "matches"
+																			}
+																		},
+																		"LabelTaxRate5__": {
+																			"type": "Label",
+																			"data": [
+																				"TaxRate5__"
+																			],
+																			"stamp": 74,
+																			"options": {
+																				"label": "_TaxRate",
+																				"version": 0
+																			}
+																		},
+																		"TaxRate5__": {
+																			"type": "Decimal",
+																			"data": [
+																				"TaxRate5__"
+																			],
+																			"stamp": 73,
+																			"options": {
+																				"label": "_TaxRate",
+																				"version": 2,
+																				"textSize": "S",
+																				"textAlignment": "right",
+																				"textStyle": "default",
+																				"textColor": "default",
+																				"integer": false,
+																				"precision_internal": 2,
+																				"precision_current": 2,
+																				"activable": true,
+																				"width": 230,
+																				"helpText": "",
+																				"helpURL": "",
+																				"helpFormat": "HTML Format",
+																				"readonly": true
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"Blank": {
+													"type": "PanelData",
+													"data": [],
+													"stamp": 75,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": true,
+														"hideTitleBar": true,
+														"hideTitle": true,
+														"backgroundcolor": "default",
+														"labelsAlignment": "right",
+														"label": "_Blank",
+														"leftImageURL": "",
+														"removeMargins": false,
+														"elementsAlignment": "left",
+														"hidden": false,
+														"sameHeightAsSiblings": false,
+														"labelsPosition": "left",
+														"version": 0
+													},
+													"*": {
+														"FieldsManager": {
+															"type": "FieldsManager",
+															"data": [],
+															"stamp": 76,
+															"options": {
+																"version": 0,
+																"controlsAssociation": {}
+															},
+															"*": {
+																"Grid": {
+																	"type": "GridLayout",
+																	"data": [
+																		"fields"
+																	],
+																	"stamp": 77,
+																	"options": {
+																		"version": 0,
+																		"lines": 0,
+																		"columns": 2,
+																		"ctrlsPos": {},
+																		"colspans": []
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-center-3": {
+											"type": "FlexibleFormLine",
+											"data": [],
+											"stamp": 78,
+											"options": {
+												"version": 0
+											},
+											"*": {
+												"VATAddRemoveButtons": {
+													"type": "PanelData",
+													"data": [],
+													"stamp": 79,
+													"options": {
+														"border": {},
+														"labelLength": "200",
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": true,
+														"hideTitleBar": true,
+														"hideTitle": true,
+														"backgroundcolor": "default",
+														"labelsAlignment": "right",
+														"label": "_VATAddRemoveButtons",
+														"leftImageURL": "",
+														"removeMargins": false,
+														"elementsAlignment": "left",
+														"sameHeightAsSiblings": false,
+														"labelsPosition": "left",
+														"version": 0
+													},
+													"*": {
+														"FieldsManager": {
+															"type": "FieldsManager",
+															"data": [],
+															"stamp": 80,
+															"options": {
+																"version": 0,
+																"controlsAssociation": {
+																	"Add__": "LabelAdd__",
+																	"LabelAdd__": "Add__"
+																}
+															},
+															"*": {
+																"Grid": {
+																	"type": "HorizontalLayout",
+																	"data": [
+																		"fields"
+																	],
+																	"stamp": 81,
+																	"options": {
+																		"version": 0,
+																		"lines": 2,
+																		"ctrlsPos": {
+																			"LabelAdd__": {
+																				"line": 1,
+																				"column": 1
+																			},
+																			"Add__": {
+																				"line": 1,
+																				"column": 2
+																			},
+																			"Remove__": {
+																				"line": 2,
+																				"column": 1
+																			}
+																		},
+																		"colspans": [
+																			[],
+																			[
+																				{
+																					"index": 0,
+																					"length": 2
+																				}
+																			]
+																		]
+																	},
+																	"*": {
+																		"LabelAdd__": {
+																			"type": "Label",
+																			"data": false,
+																			"stamp": 83,
+																			"options": {
+																				"label": "",
+																				"version": 0
+																			}
+																		},
+																		"Add__": {
+																			"type": "FormButton",
+																			"data": false,
+																			"stamp": 82,
+																			"options": {
+																				"label": "",
+																				"buttonLabel": "_AddTaxField",
+																				"textPosition": "text-right",
+																				"textSize": "S",
+																				"textStyle": "default",
+																				"textColor": "color1",
+																				"nextprocess": {
+																					"processName": "AP - Application Settings__",
+																					"attachmentsMode": "all",
+																					"willBeChild": true,
+																					"returnToOriginalUrl": false
+																				},
+																				"urlImageOverlay": "",
+																				"width": "100",
+																				"action": "none",
+																				"url": "",
+																				"version": 0
+																			}
+																		},
+																		"Remove__": {
+																			"type": "FormButton",
+																			"data": false,
+																			"stamp": 84,
+																			"options": {
+																				"label": "Remove",
+																				"buttonLabel": "_RemoveTaxField",
+																				"textPosition": "text-right",
+																				"textSize": "S",
+																				"textStyle": "default",
+																				"textColor": "color1",
+																				"nextprocess": {
+																					"processName": "AP - Application Settings__",
+																					"attachmentsMode": "all",
+																					"willBeChild": true,
+																					"returnToOriginalUrl": false
+																				},
+																				"urlImageOverlay": "",
+																				"width": "100",
+																				"action": "none",
+																				"url": "",
+																				"version": 0
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"Blank2": {
+													"type": "PanelData",
+													"data": [],
+													"stamp": 85,
+													"options": {
+														"border": {},
+														"labelLength": 0,
+														"iconURL": "",
+														"TitleFontSize": "S",
+														"hideActionButtons": true,
+														"hideTitleBar": true,
+														"hideTitle": true,
+														"backgroundcolor": "default",
+														"labelsAlignment": "right",
+														"label": "_Blank",
+														"leftImageURL": "",
+														"removeMargins": false,
+														"elementsAlignment": "left",
+														"hidden": false,
+														"sameHeightAsSiblings": false,
+														"labelsPosition": "left",
+														"version": 0
+													},
+													"*": {
+														"FieldsManager": {
+															"type": "FieldsManager",
+															"data": [],
+															"stamp": 86,
+															"options": {
+																"version": 0,
+																"controlsAssociation": {}
+															},
+															"*": {
+																"Grid": {
+																	"type": "GridLayout",
+																	"data": [
+																		"fields"
+																	],
+																	"stamp": 87,
+																	"options": {
+																		"version": 0,
+																		"lines": 0,
+																		"columns": 2,
+																		"ctrlsPos": {},
+																		"colspans": []
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"data": [],
+					"stamp": 88,
+					"options": {
+						"splitterType": "simple-h",
+						"version": 0
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 89,
+							"options": {
+								"label": "_Save",
+								"action": "savequit",
+								"submit": true,
+								"shortCut": "S",
+								"version": 0
+							}
+						},
+						"PreSave": {
+							"type": "SubmitButton",
+							"data": false,
+							"stamp": 90,
+							"options": {
+								"label": "_Save",
+								"textPosition": "text-right",
+								"textSize": "S",
+								"textStyle": "default",
+								"textColor": "color1",
+								"nextprocess": {
+									"processName": "AP - Application Settings__",
+									"attachmentsMode": "all",
+									"willBeChild": true,
+									"returnToOriginalUrl": false
+								},
+								"urlImageOverlay": "",
+								"url": "",
+								"position": null,
+								"action": "none",
+								"shortCut": "S",
+								"version": 0
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 91,
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true,
+								"shortCut": "Q",
+								"version": 0
+							}
+						},
+						"Delete": {
+							"type": "SubmitButton",
+							"data": [],
+							"stamp": 92,
+							"options": {
+								"label": "_Delete",
+								"action": "delete",
+								"submit": true,
+								"disabled": true,
+								"version": 0
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+  <field deleted="0" format="" guid="WTLIWM000IYP" id="DLDQT400153E" label="_Billable_report" length="50" name="BillableFieldBehaviour__" originalProcessID="IYY1FP000FSX" precision="0" processid="CLDQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ADLDQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/BillableFieldBehaviour__</fullname>
+        <defaultvalue>Hidden</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:17</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Type>webaccess.Process.Columns.WithPossibleValues</Type>
+        <Label>_Billable_report</Label>
+        <Alias>ADLDQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <DisplayedColumns>
+        </DisplayedColumns>
+        <DataSourceOrigin>Standalone</DataSourceOrigin>
+        <possibleKeys>Hidden
+Required</possibleKeys>
+        <SavedColumn>
+        </SavedColumn>
+        <possibleValues>_Hidden
+_Visible</possibleValues>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="UW32FP000FSX" id="ELDQT400153E" label="_CommentTemplate_report" length="32766" name="CommentTemplate__" originalProcessID="IYY1FP000FSX" precision="0" processid="CLDQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AELDQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/CommentTemplate__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:17</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_CommentTemplate_report</Label>
+        <Alias>AELDQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"_HelperInputCommentTemplate","helpURL":"4013","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="JYY1FP000FSX" id="FLDQT400153E" label="_CompanyCode_report" length="50" name="CompanyCode__" originalProcessID="IYY1FP000FSX" precision="0" processid="CLDQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AFLDQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/CompanyCode__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:17</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_CompanyCode_report</Label>
+        <Alias>AFLDQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>true</Editable>
+        <required>true</required>
+        <TableName>CT#BD8QT400153E</TableName>
+        <SortOrder>
+        </SortOrder>
+        <DisplayedColumns>CompanyCode__|CompanyName__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>CompanyCode__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ProcessName>PurchasingCompanycodes__</ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <KeyAttribute>
+        </KeyAttribute>
+        <CustomFilter>
+        </CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="RXD2FP000IYP" id="GLDQT400153E" label="_CostCenterDescription_report" length="50" name="CostCenterFieldBehaviour__" originalProcessID="IYY1FP000FSX" precision="0" processid="CLDQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AGLDQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/CostCenterFieldBehaviour__</fullname>
+        <defaultvalue>Hidden</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:17</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Type>webaccess.Process.Columns.WithPossibleValues</Type>
+        <Label>_CostCenterDescription_report</Label>
+        <Alias>AGLDQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <TableName>
+        </TableName>
+        <DisplayedColumns>
+        </DisplayedColumns>
+        <DataSourceOrigin>Standalone</DataSourceOrigin>
+        <possibleKeys>Hidden
+Required</possibleKeys>
+        <SavedColumn>
+        </SavedColumn>
+        <possibleValues>_Hidden
+_Visible</possibleValues>
+        <ProcessName>
+        </ProcessName>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="QT62FP000FSX" id="HLDQT400153E" label="_Default G/L account_report" length="30" name="DefaultGLAccount__" originalProcessID="IYY1FP000FSX" precision="0" processid="CLDQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AHLDQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/DefaultGLAccount__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:17</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_Default G/L account_report</Label>
+        <Alias>AHLDQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>false</Editable>
+        <TableName>CT#RQ8QT400153E</TableName>
+        <SortOrder>ASC</SortOrder>
+        <DisplayedColumns>Account__|Description__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>Account__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ProcessName>AP - G/L accounts__</ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <KeyAttribute>
+        </KeyAttribute>
+        <CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="LYY1FP000FSX" id="JLDQT400153E" label="_TypeDescription_report" length="120" name="Description__" originalProcessID="IYY1FP000FSX" precision="0" processid="CLDQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AJLDQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Description__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:17</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_TypeDescription_report</Label>
+        <Alias>AJLDQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="RXD2FP000IOP" id="ILDQT400153E" label="_FuelType_report" length="50" name="FuelTypeBehaviour__" originalProcessID="IYY1FP000FSX" precision="0" processid="CLDQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AILDQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/FuelTypeBehaviour__</fullname>
+        <defaultvalue>Hidden</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:17</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Type>webaccess.Process.Columns.WithPossibleValues</Type>
+        <Label>_FuelType_report</Label>
+        <Alias>AILDQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <TableName>
+        </TableName>
+        <DisplayedColumns>
+        </DisplayedColumns>
+        <DataSourceOrigin>Standalone</DataSourceOrigin>
+        <possibleKeys>Hidden
+Optional</possibleKeys>
+        <SavedColumn>
+        </SavedColumn>
+        <possibleValues>_Hidden
+_Optional</possibleValues>
+        <ProcessName>
+        </ProcessName>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="XK72FP000FSX" id="KLDQT400153E" label="_InputTaxRate" length="0" name="InputTaxRate__" originalProcessID="IYY1FP000FSX" precision="0" processid="CLDQT400153E" submitable="1" type="BOOL">
+    <properties>
+      <db>
+        <alias>AKLDQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/InputTaxRate__</fullname>
+        <defaultvalue>false</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:17</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_InputTaxRate</Label>
+        <Alias>AKLDQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"_HelperInputTaxRate","helpURL":"4012","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>Boolean</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="XK72FP000FSY" id="LLDQT400153E" label="_Itemizable" length="0" name="Itemizable__" originalProcessID="IYY1FP000FSX" precision="0" processid="CLDQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ALLDQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Itemizable__</fullname>
+        <defaultvalue>Disabled</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:17</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Type>webaccess.Process.Columns.WithPossibleValues</Type>
+        <Label>_Itemizable</Label>
+        <Alias>ALLDQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <TableName>
+        </TableName>
+        <DisplayedColumns>
+        </DisplayedColumns>
+        <DataSourceOrigin>Standalone</DataSourceOrigin>
+        <possibleKeys>Disabled
+Optional</possibleKeys>
+        <SavedColumn>
+        </SavedColumn>
+        <possibleValues>_ItemizationDisabled
+_ItemizationOptional</possibleValues>
+        <ProcessName>
+        </ProcessName>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="KYY1FP000FSX" id="MLDQT400153E" label="_TypeName_report" length="50" name="Name__" originalProcessID="IYY1FP000FSX" precision="0" processid="CLDQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AMLDQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Name__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:17</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_TypeName_report</Label>
+        <Alias>AMLDQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="KUXHG0000PA9" id="NLDQT400153E" label="_ProjectCodeDescription_report" length="50" name="ProjectCodeFieldBehaviour__" originalProcessID="IYY1FP000FSX" precision="0" processid="CLDQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ANLDQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ProjectCodeFieldBehaviour__</fullname>
+        <defaultvalue>Hidden</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:17</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Type>webaccess.Process.Columns.WithPossibleValues</Type>
+        <Label>_ProjectCodeDescription_report</Label>
+        <Alias>ANLDQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <TableName>
+        </TableName>
+        <DisplayedColumns>
+        </DisplayedColumns>
+        <DataSourceOrigin>Standalone</DataSourceOrigin>
+        <possibleKeys>Hidden
+Optional
+Required</possibleKeys>
+        <SavedColumn>
+        </SavedColumn>
+        <possibleValues>_Hidden
+_Optional
+_Required</possibleValues>
+        <ProcessName>
+        </ProcessName>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="MYNIWM000M4H" id="OLDQT400153E" label="_Receipt_report" length="50" name="ReceiptBehaviour__" originalProcessID="IYY1FP000FSX" precision="0" processid="CLDQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AOLDQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/ReceiptBehaviour__</fullname>
+        <defaultvalue>Optional</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:17</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Type>webaccess.Process.Columns.WithPossibleValues</Type>
+        <Label>_Receipt_report</Label>
+        <Alias>AOLDQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <TableName>
+        </TableName>
+        <DisplayedColumns>
+        </DisplayedColumns>
+        <DataSourceOrigin>Standalone</DataSourceOrigin>
+        <possibleKeys>Optional
+Required</possibleKeys>
+        <SavedColumn>
+        </SavedColumn>
+        <possibleValues>_ReiceptOptional
+_ReiceptRequired</possibleValues>
+        <ProcessName>
+        </ProcessName>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format","helpIconPosition":"Right"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="OK72FP000FSX" id="PLDQT400153E" label="_TaxCode1_report" length="600" name="TaxCode1__" originalProcessID="IYY1FP000FSX" precision="0" processid="CLDQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>APLDQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/TaxCode1__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:17</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_TaxCode1_report</Label>
+        <Alias>APLDQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>false</Editable>
+        <TableName>CT#TU8QT400153E</TableName>
+        <SortOrder>ASC</SortOrder>
+        <DisplayedColumns>TaxCode__|TaxRate__|Description__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>TaxCode__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ProcessName>AP - Tax codes__</ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <KeyAttribute>
+        </KeyAttribute>
+        <CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="PK72FP000FSX" id="QLDQT400153E" label="_TaxCode2_report" length="600" name="TaxCode2__" originalProcessID="IYY1FP000FSX" precision="0" processid="CLDQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AQLDQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/TaxCode2__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:17</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_TaxCode2_report</Label>
+        <Alias>AQLDQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>false</Editable>
+        <TableName>CT#TU8QT400153E</TableName>
+        <SortOrder>
+        </SortOrder>
+        <DisplayedColumns>TaxCode__|TaxRate__|Description__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>TaxCode__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ProcessName>AP - Tax codes__</ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <KeyAttribute>
+        </KeyAttribute>
+        <CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="QK72FP000FSX" id="RLDQT400153E" label="_TaxCode3_report" length="600" name="TaxCode3__" originalProcessID="IYY1FP000FSX" precision="0" processid="CLDQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ARLDQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/TaxCode3__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:17</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_TaxCode3_report</Label>
+        <Alias>ARLDQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>false</Editable>
+        <TableName>CT#TU8QT400153E</TableName>
+        <SortOrder>ASC</SortOrder>
+        <DisplayedColumns>TaxCode__|TaxRate__|Description__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>TaxCode__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ProcessName>AP - Tax codes__</ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <KeyAttribute>
+        </KeyAttribute>
+        <CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="RK72FP000FSX" id="SLDQT400153E" label="_TaxCode4_report" length="600" name="TaxCode4__" originalProcessID="IYY1FP000FSX" precision="0" processid="CLDQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ASLDQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/TaxCode4__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:17</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_TaxCode4_report</Label>
+        <Alias>ASLDQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>false</Editable>
+        <TableName>CT#TU8QT400153E</TableName>
+        <SortOrder>ASC</SortOrder>
+        <DisplayedColumns>TaxCode__|TaxRate__|Description__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>TaxCode__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ProcessName>AP - Tax codes__</ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <KeyAttribute>
+        </KeyAttribute>
+        <CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="VK72FP000FSX" id="TLDQT400153E" label="_TaxCode5_report" length="600" name="TaxCode5__" originalProcessID="IYY1FP000FSX" precision="0" processid="CLDQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>ATLDQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/TaxCode5__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:17</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_TaxCode5_report</Label>
+        <Alias>ATLDQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <Editable>false</Editable>
+        <TableName>CT#TU8QT400153E</TableName>
+        <SortOrder>ASC</SortOrder>
+        <DisplayedColumns>TaxCode__|TaxRate__|Description__</DisplayedColumns>
+        <DisplayedColumnsIds>
+        </DisplayedColumnsIds>
+        <UseTableForAutolearn>false</UseTableForAutolearn>
+        <SavedColumn>TaxCode__</SavedColumn>
+        <SavedColumnId>
+        </SavedColumnId>
+        <ProcessName>AP - Tax codes__</ProcessName>
+        <KeyColumnId>
+        </KeyColumnId>
+        <KeyAttribute>
+        </KeyAttribute>
+        <CustomFilter>(|(CompanyCode__=%[CompanyCode__])(CompanyCode__=)(CompanyCode__!=*))</CustomFilter>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="H232FP000FSX" id="ULDQT400153E" label="_TaxRate1_report" length="17" name="TaxRate1__" originalProcessID="IYY1FP000FSX" precision="2" processid="CLDQT400153E" submitable="1" type="DECIMAL">
+    <properties>
+      <db>
+        <alias>AULDQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/TaxRate1__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:18</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_TaxRate1_report</Label>
+        <Alias>AULDQT400153E</Alias>
+        <DecimalPrecision vartype="INT">2</DecimalPrecision>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="I232FP000FSX" id="VLDQT400153E" label="_TaxRate2_report" length="17" name="TaxRate2__" originalProcessID="IYY1FP000FSX" precision="2" processid="CLDQT400153E" submitable="1" type="DECIMAL">
+    <properties>
+      <db>
+        <alias>AVLDQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/TaxRate2__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:18</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_TaxRate2_report</Label>
+        <Alias>AVLDQT400153E</Alias>
+        <DecimalPrecision vartype="INT">2</DecimalPrecision>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="J232FP000FSX" id="WLDQT400153E" label="_TaxRate3_report" length="17" name="TaxRate3__" originalProcessID="IYY1FP000FSX" precision="2" processid="CLDQT400153E" submitable="1" type="DECIMAL">
+    <properties>
+      <db>
+        <alias>AWLDQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/TaxRate3__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:18</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_TaxRate3_report</Label>
+        <Alias>AWLDQT400153E</Alias>
+        <DecimalPrecision vartype="INT">2</DecimalPrecision>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="K232FP000FSX" id="XLDQT400153E" label="_TaxRate4_report" length="17" name="TaxRate4__" originalProcessID="IYY1FP000FSX" precision="2" processid="CLDQT400153E" submitable="1" type="DECIMAL">
+    <properties>
+      <db>
+        <alias>AXLDQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/TaxRate4__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:18</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_TaxRate4_report</Label>
+        <Alias>AXLDQT400153E</Alias>
+        <DecimalPrecision vartype="INT">2</DecimalPrecision>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="L232FP000FSX" id="YLDQT400153E" label="_TaxRate5_report" length="17" name="TaxRate5__" originalProcessID="IYY1FP000FSX" precision="2" processid="CLDQT400153E" submitable="1" type="DECIMAL">
+    <properties>
+      <db>
+        <alias>AYLDQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/TaxRate5__</fullname>
+        <defaultvalue>
+        </defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:18</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Label>_TaxRate5_report</Label>
+        <Alias>AYLDQT400153E</Alias>
+        <DecimalPrecision vartype="INT">2</DecimalPrecision>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <gdr>
+        <VarType>Area</VarType>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>Number</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="LL42FP000FSX" id="ZLDQT400153E" label="_Template_report" length="50" name="Template__" originalProcessID="IYY1FP000FSX" precision="0" processid="CLDQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AZLDQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/Template__</fullname>
+        <defaultvalue>Standard</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:18</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Type>webaccess.Process.Columns.WithPossibleValues</Type>
+        <Label>_Template_report</Label>
+        <Alias>AZLDQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+        <DisplayedColumns>
+        </DisplayedColumns>
+        <DataSourceOrigin>Standalone</DataSourceOrigin>
+        <possibleKeys>Standard
+Distance
+Restaurant
+Hotel
+Fuel/Gas</possibleKeys>
+        <SavedColumn>
+        </SavedColumn>
+        <possibleValues>_Standard
+_Distance
+_Restaurant
+_Hotel
+_Fuel/Gas</possibleValues>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <field deleted="0" format="" guid="YO32FP000FSX" id="AMDQT400153E" label="_Vendor" length="50" name="VendorFieldBehaviour__" originalProcessID="IYY1FP000FSX" precision="0" processid="CLDQT400153E" submitable="1" type="STR">
+    <properties>
+      <db>
+        <alias>AAMDQT400153E</alias>
+        <noxml>1</noxml>
+        <fullname>/job/processfields/VendorFieldBehaviour__</fullname>
+        <defaultvalue>Hidden</defaultvalue>
+        <RecordLastWrite>2026-11-04 11:09:18</RecordLastWrite>
+      </db>
+      <extrainfo>
+        <Type>webaccess.Process.Columns.WithPossibleValues</Type>
+        <Label>_Vendor</Label>
+        <Alias>AAMDQT400153E</Alias>
+        <ProcessFieldVersion vartype="INT">1</ProcessFieldVersion>
+      </extrainfo>
+      <field>
+        <required>false</required>
+        <DisplayedColumns>
+        </DisplayedColumns>
+        <DataSourceOrigin>Standalone</DataSourceOrigin>
+        <possibleKeys>Hidden
+Optional
+Required</possibleKeys>
+        <SavedColumn>
+        </SavedColumn>
+        <possibleValues>_Hidden
+_Optional
+_Required</possibleValues>
+      </field>
+      <gdr>
+        <DisableAutolearn>1</DisableAutolearn>
+      </gdr>
+      <help>
+        <helpData>{"helpText":"","helpURL":"","helpFormat":"HTML Format"}</helpData>
+      </help>
+      <ui>
+        <_type>String</_type>
+        <automatic>true</automatic>
+      </ui>
+    </properties>
+  </field>
+  <type id="KOLHG0000M4O" name="CT">
+  </type>
+</process>

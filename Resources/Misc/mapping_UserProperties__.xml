@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mappingDef xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<options>
+		<separator>,</separator>
+		<newLine />
+		<escape />
+		<hasHeader>true</hasHeader>
+		<comment />
+		<textQualifier>"</textQualifier>
+		<hasLastDelimiter>false</hasLastDelimiter>
+	</options>
+	<script>
+		<code><![CDATA[
+			var Tools = window.external;
+			var loginSuffix = "%[reference:creator:demosubstring]";
+			var defaultCompanyCode = "US01";
+
+			// Init function
+			function Init()
+			{
+				var adminUserVars = Tools.GetAdminUserVars();
+				if (adminUserVars == undefined)
+				{
+					Tools.NotifyError("Init: Cannot access logged user data");
+					return;
+				}
+
+				var language = adminUserVars.GetValue_String("LANGUAGE", 0);
+				if (language == "fr")
+					defaultCompanyCode = "FR01";
+				else
+					defaultCompanyCode = "US01";
+			}
+
+			function GetUserLogin()
+			{
+				if (Tools.ExistsCsvColumn("CompanyCode__"))
+					return Tools.GetCsvColumnValue("UserLogin__");
+				else
+					return Tools.GetCsvColumnValue("UserLogin__") + "." + loginSuffix;
+			}
+
+
+			function GetCompanyCode()
+			{
+				if (Tools.ExistsCsvColumn("CompanyCode__"))
+					return  Tools.GetCsvColumnValue("CompanyCode__");
+				else
+					return defaultCompanyCode;
+			}
+
+			function GetAllowedCompanyCodes()
+			{
+				if (Tools.ExistsCsvColumn("AllowedCompanyCodes__"))
+					return  Tools.GetCsvColumnValue("AllowedCompanyCodes__");
+				else
+					return defaultCompanyCode;
+			}
+
+			function GetManagerLogin()
+			{
+				if (Tools.ExistsCsvColumn("CompanyCode__"))
+					return Tools.GetCsvColumnValue("ManagerLogin__");
+				else
+					return Tools.GetCsvColumnValue("ManagerLogin__") ? Tools.GetCsvColumnValue("ManagerLogin__") + "." + loginSuffix : "";
+			}
+
+			]]>
+		</code>
+		<eval onEachCsvLine="false">Init</eval>
+	</script>
+	<tableName>P2P - User properties__</tableName>
+	<mappings>
+		<mapping fieldType="" countryColumnName="" countryColumnIndex="" key="true" country="" command="false">
+			<evalScript>GetUserLogin</evalScript>
+			<fieldInTable>UserLogin__</fieldInTable>
+			<fieldInFile defaultValue="">
+				<fieldNameInFile>UserLogin__</fieldNameInFile>
+			</fieldInFile>
+		</mapping>
+		<mapping fieldType="" countryColumnName="" countryColumnIndex="" key="" country="" command="false">
+			<fieldInTable>UserNumber__</fieldInTable>
+			<fieldInFile defaultValue="">
+				<fieldNameInFile>UserNumber__</fieldNameInFile>
+			</fieldInFile>
+		</mapping>
+		<mapping fieldType="" countryColumnName="" countryColumnIndex="" key="" country="" command="false">
+			<evalScript>GetCompanyCode</evalScript>
+			<fieldInTable>CompanyCode__</fieldInTable>
+		</mapping>
+		<mapping fieldType="" countryColumnName="" countryColumnIndex="" key="" country="" command="false">
+			<fieldInTable>CostCenter__</fieldInTable>
+			<fieldInFile defaultValue="">
+				<fieldNameInFile>CostCenter__</fieldNameInFile>
+			</fieldInFile>
+		</mapping>
+		<mapping fieldType="" countryColumnName="" countryColumnIndex="" key="" country="" command="false">
+			<evalScript>GetAllowedCompanyCodes</evalScript>
+			<fieldInTable>AllowedCompanyCodes__</fieldInTable>
+		</mapping>
+		<mapping fieldType="" countryColumnName="" countryColumnIndex="" key="" country="" command="false">
+			<fieldInTable>AllowedWarehouses__</fieldInTable>
+			<fieldInFile defaultValue="">
+				<fieldNameInFile>AllowedWarehouses__</fieldNameInFile>
+			</fieldInFile>
+		</mapping>
+		<mapping fieldType="" countryColumnName="" countryColumnIndex="" key="" country="" command="false">
+			<fieldInTable>DefaultWarehouse__</fieldInTable>
+			<fieldInFile defaultValue="">
+				<fieldNameInFile>DefaultWarehouse__</fieldNameInFile>
+			</fieldInFile>
+		</mapping>
+		<mapping fieldType="" countryColumnName="" countryColumnIndex="" key="" country="" command="false">
+			<evalScript>GetManagerLogin</evalScript>
+			<fieldInTable>ManagerLogin__</fieldInTable>
+		</mapping>
+		<mapping fieldType="" countryColumnName="" countryColumnIndex="" key="" country="" command="false">
+			<fieldInTable>LOAAmount__</fieldInTable>
+			<fieldInFile defaultValue="">
+				<fieldNameInFile>LOAAmount__</fieldNameInFile>
+			</fieldInFile>
+		</mapping>
+		<mapping fieldType="" countryColumnName="" countryColumnIndex="" key="" country="" command="false">
+			<fieldInTable>HasCompanyCard__</fieldInTable>
+			<fieldInFile defaultValue="">
+				<fieldNameInFile>HasCompanyCard__</fieldNameInFile>
+			</fieldInFile>
+		</mapping>
+		<mapping fieldType="" countryColumnName="" countryColumnIndex="" key="" country="" command="false">
+			<fieldInTable>AllowedBudgetKeys__</fieldInTable>
+			<fieldInFile defaultValue="">
+				<fieldNameInFile>AllowedBudgetKeys__</fieldNameInFile>
+			</fieldInFile>
+		</mapping>
+		<mapping fieldType="" countryColumnName="" countryColumnIndex="" key="" country="" command="false">
+			<fieldInTable>MarketDojoApiKey__</fieldInTable>
+			<fieldInFile defaultValue="">
+				<fieldNameInFile>MarketDojoApiKey__</fieldNameInFile>
+			</fieldInFile>
+		</mapping>
+		<mapping fieldType="" countryColumnName="" countryColumnIndex="" key="" country="" command="false">
+			<fieldInTable>MarketDojoEmail__</fieldInTable>
+			<fieldInFile defaultValue="">
+				<fieldNameInFile>MarketDojoEmail__</fieldNameInFile>
+			</fieldInFile>
+		</mapping>
+		<mapping fieldType="" countryColumnName="" countryColumnIndex="" key="" country="" command="false">
+			<fieldInTable>UseEODLoginForMarketDojo__</fieldInTable>
+			<fieldInFile defaultValue="">
+				<fieldNameInFile>UseEODLoginForMarketDojo__</fieldNameInFile>
+			</fieldInFile>
+		</mapping>
+		<mapping fieldType="" countryColumnName="" countryColumnIndex="" key="" country="" command="false">
+			<fieldInTable>AllowedOnBehalfUsers__</fieldInTable>
+			<fieldInFile defaultValue="">
+				<fieldNameInFile>AllowedOnBehalfUsers__</fieldNameInFile>
+			</fieldInFile>
+		</mapping>
+		<mapping fieldType="" countryColumnName="" countryColumnIndex="" key="" country="" command="false">
+			<fieldInTable>AllowedToTerminateExpenseUser__</fieldInTable>
+			<fieldInFile defaultValue="">
+				<fieldNameInFile>AllowedToTerminateExpenseUser__</fieldNameInFile>
+			</fieldInFile>
+		</mapping>
+		<mapping fieldType="" countryColumnName="" countryColumnIndex="" key="" country="" command="false">
+			<fieldInTable>AllowedInvoiceViewByCompanyCode__</fieldInTable>
+			<fieldInFile defaultValue="">
+				<fieldNameInFile>AllowedInvoiceViewByCompanyCode__</fieldNameInFile>
+			</fieldInFile>
+		</mapping>
+	</mappings>
+</mappingDef>

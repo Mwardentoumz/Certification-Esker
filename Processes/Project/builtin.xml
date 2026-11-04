@@ -1,0 +1,232 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process accountid="0" allowrepairprocess="0" builtin="1" builtinversion="0" carriesapplicationversion="0" creationdatetime="2020-02-12 14:25:27" deleted="0" eskerapplication="" global="1" id="GOLHG0000M4O" keepcustomization="0" keepcustompositions="0" keepfieldsonly="0" keepfieldsproperties="0" keepnewcontroloptions="0" migrationversion="4" name="CD" needvalidation="0" ootofilter="" ootoversion="1" originalProcessID="GOLHG0000M4O" ownerid="s=eoo" ownerpb="OnDemand Addressbook" public="0" pushnotification="0" reuseengine="0" sprintversion="" transportname="CustomData" upgradable="0" userid="0" version="1" visibility="0">
+  <properties>
+    <gdr>
+      <AllowTagCoverPages>true</AllowTagCoverPages>
+      <AllowTagNewDocuments>true</AllowTagNewDocuments>
+      <AllowTagAttachments>true</AllowTagAttachments>
+      <AllowRemovePages>true</AllowRemovePages>
+      <AllowSwapPages>true</AllowSwapPages>
+    </gdr>
+    <ocr>
+      <trade-off>accurate</trade-off>
+      <image-binarization>no</image-binarization>
+      <image-draft-fax>no</image-draft-fax>
+      <image-despeckle>no</image-despeckle>
+      <allowed-language>0</allowed-language>
+      <image-resolution-enhancement>auto</image-resolution-enhancement>
+    </ocr>
+    <process>
+      <flowtype>processing</flowtype>
+      <ocrpreset>scan</ocrpreset>
+      <instanciable>1</instanciable>
+      <EnablePreviewPrecomputation>false</EnablePreviewPrecomputation>
+      <AllowUploadAttachment>1</AllowUploadAttachment>
+      <AllowUploadReferenceDocument>1</AllowUploadReferenceDocument>
+      <AllowRetryExtractCD>true</AllowRetryExtractCD>
+      <TransportName>CustomData</TransportName>
+      <LayoutVersion>1.0</LayoutVersion>
+    </process>
+    <ui>
+      <layout>{
+	"*": {
+		"GDRData": {
+			"type": "GDRData"
+		},
+		"OCRParams": {
+			"type": "OCRParams"
+		},
+		"Screen": {
+			"type": "FlexibleFormLayout",
+			"options": {
+				"splitterType": "complex"
+			},
+			"*": {
+				"form-header": {
+					"type": "FlexibleFormHeader",
+					"options": {}
+				},
+				"form-center": {
+					"type": "FlexibleFormCenter",
+					"options": {},
+					"*": {
+						"form-content": {
+							"type": "FlexibleFormContent",
+							"options": {},
+							"*": {
+								"form-content-top": {
+									"type": "FlexibleFormSplitter",
+									"options": {
+										"autosize": true
+									},
+									"*": {
+										"form-content-top-1": {
+											"type": "FlexibleFormLine",
+											"options": {},
+											"*": {
+												"DocumentsPanel": {
+													"type": "PanelDocument",
+													"options": {},
+													"*": {
+														"Document": {
+															"data": "documentscontroldata",
+															"type": "Documents",
+															"options": {}
+														}
+													}
+												}
+											}
+										}
+									}
+								},
+								"form-content-bottom": {
+									"type": "FlexibleFormSplitter",
+									"options": {},
+									"*": {
+										"form-content-left": {
+											"type": "FlexibleFormSplitter",
+											"options": {},
+											"*": {
+												"form-content-left-1": {
+													"type": "FlexibleFormLine",
+													"options": {},
+													"*": {
+														"DataPanel": {
+															"type": "PanelData",
+															"options": {
+																"border": {}
+															},
+															"*": {
+																"FieldsManager": {
+																	"type": "FieldsManager",
+																	"options": {
+																		"controlsAssociation": {}
+																	},
+																	"*": {
+																		"Grid": {
+																			"type": "GridLayout",
+																			"options": {
+																				"lines": 0,
+																				"columns": 2
+																			},
+																			"data": "fields",
+																			"*": {}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												},
+												"form-content-left-2": {
+													"type": "FlexibleFormLine",
+													"options": {},
+													"*": {
+														"SystemData": {
+															"type": "PanelSystemData",
+															"options": {
+																"multicolumn": false
+															}
+														}
+													}
+												},
+												"form-content-left-3": {
+													"type": "FlexibleFormLine",
+													"options": {},
+													"*": {
+														"NextProcess": {
+															"type": "PanelNextProcess",
+															"options": {
+																"hidden": true
+															}
+														}
+													}
+												}
+											}
+										},
+										"form-content-right": {
+											"type": "FlexibleFormSplitter",
+											"options": {},
+											"*": {
+												"form-content-right-1": {
+													"type": "FlexibleFormLine",
+													"options": {},
+													"*": {
+														"PreviewPanel": {
+															"type": "PanelPreview",
+															"options": {
+																"border": {}
+															},
+															"*": {
+																"Preview": {
+																	"data": "previewdata",
+																	"type": "Preview",
+																	"options": {}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"form-footer": {
+					"type": "FlexibleFormFooter",
+					"options": {
+						"splitterType": "simple-h"
+					},
+					"*": {
+						"Save": {
+							"type": "SubmitButton",
+							"options": {
+								"label": "_Save",
+								"action": "save",
+								"submit": true
+							}
+						},
+						"Approve": {
+							"type": "SubmitButton",
+							"options": {
+								"label": "_Approve",
+								"action": "approve",
+								"submit": true
+							}
+						},
+						"Reject": {
+							"type": "SubmitButton",
+							"options": {
+								"label": "_Reject",
+								"action": "reject",
+								"submit": true
+							}
+						},
+						"Reprocess": {
+							"type": "SubmitButton",
+							"options": {
+								"label": "_Reprocess",
+								"action": "reprocess",
+								"submit": true
+							}
+						},
+						"Close": {
+							"type": "SubmitButton",
+							"options": {
+								"label": "_Close",
+								"action": "cancel",
+								"submit": true
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}</layout>
+    </ui>
+  </properties>
+</process>
