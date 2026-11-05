@@ -1,0 +1,180 @@
+﻿Version;RuleName;Active;Parallel;StepIndex;ConditionField;Operator;ExpectedValue;StepType;StepParam1
+1;"No reviewer for intercompany invoices";"true";"false";"0";"GroupByDimension";"=";"CostCenter__";;
+1;"No reviewer for intercompany invoices";"true";"false";"0";"WorkflowType";"=";"invoiceReview";;
+1;"No reviewer for intercompany invoices";"true";"false";"0";"IntercompanyInvoice";"=";"true";;
+1;"No reviewer for intercompany invoices";"true";"false";"1";;;;"nobody";
+1;"Default Credit note Approval Rule";"true";"false";"0";"GroupByDimension";"=";"CostCenter__";;
+1;"Default Credit note Approval Rule";"true";"false";"0";"WorkflowType";"=";"paymentApproval";;
+1;"Default Credit note Approval Rule";"true";"false";"0";"HasRelatedInvoice";"=";"true";;
+1;"Default Credit note Approval Rule";"true";"false";"0";"NetAmount";"<";"0";;
+1;"Default Credit note Approval Rule";"true";"false";"1";"Z_ComplianceReviewRequired";"=";"true";"user";"compliance@vilt-group.com"
+1;"Default Credit note Approval Rule";"true";"false";"2";;;;"GetRelatedInvoiceOwner";
+1;"No reviewer for invoices from expense management";"true";"true";"0";"GroupByDimension";"=";"CostCenter__";;
+1;"No reviewer for invoices from expense management";"true";"true";"0";"WorkflowType";"=";"invoiceReview";;
+1;"No reviewer for invoices from expense management";"true";"true";"0";"ReceptionMethod";"=";"Claims";;
+1;"No reviewer for invoices from expense management";"true";"true";"1";"FirstInvoiceController";"=";"";"nobody";
+1;"No reviewer for invoices from expense management";"true";"true";"2";"FirstInvoiceController";"!=";"";"firstInvoiceController";
+1;"No approver for invoices from expense management";"true";"true";"0";"GroupByDimension";"=";"CostCenter__";;
+1;"No approver for invoices from expense management";"true";"true";"0";"WorkflowType";"=";"paymentApproval";;
+1;"No approver for invoices from expense management";"true";"true";"0";"ReceptionMethod";"=";"Claims";;
+1;"No approver for invoices from expense management";"true";"true";"1";"FirstInvoiceApprover";"=";"";"nobody";
+1;"No approver for invoices from expense management";"true";"true";"2";"FirstInvoiceApprover";"!=";"";"firstInvoiceApprover";
+1;"Price variance review on line items";"true";"true";"0";"LineExceptionType";"=";"priceMismatchException";;
+1;"Price variance review on line items";"true";"true";"0";"WorkflowType";"=";"invoiceLineItemExceptionForReviewers";;
+1;"Price variance review on line items";"true";"true";"0";"UnitPriceVarianceExceedsThreshold";"=";"true";;
+1;"Price variance review on line items";"true";"true";"0";"UnitPriceVarianceResolved";"=";"false";;
+1;"Price variance review on line items";"true";"true";"1";;;;"GetPOBuyer";
+1;"Price variance review on line items";"true";"true";"2";"WorkflowIsEmpty";"=";"true";"user";"buyersprocess.su@20093069.esk"
+1;"Quantity variance review on line items";"true";"true";"0";"LineExceptionType";"=";"quantityMismatchException";;
+1;"Quantity variance review on line items";"true";"true";"0";"WorkflowType";"=";"invoiceLineItemExceptionForReviewers";;
+1;"Quantity variance review on line items";"true";"true";"0";"QuantityVarianceExceedsThreshold";"=";"true";;
+1;"Quantity variance review on line items";"true";"true";"0";"QuantityVariance";">";"0";;
+1;"Quantity variance review on line items";"true";"true";"0";"QuantityVarianceResolved";"=";"false";;
+1;"Quantity variance review on line items";"true";"true";"1";;;;"GetPOReceiver";
+1;"Quantity variance review on line items";"true";"true";"2";"WorkflowIsEmpty";"=";"true";"user";"legalprocess.tthivolet@vilt-group.com.dev"
+1;"Price variance approval on line items";"true";"true";"0";"LineExceptionType";"=";"priceMismatchException";;
+1;"Price variance approval on line items";"true";"true";"0";"WorkflowType";"=";"invoiceLineItemExceptionForApprovers";;
+1;"Price variance approval on line items";"true";"true";"0";"UnitPriceVarianceExceedsThreshold";"=";"true";;
+1;"Price variance approval on line items";"true";"true";"0";"UnitPriceVarianceResolved";"=";"false";;
+1;"Price variance approval on line items";"true";"true";"1";;;;"GetPOBuyer";
+1;"Price variance approval on line items";"true";"true";"2";"WorkflowIsEmpty";"=";"true";"user";"buyersprocess.su@20093069.esk"
+1;"Quantity variance approval on line items";"true";"true";"0";"LineExceptionType";"=";"quantityMismatchException";;
+1;"Quantity variance approval on line items";"true";"true";"0";"WorkflowType";"=";"invoiceLineItemExceptionForApprovers";;
+1;"Quantity variance approval on line items";"true";"true";"0";"QuantityVarianceExceedsThreshold";"=";"true";;
+1;"Quantity variance approval on line items";"true";"true";"0";"QuantityVariance";">";"0";;
+1;"Quantity variance approval on line items";"true";"true";"0";"QuantityVarianceResolved";"=";"false";;
+1;"Quantity variance approval on line items";"true";"true";"1";;;;"GetPOReceiver";
+1;"Quantity variance approval on line items";"true";"true";"2";"WorkflowIsEmpty";"=";"true";"user";"legalprocess.tthivolet@vilt-group.com.dev"
+1;"Price mismatch";"true";"false";"0";"WorkflowType";"=";"invoiceException";;
+1;"Price mismatch";"true";"false";"0";"InvoiceType";"=";"PO Invoice";;
+1;"Price mismatch";"true";"false";"0";"UnitPriceVariance";">";"0";;
+1;"Price mismatch";"true";"false";"1";;;;"GetPOBuyer";
+1;"Price mismatch";"true";"false";"2";"WorkflowIsEmpty";"=";"true";"user";"buyersprocess.su@20093069.esk"
+1;"Quantity mismatch";"true";"false";"0";"WorkflowType";"=";"invoiceException";;
+1;"Quantity mismatch";"true";"false";"0";"InvoiceType";"=";"PO Invoice";;
+1;"Quantity mismatch";"true";"false";"0";"SubsequentDocument";"!=";"true";;
+1;"Quantity mismatch";"true";"false";"0";"QuantityVariance";">";"0";;
+1;"Quantity mismatch";"true";"false";"1";;;;"GetPOReceiver";
+1;"Quantity mismatch";"true";"false";"2";"WorkflowIsEmpty";"=";"true";"user";"buyersprocess.su@20093069.esk"
+1;"UDC over tolerance";"true";"false";"0";"WorkflowType";"=";"invoiceException";;
+1;"UDC over tolerance";"true";"false";"0";"InvoiceType";"=";"PO Invoice";;
+1;"UDC over tolerance";"true";"false";"0";"UDCOverTolerance";"=";"true";;
+1;"UDC over tolerance";"true";"false";"1";;;;"GetPOBuyer";
+1;"UDC over tolerance";"true";"false";"2";"WorkflowIsEmpty";"=";"true";"user";"buyersprocess.su@20093069.esk"
+1;"Manually entered reviewer (US)";"true";"true";"0";"GroupByDimension";"=";"CostCenter__";;
+1;"Manually entered reviewer (US)";"true";"true";"0";"WorkflowType";"=";"invoiceReview";;
+1;"Manually entered reviewer (US)";"true";"true";"0";"CompanyCode";"=";"3000;US01;AU01;NZ01";;
+1;"Manually entered reviewer (US)";"true";"true";"0";"FirstInvoiceController";"!=";"";;
+1;"Manually entered reviewer (US)";"true";"true";"1";;;;"firstInvoiceController";
+1;"Manually entered reviewer (US)";"true";"true";"2";;;;"delegationOfAuthority";
+1;"Manually entered reviewer";"true";"true";"0";"GroupByDimension";"=";"CostCenter__";;
+1;"Manually entered reviewer";"true";"true";"0";"WorkflowType";"=";"invoiceReview";;
+1;"Manually entered reviewer";"true";"true";"0";"FirstInvoiceController";"!=";"";;
+1;"Manually entered reviewer";"true";"true";"1";;;;"firstInvoiceController";
+1;"Reviewers for Non-PO Invoices (US)";"true";"true";"0";"GroupByDimension";"=";"CostCenter__";;
+1;"Reviewers for Non-PO Invoices (US)";"true";"true";"0";"WorkflowType";"=";"invoiceReview";;
+1;"Reviewers for Non-PO Invoices (US)";"true";"true";"0";"CompanyCode";"=";"3000;US01;AU01;NZ01";;
+1;"Reviewers for Non-PO Invoices (US)";"true";"true";"0";"InvoiceType";"=";"Non-PO Invoice";;
+1;"Reviewers for Non-PO Invoices (US)";"true";"true";"0";"InvoiceStatus";"=";"Received;To verify";;
+1;"Reviewers for Non-PO Invoices (US)";"true";"true";"1";;;;"dimensionManager";
+1;"Reviewers for Non-PO Invoices (US)";"true";"true";"2";;;;"delegationOfAuthority";
+1;"Reviewers for Non-PO Invoices (US) by G/L account";"false";"true";"0";"GroupByDimension";"=";"Account__";;
+1;"Reviewers for Non-PO Invoices (US) by G/L account";"false";"true";"0";"WorkflowType";"=";"invoiceReview";;
+1;"Reviewers for Non-PO Invoices (US) by G/L account";"false";"true";"0";"CompanyCode";"=";"3000;US01;AU01;NZ01";;
+1;"Reviewers for Non-PO Invoices (US) by G/L account";"false";"true";"0";"InvoiceType";"=";"Non-PO Invoice";;
+1;"Reviewers for Non-PO Invoices (US) by G/L account";"false";"true";"0";"InvoiceStatus";"=";"Received;To verify";;
+1;"Reviewers for Non-PO Invoices (US) by G/L account";"false";"true";"1";"DimensionValue";"!=";"";"dimensionManager";
+1;"Reviewers for Non-PO Invoices (US) by G/L account";"false";"true";"2";"DimensionValue";"!=";"";"delegationOfAuthority";
+1;"Reviewers for Non-PO Invoices (US) by G/L account";"false";"true";"3";"DimensionValue";"=";"";"user";"adminfinanceprocess.su@20093069.esk"
+1;"Reviewers for Non-PO Invoices (US) by G/L account";"false";"true";"3";"ManualLink";"=";"false";"user";"adminfinanceprocess.su@20093069.esk"
+1;"Reviewer for missing assignments for Non-PO Invoices";"true";"true";"0";"GroupByDimension";"=";"CostCenter__";;
+1;"Reviewer for missing assignments for Non-PO Invoices";"true";"true";"0";"WorkflowType";"=";"invoiceReview";;
+1;"Reviewer for missing assignments for Non-PO Invoices";"true";"true";"0";"CompanyCode";"!=";"3000;US01;AU01;NZ01";;
+1;"Reviewer for missing assignments for Non-PO Invoices";"true";"true";"0";"InvoiceType";"=";"Non-PO Invoice";;
+1;"Reviewer for missing assignments for Non-PO Invoices";"true";"true";"0";"DimensionValue";"=";"";;
+1;"Reviewer for missing assignments for Non-PO Invoices";"true";"true";"0";"ManualLink";"=";"false";;
+1;"Reviewer for missing assignments for Non-PO Invoices";"true";"true";"1";;;;"user";"adminfinanceprocess.su@20093069.esk"
+1;"Default review";"true";"true";"0";"GroupByDimension";"=";"CostCenter__";;
+1;"Default review";"true";"true";"0";"WorkflowType";"=";"invoiceReview";;
+1;"Default review";"true";"true";"1";;;;"nobody";
+1;"Manually entered approver";"true";"true";"0";"GroupByDimension";"=";"CostCenter__";;
+1;"Manually entered approver";"true";"true";"0";"WorkflowType";"=";"paymentApproval";;
+1;"Manually entered approver";"true";"true";"0";"FirstInvoiceApprover";"!=";"";;
+1;"Manually entered approver";"true";"true";"1";"Z_ComplianceReviewRequired";"=";"true";"user";"compliance@vilt-group.com"
+1;"Manually entered approver";"true";"true";"2";;;;"firstInvoiceApprover";
+1;"Manually entered approver";"true";"true";"3";;;;"delegationOfAuthority";
+1;"Approvers for Non-PO Invoices (US)";"true";"true";"0";"GroupByDimension";"=";"CostCenter__";;
+1;"Approvers for Non-PO Invoices (US)";"true";"true";"0";"WorkflowType";"=";"paymentApproval";;
+1;"Approvers for Non-PO Invoices (US)";"true";"true";"0";"CompanyCode";"=";"3000;US01;AU01;NZ01";;
+1;"Approvers for Non-PO Invoices (US)";"true";"true";"0";"InvoiceType";"=";"Non-PO Invoice";;
+1;"Approvers for Non-PO Invoices (US)";"true";"true";"1";"Z_ComplianceReviewRequired";"=";"true";"user";"compliance@vilt-group.com"
+1;"Approvers for Non-PO Invoices (US)";"true";"true";"2";;;;"nobody";
+1;"Approvers for Non-PO Invoices";"true";"true";"0";"GroupByDimension";"=";"CostCenter__";;
+1;"Approvers for Non-PO Invoices";"true";"true";"0";"WorkflowType";"=";"paymentApproval";;
+1;"Approvers for Non-PO Invoices";"true";"true";"0";"InvoiceType";"=";"Non-PO Invoice";;
+1;"Approvers for Non-PO Invoices";"true";"true";"1";"Z_ComplianceReviewRequired";"=";"true";"user";"compliance@vilt-group.com"
+1;"Approvers for Non-PO Invoices";"true";"true";"2";;;;"dimensionManager";
+1;"Approvers for Non-PO Invoices";"true";"true";"3";;;;"delegationOfAuthority";
+1;"Default payment approval";"true";"true";"0";"GroupByDimension";"=";"CostCenter__";;
+1;"Default payment approval";"true";"true";"0";"WorkflowType";"=";"paymentApproval";;
+1;"Default payment approval";"true";"true";"1";"Z_ComplianceReviewRequired";"=";"true";"user";"compliance@vilt-group.com"
+1;"Default payment approval";"true";"true";"2";;;;"nobody";
+1;"Default Purchasing Reviewer Rule";"true";"false";"0";"WorkflowType";"=";"purchaseRequisitionPreApproval";;
+1;"Default Purchasing Reviewer Rule";"true";"false";"1";"PRV2-LineItems__-ItemOrigin";"=";"FreeItem";"user";"buyersprocess.su@20093069.esk"
+1;"Default Purchasing Reviewer Rule";"true";"false";"1";"PRV2-LineItems__-SupplyTypeFullPath";"=";"/IT;/IT/*;/Informatique;/Informatique/*";"user";"buyersprocess.su@20093069.esk"
+1;"Default Purchasing Reviewer Rule";"true";"false";"1";"PRV2-LineItems__-ItemLocalNetAmount";">";"500";"user";"buyersprocess.su@20093069.esk"
+1;"Default Purchasing Reviewer Rule";"true";"false";"1";"PRV2-LineItems__-IsSourcedItem";"!=";"1";"user";"buyersprocess.su@20093069.esk"
+1;"Default Purchasing Reviewer Rule";"true";"false";"2";"PRV2-LineItems__-ItemGLAccount";"=";"";"user";"apspecialistsprocess.su@20093069.esk"
+1;"Default Purchasing Rule";"true";"true";"0";"GroupByDimension";"=";"CostCenter__";;
+1;"Default Purchasing Rule";"true";"true";"0";"WorkflowType";"=";"purchaseRequisitionApproval";;
+1;"Default Purchasing Rule";"true";"true";"1";;;;"dimensionManager";
+1;"Default Purchasing Rule";"true";"true";"2";;;;"delegationOfAuthority";
+1;"PDF ASN Reviewer Rule for Acme (Sample)";"false";"false";"0";"WorkflowType";"=";"ASNReview";;
+1;"PDF ASN Reviewer Rule for Acme (Sample)";"false";"false";"0";"Sys:FromAddress";"=";"*@acme.com";;
+1;"PDF ASN Reviewer Rule for Acme (Sample)";"false";"false";"1";;;;"user";"buyersprocess.su@20093069.esk"
+1;"Default PDF ASN Reviewer Rule";"true";"false";"0";"WorkflowType";"=";"ASNReview";;
+1;"Default PDF ASN Reviewer Rule";"true";"false";"1";;;;"user";"buyersprocess.su@20093069.esk"
+1;"Default Expense Report Approval Rule";"true";"false";"0";"GroupByDimension";"=";"CostCenter__";;
+1;"Default Expense Report Approval Rule";"true";"false";"0";"WorkflowType";"=";"expenseReportApproval";;
+1;"Default Expense Report Approval Rule";"true";"false";"1";"Sys:CreatedOnBehalf";"=";"1";"OriginalOwnerId";
+1;"Default Expense Report Approval Rule";"true";"false";"2";;;;"manager";
+1;"Default Expense Report Control Rule";"true";"false";"0";"WorkflowType";"=";"expenseReportControl";;
+1;"Default Expense Report Control Rule";"true";"false";"1";;;;"user";"apspecialistsprocess.su@20093069.esk"
+1;"Default Supplier Registration Rule";"true";"false";"0";"WorkflowType";"=";"vendorRegistration";;
+1;"Default Supplier Registration Rule";"true";"false";"1";;;;"user";"apspecialistsprocess.su@20093069.esk"
+1;"Default Catalog Import Approval Rule";"true";"false";"0";"WorkflowType";"=";"catalogImportApproval";;
+1;"Default Catalog Import Approval Rule";"true";"false";"1";"CatalogUpdateRequestType";"=";"Internal";"nobody";
+1;"Default Catalog Import Approval Rule";"true";"false";"2";"CatalogUpdateRequestType";"=";"External";"user";"buyersprocess.su@20093069.esk"
+1;"Contract Approval Rule when imported";"true";"false";"0";"WorkflowType";"=";"ContractApproval";;
+1;"Contract Approval Rule when imported";"true";"false";"0";"FromContractManagement";"=";"true";;
+1;"Contract Approval Rule when imported";"true";"false";"1";;;;"user";"legalsprocess.su@20093069.esk"
+1;"Default Contract Approval Rule";"true";"false";"0";"WorkflowType";"=";"ContractApproval";;
+1;"Default Contract Approval Rule";"true";"false";"1";;;;"user";"legalsprocess.su@20093069.esk"
+1;"Default Supplier Registration OFAC Verification Rule";"true";"false";"0";"WorkflowType";"=";"OFACVerification";;
+1;"Default Supplier Registration OFAC Verification Rule";"true";"false";"0";"OFACMatchFound";"=";"true";;
+1;"Default Supplier Registration OFAC Verification Rule";"true";"false";"1";;;;"user";"legalprocess.tthivolet@vilt-group.com.dev"
+1;"Payment run";"true";"false";"0";"WorkflowType";"=";"paymentRun";;
+1;"Payment run";"true";"false";"1";;;;"user";"cfoprocess.tthivolet@vilt-group.com.dev"
+1;"Payment run";"true";"false";"2";;;;"requester";
+1;"Order Confirmation Reviewer Rule for Acme (Sample)";"false";"false";"0";"WorkflowType";"=";"orderConfirmationReview";;
+1;"Order Confirmation Reviewer Rule for Acme (Sample)";"false";"false";"0";"Sys:FromAddress";"=";"*@acme.com";;
+1;"Order Confirmation Reviewer Rule for Acme (Sample)";"false";"false";"1";;;;"user";"buyersprocess.su@20093069.esk"
+1;"Default Order Confirmation Reviewer Rule";"true";"false";"0";"WorkflowType";"=";"orderConfirmationReview";;
+1;"Default Order Confirmation Reviewer Rule";"true";"false";"0";"OC-SubmittedFromPortal";"=";"false";;
+1;"Default Order Confirmation Reviewer Rule";"true";"false";"1";"OC-LineItems__-OCRecipientIsBuyer";"=";"false";"oc-buyer";
+1;"Default Order Confirmation Approval Rule";"true";"false";"0";"WorkflowType";"=";"orderConfirmationApproval";;
+1;"Default Order Confirmation Approval Rule";"true";"false";"1";"OC-LineItems__-ItemOCType";"=";"Reject";"oc-buyer";
+1;"Default Order Confirmation Approval Rule";"true";"false";"2";"OC-IsLocalPO";"=";"true";"oc-buyer";
+1;"Default Order Confirmation Approval Rule";"true";"false";"2";"OC-LineItems__-ItemOCType";"=";"Update";"oc-buyer";
+1;"Default Order Confirmation Approval Rule";"true";"false";"2";"OC-LineItems__-NetAmountVariance";">";"0";"oc-buyer";
+1;"Default Order Confirmation Approval Rule";"true";"false";"3";"OC-IsLocalPO";"=";"true";"oc-buyer";
+1;"Default Order Confirmation Approval Rule";"true";"false";"3";"OC-LineItems__-ItemOCType";"=";"Update";"oc-buyer";
+1;"Default Order Confirmation Approval Rule";"true";"false";"3";"OC-LineItems__-UnitPriceVariance";">";"0";"oc-buyer";
+1;"Default Order Confirmation Approval Rule";"true";"false";"4";"OC-IsLocalPO";"=";"false";"oc-buyer";
+1;"Default Order Confirmation Approval Rule";"true";"false";"4";"OC-LineItems__-ItemOCType";"=";"Update";"oc-buyer";
+1;"Default Order Confirmation Approval Rule";"true";"false";"4";"OC-LineItems__-NetAmountPercentageVariation";">";"5";"oc-buyer";
+1;"Default Order Confirmation Approval Rule";"true";"false";"5";"OC-IsLocalPO";"=";"false";"oc-buyer";
+1;"Default Order Confirmation Approval Rule";"true";"false";"5";"OC-LineItems__-ItemOCType";"=";"Update";"oc-buyer";
+1;"Default Order Confirmation Approval Rule";"true";"false";"5";"OC-LineItems__-UnitPricePercentageVariation";">";"5";"oc-buyer";
+1;"Default Order Confirmation Approval Rule";"true";"false";"6";"OC-LineItems__-ItemOCType";"=";"Update";"oc-porecipient";
+1;"Default Order Confirmation Approval Rule";"true";"false";"6";"OC-LineItems__-DeliveryDateChange";"=";"true";"oc-porecipient";

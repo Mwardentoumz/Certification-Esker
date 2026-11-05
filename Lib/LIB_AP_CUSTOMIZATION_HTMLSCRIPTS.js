@@ -243,7 +243,7 @@ Lib.AP.Customization = Lib.AP.Customization || {};
 					AuditUI.Refresh(silent);
 					if (reviewChanged)
 					{
-						// Add or remove the compliance review step (see Lib.AP.Customization.Common.Workflow.ProcessApproverList)
+						// Add or remove the compliance review step (workflow rules, condition Z_ComplianceReviewRequired__)
 						Lib.AP.WorkflowCtrl.Rebuild(true, true, "Z_vendorRiskChanged");
 					}
 				})

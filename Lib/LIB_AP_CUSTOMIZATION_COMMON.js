@@ -26,8 +26,9 @@ Lib.AP.Customization = Lib.AP.Customization || {};
 	/**
 	 * Vendor risk management: reads the risk level of the vendor in the "AP - Vendors__" table
 	 * (Z_Risk_Level__ / Z_Risk_details__) and computes the controls to apply on the invoice.
-	 * The same functions are used by the HTML page script (vendor change), the extraction script,
-	 * the validation script (set aside rule) and the workflow (compliance review step).
+	 * The same functions are used by the HTML page script (vendor change), the extraction script
+	 * and the validation script (set aside rule). The compliance review step is added by the workflow rules,
+	 * with the condition Z_ComplianceReviewRequired__ (see LIB_CUSTOM_WORKFLOWDEFINITION).
 	 */
 	const VendorRisk = (function ()
 	{
@@ -61,15 +62,12 @@ Lib.AP.Customization = Lib.AP.Customization || {};
 		// Parameters (see LIB_P2P_CUSTOM_PARAMETERS)
 		const Parameters = {
 			ThresholdMedium: "Z_RiskThresholdMedium",
-			ThresholdHigh: "Z_RiskThresholdHigh",
-			ComplianceReviewerLogin: "Z_ComplianceReviewerLogin",
-			ComplianceReviewerName: "Z_ComplianceReviewerName"
+			ThresholdHigh: "Z_RiskThresholdHigh"
 		};
 
 		// Key stored in AsideReason__ when the invoice is set aside by the risk rule
 		const ASIDE_REASON_KEY = "High risk vendor";
 		const ASIDE_REASON_LABEL = "Fournisseur à risque élevé : revue conformité requise";
-		const COMPLIANCE_REVIEW_RULE = "Revue conformité (fournisseur à risque)";
 
 		function GetParameter(name)
 		{
@@ -297,36 +295,15 @@ Lib.AP.Customization = Lib.AP.Customization || {};
 				+ ". Revue conformité requise avant paiement.";
 		}
 
-		/**
-		 * @returns {object|null} Workflow approver for the compliance review step, null if not configured
-		 */
-		function GetComplianceReviewer()
-		{
-			const login = GetParameter(Parameters.ComplianceReviewerLogin);
-			if (!login)
-			{
-				Log.Error(LOG_PREFIX + "Parameter " + Parameters.ComplianceReviewerLogin + " not configured, the compliance review step cannot be added to the workflow");
-				return null;
-			}
-			return {
-				login: login,
-				displayName: GetParameter(Parameters.ComplianceReviewerName) || login,
-				emailAddress: "",
-				workflowRule: COMPLIANCE_REVIEW_RULE
-			};
-		}
-
 		return {
 			RiskLevel: RiskLevel,
 			Status: Status,
 			ASIDE_REASON_KEY: ASIDE_REASON_KEY,
 			ASIDE_REASON_LABEL: ASIDE_REASON_LABEL,
-			COMPLIANCE_REVIEW_RULE: COMPLIANCE_REVIEW_RULE,
 			QueryVendorRisk: QueryVendorRisk,
 			EvaluateInvoiceRisk: EvaluateInvoiceRisk,
 			ApplyToForm: ApplyToForm,
-			GetSetAsideComment: GetSetAsideComment,
-			GetComplianceReviewer: GetComplianceReviewer
+			GetSetAsideComment: GetSetAsideComment
 		};
 	})();
 
@@ -540,40 +517,6 @@ Lib.AP.Customization = Lib.AP.Customization || {};
 		{
 			VendorRisk: VendorRisk,
 			AuditControl: AuditControl
-		},
-
-		Workflow:
-		{
-			/**
-			 * Adds the mandatory "Revue conformité" step at the beginning of the approvers list
-			 * when the invoice requires a compliance review (Z_ComplianceReviewRequired__).
-			 * @param {Array<Sys.WorkflowController.IWorkflowUser>} approverList The complete list of approvers
-			 * @returns {Array<Sys.WorkflowController.IWorkflowUser>|void} Modified approver list
-			 */
-			ProcessApproverList: function (approverList)
-			{
-				if (!Data.GetValue("Z_ComplianceReviewRequired__"))
-				{
-					return approverList;
-				}
-
-				const reviewer = VendorRisk.GetComplianceReviewer();
-				if (!reviewer)
-				{
-					return approverList;
-				}
-
-				const alreadyAdded = approverList.some(function (approver)
-				{
-					return approver.login === reviewer.login && approver.workflowRule === VendorRisk.COMPLIANCE_REVIEW_RULE;
-				});
-				if (!alreadyAdded)
-				{
-					Log.Info("[VendorRisk] Add compliance review step for " + reviewer.login);
-					approverList.unshift(reviewer);
-				}
-				return approverList;
-			}
 		}
 	};
 
