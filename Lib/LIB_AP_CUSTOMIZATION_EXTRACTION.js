@@ -353,18 +353,15 @@ Lib.AP.Customization = Lib.AP.Customization || {};
 
 		/**
 		 * Called after tax computation but before the workflow is built:
-		 * fills the vendor risk fields so that the compliance review step is added to the workflow if needed,
-		 * then the audit flags which depend on the vendor risk level
+		 * fills the vendor risk fields so that the compliance review step is added to the workflow if needed
 		 */
 		OnLineItemsPopulatedPostTax: function ()
 		{
 			const VendorRisk = Lib.AP.Customization.Common.CustomFunctions.VendorRisk;
-			const AuditControl = Lib.AP.Customization.Common.CustomFunctions.AuditControl;
 			VendorRisk.EvaluateInvoiceRisk()
 				.Then(function (assessment)
 				{
 					VendorRisk.ApplyToForm(assessment);
-					AuditControl.ApplyToForm(AuditControl.Evaluate());
 				})
 				.Catch(function (error)
 				{
@@ -373,10 +370,13 @@ Lib.AP.Customization = Lib.AP.Customization || {};
 		},
 
 		/**
-		 * Called at the end of the extraction script
+		 * Called at the end of the extraction script, once the header net amount is computed
+		 * (it is still empty in OnLineItemsPopulatedPostTax)
 		 */
 		OnExtractionScriptEnd: function ()
 		{
+			const AuditControl = Lib.AP.Customization.Common.CustomFunctions.AuditControl;
+			AuditControl.ApplyToForm(AuditControl.Evaluate());
 			PurchaseOrderReference.Extract();
 		},
 

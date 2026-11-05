@@ -165,12 +165,10 @@ Lib.AP.Customization = Lib.AP.Customization || {};
 		{
 			try
 			{
+				// Applied whatever the status: the invoice may have been set aside in this validation
+				// (high risk vendor), and the result is unchanged once the amounts are posted
 				const evaluation = GetAuditControl().Evaluate();
-				// Amounts can only change before posting
-				if (Data.GetValue("InvoiceStatus__") === Lib.AP.InvoiceStatus.ToVerify)
-				{
-					GetAuditControl().ApplyToForm(evaluation);
-				}
+				GetAuditControl().ApplyToForm(evaluation);
 				UpdateAuditorsRights(evaluation.sensitive);
 			}
 			catch (error)

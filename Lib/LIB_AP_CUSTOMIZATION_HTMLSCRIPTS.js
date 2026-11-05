@@ -282,8 +282,18 @@ Lib.AP.Customization = Lib.AP.Customization || {};
 		 */
 		OnHTMLScriptEnd: function ()
 		{
-			AuditUI.Init();
-			VendorRiskUI.Init();
+			// A custom error must never block the form loading (the standard rethrows the exception)
+			[AuditUI, VendorRiskUI].forEach(function (ui)
+			{
+				try
+				{
+					ui.Init();
+				}
+				catch (error)
+				{
+					Log.Error("[Customization] Init failed: " + (error && error.message ? error.message : error));
+				}
+			});
 		},
 
 		/**

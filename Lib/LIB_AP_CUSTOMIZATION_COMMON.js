@@ -437,7 +437,7 @@ Lib.AP.Customization = Lib.AP.Customization || {};
 
 			for (let i = 0; i < lineItems.GetItemCount(); i++)
 			{
-				evaluation.lineAlerts.push("");
+				evaluation.lineAlerts.push(false);
 			}
 
 			if (!evaluation.sensitive)
@@ -465,7 +465,7 @@ Lib.AP.Customization = Lib.AP.Customization || {};
 				const lineAmount = GetLineNetAmount(lineItems.GetItem(i));
 				if (lineAmount > lineThreshold)
 				{
-					evaluation.lineAlerts[i] = "Seuil dépassé : " + FormatAmount(lineAmount) + " > " + FormatAmount(lineThreshold);
+					evaluation.lineAlerts[i] = true;
 					alertCount++;
 				}
 			}
@@ -497,8 +497,8 @@ Lib.AP.Customization = Lib.AP.Customization || {};
 			for (let i = 0; i < lineItems.GetItemCount(); i++)
 			{
 				const item = lineItems.GetItem(i);
-				const alert = evaluation.lineAlerts[i] || "";
-				if (item.GetValue(Fields.LineAlert) !== alert)
+				const alert = Boolean(evaluation.lineAlerts[i]);
+				if (Boolean(item.GetValue(Fields.LineAlert)) !== alert)
 				{
 					item.SetValue(Fields.LineAlert, alert);
 				}
