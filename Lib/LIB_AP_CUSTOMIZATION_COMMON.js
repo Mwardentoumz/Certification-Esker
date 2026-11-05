@@ -331,6 +331,203 @@ Lib.AP.Customization = Lib.AP.Customization || {};
 	})();
 
 	/**
+	 * Auditor control: invoices of sensitive vendors (risk level from VendorRisk) are flagged for the auditors.
+	 * - "Facture à auditer" (Z_InvoiceToAudit__) when the invoice net amount exceeds the invoice threshold
+	 * - "Alerte" column (LineItems__.Z_Alert__) on the lines whose net amount exceeds the line threshold
+	 * - read-only access of the auditors group (see Lib.AP.Customization.Validation)
+	 * The behavior is driven by the AP configuration (Customizations step of the configurator).
+	 */
+	const AuditControl = (function ()
+	{
+		const LOG_PREFIX = "[Audit] ";
+
+		// AP configuration fields (see LIB_AP_CUSTOMIZATION_WIZARD), except the group login (see LIB_P2P_CUSTOM_PARAMETERS)
+		const Parameters = {
+			Enabled: "Z_Audit_Behavior",
+			IncludeMediumRisk: "Z_Include",
+			LineThreshold: "Z_AuditLineThreshold",
+			InvoiceThreshold: "Z_AuditInvoiceThreshold",
+			AuditorsGroupLogin: "Z_AuditorsGroupLogin"
+		};
+
+		const Fields = {
+			InvoiceToAudit: "Z_InvoiceToAudit__",
+			LineAlert: "Z_Alert__"
+		};
+
+		const THRESHOLD_MISSING_MESSAGE = "Seuils auditeur non configurés, contactez l'administrateur";
+
+		function GetParameter(name, defaultValue)
+		{
+			return Sys.Parameters.GetInstance("AP").GetParameter(name, defaultValue);
+		}
+
+		function IsEnabled()
+		{
+			return GetParameter(Parameters.Enabled, "0") === "1";
+		}
+
+		/**
+		 * @param {string} level Risk level of the vendor (Z_Risk_level__)
+		 * @returns {boolean} true if the vendor is sensitive and the auditor behavior is enabled
+		 */
+		function IsSensitiveVendor(level)
+		{
+			if (!IsEnabled())
+			{
+				return false;
+			}
+			return level === VendorRisk.RiskLevel.High
+				|| (level === VendorRisk.RiskLevel.Medium && GetParameter(Parameters.IncludeMediumRisk, "0") === "1");
+		}
+
+		/**
+		 * @returns {number|null} Threshold in company currency, null if not configured
+		 */
+		function GetThreshold(name)
+		{
+			const threshold = parseFloat(GetParameter(name, ""));
+			return isNaN(threshold) ? null : threshold;
+		}
+
+		function FormatAmount(amount)
+		{
+			return Number(amount).toFixed(2);
+		}
+
+		/**
+		 * Amounts are compared in company currency, in absolute value (credit notes are controlled too)
+		 */
+		function GetExchangeRate()
+		{
+			return parseFloat(Data.GetValue("ExchangeRate__")) || 1;
+		}
+
+		function GetInvoiceNetAmount()
+		{
+			const localNetAmount = parseFloat(Data.GetValue("LocalNetAmount__"));
+			const netAmount = isNaN(localNetAmount) || localNetAmount === 0
+				? (parseFloat(Data.GetValue("NetAmount__")) || 0) * GetExchangeRate()
+				: localNetAmount;
+			return Math.abs(netAmount);
+		}
+
+		function GetLineNetAmount(item)
+		{
+			return Math.abs((parseFloat(item.GetValue("Amount__")) || 0) * GetExchangeRate());
+		}
+
+		/**
+		 * Evaluates the invoice from the current form data. The vendor risk level must be up to date (see VendorRisk.ApplyToForm).
+		 * @returns {object} { enabled, sensitive, level, invoiceToAudit, lineAlerts, thresholdMissing, message }
+		 */
+		function Evaluate()
+		{
+			const level = Data.GetValue("Z_Risk_level__") || "";
+			const lineItems = Data.GetTable("LineItems__");
+			const evaluation = {
+				enabled: IsEnabled(),
+				sensitive: IsSensitiveVendor(level),
+				level: level,
+				invoiceToAudit: false,
+				lineAlerts: [],
+				thresholdMissing: false,
+				message: ""
+			};
+
+			for (let i = 0; i < lineItems.GetItemCount(); i++)
+			{
+				evaluation.lineAlerts.push("");
+			}
+
+			if (!evaluation.sensitive)
+			{
+				Log.Info(LOG_PREFIX + "Auditor behavior " + (evaluation.enabled ? "enabled" : "disabled") + ", vendor risk '" + level + "': invoice not sensitive");
+				return evaluation;
+			}
+
+			const invoiceThreshold = GetThreshold(Parameters.InvoiceThreshold);
+			const lineThreshold = GetThreshold(Parameters.LineThreshold);
+			if (invoiceThreshold === null || lineThreshold === null)
+			{
+				Log.Error(LOG_PREFIX + "Auditor thresholds not configured (" + Parameters.InvoiceThreshold + " / " + Parameters.LineThreshold + ")");
+				evaluation.thresholdMissing = true;
+				evaluation.message = THRESHOLD_MISSING_MESSAGE;
+				return evaluation;
+			}
+
+			const invoiceAmount = GetInvoiceNetAmount();
+			evaluation.invoiceToAudit = invoiceAmount > invoiceThreshold;
+
+			let alertCount = 0;
+			for (let i = 0; i < lineItems.GetItemCount(); i++)
+			{
+				const lineAmount = GetLineNetAmount(lineItems.GetItem(i));
+				if (lineAmount > lineThreshold)
+				{
+					evaluation.lineAlerts[i] = "Seuil dépassé : " + FormatAmount(lineAmount) + " > " + FormatAmount(lineThreshold);
+					alertCount++;
+				}
+			}
+
+			if (evaluation.invoiceToAudit || alertCount > 0)
+			{
+				evaluation.message = "Facture à auditer : fournisseur sensible (risque " + level + ")"
+					+ (evaluation.invoiceToAudit ? ", montant net " + FormatAmount(invoiceAmount) + " > seuil " + FormatAmount(invoiceThreshold) : "")
+					+ (alertCount > 0 ? ", " + alertCount + " ligne(s) au-dessus du seuil de " + FormatAmount(lineThreshold) : "")
+					+ ".";
+			}
+
+			Log.Info(LOG_PREFIX + "Sensitive vendor (risk '" + level + "'), net amount " + FormatAmount(invoiceAmount)
+				+ ", invoice threshold " + FormatAmount(invoiceThreshold) + ", invoice to audit: " + evaluation.invoiceToAudit
+				+ ", " + alertCount + " line(s) over " + FormatAmount(lineThreshold));
+			return evaluation;
+		}
+
+		/**
+		 * Fills the "Facture à auditer" flag and the "Alerte" column from the evaluation
+		 * @param {object} evaluation Result of Evaluate
+		 */
+		function ApplyToForm(evaluation)
+		{
+			Data.SetValue(Fields.InvoiceToAudit, evaluation.invoiceToAudit);
+			Data.SetWarning(Fields.InvoiceToAudit, evaluation.thresholdMissing ? THRESHOLD_MISSING_MESSAGE : "");
+
+			const lineItems = Data.GetTable("LineItems__");
+			for (let i = 0; i < lineItems.GetItemCount(); i++)
+			{
+				const item = lineItems.GetItem(i);
+				const alert = evaluation.lineAlerts[i] || "";
+				if (item.GetValue(Fields.LineAlert) !== alert)
+				{
+					item.SetValue(Fields.LineAlert, alert);
+				}
+			}
+		}
+
+		/**
+		 * @returns {string} Login of the auditors group, empty if not configured
+		 */
+		function GetAuditorsGroupLogin()
+		{
+			const login = GetParameter(Parameters.AuditorsGroupLogin, "");
+			if (!login)
+			{
+				Log.Error(LOG_PREFIX + "Parameter " + Parameters.AuditorsGroupLogin + " not configured, the auditors cannot access the invoice");
+			}
+			return login;
+		}
+
+		return {
+			Fields: Fields,
+			IsEnabled: IsEnabled,
+			Evaluate: Evaluate,
+			ApplyToForm: ApplyToForm,
+			GetAuditorsGroupLogin: GetAuditorsGroupLogin
+		};
+	})();
+
+	/**
 	 * @lends Lib.AP.Customization.Common
 	 */
 	parentLib.Common =
@@ -341,7 +538,8 @@ Lib.AP.Customization = Lib.AP.Customization || {};
 		 */
 		CustomFunctions:
 		{
-			VendorRisk: VendorRisk
+			VendorRisk: VendorRisk,
+			AuditControl: AuditControl
 		},
 
 		Workflow:

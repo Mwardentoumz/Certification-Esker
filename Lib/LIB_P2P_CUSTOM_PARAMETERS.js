@@ -52,6 +52,7 @@ var Lib;
 	// Vendor risk management (see LIB_AP_CUSTOMIZATION_COMMON)
 	// Z_RiskThresholdMedium / Z_RiskThresholdHigh: amount (company currency) above which a compliance review is required
 	// Z_ComplianceReviewerLogin / Z_ComplianceReviewerName: user added to the workflow for the compliance review step
+	// Z_AuditorsGroupLogin: group granted a read-only access to the invoices of sensitive vendors (see AuditControl)
 	Sys.Parameters.GetInstance("AP").Extend(
 		{
 			"PROD":
@@ -59,21 +60,24 @@ var Lib;
 				"Z_RiskThresholdMedium": "10000",
 				"Z_RiskThresholdHigh": "2000",
 				"Z_ComplianceReviewerLogin": "compliance@vilt-group.com",
-				"Z_ComplianceReviewerName": "Compliance"
+				"Z_ComplianceReviewerName": "Compliance",
+				"Z_AuditorsGroupLogin": "auditeurs@vilt-group.com"
 			},
 			"QA":
 			{
 				"Z_RiskThresholdMedium": "10000",
 				"Z_RiskThresholdHigh": "2000",
 				"Z_ComplianceReviewerLogin": "compliance@vilt-group.com",
-				"Z_ComplianceReviewerName": "Compliance"
+				"Z_ComplianceReviewerName": "Compliance",
+				"Z_AuditorsGroupLogin": "auditeurs@vilt-group.com"
 			},
 			"DEV":
 			{
 				"Z_RiskThresholdMedium": "10000",
 				"Z_RiskThresholdHigh": "2000",
 				"Z_ComplianceReviewerLogin": "compliance@vilt-group.com",
-				"Z_ComplianceReviewerName": "Compliance"
+				"Z_ComplianceReviewerName": "Compliance",
+				"Z_AuditorsGroupLogin": "auditeurs@vilt-group.com"
 			}
 		});
 

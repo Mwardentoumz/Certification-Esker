@@ -129,6 +129,62 @@ Lib.AP.Customization = Lib.AP.Customization || {};
 	})();
 
 	/**
+	 * Auditor control: at the end of each validation, recomputes the audit flags (amounts may have been changed
+	 * by the AP specialist or by a script without client event) and grants or removes the read-only access of the auditors group.
+	 */
+	const AuditRule = (function ()
+	{
+		function GetAuditControl()
+		{
+			return Lib.AP.Customization.Common.CustomFunctions.AuditControl;
+		}
+
+		/**
+		 * The read right is granted with SetRight so that RemoveRight can withdraw it
+		 * when the vendor is no longer sensitive or the auditor behavior is disabled
+		 */
+		function UpdateAuditorsRights(sensitive)
+		{
+			const groupLogin = GetAuditControl().GetAuditorsGroupLogin();
+			if (!groupLogin)
+			{
+				return;
+			}
+			if (sensitive)
+			{
+				Log.Info("[Audit] Grant read right to " + groupLogin);
+				Process.SetRight(groupLogin, "read");
+			}
+			else
+			{
+				Process.RemoveRight(groupLogin);
+			}
+		}
+
+		function Run()
+		{
+			try
+			{
+				const evaluation = GetAuditControl().Evaluate();
+				// Amounts can only change before posting
+				if (Data.GetValue("InvoiceStatus__") === Lib.AP.InvoiceStatus.ToVerify)
+				{
+					GetAuditControl().ApplyToForm(evaluation);
+				}
+				UpdateAuditorsRights(evaluation.sensitive);
+			}
+			catch (error)
+			{
+				Log.Error("[Audit] Unexpected error in audit rule: " + (error && error.message ? error.message : error));
+			}
+		}
+
+		return {
+			Run: Run
+		};
+	})();
+
+	/**
 	 * @lends Lib.AP.Customization.Validation
 	 */
 	parentLib.Validation =
@@ -143,6 +199,16 @@ Lib.AP.Customization = Lib.AP.Customization || {};
 			{
 				VendorRiskRule.WrapDefaultAction(validationActionMap[""]);
 			}
+		},
+
+		/**
+		 * Called at the very end of the validation script in all cases
+		 * @param {string} actionType Return value of Data.GetActionType()
+		 * @param {string} actionName Action name in lower case
+		 */
+		OnValidationScriptEnd: function (actionType, actionName)
+		{
+			AuditRule.Run();
 		}
 	};
 

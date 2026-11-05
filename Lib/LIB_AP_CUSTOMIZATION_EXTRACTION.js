@@ -23,6 +23,117 @@ Lib.AP.Customization = Lib.AP.Customization || {};
 (function (parentLib)
 {
 	/**
+	 * Extraction of the purchase order reference from the header block of the first page
+	 * (between the addresses and the line items table), into Z_Reference__.
+	 * The reference is the word following one of the known labels ("Bon de commande", "N° commande"...).
+	 */
+	const PurchaseOrderReference = (function ()
+	{
+		const LOG_PREFIX = "[POReference] ";
+		const FIELD = "Z_Reference__";
+		const NOT_FOUND_MESSAGE = "Référence du bon de commande introuvable sur le document, à saisir si nécessaire";
+
+		// Header block of the first page, in fraction of the page size
+		const Zone = {
+			page: 0,
+			left: 0,
+			top: 0.15,
+			width: 1,
+			height: 0.22
+		};
+
+		const LABELS = [
+			"Bon de commande",
+			"N° de commande",
+			"N° commande",
+			"Commande N°",
+			"Référence commande",
+			"Réf. commande",
+			"PO number",
+			"Purchase order"
+		];
+
+		// Words between the label and the reference
+		const SEPARATORS = /^(:|n°|n°:|no|no:|nº)$/i;
+		// A reference is a single alphanumeric word containing at least one digit
+		const REFERENCE_PATTERN = /^[A-Z0-9][A-Z0-9\-/_.]*$/i;
+		const MAX_WORDS_AFTER_LABEL = 3;
+
+		function GetZoneArea()
+		{
+			const pageWidth = Document.GetPageWidth(Zone.page);
+			const pageHeight = Document.GetPageHeight(Zone.page);
+			return Document.GetArea(Zone.page,
+				Math.round(pageWidth * Zone.left),
+				Math.round(pageHeight * Zone.top),
+				Math.round(pageWidth * Zone.width),
+				Math.round(pageHeight * Zone.height));
+		}
+
+		/**
+		 * @param {Area} labelArea Area of the label found in the zone
+		 * @returns {Area|null} Area of the reference following the label
+		 */
+		function GetReferenceAfterLabel(labelArea)
+		{
+			let word = labelArea.GetNextWord();
+			for (let i = 0; word && i < MAX_WORDS_AFTER_LABEL; i++)
+			{
+				const text = word.toString().trim().replace(/:$/, "");
+				if (text && !SEPARATORS.test(text))
+				{
+					return REFERENCE_PATTERN.test(text) && /\d/.test(text) ? word : null;
+				}
+				word = word.GetNextWord();
+			}
+			return null;
+		}
+
+		function Extract()
+		{
+			try
+			{
+				if (Document.GetPageCount() === 0)
+				{
+					Log.Info(LOG_PREFIX + "No document page (EDI invoice), purchase order reference not extracted");
+					return;
+				}
+
+				const zone = GetZoneArea();
+				for (const label of LABELS)
+				{
+					const labelAreas = Document.SearchString(label, zone, false, false) || [];
+					for (const labelArea of labelAreas)
+					{
+						const referenceArea = GetReferenceAfterLabel(labelArea);
+						if (referenceArea)
+						{
+							const reference = referenceArea.toString().trim().replace(/:$/, "");
+							Log.Info(LOG_PREFIX + "Purchase order reference '" + reference + "' found after label '" + label + "'");
+							Data.SetValue(FIELD, referenceArea, reference);
+							Data.SetWarning(FIELD, "");
+							return;
+						}
+					}
+				}
+
+				Log.Warn(LOG_PREFIX + "Purchase order reference not found in the header block of the first page");
+				Data.SetValue(FIELD, "");
+				Data.SetWarning(FIELD, NOT_FOUND_MESSAGE);
+			}
+			catch (error)
+			{
+				Log.Error(LOG_PREFIX + "Purchase order reference extraction failed: " + (error && error.message ? error.message : error));
+				Data.SetWarning(FIELD, NOT_FOUND_MESSAGE);
+			}
+		}
+
+		return {
+			Extract: Extract
+		};
+	})();
+
+	/**
 	 * @lends Lib.AP.Customization.Extraction
 	 */
 	parentLib.Extraction =
@@ -242,20 +353,31 @@ Lib.AP.Customization = Lib.AP.Customization || {};
 
 		/**
 		 * Called after tax computation but before the workflow is built:
-		 * fills the vendor risk fields so that the compliance review step is added to the workflow if needed
+		 * fills the vendor risk fields so that the compliance review step is added to the workflow if needed,
+		 * then the audit flags which depend on the vendor risk level
 		 */
 		OnLineItemsPopulatedPostTax: function ()
 		{
 			const VendorRisk = Lib.AP.Customization.Common.CustomFunctions.VendorRisk;
+			const AuditControl = Lib.AP.Customization.Common.CustomFunctions.AuditControl;
 			VendorRisk.EvaluateInvoiceRisk()
 				.Then(function (assessment)
 				{
 					VendorRisk.ApplyToForm(assessment);
+					AuditControl.ApplyToForm(AuditControl.Evaluate());
 				})
 				.Catch(function (error)
 				{
 					Log.Error("[VendorRisk] Unexpected error during extraction: " + (error && error.message ? error.message : error));
 				});
+		},
+
+		/**
+		 * Called at the end of the extraction script
+		 */
+		OnExtractionScriptEnd: function ()
+		{
+			PurchaseOrderReference.Extract();
 		},
 
 		/**
